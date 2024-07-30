@@ -1,12 +1,12 @@
 (ns ^:no-doc gdl.libgdx.context.input
-  (:require gdl.context
+  (:require api.context
             gdl.input.keys
             gdl.input.buttons
             [gdl.libgdx.utils.reflect :refer [bind-roots]])
   (:import (com.badlogic.gdx Gdx Input$Buttons Input$Keys)))
 
-(extend-type gdl.context.Context
-  gdl.context/Input
+(extend-type api.context.Context
+  api.context/Input
   (button-pressed?      [_ button] (.isButtonPressed     Gdx/input button))
   (button-just-pressed? [_ button] (.isButtonJustPressed Gdx/input button))
 

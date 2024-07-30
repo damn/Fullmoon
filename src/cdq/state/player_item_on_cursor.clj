@@ -1,9 +1,8 @@
 (ns cdq.state.player-item-on-cursor
-  (:require [gdl.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed?]]
+  (:require [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? item-entity]]
             [gdl.graphics :as g]
             [gdl.input.buttons :as buttons]
             [gdl.math.vector :as v]
-            [api.context :refer [item-entity]]
             [api.entity :as entity]
             [cdq.entity.inventory :as inventory]
             [api.state :as state]))

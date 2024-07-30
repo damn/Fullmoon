@@ -1,6 +1,6 @@
 (ns context.config
   (:require [core.component :as component]
-            [gdl.context :as ctx]))
+            [api.context :as ctx]))
 
 (component/def :context/config {}
   {:keys [tag configs]}

@@ -1,6 +1,5 @@
 (ns context.builder
   (:require [core.component :as component]
-            gdl.context
             [api.context :refer [transact! get-property]]
             [api.entity :as entity]))
 
@@ -18,7 +17,7 @@
   (entity/destroy [_ entity* ctx]
     [[:tx/audiovisual (:entity/position entity*) :projectile/hit-wall-effect]]))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Builder
   ; TODO use image w. shadows spritesheet
   (item-entity [_ position item]

@@ -1,10 +1,9 @@
 (ns context.action-bar
   (:require [core.component :as component]
-            [gdl.context :as ctx :refer [->image-button key-just-pressed? ->button-group ->horizontal-group]]
+            [api.context :as ctx :refer [->image-button key-just-pressed? ->button-group ->horizontal-group player-tooltip-text]]
             [gdl.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [gdl.scene2d.group :refer [clear-children! add-actor!]]
-            [gdl.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
-            [api.context :refer [player-tooltip-text]]))
+            [gdl.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
 
 (component/def :context/action-bar {}
   _
@@ -17,12 +16,12 @@
 ; (reset-actionbar ctx)
 
 (comment
- (let [stage (gdl.context/get-stage @gdl.app/current-context)]
+ (let [stage (api.context/get-stage @gdl.app/current-context)]
    (::action-bar (:gdl.context.ui.actors/main-table stage))
    )
  )
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Actionbar
   (->action-bar [{{:keys [horizontal-group]} :context/action-bar}]
     horizontal-group)

@@ -1,6 +1,5 @@
 (ns context.world
-  (:require [gdl.context :as ctx]
-            [gdl.disposable :refer [dispose]]
+  (:require [gdl.disposable :refer [dispose]]
             [gdl.graphics :as g]
             [gdl.graphics.camera :as camera]
             [gdl.graphics.color :as color]
@@ -9,7 +8,7 @@
             [gdl.math.vector :as v]
             [data.grid2d :as grid2d]
             [utils.core :refer [->tile tile->middle]]
-            [api.context :refer [explored? transact! transact-all! ray-blocked? content-grid world-grid]]
+            [api.context :as ctx :refer [explored? transact! transact-all! ray-blocked? content-grid world-grid]]
             [cdq.world.grid :refer [create-grid]]
             [cdq.world.content-grid :refer [->content-grid]]
             cdq.world.render
@@ -53,7 +52,7 @@
 
 (def ^:private los-checks? true)
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/World
   (render-map [ctx]
     (cdq.world.render/render-map ctx (camera/position (ctx/world-camera ctx))))

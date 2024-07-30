@@ -1,11 +1,10 @@
 (ns context.render-debug
-  (:require [gdl.context :as ctx]
+  (:require [api.context :as ctx :refer [world-grid]]
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
             [gdl.graphics.camera :as camera]
             gdl.math.geom
             [utils.core :refer [->tile]]
-            [api.context :refer [world-grid]]
             [api.world.grid :refer [circle->cells]]))
 
 ; TODO make check-buttons with debug-window or MENU top screen is good for debug I think
@@ -91,7 +90,7 @@
                             :air  [1 1 0 0.5]
                             :none [1 0 0 0.5]))))))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/DebugRender
   (debug-render-before-entities [ctx g]
     (tile-debug g ctx))

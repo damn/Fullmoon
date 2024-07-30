@@ -1,7 +1,7 @@
 (ns ^:no-doc gdl.libgdx.context.ui
   (:require [core.component :as component]
             [gdl.app :refer [current-context]]
-            [gdl.context :as ctx]
+            [api.context :as ctx]
             [gdl.scene2d.actor :as actor :refer [parent]]
             [gdl.scene2d.group :refer [add-actor!]]
             gdl.scene2d.ui.button
@@ -139,8 +139,8 @@
   [{:keys [^TextureRegion texture]}]
   (VisImage. texture))
 
-(extend-type gdl.context.Context
-  gdl.context/Widgets
+(extend-type api.context.Context
+  api.context/Widgets
   (->actor [_ {:keys [draw act]}]
     (proxy [Actor] []
       (draw [_batch _parent-alpha]
@@ -210,7 +210,7 @@
   ; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
   (->image-button
     ([context image on-clicked]
-     (gdl.context/->image-button context image on-clicked {}))
+     (api.context/->image-button context image on-clicked {}))
     ([context image on-clicked {:keys [dimensions]}]
      (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture image))
            button (VisImageButton. drawable)]

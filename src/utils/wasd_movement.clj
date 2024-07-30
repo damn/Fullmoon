@@ -1,5 +1,5 @@
 (ns utils.wasd-movement
-  (:require [gdl.context :refer [key-pressed?]]
+  (:require [api.context :refer [key-pressed?]]
             [gdl.input.keys :as input.keys]
             [gdl.math.vector :as v]))
 

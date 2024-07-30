@@ -1,14 +1,13 @@
 (ns screens.game
   (:require [core.component :as component]
             [gdl.app :refer [change-screen!]]
-            [gdl.context :as ctx :refer [delta-time key-just-pressed? key-pressed?]]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursor! transact-all! frame->txs windows id->window]]
             [gdl.graphics :as g]
             [gdl.graphics.camera :as camera]
             [gdl.screen :as screen :refer [Screen]]
             [gdl.input.keys :as input.keys]
             [gdl.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
             [utils.core :refer [safe-get]]
-            [api.context :refer [render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursor! transact-all! frame->txs windows id->window]]
             context.ui.actors
             [api.entity :as entity]
             [cdq.entity.movement :as movement]

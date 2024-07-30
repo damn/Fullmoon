@@ -1,5 +1,5 @@
 (ns ^:no-doc gdl.libgdx.context.stage
-  (:require [gdl.context :refer [current-screen get-stage delta-time]]
+  (:require [api.context :refer [current-screen get-stage delta-time]]
             gdl.disposable
             [gdl.graphics :as g]
             [gdl.screen :as screen]
@@ -30,8 +30,8 @@
     (when sub-screen (screen/render sub-screen context))
     (.draw stage)))
 
-(extend-type gdl.context.Context
-  gdl.context/Stage
+(extend-type api.context.Context
+  api.context/Stage
   (->stage-screen [{{:keys [gui-viewport batch]} :gdl.libgdx.context/graphics} ; FIXME only use internally as far as possible - abstraction - !
                    {:keys [actors sub-screen]}]
     (let [stage (proxy [Stage clojure.lang.ILookup] [gui-viewport batch]

@@ -1,7 +1,6 @@
 (ns context.mouseover-entity
-  (:require [gdl.context :as ctx :refer [mouse-on-stage-actor?]]
+  (:require [api.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [utils.core :refer [sort-by-order]]
-            [api.context :refer [world-grid line-of-sight?]]
             [api.entity :as entity]
             [api.world.grid :refer [point->entities]]))
 
@@ -15,7 +14,7 @@
          (filter #(line-of-sight? context @player-entity @%))
          first)))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/MouseOverEntity
   (update-mouseover-entity! [{:keys [context/mouseover-entity]
                               :as context}]

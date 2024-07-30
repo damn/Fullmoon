@@ -1,11 +1,11 @@
 (ns ^:no-doc gdl.libgdx.context.tiled
-  (:require gdl.context
+  (:require api.context
             [gdl.maps.tiled :as tiled])
   (:import [com.badlogic.gdx.maps MapLayer MapLayers MapProperties]
            [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
 
-(extend-type gdl.context.Context
-  gdl.context/TiledMapLoader
+(extend-type api.context.Context
+  api.context/TiledMapLoader
   (->tiled-map [_ file]
     (.load (TmxMapLoader.) file)))
 

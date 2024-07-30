@@ -1,13 +1,12 @@
 (ns context.cursor
   (:require [core.component :as component]
-            [gdl.context :as ctx]
-            [utils.core :refer [safe-get mapvals]]
-            api.context))
+            [api.context :as ctx]
+            [utils.core :refer [safe-get mapvals]]))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Cursor
   (set-cursor! [{:keys [context/cursor] :as ctx} cursor-key]
-    (gdl.context/set-cursor! ctx (safe-get cursor cursor-key))))
+    (api.context/set-cursor! ctx (safe-get cursor cursor-key))))
 
 (def ^:private cursors
   {:cursors/default ["default" 0 0]

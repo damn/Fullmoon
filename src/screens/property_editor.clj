@@ -5,7 +5,7 @@
             [core.component :as component]
             ; api
             [gdl.app :as app :refer [change-screen!]]
-            [gdl.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane]]
+            [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane get-property all-properties tooltip-text ->error-window]]
             [gdl.input.keys :as input.keys]
             [gdl.screen :as screen]
             [gdl.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
@@ -13,8 +13,7 @@
             [gdl.scene2d.ui.text-field :as text-field]
             [gdl.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [gdl.scene2d.ui.cell :refer [set-actor!]]
-            [gdl.scene2d.ui.widget-group :refer [pack!]]
-            [api.context :refer [get-property all-properties tooltip-text ->error-window]]))
+            [gdl.scene2d.ui.widget-group :refer [pack!]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows
@@ -94,9 +93,9 @@
 ; TODO too many ! too big ! scroll ... only show files first & preview?
 ; TODO make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
-  (for [file (sort (gdl.context/all-texture-files ctx))]
+  (for [file (sort (api.context/all-texture-files ctx))]
     [(->image-button ctx
-                      (gdl.context/create-image ctx file)
+                      (api.context/create-image ctx file)
                       (fn [_ctx]))]
     #_[(->text-button ctx
                     file

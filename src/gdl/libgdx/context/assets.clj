@@ -1,7 +1,7 @@
 (ns ^:no-doc gdl.libgdx.context.assets
   (:require [clojure.string :as str]
             [core.component :as component]
-            [gdl.context :as ctx])
+            [api.context :as ctx])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
@@ -47,12 +47,12 @@
 
 (defn- this [ctx] (:gdl.libgdx.context/assets ctx))
 
-(extend-type gdl.context.Context
-  gdl.context/SoundStore
+(extend-type api.context.Context
+  api.context/SoundStore
   (play-sound! [ctx file]
     (.play ^Sound (get (:manager (this ctx)) file)))
 
-  gdl.context/Assets
+  api.context/Assets
   (cached-texture [ctx file]
     (let [texture  (get (:manager (this ctx)) file)]
       (assert texture)

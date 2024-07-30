@@ -2,9 +2,7 @@
   (:require [clojure.string :as str]
             [core.component :as component]
             [utils.core :refer [readable-number]]
-            ;; api
-            [gdl.context :as ctx]
-            [api.context :refer [modifier-text effect-text]]
+            [api.context :as ctx :refer [modifier-text effect-text]]
             ;; hardcoded
             [malli.core :as m]
             [malli.error :as me]
@@ -199,7 +197,7 @@
 ; its basically ';component - join newlines & to text ... '
 ; generic thing for that ...
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/TooltipText
   (tooltip-text [ctx property]
     (try (->> property
@@ -214,7 +212,7 @@
      (assoc ctx :effect/source (:context/player-entity ctx))
      property)))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/PropertyTypes
   (of-type? [{:keys [context/property-types]} property-type property]
     ((:of-type? (get property-types property-type))

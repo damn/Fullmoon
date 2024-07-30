@@ -1,7 +1,7 @@
 (ns dev
   (:require [clojure.pprint :refer :all]
             [clojure.string :as str]
-            [gdl.context :as ctx :refer :all]
+            [api.context :as ctx :refer :all]
             [gdl.scene2d.actor :as actor]
             ))
 

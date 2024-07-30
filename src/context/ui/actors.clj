@@ -1,7 +1,7 @@
 (ns context.ui.actors
   (:require gdl.libgdx.context.image-drawer-creator
             [gdl.app :refer [change-screen!]]
-            [gdl.context :refer [->actor ->table ->group ->text-button get-stage]]
+            [api.context :refer [->actor ->table ->group ->text-button get-stage ->action-bar id->window]]
             [gdl.scene2d.actor :refer [toggle-visible! add-tooltip!]]
             [gdl.scene2d.group :refer [children]]
             [utils.core :refer [safe-get]]
@@ -12,13 +12,12 @@
             [context.ui.help-window :as help-window]
             [context.ui.entity-info-window :as entity-info-window]
             [context.ui.skill-window :as skill-window]
-            [api.context :refer [->action-bar id->window]]
             [cdq.state.player-item-on-cursor :refer [draw-item-on-cursor]]))
 
 (defn- ->item-on-cursor-actor [context]
   (->actor context {:draw draw-item-on-cursor}))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Windows
   (windows [ctx]
     (children (:windows (get-stage ctx))))
@@ -29,14 +28,14 @@
 ; TODO reused from properties, move gdl.
 (defn ->sprite [ctx sprite-idx]
   (gdl.libgdx.context.image-drawer-creator/map->Image
-   (gdl.context/get-sprite ctx
+   (api.context/get-sprite ctx
                            {:file "ui/uf_interface.png"
                             :tilew 24
                             :tileh 24}
                            sprite-idx)))
 
 (defn- ->option-button-cell [ctx sprite-idx tooltip-text f]
-  {:actor (let [button  (gdl.context/->image-button ctx
+  {:actor (let [button  (api.context/->image-button ctx
                                                     (->sprite ctx sprite-idx)
                                                     f
                                                     {:dimensions [32 32]})]

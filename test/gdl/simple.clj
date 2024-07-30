@@ -1,7 +1,7 @@
 (ns gdl.simple
   (:require [core.component :as component]
             [gdl.libgdx.app :as app]
-            [gdl.context :as ctx]))
+            [api.context :as ctx]))
 
 (component/def :gdl/simple {}
   {:keys [font logo]}

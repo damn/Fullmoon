@@ -1,7 +1,7 @@
 (ns gdl.libgdx.app
   (:require [core.component :as component]
             [gdl.app :refer [current-context]]
-            [gdl.context :as ctx]
+            [api.context :as ctx]
             [gdl.context.screens :as screens]
             gdl.disposable
             [gdl.graphics.color :as color]
@@ -61,8 +61,8 @@
   (Lwjgl3Application. (->application (:context config))
                       (lwjgl3-configuration (:app config))))
 
-(extend-type gdl.context.Context
-  gdl.context/Application
+(extend-type api.context.Context
+  api.context/Application
   (exit-app [_]
     (.exit Gdx/app)))
 

@@ -4,7 +4,7 @@
             [utils.core :refer [->tile]]
             ; api/
             [gdl.app :refer [change-screen!]]
-            [gdl.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen]]
+            [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property ->error-window]]
             [gdl.graphics :as g]
             [gdl.disposable :refer [dispose]]
             [gdl.input.keys :as input.keys]
@@ -16,7 +16,6 @@
             [gdl.scene2d.group :refer [add-actor!]]
             [gdl.scene2d.ui.widget-group :refer [pack!]]
             [gdl.scene2d.ui.label :refer [set-text!]]
-            [api.context :refer [get-property ->error-window]]
             ; hardcoded dependencies => pull out.
             [mapgen.movement-property :refer (movement-property movement-properties)]
             [mapgen.module-gen :as module-gen]))

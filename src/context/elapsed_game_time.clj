@@ -1,10 +1,9 @@
 (ns context.elapsed-game-time
-  (:require gdl.context
-            [api.context :refer [stopped?]]))
+  (:require [api.context :refer [stopped?]]))
 
 (defrecord ImmutableCounter [duration stop-time])
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Counter
   (->counter [{:keys [context/elapsed-game-time]} duration]
     {:pre [(>= duration 0)]}

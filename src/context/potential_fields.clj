@@ -8,7 +8,6 @@
   TODO assert @ mapload no NAD's and @ potential field init & remove from
   potential-field-following the removal of NAD's."
   (:require [data.grid2d :as grid2d]
-            gdl.context
             [gdl.math.vector :as v]
             [utils.core :refer :all]
             [api.context :refer (world-grid)]
@@ -237,7 +236,7 @@
     (and (= 1 (count cells))
          (= cell (first cells)))))
 
-(extend-type gdl.context.Context ; TODO only on grid this ?!
+(extend-type api.context.Context ; TODO only on grid this ?!
   api.context/PotentialField
   (update-potential-fields! [context entities]
     (update-potential-fields*! context entities))

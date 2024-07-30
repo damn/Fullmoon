@@ -2,12 +2,12 @@
   (:require [core.component :as component]
             [data.grid2d :as grid]
             [gdl.app :refer [current-context]]
-            [gdl.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget]]
+            [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
+                                         player-tooltip-text transact-all!]]
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
             [gdl.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [cdq.entity.inventory :as inventory]
-            [api.context :refer [player-tooltip-text transact-all!]]
             [api.entity :as entity]
             [api.state :as state])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
@@ -91,7 +91,7 @@
         (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
       (.row table))))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/InventoryWindow
   (inventory-window [{{:keys [window]} :context/inventory}]
     window)

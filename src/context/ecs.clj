@@ -1,7 +1,6 @@
 (ns context.ecs
   (:require [clj-commons.pretty.repl :as p]
             [core.component :as component :refer [update-map apply-system]]
-            gdl.context
             [gdl.graphics :as g]
             [utils.core :refer [sort-by-order]]
             [api.entity :as entity :refer [map->Entity]]
@@ -92,7 +91,7 @@
                                entity/render-above
                                entity/render-info])
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/EntityComponentSystem
   (all-entities [{:keys [context/uids->entities]}]
     (vals @uids->entities))

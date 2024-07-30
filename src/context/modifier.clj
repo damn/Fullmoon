@@ -1,10 +1,9 @@
 (ns context.modifier
   (:require [clojure.string :as str]
-            gdl.context
             [api.context :refer [transact!]]
             [api.modifier :as modifier]))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Modifier
   (modifier-text [_ modifier]
     (->> (for [component modifier]

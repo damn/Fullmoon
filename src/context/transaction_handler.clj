@@ -1,6 +1,5 @@
 (ns context.transaction-handler
-  (:require gdl.context
-            gdl.libgdx.context.image-drawer-creator
+  (:require gdl.libgdx.context.image-drawer-creator
             [api.context :refer [transact! transact-all!]]))
 
 (def ^:private record-txs? false)
@@ -33,11 +32,11 @@
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
                   (instance? gdl.libgdx.context.image_drawer_creator.Image %) "<Image>"
                   (instance? gdl.graphics.animation.ImmutableAnimation %) "<Animation>"
-                  (instance? gdl.context.Context %) "<Context>"
+                  (instance? api.context.Context %) "<Context>"
                   :else %)
                 tx)))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/TransactionHandler
   (transact-all! [{:keys [context/game-logic-frame] :as ctx} txs]
     (doseq [tx txs :when tx]

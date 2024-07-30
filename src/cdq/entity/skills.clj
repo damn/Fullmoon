@@ -40,7 +40,7 @@
    (when (:entity/player? @entity)
      [:tx/actionbar-remove-skill skill])])
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/Skills
   (skill-usable-state [effect-context
                        {:keys [entity/mana]}

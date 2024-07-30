@@ -1,7 +1,7 @@
 (ns ^:no-doc gdl.libgdx.context.graphics
   (:require [clojure.string :as str]
             [core.component :as component]
-            [gdl.context :as ctx]
+            [api.context :as ctx]
             [gdl.disposable :refer [dispose]]
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
@@ -20,8 +20,8 @@
 
 (defn- this [ctx] (:gdl.libgdx.context/graphics ctx))
 
-(extend-type gdl.context.Context
-  gdl.context/Graphics
+(extend-type api.context.Context
+  api.context/Graphics
   (delta-time        [_] (.getDeltaTime       Gdx/graphics))
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
@@ -365,7 +365,7 @@
                                 (/ tile-size))
                            1))
               {:default-font (or (and default-font
-                                      (gdl.context/generate-ttf ctx default-font))
+                                      (api.context/generate-ttf ctx default-font))
                                  (BitmapFont.))}))))
 
   (ctx/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]

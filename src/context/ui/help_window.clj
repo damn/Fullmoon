@@ -1,5 +1,5 @@
 (ns context.ui.help-window
-  (:require [gdl.context :as ctx :refer [->window ->label]]))
+  (:require [api.context :as ctx :refer [->window ->label]]))
 
 (def ^:private controls-text
   "* Moving: WASD-keys

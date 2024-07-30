@@ -1,10 +1,9 @@
 (ns context.effect
   (:require [clojure.string :as str]
-            gdl.context
             [api.context :refer [transact-all! valid-params?]]
             [api.effect :as effect]))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/EffectInterpreter
   (effect-text [ctx txs]
     (->> (keep #(effect/text % ctx) txs)

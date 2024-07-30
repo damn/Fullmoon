@@ -1,7 +1,7 @@
 (ns context.properties
   (:require [clojure.edn :as edn]
             [core.component :as component]
-            [gdl.context :as ctx :refer [get-sprite create-image]]
+            [api.context :as ctx :refer [get-sprite create-image]]
             [gdl.graphics.animation :as animation]
             [utils.core :refer [safe-get]]))
 
@@ -134,7 +134,7 @@
  )
 
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/PropertyStore
   (get-property [{{:keys [db]} :context/properties} id]
     (safe-get db id))

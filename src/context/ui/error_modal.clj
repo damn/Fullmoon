@@ -1,8 +1,7 @@
 (ns context.ui.error-modal
-  (:require [gdl.context :refer [->window ->label add-to-stage!]]
-            api.context))
+  (:require [api.context :refer [->window ->label add-to-stage!]]))
 
-(extend-type gdl.context.Context
+(extend-type api.context.Context
   api.context/ErrorModal
   (->error-window [ctx throwable]
     (add-to-stage! ctx

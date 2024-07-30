@@ -1,5 +1,5 @@
 (ns ^:no-doc gdl.libgdx.context.image-drawer-creator
-  (:require [gdl.context :refer [cached-texture]])
+  (:require [api.context :refer [cached-texture]])
   (:import com.badlogic.gdx.graphics.Texture
            com.badlogic.gdx.graphics.g2d.TextureRegion))
 
@@ -41,8 +41,8 @@
 
 ; TODO pass texture-region ....
 
-(extend-type gdl.context.Context
-  gdl.context/ImageCreator
+(extend-type api.context.Context
+  api.context/ImageCreator
   (create-image [{{:keys [world-unit-scale]} :gdl.libgdx.context/graphics :as ctx} file]
     (assoc-dimensions (map->Image {:file file
                                    :scale 1 ; not used anymore as arg (or scale 1) because varargs protocol methods not possible, anyway refactor images
@@ -64,8 +64,8 @@
                       world-unit-scale))
 
   (spritesheet [context file tilew tileh]
-    (assoc (gdl.context/create-image context file) :tilew tilew :tileh tileh))
+    (assoc (api.context/create-image context file) :tilew tilew :tileh tileh))
 
   (get-sprite [context {:keys [tilew tileh] :as sheet} [x y]]
-    (gdl.context/get-sub-image context
+    (api.context/get-sub-image context
                                  (assoc sheet :sub-image-bounds [(* x tilew) (* y tileh) tilew tileh]))))

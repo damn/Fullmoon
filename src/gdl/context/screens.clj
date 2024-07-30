@@ -1,6 +1,6 @@
 (ns gdl.context.screens
   (:require [core.component :as component]
-            [gdl.context :as ctx]
+            [api.context :as ctx]
             [gdl.screen :as screen]))
 
 (component/def :gdl.context/screens {}
@@ -19,8 +19,8 @@
     (screen/render (ctx/current-screen ctx) ctx)))
 
 ; TODO make some of these fns private ?
-(extend-type gdl.context.Context
-  gdl.context/ApplicationScreens
+(extend-type api.context.Context
+  api.context/ApplicationScreens
   (current-screen [{{:keys [current-screen screens]} :gdl.context/screens}]
     (get screens current-screen))
 

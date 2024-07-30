@@ -3,8 +3,7 @@
             [core.component :as component]
             [gdl.math.vector :as v]
             [gdl.graphics.animation :as animation]
-            [gdl.context :refer [get-sprite spritesheet]]
-            [api.context :refer [transact! effect-text path-blocked?]]
+            [api.context :refer [get-sprite spritesheet transact! effect-text path-blocked?]]
             [api.effect :as effect]))
 
 ; -> range needs to be smaller than potential field range

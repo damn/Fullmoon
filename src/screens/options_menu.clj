@@ -2,14 +2,13 @@
   (:require [core.component :as component]
             [gdl.app :refer [change-screen!]]
             [gdl.screen :as screen]
-            [gdl.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
+            [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
             [gdl.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.transaction-handler
             context.render-debug
             context.world
             screens.game
-            api.context
             cdq.entity.body))
 
 (defprotocol StatusCheckBox

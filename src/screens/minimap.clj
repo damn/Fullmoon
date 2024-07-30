@@ -1,13 +1,12 @@
 (ns screens.minimap
   (:require [core.component :as component]
             [gdl.app :refer [current-context change-screen!]]
-            [gdl.context :as ctx :refer [key-just-pressed?]]
+            [api.context :as ctx :refer [key-just-pressed? explored?]]
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
             [gdl.graphics.camera :as camera]
             [gdl.input.keys :as input.keys]
-            [gdl.screen :as screen]
-            [api.context :refer [explored?]]))
+            [gdl.screen :as screen]))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight

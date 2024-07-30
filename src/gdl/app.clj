@@ -1,5 +1,5 @@
 (ns gdl.app
-  (:require [gdl.context :refer [change-screen]]))
+  (:require [api.context :refer [change-screen]]))
 
 (def current-context (atom nil))
 

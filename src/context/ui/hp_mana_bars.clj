@@ -1,5 +1,5 @@
 (ns context.ui.hp-mana-bars
-  (:require [gdl.context :as ctx :refer [create-image get-sub-image ->actor]]
+  (:require [api.context :as ctx :refer [create-image get-sub-image ->actor]]
             [gdl.graphics :as g]
             [utils.core :refer [readable-number]]
             [data.val-max :refer [val-max-ratio]]))
