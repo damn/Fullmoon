@@ -7,7 +7,7 @@
             [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
             context.libgdx.ttf-generator ; TODO
-            [libgdx.utils.reflect :refer [bind-roots]])
+            [app.libgdx.utils.reflect :refer [bind-roots]])
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format OrthographicCamera)
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch BitmapFont TextureRegion)

@@ -88,7 +88,6 @@
     avar))
 
 (comment
- (libgdx.dev/restart!)
 
  (spit "app-values-tree.clj"
        (with-out-str

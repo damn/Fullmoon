@@ -1,5 +1,5 @@
 (ns app
-  (:require [libgdx.app :as app]
+  (:require [app.libgdx.app :as app]
             (context.ui player-modal
                         error-modal)))
 

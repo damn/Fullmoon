@@ -1,4 +1,4 @@
-(ns libgdx.app
+(ns app.libgdx.app
   (:require [core.component :as component]
             [api.context :as ctx]
             [api.graphics.color :as color]
