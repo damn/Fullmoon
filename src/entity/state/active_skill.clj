@@ -3,7 +3,7 @@
             [data.val-max :refer [apply-val]]
             [api.context :refer [valid-params? effect-render-info stopped? finished-ratio ->counter]]
             [api.entity :as entity]
-            [api.state :as state]))
+            [api.entity.state :as state]))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)

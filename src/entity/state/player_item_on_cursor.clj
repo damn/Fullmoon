@@ -5,7 +5,7 @@
             [math.vector :as v]
             [api.entity :as entity]
             [entity.inventory :as inventory]
-            [api.state :as state]))
+            [api.entity.state :as state]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)

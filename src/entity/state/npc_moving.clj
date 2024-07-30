@@ -1,6 +1,6 @@
 (ns entity.state.npc-moving
   (:require [api.context :refer [stopped? ->counter]]
-            [api.state :as state]))
+            [api.entity.state :as state]))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
 ; pathfinding/usable skills every frame

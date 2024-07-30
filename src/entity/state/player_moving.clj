@@ -1,6 +1,6 @@
 (ns entity.state.player-moving
   (:require [utils.wasd-movement :refer [WASD-movement-vector]]
-            [api.state :as state]))
+            [api.entity.state :as state]))
 
 (defrecord PlayerMoving [movement-vector]
   state/PlayerState

@@ -3,7 +3,7 @@
             [api.graphics.color :as color]
             [api.context :refer [world-grid ->counter]]
             [api.entity :as entity]
-            [api.state :as state]
+            [api.entity.state :as state]
             [api.world.cell :as cell]))
 
 ; TODO pass to creature data, also @ shout

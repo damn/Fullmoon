@@ -11,7 +11,7 @@
             context.ui.actors
             [api.entity :as entity]
             [entity.movement :as movement]
-            [api.state :as state]
+            [api.entity.state :as state]
             [api.world.content-grid :refer [active-entities]]))
 
 ; for now a function, see context.libgdx.input reload bug

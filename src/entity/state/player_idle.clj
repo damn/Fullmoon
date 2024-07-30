@@ -8,7 +8,7 @@
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? button-pressed? get-property inventory-window skill-usable-state selected-skill]]
             [api.entity :as entity]
-            [api.state :as state]))
+            [api.entity.state :as state]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
