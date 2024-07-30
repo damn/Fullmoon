@@ -1,15 +1,14 @@
 (ns context.property-types
   (:require [clojure.string :as str]
-            [malli.core :as m]
-            [malli.error :as me]
             [core.component :as component]
             [utils.core :refer [readable-number]]
+            ;; api
             [gdl.context :as ctx]
             [cdq.api.context :refer [modifier-text effect-text]]
-            [cdq.attributes :as attr]
-            cdq.tx.all
-            cdq.entity.all
-            cdq.modifier.all))
+            ;; hardcoded
+            [malli.core :as m]
+            [malli.error :as me]
+            [cdq.attributes :as attr]))
 
 (component/def :property/image       attr/image)
 (component/def :property/sound       attr/sound)
