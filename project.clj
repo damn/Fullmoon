@@ -77,19 +77,28 @@
     :layout :horizontal
     ;:cluster-depth 3
     :external false
-    :ignore #{"screens.options-menu"
-              "screens.main-menu"
-              "app"
-              "screens.game"
-              "cdq.tx.all"
-              "context.world"
-              "cdq.tx.spawn"
-              "context.ui.actors"
-              "cdq.entity.all"
-              "cdq.state.player"
-              "gdl.libgdx.app"
-              "cdq.state.npc"
+    :ignore #{"api"
+              "gdl"
+              "core.component"
+              "utils.core"
+              "data.val-max"
+              "cdq.attributes"
+              "screens.options-menu"
               }}))
+
+ ; most complex ns:
+ "screens.options-menu"
+ "screens.main-menu"
+ "app"
+ "screens.game"
+ "cdq.tx.all"
+ "context.world"
+ "cdq.tx.spawn"
+ "context.ui.actors"
+ "cdq.entity.all"
+ "cdq.state.player"
+ "gdl.libgdx.app"
+ "cdq.state.npc"
 
  ; TODO I can also just see which namespaces have the most dependencies ... (on non-API namespaces !!!)
 
