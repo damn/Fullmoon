@@ -11,10 +11,10 @@
             gdl.context
             [gdl.math.vector :as v]
             [utils.core :refer :all]
-            [cdq.api.context :refer (world-grid)]
-            [cdq.api.entity :as entity]
-            [cdq.api.world.grid :refer [cached-adjacent-cells rectangle->cells]]
-            [cdq.api.world.cell :as cell]))
+            [api.context :refer (world-grid)]
+            [api.entity :as entity]
+            [api.world.grid :refer [cached-adjacent-cells rectangle->cells]]
+            [api.world.cell :as cell]))
 
 ; FIXME assert @ mapload no NAD's and @ potential field init & remove from
 ; potential-field-following the removal of NAD's.
@@ -238,7 +238,7 @@
          (= cell (first cells)))))
 
 (extend-type gdl.context.Context ; TODO only on grid this ?!
-  cdq.api.context/PotentialField
+  api.context/PotentialField
   (update-potential-fields! [context entities]
     (update-potential-fields*! context entities))
 

@@ -1,8 +1,8 @@
 (ns cdq.entity.shout
   (:require [core.component :as component]
-            [cdq.api.context :refer [world-grid line-of-sight? stopped?]]
-            [cdq.api.entity :as entity]
-            [cdq.api.world.grid :refer [circle->entities]]))
+            [api.context :refer [world-grid line-of-sight? stopped?]]
+            [api.entity :as entity]
+            [api.world.grid :refer [circle->entities]]))
 
 (def ^:private shout-range 6)
 

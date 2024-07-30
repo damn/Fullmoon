@@ -1,4 +1,4 @@
-(ns cdq.api.modifier
+(ns api.modifier
   (:refer-clojure :exclude [keys apply reverse])
   (:require [core.component :as component]))
 

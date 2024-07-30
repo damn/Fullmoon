@@ -1,10 +1,10 @@
 (ns cdq.state.npc-sleeping
   (:require [gdl.graphics :as g]
             [gdl.graphics.color :as color]
-            [cdq.api.context :refer [world-grid ->counter]]
-            [cdq.api.entity :as entity]
-            [cdq.api.state :as state]
-            [cdq.api.world.cell :as cell]))
+            [api.context :refer [world-grid ->counter]]
+            [api.entity :as entity]
+            [api.state :as state]
+            [api.world.cell :as cell]))
 
 ; TODO pass to creature data, also @ shout
 (def ^:private aggro-range 6)

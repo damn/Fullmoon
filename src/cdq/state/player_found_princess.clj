@@ -1,6 +1,6 @@
 (ns cdq.state.player-found-princess
   (:require [gdl.app :refer [change-screen!]]
-            [cdq.api.state :as state]))
+            [api.state :as state]))
 
 (defrecord PlayerFoundPrincess []
   state/PlayerState

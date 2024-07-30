@@ -1,14 +1,14 @@
 (ns context.background-image
   (:require [core.component :as component]
             [gdl.context :as ctx]
-            cdq.api.context))
+            api.context))
 
 (component/def :context/background-image {}
   file
   (ctx/create [_ ctx] (ctx/create-image ctx file)))
 
 (extend-type gdl.context.Context
-  cdq.api.context/BackgroundImage
+  api.context/BackgroundImage
   (->background-image [ctx]
     (ctx/->image-widget ctx
                         (:context/background-image ctx)

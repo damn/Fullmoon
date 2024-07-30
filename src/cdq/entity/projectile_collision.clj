@@ -2,10 +2,10 @@
   (:require [core.component :as component]
             [gdl.math.geom :as geom]
             [utils.core :refer [find-first]]
-            [cdq.api.context :refer [world-grid]]
-            [cdq.api.entity :as entity]
-            [cdq.api.world.grid :refer [rectangle->cells]]
-            [cdq.api.world.cell :as cell :refer [cells->entities]]))
+            [api.context :refer [world-grid]]
+            [api.entity :as entity]
+            [api.world.grid :refer [rectangle->cells]]
+            [api.world.cell :as cell :refer [cells->entities]]))
 
 (component/def :entity/projectile-collision {}
   {:keys [hit-effect

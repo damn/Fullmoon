@@ -7,9 +7,9 @@
             [gdl.scene2d.ui.window :refer [window-title-bar?]]
             [gdl.math.vector :as v]
             [utils.wasd-movement :refer [WASD-movement-vector]]
-            [cdq.api.context :refer [get-property inventory-window skill-usable-state selected-skill]]
-            [cdq.api.entity :as entity]
-            [cdq.api.state :as state]))
+            [api.context :refer [get-property inventory-window skill-usable-state selected-skill]]
+            [api.entity :as entity]
+            [api.state :as state]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]

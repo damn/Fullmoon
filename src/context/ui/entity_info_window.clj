@@ -3,7 +3,7 @@
             [gdl.scene2d.ui.label :refer [set-text!]]
             [gdl.scene2d.group :refer [add-actor!]]
             [gdl.scene2d.ui.widget-group :refer [pack!]]
-            [cdq.api.entity :as entity]))
+            [api.entity :as entity]))
 
 
 

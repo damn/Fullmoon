@@ -2,10 +2,10 @@
   (:require [core.component :as component]
             [gdl.context :as ctx]
             [utils.core :refer [safe-get mapvals]]
-            cdq.api.context))
+            api.context))
 
 (extend-type gdl.context.Context
-  cdq.api.context/Cursor
+  api.context/Cursor
   (set-cursor! [{:keys [context/cursor] :as ctx} cursor-key]
     (gdl.context/set-cursor! ctx (safe-get cursor cursor-key))))
 
@@ -38,6 +38,6 @@
       (ctx/set-cursor! ctx (:cursors/default cursors))
       cursors)))
 
-(defmethod cdq.api.context/transact! :tx/cursor [[_ cursor-key] ctx]
-  (cdq.api.context/set-cursor! ctx cursor-key)
+(defmethod api.context/transact! :tx/cursor [[_ cursor-key] ctx]
+  (api.context/set-cursor! ctx cursor-key)
   nil)

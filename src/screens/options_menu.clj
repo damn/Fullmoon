@@ -9,7 +9,7 @@
             context.render-debug
             context.world
             screens.game
-            cdq.api.context
+            api.context
             cdq.entity.body))
 
 (defprotocol StatusCheckBox
@@ -89,4 +89,4 @@
 
 (component/def :screens/options-menu {}
   _
-  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (cdq.api.context/->background-image ctx)))))
+  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (api.context/->background-image ctx)))))

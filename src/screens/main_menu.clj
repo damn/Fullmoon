@@ -6,7 +6,7 @@
             [gdl.context :as ctx :refer [exit-app ->text-button key-just-pressed? ->table ->actor ->tiled-map]]
             [gdl.input.keys :as input.keys]
             [gdl.screen :as screen]
-            [cdq.api.context :refer [get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
+            [api.context :refer [get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
             ;; hardcoded
 
             ;; common game ctx
@@ -28,7 +28,7 @@
 
 (defn- fetch-player-entity [ctx]
   {:post [%]}
-  (first (filter #(:entity/player? @%) (cdq.api.context/all-entities ctx))))
+  (first (filter #(:entity/player? @%) (api.context/all-entities ctx))))
 
 (defn- ->player-entity-context [ctx]
   {:context/player-entity (fetch-player-entity ctx)})
@@ -64,7 +64,7 @@
   (txs/set-record-txs! false)
   ; remove entity connections to world grid/content-grid,
   ; otherwise all entities removed with reset-common-game-context!
-  (transact-all! ctx (for [e (cdq.api.context/all-entities ctx)] [:tx/destroy e]))
+  (transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
   (remove-destroyed-entities! ctx)
   (let [ctx (merge ctx (reset-common-game-context! ctx))] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
@@ -144,4 +144,4 @@
   _
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx
-                        {:actors (->actors ctx (cdq.api.context/->background-image ctx))})))
+                        {:actors (->actors ctx (api.context/->background-image ctx))})))

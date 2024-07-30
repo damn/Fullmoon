@@ -3,7 +3,7 @@
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
             [data.val-max :refer [val-max-ratio]]
-            [cdq.api.entity :as entity]
+            [api.entity :as entity]
             [context.ui.config :refer (hpbar-height-px)]
             [cdq.attributes :as attr]))
 

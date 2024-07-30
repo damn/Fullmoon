@@ -1,6 +1,6 @@
 (ns cdq.state.npc-moving
-  (:require [cdq.api.context :refer [stopped? ->counter]]
-            [cdq.api.state :as state]))
+  (:require [api.context :refer [stopped? ->counter]]
+            [api.state :as state]))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
 ; pathfinding/usable skills every frame

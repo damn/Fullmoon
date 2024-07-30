@@ -64,7 +64,7 @@
 
 (comment
  (let [ctx @gdl.app/current-context
-       entity (cdq.api.context/get-entity ctx 2)
+       entity (api.context/get-entity ctx 2)
        ]
 
    (clojure.pprint/pprint
@@ -100,7 +100,7 @@
            [(ns-name nmspace) (map (comp symbol name symbol) value-vars)]))))
 
 
- (require '[cdq.api.context :refer [get-entity]])
+ (require '[api.context :refer [get-entity]])
  (let [entity* @(get-entity @gdl.app/current-context 49)]
    (:mana entity*)
    )
@@ -116,7 +116,7 @@
  (let [ctx @gdl.app/current-context
 
        position (ctx/world-mouse-position ctx)
-       cell (get (cdq.api.context/world-grid ctx) (mapv int position))
+       cell (get (api.context/world-grid ctx) (mapv int position))
 
        ;tree-map @cell
        ;tree-map @@(:context/mouseover-entity ctx)

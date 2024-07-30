@@ -3,10 +3,10 @@
             [gdl.graphics :as g]
             [gdl.input.buttons :as buttons]
             [gdl.math.vector :as v]
-            [cdq.api.context :refer [item-entity]]
-            [cdq.api.entity :as entity]
+            [api.context :refer [item-entity]]
+            [api.entity :as entity]
             [cdq.entity.inventory :as inventory]
-            [cdq.api.state :as state]))
+            [api.state :as state]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)

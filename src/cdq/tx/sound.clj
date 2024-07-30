@@ -1,7 +1,7 @@
 (ns cdq.tx.sound
   (:require [core.component :as component]
             [gdl.context :refer [play-sound!]]
-            [cdq.api.context :refer [transact!]]
+            [api.context :refer [transact!]]
             [cdq.attributes :as attr]))
 
 (component/def :tx/sound attr/sound

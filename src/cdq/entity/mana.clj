@@ -1,6 +1,6 @@
 (ns cdq.entity.mana
   (:require [core.component :as component]
-            [cdq.api.entity :as entity]
+            [api.entity :as entity]
             [cdq.attributes :as attr]))
 
 ; required @ npc state, for cost, check if nil

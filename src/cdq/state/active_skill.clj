@@ -1,9 +1,9 @@
 (ns cdq.state.active-skill
   (:require [gdl.graphics :as g]
             [data.val-max :refer [apply-val]]
-            [cdq.api.context :refer [valid-params? effect-render-info stopped? finished-ratio ->counter]]
-            [cdq.api.entity :as entity]
-            [cdq.api.state :as state]))
+            [api.context :refer [valid-params? effect-render-info stopped? finished-ratio ->counter]]
+            [api.entity :as entity]
+            [api.state :as state]))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)

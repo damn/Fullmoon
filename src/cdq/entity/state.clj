@@ -1,9 +1,9 @@
 (ns cdq.entity.state
   (:require [reduce-fsm :as fsm]
             [core.component :as component]
-            [cdq.api.context :refer [transact-all!]]
-            [cdq.api.entity :as entity]
-            [cdq.api.state :as state]))
+            [api.context :refer [transact-all!]]
+            [api.entity :as entity]
+            [api.state :as state]))
 
 (component/def :entity/state {}
   {:keys [initial-state
@@ -23,7 +23,7 @@
   (entity/render-above [_ entity* g ctx] (state/render-above state-obj entity* g ctx))
   (entity/render-info  [_ entity* g ctx] (state/render-info  state-obj entity* g ctx)))
 
-(extend-type cdq.api.entity.Entity
+(extend-type api.entity.Entity
   entity/State
   (state [entity*]
     (-> entity* :entity/state :fsm :state))
@@ -51,6 +51,6 @@
                             [:tx/assoc-in entity [:entity/state :state-obj] new-state-obj])]]
             (transact-all! ctx (txs-fn))))))))
 
-(defmethod cdq.api.context/transact! :tx/event [[_ entity event params] ctx]
+(defmethod api.context/transact! :tx/event [[_ entity event params] ctx]
   (send-event! ctx entity event params)
   [])

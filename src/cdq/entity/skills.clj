@@ -1,8 +1,8 @@
 (ns cdq.entity.skills
   (:require [core.component :as component]
             [data.val-max :refer [apply-val]]
-            [cdq.api.context :refer [get-property valid-params? ->counter stopped?]]
-            [cdq.api.entity :as entity]
+            [api.context :refer [get-property valid-params? ->counter stopped?]]
+            [api.entity :as entity]
             [cdq.attributes :as attr]))
 
 ; FIXME starting skills do not trigger tx/actionbar-add-skill
@@ -20,12 +20,12 @@
                      (stopped? ctx cooling-down?))]
       [:tx/assoc-in (:entity/id entity*) [k id :skill/cooling-down?] false])))
 
-(extend-type cdq.api.entity.Entity
+(extend-type api.entity.Entity
   entity/Skills
   (has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
     (contains? skills id)))
 
-(defmethod cdq.api.context/transact! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
+(defmethod api.context/transact! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
                                                 _ctx]
   (assert (not (entity/has-skill? @entity skill)))
   [[:tx/assoc-in entity [:entity/skills id] skill]
@@ -33,7 +33,7 @@
      [:tx/actionbar-add-skill skill])])
 
 ; unused ?
-(defmethod cdq.api.context/transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
+(defmethod api.context/transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
                                                    _ctx]
   (assert (entity/has-skill? @entity skill))
   [[:tx/dissoc-in entity [:entity/skills id]]
@@ -41,7 +41,7 @@
      [:tx/actionbar-remove-skill skill])])
 
 (extend-type gdl.context.Context
-  cdq.api.context/Skills
+  api.context/Skills
   (skill-usable-state [effect-context
                        {:keys [entity/mana]}
                        {:keys [skill/cost skill/cooling-down? skill/effect]}]

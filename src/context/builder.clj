@@ -1,8 +1,8 @@
 (ns context.builder
   (:require [core.component :as component]
             gdl.context
-            [cdq.api.context :refer [transact! get-property]]
-            [cdq.api.entity :as entity]))
+            [api.context :refer [transact! get-property]]
+            [api.entity :as entity]))
 
 (defmethod transact! :tx/creature [[_ creature-id extra-components] ctx]
   (let [entity-components (:property/entity (get-property ctx creature-id))]
@@ -19,7 +19,7 @@
     [[:tx/audiovisual (:entity/position entity*) :projectile/hit-wall-effect]]))
 
 (extend-type gdl.context.Context
-  cdq.api.context/Builder
+  api.context/Builder
   ; TODO use image w. shadows spritesheet
   (item-entity [_ position item]
     #:entity {:position position

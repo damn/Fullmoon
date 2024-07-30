@@ -1,11 +1,11 @@
 (ns context.elapsed-game-time
   (:require gdl.context
-            [cdq.api.context :refer [stopped?]]))
+            [api.context :refer [stopped?]]))
 
 (defrecord ImmutableCounter [duration stop-time])
 
 (extend-type gdl.context.Context
-  cdq.api.context/Counter
+  api.context/Counter
   (->counter [{:keys [context/elapsed-game-time]} duration]
     {:pre [(>= duration 0)]}
     (->ImmutableCounter duration

@@ -1,10 +1,10 @@
 (ns cdq.entity.movement
   (:require [core.component :as component]
             [gdl.math.vector :as v]
-            [cdq.api.entity :as entity]
-            [cdq.api.context :refer [world-grid]]
+            [api.entity :as entity]
+            [api.context :refer [world-grid]]
             [cdq.entity.body :as body]
-            [cdq.api.world.grid :refer [valid-position?]]
+            [api.world.grid :refer [valid-position?]]
             [cdq.attributes :as attr]))
 
 (def max-delta-time 0.04)

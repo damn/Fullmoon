@@ -1,12 +1,12 @@
 (ns cdq.world.content-grid
   (:require [data.grid2d :as grid2d]
-            cdq.api.world.content-grid))
+            api.world.content-grid))
 
 ; why needs entity a reference to the cell
 ; just calculate it easily
 
 (defrecord ContentGrid [grid cell-w cell-h]
-  cdq.api.world.content-grid/ContentGrid
+  api.world.content-grid/ContentGrid
   (update-entity! [_ entity]
     (let [{:keys [entity/content-cell entity/position]} @entity
           [x y] position
@@ -45,7 +45,7 @@
 
  (defn get-all-entities-of-current-map [context]
    (mapcat (comp :entities deref)
-           (grid2d/cells (cdq.api.context/content-grid context))))
+           (grid2d/cells (api.context/content-grid context))))
 
  (count
   (get-all-entities-of-current-map @gdl.app/current-context))

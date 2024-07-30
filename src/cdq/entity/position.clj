@@ -2,9 +2,9 @@
   (:require [core.component :as component]
             [gdl.math.vector :as v]
             [utils.core :refer [->tile]]
-            [cdq.api.entity :as entity]))
+            [api.entity :as entity]))
 
-(extend-type cdq.api.entity.Entity
+(extend-type api.entity.Entity
   entity/Position
   (tile [{:keys [entity/position]}]
     (->tile position))

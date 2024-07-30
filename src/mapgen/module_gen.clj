@@ -2,7 +2,7 @@
   (:require [data.grid2d :as grid]
             [gdl.maps.tiled :as tiled]
             [gdl.context :refer [->tiled-map]]
-            [cdq.api.context :refer [all-properties]]
+            [api.context :refer [all-properties]]
             [utils.core :refer [assoc-ks]]
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer! grid->tiled-map]]
@@ -217,7 +217,7 @@
 (defn- place-princess! [context tiled-map position princess]
   (set-tile! (tiled/get-layer tiled-map "creatures")
              position
-             (creature->tile (cdq.api.context/get-property context princess))))
+             (creature->tile (api.context/get-property context princess))))
 
 (defn generate
   "The generated tiled-map needs to be disposed."

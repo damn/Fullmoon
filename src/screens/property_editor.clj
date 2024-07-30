@@ -14,7 +14,7 @@
             [gdl.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [gdl.scene2d.ui.cell :refer [set-actor!]]
             [gdl.scene2d.ui.widget-group :refer [pack!]]
-            [cdq.api.context :refer [get-property all-properties tooltip-text ->error-window]]))
+            [api.context :refer [get-property all-properties tooltip-text ->error-window]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows
@@ -337,9 +337,9 @@
 
 (defn ->property-editor-window [context id]
   (let [props (get-property context id)
-        {:keys [title]} (cdq.api.context/overview
+        {:keys [title]} (api.context/overview
                          context
-                         (cdq.api.context/property->type context props))
+                         (api.context/property->type context props))
         window (->window context {:title (or title (name id))
                                   :modal? true
                                   :close-button? true
@@ -348,9 +348,9 @@
                                   :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group context props)
         save!   (apply-context-fn window
-                                  #(cdq.api.context/update! % (attribute-widget-group->data widgets)))
+                                  #(api.context/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window
-                                  #(cdq.api.context/delete! % id))]
+                                  #(api.context/delete! % id))]
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(->text-button context "Save" save!)
                                                       (->text-button context "Delete" delete!)]])]])
@@ -369,7 +369,7 @@
                 sort-by-fn
                 extra-info-text
                 columns
-                image/dimensions]} (cdq.api.context/overview ctx property-type)
+                image/dimensions]} (api.context/overview ctx property-type)
         entities (all-properties ctx property-type)
         entities (if sort-by-fn
                    (sort-by sort-by-fn entities)
@@ -402,9 +402,9 @@
 (defn- ->left-widget [context]
   (->table context {:cell-defaults {:pad 5}
                     :rows (concat
-                           (for [property-type (cdq.api.context/property-types context)]
+                           (for [property-type (api.context/property-types context)]
                              [(->text-button context
-                                             (:title (cdq.api.context/overview context property-type))
+                                             (:title (api.context/overview context property-type))
                                              #(set-second-widget! % (->overview-table % property-type open-property-editor-window!)))])
                            [[(->text-button context "Back to Main Menu" (fn [_context]
                                                                           (change-screen! :screens/main-menu)))]])}))
@@ -413,7 +413,7 @@
   _
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx
-                        {:actors [(cdq.api.context/->background-image ctx)
+                        {:actors [(api.context/->background-image ctx)
                                   (->table ctx {:id :main-table
                                                 :rows [[(->left-widget ctx) nil]]
                                                 :fill-parent? true})]})))

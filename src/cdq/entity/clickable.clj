@@ -1,7 +1,7 @@
 (ns cdq.entity.clickable
   (:require [core.component :as component]
             [gdl.graphics :as g]
-            [cdq.api.entity :as entity]))
+            [api.entity :as entity]))
 
 (component/def :entity/clickable {}
   {:keys [text]}

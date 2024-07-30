@@ -1,7 +1,7 @@
 (ns context.transaction-handler
   (:require gdl.context
             gdl.libgdx.context.image-drawer-creator
-            [cdq.api.context :refer [transact! transact-all!]]))
+            [api.context :refer [transact! transact-all!]]))
 
 (def ^:private record-txs? false)
 
@@ -38,7 +38,7 @@
                 tx)))
 
 (extend-type gdl.context.Context
-  cdq.api.context/TransactionHandler
+  api.context/TransactionHandler
   (transact-all! [{:keys [context/game-logic-frame] :as ctx} txs]
     (doseq [tx txs :when tx]
       (try (let [result (transact! tx ctx)]

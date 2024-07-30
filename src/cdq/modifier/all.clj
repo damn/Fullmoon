@@ -3,7 +3,7 @@
             [clojure.math :as math]
             [core.component :as component]
             [data.val-max :refer [apply-max]]
-            [cdq.api.modifier :as modifier]
+            [api.modifier :as modifier]
             [cdq.attributes :as attr]))
 
 ; TODO add movement speed +/- modifier.

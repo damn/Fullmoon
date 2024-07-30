@@ -1,4 +1,4 @@
-(ns cdq.api.context
+(ns api.context
   (:require [core.component :as component]))
 
 (component/defn transact! [_ ctx])

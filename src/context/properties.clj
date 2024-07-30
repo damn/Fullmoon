@@ -78,7 +78,7 @@
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
-         (map #(cdq.api.context/validate context % {}))
+         (map #(api.context/validate context % {}))
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
@@ -99,8 +99,8 @@
 
 (defn- sort-by-type [ctx properties-values]
   (sort-by #(->> %
-                 (cdq.api.context/property->type ctx)
-                 (cdq.api.context/edn-file-sort-order ctx))
+                 (api.context/property->type ctx)
+                 (api.context/edn-file-sort-order ctx))
            properties-values))
 
 (def ^:private write-to-file? true)
@@ -120,7 +120,7 @@
 (comment
  ; # Add new attributes => make into fn for property-type apply fn to all props
  (let [ctx @gdl.app/current-context
-       props (cdq.api.context/all-properties ctx :property.type/weapon)
+       props (api.context/all-properties ctx :property.type/weapon)
        props (for [prop props]
                (-> prop
                    (assoc :skill/start-action-sound "sounds/slash.wav"
@@ -129,24 +129,24 @@
    (doseq [prop props]
      (swap! gdl.app/current-context update :context/properties update! prop))
    (def ^:private write-to-file? true)
-   (swap! gdl.app/current-context update :context/properties update! (cdq.api.context/get-property ctx :creatures/vampire))
+   (swap! gdl.app/current-context update :context/properties update! (api.context/get-property ctx :creatures/vampire))
    nil)
  )
 
 
 (extend-type gdl.context.Context
-  cdq.api.context/PropertyStore
+  api.context/PropertyStore
   (get-property [{{:keys [db]} :context/properties} id]
     (safe-get db id))
 
   (all-properties [{{:keys [db]} :context/properties :as ctx} property-type]
-    (filter #(cdq.api.context/of-type? ctx property-type %) (vals db)))
+    (filter #(api.context/of-type? ctx property-type %) (vals db)))
 
   (update! [{{:keys [db]} :context/properties :as ctx}
             {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
            (contains? db id)]}
-    (cdq.api.context/validate ctx property {:humanize? true})
+    (api.context/validate ctx property {:humanize? true})
     ;(binding [*print-level* nil] (clojure.pprint/pprint property))
     (let [new-ctx (update-in ctx [:context/properties :db] assoc id property)]
       (write-properties-to-file! new-ctx)

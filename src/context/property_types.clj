@@ -4,7 +4,7 @@
             [utils.core :refer [readable-number]]
             ;; api
             [gdl.context :as ctx]
-            [cdq.api.context :refer [modifier-text effect-text]]
+            [api.context :refer [modifier-text effect-text]]
             ;; hardcoded
             [malli.core :as m]
             [malli.error :as me]
@@ -190,7 +190,7 @@
   (ctx/create [_ _ctx] property-types-raw))
 
 (defn- property->text [{:keys [context/property-types] :as ctx} property]
-  ((:->text (get property-types (cdq.api.context/property->type ctx property)))
+  ((:->text (get property-types (api.context/property->type ctx property)))
    ctx
    property))
 
@@ -200,7 +200,7 @@
 ; generic thing for that ...
 
 (extend-type gdl.context.Context
-  cdq.api.context/TooltipText
+  api.context/TooltipText
   (tooltip-text [ctx property]
     (try (->> property
               (property->text ctx)
@@ -210,18 +210,18 @@
            (str t))))
 
   (player-tooltip-text [ctx property]
-    (cdq.api.context/tooltip-text
+    (api.context/tooltip-text
      (assoc ctx :effect/source (:context/player-entity ctx))
      property)))
 
 (extend-type gdl.context.Context
-  cdq.api.context/PropertyTypes
+  api.context/PropertyTypes
   (of-type? [{:keys [context/property-types]} property-type property]
     ((:of-type? (get property-types property-type))
      property))
 
   (validate [{:keys [context/property-types] :as ctx} property {:keys [humanize?]}]
-    (let [ptype (cdq.api.context/property->type ctx property)]
+    (let [ptype (api.context/property->type ctx property)]
       (if-let [schema (:schema (get property-types ptype))]
         (if (try (m/validate schema property)
                  (catch Throwable t

@@ -1,4 +1,4 @@
-(ns cdq.api.entity
+(ns api.entity
   (:require [core.component :as component]
             [utils.core :as utils]))
 

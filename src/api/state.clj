@@ -1,4 +1,4 @@
-(ns cdq.api.state)
+(ns api.state)
 
 (defprotocol State
   (enter [_ entity* ctx])

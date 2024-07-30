@@ -1,7 +1,7 @@
 (ns cdq.entity.mouseover
   (:require [core.component :as component]
             [gdl.graphics :as g]
-            [cdq.api.entity :as entity]))
+            [api.entity :as entity]))
 
 (def ^:private outline-alpha 0.4)
 (def ^:private enemy-color    [1 0 0 outline-alpha])

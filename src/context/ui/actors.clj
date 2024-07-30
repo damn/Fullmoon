@@ -12,14 +12,14 @@
             [context.ui.help-window :as help-window]
             [context.ui.entity-info-window :as entity-info-window]
             [context.ui.skill-window :as skill-window]
-            [cdq.api.context :refer [->action-bar id->window]]
+            [api.context :refer [->action-bar id->window]]
             [cdq.state.player-item-on-cursor :refer [draw-item-on-cursor]]))
 
 (defn- ->item-on-cursor-actor [context]
   (->actor context {:draw draw-item-on-cursor}))
 
 (extend-type gdl.context.Context
-  cdq.api.context/Windows
+  api.context/Windows
   (windows [ctx]
     (children (:windows (get-stage ctx))))
 

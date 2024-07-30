@@ -1,7 +1,7 @@
 (ns cdq.entity.animation
   (:require [core.component :as component]
             [gdl.graphics.animation :as animation]
-            [cdq.api.entity :as entity]
+            [api.entity :as entity]
             [cdq.attributes :as attr]))
 
 (defn- tx-assoc-image-current-frame [{:keys [entity/id entity/animation]}]

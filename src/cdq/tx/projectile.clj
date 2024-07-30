@@ -4,8 +4,8 @@
             [gdl.math.vector :as v]
             [gdl.graphics.animation :as animation]
             [gdl.context :refer [get-sprite spritesheet]]
-            [cdq.api.context :refer [transact! effect-text path-blocked?]]
-            [cdq.api.effect :as effect]))
+            [api.context :refer [transact! effect-text path-blocked?]]
+            [api.effect :as effect]))
 
 ; -> range needs to be smaller than potential field range
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight

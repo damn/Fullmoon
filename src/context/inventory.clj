@@ -7,9 +7,9 @@
             [gdl.graphics.color :as color]
             [gdl.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [cdq.entity.inventory :as inventory]
-            [cdq.api.context :refer [player-tooltip-text transact-all!]]
-            [cdq.api.entity :as entity]
-            [cdq.api.state :as state])
+            [api.context :refer [player-tooltip-text transact-all!]]
+            [api.entity :as entity]
+            [api.state :as state])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -92,7 +92,7 @@
       (.row table))))
 
 (extend-type gdl.context.Context
-  cdq.api.context/InventoryWindow
+  api.context/InventoryWindow
   (inventory-window [{{:keys [window]} :context/inventory}]
     window)
 
@@ -100,7 +100,7 @@
     (redo-table ctx inventory)
     (.pack window)))
 
-(defmethod cdq.api.context/transact! :tx/set-item-image-in-widget [[_ cell item]
+(defmethod api.context/transact! :tx/set-item-image-in-widget [[_ cell item]
                                                                    {{:keys [table]} :context/inventory :as ctx}]
   (let [^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)
@@ -110,7 +110,7 @@
     (add-tooltip! cell-widget #(player-tooltip-text % item))
     nil))
 
-(defmethod cdq.api.context/transact! :tx/remove-item-from-widget [[_ cell]
+(defmethod api.context/transact! :tx/remove-item-from-widget [[_ cell]
                                                                   {{:keys [table slot->background]} :context/inventory :as ctx}]
   (let [^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)]

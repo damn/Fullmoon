@@ -1,6 +1,6 @@
 (ns cdq.state.player-dead
   (:require [gdl.app :refer [change-screen!]]
-            [cdq.api.state :as state]))
+            [api.state :as state]))
 
 (defrecord PlayerDead []
   state/PlayerState

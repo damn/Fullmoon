@@ -1,4 +1,4 @@
-(ns cdq.api.effect
+(ns api.effect
   (:require [core.component :as component]))
 
 (component/defn text          [_ ctx])

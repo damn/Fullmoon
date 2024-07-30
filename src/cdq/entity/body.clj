@@ -2,7 +2,7 @@
   (:require [core.component :as component]
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
-            [cdq.api.entity :as entity]
+            [api.entity :as entity]
             [cdq.attributes :as attr]))
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not

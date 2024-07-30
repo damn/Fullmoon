@@ -1,8 +1,8 @@
 (ns cdq.tx.stun
   (:require [core.component :as component]
             [utils.core :refer [readable-number]]
-            [cdq.api.context :refer [transact!]]
-            [cdq.api.effect :as effect]
+            [api.context :refer [transact!]]
+            [api.effect :as effect]
             [cdq.attributes :as attr]))
 
 (component/def :tx/stun attr/pos-attr

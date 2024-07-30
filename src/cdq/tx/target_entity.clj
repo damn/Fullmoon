@@ -2,9 +2,9 @@
   (:require [core.component :as component]
             [gdl.graphics :as g]
             [gdl.math.vector :as v]
-            [cdq.api.context :refer [transact! effect-text line-of-sight? line-entity]]
-            [cdq.api.effect :as effect]
-            [cdq.api.entity :as entity]
+            [api.context :refer [transact! effect-text line-of-sight? line-entity]]
+            [api.effect :as effect]
+            [api.entity :as entity]
             [cdq.attributes :as attr]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?

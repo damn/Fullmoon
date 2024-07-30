@@ -1,7 +1,7 @@
 (ns cdq.tx.spawn
   (:require [core.component :as component]
-            [cdq.api.context :refer [transact!]]
-            [cdq.api.effect :as effect]
+            [api.context :refer [transact!]]
+            [api.effect :as effect]
             [cdq.state.npc :as npc-state]))
 
 ; TODO spawning on player both without error ?! => not valid position checked

@@ -1,4 +1,4 @@
-(ns cdq.api.world.cell)
+(ns api.world.cell)
 
 ; is cell* actually
 (defprotocol Cell

@@ -1,4 +1,4 @@
-(ns cdq.api.world.content-grid)
+(ns api.world.content-grid)
 
 (defprotocol ContentGrid
   (update-entity! [_ entity])

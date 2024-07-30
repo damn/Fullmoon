@@ -4,8 +4,8 @@
             gdl.context
             [gdl.graphics :as g]
             [utils.core :refer [sort-by-order]]
-            [cdq.api.entity :as entity :refer [map->Entity]]
-            [cdq.api.context :refer [transact! transact-all! get-entity]]))
+            [api.entity :as entity :refer [map->Entity]]
+            [api.context :refer [transact! transact-all! get-entity]]))
 
 (defn- apply-system-transact-all! [ctx system entity*]
   (run! #(transact-all! ctx %) (apply-system system entity* ctx)))
@@ -93,7 +93,7 @@
                                entity/render-info])
 
 (extend-type gdl.context.Context
-  cdq.api.context/EntityComponentSystem
+  api.context/EntityComponentSystem
   (all-entities [{:keys [context/uids->entities]}]
     (vals @uids->entities))
 

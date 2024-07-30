@@ -7,7 +7,7 @@
             [gdl.graphics.camera :as camera]
             [gdl.input.keys :as input.keys]
             [gdl.screen :as screen]
-            [cdq.api.context :refer [explored?]]))
+            [api.context :refer [explored?]]))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
