@@ -67,6 +67,8 @@
                                           :screens/options-menu   true
                                           :screens/property-editor true}}]
 
+             [:tx/sound true]
+
              ; game
              ;[:context/ecs]
              ;[:context/mouseover-entity]

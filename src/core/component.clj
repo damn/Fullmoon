@@ -139,7 +139,7 @@
 (clojure.core/defn build [obj create-fn components & {:keys [log?]}]
   (reduce (fn [obj {k 0 :as component}]
             (when log? (println k))
-            (if (get attributes k)
+            (if ((set (keys (methods create-fn))) k)
               (assoc obj k (create-fn component obj))
               obj))
           obj

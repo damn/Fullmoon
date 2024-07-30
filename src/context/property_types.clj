@@ -17,8 +17,8 @@
 (component/def :property/pretty-name attr/string-attr)
 
 (component/def :property/entity (attr/components-attribute :entity))
-(component/def :skill/effect (attr/components-attribute :tx))
-(component/def :hit-effect   (attr/components-attribute :tx))
+(component/def :skill/effect (attr/components-attribute :effect))
+(component/def :hit-effect   (attr/components-attribute :effect))
 (component/def :item/modifier (attr/components-attribute :modifier))
 
 (component/def :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!

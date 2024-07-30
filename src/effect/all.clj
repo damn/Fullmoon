@@ -1,4 +1,4 @@
-(ns effet.all
+(ns effect.all
   (:require (effect damage
                     melee-damage
                     projectile
