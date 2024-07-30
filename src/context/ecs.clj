@@ -93,8 +93,8 @@
 
 (extend-type gdl.context.Context
   cdq.api.context/EntityComponentSystem
-  (all-entities {::keys [uids->entities]}
-    (vals @(:context.ecs/uids->entities ctx)))
+  (all-entities [{::keys [uids->entities]}]
+    (vals @uids->entities))
 
   (get-entity [{::keys [uids->entities]} uid]
     (get @uids->entities uid))
