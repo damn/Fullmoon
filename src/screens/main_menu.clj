@@ -20,6 +20,9 @@
   {:post [%]}
   (first (filter #(:entity/player? @%) (cdq.api.context/all-entities ctx))))
 
+(defn- ->player-entity-context [ctx]
+  {:context/player-entity (fetch-player-entity ctx)})
+
 (def ^:private z-orders [:z-order/on-ground
                          :z-order/ground
                          :z-order/flying
@@ -45,7 +48,7 @@
     (world/transact-create-entities-from-tiledmap! ctx)
     ;(println "Initial entity txs:")
     ;(txs/summarize-txs (frame->txs ctx 0))
-    (assoc ctx :context/player-entity (fetch-player-entity ctx))))
+    (merge ctx (->player-entity-context ctx))))
 
 (defn- start-replay-mode! [ctx]
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
@@ -58,8 +61,9 @@
     ; world visibility is not reset ... ...
     (transact-all! ctx (frame->txs ctx 0))
     (reset! gdl.app/current-context
-            (merge ctx {:context/replay-mode? true
-                        :context/player-entity (fetch-player-entity ctx)}))))
+            (merge ctx
+                   (->player-entity-context ctx)
+                   {:context/replay-mode? true}))))
 
 (comment
 
