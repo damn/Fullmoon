@@ -1,9 +1,9 @@
 (ns gdl.simple-screen
   (:require [core.component :as component]
             [api.context :as ctx]
-            [gdl.graphics :as g]
-            [gdl.screen :as screen]
-            [gdl.graphics.color :as color]))
+            [api.graphics :as g]
+            [api.screen :as screen]
+            [api.graphics.color :as color]))
 
 (defn draw-test [g {{:keys [special-font logo]} :gdl/simple}]
   (let [[wx wy] (map #(format "%.2f" %) (g/world-mouse-position g))
@@ -27,7 +27,7 @@
   screen/Screen
   (show [_ _ctx])
   (hide [_ _ctx])
-  (render [_ {g :gdl.libgdx.context/graphics :as ctx}]
+  (render [_ {g :context.libgdx/graphics :as ctx}]
     (g/render-gui-view g #(draw-test % ctx))))
 
 (component/def :gdl/simple-screen {}
