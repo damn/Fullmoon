@@ -27,6 +27,3 @@
       (reset! mouseover-entity entity)
       (when entity
         (swap! entity assoc :entity/mouseover? true)))))
-
-(defn ->context []
-  {:context/mouseover-entity (atom nil)})

@@ -31,6 +31,3 @@
   (->actor ctx
            {:draw draw-player-message
             :act check-remove-message}))
-
-(defn ->context []
-  {:context/player-message (atom nil)})

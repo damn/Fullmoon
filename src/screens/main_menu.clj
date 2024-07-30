@@ -11,9 +11,9 @@
 
             ;; common game ctx
             context.ecs
-            [context.counter :as counter]
-            [context.mouseover-entity :as mouseover-entity]
-            [context.ui.player-message :as player-message]
+            context.counter
+            context.mouseover-entity
+            context.ui.player-message
 
             ;; other ctx
             [context.transaction-handler :as txs]
@@ -36,10 +36,10 @@
   (merge {:context/uids->entities (atom {})
           :context/thrown-error (atom nil)
           :context/game-paused? (atom nil)
-          :context/game-logic-frame (atom 0)}
-         (mouseover-entity/->context)
-         (player-message/->context)
-         (counter/->context)))
+          :context/game-logic-frame (atom 0)
+          :context/elapsed-game-time (atom 0)
+          :context/mouseover-entity (atom nil)
+          :context/player-message (atom nil)}))
 
 (defn- start-new-game [ctx tiled-level]
   (let [ctx (merge ctx
