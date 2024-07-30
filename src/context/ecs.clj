@@ -121,8 +121,10 @@
     (doseq [entity (filter (comp :entity/destroyed? deref) (vals @uids->entities))]
       (apply-system-transact-all! ctx entity/destroy @entity))))
 
-(defn ->context [& {:keys [z-orders]}]
-  (assert (every? #(= "z-order" (namespace %)) z-orders))
+(defn ->context []
   {::uids->entities (atom {})
    ::thrown-error (atom nil)
-   ::render-on-map-order (define-order z-orders)})
+   ::render-on-map-order (define-order [:z-order/on-ground
+                                        :z-order/ground
+                                        :z-order/flying
+                                        :z-order/effect])})

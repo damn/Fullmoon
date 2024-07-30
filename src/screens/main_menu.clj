@@ -23,15 +23,12 @@
 (defn- ->player-entity-context [ctx]
   {:context/player-entity (fetch-player-entity ctx)})
 
-(def ^:private z-orders [:z-order/on-ground
-                         :z-order/ground
-                         :z-order/flying
-                         :z-order/effect])
-
+; 1. move to app
+; 2. define game context or context system to 'reset-to-new-game' thingy
 (defn- reset-common-game-context! [ctx]
   (rebuild-inventory-widgets ctx)
   (reset-actionbar ctx)
-  (merge (ecs/->context :z-orders z-orders)
+  (merge (ecs/->context)
          (mouseover-entity/->context)
          (player-message/->context)
          (counter/->context) ; = elapsed game time counter
