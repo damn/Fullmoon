@@ -1,4 +1,4 @@
-(ns gdl.maps.tiled
+(ns api.maps.tiled
   (:import com.badlogic.gdx.maps.MapLayer))
 
 ; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer -> protocol docstring.

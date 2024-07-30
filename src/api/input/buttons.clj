@@ -1,4 +1,4 @@
-(ns gdl.input.buttons)
+(ns api.input.buttons)
 
 (declare back
          forward

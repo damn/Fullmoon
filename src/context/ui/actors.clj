@@ -2,8 +2,8 @@
   (:require gdl.libgdx.context.image-drawer-creator
             [gdl.app :refer [change-screen!]]
             [api.context :refer [->actor ->table ->group ->text-button get-stage ->action-bar id->window]]
-            [gdl.scene2d.actor :refer [toggle-visible! add-tooltip!]]
-            [gdl.scene2d.group :refer [children]]
+            [api.scene2d.actor :refer [toggle-visible! add-tooltip!]]
+            [api.scene2d.group :refer [children]]
             [utils.core :refer [safe-get]]
             [context.inventory :as inventory]
             [context.player-message :refer [->player-message-actor]]

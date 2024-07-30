@@ -1,4 +1,4 @@
-(ns gdl.graphics.color)
+(ns api.graphics.color)
 
 (declare black
          blue

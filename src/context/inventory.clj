@@ -5,8 +5,8 @@
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
                                          player-tooltip-text transact-all!]]
             [gdl.graphics :as g]
-            [gdl.graphics.color :as color]
-            [gdl.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
+            [api.graphics.color :as color]
+            [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [entity.inventory :as inventory]
             [api.entity :as entity]
             [api.state :as state])

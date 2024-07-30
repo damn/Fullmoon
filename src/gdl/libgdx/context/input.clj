@@ -1,7 +1,7 @@
 (ns ^:no-doc gdl.libgdx.context.input
   (:require api.context
-            gdl.input.keys
-            gdl.input.buttons
+            api.input.keys
+            api.input.buttons
             [gdl.libgdx.utils.reflect :refer [bind-roots]])
   (:import (com.badlogic.gdx Gdx Input$Buttons Input$Keys)))
 
@@ -15,7 +15,7 @@
 
 ; TODO FIXME with namespace refresh and using the input.keys they can be not bound yet
 ; -> namespace dependency tree not working with bind-roots ? do it different?
-; for example creating them manually with the right key code in gdl.input.*
+; for example creating them manually with the right key code in api.input.*
 ; -> just make keywords!
-(bind-roots "com.badlogic.gdx.Input$Keys"    'int "gdl.input.keys")
-(bind-roots "com.badlogic.gdx.Input$Buttons" 'int "gdl.input.buttons")
+(bind-roots "com.badlogic.gdx.Input$Keys"    'int "api.input.keys")
+(bind-roots "com.badlogic.gdx.Input$Buttons" 'int "api.input.buttons")

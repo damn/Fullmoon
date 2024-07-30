@@ -1,6 +1,6 @@
 (ns entity.projectile-collision
   (:require [core.component :as component]
-            [gdl.math.geom :as geom]
+            [math.geom :as geom]
             [utils.core :refer [find-first]]
             [api.context :refer [world-grid]]
             [api.entity :as entity]

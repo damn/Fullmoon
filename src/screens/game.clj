@@ -3,10 +3,10 @@
             [gdl.app :refer [change-screen!]]
             [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursork! transact-all! frame->txs windows id->window]]
             [gdl.graphics :as g]
-            [gdl.graphics.camera :as camera]
+            [api.graphics.camera :as camera]
             [gdl.screen :as screen :refer [Screen]]
-            [gdl.input.keys :as input.keys]
-            [gdl.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
+            [api.input.keys :as input.keys]
+            [api.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
             [utils.core :refer [safe-get]]
             context.ui.actors
             [api.entity :as entity]

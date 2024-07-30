@@ -1,7 +1,7 @@
 (ns entity.hp
   (:require [core.component :as component]
             [gdl.graphics :as g]
-            [gdl.graphics.color :as color]
+            [api.graphics.color :as color]
             [data.val-max :refer [val-max-ratio]]
             [api.entity :as entity]
             [context.ui.config :refer (hpbar-height-px)]

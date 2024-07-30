@@ -1,4 +1,4 @@
-(ns gdl.scene2d.ui.table
+(ns api.scene2d.ui.table
   (:import com.kotcrab.vis.ui.widget.Separator))
 
 (defprotocol Table

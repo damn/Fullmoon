@@ -1,6 +1,6 @@
 (ns mapgen.module-gen
   (:require [data.grid2d :as grid]
-            [gdl.maps.tiled :as tiled]
+            [api.maps.tiled :as tiled]
             [api.context :refer [->tiled-map]]
             [api.context :refer [all-properties]]
             [utils.core :refer [assoc-ks]]

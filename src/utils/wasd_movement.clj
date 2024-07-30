@@ -1,7 +1,7 @@
 (ns utils.wasd-movement
   (:require [api.context :refer [key-pressed?]]
-            [gdl.input.keys :as input.keys]
-            [gdl.math.vector :as v]))
+            [api.input.keys :as input.keys]
+            [math.vector :as v]))
 
 (defn- add-vs [vs]
   (v/normalise (reduce v/add [0 0] vs)))

@@ -1,4 +1,4 @@
-(ns gdl.scene2d.group)
+(ns api.scene2d.group)
 
 (defprotocol Group
   (children [_] "Returns an ordered list of child actors in this group.")

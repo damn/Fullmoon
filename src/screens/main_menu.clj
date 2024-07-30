@@ -4,7 +4,7 @@
             ;; api
             [gdl.app :refer [current-context change-screen!]]
             [api.context :as ctx :refer [exit-app ->text-button key-just-pressed? ->table ->actor ->tiled-map get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
-            [gdl.input.keys :as input.keys]
+            [api.input.keys :as input.keys]
             [gdl.screen :as screen]
             ;; hardcoded
 

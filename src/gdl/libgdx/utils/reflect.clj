@@ -32,12 +32,12 @@
 
  (write-declarations :class-str "com.badlogic.gdx.graphics.Color"
                      :field-type 'com.badlogic.gdx.graphics.Color
-                     :file "src/gdl/graphics/color.clj")
+                     :file "src/api.graphics.color.clj")
 
  (write-declarations :class-str "com.badlogic.gdx.Input$Keys"
                      :field-type 'int
-                     :file "src/gdl/input/keys.clj")
+                     :file "src/api.input/keys.clj")
 
  (write-declarations :class-str "com.badlogic.gdx.Input$Buttons"
                      :field-type 'int
-                     :file "src/gdl/input/buttons.clj"))
+                     :file "src/api.input/buttons.clj"))

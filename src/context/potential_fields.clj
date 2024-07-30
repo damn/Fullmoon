@@ -8,7 +8,7 @@
   TODO assert @ mapload no NAD's and @ potential field init & remove from
   potential-field-following the removal of NAD's."
   (:require [data.grid2d :as grid2d]
-            [gdl.math.vector :as v]
+            [math.vector :as v]
             [utils.core :refer :all]
             [api.context :refer (world-grid)]
             [api.entity :as entity]

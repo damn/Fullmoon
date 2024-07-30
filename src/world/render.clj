@@ -1,7 +1,7 @@
 (ns world.render
   (:require [gdl.graphics :as g]
-            [gdl.graphics.color :as color]
-            [gdl.math.raycaster :as raycaster]
+            [api.graphics.color :as color]
+            [math.raycaster :as raycaster]
             [utils.core :refer [->tile]])
   (:import com.badlogic.gdx.graphics.Color))
 

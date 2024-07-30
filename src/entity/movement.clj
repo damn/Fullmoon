@@ -1,6 +1,6 @@
 (ns entity.movement
   (:require [core.component :as component]
-            [gdl.math.vector :as v]
+            [math.vector :as v]
             [api.entity :as entity]
             [api.context :refer [world-grid]]
             [entity.body :as body]

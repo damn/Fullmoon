@@ -1,5 +1,5 @@
 (ns mapgen.movement-property
-  (:require [gdl.maps.tiled :as tiled]))
+  (:require [api.maps.tiled :as tiled]))
 
 ; TODO performance bottleneck -> every time getting same layers
 ; takes 600 ms to read movement-properties

@@ -1,9 +1,9 @@
 (ns context.render-debug
   (:require [api.context :as ctx :refer [world-grid]]
             [gdl.graphics :as g]
-            [gdl.graphics.color :as color]
-            [gdl.graphics.camera :as camera]
-            gdl.math.geom
+            [api.graphics.color :as color]
+            [api.graphics.camera :as camera]
+            math.geom
             [utils.core :refer [->tile]]
             [api.world.grid :refer [circle->cells]]))
 
@@ -18,7 +18,7 @@
     (doseq [[x y] (map #(:position @%)
                        (circle->cells grid circle))]
       (g/draw-rectangle g x y 1 1 [1 0 0 0.5]))
-    (let [{[x y] :left-bottom :keys [width height]} (gdl.math.geom/circle->outer-rectangle circle)]
+    (let [{[x y] :left-bottom :keys [width height]} (math.geom/circle->outer-rectangle circle)]
       (g/draw-rectangle g x y width height [0 0 1 1]))))
 
 (def ^:private tile-grid? false)

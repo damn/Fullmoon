@@ -1,6 +1,6 @@
 (ns context.ui.skill-window
   (:require [api.context :refer [->window ->image-button get-property player-tooltip-text transact-all!]]
-            [gdl.scene2d.actor :refer [add-tooltip!]]
+            [api.scene2d.actor :refer [add-tooltip!]]
             [api.entity :as entity]
             [api.state :as state]))
 

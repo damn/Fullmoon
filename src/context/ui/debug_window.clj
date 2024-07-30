@@ -1,10 +1,10 @@
 (ns context.ui.debug-window
   (:require [api.context :as ctx :refer [frames-per-second mouse-on-stage-actor? ->actor ->window ->label]]
             [gdl.graphics :as g]
-            [gdl.graphics.camera :as camera]
-            [gdl.scene2d.group :refer [add-actor!]]
-            [gdl.scene2d.ui.label :refer [set-text!]]
-            [gdl.scene2d.ui.widget-group :refer [pack!]]))
+            [api.graphics.camera :as camera]
+            [api.scene2d.group :refer [add-actor!]]
+            [api.scene2d.ui.label :refer [set-text!]]
+            [api.scene2d.ui.widget-group :refer [pack!]]))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -35,7 +35,7 @@
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (gdl.scene2d.actor/id actor)
+              "id: " (api.scene2d.actor/id actor)
               )))))
 
 (defn create [context]

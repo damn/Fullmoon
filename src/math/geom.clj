@@ -1,4 +1,4 @@
-(ns gdl.math.geom
+(ns math.geom
   "API wrapping com.badlogic.gdx.math.Intersector"
   (:import (com.badlogic.gdx.math Rectangle Circle Intersector)))
 

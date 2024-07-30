@@ -2,16 +2,16 @@
   (:require [core.component :as component]
             [gdl.app :refer [current-context]]
             [api.context :as ctx]
-            [gdl.scene2d.actor :as actor :refer [parent]]
-            [gdl.scene2d.group :refer [add-actor!]]
-            gdl.scene2d.ui.button
-            gdl.scene2d.ui.button-group
-            gdl.scene2d.ui.label
-            [gdl.scene2d.ui.table :refer [add-rows!]]
-            gdl.scene2d.ui.cell
-            gdl.scene2d.ui.text-field
-            [gdl.scene2d.ui.widget-group :refer [pack!]]
-            gdl.scene2d.ui.window
+            [api.scene2d.actor :as actor :refer [parent]]
+            [api.scene2d.group :refer [add-actor!]]
+            api.scene2d.ui.button
+            api.scene2d.ui.button-group
+            api.scene2d.ui.label
+            [api.scene2d.ui.table :refer [add-rows!]]
+            api.scene2d.ui.cell
+            api.scene2d.ui.text-field
+            [api.scene2d.ui.widget-group :refer [pack!]]
+            api.scene2d.ui.window
             gdl.libgdx.context.image-drawer-creator)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
@@ -284,12 +284,12 @@
       scroll-pane)))
 
 (extend-type Cell
-  gdl.scene2d.ui.cell/Cell
+  api.scene2d.ui.cell/Cell
   (set-actor! [cell actor]
     (.setActor cell actor)))
 
 (extend-type Table
-  gdl.scene2d.ui.table/Table
+  api.scene2d.ui.table/Table
   (cells [table]
     (.getCells table))
 
@@ -307,17 +307,17 @@
     (.add table ^Actor actor)))
 
 (extend-type Label
-  gdl.scene2d.ui.label/Label
+  api.scene2d.ui.label/Label
   (set-text! [^Label label ^CharSequence text]
     (.setText label text)))
 
 (extend-type VisTextField
-  gdl.scene2d.ui.text-field/TextField
+  api.scene2d.ui.text-field/TextField
   (text [text-field]
     (.getText text-field)))
 
 (extend-type Group
-  gdl.scene2d.group/Group
+  api.scene2d.group/Group
   (children [group]
     (seq (.getChildren group)))
 
@@ -331,7 +331,7 @@
     (.addActor group actor)))
 
 (extend-type Actor
-  gdl.scene2d.actor/Actor
+  api.scene2d.actor/Actor
   (id [actor] (.getUserObject actor))
   (set-id! [actor id] (.setUserObject actor id))
   (set-name! [actor name] (.setName actor name))
@@ -395,7 +395,7 @@
     (pack! (actor/find-ancestor-window actor))))
 
 (extend-type ButtonGroup
-  gdl.scene2d.ui.button-group/ButtonGroup
+  api.scene2d.ui.button-group/ButtonGroup
   (clear! [button-group]
     (.clear button-group))
   (add! [button-group button]
@@ -406,7 +406,7 @@
     (.remove button-group ^Button button)))
 
 (extend-type WidgetGroup
-  gdl.scene2d.ui.widget-group/WidgetGroup
+  api.scene2d.ui.widget-group/WidgetGroup
   (pack! [group]
     (.pack group)))
 
@@ -414,14 +414,14 @@
   (some #(= Button %) (supers (class actor))))
 
 (extend-type Actor
-  gdl.scene2d.ui.button/Actor
+  api.scene2d.ui.button/Actor
   (button? [actor]
     (or (button-class? actor)
         (and (parent actor)
              (button-class? (parent actor))))))
 
 (extend-type Actor
-  gdl.scene2d.ui.window/Actor
+  api.scene2d.ui.window/Actor
   (window-title-bar? [actor]
     (when (instance? Label actor)
       (when-let [prnt (parent actor)]

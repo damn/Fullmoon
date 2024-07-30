@@ -4,8 +4,8 @@
             [api.context :as ctx]
             [gdl.disposable :refer [dispose]]
             [gdl.graphics :as g]
-            [gdl.graphics.color :as color]
-            [gdl.maps.tiled :as tiled]
+            [api.graphics.color :as color]
+            [api.maps.tiled :as tiled]
             gdl.libgdx.context.ttf-generator ; TODO
             [gdl.libgdx.utils.reflect :refer [bind-roots]])
   (:import com.badlogic.gdx.Gdx
@@ -49,7 +49,7 @@
 
 (bind-roots "com.badlogic.gdx.graphics.Color"
             'com.badlogic.gdx.graphics.Color
-            "gdl.graphics.color")
+            "api.graphics.color")
 
 (defrecord Graphics [batch
                      shape-drawer

@@ -1,9 +1,9 @@
 (ns context.action-bar
   (:require [core.component :as component]
             [api.context :as ctx :refer [->image-button key-just-pressed? ->button-group ->horizontal-group player-tooltip-text]]
-            [gdl.scene2d.actor :as actor :refer [remove! add-tooltip!]]
-            [gdl.scene2d.group :refer [clear-children! add-actor!]]
-            [gdl.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
+            [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
+            [api.scene2d.group :refer [clear-children! add-actor!]]
+            [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
 
 (component/def :context/action-bar {}
   _
@@ -54,7 +54,7 @@
 
 (comment
 
- ;[gdl.input.keys :as input.keys]
+ ;[api.input.keys :as input.keys]
  (comment
   (def sword-button (.getChecked button-group))
   (.setChecked sword-button false)

@@ -1,6 +1,6 @@
 (ns ^:no-doc gdl.libgdx.context.tiled
   (:require api.context
-            [gdl.maps.tiled :as tiled])
+            [api.maps.tiled :as tiled])
   (:import [com.badlogic.gdx.maps MapLayer MapLayers MapProperties]
            [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
 
@@ -20,7 +20,7 @@
 (defn- lookup [has-properties key]
   (.get ^MapProperties (tiled/properties has-properties) (name key)))
 
-(extend-protocol gdl.maps.tiled/HasProperties
+(extend-protocol api.maps.tiled/HasProperties
   TiledMap
   (properties [tiled-map] (.getProperties tiled-map))
   (get-property [tiled-map key] (lookup tiled-map key))
@@ -34,7 +34,7 @@
   (get-property [tile key] (lookup tile key)))
 
 (extend-type TiledMap
-  gdl.maps.tiled/TiledMap
+  api.maps.tiled/TiledMap
   (width [tiled-map]
     (tiled/get-property tiled-map :width))
 

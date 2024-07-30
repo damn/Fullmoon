@@ -1,6 +1,6 @@
 (ns entity.position
   (:require [core.component :as component]
-            [gdl.math.vector :as v]
+            [math.vector :as v]
             [utils.core :refer [->tile]]
             [api.entity :as entity]))
 

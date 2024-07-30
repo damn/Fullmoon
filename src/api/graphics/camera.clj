@@ -1,4 +1,4 @@
-(ns gdl.graphics.camera
+(ns api.graphics.camera
   "Convinience functions operating on com.badlogic.gdx.graphics.OrthographicCamera."
   (:import com.badlogic.gdx.graphics.OrthographicCamera
            com.badlogic.gdx.math.Vector3))

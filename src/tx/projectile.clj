@@ -1,7 +1,7 @@
 (ns tx.projectile
   (:require [clojure.string :as str]
             [core.component :as component]
-            [gdl.math.vector :as v]
+            [math.vector :as v]
             [data.animation :as animation]
             [api.context :refer [get-sprite spritesheet transact! effect-text path-blocked?]]
             [api.effect :as effect]))

@@ -3,7 +3,7 @@
             [gdl.app :refer [change-screen!]]
             [gdl.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
-            [gdl.input.keys :as input.keys]
+            [api.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.transaction-handler
             context.render-debug

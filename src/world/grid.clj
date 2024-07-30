@@ -1,6 +1,6 @@
 (ns world.grid
   (:require [data.grid2d :as grid2d]
-            [gdl.math.geom :as geom]
+            [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
             [api.world.grid :refer [rectangle->cells circle->cells valid-position?]]
             [api.world.cell :as cell :refer [cells->entities]]))

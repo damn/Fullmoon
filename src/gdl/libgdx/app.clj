@@ -4,7 +4,7 @@
             [api.context :as ctx]
             [context.screens :as screens]
             gdl.disposable
-            [gdl.graphics.color :as color]
+            [api.graphics.color :as color]
             [gdl.libgdx.context.graphics :as graphics])
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)

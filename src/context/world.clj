@@ -1,11 +1,11 @@
 (ns context.world
   (:require [gdl.disposable :refer [dispose]]
             [gdl.graphics :as g]
-            [gdl.graphics.camera :as camera]
-            [gdl.graphics.color :as color]
-            [gdl.maps.tiled :as tiled]
-            [gdl.math.raycaster :as raycaster]
-            [gdl.math.vector :as v]
+            [api.graphics.camera :as camera]
+            [api.graphics.color :as color]
+            [api.maps.tiled :as tiled]
+            [math.raycaster :as raycaster]
+            [math.vector :as v]
             [data.grid2d :as grid2d]
             [utils.core :refer [->tile tile->middle]]
             [api.context :as ctx :refer [explored? transact! transact-all! ray-blocked? content-grid world-grid]]
@@ -33,7 +33,7 @@
      (<= xdist (inc (/ (float (ctx/world-viewport-width ctx))  2)))
      (<= ydist (inc (/ (float (ctx/world-viewport-height ctx)) 2))))))
 
-; TO gdl.math.... // not tested
+; TO math.... // not tested
 (defn- create-double-ray-endpositions
   "path-w in tiles."
   [[start-x start-y] [target-x target-y] path-w]

@@ -1,4 +1,4 @@
-(ns gdl.math.raycaster
+(ns math.raycaster
   "An implementation of Bresenham line drawing algorithm for casting rays on a two dimensional array."
   (:import gdl.RayCaster))
 

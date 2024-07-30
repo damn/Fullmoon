@@ -3,8 +3,8 @@
             gdl.disposable
             [gdl.graphics :as g]
             [gdl.screen :as screen]
-            [gdl.scene2d.actor :as actor]
-            [gdl.scene2d.group :refer [find-actor-with-id] :as group])
+            [api.scene2d.actor :as actor]
+            [api.scene2d.group :refer [find-actor-with-id] :as group])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.Stage))
 
@@ -58,7 +58,7 @@
         (group/add-actor! actor))))
 
 (extend-type Stage
-  gdl.scene2d.group/Group
+  api.scene2d.group/Group
   (children [stage]
     (group/children (.getRoot stage)))
 

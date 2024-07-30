@@ -1,8 +1,8 @@
 (ns state.player-item-on-cursor
   (:require [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? item-entity]]
             [gdl.graphics :as g]
-            [gdl.input.buttons :as buttons]
-            [gdl.math.vector :as v]
+            [api.input.buttons :as buttons]
+            [math.vector :as v]
             [api.entity :as entity]
             [entity.inventory :as inventory]
             [api.state :as state]))

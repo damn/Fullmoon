@@ -1,4 +1,4 @@
-(ns gdl.scene2d.ui.button-group)
+(ns api.scene2d.ui.button-group)
 
 (defprotocol ButtonGroup
   (clear! [_])

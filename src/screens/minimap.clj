@@ -3,9 +3,9 @@
             [gdl.app :refer [current-context change-screen!]]
             [api.context :as ctx :refer [key-just-pressed? explored?]]
             [gdl.graphics :as g]
-            [gdl.graphics.color :as color]
-            [gdl.graphics.camera :as camera]
-            [gdl.input.keys :as input.keys]
+            [api.graphics.color :as color]
+            [api.graphics.camera :as camera]
+            [api.input.keys :as input.keys]
             [gdl.screen :as screen]))
 
 ; 28.4 viewportwidth

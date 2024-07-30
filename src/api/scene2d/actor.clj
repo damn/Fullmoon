@@ -1,4 +1,4 @@
-(ns gdl.scene2d.actor
+(ns api.scene2d.actor
   (:refer-clojure :exclude [name]))
 
 (defprotocol Actor
