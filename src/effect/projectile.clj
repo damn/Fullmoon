@@ -1,4 +1,4 @@
-(ns tx.projectile
+(ns effect.projectile
   (:require [clojure.string :as str]
             [core.component :as component]
             [math.vector :as v]
@@ -23,8 +23,8 @@
      (random/percent-chance chance)))
 
 (def ^:private hit-effect
-  [[:tx/damage {:damage/min-max [4 8]}]
-   [:tx/stun 0.5]
+  [[:effect/damage {:damage/min-max [4 8]}]
+   [:effect/stun 0.5]
    ;[:stun {:duration 0.2} {:chance 100}]
    ])
 
@@ -39,9 +39,9 @@
          (v/scale direction
                   (+ (:radius (:entity/body entity*)) size 0.1))))
 
-(component/def :tx/projectile {:widget :text-field
-                               :schema [:= true]
-                               :default-value true}
+(component/def :effect/projectile {:widget :text-field
+                                   :schema [:= true]
+                                   :default-value true}
   _
   (effect/text [_ ctx]
                (effect-text ctx hit-effect))

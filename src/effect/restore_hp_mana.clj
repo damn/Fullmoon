@@ -1,11 +1,11 @@
-(ns tx.restore-hp-mana
+(ns effect.restore-hp-mana
   (:require [core.component :as component]
             [data.val-max :refer [lower-than-max? set-to-max]]
             [api.context :refer [transact!]]
             [api.effect :as effect]))
 
 (defmacro def-set-to-max-effect [stat]
-  `(let [component# ~(keyword "tx" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))]
+  `(let [component# ~(keyword "effect" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))]
      (component/def component# {:widget :label
                                 :schema [:= true]
                                 :default-value true}

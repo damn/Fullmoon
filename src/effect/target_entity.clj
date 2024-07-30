@@ -1,4 +1,4 @@
-(ns tx.target-entity
+(ns effect.target-entity
   (:require [core.component :as component]
             [api.graphics :as g]
             [math.vector :as v]
@@ -27,12 +27,12 @@
 
 (component/def :maxrange attr/pos-attr)
 
-(component/def :tx/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
-                                  :schema [:map {:closed true}
-                                           [:hit-effect [:map]]
-                                           [:maxrange pos?]]
-                                  :default-value {:hit-effect {}
-                                                  :max-range 2.0}}
+(component/def :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
+                                      :schema [:map {:closed true}
+                                               [:hit-effect [:map]]
+                                               [:maxrange pos?]]
+                                      :default-value {:hit-effect {}
+                                                      :max-range 2.0}}
   {:keys [maxrange hit-effect]}
   (effect/text [_ ctx]
                (str "Range " maxrange " meters\n" (effect-text ctx hit-effect)))

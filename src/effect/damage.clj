@@ -1,4 +1,4 @@
-(ns tx.damage
+(ns effect.damage
   (:require [core.component :as component]
             [data.val-max :refer [apply-val apply-val-max-modifiers]]
             [utils.random :as random]
@@ -99,7 +99,7 @@
 
 (component/def :damage/min-max attr/val-max-attr)
 
-(component/def :tx/damage (attr/map-attribute :damage/min-max)
+(component/def :effect/damage (attr/map-attribute :damage/min-max)
   damage
   (effect/text [_ {:keys [effect/source]}]
     (if source

@@ -6,8 +6,8 @@
   :skill/cooldown 0,
   :skill/cost 0,
   :skill/effect
-  {:tx/sound "sounds/bfxr_shield_consume.wav",
-   :tx/spawn :creatures/skeleton-warrior},
+  {:effect/sound "sounds/bfxr_shield_consume.wav",
+   :effect/spawn :creatures/skeleton-warrior},
   :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
  {:property/id :skills/meditation,
   :property/image
@@ -17,7 +17,7 @@
   :skill/cooldown 0,
   :skill/cost 1,
   :skill/effect
-  {:tx/entity-mana-set-to-max true, :tx/sound "sounds/bfxr_click.wav"},
+  {:effect/entity-mana-set-to-max true, :effect/sound "sounds/bfxr_click.wav"},
   :skill/start-action-sound "sounds/shoot.wav"}
  {:property/id :skills/projectile,
   :property/image
@@ -27,7 +27,7 @@
   :skill/cooldown 0,
   :skill/cost 4,
   :skill/effect
-  {:tx/projectile true, :tx/sound "sounds/bfxr_waypointunlock.wav"},
+  {:effect/projectile true, :effect/sound "sounds/bfxr_waypointunlock.wav"},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/melee-attack,
   :property/image
@@ -37,8 +37,8 @@
   :skill/cooldown 0,
   :skill/cost 0,
   :skill/effect
-  {:tx/target-entity
-   {:maxrange 0.5, :hit-effect {:tx/melee-damage true}}},
+  {:effect/target-entity
+   {:maxrange 0.5, :hit-effect {:effect/melee-damage true}}},
   :skill/start-action-sound "sounds/slash.wav"}
  {:creature/level nil,
   :creature/species :species/toad,

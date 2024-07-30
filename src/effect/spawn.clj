@@ -1,4 +1,4 @@
-(ns tx.spawn
+(ns effect.spawn
   (:require [core.component :as component]
             [api.context :refer [transact!]]
             [api.effect :as effect]
@@ -28,8 +28,8 @@
  )
 
 ; => one to one attr!?
-(component/def :tx/spawn {:widget :text-field
-                          :schema [:qualified-keyword {:namespace :creatures}]}
+(component/def :effect/spawn {:widget :text-field
+                              :schema [:qualified-keyword {:namespace :creatures}]}
   creature-id
   (effect/text [_ _ctx]
                (str "Spawns a " (name creature-id)))
