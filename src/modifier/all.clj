@@ -4,7 +4,7 @@
             [core.component :as component]
             [data.val-max :refer [apply-max]]
             [api.modifier :as modifier]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 ; TODO add movement speed +/- modifier.
 

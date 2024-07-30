@@ -5,7 +5,7 @@
             [api.context :refer [get-property]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (def empty-inventory
   (->> #:inventory.slot{:bag      [6 4]

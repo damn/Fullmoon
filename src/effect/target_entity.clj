@@ -6,7 +6,7 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:entity/position entity*)

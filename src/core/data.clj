@@ -1,6 +1,6 @@
-(ns data.types
+(ns core.data
   (:require [malli.core :as m]
-            core.component
+            [core.component :as component]
             [data.val-max :refer [val-max-schema]]))
 
 ; this is 'value-types'
@@ -40,13 +40,13 @@
   {:widget :nested-map
    :schema (vec (concat [:map {:closed true}]
                         (for [k attr-ks]
-                          (vector k (or (:schema (get core.component/attributes k)) :some)))))})
+                          (vector k (or (:schema (get component/attributes k)) :some)))))})
 
 (defn components-attribute [component-namespace]
   (let [component-attributes (filter #(= (name component-namespace) (namespace %))
-                                     (keys core.component/attributes))]
+                                     (keys component/attributes))]
     {:widget :nested-map
      :schema (vec (concat [:map {:closed true}]
                           (for [k component-attributes]
-                            [k {:optional true} (or (:schema (get core.component/attributes k)) :some)])))
+                            [k {:optional true} (or (:schema (get component/attributes k)) :some)])))
      :components component-attributes})) ; => fetch from schema ? (optional? )

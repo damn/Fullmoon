@@ -4,7 +4,7 @@
             [utils.random :as random]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (defn- effective-armor-save [source* target*]
   (max (- (or (-> target* :entity/stats :stats/armor-save)   0)

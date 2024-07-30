@@ -3,7 +3,7 @@
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.entity :as entity]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement

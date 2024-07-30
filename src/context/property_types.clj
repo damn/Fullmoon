@@ -1,13 +1,11 @@
 (ns context.property-types
   (:require [clojure.string :as str]
-            [core.component :as component]
-            [utils.core :refer [readable-number]]
-            [api.context :as ctx :refer [modifier-text effect-text]]
-            ;; hardcoded
             [malli.core :as m]
             [malli.error :as me]
-            [data.types :as attr]
-
+            [utils.core :refer [readable-number]]
+            [core.component :as component]
+            [core.data :as attr]
+            [api.context :as ctx :refer [modifier-text effect-text]]
             effect.all
             entity.all
             modifier.all))
@@ -15,12 +13,12 @@
 (component/def :property/image       attr/image)
 (component/def :property/sound       attr/sound)
 (component/def :property/pretty-name attr/string-attr)
-
 (component/def :property/entity (attr/components-attribute :entity))
-(component/def :skill/effect (attr/components-attribute :effect))
-(component/def :hit-effect   (attr/components-attribute :effect))
-(component/def :item/modifier (attr/components-attribute :modifier))
 
+; component to text
+; modifier add/remove
+; item 'upgrade' colorless to sword fire
+(component/def :item/modifier (attr/components-attribute :modifier))
 (component/def :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
 
 (component/def :creature/species {:widget :label      :schema [:qualified-keyword {:namespace :species}]}) ; TODO not used ... but one of?
@@ -31,6 +29,9 @@
 (component/def :skill/action-time              attr/pos-attr)
 (component/def :skill/cooldown                 attr/nat-int-attr)
 (component/def :skill/cost                     attr/nat-int-attr)
+(component/def :skill/effect (attr/components-attribute :effect))
+
+(component/def :hit-effect   (attr/components-attribute :effect))
 
 (component/def :world/map-size       attr/pos-int-attr)
 (component/def :world/max-area-level attr/pos-int-attr) ; TODO <= map-size !?

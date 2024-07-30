@@ -5,7 +5,7 @@
             [data.val-max :refer [val-max-ratio]]
             [api.entity :as entity]
             [context.ui.config :refer (hpbar-height-px)]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]

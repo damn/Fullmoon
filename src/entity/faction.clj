@@ -1,7 +1,7 @@
 (ns entity.faction
   (:require [core.component :as component]
             [api.entity :as entity]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (component/def :entity/faction (attr/enum :good :evil))
 

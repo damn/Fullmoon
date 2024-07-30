@@ -3,7 +3,7 @@
             [utils.core :refer [readable-number]]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (component/def :effect/stun attr/pos-attr
   duration

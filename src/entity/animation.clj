@@ -2,7 +2,7 @@
   (:require [core.component :as component]
             [data.animation :as animation]
             [api.entity :as entity]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 (defn- tx-assoc-image-current-frame [{:keys [entity/id entity/animation]}]
   [:tx/assoc id :entity/image (animation/current-frame animation)])

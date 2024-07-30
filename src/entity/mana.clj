@@ -1,7 +1,7 @@
 (ns entity.mana
   (:require [core.component :as component]
             [api.entity :as entity]
-            [data.types :as attr]))
+            [core.data :as attr]))
 
 ; required @ npc state, for cost, check if nil
 (component/def :entity/mana attr/nat-int-attr
