@@ -1,6 +1,8 @@
 (ns screens.map-editor
   (:require [clojure.string :as str]
             [core.component :as component]
+            [utils.core :refer [->tile]]
+            ; api/
             [gdl.app :refer [change-screen!]]
             [gdl.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen]]
             [gdl.graphics :as g]
@@ -15,10 +17,9 @@
             [gdl.scene2d.ui.widget-group :refer [pack!]]
             [gdl.scene2d.ui.label :refer [set-text!]]
             [cdq.api.context :refer [get-property ->error-window]]
-            [utils.core :refer [->tile]]
+            ; hardcoded dependencies => pull out.
             [mapgen.movement-property :refer (movement-property movement-properties)]
-            [mapgen.module-gen :as module-gen]
-            screens.property-editor))
+            [mapgen.module-gen :as module-gen]))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -180,7 +181,9 @@ direction keys: move")
 (defn ->generate-map-window [ctx level-id]
   (->window ctx {:title "Properties"
                  :cell-defaults {:pad 10}
-                 :rows [[(->text-button ctx "Edit" #(screens.property-editor/open-property-editor-window! % level-id))]
+                 :rows [[(->label ctx (with-out-str
+                                       (clojure.pprint/pprint
+                                        (get-property ctx level-id))))]
                         [(->text-button ctx "Generate" #(try (generate % (get-property % level-id))
                                                              (catch Throwable t
                                                                (->error-window % t)

@@ -3,6 +3,7 @@
             [clojure.string :as str]
             [malli.core :as m]
             [core.component :as component]
+            ; api
             [gdl.app :as app :refer [change-screen!]]
             [gdl.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane]]
             [gdl.input.keys :as input.keys]
@@ -13,8 +14,9 @@
             [gdl.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [gdl.scene2d.ui.cell :refer [set-actor!]]
             [gdl.scene2d.ui.widget-group :refer [pack!]]
-            [context.properties :as properties]
-            [cdq.api.context :refer [get-property all-properties tooltip-text ->error-window]]))
+            [cdq.api.context :refer [get-property all-properties tooltip-text ->error-window]]
+            ; hardcoded -> pull out
+            [context.properties :as properties]))
 
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows
@@ -330,8 +332,8 @@
 (defn ->property-editor-window [{:keys [context/properties] :as context} id]
   (let [props (get-property context id)
         {:keys [title]} (get (:property-types properties)
-                             (context.properties/property->type (:property-types properties)
-                                                                    props))
+                             (properties/property->type (:property-types properties)
+                                                        props))
         window (->window context {:title (or title (name id))
                                   :modal? true
                                   :close-button? true

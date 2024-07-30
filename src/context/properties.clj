@@ -9,6 +9,9 @@
             [gdl.graphics.animation :as animation]
             [utils.core :refer [safe-get]]))
 
+; - property-type separate API -
+; with valiidate, property-type info, etc. ...
+
 (defn property->type [property-types property]
   (some (fn [[type {:keys [of-type?]}]]
           (when (of-type? property)

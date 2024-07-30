@@ -47,7 +47,11 @@
 
 (defprotocol PropertyStore
   (get-property [_ id])
-  (all-properties [_ type]))
+  (all-properties [_ type])
+  ; update!
+  ; delete!
+  ; property-type info get ('object type' ? )
+  )
 
 (defprotocol InventoryWindow
   (inventory-window [_])

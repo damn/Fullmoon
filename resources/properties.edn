@@ -4259,8 +4259,8 @@
   {:file "items/images.png", :sub-image-bounds [816 240 48 48]},
   :property/pretty-name "Heater Mystic Shield"}
  {:property/id :worlds/first-level,
-  :world/map-size 1,
-  :world/max-area-level 1,
+  :world/map-size 3,
+  :world/max-area-level 3,
   :world/princess :creatures/lady-a,
   :world/spawn-rate 0.05}
  {:entity/animation
