@@ -9,11 +9,11 @@
             [data.grid2d :as grid2d]
             [utils.core :refer [->tile tile->middle]]
             [api.context :as ctx :refer [explored? transact! transact-all! ray-blocked? content-grid world-grid]]
-            [cdq.world.grid :refer [create-grid]]
-            [cdq.world.content-grid :refer [->content-grid]]
-            cdq.world.render
-            [cdq.state.player :as player-state]
-            [cdq.state.npc :as npc-state]
+            [world.grid :refer [create-grid]]
+            [world.content-grid :refer [->content-grid]]
+            world.render
+            [state.player :as player-state]
+            [state.npc :as npc-state]
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
@@ -55,7 +55,7 @@
 (extend-type api.context.Context
   api.context/World
   (render-map [ctx]
-    (cdq.world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
+    (world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
 
   (line-of-sight? [context source* target*]
     (and (:entity/z-order target*)  ; is even an entity which renders something

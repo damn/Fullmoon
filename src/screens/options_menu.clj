@@ -9,7 +9,7 @@
             context.render-debug
             context.world
             screens.game
-            cdq.entity.body))
+            entity.body))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -39,7 +39,7 @@
 ; TODO add line of sight activate, shadows on/off, see through walls etc.
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 (def ^:private debug-flags (map ->debug-flag
-                                [#'cdq.entity.body/show-body-bounds
+                                [#'entity.body/show-body-bounds
                                  ;#'context.transaction-handler/record-txs?
                                  #'context.transaction-handler/debug-print-txs?
                                  #'context.render-debug/tile-grid?
@@ -50,7 +50,7 @@
                                  #'screens.game/pausing?
                                  #'context.world/los-checks?
                                  #'context.world/spawn-enemies?
-                                 #'cdq.world.render/see-all-tiles?]))
+                                 #'world.render/see-all-tiles?]))
 
 (defn- exit []
   (change-screen! :screens/game))

@@ -7,7 +7,7 @@
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
             [gdl.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [cdq.entity.inventory :as inventory]
+            [entity.inventory :as inventory]
             [api.entity :as entity]
             [api.state :as state])
   (:import com.badlogic.gdx.scenes.scene2d.Actor

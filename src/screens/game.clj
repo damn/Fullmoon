@@ -10,7 +10,7 @@
             [utils.core :refer [safe-get]]
             context.ui.actors
             [api.entity :as entity]
-            [cdq.entity.movement :as movement]
+            [entity.movement :as movement]
             [api.state :as state]
             [api.world.content-grid :refer [active-entities]]))
 
