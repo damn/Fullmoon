@@ -29,6 +29,7 @@
                                                :debug-windows? true
                                                :debug-options? true}}}]
 
+             [:context/property-types true]
              [:context/properties {:file "resources/properties.edn"}]
 
              ; strange when finds the namespace but wrong name @ component definition

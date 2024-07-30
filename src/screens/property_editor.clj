@@ -14,9 +14,7 @@
             [gdl.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [gdl.scene2d.ui.cell :refer [set-actor!]]
             [gdl.scene2d.ui.widget-group :refer [pack!]]
-            [cdq.api.context :refer [get-property all-properties tooltip-text ->error-window]]
-            ; hardcoded -> pull out
-            [context.properties :as properties]))
+            [cdq.api.context :refer [get-property all-properties tooltip-text ->error-window]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows
@@ -329,11 +327,19 @@
 
 ;;
 
-(defn ->property-editor-window [{:keys [context/properties] :as context} id]
+(defn- apply-context-fn [window f]
+  (fn [ctx]
+    (try
+     (swap! app/current-context f)
+     (remove! window)
+     (catch Throwable t
+       (->error-window ctx t)))))
+
+(defn ->property-editor-window [context id]
   (let [props (get-property context id)
-        {:keys [title]} (get (:property-types properties)
-                             (properties/property->type (:property-types properties)
-                                                        props))
+        {:keys [title]} (cdq.api.context/overview
+                         context
+                         (cdq.api.context/property->type context props))
         window (->window context {:title (or title (name id))
                                   :modal? true
                                   :close-button? true
@@ -341,15 +347,10 @@
                                   :close-on-escape? true
                                   :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group context props)
-        apply-context! (fn [f]
-                         (fn [ctx]
-                           (try
-                            (swap! app/current-context update :context/properties f)
-                            (remove! window)
-                            (catch Throwable t
-                              (->error-window ctx t)))))
-        save!   (apply-context! #(properties/update! % (attribute-widget-group->data widgets)))
-        delete! (apply-context! #(properties/delete! % id))]
+        save!   (apply-context-fn window
+                                  #(cdq.api.context/update! % (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window
+                                  #(cdq.api.context/delete! % id))]
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(->text-button context "Save" save!)
                                                       (->text-button context "Delete" delete!)]])]])
@@ -363,12 +364,12 @@
 (defn- ->overview-table
   "Creates a table with all-properties of property-type and buttons for each id
   which on-clicked calls clicked-id-fn."
-  [{:keys [context/properties] :as ctx} property-type clicked-id-fn]
+  [ctx property-type clicked-id-fn]
   (let [{:keys [title
                 sort-by-fn
                 extra-info-text
                 columns
-                image/dimensions]} (:overview (get (:property-types properties) property-type))
+                image/dimensions]} (cdq.api.context/overview ctx property-type)
         entities (all-properties ctx property-type)
         entities (if sort-by-fn
                    (sort-by sort-by-fn entities)
@@ -398,12 +399,12 @@
     (set-actor! (second (cells table)) widget)
     (pack! table)))
 
-(defn- ->left-widget [{:keys [context/properties] :as context}]
+(defn- ->left-widget [context]
   (->table context {:cell-defaults {:pad 5}
                     :rows (concat
-                           (for [[property-type {:keys [overview]}] (:property-types properties)]
+                           (for [property-type (cdq.api.context/property-types context)]
                              [(->text-button context
-                                             (:title overview)
+                                             (:title (cdq.api.context/overview context property-type))
                                              #(set-second-widget! % (->overview-table % property-type open-property-editor-window!)))])
                            [[(->text-button context "Back to Main Menu" (fn [_context]
                                                                           (change-screen! :screens/main-menu)))]])}))

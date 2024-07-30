@@ -45,13 +45,21 @@
   (update-potential-fields! [_ entities])
   (potential-field-follow-to-enemy [_ entity]))
 
+(defprotocol PropertyTypes
+  (of-type? [_ property-type property]
+            "Returns true if the property is of that type.")
+  (validate [_ property  & {:keys [humanize?]}]
+            "If property is valid as of defined types.")
+  (property->type [_ property])
+  (edn-file-sort-order [_ property-type])
+  (overview [_ property-type])
+  (property-types [_]))
+
 (defprotocol PropertyStore
   (get-property [_ id])
   (all-properties [_ type])
-  ; update!
-  ; delete!
-  ; property-type info get ('object type' ? )
-  )
+  (update! [_ property])
+  (delete! [_ id]))
 
 (defprotocol InventoryWindow
   (inventory-window [_])

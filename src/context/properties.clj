@@ -1,52 +1,19 @@
 (ns context.properties
   (:require [clojure.edn :as edn]
-            [clojure.string :as str]
             [core.component :as component]
-            [malli.core :as m]
-            [malli.error :as me]
             [gdl.context :as ctx :refer [get-sprite create-image]]
-            cdq.properties
             [gdl.graphics.animation :as animation]
             [utils.core :refer [safe-get]]))
 
-; - property-type separate API -
-; with valiidate, property-type info, etc. ...
+; internally we just call it 'ids->properties' or something ... not db....
 
-(defn property->type [property-types property]
-  (some (fn [[type {:keys [of-type?]}]]
-          (when (of-type? property)
-            type))
-        property-types))
+; TODO all data private -> can make record out of context later!!!
+; dont access internals of data structure ... ? ?
 
-(defn- property->text [{{:keys [property-types]} :context/properties :as ctx} property]
-  ((:->text (get property-types (property->type property-types property)))
-   ctx
-   property))
+; TODO also don't hardcode malli dependency ... don't hardcode anything
+; take it to its logical conclusion
 
-(extend-type gdl.context.Context
-  cdq.api.context/TooltipText
-  (tooltip-text [ctx property]
-    (try (->> property
-              (property->text ctx)
-              (remove nil?)
-              (str/join "\n"))
-         (catch Throwable t
-           (str t))))
 
-  (player-tooltip-text [ctx property]
-    (cdq.api.context/tooltip-text
-     (assoc ctx :effect/source (:context/player-entity ctx))
-     property)))
-
-;;
-
-(extend-type gdl.context.Context
-  cdq.api.context/PropertyStore
-  (get-property [{{:keys [db]} :context/properties} id]
-    (safe-get db id))
-
-  (all-properties [{{:keys [db property-types]} :context/properties} property-type]
-    (filter (:of-type? (get property-types property-type)) (vals db))))
 
 (require 'gdl.libgdx.context.image-drawer-creator)
 
@@ -105,37 +72,21 @@
        (#(if (:entity/animation (:property/entity %))
            (update-in % [:property/entity :entity/animation] serialize-animation) %))))
 
-(defn- validate [property-types property & {:keys [humanize?]}]
-  (let [ptype (property->type property-types property)]
-    (if-let [schema (:schema (get property-types ptype))]
-      (if (try (m/validate schema property)
-               (catch Throwable t
-                 (throw (ex-info "m/validate fail" {:property property :ptype ptype} t))))
-        property
-        (throw (Error. (let [explained (m/explain schema property)]
-                         (str (if humanize?
-                                (me/humanize explained)
-                                (binding [*print-level* nil]
-                                  (with-out-str
-                                   (clojure.pprint/pprint
-                                    explained)))))))))
-      property)))
 
-(defn- load-edn [context property-types file]
+
+(defn- load-edn [context file]
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
-         (map #(validate property-types %))
+         (map #(cdq.api.context/validate context %))
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
 (component/def :context/properties {}
   {:keys [file]}
   (ctx/create [_ ctx]
-    (let [property-types cdq.properties/property-types
-          properties {:file file
-                      :property-types property-types}]
-      (assoc properties :db (load-edn ctx property-types file)))))
+    {:file file
+     :db (load-edn ctx file)}))
 
 (defn- pprint-spit [file data]
   (binding [*print-level* nil]
@@ -144,23 +95,24 @@
          with-out-str
          (spit file))))
 
-(defn- sort-by-type [property-types properties-values]
+; property -> type -> type -> sort-order .....
+
+(defn- sort-by-type [ctx properties-values]
   (sort-by #(->> %
-                 (property->type property-types)
-                 property-types
-                 :edn-file-sort-order)
+                 (cdq.api.context/property->type ctx)
+                 (cdq.api.context/edn-file-sort-order ctx))
            properties-values))
 
 (def ^:private write-to-file? true)
 
-(defn- write-properties-to-file! [{:keys [db file property-types]}]
+(defn- write-properties-to-file! [{{:keys [db file]} :context/properties :as ctx}]
   (when write-to-file?
     (.start
      (Thread.
       (fn []
         (->> db
              vals
-             (sort-by-type property-types)
+             (sort-by-type ctx)
              (map serialize)
              (map #(into (sorted-map) %))
              (pprint-spit file)))))))
@@ -181,19 +133,28 @@
    nil)
  )
 
-(defn update! [{:keys [db property-types] :as properties}
-               {:keys [property/id] :as property}]
-  {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
-         (contains? db id)]}
-  (validate property-types property :humanize? true)
-  ;(binding [*print-level* nil] (clojure.pprint/pprint property))
-  (let [properties (update properties :db assoc id property)]
-    (write-properties-to-file! properties)
-    properties))
 
-(defn delete! [{:keys [db] :as properties}
-               property-id]
-  {:pre [(contains? db property-id)]}
-  (let [properties (update properties :db dissoc property-id)]
-    (write-properties-to-file! properties)
-    properties))
+(extend-type gdl.context.Context
+  cdq.api.context/PropertyStore
+  (get-property [{{:keys [db]} :context/properties} id]
+    (safe-get db id))
+
+  (all-properties [{{:keys [db]} :context/properties :as ctx} property-type]
+    (filter #(cdq.api.context/of-type? ctx property-type %) (vals db)))
+
+  (update! [{{:keys [db]} :context/properties :as ctx}
+            {:keys [property/id] :as property}]
+    {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
+           (contains? db id)]}
+    (cdq.api.context/validate ctx property :humanize? true)
+    ;(binding [*print-level* nil] (clojure.pprint/pprint property))
+    (let [new-ctx (update-in ctx [:context/properites :db] assoc id property)]
+      (write-properties-to-file! new-ctx)
+      new-ctx))
+
+  (delete! [{{:keys [db]} :context/properties :as ctx}
+            property-id]
+    {:pre [(contains? db property-id)]}
+    (let [new-ctx (update-in ctx [:context/properties :db] dissoc property-id)]
+      (write-properties-to-file! new-ctx)
+      new-ctx)))
