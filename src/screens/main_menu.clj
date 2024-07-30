@@ -10,8 +10,8 @@
             ;; hardcoded
 
             ;; common game ctx
+            context.ecs
             [context.counter :as counter]
-            [context.ecs :as ecs]
             [context.mouseover-entity :as mouseover-entity]
             [context.ui.player-message :as player-message]
 
@@ -27,17 +27,20 @@
 (defn- ->player-entity-context [ctx]
   {:context/player-entity (fetch-player-entity ctx)})
 
-; 1. move to app
-; 2. define game context or context system to 'reset-to-new-game' thingy
 (defn- reset-common-game-context! [ctx]
   (rebuild-inventory-widgets ctx)
   (reset-actionbar ctx)
-  (merge (ecs/->context)
+  (merge {:context/uids->entities (atom {})
+          :context/thrown-error (atom nil)
+          :context/game-paused? (atom nil)
+          :context/game-logic-frame (atom 0)
+          :context/render-on-map-order (utils.core/define-order [:z-order/on-ground
+                                                                 :z-order/ground
+                                                                 :z-order/flying
+                                                                 :z-order/effect])}
          (mouseover-entity/->context)
          (player-message/->context)
-         (counter/->context) ; = elapsed game time counter
-         {:context/game-paused? (atom nil)
-          :context/game-logic-frame (atom 0)}))
+         (counter/->context)))
 
 (defn- start-new-game [ctx tiled-level]
   (let [ctx (merge ctx

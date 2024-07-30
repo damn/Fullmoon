@@ -80,7 +80,7 @@
 
 (defn- update-game [{:keys [context/player-entity
                             context/game-paused?
-                            context.ecs/thrown-error
+                            context/thrown-error
                             context/game-logic-frame]
                      :as ctx}
                     active-entities]

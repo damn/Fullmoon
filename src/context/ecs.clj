@@ -3,7 +3,7 @@
             [core.component :as component :refer [update-map apply-system]]
             gdl.context
             [gdl.graphics :as g]
-            [utils.core :refer [define-order sort-by-order]]
+            [utils.core :refer [sort-by-order]]
             [cdq.api.entity :as entity :refer [map->Entity]]
             [cdq.api.context :refer [transact! transact-all! get-entity]]))
 
@@ -38,12 +38,12 @@
     (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
   nil)
 
-(defmethod transact! :tx/assoc-uids->entities [[_ entity] {::keys [uids->entities]}]
+(defmethod transact! :tx/assoc-uids->entities [[_ entity] {:keys [context/uids->entities]}]
   {:pre [(number? (:entity/uid @entity))]}
   (swap! uids->entities assoc (:entity/uid @entity) entity)
   nil)
 
-(defmethod transact! :tx/dissoc-uids->entities [[_ uid] {::keys [uids->entities]}]
+(defmethod transact! :tx/dissoc-uids->entities [[_ uid] {:keys [context/uids->entities]}]
   {:pre [(contains? @uids->entities uid)]}
   (swap! uids->entities dissoc uid)
   nil)
@@ -66,14 +66,14 @@
   (swap! entity assoc :entity/destroyed? true)
   nil)
 
-(defn- handle-entity-error! [{::keys [thrown-error] :as ctx} entity* throwable]
+(defn- handle-entity-error! [{:keys [context/thrown-error]} entity* throwable]
   (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
   (reset! thrown-error throwable))
 
 (defn- render-entity* [system
                        entity*
                        g
-                       {::keys [thrown-error] :as ctx}]
+                       {:keys [context/thrown-error] :as ctx}]
   (try
    (dorun (apply-system system entity* g ctx))
    (catch Throwable t
@@ -86,6 +86,7 @@
                      :y y
                      :up? true})))))
 
+; TODO similar with define-order --- same fns for z-order keyword ... same name make ?
 (def ^:private render-systems [entity/render-below
                                entity/render-default
                                entity/render-above
@@ -93,20 +94,20 @@
 
 (extend-type gdl.context.Context
   cdq.api.context/EntityComponentSystem
-  (all-entities [{::keys [uids->entities]}]
+  (all-entities [{:keys [context/uids->entities]}]
     (vals @uids->entities))
 
-  (get-entity [{::keys [uids->entities]} uid]
+  (get-entity [{:keys [context/uids->entities]} uid]
     (get @uids->entities uid))
 
-  (tick-entities! [{::keys [thrown-error] :as ctx} entities*]
+  (tick-entities! [{:keys [context/thrown-error] :as ctx} entities*]
     (doseq [entity* entities*]
       (try
        (apply-system-transact-all! ctx entity/tick entity*)
        (catch Throwable t
          (handle-entity-error! ctx entity* t)))))
 
-  (render-entities! [{::keys [render-on-map-order] :as context} g entities*]
+  (render-entities! [{:keys [context/render-on-map-order] :as context} g entities*]
     (doseq [entities* (map second ; FIXME lazy seq
                            (sort-by-order (group-by :entity/z-order entities*)
                                           first
@@ -117,14 +118,6 @@
     (doseq [entity* entities*]
       (render-entity* entity/render-debug entity* g context)))
 
-  (remove-destroyed-entities! [{::keys [uids->entities] :as ctx}]
+  (remove-destroyed-entities! [{:keys [context/uids->entities] :as ctx}]
     (doseq [entity (filter (comp :entity/destroyed? deref) (vals @uids->entities))]
       (apply-system-transact-all! ctx entity/destroy @entity))))
-
-(defn ->context []
-  {::uids->entities (atom {})
-   ::thrown-error (atom nil)
-   ::render-on-map-order (define-order [:z-order/on-ground
-                                        :z-order/ground
-                                        :z-order/flying
-                                        :z-order/effect])})

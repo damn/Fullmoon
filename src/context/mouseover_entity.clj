@@ -5,7 +5,7 @@
             [cdq.api.world.grid :refer [point->entities]]))
 
 (defn- calculate-mouseover-entity [{:keys [context/player-entity
-                                           context.ecs/render-on-map-order]
+                                           context/render-on-map-order]
                                     :as context}]
   (assert render-on-map-order)
   (let [hits (filter #(:entity/z-order @%)

@@ -14,7 +14,7 @@
 
 (defn- debug-infos [{:keys [context/game-paused?
                             context/player-entity
-                            context.ecs/thrown-error
+                            context/thrown-error
                             context/elapsed-game-time
                             context/game-logic-frame]
                      :as ctx}]
