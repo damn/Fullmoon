@@ -9,6 +9,10 @@
          :height 900
          :full-screen? false
          :fps 60}
+   ; TODO forgot to add component w. create for property-types
+   ; => all have to defined as components??? those w.o data ??? return nil???
+   ; => remove 'if's from core.component ... specify outer layer
+   ; pull stuff out.....
    :context [[:gdl.libgdx.context/graphics {:tile-size 48
                                             :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
              [:gdl.libgdx.context/assets true]

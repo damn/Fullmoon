@@ -78,7 +78,7 @@
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
-         (map #(cdq.api.context/validate context %))
+         (map #(cdq.api.context/validate context % {}))
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
@@ -146,9 +146,9 @@
             {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
            (contains? db id)]}
-    (cdq.api.context/validate ctx property :humanize? true)
+    (cdq.api.context/validate ctx property {:humanize? true})
     ;(binding [*print-level* nil] (clojure.pprint/pprint property))
-    (let [new-ctx (update-in ctx [:context/properites :db] assoc id property)]
+    (let [new-ctx (update-in ctx [:context/properties :db] assoc id property)]
       (write-properties-to-file! new-ctx)
       new-ctx))
 

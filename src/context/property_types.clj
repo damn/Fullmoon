@@ -4,6 +4,7 @@
             [malli.error :as me]
             [core.component :as component]
             [utils.core :refer [readable-number]]
+            [gdl.context :as ctx]
             [cdq.api.context :refer [modifier-text effect-text]]
             [cdq.attributes :as attr]
             cdq.tx.all
@@ -70,7 +71,7 @@
 (def ^:private effect-color "[CHARTREUSE]")
 (def ^:private modifier-color "[VIOLET]")
 
-(def ^:private property-types
+(def ^:private property-types-raw
   {:property.type/creature {:of-type? :creature/species
                             :edn-file-sort-order 1
                             :title "Creature"
@@ -185,10 +186,12 @@
                                    :columns 10
                                    :image/dimensions [96 96]}}})
 
-
+(component/def :context/property-types {}
+  _
+  (ctx/create [_ _ctx] property-types-raw))
 
 (defn- property->text [{:keys [context/property-types] :as ctx} property]
-  ((:->text (get property-types (property->type property-types property)))
+  ((:->text (get property-types (cdq.api.context/property->type ctx property)))
    ctx
    property))
 
@@ -218,8 +221,8 @@
     ((:of-type? (get property-types property-type))
      property))
 
-  (validate [{:keys [context/property-types]} property & {:keys [humanize?]}]
-    (let [ptype (property->type property-types property)]
+  (validate [{:keys [context/property-types] :as ctx} property {:keys [humanize?]}]
+    (let [ptype (cdq.api.context/property->type ctx property)]
       (if-let [schema (:schema (get property-types ptype))]
         (if (try (m/validate schema property)
                  (catch Throwable t
