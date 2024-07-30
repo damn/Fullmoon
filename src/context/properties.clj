@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn]
             [core.component :as component]
             [api.context :as ctx :refer [get-sprite create-image]]
-            [gdl.graphics.animation :as animation]
+            [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
 ; internally we just call it 'ids->properties' or something ... not db....

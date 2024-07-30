@@ -3,7 +3,7 @@
             [utils.core :refer [readable-number]]
             [api.context :refer [transact!]]
             [api.effect :as effect]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (component/def :tx/stun attr/pos-attr
   duration

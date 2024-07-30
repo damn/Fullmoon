@@ -3,7 +3,7 @@
             [gdl.graphics :as g]
             [gdl.graphics.color :as color]
             [api.entity :as entity]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement

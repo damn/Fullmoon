@@ -1,5 +1,5 @@
 (ns entity.reaction-time
   (:require [core.component :as component]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (component/def :entity/reaction-time attr/pos-attr)

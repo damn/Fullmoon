@@ -1,7 +1,7 @@
 (ns tx.sound
   (:require [core.component :as component]
             [api.context :refer [play-sound! transact!]]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (component/def :tx/sound attr/sound
   file

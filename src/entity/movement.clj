@@ -5,7 +5,7 @@
             [api.context :refer [world-grid]]
             [entity.body :as body]
             [api.world.grid :refer [valid-position?]]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (def max-delta-time 0.04)
 

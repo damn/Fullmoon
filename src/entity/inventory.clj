@@ -4,7 +4,7 @@
             [utils.core :refer [find-first]]
             [api.context :refer [get-property]]
             [api.entity :as entity]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (def empty-inventory
   (->> #:inventory.slot{:bag      [6 4]

@@ -5,7 +5,7 @@
             [api.context :refer [transact! effect-text line-of-sight? line-entity]]
             [api.effect :as effect]
             [api.entity :as entity]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:entity/position entity*)

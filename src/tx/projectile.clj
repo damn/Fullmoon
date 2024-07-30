@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [core.component :as component]
             [gdl.math.vector :as v]
-            [gdl.graphics.animation :as animation]
+            [data.animation :as animation]
             [api.context :refer [get-sprite spritesheet transact! effect-text path-blocked?]]
             [api.effect :as effect]))
 

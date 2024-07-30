@@ -1,6 +1,6 @@
 (ns entity.stats
   (:require [core.component :as component]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (component/def :stats/strength attr/nat-int-attr)
 

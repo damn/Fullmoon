@@ -6,7 +6,7 @@
             ;; hardcoded
             [malli.core :as m]
             [malli.error :as me]
-            [cdq.attributes :as attr]
+            [data.types :as attr]
 
             tx.all
             entity.all

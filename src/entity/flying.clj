@@ -1,5 +1,5 @@
 (ns entity.flying
   (:require [core.component :as component]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 (component/def :entity/flying? attr/boolean-attr) ; optional, mixed with z-order

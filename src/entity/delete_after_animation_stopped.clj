@@ -1,6 +1,6 @@
 (ns entity.delete-after-animation-stopped
   (:require [core.component :as component]
-            [gdl.graphics.animation :as animation]
+            [data.animation :as animation]
             [api.entity :as entity]))
 
 (component/def :entity/delete-after-animation-stopped? {}

@@ -3,7 +3,7 @@
             [data.val-max :refer [apply-val]]
             [api.context :refer [get-property valid-params? ->counter stopped?]]
             [api.entity :as entity]
-            [cdq.attributes :as attr]))
+            [data.types :as attr]))
 
 ; FIXME starting skills do not trigger tx/actionbar-add-skill
 ; https://trello.com/c/R6GSIDO1/363

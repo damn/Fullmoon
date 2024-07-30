@@ -31,7 +31,7 @@
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
                   (instance? gdl.libgdx.context.image_drawer_creator.Image %) "<Image>"
-                  (instance? gdl.graphics.animation.ImmutableAnimation %) "<Animation>"
+                  (instance? data.animation.ImmutableAnimation %) "<Animation>"
                   (instance? api.context.Context %) "<Context>"
                   :else %)
                 tx)))
