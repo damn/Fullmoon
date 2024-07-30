@@ -1,11 +1,13 @@
 (ns screens.main-menu
   (:require [core.component :as component]
+            [utils.core :refer [safe-get tile->middle]]
+            ;; api
             [gdl.app :refer [current-context change-screen!]]
             [gdl.context :as ctx :refer [exit-app ->text-button key-just-pressed? ->table ->actor ->tiled-map]]
             [gdl.input.keys :as input.keys]
             [gdl.screen :as screen]
-            [utils.core :refer [safe-get tile->middle]]
             [cdq.api.context :refer [get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
+            ;; hardcoded
             [context.counter :as counter]
             [context.ecs :as ecs]
             [context.mouseover-entity :as mouseover-entity]
@@ -14,12 +16,9 @@
             [context.world :as world]
             mapgen.module-gen))
 
-(defn- all-entities [ctx]
-  (vals @(:context.ecs/uids->entities ctx))) ; move to ecs
-
 (defn- fetch-player-entity [ctx]
   {:post [%]}
-  (first (filter #(:entity/player? @%) (all-entities ctx))))
+  (first (filter #(:entity/player? @%) (cdq.api.context/all-entities ctx))))
 
 (def ^:private z-orders [:z-order/on-ground
                          :z-order/ground
@@ -53,7 +52,7 @@
   (txs/set-record-txs! false)
   ; remove entity connections to world grid/content-grid,
   ; otherwise all entities removed with reset-common-game-context!
-  (transact-all! ctx (for [e (all-entities ctx)] [:tx/destroy e]))
+  (transact-all! ctx (for [e (cdq.api.context/all-entities ctx)] [:tx/destroy e]))
   (remove-destroyed-entities! ctx)
   (let [ctx (merge ctx (reset-common-game-context! ctx))] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
