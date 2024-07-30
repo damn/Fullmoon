@@ -1,7 +1,5 @@
 (ns app
-  (:require [app.libgdx.app :as app]
-            (context.ui player-modal
-                        error-modal)))
+  (:require [app.libgdx.app :as app]))
 
 (def ^:private app-config
   {:app {:title "Cyber Dungeon Quest"
@@ -68,6 +66,9 @@
                                           :screens/property-editor true}}]
 
              [:tx/sound true]
+             [:tx/player-modal true]
+
+             [:context/error-modal true]
 
              ; game
              ;[:context/ecs]

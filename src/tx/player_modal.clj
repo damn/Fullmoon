@@ -1,4 +1,4 @@
-(ns context.ui.player-modal
+(ns tx.player-modal
   (:require [api.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
             [api.scene2d.actor :refer [remove!]]))
 

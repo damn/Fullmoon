@@ -1,4 +1,4 @@
-(ns context.ui.error-modal
+(ns context.error-modal
   (:require [api.context :refer [->window ->label add-to-stage!]]))
 
 (extend-type api.context.Context
