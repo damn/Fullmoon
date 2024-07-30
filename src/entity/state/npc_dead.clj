@@ -1,4 +1,4 @@
-(ns state.npc-dead
+(ns entity.state.npc-dead
   (:require [api.state :as state]))
 
 (defrecord NpcDead []

@@ -1,11 +1,11 @@
-(ns state.npc
+(ns entity.state.npc
   (:require [reduce-fsm :as fsm]
-            (state [active-skill :as active-skill]
-                       [npc-dead :as dead]
-                       [npc-idle :as idle]
-                       [npc-moving :as moving]
-                       [npc-sleeping :as sleeping]
-                       [stunned :as stunned])))
+            (entity.state [active-skill :as active-skill]
+                          [npc-dead :as dead]
+                          [npc-idle :as idle]
+                          [npc-moving :as moving]
+                          [npc-sleeping :as sleeping]
+                          [stunned :as stunned])))
 
 (fsm/defsm-inc ^:private fsm
   [[:sleeping

@@ -12,8 +12,8 @@
             [world.grid :refer [create-grid]]
             [world.content-grid :refer [->content-grid]]
             world.render
-            [state.player :as player-state]
-            [state.npc :as npc-state]
+            [entity.state.player :as player-state]
+            [entity.state.npc :as npc-state]
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]

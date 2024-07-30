@@ -1,4 +1,4 @@
-(ns state.npc-idle
+(ns entity.state.npc-idle
   (:require [api.context :refer [effect-useful? world-grid potential-field-follow-to-enemy skill-usable-state]]
             [api.entity :as entity]
             [api.state :as state]

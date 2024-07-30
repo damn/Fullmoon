@@ -1,4 +1,4 @@
-(ns state.player-moving
+(ns entity.state.player-moving
   (:require [utils.wasd-movement :refer [WASD-movement-vector]]
             [api.state :as state]))
 

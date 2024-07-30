@@ -2,7 +2,7 @@
   (:require [core.component :as component]
             [api.context :refer [transact!]]
             [api.effect :as effect]
-            [state.npc :as npc-state]))
+            [entity.state.npc :as npc-state]))
 
 ; TODO spawning on player both without error ?! => not valid position checked
 ; also what if someone moves on the target posi ? find nearby valid cell ?

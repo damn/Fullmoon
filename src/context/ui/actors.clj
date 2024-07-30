@@ -12,7 +12,7 @@
             [context.ui.help-window :as help-window]
             [context.ui.entity-info-window :as entity-info-window]
             [context.ui.skill-window :as skill-window]
-            [state.player-item-on-cursor :refer [draw-item-on-cursor]]))
+            [entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]))
 
 (defn- ->item-on-cursor-actor [context]
   (->actor context {:draw draw-item-on-cursor}))

@@ -1,4 +1,4 @@
-(ns state.npc-sleeping
+(ns entity.state.npc-sleeping
   (:require [api.graphics :as g]
             [api.graphics.color :as color]
             [api.context :refer [world-grid ->counter]]

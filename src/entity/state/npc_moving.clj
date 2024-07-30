@@ -1,4 +1,4 @@
-(ns state.npc-moving
+(ns entity.state.npc-moving
   (:require [api.context :refer [stopped? ->counter]]
             [api.state :as state]))
 

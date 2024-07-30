@@ -1,4 +1,4 @@
-(ns state.player-idle
+(ns entity.state.player-idle
   (:require [api.graphics :as g]
             [api.input.buttons :as buttons]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]

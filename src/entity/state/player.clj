@@ -1,12 +1,12 @@
-(ns state.player
+(ns entity.state.player
   (:require [reduce-fsm :as fsm]
-            (state [active-skill :as active-skill]
-                       [player-dead :as dead]
-                       [player-found-princess :as found-princess]
-                       [player-idle :as idle]
-                       [player-item-on-cursor :as item-on-cursor]
-                       [player-moving :as moving]
-                       [stunned :as stunned])))
+            (entity.state [active-skill :as active-skill]
+                          [player-dead :as dead]
+                          [player-found-princess :as found-princess]
+                          [player-idle :as idle]
+                          [player-item-on-cursor :as item-on-cursor]
+                          [player-moving :as moving]
+                          [stunned :as stunned])))
 
 (fsm/defsm-inc ^:private fsm
   [[:idle

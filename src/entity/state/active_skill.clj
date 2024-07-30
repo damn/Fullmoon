@@ -1,4 +1,4 @@
-(ns state.active-skill
+(ns entity.state.active-skill
   (:require [api.graphics :as g]
             [data.val-max :refer [apply-val]]
             [api.context :refer [valid-params? effect-render-info stopped? finished-ratio ->counter]]

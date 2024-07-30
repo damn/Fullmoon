@@ -1,8 +1,8 @@
-(ns state.player-found-princess
+(ns entity.state.player-dead
   (:require [app.state :refer [change-screen!]]
             [api.state :as state]))
 
-(defrecord PlayerFoundPrincess []
+(defrecord PlayerDead []
   state/PlayerState
   (player-enter [_] [[:tx/cursor :cursors/black-x]])
   (pause-game? [_] true)
@@ -12,10 +12,10 @@
 
   state/State
   (enter [_ _entity* _ctx]
-    [[:tx/sound "sounds/bfxr_playerdeath.wav"]
-     [:tx/player-modal {:title "YOU WON!"
-                        :text "\nYou found the princess!"
-                        :button-text ":)"
+    [[:tx/sound  "sounds/bfxr_playerdeath.wav"]
+     [:tx/player-modal {:title "YOU DIED"
+                        :text "\nGood luck next time"
+                        :button-text ":("
                         :on-click (fn [_ctx]
                                     (change-screen! :screens/main-menu))}]])
   (exit [_ entity* _ctx])
