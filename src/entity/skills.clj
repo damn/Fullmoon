@@ -3,6 +3,7 @@
             [data.val-max :refer [apply-val]]
             [api.context :refer [get-property valid-params? ->counter stopped?]]
             [api.entity :as entity]
+            [api.tx :refer [transact!]]
             [data.types :as attr]))
 
 ; FIXME starting skills do not trigger tx/actionbar-add-skill
