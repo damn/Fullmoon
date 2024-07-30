@@ -6,7 +6,11 @@
             ;; hardcoded
             [malli.core :as m]
             [malli.error :as me]
-            [cdq.attributes :as attr]))
+            [cdq.attributes :as attr]
+
+            cdq.tx.all
+            cdq.entity.all
+            cdq.modifier.all))
 
 (component/def :property/image       attr/image)
 (component/def :property/sound       attr/sound)

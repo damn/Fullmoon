@@ -5,8 +5,8 @@
 
 (extend-type api.context.Context
   api.context/Cursor
-  (set-cursor! [{:keys [context/cursor] :as ctx} cursor-key]
-    (api.context/set-cursor! ctx (safe-get cursor cursor-key))))
+  (set-cursork! [{:keys [context/cursor] :as ctx} cursor-key]
+    (ctx/set-cursor! ctx (safe-get cursor cursor-key))))
 
 (def ^:private cursors
   {:cursors/default ["default" 0 0]
@@ -38,5 +38,5 @@
       cursors)))
 
 (defmethod api.context/transact! :tx/cursor [[_ cursor-key] ctx]
-  (api.context/set-cursor! ctx cursor-key)
+  (ctx/set-cursork! ctx cursor-key)
   nil)

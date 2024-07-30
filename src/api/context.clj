@@ -183,7 +183,7 @@
   (debug-render-after-entities  [_ g]))
 
 (defprotocol Cursor
-  (set-cursor! [_ cursor-key]))
+  (set-cursork! [_ cursor-key]))
 
 (defprotocol TooltipText
   (tooltip-text [_ property])

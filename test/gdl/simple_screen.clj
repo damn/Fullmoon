@@ -1,6 +1,6 @@
 (ns gdl.simple-screen
   (:require [core.component :as component]
-            [gdl.context :as ctx]
+            [api.context :as ctx]
             [gdl.graphics :as g]
             [gdl.screen :as screen]
             [gdl.graphics.color :as color]))

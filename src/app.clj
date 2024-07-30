@@ -33,9 +33,6 @@
                                                :debug-windows? true
                                                :debug-options? true}}}]
 
-             [:cdq.tx/all true]
-             [:cdq.entity/all true]
-             [:cdq.modifier/all true]
              [:context/property-types true]
              [:context/properties {:file "resources/properties.edn"}]
 

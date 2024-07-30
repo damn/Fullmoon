@@ -1,7 +1,7 @@
 (ns screens.game
   (:require [core.component :as component]
             [gdl.app :refer [change-screen!]]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursor! transact-all! frame->txs windows id->window]]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursork! transact-all! frame->txs windows id->window]]
             [gdl.graphics :as g]
             [gdl.graphics.camera :as camera]
             [gdl.screen :as screen :refer [Screen]]
@@ -119,7 +119,7 @@
   (show [_ _context])
 
   (hide [_ ctx]
-    (set-cursor! ctx :cursors/default))
+    (set-cursork! ctx :cursors/default))
 
   (render [_ {:keys [context/player-entity
                      context/replay-mode?] :as context}]

@@ -119,6 +119,14 @@
   (doseq [[k _] components
           :let [component-ns (k->component-ns k)]]
     (require component-ns)
+    ; tools namespace doesn't load them in right order, if we are asserting order of component matters, we need to reload them.
+    ; but this is quite though because then so much loading
+    ; or those which just define components which are used somewhere else we might pass a :reload flag there ???
+
+    ; TODO force reload fucks up other stuff !!!  ???
+
+    ; this has to work ... shit !
+
     (assert (find-ns component-ns)
             (str "Cannot find component namespace " component-ns))))
 
