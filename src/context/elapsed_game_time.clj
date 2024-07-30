@@ -1,4 +1,4 @@
-(ns context.counter
+(ns context.elapsed-game-time
   (:require gdl.context
             [cdq.api.context :refer [stopped?]]))
 

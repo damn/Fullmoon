@@ -1,4 +1,4 @@
-(ns context.ui.player-message
+(ns context.player-message
   (:require [gdl.context :as ctx :refer [->actor delta-time]]
             [gdl.graphics :as g]
             cdq.api.context))
@@ -23,7 +23,7 @@
       (reset! player-message nil))))
 
 (defmethod cdq.api.context/transact! :tx/msg-to-player [[_ message]
-                                                    {:keys [context/player-message]}]
+                                                        {:keys [context/player-message]}]
   (reset! player-message {:message message :counter 0})
   nil)
 

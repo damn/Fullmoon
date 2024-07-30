@@ -11,9 +11,15 @@
 
             ;; common game ctx
             context.ecs
-            context.counter
+
+            context.uids->entities ; 1. problem '->'
+            context.thrown-error
+            context.game-paused? ; 2. problem '?'
+            context.game-logic-frame
+
+            context.elapsed-game-time
             context.mouseover-entity
-            context.ui.player-message
+            context.player-message
 
             ;; other ctx
             [context.transaction-handler :as txs]
