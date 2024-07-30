@@ -77,27 +77,21 @@
     :layout :horizontal
     ;:cluster-depth 3
     :external false
-    :ignore #{;"app"
-              ;"cdq.context.screens"
-              "cdq.screens.map-editor"
-              "cdq.screens.property-editor"
-              "cdq.context.properties"
-              "cdq.properties"
-              "cdq.screens.main-menu"
-              "cdq.screens.options-menu"
+    :ignore #{"screens.options-menu"
+              "screens.main-menu"
+              "app"
+              "screens.game"
               "cdq.tx.all"
-              "cdq.entity.all"
-              "cdq.screens.game"
-              "cdq.context.world"
-              "cdq.context.ui.actors"
-              "cdq.state.player"
-              "cdq.state.npc"
+              "context.world"
               "cdq.tx.spawn"
-              "cdq.entity.movement"
-              "cdq.context.inventory-window"
-              "mapgen.module-gen"
-              "cdq.state.player-item-on-cursor"
+              "context.ui.actors"
+              "cdq.entity.all"
+              "cdq.state.player"
+              "gdl.libgdx.app"
+              "cdq.state.npc"
               }}))
+
+ ; TODO I can also just see which namespaces have the most dependencies ... (on non-API namespaces !!!)
 
  ; => only focus on this - to de-tangle everything, pull things out , only depend on API's
  ; e.g. screens.map-editor -> screens.property-editor
