@@ -2,7 +2,7 @@
   (:require [core.component :as component]
             [gdl.app :refer [current-context]]
             [api.context :as ctx]
-            [gdl.context.screens :as screens]
+            [context.screens :as screens]
             gdl.disposable
             [gdl.graphics.color :as color]
             [gdl.libgdx.context.graphics :as graphics])

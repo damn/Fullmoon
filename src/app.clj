@@ -13,6 +13,9 @@
    ; => all have to defined as components??? those w.o data ??? return nil???
    ; => remove 'if's from core.component ... specify outer layer
    ; pull stuff out.....
+
+   ; TODO !!
+   ; make without slash ... then can directly grep n-name and find this too ! missed some !
    :context [[:gdl.libgdx.context/graphics {:tile-size 48
                                             :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
              [:gdl.libgdx.context/assets true]
@@ -56,13 +59,13 @@
              ; make asserts .... for all dependencies ... everywhere o.o
              [:context/background-image "ui/moon_background.png"]
 
-             [:gdl.context/screens {:first-screen :screens/main-menu
-                                    :screens {:screens/game           true
-                                              :screens/main-menu      true
-                                              :screens/map-editor     true
-                                              :screens/minimap        true
-                                              :screens/options-menu   true
-                                              :screens/property-editor true}}]
+             [:context/screens {:first-screen :screens/main-menu
+                                :screens {:screens/game           true
+                                          :screens/main-menu      true
+                                          :screens/map-editor     true
+                                          :screens/minimap        true
+                                          :screens/options-menu   true
+                                          :screens/property-editor true}}]
 
              ; game
              ;[:context/ecs]

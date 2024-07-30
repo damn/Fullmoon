@@ -18,8 +18,8 @@
                         [:gdl.libgdx.context/assets true]
                         [:gdl.libgdx.context/image-drawer-creator true]
                         [:gdl.libgdx.context/ui true]
-                        [:gdl.context/screens {:first-screen :gdl/simple-screen
-                                               :screens {:gdl/simple-screen true}}]
+                        [:context/screens {:first-screen :gdl/simple-screen
+                                           :screens {:gdl/simple-screen true}}]
                         [:gdl/simple {:logo "logo.png"
                                       :font {:file "exocet/films.EXL_____.ttf"
                                              :size 16}}]]}))
