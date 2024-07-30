@@ -62,7 +62,18 @@
                                               :screens/map-editor     true
                                               :screens/minimap        true
                                               :screens/options-menu   true
-                                              :screens/property-editor true}}]]})
+                                              :screens/property-editor true}}]
+
+             ; game
+             ;[:context/ecs]
+             ;[:context/mouseover-entity]
+             ;[:context/player-message]
+             ;[:context/counter]
+             ;[:context/game-paused?] ; (atom nil)
+             ;[:context/game-logic-frame] ; (atom 0)
+
+
+             ]})
 
 (defn -main []
   (app/start app-config))

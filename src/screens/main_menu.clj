@@ -8,10 +8,14 @@
             [gdl.screen :as screen]
             [cdq.api.context :refer [get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
             ;; hardcoded
+
+            ;; common game ctx
             [context.counter :as counter]
             [context.ecs :as ecs]
             [context.mouseover-entity :as mouseover-entity]
             [context.ui.player-message :as player-message]
+
+            ;; other ctx
             [context.transaction-handler :as txs]
             [context.world :as world]
             mapgen.module-gen))

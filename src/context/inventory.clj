@@ -154,3 +154,5 @@
                                   :rows [[{:actor table :pad 2}]]})
        :slot->background (slot->background context)
        :table table})))
+
+; (rebuild-inventory-widgets ctx)
