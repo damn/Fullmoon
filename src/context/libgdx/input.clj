@@ -1,8 +1,8 @@
-(ns ^:no-doc gdl.libgdx.context.input
+(ns ^:no-doc context.libgdx.input
   (:require api.context
             api.input.keys
             api.input.buttons
-            [gdl.libgdx.utils.reflect :refer [bind-roots]])
+            [libgdx.utils.reflect :refer [bind-roots]])
   (:import (com.badlogic.gdx Gdx Input$Buttons Input$Keys)))
 
 (extend-type api.context.Context

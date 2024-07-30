@@ -63,7 +63,7 @@
      :height (min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
 
 (comment
- (let [ctx @gdl.app/current-context
+ (let [ctx @app.state/current-context
        entity (api.context/get-entity ctx 2)
        ]
 
@@ -88,7 +88,7 @@
     avar))
 
 (comment
- (gdl.libgdx.dev/restart!)
+ (libgdx.dev/restart!)
 
  (spit "app-values-tree.clj"
        (with-out-str
@@ -101,7 +101,7 @@
 
 
  (require '[api.context :refer [get-entity]])
- (let [entity* @(get-entity @gdl.app/current-context 49)]
+ (let [entity* @(get-entity @app.state/current-context 49)]
    (:mana entity*)
    )
 
@@ -113,7 +113,7 @@
  ; and make for entities/cells too !
  ; and cells no atoms! grid! I change multiple at once ...
  ; maybe only add elements on click -> somehow glyphlayout breaks AFTER this returns successfully
- (let [ctx @gdl.app/current-context
+ (let [ctx @app.state/current-context
 
        position (ctx/world-mouse-position ctx)
        cell (get (api.context/world-grid ctx) (mapv int position))

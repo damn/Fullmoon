@@ -1,4 +1,4 @@
-(ns ^:no-doc gdl.libgdx.context.ttf-generator
+(ns ^:no-doc context.libgdx.ttf-generator
   "Convinience clojure constructor for the java
   com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator class."
   (:require api.context)

@@ -1,5 +1,5 @@
 (ns context.transaction-handler
-  (:require gdl.libgdx.context.image-drawer-creator
+  (:require context.libgdx.image-drawer-creator
             [api.context :refer [transact! transact-all!]]))
 
 (def ^:private record-txs? false)
@@ -30,7 +30,7 @@
 (defn- debug-print-tx [tx]
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
-                  (instance? gdl.libgdx.context.image_drawer_creator.Image %) "<Image>"
+                  (instance? context.libgdx.image_drawer_creator.Image %) "<Image>"
                   (instance? data.animation.ImmutableAnimation %) "<Animation>"
                   (instance? api.context.Context %) "<Context>"
                   :else %)

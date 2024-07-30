@@ -1,4 +1,4 @@
-(ns ^:no-doc gdl.libgdx.context.graphics
+(ns ^:no-doc context.libgdx.graphics
   (:require [clojure.string :as str]
             [core.component :as component]
             [api.context :as ctx]
@@ -6,8 +6,8 @@
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
-            gdl.libgdx.context.ttf-generator ; TODO
-            [gdl.libgdx.utils.reflect :refer [bind-roots]])
+            context.libgdx.ttf-generator ; TODO
+            [libgdx.utils.reflect :refer [bind-roots]])
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format OrthographicCamera)
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch BitmapFont TextureRegion)
@@ -18,7 +18,7 @@
            space.earlygrey.shapedrawer.ShapeDrawer
            [gdl OrthogonalTiledMapRendererWithColorSetter ColorSetter]))
 
-(defn- this [ctx] (:gdl.libgdx.context/graphics ctx))
+(defn- this [ctx] (:context.libgdx/graphics ctx))
 
 (extend-type api.context.Context
   api.context/Graphics
@@ -222,12 +222,12 @@
                              #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
-(defn update-viewports [{{:keys [gui-viewport world-viewport]} :gdl.libgdx.context/graphics} w h]
+(defn update-viewports [{{:keys [gui-viewport world-viewport]} :context.libgdx/graphics} w h]
   (.update ^Viewport gui-viewport w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update ^Viewport world-viewport w h false))
 
-(defn- viewport-fix-required? [{{:keys [^Viewport gui-viewport]} :gdl.libgdx.context/graphics}]
+(defn- viewport-fix-required? [{{:keys [^Viewport gui-viewport]} :context.libgdx/graphics}]
   (or (not= (.getScreenWidth  gui-viewport) (screen-width))
       (not= (.getScreenHeight gui-viewport) (screen-height))))
 
@@ -354,7 +354,7 @@
 ; TODO BitmapFont does not draw world-unit-scale idk how possible, maybe setfontdata something
 ; (did draw world scale @ test ...)
 ; TODO optional world-viewport make
-(component/def :gdl.libgdx.context/graphics {}
+(component/def :context.libgdx/graphics {}
   _
   (ctx/create [[_ {:keys [tile-size default-font]}] ctx]
     (let [batch (SpriteBatch.)]

@@ -1,5 +1,5 @@
 (ns app
-  (:require [gdl.libgdx.app :as app]
+  (:require [libgdx.app :as app]
             (context.ui player-modal
                         error-modal)))
 
@@ -16,15 +16,15 @@
 
    ; TODO !!
    ; make without slash ... then can directly grep n-name and find this too ! missed some !
-   :context [[:gdl.libgdx.context/graphics {:tile-size 48
-                                            :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
-             [:gdl.libgdx.context/assets true]
-             [:gdl.libgdx.context/ui true]
-             [:gdl.libgdx.context/input true]
-             [:gdl.libgdx.context/image-drawer-creator true]
-             [:gdl.libgdx.context/stage true]
-             [:gdl.libgdx.context/tiled true]
-             [:gdl.libgdx.context/ttf-generator true]
+   :context [[:context.libgdx/graphics {:tile-size 48
+                                        :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
+             [:context.libgdx/assets true]
+             [:context.libgdx/ui true]
+             [:context.libgdx/input true]
+             [:context.libgdx/image-drawer-creator true]
+             [:context.libgdx/stage true]
+             [:context.libgdx/tiled true]
+             [:context.libgdx/ttf-generator true]
 
              [:context/config {:tag :dev
                                :configs {:prod {:map-editor? false

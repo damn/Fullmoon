@@ -3,7 +3,7 @@
             [core.component :as component]
             [utils.core :refer [->tile]]
             ; api/
-            [gdl.app :refer [change-screen!]]
+            [app.state :refer [change-screen!]]
             [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property ->error-window]]
             [api.graphics :as g]
             [api.disposable :refer [dispose]]
@@ -164,7 +164,7 @@ direction keys: move")
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (render [_ {g :gdl.libgdx.context/graphics :as context}]
+  (render [_ {g :context.libgdx/graphics :as context}]
     (g/render-tiled-map g
                         (:tiled-map @current-data)
                         (constantly color/white))

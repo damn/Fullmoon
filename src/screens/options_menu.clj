@@ -1,6 +1,6 @@
 (ns screens.options-menu
   (:require [core.component :as component]
-            [gdl.app :refer [change-screen!]]
+            [app.state :refer [change-screen!]]
             [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
             [api.input.keys :as input.keys]

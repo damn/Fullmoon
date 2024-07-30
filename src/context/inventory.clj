@@ -1,7 +1,7 @@
 (ns context.inventory
   (:require [core.component :as component]
             [data.grid2d :as grid]
-            [gdl.app :refer [current-context]]
+            [app.state :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
                                          player-tooltip-text transact-all!]]
             [api.graphics :as g]
@@ -41,7 +41,7 @@
 (defn- draw-rect-actor ^Widget []
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{:keys [context/player-entity] g :gdl.libgdx.context/graphics :as ctx} @current-context
+      (let [{:keys [context/player-entity] g :context.libgdx/graphics :as ctx} @current-context
             ^Widget this this]
         (draw-cell-rect g
                         player-entity

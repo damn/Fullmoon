@@ -17,7 +17,7 @@
         rahmenh (second (:pixel-dimensions rahmen))
         hpcontent   (create-image context "ui/hp.png")
         manacontent (create-image context "ui/mana.png")
-        render-hpmana-bar (fn [{g :gdl.libgdx.context/graphics :as ctx} x y contentimg minmaxval name]
+        render-hpmana-bar (fn [{g :context.libgdx/graphics :as ctx} x y contentimg minmaxval name]
                             (g/draw-image g rahmen [x y])
                             (g/draw-image g
                                           (get-sub-image ctx (assoc contentimg :sub-image-bounds [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh]))

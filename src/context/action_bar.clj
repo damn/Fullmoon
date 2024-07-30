@@ -16,7 +16,7 @@
 ; (reset-actionbar ctx)
 
 (comment
- (let [stage (api.context/get-stage @gdl.app/current-context)]
+ (let [stage (api.context/get-stage @app.state/current-context)]
    (::action-bar (:gdl.context.ui.actors/main-table stage))
    )
  )

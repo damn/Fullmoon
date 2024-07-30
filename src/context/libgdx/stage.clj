@@ -1,4 +1,4 @@
-(ns ^:no-doc gdl.libgdx.context.stage
+(ns ^:no-doc context.libgdx.stage
   (:require [api.context :refer [current-screen get-stage delta-time]]
             api.disposable
             [api.graphics :as g]
@@ -32,7 +32,7 @@
 
 (extend-type api.context.Context
   api.context/Stage
-  (->stage-screen [{{:keys [gui-viewport batch]} :gdl.libgdx.context/graphics} ; FIXME only use internally as far as possible - abstraction - !
+  (->stage-screen [{{:keys [gui-viewport batch]} :context.libgdx/graphics} ; FIXME only use internally as far as possible - abstraction - !
                    {:keys [actors sub-screen]}]
     (let [stage (proxy [Stage clojure.lang.ILookup] [gui-viewport batch]
                   (valAt
@@ -49,7 +49,7 @@
     (:stage (current-screen context)))
 
   (mouse-on-stage-actor? [context]
-    (let [[x y] (g/gui-mouse-position (:gdl.libgdx.context/graphics context))]
+    (let [[x y] (g/gui-mouse-position (:context.libgdx/graphics context))]
       (.hit ^Stage (get-stage context) x y true)))
 
   (add-to-stage! [ctx actor]

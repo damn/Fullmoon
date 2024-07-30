@@ -1,4 +1,4 @@
-(ns ^:no-doc gdl.libgdx.utils.reflect
+(ns ^:no-doc libgdx.utils.reflect
   (:require [clojure.string :as str]
             [clojure.reflect :refer [type-reflect]]))
 

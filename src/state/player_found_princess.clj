@@ -1,5 +1,5 @@
 (ns state.player-found-princess
-  (:require [gdl.app :refer [change-screen!]]
+  (:require [app.state :refer [change-screen!]]
             [api.state :as state]))
 
 (defrecord PlayerFoundPrincess []

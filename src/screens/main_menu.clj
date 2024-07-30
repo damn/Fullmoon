@@ -2,7 +2,7 @@
   (:require [core.component :as component]
             [utils.core :refer [safe-get tile->middle]]
             ;; api
-            [gdl.app :refer [current-context change-screen!]]
+            [app.state :refer [current-context change-screen!]]
             [api.context :as ctx :refer [exit-app ->text-button key-just-pressed? ->table ->actor ->tiled-map get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
             [api.input.keys :as input.keys]
             [api.screen :as screen]
@@ -68,7 +68,7 @@
   (let [ctx (merge ctx (reset-common-game-context! ctx))] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
     (transact-all! ctx (frame->txs ctx 0))
-    (reset! gdl.app/current-context
+    (reset! app.state/current-context
             (merge ctx
                    (->player-entity-context ctx)
                    {:context/replay-mode? true}))))
@@ -96,7 +96,7 @@
  (.postRunnable com.badlogic.gdx.Gdx/app
                 (fn []
                   (start-replay-mode!
-                   @gdl.app/current-context)))
+                   @app.state/current-context)))
 
  )
 

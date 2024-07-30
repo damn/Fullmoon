@@ -1,6 +1,6 @@
 (ns context.ui.actors
-  (:require gdl.libgdx.context.image-drawer-creator
-            [gdl.app :refer [change-screen!]]
+  (:require context.libgdx.image-drawer-creator
+            [app.state :refer [change-screen!]]
             [api.context :refer [->actor ->table ->group ->text-button get-stage ->action-bar id->window]]
             [api.scene2d.actor :refer [toggle-visible! add-tooltip!]]
             [api.scene2d.group :refer [children]]
@@ -27,7 +27,7 @@
 
 ; TODO reused from properties, move gdl.
 (defn ->sprite [ctx sprite-idx]
-  (gdl.libgdx.context.image-drawer-creator/map->Image
+  (context.libgdx.image-drawer-creator/map->Image
    (api.context/get-sprite ctx
                            {:file "ui/uf_interface.png"
                             :tilew 24

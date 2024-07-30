@@ -1,6 +1,6 @@
 (ns screens.minimap
   (:require [core.component :as component]
-            [gdl.app :refer [current-context change-screen!]]
+            [app.state :refer [current-context change-screen!]]
             [api.context :as ctx :refer [key-just-pressed? explored?]]
             [api.graphics :as g]
             [api.graphics.color :as color]
@@ -49,7 +49,7 @@
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (render [_ {g :gdl.libgdx.context/graphics :keys [context/world] :as context}]
+  (render [_ {g :context.libgdx/graphics :keys [context/world] :as context}]
     (g/render-tiled-map g (:tiled-map world) tile-corner-color-setter)
     (g/render-world-view g
                          (fn [g]

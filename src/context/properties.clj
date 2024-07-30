@@ -15,7 +15,7 @@
 
 
 
-(require 'gdl.libgdx.context.image-drawer-creator)
+(require 'context.libgdx.image-drawer-creator)
 
 (defn- deserialize-image [context {:keys [file sub-image-bounds]}]
   {:pre [file]}
@@ -23,7 +23,7 @@
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
           [tilew tileh]       (drop 2 sub-image-bounds)]
       ; TODO get-sprite does not return Image record => do @ image itself.
-      (gdl.libgdx.context.image-drawer-creator/map->Image
+      (context.libgdx.image-drawer-creator/map->Image
        (get-sprite context
                    {:file file
                     :tilew tileh
@@ -119,7 +119,7 @@
 
 (comment
  ; # Add new attributes => make into fn for property-type apply fn to all props
- (let [ctx @gdl.app/current-context
+ (let [ctx @app.state/current-context
        props (api.context/all-properties ctx :property.type/weapon)
        props (for [prop props]
                (-> prop
@@ -127,9 +127,9 @@
                           :skill/action-time-modifier-key :attack-speed)))]
    (def write-to-file? false)
    (doseq [prop props]
-     (swap! gdl.app/current-context update :context/properties update! prop))
+     (swap! app.state/current-context update :context/properties update! prop))
    (def ^:private write-to-file? true)
-   (swap! gdl.app/current-context update :context/properties update! (api.context/get-property ctx :creatures/vampire))
+   (swap! app.state/current-context update :context/properties update! (api.context/get-property ctx :creatures/vampire))
    nil)
  )
 

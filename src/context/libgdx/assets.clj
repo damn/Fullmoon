@@ -1,4 +1,4 @@
-(ns ^:no-doc gdl.libgdx.context.assets
+(ns ^:no-doc context.libgdx.assets
   (:require [clojure.string :as str]
             [core.component :as component]
             [api.context :as ctx])
@@ -33,7 +33,7 @@
     (.finishLoading manager)
     manager))
 
-(component/def :gdl.libgdx.context/assets {}
+(component/def :context.libgdx/assets {}
   _
   (ctx/create [_ _ctx]
     (let [folder "resources/" ; TODO should be set in classpath and not necessary here ?
@@ -45,7 +45,7 @@
        :sound-files sound-files
        :texture-files texture-files})))
 
-(defn- this [ctx] (:gdl.libgdx.context/assets ctx))
+(defn- this [ctx] (:context.libgdx/assets ctx))
 
 (extend-type api.context.Context
   api.context/SoundStore

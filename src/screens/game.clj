@@ -1,6 +1,6 @@
 (ns screens.game
   (:require [core.component :as component]
-            [gdl.app :refer [change-screen!]]
+            [app.state :refer [change-screen!]]
             [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursork! transact-all! frame->txs windows id->window]]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
@@ -14,7 +14,7 @@
             [api.state :as state]
             [api.world.content-grid :refer [active-entities]]))
 
-; for now a function, see gdl.libgdx.context.input reload bug
+; for now a function, see context.libgdx.input reload bug
 ; otherwise keys in dev mode may be unbound because dependency order not reflected
 ; because bind-roots
 (defn- hotkey->window []
@@ -52,7 +52,7 @@
   (when (key-just-pressed? context input.keys/tab)
     (change-screen! :screens/minimap)))
 
-(defn- render-game [{:keys [context/player-entity] g :gdl.libgdx.context/graphics :as context}
+(defn- render-game [{:keys [context/player-entity] g :context.libgdx/graphics :as context}
                     active-entities*]
   (camera/set-position! (ctx/world-camera context)
                         (:entity/position @player-entity))

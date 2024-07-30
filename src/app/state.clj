@@ -1,4 +1,4 @@
-(ns gdl.app
+(ns app.state
   (:require [api.context :refer [change-screen]]))
 
 (def current-context (atom nil))

@@ -69,7 +69,7 @@
 
 
 (comment
- (let [ctx @gdl.app/current-context
+ (let [ctx @app.state/current-context
        [x y] (->tile (ctx/world-mouse-position ctx))
        cell* @((world-grid ctx) [x y])]
    (clojure.pprint/pprint

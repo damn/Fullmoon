@@ -1,10 +1,10 @@
-(ns gdl.libgdx.app
+(ns libgdx.app
   (:require [core.component :as component]
             [api.context :as ctx]
             [api.graphics.color :as color]
             [context.screens :as screens]
-            [gdl.libgdx.context.graphics :as graphics]
-            [gdl.app :refer [current-context]])
+            [context.libgdx.graphics :as graphics]
+            [app.state :refer [current-context]])
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.utils.ScreenUtils))
