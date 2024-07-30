@@ -107,11 +107,11 @@
        (catch Throwable t
          (handle-entity-error! ctx entity* t)))))
 
-  (render-entities! [{:keys [context/render-on-map-order] :as context} g entities*]
+  (render-entities! [context g entities*]
     (doseq [entities* (map second ; FIXME lazy seq
                            (sort-by-order (group-by :entity/z-order entities*)
                                           first
-                                          render-on-map-order))
+                                          entity/render-order))
             system render-systems
             entity* entities*]
       (render-entity* system entity* g context))

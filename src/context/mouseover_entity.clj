@@ -2,16 +2,14 @@
   (:require [gdl.context :as ctx :refer [mouse-on-stage-actor?]]
             [utils.core :refer [sort-by-order]]
             [cdq.api.context :refer [world-grid line-of-sight?]]
+            [cdq.api.entity :as entity]
             [cdq.api.world.grid :refer [point->entities]]))
 
-(defn- calculate-mouseover-entity [{:keys [context/player-entity
-                                           context/render-on-map-order]
-                                    :as context}]
-  (assert render-on-map-order)
+(defn- calculate-mouseover-entity [{:keys [context/player-entity] :as context}]
   (let [hits (filter #(:entity/z-order @%)
                      (point->entities (world-grid context)
                                       (ctx/world-mouse-position context)))]
-    (->> render-on-map-order
+    (->> entity/render-order
          (sort-by-order hits #(:entity/z-order @%))
          reverse
          (filter #(line-of-sight? context @player-entity @%))

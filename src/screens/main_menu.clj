@@ -27,17 +27,16 @@
 (defn- ->player-entity-context [ctx]
   {:context/player-entity (fetch-player-entity ctx)})
 
+; or just call 'build' with certain args
+; and just those components merge with the original context
+; game-context is just a list of keywords what parts are the game context
 (defn- reset-common-game-context! [ctx]
   (rebuild-inventory-widgets ctx)
   (reset-actionbar ctx)
   (merge {:context/uids->entities (atom {})
           :context/thrown-error (atom nil)
           :context/game-paused? (atom nil)
-          :context/game-logic-frame (atom 0)
-          :context/render-on-map-order (utils.core/define-order [:z-order/on-ground
-                                                                 :z-order/ground
-                                                                 :z-order/flying
-                                                                 :z-order/effect])}
+          :context/game-logic-frame (atom 0)}
          (mouseover-entity/->context)
          (player-message/->context)
          (counter/->context)))
