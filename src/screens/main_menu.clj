@@ -12,10 +12,10 @@
             ;; common game ctx
             context.ecs
 
-            context.uids->entities ; 1. problem '->'
-            context.thrown-error
-            context.game-paused? ; 2. problem '?'
-            context.game-logic-frame
+           ; context.uids->entities ; 1. problem '->'
+           ; context.thrown-error
+           ; context.game-paused? ; 2. problem '?'
+           ; context.game-logic-frame
 
             context.elapsed-game-time
             context.mouseover-entity

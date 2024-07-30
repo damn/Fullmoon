@@ -6,12 +6,12 @@
             [gdl.scene2d.group :refer [children]]
             [utils.core :refer [safe-get]]
             [context.inventory :as inventory]
+            [context.player-message :refer [->player-message-actor]]
             [context.ui.hp-mana-bars :refer [->hp-mana-bars]]
             [context.ui.debug-window :as debug-window]
             [context.ui.help-window :as help-window]
             [context.ui.entity-info-window :as entity-info-window]
             [context.ui.skill-window :as skill-window]
-            [context.ui.player-message :refer [->player-message-actor]]
             [cdq.api.context :refer [->action-bar id->window]]
             [cdq.state.player-item-on-cursor :refer [draw-item-on-cursor]]))
 
