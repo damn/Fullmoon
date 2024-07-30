@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "movement",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "air",
+            "all",
+            "none"
+        ],
+        "valuesAsFlags": false
+    }
+]

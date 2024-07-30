@@ -1,0 +1,92 @@
+(ns screens.options-menu
+  (:require [core.component :as component]
+            [gdl.app :refer [change-screen!]]
+            [gdl.screen :as screen]
+            [gdl.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
+            [gdl.input.keys :as input.keys]
+            [utils.core :refer [safe-get]]
+            context.transaction-handler
+            context.render-debug
+            context.world
+            screens.game
+            cdq.api.context
+            cdq.entity.body))
+
+(defprotocol StatusCheckBox
+  (get-text [this])
+  (get-state [this])
+  (set-state [this is-selected]))
+
+#_(def status-check-boxes (atom []))
+
+#_(defmacro status-check-box [& forms]
+  `(swap! status-check-boxes conj (reify StatusCheckBox ~@forms)))
+
+#_(status-check-box
+  (get-text [this] "Sound")
+  (get-state [this] #_(.isSoundOn app-game-container))
+  (set-state [this is-selected] #_(.setSoundOn app-game-container is-selected)))
+
+(defn- ->debug-flag [avar]
+  (reify StatusCheckBox
+    (get-text [this]
+      (let [m (meta avar)]
+        (str "[LIGHT_GRAY]" (str (:ns m)) "/[WHITE]" (name (:name m)))))
+    (get-state [this]
+      @avar)
+    (set-state [this is-selected]
+      (.bindRoot ^clojure.lang.Var avar is-selected))))
+
+; TODO add line of sight activate, shadows on/off, see through walls etc.
+; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
+(def ^:private debug-flags (map ->debug-flag
+                                [#'cdq.entity.body/show-body-bounds
+                                 ;#'context.transaction-handler/record-txs?
+                                 #'context.transaction-handler/debug-print-txs?
+                                 #'context.render-debug/tile-grid?
+                                 #'context.render-debug/cell-occupied?
+                                 #'context.render-debug/highlight-blocked-cell?
+                                 #'context.render-debug/cell-entities?
+                                 #'context.render-debug/potential-field-colors?
+                                 #'screens.game/pausing?
+                                 #'context.world/los-checks?
+                                 #'context.world/spawn-enemies?
+                                 #'cdq.world.render/see-all-tiles?]))
+
+(defn- exit []
+  (change-screen! :screens/game))
+
+(defn- create-table [{:keys [context/config] :as ctx}]
+  (->table ctx
+           {:rows (concat
+                   #_(for [check-box @status-check-boxes]
+                       [(->check-box ctx
+                                     (get-text check-box)
+                                     #(set-state check-box %)
+                                     (boolean (get-state check-box)))])
+                   (when (safe-get config :debug-options?)
+                     (for [check-box debug-flags]
+                       [(->check-box ctx
+                                     (get-text check-box)
+                                     (partial set-state check-box)
+                                     (boolean (get-state check-box)))]))
+                   [[(->text-button ctx "Resume" (fn [_ctx] (exit)))]
+                    [(->text-button ctx "Exit" (fn [_ctx] (change-screen! :screens/main-menu)))]])
+            :fill-parent? true
+            :cell-defaults {:pad-bottom 10}}))
+
+(deftype SubScreen []
+  gdl.screen/Screen
+  (show [_ _ctx])
+  (hide [_ _ctx])
+  (render [_ ctx]
+    (when (key-just-pressed? ctx input.keys/escape)
+      (exit))))
+
+(defn- ->screen [ctx background-image]
+  {:actors [background-image (create-table ctx)]
+   :sub-screen (->SubScreen)})
+
+(component/def :screens/options-menu {}
+  _
+  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (cdq.api.context/->background-image ctx)))))

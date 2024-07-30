@@ -1,0 +1,8 @@
+set -ex
+
+lein hiera :layout :horizontal
+mv target/hiera/namespaces.png namespaces.png
+git add namespaces.png
+git commit -m 'Update namespaces.png'
+git push
+
