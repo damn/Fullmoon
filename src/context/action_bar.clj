@@ -35,7 +35,7 @@
     (when-let [skill-button (checked button-group)]
       (actor/id skill-button))))
 
-(defmethod transact! :tx/actionbar-add-skill
+(defmethod transact! :tx.context.action-bar/add-skill
   [[_ {:keys [property/id property/image] :as skill}]
    {{:keys [horizontal-group button-group]} :context/action-bar :as ctx}]
   (let [button (->image-button ctx image (fn [_]))]
@@ -45,7 +45,7 @@
     (add! button-group button)
     nil))
 
-(defmethod transact! :tx/actionbar-remove-skill
+(defmethod transact! :tx.context.action-bar/remove-skill
   [[_ {:keys [property/id]}]
    {{:keys [horizontal-group button-group]} :context/action-bar}]
   (let [button (get horizontal-group id)]

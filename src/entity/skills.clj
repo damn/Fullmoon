@@ -6,7 +6,7 @@
             [api.tx :refer [transact!]]
             [data.types :as attr]))
 
-; FIXME starting skills do not trigger tx/actionbar-add-skill
+; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
@@ -31,7 +31,7 @@
   (assert (not (entity/has-skill? @entity skill)))
   [[:tx/assoc-in entity [:entity/skills id] skill]
    (when (:entity/player? @entity)
-     [:tx/actionbar-add-skill skill])])
+     [:tx.context.action-bar/add-skill skill])])
 
 ; unused ?
 (defmethod transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
@@ -39,7 +39,7 @@
   (assert (entity/has-skill? @entity skill))
   [[:tx/dissoc-in entity [:entity/skills id]]
    (when (:entity/player? @entity)
-     [:tx/actionbar-remove-skill skill])])
+     [:tx.context.action-bar/remove-skill skill])])
 
 (extend-type api.context.Context
   api.context/Skills
