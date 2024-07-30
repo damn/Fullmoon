@@ -1,8 +1,8 @@
 (ns effect.stun
   (:require [core.component :as component]
             [utils.core :refer [readable-number]]
-            [api.context :refer [transact!]]
             [api.effect :as effect]
+            [api.tx :refer [transact!]]
             [data.types :as attr]))
 
 (component/def :effect/stun attr/pos-attr

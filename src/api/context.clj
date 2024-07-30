@@ -98,8 +98,6 @@
   (all-sound-files   [_])
   (all-texture-files [_]))
 
-(component/defn transact! [_ ctx])
-
 (defprotocol TransactionHandler
   (transact-all! [_ txs])
   (frame->txs [_ frame-number]))

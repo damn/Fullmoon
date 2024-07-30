@@ -3,7 +3,8 @@
             [api.context :as ctx :refer [->image-button key-just-pressed? ->button-group ->horizontal-group player-tooltip-text]]
             [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [api.scene2d.group :refer [clear-children! add-actor!]]
-            [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
+            [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
+            [api.tx :refer [transact!]]))
 
 (component/def :context/action-bar {}
   _
@@ -34,7 +35,7 @@
     (when-let [skill-button (checked button-group)]
       (actor/id skill-button))))
 
-(defmethod api.context/transact! :tx/actionbar-add-skill
+(defmethod transact! :tx/actionbar-add-skill
   [[_ {:keys [property/id property/image] :as skill}]
    {{:keys [horizontal-group button-group]} :context/action-bar :as ctx}]
   (let [button (->image-button ctx image (fn [_]))]
@@ -44,7 +45,7 @@
     (add! button-group button)
     nil))
 
-(defmethod api.context/transact! :tx/actionbar-remove-skill
+(defmethod transact! :tx/actionbar-remove-skill
   [[_ {:keys [property/id]}]
    {{:keys [horizontal-group button-group]} :context/action-bar}]
   (let [button (get horizontal-group id)]

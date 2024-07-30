@@ -1,7 +1,8 @@
 (ns context.cursor
-  (:require [core.component :as component]
+  (:require [utils.core :refer [safe-get mapvals]]
+            [core.component :as component]
             [api.context :as ctx]
-            [utils.core :refer [safe-get mapvals]]))
+            [api.tx :refer [transact!]]))
 
 (extend-type api.context.Context
   api.context/Cursor
@@ -37,6 +38,6 @@
       (ctx/set-cursor! ctx (:cursors/default cursors))
       cursors)))
 
-(defmethod api.context/transact! :tx/cursor [[_ cursor-key] ctx]
+(defmethod transact! :tx/cursor [[_ cursor-key] ctx]
   (ctx/set-cursork! ctx cursor-key)
   nil)

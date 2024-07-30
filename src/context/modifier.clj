@@ -1,7 +1,8 @@
 (ns context.modifier
   (:require [clojure.string :as str]
-            [api.context :refer [transact!]]
-            [api.modifier :as modifier]))
+            api.context
+            [api.modifier :as modifier]
+            [api.tx :refer [transact!]]))
 
 (extend-type api.context.Context
   api.context/Modifier

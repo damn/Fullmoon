@@ -7,9 +7,10 @@
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [entity.inventory :as inventory]
             [api.entity :as entity]
-            [api.entity.state :as state])
+            [api.entity.state :as state]
+            [api.tx :refer [transact!]]
+            [entity.inventory :as inventory])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -100,8 +101,8 @@
     (redo-table ctx inventory)
     (.pack window)))
 
-(defmethod api.context/transact! :tx/set-item-image-in-widget [[_ cell item]
-                                                                   {{:keys [table]} :context/inventory :as ctx}]
+(defmethod transact! :tx/set-item-image-in-widget [[_ cell item]
+                                                   {{:keys [table]} :context/inventory :as ctx}]
   (let [^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)
         drawable (->texture-region-drawable ctx (:texture (:property/image item)))]
@@ -110,8 +111,8 @@
     (add-tooltip! cell-widget #(player-tooltip-text % item))
     nil))
 
-(defmethod api.context/transact! :tx/remove-item-from-widget [[_ cell]
-                                                                  {{:keys [table slot->background]} :context/inventory :as ctx}]
+(defmethod transact! :tx/remove-item-from-widget [[_ cell]
+                                                  {{:keys [table slot->background]} :context/inventory :as ctx}]
   (let [^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)]
     (.setDrawable image-widget (slot->background (cell 0)))

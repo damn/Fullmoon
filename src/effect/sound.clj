@@ -1,6 +1,6 @@
 (ns effect.sound
   (:require [core.component :as component]
-            [api.context :refer [transact!]]
+            [api.tx :refer [transact!]]
             [data.types :as attr]))
 
 ; TODO or derive , is-a ???

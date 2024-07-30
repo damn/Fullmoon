@@ -1,10 +1,11 @@
 (ns context.ecs
   (:require [clj-commons.pretty.repl :as p]
-            [core.component :as component :refer [update-map apply-system]]
-            [api.graphics :as g]
             [utils.core :refer [sort-by-order]]
+            [core.component :as component :refer [update-map apply-system]]
+            [api.context :refer [transact-all! get-entity]]
+            [api.graphics :as g]
             [api.entity :as entity :refer [map->Entity]]
-            [api.context :refer [transact! transact-all! get-entity]]))
+            [api.tx :refer [transact!]]))
 
 (defn- apply-system-transact-all! [ctx system entity*]
   (run! #(transact-all! ctx %) (apply-system system entity* ctx)))

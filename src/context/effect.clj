@@ -1,7 +1,8 @@
 (ns context.effect
   (:require [clojure.string :as str]
             [api.context :refer [transact-all! valid-params?]]
-            [api.effect :as effect]))
+            [api.effect :as effect]
+            [api.tx :refer [transact!]]))
 
 (extend-type api.context.Context
   api.context/EffectInterpreter
@@ -22,7 +23,7 @@
 (defn- invalid-tx [ctx txs]
   (some #(when (not (effect/valid-params? % ctx)) %) txs))
 
-(defmethod api.context/transact! :tx/effect [[_ effect-ctx txs] ctx]
+(defmethod transact! :tx/effect [[_ effect-ctx txs] ctx]
   (let [ctx (merge ctx effect-ctx)]
     (assert (valid-params? ctx txs) (pr-str (invalid-tx ctx txs)))
     (transact-all! ctx txs)

@@ -1,6 +1,7 @@
 (ns tx.player-modal
   (:require [api.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
-            [api.scene2d.actor :refer [remove!]]))
+            [api.scene2d.actor :refer [remove!]]
+            [api.tx :refer [transact!]]))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?
@@ -23,6 +24,6 @@
                                                   (* (ctx/gui-viewport-height ctx) (/ 3 4))]
                                 :pack? true})))
 
-(defmethod api.context/transact! :tx/player-modal [[_ params] ctx]
+(defmethod transact! :tx/player-modal [[_ params] ctx]
   (show-player-modal! ctx params)
   nil)

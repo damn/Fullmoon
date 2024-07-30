@@ -8,7 +8,8 @@
             [math.vector :as v]
             [data.grid2d :as grid2d]
             [utils.core :refer [->tile tile->middle]]
-            [api.context :as ctx :refer [explored? transact! transact-all! ray-blocked? content-grid world-grid]]
+            [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
+            [api.tx :refer [transact!]]
             [world.grid :refer [create-grid]]
             [world.content-grid :refer [->content-grid]]
             world.render

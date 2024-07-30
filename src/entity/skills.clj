@@ -25,16 +25,16 @@
   (has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
     (contains? skills id)))
 
-(defmethod api.context/transact! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
-                                                _ctx]
+(defmethod transact! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
+                                    _ctx]
   (assert (not (entity/has-skill? @entity skill)))
   [[:tx/assoc-in entity [:entity/skills id] skill]
    (when (:entity/player? @entity)
      [:tx/actionbar-add-skill skill])])
 
 ; unused ?
-(defmethod api.context/transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
-                                                   _ctx]
+(defmethod transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
+                                       _ctx]
   (assert (entity/has-skill? @entity skill))
   [[:tx/dissoc-in entity [:entity/skills id]]
    (when (:entity/player? @entity)

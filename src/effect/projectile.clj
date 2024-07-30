@@ -3,8 +3,9 @@
             [core.component :as component]
             [math.vector :as v]
             [data.animation :as animation]
-            [api.context :refer [get-sprite spritesheet transact! effect-text path-blocked?]]
-            [api.effect :as effect]))
+            [api.context :refer [get-sprite spritesheet effect-text path-blocked?]]
+            [api.effect :as effect]
+            [api.tx :refer [transact!]]))
 
 ; -> range needs to be smaller than potential field range
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight

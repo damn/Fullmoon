@@ -1,6 +1,7 @@
 (ns context.player-message
   (:require [api.context :as ctx :refer [->actor delta-time]]
-            [api.graphics :as g]))
+            [api.graphics :as g]
+            [api.tx :refer [transact!]]))
 
 (def ^:private duration-seconds 1.5)
 
@@ -21,8 +22,7 @@
     (when (>= counter duration-seconds)
       (reset! player-message nil))))
 
-(defmethod api.context/transact! :tx/msg-to-player [[_ message]
-                                                        {:keys [context/player-message]}]
+(defmethod transact! :tx/msg-to-player [[_ message] {:keys [context/player-message]}]
   (reset! player-message {:message message :counter 0})
   nil)
 

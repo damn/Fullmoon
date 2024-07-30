@@ -2,9 +2,10 @@
   (:require [core.component :as component]
             [api.graphics :as g]
             [math.vector :as v]
-            [api.context :refer [transact! effect-text line-of-sight? line-entity]]
+            [api.context :refer [effect-text line-of-sight? line-entity]]
             [api.effect :as effect]
             [api.entity :as entity]
+            [api.tx :refer [transact!]]
             [data.types :as attr]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?

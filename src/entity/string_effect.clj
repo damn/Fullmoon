@@ -3,7 +3,8 @@
             [api.graphics :as g]
             [api.context :refer [->counter stopped? reset]]
             [context.ui.config :refer [hpbar-height-px]]
-            [api.entity :as entity]))
+            [api.entity :as entity]
+            [api.tx :refer [transact!]]))
 
 (component/def :entity/string-effect {}
   {:keys [text counter] :as this}
@@ -19,7 +20,7 @@
                   :scale 2
                   :up? true})))
 
-(defmethod api.context/transact! :tx/add-text-effect [[_ entity text] ctx]
+(defmethod transact! :tx/add-text-effect [[_ entity text] ctx]
   [[:tx/assoc
     entity
     :entity/string-effect

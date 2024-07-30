@@ -3,7 +3,8 @@
             [core.component :as component]
             [api.context :refer [transact-all!]]
             [api.entity :as entity]
-            [api.entity.state :as state]))
+            [api.entity.state :as state]
+            [api.tx :refer [transact!]]))
 
 (component/def :entity/state {}
   {:keys [initial-state
@@ -51,6 +52,6 @@
                             [:tx/assoc-in entity [:entity/state :state-obj] new-state-obj])]]
             (transact-all! ctx (txs-fn))))))))
 
-(defmethod api.context/transact! :tx/event [[_ entity event params] ctx]
+(defmethod transact! :tx/event [[_ entity event params] ctx]
   (send-event! ctx entity event params)
   [])

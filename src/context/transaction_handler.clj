@@ -1,6 +1,7 @@
 (ns context.transaction-handler
   (:require context.libgdx.image-drawer-creator
-            [api.context :refer [transact! transact-all!]]))
+            [api.context :refer [transact-all!]]
+            [api.tx :refer [transact!]]))
 
 (def ^:private record-txs? false)
 

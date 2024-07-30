@@ -1,7 +1,7 @@
 (ns effect.spawn
   (:require [core.component :as component]
-            [api.context :refer [transact!]]
             [api.effect :as effect]
+            [api.tx :refer [transact!]]
             [entity.state.npc :as npc-state]))
 
 ; TODO spawning on player both without error ?! => not valid position checked

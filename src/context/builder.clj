@@ -1,7 +1,8 @@
 (ns context.builder
   (:require [core.component :as component]
-            [api.context :refer [transact! get-property]]
-            [api.entity :as entity]))
+            [api.context :refer [get-property]]
+            [api.entity :as entity]
+            [api.tx :refer [transact!]]))
 
 (defmethod transact! :tx/creature [[_ creature-id extra-components] ctx]
   (let [entity-components (:property/entity (get-property ctx creature-id))]
