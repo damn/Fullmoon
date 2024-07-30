@@ -1,4 +1,4 @@
-(ns gdl.screen
+(ns api.screen
   (:require [core.component :as component]))
 
 (component/defn create [_ ctx])

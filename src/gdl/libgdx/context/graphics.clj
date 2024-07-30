@@ -2,8 +2,8 @@
   (:require [clojure.string :as str]
             [core.component :as component]
             [api.context :as ctx]
-            [gdl.disposable :refer [dispose]]
-            [gdl.graphics :as g]
+            [api.disposable :refer [dispose]]
+            [api.graphics :as g]
             [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
             gdl.libgdx.context.ttf-generator ; TODO
@@ -85,7 +85,7 @@
   (.setColor shape-drawer (->color color)))
 
 (extend-type Graphics
-  gdl.graphics/ShapeDrawer
+  api.graphics/ShapeDrawer
   (draw-ellipse [{:keys [^ShapeDrawer shape-drawer]} [x y] radius-x radius-y color]
     (set-color shape-drawer color)
     (.ellipse shape-drawer (float x) (float y) (float radius-x) (float radius-y)) )
@@ -159,7 +159,7 @@
       (* (.getLineHeight font))))
 
 (extend-type Graphics
-  gdl.graphics/TextDrawer
+  api.graphics/TextDrawer
   (draw-text [{:keys [default-font unit-scale batch]}
               {:keys [x y text font h-align up? scale]}]
     (let [^BitmapFont font (or font default-font)
@@ -239,7 +239,7 @@
     (update-viewports context (screen-width) (screen-height))))
 
 (extend-type Graphics
-  gdl.graphics/GuiWorldViews
+  api.graphics/GuiWorldViews
   (render-gui-view   [g render-fn] (render-view g :gui   render-fn))
   (render-world-view [g render-fn] (render-view g :world render-fn))
 
@@ -299,7 +299,7 @@
     (:world-unit-dimensions image)))
 
 (extend-type Graphics
-  gdl.graphics/ImageDrawer
+  api.graphics/ImageDrawer
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture color] :as image}
                position]
@@ -339,7 +339,7 @@
 (def ^:private cached-map-renderer (memoize map-renderer-for))
 
 (extend-type Graphics
-  gdl.graphics/TiledMapRenderer
+  api.graphics/TiledMapRenderer
   (render-tiled-map [{:keys [world-camera] :as g} tiled-map color-setter]
     (let [^MapRenderer map-renderer (cached-map-renderer g tiled-map color-setter)]
       (.update ^OrthographicCamera world-camera)

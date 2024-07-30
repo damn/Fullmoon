@@ -1,7 +1,7 @@
 (ns context.screens
   (:require [core.component :as component]
             [api.context :as ctx]
-            [gdl.screen :as screen]))
+            [api.screen :as screen]))
 
 (component/def :context/screens {}
   _

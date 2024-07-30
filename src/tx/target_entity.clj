@@ -1,6 +1,6 @@
 (ns tx.target-entity
   (:require [core.component :as component]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [math.vector :as v]
             [api.context :refer [transact! effect-text line-of-sight? line-entity]]
             [api.effect :as effect]

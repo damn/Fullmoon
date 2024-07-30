@@ -1,5 +1,5 @@
 (ns state.npc-sleeping
-  (:require [gdl.graphics :as g]
+  (:require [api.graphics :as g]
             [api.graphics.color :as color]
             [api.context :refer [world-grid ->counter]]
             [api.entity :as entity]

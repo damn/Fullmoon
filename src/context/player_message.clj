@@ -1,6 +1,6 @@
 (ns context.player-message
   (:require [api.context :as ctx :refer [->actor delta-time]]
-            [gdl.graphics :as g]))
+            [api.graphics :as g]))
 
 (def ^:private duration-seconds 1.5)
 

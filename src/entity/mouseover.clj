@@ -1,6 +1,6 @@
 (ns entity.mouseover
   (:require [core.component :as component]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.entity :as entity]))
 
 (def ^:private outline-alpha 0.4)

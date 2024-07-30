@@ -1,6 +1,6 @@
 (ns entity.string-effect
   (:require [core.component :as component]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.context :refer [->counter stopped? reset]]
             [context.ui.config :refer [hpbar-height-px]]
             [api.entity :as entity]))

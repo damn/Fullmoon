@@ -1,5 +1,5 @@
 (ns state.active-skill
-  (:require [gdl.graphics :as g]
+  (:require [api.graphics :as g]
             [data.val-max :refer [apply-val]]
             [api.context :refer [valid-params? effect-render-info stopped? finished-ratio ->counter]]
             [api.entity :as entity]

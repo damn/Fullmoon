@@ -1,19 +1,19 @@
 (ns ^:no-doc gdl.libgdx.context.stage
   (:require [api.context :refer [current-screen get-stage delta-time]]
-            gdl.disposable
-            [gdl.graphics :as g]
-            [gdl.screen :as screen]
+            api.disposable
+            [api.graphics :as g]
+            [api.screen :as screen]
             [api.scene2d.actor :as actor]
             [api.scene2d.group :refer [find-actor-with-id] :as group])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.Stage))
 
 (defrecord StageScreen [^Stage stage sub-screen]
-  gdl.disposable/Disposable ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
+  api.disposable/Disposable ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
   (dispose [_]
     (.dispose stage))
 
-  gdl.screen/Screen
+  api.screen/Screen
   (show [_ context]
     (.setInputProcessor Gdx/input stage)
     (when sub-screen (screen/show sub-screen context)))

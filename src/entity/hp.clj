@@ -1,6 +1,6 @@
 (ns entity.hp
   (:require [core.component :as component]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.graphics.color :as color]
             [data.val-max :refer [val-max-ratio]]
             [api.entity :as entity]

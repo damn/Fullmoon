@@ -1,4 +1,4 @@
-(ns gdl.disposable)
+(ns api.disposable)
 
 (defprotocol Disposable
   (dispose [_]))

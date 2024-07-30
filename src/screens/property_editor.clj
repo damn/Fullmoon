@@ -7,7 +7,7 @@
             [gdl.app :as app :refer [change-screen!]]
             [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane get-property all-properties tooltip-text ->error-window]]
             [api.input.keys :as input.keys]
-            [gdl.screen :as screen]
+            [api.screen :as screen]
             [api.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [api.scene2d.group :refer [add-actor! clear-children! children]]
             [api.scene2d.ui.text-field :as text-field]

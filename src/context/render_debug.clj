@@ -1,6 +1,6 @@
 (ns context.render-debug
   (:require [api.context :as ctx :refer [world-grid]]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.graphics.color :as color]
             [api.graphics.camera :as camera]
             math.geom

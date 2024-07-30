@@ -1,5 +1,5 @@
 (ns state.stunned
-  (:require [gdl.graphics :as g]
+  (:require [api.graphics :as g]
             [api.context :refer [stopped? ->counter]]
             [api.state :as state]))
 

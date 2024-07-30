@@ -1,5 +1,5 @@
 (ns world.render
-  (:require [gdl.graphics :as g]
+  (:require [api.graphics :as g]
             [api.graphics.color :as color]
             [math.raycaster :as raycaster]
             [utils.core :refer [->tile]])

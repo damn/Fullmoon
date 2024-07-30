@@ -1,7 +1,7 @@
 (ns context.ecs
   (:require [clj-commons.pretty.repl :as p]
             [core.component :as component :refer [update-map apply-system]]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [utils.core :refer [sort-by-order]]
             [api.entity :as entity :refer [map->Entity]]
             [api.context :refer [transact! transact-all! get-entity]]))

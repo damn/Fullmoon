@@ -1,6 +1,6 @@
 (ns context.ui.debug-window
   (:require [api.context :as ctx :refer [frames-per-second mouse-on-stage-actor? ->actor ->window ->label]]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.scene2d.group :refer [add-actor!]]
             [api.scene2d.ui.label :refer [set-text!]]

@@ -2,11 +2,11 @@
   (:require [core.component :as component]
             [gdl.app :refer [current-context change-screen!]]
             [api.context :as ctx :refer [key-just-pressed? explored?]]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.graphics.color :as color]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
-            [gdl.screen :as screen]))
+            [api.screen :as screen]))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -42,7 +42,7 @@
     color/black))
 
 (deftype Screen []
-  gdl.screen/Screen
+  api.screen/Screen
   (show [_ ctx]
     (camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
 

@@ -1,6 +1,6 @@
 (ns entity.body
   (:require [core.component :as component]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.graphics.color :as color]
             [api.entity :as entity]
             [data.types :as attr]))

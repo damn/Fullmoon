@@ -5,7 +5,7 @@
             [gdl.app :refer [current-context change-screen!]]
             [api.context :as ctx :refer [exit-app ->text-button key-just-pressed? ->table ->actor ->tiled-map get-property rebuild-inventory-widgets reset-actionbar frame->txs transact-all! remove-destroyed-entities!]]
             [api.input.keys :as input.keys]
-            [gdl.screen :as screen]
+            [api.screen :as screen]
             ;; hardcoded
 
             ;; common game ctx

@@ -1,7 +1,7 @@
 (ns screens.options-menu
   (:require [core.component :as component]
             [gdl.app :refer [change-screen!]]
-            [gdl.screen :as screen]
+            [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
             [api.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
@@ -75,7 +75,7 @@
             :cell-defaults {:pad-bottom 10}}))
 
 (deftype SubScreen []
-  gdl.screen/Screen
+  api.screen/Screen
   (show [_ _ctx])
   (hide [_ _ctx])
   (render [_ ctx]

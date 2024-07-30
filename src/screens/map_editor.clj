@@ -5,10 +5,10 @@
             ; api/
             [gdl.app :refer [change-screen!]]
             [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property ->error-window]]
-            [gdl.graphics :as g]
-            [gdl.disposable :refer [dispose]]
+            [api.graphics :as g]
+            [api.disposable :refer [dispose]]
             [api.input.keys :as input.keys]
-            [gdl.screen :as screen]
+            [api.screen :as screen]
             [api.graphics.color :as color]
             [api.graphics.camera :as camera]
             [api.maps.tiled :as tiled]
@@ -153,11 +153,11 @@ direction keys: move")
     (show-whole-map! (ctx/world-camera context) tiled-map)))
 
 (defrecord SubScreen [current-data]
-  gdl.disposable/Disposable
+  api.disposable/Disposable
   (dispose [_]
     (dispose (:tiled-map @current-data)))
 
-  gdl.screen/Screen
+  api.screen/Screen
   (show [_ ctx]
     (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
 

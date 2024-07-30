@@ -1,6 +1,6 @@
 (ns entity.image
   (:require [core.component :as component]
-            [gdl.graphics :as g]
+            [api.graphics :as g]
             [api.entity :as entity]))
 
 (component/def :entity/image {}

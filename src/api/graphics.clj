@@ -1,4 +1,4 @@
-(ns gdl.graphics)
+(ns api.graphics)
 
 (defprotocol GuiWorldViews
   (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")

@@ -1,6 +1,6 @@
 (ns context.world
-  (:require [gdl.disposable :refer [dispose]]
-            [gdl.graphics :as g]
+  (:require [api.disposable :refer [dispose]]
+            [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
