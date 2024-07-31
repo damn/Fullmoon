@@ -25,6 +25,8 @@
             [context.world :as world]
             mapgen.module-gen))
 
+; TODO all context here use move to context.game.*
+
 (defn- fetch-player-entity [ctx]
   {:post [%]}
   (first (filter #(:entity/player? @%) (api.context/all-entities ctx))))

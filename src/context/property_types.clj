@@ -6,6 +6,7 @@
             [core.component :as component]
             [core.data :as attr]
             [api.context :as ctx :refer [modifier-text effect-text]]
+            ; these 3 here because nstools needs to know to load them before
             effect.all
             entity.all
             modifier.all))
@@ -13,6 +14,12 @@
 (component/def :property/image       attr/image)
 (component/def :property/sound       attr/sound)
 (component/def :property/pretty-name attr/string-attr)
+
+(component/def :creature/species {:widget :label      :schema [:qualified-keyword {:namespace :species}]}) ; TODO not used ... but one of?
+(component/def :creature/level   {:widget :text-field :schema [:maybe pos-int?]}) ; pos-int-attr ? ; TODO creature lvl >0, <max-lvls (9 ?)
+; TODO what components required? got some without attack !
+; also
+; rename property/creature
 (component/def :property/entity (attr/components-attribute :entity))
 
 ; component to text
@@ -21,8 +28,6 @@
 (component/def :item/modifier (attr/components-attribute :modifier))
 (component/def :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
 
-(component/def :creature/species {:widget :label      :schema [:qualified-keyword {:namespace :species}]}) ; TODO not used ... but one of?
-(component/def :creature/level   {:widget :text-field :schema [:maybe pos-int?]}) ; pos-int-attr ? ; TODO creature lvl >0, <max-lvls (9 ?)
 
 (component/def :skill/start-action-sound       attr/sound)
 (component/def :skill/action-time-modifier-key (attr/enum :stats/cast-speed :stats/attack-speed))
