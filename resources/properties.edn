@@ -17,7 +17,8 @@
   :skill/cooldown 0,
   :skill/cost 1,
   :skill/effect
-  {:effect/entity-mana-set-to-max true, :effect/sound "sounds/bfxr_click.wav"},
+  {:effect/entity-mana-set-to-max true,
+   :effect/sound "sounds/bfxr_click.wav"},
   :skill/start-action-sound "sounds/shoot.wav"}
  {:property/id :skills/projectile,
   :property/image
@@ -27,7 +28,8 @@
   :skill/cooldown 0,
   :skill/cost 4,
   :skill/effect
-  {:effect/projectile true, :effect/sound "sounds/bfxr_waypointunlock.wav"},
+  {:effect/projectile true,
+   :effect/sound "sounds/bfxr_waypointunlock.wav"},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/melee-attack,
   :property/image
@@ -2340,19 +2342,14 @@
     :frame-duration 0.1,
     :looping? true},
    :entity/reaction-time 0.2,
-   :entity/inventory
-   #{:items/shield-vorpal-buckler
-     :items/ring-flame
-     :items/blood-helm
-     :items/wild-leg
-     :items/ring-gold
-     :items/sword
-     :items/blood-chest
-     :items/necklace-dark
-     :items/cloak-blood
-     :items/blood-glove
-     :items/greatspear},
+   :entity/inventory #{},
    :entity/mana 100,
+   :entity/stats
+   {:stats/armor-pierce 0,
+    :stats/armor-save 0,
+    :stats/attack-speed 1,
+    :stats/cast-speed 1,
+    :stats/strength 1},
    :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/flying? false,
    :entity/hp 100,
