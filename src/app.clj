@@ -27,11 +27,11 @@
              [:context/config {:tag :dev
                                :configs {:prod {:map-editor? false
                                                 :property-editor? false
-                                                :debug-windows? false
+                                                :debug-window? false
                                                 :debug-options? false}
                                          :dev {:map-editor? true
                                                :property-editor? true
-                                               :debug-windows? true
+                                               :debug-window? true
                                                :debug-options? true}}}]
 
              [:context/property-types true]

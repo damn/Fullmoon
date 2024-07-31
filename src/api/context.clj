@@ -192,7 +192,7 @@
 
 (defprotocol Windows
   (windows [_])
-  (id->window [_ window-id]))
+  (get-window [_ window-id]))
 
 (defprotocol BackgroundImage
   (->background-image [_]))

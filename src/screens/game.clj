@@ -1,7 +1,7 @@
 (ns screens.game
   (:require [core.component :as component]
             [app.state :refer [change-screen!]]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursork! transact-all! frame->txs windows id->window]]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursork! transact-all! frame->txs windows]]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.screen :as screen :refer [Screen]]
@@ -17,33 +17,29 @@
 ; for now a function, see context.libgdx.input reload bug
 ; otherwise keys in dev mode may be unbound because dependency order not reflected
 ; because bind-roots
-(defn- hotkey->window []
-  {input.keys/i :inventory-window
-   input.keys/q :skill-window ; 's' moves also ! (WASD)
-   input.keys/e :entity-info-window
-   input.keys/h :help-window
-   input.keys/z :debug-window})
+(defn- hotkey->window [{:keys [context/config] :as ctx}]
+  (merge
+   {input.keys/i :inventory-window
+    input.keys/e :entity-info-window}
+   (when (safe-get config :debug-window?)
+     {input.keys/z :debug-window})))
 
 (defn- check-window-hotkeys [ctx]
-  (doseq [[hotkey window] (hotkey->window)
+  (doseq [[hotkey window] (hotkey->window ctx)
           :when (key-just-pressed? ctx hotkey)]
-    (toggle-visible! (id->window ctx window))))
+    (toggle-visible! (ctx/get-window ctx window))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
 
 (def ^:private zoom-speed 0.05)
 
-(defn- end-of-frame-checks! [{:keys [context/config] :as context}]
+(defn- end-of-frame-checks! [context]
   (when (key-pressed? context input.keys/shift-left)
     (adjust-zoom (ctx/world-camera context) zoom-speed))
-
   (when (key-pressed? context input.keys/minus)
     (adjust-zoom (ctx/world-camera context) (- zoom-speed)))
-
-  (when (safe-get config :debug-windows?) ; FIXME TODO
-    (check-window-hotkeys context))
-
+  (check-window-hotkeys context)
   (when (key-just-pressed? context input.keys/escape)
     (let [windows (windows context)]
       (cond (some visible? windows) (run! #(set-visible! % false) windows)
