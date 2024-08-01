@@ -50,3 +50,12 @@
                           (for [k component-attributes]
                             [k {:optional true} (or (:schema (get component/attributes k)) :some)])))
      :components component-attributes})) ; => fetch from schema ? (optional? )
+
+; TODO similar to map-attribute & components-attribute
+(defn map-attribute-schema [id-attribute attr-ks]
+  (m/schema
+   (vec (concat [:map {:closed true} id-attribute] ; TODO same id-attribute w. different namespaces ...
+                ; creature/id ?
+                ; item/id ?
+                (for [k attr-ks]
+                  (vector k (:schema (get component/attributes k))))))))

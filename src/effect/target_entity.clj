@@ -27,6 +27,9 @@
                   maxrange)))
 
 (component/def :maxrange attr/pos-attr)
+; TODO how should this work ???
+; can not contain the other effects properly o.o
+(component/def :hit-effect (attr/components-attribute :effect))
 
 (component/def :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
                                       :schema [:map {:closed true}
