@@ -10,7 +10,7 @@
   {:keys [text counter] :as this}
   (entity/tick [[k _] {:keys [entity/id]} context]
     (when (stopped? context counter)
-      [[:tx/dissoc id k]]))
+      [[:tx.entity/dissoc id k]]))
 
   (entity/render-above [_ {[x y] :entity/position :keys [entity/body]} g _ctx]
     (g/draw-text g
@@ -21,7 +21,7 @@
                   :up? true})))
 
 (defmethod transact! :tx/add-text-effect [[_ entity text] ctx]
-  [[:tx/assoc
+  [[:tx.entity/assoc
     entity
     :entity/string-effect
     (if-let [string-effect (:entity/string-effect @entity)]

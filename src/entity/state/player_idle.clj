@@ -146,7 +146,7 @@
   (clicked-skillmenu-skill [_ {:keys [entity/id entity/free-skill-points] :as entity*} skill]
     (when (and (pos? free-skill-points)
                (not (entity/has-skill? entity* skill)))
-      [[:tx/assoc id :entity/free-skill-points (dec free-skill-points)]
+      [[:tx.entity/assoc id :entity/free-skill-points (dec free-skill-points)]
        [:tx/add-skill id skill]]))
   ; TODO no else case, no visible fsp..
 

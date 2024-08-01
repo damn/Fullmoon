@@ -131,5 +131,5 @@
              hp (apply-val hp #(- % dmg-amount))]
          [[:tx/audiovisual position :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          [:tx/assoc target :entity/hp hp]
+          [:tx.entity/assoc target :entity/hp hp]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))

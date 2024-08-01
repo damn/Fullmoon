@@ -92,6 +92,7 @@
              ; TODO tx/all ?
              [:tx/audiovisual true]
              [:tx/creature true]
+             [:tx/entity true]
              [:tx/sound true]
              [:tx/player-modal true]
              [:context/error-modal true]]})

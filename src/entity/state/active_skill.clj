@@ -20,11 +20,11 @@
 
 (defn- set-skill-to-cooldown [entity* {:keys [property/id skill/cooldown] :as skill} ctx]
   (when cooldown
-    [:tx/assoc-in (:entity/id entity*) [:entity/skills id :skill/cooling-down?] (->counter ctx cooldown)]))
+    [:tx.entity/assoc-in (:entity/id entity*) [:entity/skills id :skill/cooling-down?] (->counter ctx cooldown)]))
 
 (defn- pay-skill-mana-cost [{:keys [entity/id entity/mana]} {:keys [skill/cost]}]
   (when cost
-    [:tx/assoc id :entity/mana (apply-val mana #(- % cost))]))
+    [:tx.entity/assoc id :entity/mana (apply-val mana #(- % cost))]))
 
 (defrecord ActiveSkill [skill effect-context counter]
   state/PlayerState

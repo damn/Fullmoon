@@ -48,8 +48,8 @@
                           #(state/enter new-state-obj @entity ctx)
                           #(if (:entity/player? @entity) (state/player-enter new-state-obj) [])
                           #(vector
-                            [:tx/assoc-in entity [:entity/state :fsm] new-fsm]
-                            [:tx/assoc-in entity [:entity/state :state-obj] new-state-obj])]]
+                            [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
+                            [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj])]]
             (transact-all! ctx (txs-fn))))))))
 
 (defmethod transact! :tx/event [[_ entity event params] ctx]

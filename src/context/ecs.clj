@@ -7,25 +7,6 @@
             [api.entity :as entity :refer [map->Entity]]
             [api.tx :refer [transact!]]))
 
-(defmethod transact! :tx/assoc [[_ entity k v] _ctx]
-  (assert (keyword? k))
-  (swap! entity assoc k v)
-  nil)
-
-(defmethod transact! :tx/assoc-in [[_ entity ks v] _ctx]
-  (swap! entity assoc-in ks v)
-  nil)
-
-(defmethod transact! :tx/dissoc [[_ entity k] _ctx]
-  (assert (keyword? k))
-  (swap! entity dissoc k)
-  nil)
-
-(defmethod transact! :tx/dissoc-in [[_ entity ks] _ctx]
-  (assert (> (count ks) 1))
-  (swap! entity update-in (drop-last ks) dissoc (last ks))
-  nil)
-
 (defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
   {:pre [(not (contains? components :entity/id))
          (not (contains? components :entity/uid))]}
@@ -34,11 +15,6 @@
                     map->Entity)]
     (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
   nil)
-
-; TODO on error
-; give context snapshot
-; pass to dev app
-; there can look at it ???
 
 (defmethod transact! :tx/assoc-uids->entities [[_ entity] {:keys [context/uids-entities] :as ctx}]
   {:pre [(number? (:entity/uid @entity))]}

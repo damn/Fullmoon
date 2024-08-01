@@ -7,10 +7,10 @@
 (defrecord NpcMoving [movement-vector counter]
   state/State
   (enter [_ {:keys [entity/id]} _ctx]
-    [[:tx/assoc id :entity/movement-vector movement-vector]])
+    [[:tx.entity/assoc id :entity/movement-vector movement-vector]])
 
   (exit [_ {:keys [entity/id]} _ctx]
-    [[:tx/dissoc id :entity/movement-vector]])
+    [[:tx.entity/dissoc id :entity/movement-vector]])
 
   (tick [_ {:keys [entity/id]} ctx]
     (when (stopped? ctx counter)

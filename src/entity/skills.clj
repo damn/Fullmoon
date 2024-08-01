@@ -19,7 +19,7 @@
     (for [{:keys [property/id skill/cooling-down?]} (vals skills)
           :when (and cooling-down?
                      (stopped? ctx cooling-down?))]
-      [:tx/assoc-in (:entity/id entity*) [k id :skill/cooling-down?] false])))
+      [:tx.entity/assoc-in (:entity/id entity*) [k id :skill/cooling-down?] false])))
 
 (extend-type api.entity.Entity
   entity/Skills
@@ -29,7 +29,7 @@
 (defmethod transact! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
                                     _ctx]
   (assert (not (entity/has-skill? @entity skill)))
-  [[:tx/assoc-in entity [:entity/skills id] skill]
+  [[:tx.entity/assoc-in entity [:entity/skills id] skill]
    (when (:entity/player? @entity)
      [:tx.context.action-bar/add-skill skill])])
 
@@ -37,7 +37,7 @@
 (defmethod transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
                                        _ctx]
   (assert (entity/has-skill? @entity skill))
-  [[:tx/dissoc-in entity [:entity/skills id]]
+  [[:tx.entity/dissoc-in entity [:entity/skills id]]
    (when (:entity/player? @entity)
      [:tx.context.action-bar/remove-skill skill])])
 

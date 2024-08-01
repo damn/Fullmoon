@@ -57,8 +57,8 @@
                            entity/body]} (if (:solid? (:entity/body entity*))
                                            (update-position-solid     ctx entity* direction)
                                            (update-position-non-solid ctx entity* direction))]
-          [[:tx/assoc    id :entity/position position]
-           [:tx/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
+          [[:tx.entity/assoc    id :entity/position position]
+           [:tx.entity/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
            (when (:rotate-in-movement-direction? body)
-             [:tx/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
+             [:tx.entity/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
            [:tx/position-changed id]])))))

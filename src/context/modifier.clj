@@ -14,7 +14,7 @@
 (defn- gen-txs [system entity modifier]
   (for [component modifier
         :let [ks (modifier/keys component)]]
-    [:tx/assoc-in entity ks (system component (get-in @entity ks))]))
+    [:tx.entity/assoc-in entity ks (system component (get-in @entity ks))]))
 
 (defmethod transact! :tx/apply-modifier [[_ entity modifier] ctx]
   (gen-txs modifier/apply entity modifier))

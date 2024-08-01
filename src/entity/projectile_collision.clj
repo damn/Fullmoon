@@ -27,7 +27,7 @@
                        (some #(cell/blocked? % entity*) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
-         [:tx/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)])
+         [:tx.entity/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)])
        (when destroy?
          [:tx/destroy id])
        (when hit-entity

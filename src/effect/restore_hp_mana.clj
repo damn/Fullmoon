@@ -20,7 +20,7 @@
                        (lower-than-max? (~stat @~'source)))
 
        (transact! ~'[_ {:keys [effect/source]}]
-                  [[:tx/assoc ~'source ~stat (set-to-max (~stat @~'source))]]))))
+                  [[:tx.entity/assoc ~'source ~stat (set-to-max (~stat @~'source))]]))))
 
 (def-set-to-max-effect :entity/hp)
 (def-set-to-max-effect :entity/mana)

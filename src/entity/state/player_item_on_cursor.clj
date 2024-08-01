@@ -17,14 +17,14 @@
           (inventory/valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/set-item id cell item-on-cursor]
-      [:tx/dissoc id :entity/item-on-cursor]
+      [:tx.entity/dissoc id :entity/item-on-cursor]
       [:tx/event id :dropped-item]]
 
      ; STACK ITEMS
      (and item (inventory/stackable? item item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/stack-item id cell item-on-cursor]
-      [:tx/dissoc id :entity/item-on-cursor]
+      [:tx.entity/dissoc id :entity/item-on-cursor]
       [:tx/event id :dropped-item]]
 
      ; SWAP ITEMS
@@ -35,7 +35,7 @@
       [:tx/set-item id cell item-on-cursor]
       ; need to dissoc and drop otherwise state enter does not trigger picking it up again
       ; TODO? coud handle pickup-item from item-on-cursor state also
-      [:tx/dissoc id :entity/item-on-cursor]
+      [:tx.entity/dissoc id :entity/item-on-cursor]
       [:tx/event id :dropped-item]
       [:tx/event id :pickup-item item]])))
 
@@ -73,7 +73,7 @@
   state/State
   (enter [_ {:keys [entity/id]} _ctx]
     [[:tx.context.cursor/set :cursors/hand-grab]
-     [:tx/assoc id :entity/item-on-cursor item]])
+     [:tx.entity/assoc id :entity/item-on-cursor item]])
 
   (exit [_ {:keys [entity/id] :as entity*} ctx]
     ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
@@ -85,7 +85,7 @@
        [:tx/create (item-entity ctx
                                 (item-place-position ctx entity*)
                                 (:entity/item-on-cursor entity*))]
-       [:tx/dissoc id :entity/item-on-cursor]]))
+       [:tx.entity/dissoc id :entity/item-on-cursor]]))
 
   (tick [_ entity* _ctx])
   (render-below [_ entity* g ctx]
