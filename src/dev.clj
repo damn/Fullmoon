@@ -5,6 +5,13 @@
             [api.scene2d.actor :as actor]
             ))
 
+(comment
+ (defn- all-text-colors []
+   (let [colors (seq (.keys (com.badlogic.gdx.graphics.Colors/getColors)))]
+     (str/join "\n"
+               (for [colors (partition-all 4 colors)]
+                 (str/join " , " (map #(str "[" % "]" %) colors)))))))
+
 (import 'com.badlogic.gdx.scenes.scene2d.ui.Tree$Node)
 (import 'com.kotcrab.vis.ui.widget.VisTree)
 

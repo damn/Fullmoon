@@ -1,56 +1,14 @@
 (ns app
-  (:require ;; world property dep ....
-            [core.component :as component]
-            [core.data :as data]
-            properties.property
+  (:require properties.property
             properties.creature
             properties.skill
             properties.item
+            properties.world
             [app.libgdx.app :as app]))
 
-(comment
- (defn- all-text-colors []
-   (let [colors (seq (.keys (com.badlogic.gdx.graphics.Colors/getColors)))]
-     (str/join "\n"
-               (for [colors (partition-all 4 colors)]
-                 (str/join " , " (map #(str "[" % "]" %) colors)))))))
-
-(component/def :world/map-size       data/pos-int-attr)
-(component/def :world/max-area-level data/pos-int-attr) ; TODO <= map-size !?
-(component/def :world/spawn-rate     data/pos-attr) ; TODO <1 !
-
-; TODO make misc is when no property-type matches ? :else case?
-
-(def ^:private property-types
-  (merge
-   properties.creature/definition
-   properties.skill/definition
-   properties.item/definition
-   {; TODO schema missing here .... world/princess key not at defattribute ... require schema ...
-    :property.type/world {:of-type? :world/princess
-                          :edn-file-sort-order 5
-                          :title "World"
-                          :overview {:title "Worlds"
-                                     :columns 10
-                                     :image/dimensions [96 96]}
-                          #_:schema #_(map-attribute-schema
-                                       [:property/id [:qualified-keyword {:namespace :worlds}]]
-                                       [:world/map-size
-                                        :world/max-area-level
-                                        :world/princess
-                                        :world/spawn-rate])}
-
-    :property.type/misc {:of-type? (fn [{:keys [entity/hp
-                                                creature/species
-                                                item/slot
-                                                skill/effect
-                                                world/princess]}]
-                                     (not (or hp species slot effect princess)))
-                         :edn-file-sort-order 6
-                         :title "Misc"
-                         :overview {:title "Misc"
-                                    :columns 10
-                                    :image/dimensions [96 96]}}}))
+; edit /add / remove components with an dev-app
+; creates properly named namespaces then
+; open files also on request??
 
 (def ^:private app-config
   {:app {:title "Cyber Dungeon Quest"
@@ -65,6 +23,7 @@
 
    ; TODO !!
    ; make without slash ... then can directly grep n-name and find this too ! missed some !
+   ; no you dont miss with grep for '.', also we need namespaced keyword short names @ functions
    :context [[:context.libgdx/graphics {:tile-size 48
                                         :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
              [:context.libgdx/assets true]
@@ -85,7 +44,23 @@
                                                :debug-window? true
                                                :debug-options? true}}}]
 
-             [:context/property-types property-types]
+             ; TODO make misc is when no property-type matches ? :else case?
+             [:context/property-types (merge
+                                       properties.creature/definition
+                                       properties.item/definition
+                                       properties.skill/definition
+                                       properties.world/definition
+                                       {:property.type/misc {:of-type? (fn [{:keys [entity/hp
+                                                                                    creature/species
+                                                                                    item/slot
+                                                                                    skill/effect
+                                                                                    world/princess]}]
+                                                                         (not (or hp species slot effect princess)))
+                                                             :edn-file-sort-order 6
+                                                             :title "Misc"
+                                                             :overview {:title "Misc"
+                                                                        :columns 10
+                                                                        :image/dimensions [96 96]}}})]
              [:context/properties {:file "resources/properties.edn"}]
 
              ; strange when finds the namespace but wrong name @ component definition
