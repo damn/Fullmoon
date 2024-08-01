@@ -39,7 +39,7 @@
                                                :debug-window? true
                                                :debug-options? true}}}]
 
-             [:property.all true]
+             [:property/all true]
              [:context/property-types {:properties/audiovisual true
                                        :properties/creature true
                                        :properties/item true
