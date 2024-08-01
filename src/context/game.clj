@@ -24,7 +24,7 @@
   (let [components (map #(vector % nil) game)]
     (component/load! components)
     (reduce (fn [ctx {k 0 :as component}]
-              (assoc ctx k (ctx/create component ctx)))
+              (assoc ctx k (component/create component ctx)))
             ctx
             components)))
 
@@ -151,7 +151,7 @@
 
 (component/def :context/game {}
   components
-  (ctx/create [_ _ctx] components))
+  (component/create [_ _ctx] components))
 
 (extend-type api.context.Context
   api.context/Game

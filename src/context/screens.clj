@@ -5,11 +5,11 @@
 
 (component/def :context/screens {}
   _
-  (ctx/create [[_ {:keys [screens] :as this}] ctx]
+  (component/create [[_ {:keys [screens] :as this}] ctx]
     (component/load! screens)
     (update this :screens component/update-map screen/create ctx))
 
-  (ctx/destroy [_ ctx]
+  (component/destroy [_ ctx]
                ; TODO dispose all screen stages ....
                ; call dispose ?
                ; is it doing anything? because has batch right ? but stuff ... idk

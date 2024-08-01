@@ -1,7 +1,6 @@
 (ns context.game-logic-frame
-  (:require [core.component :as component]
-            [api.context :as ctx]))
+  (:require [core.component :as component]))
 
 (component/def :context/game-logic-frame {}
   _
-  (ctx/create [_ _ctx] (atom 0)))
+  (component/create [_ _ctx] (atom 0)))

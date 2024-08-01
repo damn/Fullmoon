@@ -4,4 +4,4 @@
 
 (component/def :context/thrown-error {}
   _
-  (ctx/create [_ _ctx] (atom nil)))
+  (component/create [_ _ctx] (atom nil)))

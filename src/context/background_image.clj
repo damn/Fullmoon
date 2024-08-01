@@ -4,7 +4,7 @@
 
 (component/def :context/background-image {}
   file
-  (ctx/create [_ ctx] (ctx/create-image ctx file)))
+  (component/create [_ ctx] (ctx/create-image ctx file)))
 
 (extend-type api.context.Context
   api.context/BackgroundImage

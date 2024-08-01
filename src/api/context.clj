@@ -3,8 +3,6 @@
 
 (defrecord Context [])
 
-(component/defn create  [_ ctx])
-(component/defn destroy [_ ctx])
 (component/defn render  [_ ctx])
 
 (defprotocol Game

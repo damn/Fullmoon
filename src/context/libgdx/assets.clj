@@ -35,7 +35,7 @@
 
 (component/def :context.libgdx/assets {}
   _
-  (ctx/create [_ _ctx]
+  (component/create [_ _ctx]
     (let [folder "resources/" ; TODO should be set in classpath and not necessary here ?
           sound-files   (recursively-search-files folder #{"wav"})
           texture-files (recursively-search-files folder #{"png" "bmp"})]

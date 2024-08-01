@@ -118,7 +118,7 @@
 
 (component/def :context/inventory {}
   _
-  (ctx/create [_ ctx]
+  (component/create [_ ctx]
     (let [table (->table ctx {})
           slot->background (slot->background ctx)]
       (redo-table! ctx table slot->background)

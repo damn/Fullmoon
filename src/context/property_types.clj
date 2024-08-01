@@ -8,7 +8,7 @@
 
 (component/def :context/property-types {}
   property-types
-  (ctx/create [_ _ctx]
+  (component/create [_ _ctx]
     (component/load! property-types)
     (component/update-map property-types properties/create)))
 

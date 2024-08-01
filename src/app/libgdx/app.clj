@@ -11,7 +11,7 @@
 
 (defn ->context [context]
   (component/load! context)
-  (component/build (ctx/->Context) ctx/create context :log? false))
+  (component/build (ctx/->Context) component/create context :log? false))
 
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []
@@ -22,7 +22,7 @@
            (reset! current-context)))
 
     (dispose []
-      (component/run-system! ctx/destroy @current-context))
+      (component/run-system! component/destroy @current-context))
 
     (render []
       (ScreenUtils/clear color/black)

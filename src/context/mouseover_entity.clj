@@ -17,7 +17,7 @@
 
 (component/def :context/mouseover-entity {}
   _
-  (ctx/create [_ _ctx] (atom nil)))
+  (component/create [_ _ctx] (atom nil)))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity

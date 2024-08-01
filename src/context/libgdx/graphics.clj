@@ -1,7 +1,7 @@
 (ns ^:no-doc context.libgdx.graphics
   (:require [clojure.string :as str]
             [core.component :as component]
-            [api.context :as ctx]
+            api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
             [api.graphics.color :as color]
@@ -356,7 +356,7 @@
 ; TODO optional world-viewport make
 (component/def :context.libgdx/graphics {}
   _
-  (ctx/create [[_ {:keys [tile-size default-font]}] ctx]
+  (component/create [[_ {:keys [tile-size default-font]}] ctx]
     (let [batch (SpriteBatch.)]
       (map->Graphics
        (merge {:batch batch}
@@ -368,7 +368,7 @@
                                       (api.context/generate-ttf ctx default-font))
                                  (BitmapFont.))}))))
 
-  (ctx/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
+  (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
     (dispose default-font)
     (dispose shape-drawer-texture)
     (dispose batch)))

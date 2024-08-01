@@ -44,14 +44,14 @@
 
 (component/def :context.libgdx/ui {}
   _
-  (ctx/create [_ _ctx]
+  (component/create [_ _ctx]
     (check-cleanup-visui!)
     (VisUI/load)
     (font-enable-markup!)
     (set-tooltip-config!)
     true)
 
-  (ctx/destroy [_ _ctx]
+  (component/destroy [_ _ctx]
     (VisUI/dispose)))
 
 (defn- ->change-listener [_ on-clicked]

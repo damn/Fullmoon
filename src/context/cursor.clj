@@ -31,7 +31,7 @@
 ; => move to gdl ....
 (component/def :context/cursor {}
   _
-  (ctx/create [_ ctx]
+  (component/create [_ ctx]
     (let [cursors (mapvals (fn [[file x y]]
                              (ctx/->cursor ctx (str "cursors/" file ".png") x y))
                            cursors)]

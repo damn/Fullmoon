@@ -1,6 +1,6 @@
 (ns context.action-bar
   (:require [core.component :as component]
-            [api.context :as ctx :refer [->image-button key-just-pressed? ->button-group ->horizontal-group player-tooltip-text]]
+            [api.context :refer [->image-button key-just-pressed? ->button-group ->horizontal-group player-tooltip-text]]
             [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [api.scene2d.group :refer [clear-children! add-actor!]]
             [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
@@ -8,7 +8,7 @@
 
 (component/def :context/action-bar {}
   _
-  (ctx/create [_ ctx]
+  (component/create [_ ctx]
     {:horizontal-group (->horizontal-group ctx {:pad 2
                                                 :space 2})
      :button-group (->button-group ctx {:max-check-count 1

@@ -80,7 +80,7 @@
 
 (component/def :context/properties {}
   {:keys [file]}
-  (ctx/create [_ ctx]
+  (component/create [_ ctx]
     {:file file
      :db (load-edn ctx file)}))
 

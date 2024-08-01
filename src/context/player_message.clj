@@ -25,7 +25,7 @@
 
 (component/def :context/player-message {}
   _
-  (ctx/create [_ _ctx] (atom nil)))
+  (component/create [_ _ctx] (atom nil)))
 
 (defmethod transact! :tx/msg-to-player [[_ message] {:keys [context/player-message]}]
   (reset! player-message {:message message :counter 0})

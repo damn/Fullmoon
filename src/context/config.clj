@@ -1,8 +1,7 @@
 (ns context.config
-  (:require [core.component :as component]
-            [api.context :as ctx]))
+  (:require [core.component :as component]))
 
 (component/def :context/config {}
   {:keys [tag configs]}
-  (ctx/create [_ _ctx]
+  (component/create [_ _ctx]
     (get configs tag)))
