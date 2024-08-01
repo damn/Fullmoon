@@ -3,11 +3,14 @@
             [malli.core :as m]
             [malli.error :as me]
             [core.component :as component]
-            [api.context :as ctx]))
+            [api.context :as ctx]
+            [api.properties :as properties]))
 
 (component/def :context/property-types {}
   property-types
-  (ctx/create [_ _ctx] property-types))
+  (ctx/create [_ _ctx]
+    (component/load! property-types :log? true)
+    (component/update-map property-types properties/create)))
 
 (defn- property->text [{:keys [context/property-types] :as ctx} property]
   ((:->text (get property-types (api.context/property->type ctx property)))
@@ -57,6 +60,7 @@
 
   (property->type [{:keys [context/property-types]} property]
     (some (fn [[type {:keys [of-type?]}]]
+            (assert of-type?)
             (when (of-type? property)
               type))
           property-types))

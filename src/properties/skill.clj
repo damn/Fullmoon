@@ -4,6 +4,7 @@
             [core.component :as component]
             [core.data :as data]
             [api.context :as ctx]
+            [api.properties :as properties]
             effect.all))
 
 (component/def :skill/action-time data/pos-attr)
@@ -18,36 +19,37 @@
 (def ^:private cooldown-color "[SKY]")
 (def ^:private effect-color "[CHARTREUSE]")
 
-(def definition
-  {:property.type/skill
-   {:of-type? :skill/effect
-    :edn-file-sort-order 0
-    :title "Skill"
-    :overview {:title "Skill"
-               :columns 16
-               :image/dimensions [70 70]}
-    :schema (data/map-attribute-schema
-             [:property/id [:qualified-keyword {:namespace :skills}]]
-             [:property/image
-              :skill/action-time
-              :skill/cooldown
-              :skill/cost
-              :skill/effect
-              :skill/start-action-sound
-              :skill/action-time-modifier-key])
-    :->text (fn [ctx {:keys [property/id
-                             skill/action-time
-                             skill/cooldown
-                             skill/cost
-                             skill/effect
-                             skill/action-time-modifier-key]}]
-              [(str/capitalize (name id))
-               (str skill-cost-color "Cost: " cost "[]")
-               (str action-time-color
-                    (case action-time-modifier-key
-                      :stats/cast-speed "Casting-Time"
-                      :stats/attack-speed "Attack-Time")
-                    ": "
-                    (readable-number action-time) " seconds" "[]")
-               (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
-               (str effect-color (ctx/effect-text ctx effect) "[]")])}})
+(component/def :properties/skill {}
+  _
+  (properties/create [_]
+    {:of-type? :skill/effect
+     :edn-file-sort-order 0
+     :title "Skill"
+     :overview {:title "Skill"
+                :columns 16
+                :image/dimensions [70 70]}
+     :schema (data/map-attribute-schema
+              [:property/id [:qualified-keyword {:namespace :skills}]]
+              [:property/image
+               :skill/action-time
+               :skill/cooldown
+               :skill/cost
+               :skill/effect
+               :skill/start-action-sound
+               :skill/action-time-modifier-key])
+     :->text (fn [ctx {:keys [property/id
+                              skill/action-time
+                              skill/cooldown
+                              skill/cost
+                              skill/effect
+                              skill/action-time-modifier-key]}]
+               [(str/capitalize (name id))
+                (str skill-cost-color "Cost: " cost "[]")
+                (str action-time-color
+                     (case action-time-modifier-key
+                       :stats/cast-speed "Casting-Time"
+                       :stats/attack-speed "Attack-Time")
+                     ": "
+                     (readable-number action-time) " seconds" "[]")
+                (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
+                (str effect-color (ctx/effect-text ctx effect) "[]")])}))

@@ -117,6 +117,8 @@
 
  ; # Change properties -> disable validate @ update!
 
+ ; == 'db - migration' !
+
  (let [ctx @app.state/current-context
        props (api.context/all-properties ctx :property.type/misc)
        props (for [prop props]

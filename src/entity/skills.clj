@@ -10,7 +10,7 @@
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
-(component/def :entity/skills (attr/one-to-many-ids :property.type/skill)
+(component/def :entity/skills (attr/one-to-many-ids :properties/skill)
   skills
   (entity/create-component [_ _components ctx]
     (zipmap skills (map #(get-property ctx %) skills)))

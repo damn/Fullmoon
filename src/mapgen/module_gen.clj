@@ -204,7 +204,7 @@
 
 (defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
   (let [layer (add-layer! tiled-map :name "creatures" :visible true)
-        creature-properties (all-properties context :property.type/creature)]
+        creature-properties (all-properties context :properties/creature)]
     (when spawn-creatures?
       (doseq [position spawn-positions
               :let [area-level (get area-level-grid position)]

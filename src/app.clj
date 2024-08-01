@@ -10,13 +10,6 @@
   ; !! => only functions !!
 
   (:require properties.property
-            ;
-            properties.audiovisual
-            properties.creature
-            properties.skill
-            properties.item
-            properties.world
-            ;
             [app.libgdx.app :as app]))
 
 ; edit /add / remove components with an dev-app
@@ -57,11 +50,11 @@
                                                :debug-window? true
                                                :debug-options? true}}}]
 
-             [:context/property-types (merge properties.audiovisual/definition
-                                             properties.creature/definition
-                                             properties.item/definition
-                                             properties.skill/definition
-                                             properties.world/definition)]
+             [:context/property-types {:properties/audiovisual true
+                                       :properties/creature true
+                                       :properties/item true
+                                       :properties/skill true
+                                       :properties/world true}]
              [:context/properties {:file "resources/properties.edn"}]
 
              ; strange when finds the namespace but wrong name @ component definition

@@ -114,10 +114,11 @@
 (defn- k->component-ns [k]
   (symbol (str (namespace k) "." (name k))))
 
-(clojure.core/defn load! [components]
+(clojure.core/defn load! [components & {:keys [log?]}]
   (assert (apply distinct? (map first components)))
   (doseq [[k _] components
           :let [component-ns (k->component-ns k)]]
+    (when log? (println "require " component-ns))
     (require component-ns)
     ; tools namespace doesn't load them in right order, if we are asserting order of component matters, we need to reload them.
     ; but this is quite though because then so much loading

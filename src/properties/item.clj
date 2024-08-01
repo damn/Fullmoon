@@ -2,6 +2,7 @@
   (:require [core.component :as component]
             [core.data :as data]
             [api.context :as ctx]
+            [api.properties :as properties]
             modifier.all))
 
 ; modifier add/remove
@@ -23,27 +24,28 @@
 
 (def ^:private modifier-color "[VIOLET]")
 
-(def definition
-  {:property.type/item {:of-type? :item/slot
-                        :edn-file-sort-order 3
-                        :title "Item"
-                        :overview {:title "Items"
-                                   :columns 17
-                                   :image/dimensions [60 60]
-                                   :sort-by-fn #(vector (if-let [slot (:item/slot %)]
-                                                          (name slot)
-                                                          "")
-                                                        (name (:property/id %)))}
-                        :schema (data/map-attribute-schema
-                                 [:property/id [:qualified-keyword {:namespace :items}]]
-                                 [:property/pretty-name
-                                  :property/image
-                                  :item/slot
-                                  :item/modifier])
-                        :->text (fn [ctx
-                                     {:keys [property/pretty-name
-                                             item/modifier]
-                                      :as item}]
-                                  [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
-                                   (when (seq modifier) (str modifier-color (ctx/modifier-text ctx modifier) "[]"))])}}
-  )
+(component/def :properties/item {}
+  _
+  (properties/create [_]
+    {:of-type? :item/slot
+     :edn-file-sort-order 3
+     :title "Item"
+     :overview {:title "Items"
+                :columns 17
+                :image/dimensions [60 60]
+                :sort-by-fn #(vector (if-let [slot (:item/slot %)]
+                                       (name slot)
+                                       "")
+                                     (name (:property/id %)))}
+     :schema (data/map-attribute-schema
+              [:property/id [:qualified-keyword {:namespace :items}]]
+              [:property/pretty-name
+               :property/image
+               :item/slot
+               :item/modifier])
+     :->text (fn [ctx
+                  {:keys [property/pretty-name
+                          item/modifier]
+                   :as item}]
+               [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
+                (when (seq modifier) (str modifier-color (ctx/modifier-text ctx modifier) "[]"))])}))
