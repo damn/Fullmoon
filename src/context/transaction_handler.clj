@@ -5,13 +5,7 @@
 
 (def ^:private record-txs? false)
 
-(defn set-record-txs! [bool]
-  (.bindRoot #'record-txs? bool))
-
 (def ^:private frame->txs (atom nil))
-
-(defn clear-recorded-txs! []
-  (reset! frame->txs {}))
 
 (defn- add-tx-to-frame [frame->txs frame-num tx]
   (update frame->txs frame-num (fn [txs-at-frame]
@@ -39,6 +33,17 @@
 
 (extend-type api.context.Context
   api.context/TransactionHandler
+  (set-record-txs! [_ bool]
+    (.bindRoot #'record-txs? bool))
+
+  (clear-recorded-txs! [_]
+    (reset! frame->txs {}))
+
+  (summarize-txs [_ txs]
+    (clojure.pprint/pprint
+     (for [[txkey txs] (group-by first txs)]
+       [txkey (count txs)])))
+
   (transact-all! [{:keys [context/game-logic-frame] :as ctx} txs]
     (doseq [tx txs :when tx]
       (try (let [result (transact! tx ctx)]
@@ -55,8 +60,3 @@
 
   (frame->txs [_ frame-number]
     (@frame->txs frame-number)))
-
-(defn summarize-txs [txs]
-  (clojure.pprint/pprint
-   (for [[txkey txs] (group-by first txs)]
-     [txkey (count txs)])))

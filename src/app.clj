@@ -59,6 +59,12 @@
              [:context/render-debug true]
              [:context/transaction-handler true]
 
+
+             ; TODO to fix modal bug
+             ; clear and add again every new game
+             ; to game screen the ui actors
+             ; => game screen doesn't even have to know ....
+             ; and fetch inventory/action-bar from there ???
              [:context/inventory true]
              [:context/action-bar true]
              [:context/ecs true]
