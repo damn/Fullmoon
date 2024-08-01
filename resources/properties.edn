@@ -4260,14 +4260,14 @@
   :world/max-area-level 16,
   :world/princess :creatures/lady-a,
   :world/spawn-rate 0.05}
- {:entity/animation
+ {:property/animation
   {:frames
    ({:file "fx/uf_FX_impact.png", :sub-image-bounds [144 0 48 48]}
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [192 0 48 48]}
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [240 0 48 48]}),
    :frame-duration 0.05,
    :looping? nil},
-  :property/id :effects.damage/hit-effect,
+  :property/id :audiovisuals/damage,
   :property/sound "sounds/bfxr_normalhit.wav"}
  {:property/id :skull-small-gold,
   :property/image
@@ -4317,14 +4317,14 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [384 384 48 48]},
   :property/pretty-name "Sapphire Gem"}
- {:entity/animation
+ {:property/animation
   {:frames
    ({:file "fx/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [384 48 48 48]}),
    :frame-duration 0.05,
    :looping? nil},
-  :property/id :effects.damage.magic/hit-effect_UNUSED,
+  :property/id :audiovisuals/unused,
   :property/sound "sounds/bfxr_curse.wav"}
  {:property/id :potion-red,
   :property/image
@@ -4366,14 +4366,14 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [672 48 48 48]},
   :property/pretty-name "Lit Torch"}
- {:entity/animation
+ {:property/animation
   {:frames
    ({:file "fx/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
    :frame-duration 0.05,
    :looping? nil},
-  :property/id :effects.target-entity/hit-ground-effect,
+  :property/id :audiovisuals/hit-ground,
   :property/sound "sounds/bfxr_fisthit.wav"}
  {:property/id :book-brown,
   :property/image
@@ -4419,7 +4419,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 48 48 48]},
   :property/pretty-name "Gold Chest"}
- {:entity/animation
+ {:property/animation
   {:frames
    ({:file "fx/uf_FX.png", :sub-image-bounds [0 168 24 24]}
     {:file "fx/uf_FX.png", :sub-image-bounds [24 168 24 24]}
@@ -4429,7 +4429,7 @@
     {:file "fx/uf_FX.png", :sub-image-bounds [120 168 24 24]}),
    :frame-duration 0.025,
    :looping? nil},
-  :property/id :projectile/hit-wall-effect,
+  :property/id :audiovisuals/hit-wall,
   :property/sound "sounds/bfxr_projectile_wallhit.wav"}
  {:property/id :potion-white,
   :property/image
@@ -4443,7 +4443,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [768 48 48 48]},
   :property/pretty-name "Drumstick"}
- {:entity/animation
+ {:property/animation
   {:frames
    ({:file "fx/uf_FX.png", :sub-image-bounds [96 144 24 24]}
     {:file "fx/uf_FX.png", :sub-image-bounds [120 144 24 24]}
@@ -4453,7 +4453,7 @@
     {:file "fx/uf_FX.png", :sub-image-bounds [216 144 24 24]}),
    :frame-duration 0.05,
    :looping? nil},
-  :property/id :creature/die-effect,
+  :property/id :audiovisuals/creature-die,
   :property/sound "sounds/bfxr_defaultmonsterdeath.wav"}
  {:property/id :flask-green,
   :property/image

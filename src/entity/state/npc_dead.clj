@@ -5,7 +5,7 @@
   state/State
   (enter [_ {:keys [entity/id entity/position]} _ctx]
     [[:tx/destroy id]
-     [:tx/audiovisual position :creature/die-effect]])
+     [:tx/audiovisual position :audiovisuals/creature-die]])
   (exit [_ entity* _ctx])
   (tick [_ entity* _ctx])
   (render-below [_ entity* g ctx])

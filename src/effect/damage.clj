@@ -129,7 +129,7 @@
        (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
              dmg-amount (random/rand-int-between min-max)
              hp (apply-val hp #(- % dmg-amount))]
-         [[:tx/audiovisual position :effects.damage/hit-effect]
+         [[:tx/audiovisual position :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
           [:tx/assoc target :entity/hp hp]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))

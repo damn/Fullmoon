@@ -1,5 +1,6 @@
 (ns app
-  (:require properties.property
+  (:require properties.audiovisual
+            properties.property
             properties.creature
             properties.skill
             properties.item
@@ -46,16 +47,20 @@
 
              ; TODO make misc is when no property-type matches ? :else case?
              [:context/property-types (merge
+                                       properties.audiovisual/definition
                                        properties.creature/definition
                                        properties.item/definition
                                        properties.skill/definition
                                        properties.world/definition
-                                       {:property.type/misc {:of-type? (fn [{:keys [entity/hp
+                                       ; add unused items
+                                       ; or slot bag ?
+                                       {:property.type/misc {:of-type? (fn [{:keys [property/animation
+                                                                                    entity/hp
                                                                                     creature/species
                                                                                     item/slot
                                                                                     skill/effect
                                                                                     world/princess]}]
-                                                                         (not (or hp species slot effect princess)))
+                                                                         (not (or animation hp species slot effect princess)))
                                                              :edn-file-sort-order 6
                                                              :title "Misc"
                                                              :overview {:title "Misc"

@@ -50,9 +50,8 @@
        (#(if (:property/image %)
            (update % :property/image (fn [img] (deserialize-image context img)))
            %))
-       ; audiovisual
-       (#(if (:entity/animation %)
-           (update % :entity/animation (fn [anim] (deserialize-animation context anim)))
+       (#(if (:property/animation %)
+           (update % :property/animation (fn [anim] (deserialize-animation context anim)))
            %))
        (#(if (:entity/animation (:property/entity %))
            (update-in % [:property/entity :entity/animation] (fn [anim] (deserialize-animation context anim)))
@@ -66,13 +65,10 @@
 (defn- serialize [data]
   (->> data
        (#(if (:property/image %) (update % :property/image serialize-image) %))
-       ; audiovisual
-       (#(if (:entity/animation %)
-           (update % :entity/animation serialize-animation) %))
+       (#(if (:property/animation %)
+           (update % :property/animation serialize-animation) %))
        (#(if (:entity/animation (:property/entity %))
            (update-in % [:property/entity :entity/animation] serialize-animation) %))))
-
-
 
 (defn- load-edn [context file]
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol

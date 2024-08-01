@@ -73,7 +73,7 @@
                   ; * hitting ground in front of you ( there is another monster )
                   ; * -> it doesn't get hit ! hmmm
                   ; * either use 'MISS' or get enemy entities at end-point
-                  [:tx/audiovisual (end-point source* target* maxrange) :effects.target-entity/hit-ground-effect]])))
+                  [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
   (effect/render-info [_ g {:keys [effect/source effect/target] :as ctx}]
                       (let [source* @source

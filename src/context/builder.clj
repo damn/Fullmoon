@@ -54,7 +54,7 @@
 
 (component/def :entity/plop {} _
   (entity/destroy [_ entity* ctx]
-    [[:tx/audiovisual (:entity/position entity*) :projectile/hit-wall-effect]]))
+    [[:tx/audiovisual (:entity/position entity*) :audiovisuals/hit-wall]]))
 
 (extend-type api.context.Context
   api.context/Builder
@@ -78,7 +78,7 @@
 
 (defmethod transact! :tx/audiovisual [[_ position id] ctx]
   (let [{:keys [property/sound
-                entity/animation]} (get-property ctx id)]
+                property/animation]} (get-property ctx id)]
     [[:tx/sound sound]
      [:tx/create #:entity {:position position
                            :animation animation
