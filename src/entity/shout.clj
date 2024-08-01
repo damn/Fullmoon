@@ -17,8 +17,7 @@
                      (line-of-sight? context entity* %)))))
 
 (defcomponent :entity/shout {}
-  counter
-  (entity/tick [_ {:keys [entity/id] :as entity*} context]
+  (entity/tick [[_ counter] {:keys [entity/id] :as entity*} context]
     (when (stopped? context counter)
       (cons [:tx/destroy id]
             (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context entity* shout-range)]

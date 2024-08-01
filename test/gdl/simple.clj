@@ -1,11 +1,10 @@
 (ns gdl.simple
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [app.libgdx.app :as app]
             [api.context :as ctx]))
 
-(component/def :gdl/simple {}
-  {:keys [font logo]}
-  (ctx/create [_ ctx]
+(defcomponent :gdl/simple {}
+  (component/create [[_ {:keys [font logo]}] ctx]
     {:special-font (ctx/generate-ttf ctx font)
      :logo (ctx/create-image ctx logo)}))
 

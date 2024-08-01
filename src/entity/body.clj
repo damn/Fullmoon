@@ -36,7 +36,6 @@
 
 ; TODO body assert >+ min body size?
 (defcomponent :entity/body (attr/map-attribute :width :height :solid?)
-  body
   (entity/create-component [_ {:keys [entity/position]
                                [x y] :entity/position
                                {:keys [width
@@ -64,6 +63,6 @@
       :rotation-angle (or rotation-angle 0)
       :rotate-in-movement-direction? rotate-in-movement-direction?}))
 
-  (entity/render-debug [_ _entity* g _ctx]
+  (entity/render-debug [[_ body] _entity* g _ctx]
     (when show-body-bounds
       (draw-bounds g body))))

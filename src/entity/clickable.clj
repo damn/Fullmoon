@@ -4,8 +4,10 @@
             [api.entity :as entity]))
 
 (defcomponent :entity/clickable {}
-  {:keys [text]}
-  (entity/render-default [_ {[x y] :entity/position :keys [entity/mouseover? entity/body]} g _ctx]
+  (entity/render-default [[_ {:keys [text]}]
+                          {[x y] :entity/position :keys [entity/mouseover? entity/body]}
+                          g
+                          _ctx]
     (when (and mouseover? text)
       (g/draw-text g
                    {:text text

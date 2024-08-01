@@ -1,5 +1,5 @@
 (ns gdl.simple-screen
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.graphics :as g]
             [api.screen :as screen]
@@ -30,6 +30,5 @@
   (render [_ {g :context.libgdx/graphics :as ctx}]
     (g/render-gui-view g #(draw-test % ctx))))
 
-(component/def :gdl/simple-screen {}
-  _
+(defcomponent :gdl/simple-screen {}
   (screen/create [_ _ctx] (->Screen)))

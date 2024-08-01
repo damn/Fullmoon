@@ -11,11 +11,10 @@
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
 (defcomponent :entity/skills (attr/one-to-many-ids :properties/skill)
-  skills
-  (entity/create-component [_ _components ctx]
-    (zipmap skills (map #(get-property ctx %) skills)))
+  (entity/create-component [[_ skill-ids] _components ctx]
+    (zipmap skills (map #(get-property ctx %) skill-ids)))
 
-  (entity/tick [[k _] entity* ctx]
+  (entity/tick [[k skills] entity* ctx]
     (for [{:keys [property/id skill/cooling-down?]} (vals skills)
           :when (and cooling-down?
                      (stopped? ctx cooling-down?))]
