@@ -114,21 +114,21 @@
              (pprint-spit file)))))))
 
 (comment
- ; # Add new attributes => make into fn for property-type apply fn to all props
+
+ ; # Change properties -> disable validate @ update!
+
  (let [ctx @app.state/current-context
-       props (api.context/all-properties ctx :property.type/weapon)
+       props (api.context/all-properties ctx :property.type/misc)
        props (for [prop props]
                (-> prop
-                   (assoc :skill/start-action-sound "sounds/slash.wav"
-                          :skill/action-time-modifier-key :attack-speed)))]
-   (def write-to-file? false)
-   (doseq [prop props]
-     (swap! app.state/current-context update :context/properties update! prop))
-   (def ^:private write-to-file? true)
-   (swap! app.state/current-context update :context/properties update! (api.context/get-property ctx :creatures/vampire))
+                   (assoc
+                    :item/modifier {},
+                    :item/slot :inventory.slot/bag)
+                   (update :property/id (fn [k] (keyword "items" (name k))))))]
+   (def write-to-file? true)
+   (doseq [prop props] (swap! app.state/current-context ctx/update! prop))
    nil)
  )
-
 
 (extend-type api.context.Context
   api.context/PropertyStore
