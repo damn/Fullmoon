@@ -84,6 +84,8 @@
                                           :screens/options-menu   true
                                           :screens/property-editor true}}]
              ; TODO tx/all ?
+             [:tx/audiovisual true]
+             [:tx/creature true]
              [:tx/sound true]
              [:tx/player-modal true]
              [:context/error-modal true]]})
