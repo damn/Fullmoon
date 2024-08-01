@@ -1,6 +1,10 @@
 (ns properties.audiovisual
   (:require [core.component :as component]
-            [core.data :as data]))
+            [core.data :as data]
+
+            properties.property ; namespace refresh problenm ... because global core.component/attributes
+
+            ))
 
 (def definition
   {:property.type/audiovisual

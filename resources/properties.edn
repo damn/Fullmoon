@@ -3272,6 +3272,12 @@
   {:file "items/images.png", :sub-image-bounds [528 144 48 48]},
   :property/pretty-name "Staff"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/skull-small-gold,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [192 384 48 48]},
+  :property/pretty-name "Gold Small Skull"}
+ {:item/modifier {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-cloth,
   :property/image
@@ -3290,6 +3296,24 @@
   {:file "items/images.png", :sub-image-bounds [336 96 48 48]},
   :property/pretty-name "Axe"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/coin-copper,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [624 0 48 48]},
+  :property/pretty-name "Copper Coin"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/gem-ruby,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [336 384 48 48]},
+  :property/pretty-name "Ruby Gem"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-dragon,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [624 336 48 48]},
+  :property/pretty-name "Dragon Crystal"}
+ {:item/modifier {},
   :item/slot :inventory.slot/boot,
   :property/id :items/mystic-boot,
   :property/image
@@ -3301,6 +3325,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [0 432 48 48]},
   :property/pretty-name "Helm Cloth"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-blood,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [672 336 48 48]},
+  :property/pretty-name "Blood Crystal"}
  {:item/modifier {},
   :item/slot :inventory.slot/helm,
   :property/id :items/chain-helm,
@@ -3319,6 +3349,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [48 96 48 48]},
   :property/pretty-name "Dagger"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/skull-large-open,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [0 384 48 48]},
+  :property/pretty-name "Open Large Skull"}
  {:item/modifier {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-royal,
@@ -3343,6 +3379,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [288 96 48 48]},
   :property/pretty-name "Handaxe"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/flask-red,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [816 48 48 48]},
+  :property/pretty-name "Red Flask"}
  {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-great,
@@ -3380,6 +3422,12 @@
   {:file "items/images.png", :sub-image-bounds [48 288 48 48]},
   :property/pretty-name "Heater Flame Shield"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/coin-gold,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [720 0 48 48]},
+  :property/pretty-name "Gold Coin"}
+ {:item/modifier {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-cross,
   :property/image
@@ -3397,6 +3445,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [192 192 48 48]},
   :property/pretty-name "Sun Hammer Magic"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-blue,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [144 0 48 48]},
+  :property/pretty-name "Blue Key"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/club-spiked,
@@ -3494,17 +3548,35 @@
   {:file "items/images.png", :sub-image-bounds [480 336 48 48]},
   :property/pretty-name "Diamond Ring"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/skull-small-blood,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [144 384 48 48]},
+  :property/pretty-name "Blood Small Skull"}
+ {:item/modifier {},
   :item/slot :inventory.slot/helm,
   :property/id :items/royal-helm,
   :property/image
   {:file "items/images.png", :sub-image-bounds [240 432 48 48]},
   :property/pretty-name "Helm Royal"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/potion-black,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [576 0 48 48]},
+  :property/pretty-name "Black Potion"}
+ {:item/modifier {},
   :item/slot :inventory.slot/leg,
   :property/id :items/chain-leg,
   :property/image
   {:file "items/images.png", :sub-image-bounds [144 528 48 48]},
   :property/pretty-name "Leg Chain"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/gem-sapphire,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [384 384 48 48]},
+  :property/pretty-name "Sapphire Gem"}
  {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-great,
@@ -3523,6 +3595,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [0 528 48 48]},
   :property/pretty-name "Leg Cloth"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/potion-red,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [480 0 48 48]},
+  :property/pretty-name "Red Potion"}
  {:item/modifier {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-emerald,
@@ -3566,11 +3644,35 @@
   {:file "items/images.png", :sub-image-bounds [96 432 48 48]},
   :property/pretty-name "Helm Studded"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-silver,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [48 0 48 48]},
+  :property/pretty-name "Silver Key"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/heart-red-half,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [816 0 48 48]},
+  :property/pretty-name "Half Red Heart"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/chest-empty,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [432 48 48 48]},
+  :property/pretty-name "Empty Chest"}
+ {:item/modifier {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-leather,
   :property/image
   {:file "items/images.png", :sub-image-bounds [480 480 48 48]},
   :property/pretty-name "Leather Cloak"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/chest-gold-open,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [384 48 48 48]},
+  :property/pretty-name "Open Gold Chest"}
  {:item/modifier {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-amethyst,
@@ -3578,11 +3680,29 @@
   {:file "items/images.png", :sub-image-bounds [480 384 48 48]},
   :property/pretty-name "Amethyst Necklace"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-red,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [96 0 48 48]},
+  :property/pretty-name "Red Key"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-latch,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [288 48 48 48]},
+  :property/pretty-name "Latch Book"}
+ {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic2,
   :property/image
   {:file "items/images.png", :sub-image-bounds [768 96 48 48]},
   :property/pretty-name "Exotic2 Sword"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-bone,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [240 0 48 48]},
+  :property/pretty-name "Bone Key"}
  {:item/modifier {:modifier/cast-speed 0.3},
   :item/slot :inventory.slot/helm,
   :property/id :items/blood-helm,
@@ -3626,6 +3746,12 @@
   {:file "items/images.png", :sub-image-bounds [384 528 48 48]},
   :property/pretty-name "Leg Wild"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/gem-amethyst,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [432 384 48 48]},
+  :property/pretty-name "Amethyst Gem"}
+ {:item/modifier {},
   :item/slot :inventory.slot/chest,
   :property/id :items/leather-chest,
   :property/image
@@ -3637,6 +3763,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [48 240 48 48]},
   :property/pretty-name "Heater Wood Shield"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/torch-lit,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [672 48 48 48]},
+  :property/pretty-name "Lit Torch"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/mace,
@@ -3656,11 +3788,23 @@
   {:file "items/images.png", :sub-image-bounds [0 624 48 48]},
   :property/pretty-name "Boot Cloth"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-brown,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [0 48 48 48]},
+  :property/pretty-name "Brown Book"}
+ {:item/modifier {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-eye,
   :property/image
   {:file "items/images.png", :sub-image-bounds [768 384 48 48]},
   :property/pretty-name "Eye Necklace"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-gold,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [0 0 48 48]},
+  :property/pretty-name "Gold Key"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/stiletto,
@@ -3680,6 +3824,18 @@
   {:file "items/images.png", :sub-image-bounds [0 96 48 48]},
   :property/pretty-name "Sword"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-evil,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [240 48 48 48]},
+  :property/pretty-name "Evil Book"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/chest-silver-,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [480 48 48 48]},
+  :property/pretty-name "Silver Chest"}
+ {:item/modifier {},
   :item/slot :inventory.slot/glove,
   :property/id :items/leather-glove,
   :property/image
@@ -3692,6 +3848,12 @@
   {:file "items/images.png", :sub-image-bounds [48 192 48 48]},
   :property/pretty-name "Hellfire Sword Magic"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/flask-blue,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [864 48 48 48]},
+  :property/pretty-name "Blue Flask"}
+ {:item/modifier {},
   :item/slot :inventory.slot/helm,
   :property/id :items/wild-helm,
   :property/image
@@ -3703,6 +3865,18 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [384 576 48 48]},
   :property/pretty-name "Glove Wild"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/skull-small,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [96 384 48 48]},
+  :property/pretty-name "Small Skull"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-cloud,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [720 336 48 48]},
+  :property/pretty-name "Cloud Crystal"}
  {:item/modifier {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-ornate,
@@ -3722,6 +3896,18 @@
   {:file "items/images.png", :sub-image-bounds [576 240 48 48]},
   :property/pretty-name "Buckler Gold Shield"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/heart-empty,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [768 0 48 48]},
+  :property/pretty-name "Empty Heart"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/potion-green,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [432 0 48 48]},
+  :property/pretty-name "Green Potion"}
+ {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-great,
   :property/image
@@ -3733,6 +3919,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [624 144 48 48]},
   :property/pretty-name "Ankh Staff"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/chest-silver-open,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [528 48 48 48]},
+  :property/pretty-name "Open Silver Chest"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-venom,
@@ -3751,6 +3943,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 480 48 48]},
   :property/pretty-name "Chest Blood"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/chest-gold,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [336 48 48 48]},
+  :property/pretty-name "Gold Chest"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-vorpal,
@@ -3794,6 +3992,12 @@
   {:file "items/images.png", :sub-image-bounds [144 624 48 48]},
   :property/pretty-name "Boot Chain"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/potion-white,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [528 0 48 48]},
+  :property/pretty-name "White Potion"}
+ {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-buckler,
   :property/image
@@ -3805,6 +4009,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [192 144 48 48]},
   :property/pretty-name "Quarterstaff"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/skull-large-closed,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [48 384 48 48]},
+  :property/pretty-name "Closed Large Skull"}
  {:item/modifier {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-cold,
@@ -3824,6 +4034,12 @@
   {:file "items/images.png", :sub-image-bounds [528 528 48 48]},
   :property/pretty-name "Ornate Cloak"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/flask-green,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [912 48 48 48]},
+  :property/pretty-name "Green Flask"}
+ {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/axe-exotic1,
   :property/image
@@ -3835,6 +4051,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [192 96 48 48]},
   :property/pretty-name "Falchion"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/drumstick,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [768 48 48 48]},
+  :property/pretty-name "Drumstick"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-lightning,
@@ -3865,6 +4087,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [48 528 48 48]},
   :property/pretty-name "Leg Leather"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-crimson,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [816 336 48 48]},
+  :property/pretty-name "Crimson Crystal"}
  {:item/modifier {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-gold,
@@ -3908,6 +4136,12 @@
   {:file "items/images.png", :sub-image-bounds [528 96 48 48]},
   :property/pretty-name "Hammer"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-sun,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [864 336 48 48]},
+  :property/pretty-name "Sun Crystal"}
+ {:item/modifier {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-pearl,
   :property/image
@@ -3937,6 +4171,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [288 624 48 48]},
   :property/pretty-name "Boot Gold"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/gem-emerald,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [288 384 48 48]},
+  :property/pretty-name "Emerald Gem"}
  {:item/modifier {},
   :item/slot :inventory.slot/leg,
   :property/id :items/blood-leg,
@@ -4022,17 +4262,41 @@
   {:file "items/images.png", :sub-image-bounds [576 192 48 48]},
   :property/pretty-name "Horned Bow Magic"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-red,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [96 48 48 48]},
+  :property/pretty-name "Red Book"}
+ {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-kite,
   :property/image
   {:file "items/images.png", :sub-image-bounds [96 240 48 48]},
   :property/pretty-name "Kite Wood Shield"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-blue,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [144 48 48 48]},
+  :property/pretty-name "Blue Book"}
+ {:item/modifier {},
   :item/slot :inventory.slot/chest,
   :property/id :items/wild-chest,
   :property/image
   {:file "items/images.png", :sub-image-bounds [384 480 48 48]},
   :property/pretty-name "Chest Wild"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/coin-silver,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [672 0 48 48]},
+  :property/pretty-name "Silver Coin"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-black,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [48 48 48 48]},
+  :property/pretty-name "Black Book"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-branch,
@@ -4052,11 +4316,29 @@
   {:file "items/images.png", :sub-image-bounds [192 288 48 48]},
   :property/pretty-name "Buckler Ice Shield"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/potion-blue,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [384 0 48 48]},
+  :property/pretty-name "Blue Potion"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/potion-empty,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [336 0 48 48]},
+  :property/pretty-name "Empty Potion"}
+ {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-great,
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 240 48 48]},
   :property/pretty-name "Great Iron Shield"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/heart-green-half,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [912 0 48 48]},
+  :property/pretty-name "Half Green Heart"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greatmace,
@@ -4087,6 +4369,12 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [96 480 48 48]},
   :property/pretty-name "Chest Studded"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-sky,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [576 336 48 48]},
+  :property/pretty-name "Sky Crystal"}
  {:item/modifier {},
   :item/slot :inventory.slot/glove,
   :property/id :items/plate-glove,
@@ -4130,6 +4418,12 @@
   {:file "items/images.png", :sub-image-bounds [480 288 48 48]},
   :property/pretty-name "Kite Vorpal Shield"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/crystal-onyx,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [768 336 48 48]},
+  :property/pretty-name "Onyx Crystal"}
+ {:item/modifier {},
   :item/slot :inventory.slot/glove,
   :property/id :items/gold-glove,
   :property/image
@@ -4141,6 +4435,18 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [384 240 48 48]},
   :property/pretty-name "Buckler Royal Shield"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/heart-green-full,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [960 0 48 48]},
+  :property/pretty-name "Full Green Heart"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/gem-tourmaline,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [240 384 48 48]},
+  :property/pretty-name "Tourmaline Gem"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/lance,
@@ -4160,6 +4466,12 @@
   {:file "items/images.png", :sub-image-bounds [288 288 48 48]},
   :property/pretty-name "Kite Ice Shield"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/heart-red-full,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [864 0 48 48]},
+  :property/pretty-name "Full Red Heart"}
+ {:item/modifier {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-amethyst,
   :property/image
@@ -4172,6 +4484,12 @@
   {:file "items/images.png", :sub-image-bounds [48 432 48 48]},
   :property/pretty-name "Helm Leather"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/satchel,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [720 48 48 48]},
+  :property/pretty-name "Satchel"}
+ {:item/modifier {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-tattered,
   :property/image
@@ -4183,6 +4501,24 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [240 96 48 48]},
   :property/pretty-name "Broadsword"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/book-green,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [192 48 48 48]},
+  :property/pretty-name "Green Book"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/chest-silver-empty,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [576 48 48 48]},
+  :property/pretty-name "Empty Silver Chest"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/torch,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [624 48 48 48]},
+  :property/pretty-name "Torch"}
  {:item/modifier {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-heater,
@@ -4202,11 +4538,23 @@
   {:file "items/images.png", :sub-image-bounds [432 144 48 48]},
   :property/pretty-name "Cross"}
  {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-ornate,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [288 0 48 48]},
+  :property/pretty-name "Ornate Key"}
+ {:item/modifier {},
   :item/slot :inventory.slot/glove,
   :property/id :items/mystic-glove,
   :property/image
   {:file "items/images.png", :sub-image-bounds [432 576 48 48]},
   :property/pretty-name "Glove Mystic"}
+ {:item/modifier {},
+  :item/slot :inventory.slot/bag,
+  :property/id :items/key-green,
+  :property/image
+  {:file "items/images.png", :sub-image-bounds [192 0 48 48]},
+  :property/pretty-name "Green Key"}
  {:item/modifier {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-cold,
@@ -4269,156 +4617,6 @@
    :looping? nil},
   :property/id :audiovisuals/damage,
   :property/sound "sounds/bfxr_normalhit.wav"}
- {:property/id :skull-small-gold,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [192 384 48 48]},
-  :property/pretty-name "Gold Small Skull"}
- {:property/id :crystal-dragon,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [624 336 48 48]},
-  :property/pretty-name "Dragon Crystal"}
- {:property/id :gem-ruby,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [336 384 48 48]},
-  :property/pretty-name "Ruby Gem"}
- {:property/id :coin-copper,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [624 0 48 48]},
-  :property/pretty-name "Copper Coin"}
- {:property/id :crystal-blood,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [672 336 48 48]},
-  :property/pretty-name "Blood Crystal"}
- {:property/id :skull-large-open,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [0 384 48 48]},
-  :property/pretty-name "Open Large Skull"}
- {:property/id :flask-red,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [816 48 48 48]},
-  :property/pretty-name "Red Flask"}
- {:property/id :key-blue,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [144 0 48 48]},
-  :property/pretty-name "Blue Key"}
- {:property/id :coin-gold,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [720 0 48 48]},
-  :property/pretty-name "Gold Coin"}
- {:property/id :skull-small-blood,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [144 384 48 48]},
-  :property/pretty-name "Blood Small Skull"}
- {:property/id :potion-black,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [576 0 48 48]},
-  :property/pretty-name "Black Potion"}
- {:property/id :gem-sapphire,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [384 384 48 48]},
-  :property/pretty-name "Sapphire Gem"}
- {:property/animation
-  {:frames
-   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [384 48 48 48]}),
-   :frame-duration 0.05,
-   :looping? nil},
-  :property/id :audiovisuals/unused,
-  :property/sound "sounds/bfxr_curse.wav"}
- {:property/id :potion-red,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [480 0 48 48]},
-  :property/pretty-name "Red Potion"}
- {:property/id :key-silver,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [48 0 48 48]},
-  :property/pretty-name "Silver Key"}
- {:property/id :heart-red-half,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [816 0 48 48]},
-  :property/pretty-name "Half Red Heart"}
- {:property/id :chest-empty,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [432 48 48 48]},
-  :property/pretty-name "Empty Chest"}
- {:property/id :chest-gold-open,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [384 48 48 48]},
-  :property/pretty-name "Open Gold Chest"}
- {:property/id :gem-amethyst,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [432 384 48 48]},
-  :property/pretty-name "Amethyst Gem"}
- {:property/id :key-red,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [96 0 48 48]},
-  :property/pretty-name "Red Key"}
- {:property/id :book-latch,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [288 48 48 48]},
-  :property/pretty-name "Latch Book"}
- {:property/id :key-bone,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [240 0 48 48]},
-  :property/pretty-name "Bone Key"}
- {:property/id :torch-lit,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [672 48 48 48]},
-  :property/pretty-name "Lit Torch"}
- {:property/animation
-  {:frames
-   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
-   :frame-duration 0.05,
-   :looping? nil},
-  :property/id :audiovisuals/hit-ground,
-  :property/sound "sounds/bfxr_fisthit.wav"}
- {:property/id :book-brown,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [0 48 48 48]},
-  :property/pretty-name "Brown Book"}
- {:property/id :key-gold,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [0 0 48 48]},
-  :property/pretty-name "Gold Key"}
- {:property/id :flask-blue,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [864 48 48 48]},
-  :property/pretty-name "Blue Flask"}
- {:property/id :book-evil,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [240 48 48 48]},
-  :property/pretty-name "Evil Book"}
- {:property/id :chest-silver-,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [480 48 48 48]},
-  :property/pretty-name "Silver Chest"}
- {:property/id :crystal-cloud,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [720 336 48 48]},
-  :property/pretty-name "Cloud Crystal"}
- {:property/id :heart-empty,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [768 0 48 48]},
-  :property/pretty-name "Empty Heart"}
- {:property/id :skull-small,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [96 384 48 48]},
-  :property/pretty-name "Small Skull"}
- {:property/id :potion-green,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [432 0 48 48]},
-  :property/pretty-name "Green Potion"}
- {:property/id :chest-silver-open,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [528 48 48 48]},
-  :property/pretty-name "Open Silver Chest"}
- {:property/id :chest-gold,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [336 48 48 48]},
-  :property/pretty-name "Gold Chest"}
  {:property/animation
   {:frames
    ({:file "fx/uf_FX.png", :sub-image-bounds [0 168 24 24]}
@@ -4431,18 +4629,15 @@
    :looping? nil},
   :property/id :audiovisuals/hit-wall,
   :property/sound "sounds/bfxr_projectile_wallhit.wav"}
- {:property/id :potion-white,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [528 0 48 48]},
-  :property/pretty-name "White Potion"}
- {:property/id :skull-large-closed,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [48 384 48 48]},
-  :property/pretty-name "Closed Large Skull"}
- {:property/id :drumstick,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [768 48 48 48]},
-  :property/pretty-name "Drumstick"}
+ {:property/animation
+  {:frames
+   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
+    {:file "fx/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
+    {:file "fx/uf_FX_impact.png", :sub-image-bounds [384 48 48 48]}),
+   :frame-duration 0.05,
+   :looping? nil},
+  :property/id :audiovisuals/unused,
+  :property/sound "sounds/bfxr_curse.wav"}
  {:property/animation
   {:frames
    ({:file "fx/uf_FX.png", :sub-image-bounds [96 144 24 24]}
@@ -4455,91 +4650,12 @@
    :looping? nil},
   :property/id :audiovisuals/creature-die,
   :property/sound "sounds/bfxr_defaultmonsterdeath.wav"}
- {:property/id :flask-green,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [912 48 48 48]},
-  :property/pretty-name "Green Flask"}
- {:property/id :crystal-crimson,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [816 336 48 48]},
-  :property/pretty-name "Crimson Crystal"}
- {:property/id :crystal-sun,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [864 336 48 48]},
-  :property/pretty-name "Sun Crystal"}
- {:property/id :gem-emerald,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [288 384 48 48]},
-  :property/pretty-name "Emerald Gem"}
- {:property/id :book-red,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [96 48 48 48]},
-  :property/pretty-name "Red Book"}
- {:property/id :book-blue,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [144 48 48 48]},
-  :property/pretty-name "Blue Book"}
- {:property/id :coin-silver,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [672 0 48 48]},
-  :property/pretty-name "Silver Coin"}
- {:property/id :book-black,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [48 48 48 48]},
-  :property/pretty-name "Black Book"}
- {:property/id :potion-blue,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [384 0 48 48]},
-  :property/pretty-name "Blue Potion"}
- {:property/id :potion-empty,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [336 0 48 48]},
-  :property/pretty-name "Empty Potion"}
- {:property/id :heart-green-half,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [912 0 48 48]},
-  :property/pretty-name "Half Green Heart"}
- {:property/id :crystal-sky,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [576 336 48 48]},
-  :property/pretty-name "Sky Crystal"}
- {:property/id :heart-green-full,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [960 0 48 48]},
-  :property/pretty-name "Full Green Heart"}
- {:property/id :crystal-onyx,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [768 336 48 48]},
-  :property/pretty-name "Onyx Crystal"}
- {:property/id :heart-red-full,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [864 0 48 48]},
-  :property/pretty-name "Full Red Heart"}
- {:property/id :gem-tourmaline,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [240 384 48 48]},
-  :property/pretty-name "Tourmaline Gem"}
- {:property/id :book-green,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [192 48 48 48]},
-  :property/pretty-name "Green Book"}
- {:property/id :chest-silver-empty,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [576 48 48 48]},
-  :property/pretty-name "Empty Silver Chest"}
- {:property/id :torch,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [624 48 48 48]},
-  :property/pretty-name "Torch"}
- {:property/id :satchel,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [720 48 48 48]},
-  :property/pretty-name "Satchel"}
- {:property/id :key-green,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [192 0 48 48]},
-  :property/pretty-name "Green Key"}
- {:property/id :key-ornate,
-  :property/image
-  {:file "items/images.png", :sub-image-bounds [288 0 48 48]},
-  :property/pretty-name "Ornate Key"})
+ {:property/animation
+  {:frames
+   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
+    {:file "fx/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
+    {:file "fx/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
+   :frame-duration 0.05,
+   :looping? nil},
+  :property/id :audiovisuals/hit-ground,
+  :property/sound "sounds/bfxr_fisthit.wav"})

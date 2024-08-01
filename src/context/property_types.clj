@@ -41,20 +41,19 @@
      property))
 
   (validate [{:keys [context/property-types] :as ctx} property {:keys [humanize?]}]
-    (let [ptype (api.context/property->type ctx property)]
-      (if-let [schema (:schema (get property-types ptype))]
-        (if (try (m/validate schema property)
-                 (catch Throwable t
-                   (throw (ex-info "m/validate fail" {:property property :ptype ptype} t))))
-          property
-          (throw (Error. (let [explained (m/explain schema property)]
-                           (str (if humanize?
-                                  (me/humanize explained)
-                                  (binding [*print-level* nil]
-                                    (with-out-str
-                                     (clojure.pprint/pprint
-                                      explained)))))))))
-        property)))
+    (let [ptype (api.context/property->type ctx property)
+          schema (:schema (get property-types ptype))]
+      (if (try (m/validate schema property)
+               (catch Throwable t
+                 (throw (ex-info "m/validate fail" {:property property :ptype ptype} t))))
+        property
+        (throw (Error. (let [explained (m/explain schema property)]
+                         (str (if humanize?
+                                (me/humanize explained)
+                                (binding [*print-level* nil]
+                                  (with-out-str
+                                   (clojure.pprint/pprint
+                                    explained)))))))))))
 
   (property->type [{:keys [context/property-types]} property]
     (some (fn [[type {:keys [of-type?]}]]

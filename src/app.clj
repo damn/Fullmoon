@@ -1,10 +1,22 @@
 (ns app
-  (:require properties.audiovisual
-            properties.property
+
+  ; dependency doesnt work with tools namespace refresh
+  ; => define property types as data and load into a schema only
+  ; when the component gets ctx/create'd
+
+  ; or the problem is the global
+  ; component/attributes ??
+
+  ; !! => only functions !!
+
+  (:require properties.property
+            ;
+            properties.audiovisual
             properties.creature
             properties.skill
             properties.item
             properties.world
+            ;
             [app.libgdx.app :as app]))
 
 ; edit /add / remove components with an dev-app
@@ -45,27 +57,11 @@
                                                :debug-window? true
                                                :debug-options? true}}}]
 
-             ; TODO make misc is when no property-type matches ? :else case?
-             [:context/property-types (merge
-                                       properties.audiovisual/definition
-                                       properties.creature/definition
-                                       properties.item/definition
-                                       properties.skill/definition
-                                       properties.world/definition
-                                       ; add unused items
-                                       ; or slot bag ?
-                                       {:property.type/misc {:of-type? (fn [{:keys [property/animation
-                                                                                    entity/hp
-                                                                                    creature/species
-                                                                                    item/slot
-                                                                                    skill/effect
-                                                                                    world/princess]}]
-                                                                         (not (or animation hp species slot effect princess)))
-                                                             :edn-file-sort-order 6
-                                                             :title "Misc"
-                                                             :overview {:title "Misc"
-                                                                        :columns 10
-                                                                        :image/dimensions [96 96]}}})]
+             [:context/property-types (merge properties.audiovisual/definition
+                                             properties.creature/definition
+                                             properties.item/definition
+                                             properties.skill/definition
+                                             properties.world/definition)]
              [:context/properties {:file "resources/properties.edn"}]
 
              ; strange when finds the namespace but wrong name @ component definition

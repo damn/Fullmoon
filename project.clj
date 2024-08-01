@@ -75,14 +75,42 @@
    {:sources #{"src"}
     :output "target/hiera"
     :layout :horizontal
-    ;:cluster-depth 3
+    :cluster-depth 2
     :external false
-    :ignore #{"api"
-              "core"
-              "math"
-              "utils.core"
-              "data.val-max"
-              }}))
+    :ignore
+
+    ; show only components !
+
+    ; * context
+    ; * effect
+    ; * entity
+    ; * modifier
+    ; * properties
+    ; * screens
+
+    #{"api"
+      "app"
+      "core"
+      "math"
+      "mapgen"
+      "utils"
+      "data"
+      "dev"
+      ;"modifier"
+      "world"
+
+      "tx"
+
+      ; "effect.damage"
+      ; "effect.melee-damage"
+      ; "effect.projectile"
+      ; "effect.sound"
+      ; "effect.target-entity"
+      ; "effect.stun"
+      ; "effect.restore-hp-mana"
+
+
+      }}))
 
  ; most complex ns:
  "screens.options-menu"
