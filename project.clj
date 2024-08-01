@@ -63,85 +63,24 @@
 
 (comment
  ; https://github.com/greglook/clj-hiera/blob/main/src/hiera/main.clj
-
  ; 1. activate dependency first: [lein-hiera "2.0.0"]
  ; 2. export JVM_OPTS=
  ; 3. lein repl
  ; 4. eval this:
  (do
   (require '[hiera.main :as hiera])
-
-  ;; Biggest deps
-  ; 'screens.game'
-  ; 'screens.main-menu'
-  ; 'screens.options-menu'
-
-  ; Also replay mode not usable
-
-  (def only-component-ns #{"api" "app" "core" "math" "mapgen" "utils" "data" "dev" "world"
-
-                           ; trivial fsm can move to tx/creature or entity/state or api
-                           "effect.spawn"
-                           "context.world"
-
-                           ; trivial just use debug flag or sth
-                           "screens.options-menu"
-
-                           "effect"
-                           "modifier"
+  (def only-component-ns #{"api" "app" "core" "math" "utils" "data" "dev"
                            "property"
+                           "properties"
+                           "modifier"
                            "tx"
-
-                           "context.libgdx"
-
-                           "entity.state"
-                           "entity"
-                           })
-
-
-
-
+                           "world"
+                           "screens.options-menu"})
   (hiera/graph
    {:sources #{"src"}
     :output "target/hiera"
     :layout :horizontal
-    ;:cluster-depth 2
+    ;:cluster-depth 1
     :external false
     :ignore only-component-ns}))
-
-
- ; TODO I can also just see which namespaces have the most dependencies ... (on non-API namespaces !!!)
-
- ; => only focus on this - to de-tangle everything, pull things out , only depend on API's
- ; e.g. screens.map-editor -> screens.property-editor
- ; or in game screen the hardcoded hotkeys and not working in debug mode only ...
- ; =>  Uebersicht !! Am wichtigste, => don't get lost in detail
- ;; => make clear what is 'detail' and what not ...
- ;; -> otherwise _impossible_ !
- ; even keep inconsistent names (but the 'api' thing is interesting, but can even keep gdl. something
- ; => I see anyway in one glance what's hardcoded and what not .... work fast! names can change later even ... dont move around stuff so much just
- ; _PULL OUT_
-
-
- ; => also pull out things 1 by 1 minimal changes to restore worst offenders ...etc.
- ; => e.g. 1 change in map editor -> now property editor screen the worst offender...
-
-
- ; cdq.context.game => screens.main-menu
- ; cdq.screens.options-menu => debug-menu extra ....
-
- ;;
-
- ; cdq.tx => cdq.effect
-
- ; cdq.tx.spawn -> cdq.state.npc
- ; wasd-movement
-
- ; TODO fix cdq.entity namespace required manually (movement, body, inventory)
- ; => namespace package flow only down ... ?!
- ; inventory
- ; body
-
-
-
  )
