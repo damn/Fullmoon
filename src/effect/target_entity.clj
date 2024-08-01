@@ -1,5 +1,5 @@
 (ns effect.target-entity
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [math.vector :as v]
             [api.context :refer [effect-text line-of-sight? line-entity]]
@@ -26,12 +26,12 @@
          (v/scale (entity/direction entity* target*)
                   maxrange)))
 
-(component/def :maxrange attr/pos-attr)
+(defcomponent :maxrange attr/pos-attr)
 ; TODO how should this work ???
 ; can not contain the other effects properly o.o
-(component/def :hit-effect (attr/components-attribute :effect))
+(defcomponent :hit-effect (attr/components-attribute :effect))
 
-(component/def :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
+(defcomponent :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
                                       :schema [:map {:closed true}
                                                [:hit-effect [:map]]
                                                [:maxrange pos?]]

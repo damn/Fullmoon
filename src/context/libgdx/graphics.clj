@@ -1,6 +1,6 @@
 (ns ^:no-doc context.libgdx.graphics
   (:require [clojure.string :as str]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
@@ -354,8 +354,7 @@
 ; TODO BitmapFont does not draw world-unit-scale idk how possible, maybe setfontdata something
 ; (did draw world scale @ test ...)
 ; TODO optional world-viewport make
-(component/def :context.libgdx/graphics {}
-  _
+(defcomponent :context.libgdx/graphics {}
   (component/create [[_ {:keys [tile-size default-font]}] ctx]
     (let [batch (SpriteBatch.)]
       (map->Graphics

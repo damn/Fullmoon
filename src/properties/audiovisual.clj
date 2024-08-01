@@ -1,10 +1,9 @@
 (ns properties.audiovisual
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.properties :as properties]))
 
-(component/def :properties/audiovisual {}
-  _
+(defcomponent :properties/audiovisual {}
   (properties/create [_]
     {:id-namespace "audiovisuals"
      :schema (data/map-attribute-schema

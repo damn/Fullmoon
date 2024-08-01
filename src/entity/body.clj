@@ -1,5 +1,5 @@
 (ns entity.body
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.entity :as entity]
@@ -30,12 +30,12 @@
 ;:default-value {:width 0.5 :height 0.5 :solid? true}
 
 ; TODO label == not editable
-(component/def :width  {:widget :label :schema pos?}) ; TODO make px
-(component/def :height {:widget :label :schema pos?}) ; TODO make px
-(component/def :solid? {:widget :label :schema boolean?})
+(defcomponent :width  {:widget :label :schema pos?}) ; TODO make px
+(defcomponent :height {:widget :label :schema pos?}) ; TODO make px
+(defcomponent :solid? {:widget :label :schema boolean?})
 
 ; TODO body assert >+ min body size?
-(component/def :entity/body (attr/map-attribute :width :height :solid?)
+(defcomponent :entity/body (attr/map-attribute :width :height :solid?)
   body
   (entity/create-component [_ {:keys [entity/position]
                                [x y] :entity/position

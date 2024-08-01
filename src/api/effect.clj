@@ -1,14 +1,14 @@
 (ns api.effect
-  (:require [core.component :as component]))
+  (:require [core.component :refer [defsystem]]))
 
-(component/defn text          [_ ctx])
+(defsystem text          [_ ctx])
 (defmethod text :default [_ _])
 
-(component/defn valid-params? [_ ctx])
+(defsystem valid-params? [_ ctx])
 (defmethod valid-params? :default [_ _] true)
 
-(component/defn useful?       [_ ctx])
+(defsystem useful?       [_ ctx])
 (defmethod useful? :default [_ _] true)
 
-(component/defn render-info   [_ g ctx])
+(defsystem render-info   [_ g ctx])
 (defmethod render-info :default [_ _g _ctx])

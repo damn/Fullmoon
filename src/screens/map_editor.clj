@@ -1,6 +1,6 @@
 (ns screens.map-editor
   (:require [clojure.string :as str]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]
             ; api/
             [app.state :refer [change-screen!]]
@@ -196,7 +196,6 @@ direction keys: move")
                                    :show-movement-properties false
                                    :show-grid-lines false}))})
 
-(component/def :screens/map-editor {}
-  _
+(defcomponent :screens/map-editor {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx (->screen ctx))))

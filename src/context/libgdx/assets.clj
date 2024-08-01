@@ -1,6 +1,6 @@
 (ns ^:no-doc context.libgdx.assets
   (:require [clojure.string :as str]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.assets.AssetManager
@@ -33,8 +33,7 @@
     (.finishLoading manager)
     manager))
 
-(component/def :context.libgdx/assets {}
-  _
+(defcomponent :context.libgdx/assets {}
   (component/create [_ _ctx]
     (let [folder "resources/" ; TODO should be set in classpath and not necessary here ?
           sound-files   (recursively-search-files folder #{"wav"})

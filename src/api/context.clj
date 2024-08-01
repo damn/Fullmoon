@@ -1,9 +1,9 @@
 (ns api.context
-  (:require [core.component :as component]))
+  (:require [core.component :refer [defsystem]]))
 
 (defrecord Context [])
 
-(component/defn render  [_ ctx])
+(defsystem render  [_ ctx])
 
 (defprotocol Game
   (start-new-game [_ tiled-level])

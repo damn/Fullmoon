@@ -1,5 +1,5 @@
 (ns screens.minimap
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [app.state :refer [current-context change-screen!]]
             [api.context :as ctx :refer [key-just-pressed? explored?]]
             [api.graphics :as g]
@@ -61,6 +61,5 @@
               (key-just-pressed? context input.keys/escape))
       (change-screen! :screens/game))))
 
-(component/def :screens/minimap {}
-  _
+(defcomponent :screens/minimap {}
   (screen/create [_ _ctx] (->Screen)))

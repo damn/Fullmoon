@@ -1,5 +1,5 @@
 (ns entity.movement
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [math.vector :as v]
             [api.entity :as entity]
             [api.context :refer [world-grid]]
@@ -40,9 +40,8 @@
         (try-move ctx entity* [0 ydir]))))
 
 ; optional, only assoc'ing movement-vector
-(component/def :entity/movement attr/pos-attr
-  tiles-per-second
-  (entity/create [_ entity* _ctx]
+(defcomponent :entity/movement attr/pos-attr
+  (entity/create [[_ tiles-per-second] entity* _ctx]
     (assert (and (:entity/body entity*)
                  (:entity/position entity*)))
     (assert (<= tiles-per-second max-speed)))

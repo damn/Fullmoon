@@ -1,9 +1,9 @@
 (ns entity.faction
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.entity :as entity]
             [core.data :as attr]))
 
-(component/def :entity/faction (attr/enum :good :evil))
+(defcomponent :entity/faction (attr/enum :good :evil))
 
 (extend-type api.entity.Entity
   entity/Faction

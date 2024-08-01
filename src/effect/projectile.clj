@@ -1,6 +1,6 @@
 (ns effect.projectile
   (:require [clojure.string :as str]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [math.vector :as v]
             [data.animation :as animation]
             [api.context :refer [get-sprite spritesheet effect-text path-blocked?]]
@@ -40,10 +40,9 @@
          (v/scale direction
                   (+ (:radius (:entity/body entity*)) size 0.1))))
 
-(component/def :effect/projectile {:widget :text-field
+(defcomponent :effect/projectile {:widget :text-field
                                    :schema [:= true]
                                    :default-value true}
-  _
   (effect/text [_ ctx]
                (effect-text ctx hit-effect))
 

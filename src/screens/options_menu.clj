@@ -1,5 +1,5 @@
 (ns screens.options-menu
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [app.state :refer [change-screen!]]
             [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
@@ -93,6 +93,5 @@
             (create-table ctx)]
    :sub-screen (->SubScreen)})
 
-(component/def :screens/options-menu {}
-  _
+(defcomponent :screens/options-menu {}
   (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (api.context/->background-image ctx)))))

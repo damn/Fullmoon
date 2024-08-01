@@ -1,6 +1,6 @@
 (ns context.cursor
   (:require [utils.core :refer [safe-get mapvals]]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.tx :refer [transact!]]))
 
@@ -29,8 +29,7 @@
 
 ; TODO dispose all cursors , implement gdl.disposable
 ; => move to gdl ....
-(component/def :context/cursor {}
-  _
+(defcomponent :context/cursor {}
   (component/create [_ ctx]
     (let [cursors (mapvals (fn [[file x y]]
                              (ctx/->cursor ctx (str "cursors/" file ".png") x y))

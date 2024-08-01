@@ -1,5 +1,5 @@
 (ns entity.shout
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.context :refer [world-grid line-of-sight? stopped?]]
             [api.entity :as entity]
             [api.world.grid :refer [circle->entities]]))
@@ -16,7 +16,7 @@
        (filter #(and (= (:entity/faction %) (:entity/faction entity*))
                      (line-of-sight? context entity* %)))))
 
-(component/def :entity/shout {}
+(defcomponent :entity/shout {}
   counter
   (entity/tick [_ {:keys [entity/id] :as entity*} context]
     (when (stopped? context counter)

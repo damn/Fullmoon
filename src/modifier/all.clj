@@ -1,7 +1,7 @@
 (ns modifier.all
   (:require [clojure.string :as str]
             [clojure.math :as math]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [data.val-max :refer [apply-max]]
             [api.modifier :as modifier]
             [core.data :as attr]))
@@ -25,7 +25,7 @@
 (defn- apply-max-minus [vmx v] (apply-max vmx #(- % v)))
 
 ; TODO has to be integer ?
-(component/def :modifier/max-hp {:widget :text-field :schema number?}
+(defcomponent :modifier/max-hp {:widget :text-field :schema number?}
   amount
   (modifier/text [_] (plus-max-modifier-text "HP" amount))
   (modifier/keys [_] [:entity/hp])
@@ -33,7 +33,7 @@
   (modifier/reverse [_ hp] (apply-max-minus hp amount)))
 
 ; TODO has to be integer ?
-(component/def :modifier/max-mana {:widget :text-field :schema number?}
+(defcomponent :modifier/max-mana {:widget :text-field :schema number?}
   amount
   (modifier/text [_] (plus-max-modifier-text "Mana" amount))
   (modifier/keys [_] [:entity/mana])
@@ -43,14 +43,14 @@
 (defn- actions-speed-percent [v]
   (str (check-plus-symbol v) (int (* 100 v))))
 
-(component/def :modifier/cast-speed attr/pos-attr
+(defcomponent :modifier/cast-speed attr/pos-attr
   amount
   (modifier/text [_] (str (actions-speed-percent amount) "% Casting-Speed"))
   (modifier/keys [_] [:entity/stats :stats/cast-speed])
   (modifier/apply   [_ value] (+ (or value 1) amount))
   (modifier/reverse [_ value] (- value amount)))
 
-(component/def :modifier/attack-speed attr/pos-attr
+(defcomponent :modifier/attack-speed attr/pos-attr
   amount
   (modifier/text [_] (str (actions-speed-percent amount) "% Attack-Speed"))
   (modifier/keys [_] [:entity/stats :stats/attack-speed])
@@ -66,7 +66,7 @@
              ]))
 
 ; TODO no schema
-(component/def :modifier/armor-save {:widget :text-field :schema :some}
+(defcomponent :modifier/armor-save {:widget :text-field :schema :some}
   delta
   (modifier/text [[k _]] (armor-modifier-text k delta))
   (modifier/keys [_] [:entity/stats :stats/armor-save])
@@ -74,7 +74,7 @@
   (modifier/reverse [_ value] (- value delta)))
 
 ; TODO no schema
-(component/def :modifier/armor-pierce {:widget :text-field :schema :some}
+(defcomponent :modifier/armor-pierce {:widget :text-field :schema :some}
   delta
   (modifier/text [[k _]] (armor-modifier-text delta))
   (modifier/keys [_] [:entity/stats :stats/armor-pierce])
@@ -113,7 +113,7 @@
                :inc value-delta
                :mult (str (int (* value-delta 100)) "%"))]))
 
-(component/def :modifier/damage {:widget :text-field :schema :some}  ; TODO no schema
+(defcomponent :modifier/damage {:widget :text-field :schema :some}  ; TODO no schema
   value
   (modifier/text [_]
     (assert (check-damage-modifier-value value)

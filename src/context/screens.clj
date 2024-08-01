@@ -1,10 +1,9 @@
 (ns context.screens
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.screen :as screen]))
 
-(component/def :context/screens {}
-  _
+(defcomponent :context/screens {}
   (component/create [[_ {:keys [screens] :as this}] ctx]
     (component/load! screens)
     (update this :screens component/update-map screen/create ctx))

@@ -1,5 +1,5 @@
 (ns screens.main-menu
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [utils.core :refer [safe-get tile->middle]]
             [app.state :refer [current-context change-screen!]]
             [api.context :as ctx]
@@ -44,8 +44,7 @@
     :cell-defaults {:pad-bottom 25}
     :fill-parent? true}))
 
-(component/def :screens/main-menu {}
-  _
+(defcomponent :screens/main-menu {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx {:actors [(ctx/->background-image ctx)
                                       (->buttons ctx)

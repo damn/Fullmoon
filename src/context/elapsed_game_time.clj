@@ -1,11 +1,10 @@
 (ns context.elapsed-game-time
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [api.context :refer [stopped?]]))
 
 (defrecord ImmutableCounter [duration stop-time])
 
-(component/def :context/elapsed-game-time {}
-  _
+(defcomponent :context/elapsed-game-time {}
   (component/create [_ _ctx] (atom 0)))
 
 (extend-type api.context.Context

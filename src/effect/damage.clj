@@ -1,5 +1,5 @@
 (ns effect.damage
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [data.val-max :refer [apply-val apply-val-max-modifiers]]
             [utils.random :as random]
             [api.effect :as effect]
@@ -97,11 +97,10 @@
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
-(component/def :damage/min-max attr/val-max-attr)
+(defcomponent :damage/min-max attr/val-max-attr)
 
-(component/def :effect/damage (attr/map-attribute :damage/min-max)
-  damage
-  (effect/text [_ {:keys [effect/source]}]
+(defcomponent :effect/damage (attr/map-attribute :damage/min-max)
+  (effect/text [[_ damage] {:keys [effect/source]}]
     (if source
       (let [modified (effective-damage damage @source)]
         (if (= damage modified)
@@ -112,7 +111,7 @@
   (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and source target))
 
-  (transact! [_ {:keys [effect/source effect/target]}]
+  (transact! [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
           {:keys [entity/position entity/hp] :as target*} @target]
       (cond

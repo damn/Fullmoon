@@ -1,12 +1,12 @@
 (ns entity.string-effect
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [api.context :refer [->counter stopped? reset]]
             [context.ui.config :refer [hpbar-height-px]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]))
 
-(component/def :entity/string-effect {}
+(defcomponent :entity/string-effect {}
   {:keys [text counter] :as this}
   (entity/tick [[k _] {:keys [entity/id]} context]
     (when (stopped? context counter)

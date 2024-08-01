@@ -8,9 +8,9 @@
 
 (def ^:private warn-on-override true)
 
-(defmacro defn
+(defmacro defsystem
   "Defines a component function with the given parameter vector.
-  See also core.component/def.
+  See also core.defcomponent.
   Obligatory first parameter: component, a vector of [key/attribute value].
   Dispatching on component attribute."
   [sys-name params]
@@ -26,20 +26,17 @@
 
 (def attributes {})
 
-(defmacro def
+(defmacro defcomponent
   "Defines a component with key 'k'. User-data attr-map.
-  v is let-bound over every fn-implementation;
-
   Example:
   (defcomponent :entity/animation {:schema animation}
-    animation
     (entity/render [_ g]
       (g/render-animation animation)))"
   ([k attr-map]
    `(alter-var-root #'attributes assoc ~k ~attr-map))
-  ([k attr-map v & sys-impls]
+  ([k attr-map & sys-impls]
    `(do
-     (core.component/def ~k ~attr-map)
+     (defcomponent ~k ~attr-map)
      ~@(for [[sys & fn-body] sys-impls
              :let [sys-var (resolve sys)
                    sys-params (:params (meta sys-var))
@@ -55,11 +52,8 @@
           (when (and warn-on-override
                      (get (methods @sys-var) k))
             (println "WARNING: Overwriting defcomponent" k "on" sys-var))
-          (when (some #(= % (first fn-params)) (rest fn-params))
-            (throw (IllegalArgumentException. (str "First component parameter is shadowed by another parameter at " sys-var))))
           `(defmethod ~sys ~k ~method-name ~fn-params
-             (let [~v (~(first fn-params) 1)] ; TODO shadowing _very_ dangerous if in some fns deconstructing [_ foo] then it takes _ ....
-               ~@(rest fn-body)))))
+             ~@(rest fn-body))))
      ~k)))
 
 (clojure.core/defn update-map

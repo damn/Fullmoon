@@ -1,5 +1,5 @@
 (ns entity.hp
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [api.graphics.color :as color]
             [data.val-max :refer [val-max-ratio]]
@@ -25,12 +25,11 @@
 (def ^:private borders-px 1)
 
 ; required for target-entity (remove)
-(component/def :entity/hp attr/pos-int-attr
-  hp
+(defcomponent :entity/hp attr/pos-int-attr
   (entity/create-component [[_ max-hp] _components _ctx]
     [max-hp max-hp])
 
-  (entity/render-info [_
+  (entity/render-info [[_ hp]
                        {[x y] :entity/position
                         {:keys [width half-width half-height]} :entity/body
                         :keys [entity/mouseover?]}

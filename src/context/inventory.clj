@@ -1,5 +1,5 @@
 (ns context.inventory
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [data.grid2d :as grid]
             [app.state :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
@@ -116,8 +116,7 @@
         (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
       (.row table))))
 
-(component/def :context/inventory {}
-  _
+(defcomponent :context/inventory {}
   (component/create [_ ctx]
     (let [table (->table ctx {})
           slot->background (slot->background ctx)]

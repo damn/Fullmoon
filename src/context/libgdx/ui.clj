@@ -1,5 +1,5 @@
 (ns ^:no-doc context.libgdx.ui
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [app.state :refer [current-context]]
             [api.context :as ctx]
             [api.scene2d.actor :as actor :refer [parent]]
@@ -42,8 +42,7 @@
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
 
-(component/def :context.libgdx/ui {}
-  _
+(defcomponent :context.libgdx/ui {}
   (component/create [_ _ctx]
     (check-cleanup-visui!)
     (VisUI/load)

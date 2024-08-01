@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
             [malli.core :as m]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             ; api
             [app.state :as app :refer [change-screen!]]
             [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane get-property all-properties tooltip-text ->error-window]]
@@ -43,7 +43,7 @@
 ;;
 
 (defn- attr->value-widget [k]
-  (or (:widget (get core.component/attributes k)) :label))
+  (or (:widget (get component/attributes k)) :label))
 
 (defmulti ->value-widget     (fn [[k _v] _ctx] (attr->value-widget k)))
 (defmulti value-widget->data (fn [k _widget]   (attr->value-widget k)))
@@ -64,7 +64,7 @@
 
 (defmethod ->value-widget :text-field [[k v] ctx]
   (let [widget (->text-field ctx (->edn v) {})]
-    (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema (get core.component/attributes k))))))
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema (get component/attributes k))))))
     widget))
 
 (defmethod value-widget->data :text-field [_ widget]
@@ -82,7 +82,7 @@
 ;;
 
 (defmethod ->value-widget :enum [[k v] ctx]
-  (->select-box ctx {:items (map ->edn (:items (core.component/attributes k)))
+  (->select-box ctx {:items (map ->edn (:items (component/attributes k)))
                      :selected (->edn v)}))
 
 (defmethod value-widget->data :enum [_ widget]
@@ -143,13 +143,13 @@
                                  :close-on-escape? true
                                  :cell-defaults {:pad 5}})]
        (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                                      (:components (core.component/attributes k))))]
+                                                      (:components (component/attributes k))))]
                            [(->text-button ctx (name nested-k)
                                            (fn [ctx]
                                              (remove! window)
                                              (add-actor! attribute-widget-group
                                                          (->attribute-widget-table ctx
-                                                                                   [nested-k (:default-value (core.component/attributes nested-k))]
+                                                                                   [nested-k (:default-value (component/attributes nested-k))]
                                                                                    :horizontal-sep?
                                                                                    (pos? (count (children attribute-widget-group)))))
                                              (pack-ancestor-window! attribute-widget-group)))]))
@@ -163,9 +163,9 @@
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (->table ctx {:cell-defaults {:pad 5}
                   :rows (remove nil?
-                                [(when (:components (core.component/attributes k))
+                                [(when (:components (component/attributes k))
                                    [(->add-nested-map-button ctx k attribute-widget-group)])
-                                 (when (:components (core.component/attributes k))
+                                 (when (:components (component/attributes k))
                                    [(->horizontal-separator-cell 1)])
                                  [attribute-widget-group]])})))
 
@@ -242,7 +242,7 @@
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
-                          (:linked-property-type (core.component/attributes attribute))
+                          (:linked-property-type (component/attributes attribute))
                           property-ids)
     table))
 
@@ -285,7 +285,7 @@
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->label ctx (name k))
-        _ (when-let [doc (:doc (get core.component/attributes k))]
+        _ (when-let [doc (:doc (get component/attributes k))]
             (add-tooltip! label doc))
         value-widget (->value-widget [k v] ctx)
         table (->table ctx {:id k
@@ -405,8 +405,7 @@
                            [[(->text-button context "Back to Main Menu" (fn [_context]
                                                                           (change-screen! :screens/main-menu)))]])}))
 
-(component/def :screens/property-editor {}
-  _
+(defcomponent :screens/property-editor {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors [(api.context/->background-image ctx)

@@ -1,5 +1,5 @@
 (ns properties.item
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
             [api.properties :as properties]))
@@ -18,13 +18,12 @@
 
 (def ^:private modifier-color "[VIOLET]")
 
-(component/def :properties/item {}
-  _
+(defcomponent :properties/item {}
   (properties/create [_]
     ; modifier add/remove
     ; item 'upgrade' colorless to sword fire
-    (component/def :item/modifier (data/components-attribute :modifier))
-    (component/def :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+    (defcomponent :item/modifier (data/components-attribute :modifier))
+    (defcomponent :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
     {:id-namespace "items"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :items}]]

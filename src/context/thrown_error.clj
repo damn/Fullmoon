@@ -1,7 +1,6 @@
 (ns context.thrown-error
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]))
 
-(component/def :context/thrown-error {}
-  _
+(defcomponent :context/thrown-error {}
   (component/create [_ _ctx] (atom nil)))

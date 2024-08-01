@@ -1,5 +1,5 @@
 (ns screens.game
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.screen :as screen :refer [Screen]]
             context.ui.actors))
@@ -14,8 +14,7 @@
   (render [_ ctx]
     (ctx/render-game ctx)))
 
-(component/def :screens/game {}
-  _
+(defcomponent :screens/game {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors (context.ui.actors/->ui-actors ctx)

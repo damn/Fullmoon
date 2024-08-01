@@ -1,13 +1,12 @@
 (ns entity.delete-after-duration
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.context :refer [->counter stopped?]]
             [api.entity :as entity]))
 
-(component/def :entity/delete-after-duration {}
-  counter
+(defcomponent :entity/delete-after-duration {}
   (entity/create-component [[_ duration] _components ctx]
     (->counter ctx duration))
 
-  (entity/tick [_ {:keys [entity/id]} ctx]
+  (entity/tick [[_ counter] {:keys [entity/id]} ctx]
     (when (stopped? ctx counter)
       [[:tx/destroy id]])))

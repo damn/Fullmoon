@@ -1,5 +1,5 @@
 (ns entity.mouseover
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [api.entity :as entity]))
 
@@ -8,8 +8,7 @@
 (def ^:private friendly-color [0 1 0 outline-alpha])
 (def ^:private neutral-color  [1 1 1 outline-alpha])
 
-(component/def :entity/mouseover? {}
-  _
+(defcomponent :entity/mouseover? {}
   (entity/render-below [_
                         {:keys [entity/position entity/body entity/faction]}
                         g

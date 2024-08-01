@@ -1,6 +1,6 @@
 (ns entity.inventory
   (:require [data.grid2d :as grid]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [utils.core :refer [find-first]]
             [api.context :refer [get-property]]
             [api.entity :as entity]
@@ -116,9 +116,8 @@
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
-(component/def :entity/inventory (attr/one-to-many-ids :properties/item) ; optional
-  items
-  (entity/create [_ {:keys [entity/id]} context]
+(defcomponent :entity/inventory (attr/one-to-many-ids :properties/item) ; optional
+  (entity/create [[_ item-ids] {:keys [entity/id]} context]
     (cons [:tx.entity/assoc id :entity/inventory empty-inventory]
-          (for [item-id items]
+          (for [item-id item-ids]
             [:tx/pickup-item id (get-property context item-id)]))))

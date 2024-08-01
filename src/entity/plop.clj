@@ -1,7 +1,7 @@
 (ns entity.plop
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.entity :as entity]))
 
-(component/def :entity/plop {} _
+(defcomponent :entity/plop {} _
   (entity/destroy [_ entity* ctx]
     [[:tx/audiovisual (:entity/position entity*) :audiovisuals/hit-wall]]))

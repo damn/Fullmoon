@@ -1,6 +1,6 @@
 (ns context.properties
   (:require [clojure.edn :as edn]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [get-sprite create-image]]
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
@@ -78,9 +78,8 @@
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
-(component/def :context/properties {}
-  {:keys [file]}
-  (component/create [_ ctx]
+(defcomponent :context/properties {}
+  (component/create [[_ {:keys [file]}] ctx]
     {:file file
      :db (load-edn ctx file)}))
 

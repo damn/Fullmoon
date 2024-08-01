@@ -1,5 +1,5 @@
 (ns entity.position
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [math.vector :as v]
             [utils.core :refer [->tile]]
             [api.entity :as entity]))
@@ -12,8 +12,7 @@
   (direction [{:keys [entity/position]} other-entity*]
     (v/direction position (:entity/position other-entity*))))
 
-(component/def :entity/position {}
-  _
+(defcomponent :entity/position {}
   (entity/create [_ {:keys [entity/id]} ctx]
     [[:tx/add-to-world id]])
 

@@ -1,5 +1,5 @@
 (ns entity.skills
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [data.val-max :refer [apply-val]]
             [api.context :refer [get-property valid-params? ->counter stopped?]]
             [api.entity :as entity]
@@ -10,7 +10,7 @@
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
-(component/def :entity/skills (attr/one-to-many-ids :properties/skill)
+(defcomponent :entity/skills (attr/one-to-many-ids :properties/skill)
   skills
   (entity/create-component [_ _components ctx]
     (zipmap skills (map #(get-property ctx %) skills)))

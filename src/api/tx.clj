@@ -1,4 +1,4 @@
 (ns api.tx
-  (:require [core.component :as component]))
+  (:require [core.component :refer [defsystem]]))
 
-(component/defn transact! [_ ctx])
+(defsystem transact! [_ ctx])

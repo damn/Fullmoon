@@ -1,7 +1,7 @@
 (ns context.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [sort-by-order]]
-            [core.component :as component :refer [update-map apply-system]]
+            [core.component :refer [defcomponent] :as component]
             [api.context :refer [transact-all! get-entity]]
             [api.graphics :as g]
             [api.entity :as entity :refer [map->Entity]]
@@ -11,7 +11,7 @@
   {:pre [(not (contains? components :entity/id))
          (not (contains? components :entity/uid))]}
   (let [entity* (-> components
-                    (update-map entity/create-component components ctx)
+                    (component/update-map entity/create-component components ctx)
                     map->Entity)]
     (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
   nil)
@@ -26,16 +26,18 @@
   (swap! uids-entities dissoc uid)
   nil)
 
-(component/def :entity/uid {} uid
-  (entity/create  [_ {:keys [entity/id]} _ctx] [[:tx/assoc-uids->entities   id]])
-  (entity/destroy [_ _entity*            _ctx] [[:tx/dissoc-uids->entities uid]]))
+(defcomponent :entity/uid {}
+  (entity/create [_ {:keys [entity/id]} _ctx]
+    [[:tx/assoc-uids->entities id]])
+  (entity/destroy [[_ uid] _entity* _ctx]
+    [[:tx/dissoc-uids->entities uid]]))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
 
 (defn- apply-system-transact-all! [ctx system entity*]
-  (run! #(transact-all! ctx %) (apply-system system entity* ctx)))
+  (run! #(transact-all! ctx %) (component/apply-system system entity* ctx)))
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
@@ -56,7 +58,7 @@
                        g
                        {:keys [context/thrown-error] :as ctx}]
   (try
-   (dorun (apply-system system entity* g ctx))
+   (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
      (when-not @thrown-error
        (handle-entity-error! ctx entity* t))

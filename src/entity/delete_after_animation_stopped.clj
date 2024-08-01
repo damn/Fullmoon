@@ -1,10 +1,9 @@
 (ns entity.delete-after-animation-stopped
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [data.animation :as animation]
             [api.entity :as entity]))
 
-(component/def :entity/delete-after-animation-stopped? {}
-  _
+(defcomponent :entity/delete-after-animation-stopped? {}
   (entity/create [_ entity* _ctx]
     (-> entity* :entity/animation :looping? not assert))
   (entity/tick [_ {:keys [entity/id entity/animation]} _ctx]

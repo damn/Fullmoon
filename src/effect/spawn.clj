@@ -1,5 +1,5 @@
 (ns effect.spawn
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
             [entity.state.npc :as npc-state]))
@@ -28,23 +28,22 @@
  )
 
 ; => one to one attr!?
-(component/def :effect/spawn {:widget :text-field
+(defcomponent :effect/spawn {:widget :text-field
                               :schema [:qualified-keyword {:namespace :creatures}]}
-  creature-id
-  (effect/text [_ _ctx]
-               (str "Spawns a " (name creature-id)))
+  (effect/text [[_ creature-id] _ctx]
+    (str "Spawns a " (name creature-id)))
 
   (effect/valid-params? [_ {:keys [effect/source
                                    effect/target-position]}]
-                        ; TODO line of sight ? / not blocked ..
-                        (and source
-                             (:entity/faction @source)
-                             target-position))
+    ; TODO line of sight ? / not blocked ..
+    (and source
+         (:entity/faction @source)
+         target-position))
 
-  (transact! [_ {:keys [effect/source
-                        effect/target-position] :as ctx}]
-             [[:tx/creature
-               creature-id
-               #:entity {:position target-position
-                         :state (npc-state/->state :idle)
-                         :faction (:entity/faction @source)}]]))
+  (transact! [[_ creature-id] {:keys [effect/source
+                                      effect/target-position] :as ctx}]
+    [[:tx/creature
+      creature-id
+      #:entity {:position target-position
+                :state (npc-state/->state :idle)
+                :faction (:entity/faction @source)}]]))

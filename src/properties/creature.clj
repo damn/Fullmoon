@@ -1,18 +1,17 @@
 (ns properties.creature
   (:require [clojure.string :as str]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.properties :as properties]))
 
-(component/def :properties/creature {}
-  _
+(defcomponent :properties/creature {}
   (properties/create [_]
-    (component/def :creature/species {:widget :label      :schema [:qualified-keyword {:namespace :species}]}) ; TODO not used ... but one of?
-    (component/def :creature/level   {:widget :text-field :schema [:maybe pos-int?]}) ; pos-int-attr ? ; TODO creature lvl >0, <max-lvls (9 ?)
+    (defcomponent :creature/species {:widget :label      :schema [:qualified-keyword {:namespace :species}]}) ; TODO not used ... but one of?
+    (defcomponent :creature/level   {:widget :text-field :schema [:maybe pos-int?]}) ; pos-int-attr ? ; TODO creature lvl >0, <max-lvls (9 ?)
     ; TODO what components required? got some without attack !
     ; also
     ; rename property/creature
-    (component/def :property/entity (data/components-attribute :entity))
+    (defcomponent :property/entity (data/components-attribute :entity))
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]

@@ -1,4 +1,4 @@
 (ns api.properties
-  (:require [core.component :as component]))
+  (:require [core.component :refer [defsystem]]))
 
-(component/defn create [_])
+(defsystem create [_])

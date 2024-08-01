@@ -1,8 +1,8 @@
 (ns property.all
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [core.data :as data]))
 
-(component/def :property/pretty-name data/string-attr)
-(component/def :property/image       data/image)
-(component/def :property/animation   data/animation)
-(component/def :property/sound       data/sound)
+(defcomponent :property/pretty-name data/string-attr)
+(defcomponent :property/image       data/image)
+(defcomponent :property/animation   data/animation)
+(defcomponent :property/sound       data/sound)

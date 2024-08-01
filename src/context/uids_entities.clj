@@ -1,6 +1,5 @@
 (ns context.uids-entities
-  (:require [core.component :as component]))
+  (:require [core.component :refer [defcomponent] :as component]))
 
-(component/def :context/uids-entities {}
-  _
+(defcomponent :context/uids-entities {}
   (component/create [_ _ctx] (atom {})))

@@ -1,17 +1,16 @@
 (ns effect.stun
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [utils.core :refer [readable-number]]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
             [core.data :as attr]))
 
-(component/def :effect/stun attr/pos-attr
-  duration
-  (effect/text [_ _ctx]
+(defcomponent :effect/stun attr/pos-attr
+  (effect/text [[_ duration] _ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
   (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and target))
 
-  (transact! [_ {:keys [effect/target]}]
+  (transact! [[_ duration] {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))

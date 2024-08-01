@@ -1,9 +1,9 @@
 (ns entity.clickable
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [api.entity :as entity]))
 
-(component/def :entity/clickable {}
+(defcomponent :entity/clickable {}
   {:keys [text]}
   (entity/render-default [_ {[x y] :entity/position :keys [entity/mouseover? entity/body]} g _ctx]
     (when (and mouseover? text)

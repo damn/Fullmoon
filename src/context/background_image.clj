@@ -1,10 +1,10 @@
 (ns context.background-image
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]))
 
-(component/def :context/background-image {}
-  file
-  (component/create [_ ctx] (ctx/create-image ctx file)))
+(defcomponent :context/background-image {}
+  (component/create [[_ file] ctx]
+    (ctx/create-image ctx file)))
 
 (extend-type api.context.Context
   api.context/BackgroundImage

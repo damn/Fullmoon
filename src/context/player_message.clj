@@ -1,5 +1,5 @@
 (ns context.player-message
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [->actor delta-time]]
             [api.graphics :as g]
             [api.tx :refer [transact!]]))
@@ -23,8 +23,7 @@
     (when (>= counter duration-seconds)
       (reset! player-message nil))))
 
-(component/def :context/player-message {}
-  _
+(defcomponent :context/player-message {}
   (component/create [_ _ctx] (atom nil)))
 
 (defmethod transact! :tx/msg-to-player [[_ message] {:keys [context/player-message]}]

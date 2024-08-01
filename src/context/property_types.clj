@@ -2,13 +2,12 @@
   (:require [clojure.string :as str]
             [malli.core :as m]
             [malli.error :as me]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.properties :as properties]))
 
-(component/def :context/property-types {}
-  property-types
-  (component/create [_ _ctx]
+(defcomponent :context/property-types {}
+  (component/create [[_ property-types] _ctx]
     (component/load! property-types)
     (component/update-map property-types properties/create)))
 

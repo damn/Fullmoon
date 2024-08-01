@@ -1,6 +1,6 @@
 (ns context.game
   (:require [utils.core :refer [safe-get]]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities transact-all! frame->txs windows]]
             [api.entity :as entity]
             [api.entity.state :as state]
@@ -149,9 +149,8 @@
   (dotimes [_ replay-speed]
     (replay-frame! ctx (swap! game-logic-frame inc))))
 
-(component/def :context/game {}
-  components
-  (component/create [_ _ctx] components))
+(defcomponent :context/game {}
+  (component/create [[_ components] _ctx] components))
 
 (extend-type api.context.Context
   api.context/Game

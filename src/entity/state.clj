@@ -1,12 +1,12 @@
 (ns entity.state
   (:require [reduce-fsm :as fsm]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [api.context :refer [transact-all!]]
             [api.entity :as entity]
             [api.entity.state :as state]
             [api.tx :refer [transact!]]))
 
-(component/def :entity/state {}
+(defcomponent :entity/state {}
   {:keys [initial-state
           fsm
           state-obj

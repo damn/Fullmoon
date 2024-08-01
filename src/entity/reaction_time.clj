@@ -1,5 +1,5 @@
 (ns entity.reaction-time
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [core.data :as attr]))
 
-(component/def :entity/reaction-time attr/pos-attr)
+(defcomponent :entity/reaction-time attr/pos-attr)

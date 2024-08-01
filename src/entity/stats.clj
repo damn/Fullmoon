@@ -1,8 +1,8 @@
 (ns entity.stats
-  (:require [core.component :as component]
+  (:require [core.component :refer [defcomponent]]
             [core.data :as attr]))
 
-(component/def :stats/strength attr/nat-int-attr)
+(defcomponent :stats/strength attr/nat-int-attr)
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -10,13 +10,13 @@
           For example:
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
       skill-speed-stat (assoc attr/pos-attr :doc doc)]
-  (component/def :stats/cast-speed   skill-speed-stat)
-  (component/def :stats/attack-speed skill-speed-stat))
+  (defcomponent :stats/cast-speed   skill-speed-stat)
+  (defcomponent :stats/attack-speed skill-speed-stat))
 
-(component/def :stats/armor-save   {:widget :text-field :schema number?})
-(component/def :stats/armor-pierce {:widget :text-field :schema number?})
+(defcomponent :stats/armor-save   {:widget :text-field :schema number?})
+(defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
 
-(component/def :entity/stats (assoc (attr/map-attribute :stats/strength
+(defcomponent :entity/stats (assoc (attr/map-attribute :stats/strength
                                                         :stats/cast-speed
                                                         :stats/attack-speed
                                                         :stats/armor-save

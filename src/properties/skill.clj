@@ -1,7 +1,7 @@
 (ns properties.skill
   (:require [clojure.string :as str]
             [utils.core :refer [readable-number]]
-            [core.component :as component]
+            [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
             [api.properties :as properties]))
@@ -11,15 +11,14 @@
 (def ^:private cooldown-color "[SKY]")
 (def ^:private effect-color "[CHARTREUSE]")
 
-(component/def :properties/skill {}
-  _
+(defcomponent :properties/skill {}
   (properties/create [_]
-    (component/def :skill/action-time data/pos-attr)
-    (component/def :skill/cooldown data/nat-int-attr)
-    (component/def :skill/cost data/nat-int-attr)
-    (component/def :skill/effect (data/components-attribute :effect))
-    (component/def :skill/start-action-sound data/sound)
-    (component/def :skill/action-time-modifier-key (data/enum :stats/cast-speed :stats/attack-speed))
+    (defcomponent :skill/action-time data/pos-attr)
+    (defcomponent :skill/cooldown data/nat-int-attr)
+    (defcomponent :skill/cost data/nat-int-attr)
+    (defcomponent :skill/effect (data/components-attribute :effect))
+    (defcomponent :skill/start-action-sound data/sound)
+    (defcomponent :skill/action-time-modifier-key (data/enum :stats/cast-speed :stats/attack-speed))
     {:id-namespace "skills"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :skills}]]

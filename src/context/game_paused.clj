@@ -1,6 +1,5 @@
 (ns context.game-paused
-  (:require [core.component :as component]))
+  (:require [core.component :refer [defcomponent] :as component]))
 
-(component/def :context/game-paused {}
-  _
+(defcomponent :context/game-paused {}
   (component/create [_ _ctx] (atom nil)))

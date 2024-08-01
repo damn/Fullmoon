@@ -1,6 +1,6 @@
 (ns context.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
-            [core.component :as component]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [api.entity :as entity]
             [api.world.grid :refer [point->entities]]))
@@ -15,8 +15,7 @@
          (filter #(line-of-sight? context @player-entity @%))
          first)))
 
-(component/def :context/mouseover-entity {}
-  _
+(defcomponent :context/mouseover-entity {}
   (component/create [_ _ctx] (atom nil)))
 
 (extend-type api.context.Context
