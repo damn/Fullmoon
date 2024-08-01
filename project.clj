@@ -71,60 +71,16 @@
  (do
   (require '[hiera.main :as hiera])
 
+  (def only-component-ns #{"api" "app" "core" "math" "mapgen" "utils" "data" "dev" "world"})
+
   (hiera/graph
    {:sources #{"src"}
     :output "target/hiera"
     :layout :horizontal
     :cluster-depth 2
     :external false
-    :ignore
+    :ignore only-component-ns}))
 
-    ; show only components !
-
-    ; * context
-    ; * effect
-    ; * entity
-    ; * modifier
-    ; * properties
-    ; * screens
-
-    #{"api"
-      "app"
-      "core"
-      "math"
-      "mapgen"
-      "utils"
-      "data"
-      "dev"
-      ;"modifier"
-      "world"
-
-      "tx"
-
-      ; "effect.damage"
-      ; "effect.melee-damage"
-      ; "effect.projectile"
-      ; "effect.sound"
-      ; "effect.target-entity"
-      ; "effect.stun"
-      ; "effect.restore-hp-mana"
-
-
-      }}))
-
- ; most complex ns:
- "screens.options-menu"
- "screens.main-menu"
- "app"
- "screens.game"
- "cdq.tx.all"
- "context.world"
- "cdq.tx.spawn"
- "context.ui.actors"
- "cdq.entity.all"
- "cdq.state.player"
- "gdl.libgdx.app"
- "cdq.state.npc"
 
  ; TODO I can also just see which namespaces have the most dependencies ... (on non-API namespaces !!!)
 

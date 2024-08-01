@@ -9,7 +9,7 @@
 (component/def :context/property-types {}
   property-types
   (ctx/create [_ _ctx]
-    (component/load! property-types :log? true)
+    (component/load! property-types)
     (component/update-map property-types properties/create)))
 
 (defn- property->text [{:keys [context/property-types] :as ctx} property]
