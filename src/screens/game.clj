@@ -35,16 +35,15 @@
 (def ^:private zoom-speed 0.05)
 
 (defn- end-of-frame-checks! [context]
-  (when (key-pressed? context input.keys/shift-left)
-    (adjust-zoom (ctx/world-camera context) zoom-speed))
   (when (key-pressed? context input.keys/minus)
+    (adjust-zoom (ctx/world-camera context) zoom-speed))
+  (when (key-pressed? context input.keys/equals)
     (adjust-zoom (ctx/world-camera context) (- zoom-speed)))
   (check-window-hotkeys context)
   (when (key-just-pressed? context input.keys/escape)
     (let [windows (windows context)]
       (cond (some visible? windows) (run! #(set-visible! % false) windows)
             :else (change-screen! :screens/options-menu))))
-
   (when (key-just-pressed? context input.keys/tab)
     (change-screen! :screens/minimap)))
 
@@ -66,12 +65,12 @@
 
 (def ^:private pausing? true)
 
-(defn- assoc-delta-time [ctx]
-  (assoc ctx :context/delta-time (min (delta-time ctx)
-                                      movement/max-delta-time)))
-
 (defn- step-one-frame? [ctx]
-  (key-just-pressed? ctx input.keys/p))
+  (or (key-just-pressed? ctx input.keys/p)
+      (key-pressed?      ctx input.keys/space)))
+
+(defn- assoc-delta-time [ctx]
+  (assoc ctx :context/delta-time (min (delta-time ctx) movement/max-delta-time)))
 
 (defn- update-game [{:keys [context/player-entity
                             context/game-paused?

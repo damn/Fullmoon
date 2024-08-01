@@ -55,6 +55,9 @@
 (defn- exit []
   (change-screen! :screens/game))
 
+(def ^:private key-help-text
+  "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
+
 (defn- create-table [{:keys [context/config] :as ctx}]
   (->table ctx
            {:rows (concat
@@ -63,6 +66,9 @@
                                      (get-text check-box)
                                      #(set-state check-box %)
                                      (boolean (get-state check-box)))])
+                   [[(ctx/->label ctx key-help-text)]]
+                   (when (safe-get config :debug-window?)
+                     [[(ctx/->label ctx "[Z] - Debug window")]])
                    (when (safe-get config :debug-options?)
                      (for [check-box debug-flags]
                        [(->check-box ctx
@@ -83,7 +89,8 @@
       (exit))))
 
 (defn- ->screen [ctx background-image]
-  {:actors [background-image (create-table ctx)]
+  {:actors [background-image
+            (create-table ctx)]
    :sub-screen (->SubScreen)})
 
 (component/def :screens/options-menu {}
