@@ -1,18 +1,18 @@
 (ns screens.game
-  (:require [core.component :as component]
-            [app.state :refer [change-screen!]]
+  (:require [utils.core :refer [safe-get]]
+            [core.component :as component]
             [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities set-cursork! transact-all! frame->txs windows]]
+            [api.entity :as entity]
+            [api.entity.state :as state]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
-            [api.screen :as screen :refer [Screen]]
             [api.input.keys :as input.keys]
             [api.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
-            [utils.core :refer [safe-get]]
+            [api.screen :as screen :refer [Screen]]
+            [api.world.content-grid :refer [active-entities]]
+            [app.state :refer [change-screen!]]
             context.ui.actors
-            [api.entity :as entity]
-            [entity.movement :as movement]
-            [api.entity.state :as state]
-            [api.world.content-grid :refer [active-entities]]))
+            [entity.movement :as movement]))
 
 ; for now a function, see context.libgdx.input reload bug
 ; otherwise keys in dev mode may be unbound because dependency order not reflected
@@ -65,7 +65,7 @@
 
 (def ^:private pausing? true)
 
-(defn- step-one-frame? [ctx]
+(defn- player-unpaused? [ctx]
   (or (key-just-pressed? ctx input.keys/p)
       (key-pressed?      ctx input.keys/space)))
 
@@ -83,7 +83,7 @@
         paused? (reset! game-paused? (or @thrown-error
                                          (and pausing?
                                               (state/pause-game? (entity/state-obj @player-entity))
-                                              (not (step-one-frame? ctx)))))
+                                              (not (player-unpaused? ctx)))))
         ctx (assoc-delta-time ctx)]
     (update-mouseover-entity! ctx) ; this do always so can get debug info even when game not running
     (when-not paused?
