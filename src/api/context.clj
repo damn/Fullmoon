@@ -194,3 +194,6 @@
 
 (defprotocol BackgroundImage
   (->background-image [_]))
+
+(defprotocol Game
+  (start-new-game [_ tiled-level]))

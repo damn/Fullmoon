@@ -66,7 +66,6 @@
              ; requires context/config (debug-windows)
              ; make asserts .... for all dependencies ... everywhere o.o
              [:context/background-image "ui/moon_background.png"]
-
              [:context/screens {:first-screen :screens/main-menu
                                 :screens {:screens/game           true
                                           :screens/main-menu      true
@@ -74,22 +73,10 @@
                                           :screens/minimap        true
                                           :screens/options-menu   true
                                           :screens/property-editor true}}]
-
              [:tx/sound true]
              [:tx/player-modal true]
-
              [:context/error-modal true]
-
-             ; game
-             ;[:context/ecs]
-             ;[:context/mouseover-entity]
-             ;[:context/player-message]
-             ;[:context/counter]
-             ;[:context/game-paused?] ; (atom nil)
-             ;[:context/game-logic-frame] ; (atom 0)
-
-
-             ]})
+             [:context/game true]]})
 
 (defn -main []
   (app/start app-config))
