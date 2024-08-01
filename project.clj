@@ -78,12 +78,10 @@
     ;:cluster-depth 3
     :external false
     :ignore #{"api"
-              "gdl"
-              "core.component"
+              "core"
+              "math"
               "utils.core"
               "data.val-max"
-              "cdq.attributes"
-              "screens.options-menu"
               }}))
 
  ; most complex ns:
