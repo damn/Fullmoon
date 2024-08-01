@@ -5,10 +5,10 @@
             [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
             [api.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
+            context.game
             context.transaction-handler
             context.render-debug
             context.world
-            screens.game
             entity.body))
 
 (defprotocol StatusCheckBox
@@ -47,7 +47,7 @@
                                  #'context.render-debug/highlight-blocked-cell?
                                  #'context.render-debug/cell-entities?
                                  #'context.render-debug/potential-field-colors?
-                                 #'screens.game/pausing?
+                                 #'context.game/pausing?
                                  #'context.world/los-checks?
                                  #'context.world/spawn-enemies?
                                  #'world.render/see-all-tiles?]))

@@ -7,6 +7,10 @@
 (component/defn destroy [_ ctx])
 (component/defn render  [_ ctx])
 
+(defprotocol Game
+  (start-new-game [_ tiled-level])
+  (render-game [_]))
+
 (defprotocol Application
   (exit-app [_]))
 
@@ -192,6 +196,3 @@
 
 (defprotocol BackgroundImage
   (->background-image [_]))
-
-(defprotocol Game
-  (start-new-game [_ tiled-level]))
