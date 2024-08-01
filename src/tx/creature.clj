@@ -2,6 +2,9 @@
   (:require [api.context :as ctx]
             [api.tx :refer [transact!]]))
 
+; * all entities give inventory -> can push up friendlies .... show bag symbol or some dot if they have items
+; or even create enemies w. inventory ....
+
 ; position
 ; body
 ; state (controller!)
