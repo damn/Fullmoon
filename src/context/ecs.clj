@@ -7,9 +7,6 @@
             [api.entity :as entity :refer [map->Entity]]
             [api.tx :refer [transact!]]))
 
-(defn- apply-system-transact-all! [ctx system entity*]
-  (run! #(transact-all! ctx %) (apply-system system entity* ctx)))
-
 (defmethod transact! :tx/assoc [[_ entity k v] _ctx]
   (assert (keyword? k))
   (swap! entity assoc k v)
@@ -55,6 +52,9 @@
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
+
+(defn- apply-system-transact-all! [ctx system entity*]
+  (run! #(transact-all! ctx %) (apply-system system entity* ctx)))
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]

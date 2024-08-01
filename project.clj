@@ -71,13 +71,41 @@
  (do
   (require '[hiera.main :as hiera])
 
-  (def only-component-ns #{"api" "app" "core" "math" "mapgen" "utils" "data" "dev" "world"})
+  ;; Biggest deps
+  ; 'screens.game'
+  ; 'screens.main-menu'
+  ; 'screens.options-menu'
+
+  ; Also replay mode not usable
+
+  (def only-component-ns #{"api" "app" "core" "math" "mapgen" "utils" "data" "dev" "world"
+
+                           ; trivial fsm can move to tx/creature or entity/state or api
+                           "effect.spawn"
+                           "context.world"
+
+                           ; trivial just use debug flag or sth
+                           "screens.options-menu"
+
+                           "effect"
+                           "modifier"
+                           "property"
+                           "tx"
+
+                           "context.libgdx"
+
+                           "entity.state"
+                           "entity"
+                           })
+
+
+
 
   (hiera/graph
    {:sources #{"src"}
     :output "target/hiera"
     :layout :horizontal
-    :cluster-depth 2
+    ;:cluster-depth 2
     :external false
     :ignore only-component-ns}))
 
