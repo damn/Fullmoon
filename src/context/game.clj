@@ -32,16 +32,16 @@
   (let [ctx (merge (reset-common-game-context! ctx)
                    {:context/replay-mode? false}
                    (world/->context ctx tiled-level))]
-    ;(ctx/clear-recorded-txs!)
-    ;(ctx/set-record-txs! true) ; TODO set in config ? ignores option menu setting and sets true always.
+    ;(ctx/clear-recorded-txs! ctx)
+    ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
     (world/transact-create-entities-from-tiledmap! ctx)
     ;(println "Initial entity txs:")
-    ;(ctx/summarize-txs (ctx/frame->txs ctx 0))
+    ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
     (merge ctx (->player-entity-context ctx))))
 
 (defn- start-replay-mode! [ctx]
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
-  (ctx/set-record-txs! false)
+  (ctx/set-record-txs! ctx false)
   ; remove entity connections to world grid/content-grid,
   ; otherwise all entities removed with reset-common-game-context!
   (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
