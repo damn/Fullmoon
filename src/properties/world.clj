@@ -11,15 +11,15 @@
 (component/def :properties/world {}
   _
   (properties/create [_]
-    {:of-type? :world/princess
-     :edn-file-sort-order 5
-     :title "World"
-     :overview {:title "Worlds"
-                :columns 10
-                :image/dimensions [96 96]}
+    {:id-namespace "worlds"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :worlds}]]
               [:world/map-size
                :world/max-area-level
                :world/princess
-               :world/spawn-rate])}))
+               :world/spawn-rate])
+     :edn-file-sort-order 5
+     :title "World"
+     :overview {:title "Worlds"
+                :columns 10
+                :image/dimensions [96 96]}}))

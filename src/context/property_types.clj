@@ -13,7 +13,7 @@
     (component/update-map property-types properties/create)))
 
 (defn- property->text [{:keys [context/property-types] :as ctx} property]
-  ((:->text (get property-types (api.context/property->type ctx property)))
+  ((:->text (get property-types (ctx/property->type ctx property)))
    ctx
    property))
 
@@ -37,11 +37,20 @@
      (assoc ctx :effect/source (:context/player-entity ctx))
      property)))
 
+(defn- of-type? [property-type {:keys [property/id]}]
+  (= (namespace id)
+     (:id-namespace property-type)))
+
 (extend-type api.context.Context
   api.context/PropertyTypes
-  (of-type? [{:keys [context/property-types]} property-type property]
-    ((:of-type? (get property-types property-type))
-     property))
+  (of-type? [{:keys [context/property-types]} property type]
+    (of-type? (type property-types) property))
+
+  (property->type [{:keys [context/property-types]} property]
+    (some (fn [[type property-type]]
+            (when (of-type? property-type property)
+              type))
+          property-types))
 
   (validate [{:keys [context/property-types] :as ctx} property {:keys [humanize?]}]
     (let [ptype (api.context/property->type ctx property)
@@ -57,13 +66,6 @@
                                   (with-out-str
                                    (clojure.pprint/pprint
                                     explained)))))))))))
-
-  (property->type [{:keys [context/property-types]} property]
-    (some (fn [[type {:keys [of-type?]}]]
-            (assert of-type?)
-            (when (of-type? property)
-              type))
-          property-types))
 
   (edn-file-sort-order [{:keys [context/property-types]} property-type]
     (:edn-file-sort-order (get property-types property-type)))

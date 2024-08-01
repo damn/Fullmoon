@@ -22,12 +22,7 @@
 (component/def :properties/skill {}
   _
   (properties/create [_]
-    {:of-type? :skill/effect
-     :edn-file-sort-order 0
-     :title "Skill"
-     :overview {:title "Skill"
-                :columns 16
-                :image/dimensions [70 70]}
+    {:id-namespace "skills"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :skills}]]
               [:property/image
@@ -37,6 +32,11 @@
                :skill/effect
                :skill/start-action-sound
                :skill/action-time-modifier-key])
+     :edn-file-sort-order 0
+     :title "Skill"
+     :overview {:title "Skill"
+                :columns 16
+                :image/dimensions [70 70]}
      :->text (fn [ctx {:keys [property/id
                               skill/action-time
                               skill/cooldown

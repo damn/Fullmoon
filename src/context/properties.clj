@@ -137,8 +137,8 @@
   (get-property [{{:keys [db]} :context/properties} id]
     (safe-get db id))
 
-  (all-properties [{{:keys [db]} :context/properties :as ctx} property-type]
-    (filter #(api.context/of-type? ctx property-type %) (vals db)))
+  (all-properties [{{:keys [db]} :context/properties :as ctx} type]
+    (filter #(ctx/of-type? ctx % type) (vals db)))
 
   (update! [{{:keys [db]} :context/properties :as ctx}
             {:keys [property/id] :as property}]

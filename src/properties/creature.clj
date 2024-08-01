@@ -15,7 +15,13 @@
 (component/def :properties/creature {}
   _
   (properties/create [_]
-    {:of-type? :creature/species
+    {:id-namespace "creatures"
+     :schema (data/map-attribute-schema
+              [:property/id [:qualified-keyword {:namespace :creatures}]]
+              [:property/image
+               :creature/species
+               :creature/level
+               :property/entity])
      :edn-file-sort-order 1
      :title "Creature"
      :overview {:title "Creatures"
@@ -28,12 +34,6 @@
                                        (case (:entity/faction (:property/entity %))
                                          :good "g"
                                          :evil "e"))}
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :creatures}]]
-              [:property/image
-               :creature/species
-               :creature/level
-               :property/entity])
      :->text (fn [_ctx
                   {:keys [property/id
                           creature/species

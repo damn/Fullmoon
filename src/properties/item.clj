@@ -27,7 +27,13 @@
 (component/def :properties/item {}
   _
   (properties/create [_]
-    {:of-type? :item/slot
+    {:id-namespace "items"
+     :schema (data/map-attribute-schema
+              [:property/id [:qualified-keyword {:namespace :items}]]
+              [:property/pretty-name
+               :property/image
+               :item/slot
+               :item/modifier])
      :edn-file-sort-order 3
      :title "Item"
      :overview {:title "Items"
@@ -37,12 +43,6 @@
                                        (name slot)
                                        "")
                                      (name (:property/id %)))}
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :items}]]
-              [:property/pretty-name
-               :property/image
-               :item/slot
-               :item/modifier])
      :->text (fn [ctx
                   {:keys [property/pretty-name
                           item/modifier]
