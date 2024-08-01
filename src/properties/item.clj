@@ -35,7 +35,6 @@
                :item/slot
                :item/modifier])
      :edn-file-sort-order 3
-     :title "Item"
      :overview {:title "Items"
                 :columns 17
                 :image/dimensions [60 60]

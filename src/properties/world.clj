@@ -19,7 +19,6 @@
                :world/princess
                :world/spawn-rate])
      :edn-file-sort-order 5
-     :title "World"
      :overview {:title "Worlds"
                 :columns 10
                 :image/dimensions [96 96]}}))

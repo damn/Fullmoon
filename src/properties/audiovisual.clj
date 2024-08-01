@@ -12,8 +12,7 @@
               [:property/sound
                :property/animation])
      :edn-file-sort-order 7 ; ? global put
-     :title "Audiovisual" ; forget it use keywords simpler
-     :overview {:title "Audiovisuals" ; forget it use keywords simpler
+     :overview {:title "Audiovisuals"
                 :columns 10
                 :image/dimensions [96 96]} ; ??
      }))

@@ -23,7 +23,6 @@
                :creature/level
                :property/entity])
      :edn-file-sort-order 1
-     :title "Creature"
      :overview {:title "Creatures"
                 :columns 16
                 :image/dimensions [65 65]

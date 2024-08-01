@@ -336,10 +336,7 @@
 
 (defn ->property-editor-window [context id]
   (let [props (get-property context id)
-        {:keys [title]} (api.context/overview
-                         context
-                         (api.context/property->type context props))
-        window (->window context {:title (or title (name id))
+        window (->window context {:title ""
                                   :modal? true
                                   :close-button? true
                                   :center? true
