@@ -1,16 +1,5 @@
 (ns app
-
-  ; dependency doesnt work with tools namespace refresh
-  ; => define property types as data and load into a schema only
-  ; when the component gets ctx/create'd
-
-  ; or the problem is the global
-  ; component/attributes ??
-
-  ; !! => only functions !!
-
-  (:require properties.property
-            [app.libgdx.app :as app]))
+  (:require [app.libgdx.app :as app]))
 
 ; edit /add / remove components with an dev-app
 ; creates properly named namespaces then
@@ -50,6 +39,7 @@
                                                :debug-window? true
                                                :debug-options? true}}}]
 
+             [:properties/property true]
              [:context/property-types {:properties/audiovisual true
                                        :properties/creature true
                                        :properties/item true
