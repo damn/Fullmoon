@@ -116,7 +116,7 @@
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
-(component/def :entity/inventory (attr/one-to-many-ids :property.type/item) ; optional
+(component/def :entity/inventory (attr/one-to-many-ids :properties/item) ; optional
   items
   (entity/create [_ {:keys [entity/id]} context]
     (cons [:tx/assoc id :entity/inventory empty-inventory]
