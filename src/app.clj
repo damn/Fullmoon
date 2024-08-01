@@ -28,7 +28,6 @@
              [:context.libgdx/stage true]
              [:context.libgdx/tiled true]
              [:context.libgdx/ttf-generator true]
-
              [:context/config {:tag :dev
                                :configs {:prod {:map-editor? false
                                                 :property-editor? false
@@ -48,13 +47,11 @@
                                        :properties/skill true
                                        :properties/world true}]
              [:context/properties {:file "resources/properties.edn"}]
-
              ; strange when finds the namespace but wrong name @ component definition
              ; but we want to support pure namespaces just behaviour no create fn
              ; what to do ?
              ; smoketest
              [:context/cursor true]
-
              [:context/builder true]
              [:context/effect true]
              [:context/modifier true]
@@ -63,10 +60,21 @@
              [:context/transaction-handler true]
 
              [:context/inventory true]
-             [:context/action-bar true] ; fehlt
+             [:context/action-bar true]
+             [:context/ecs true]
+             [:context/game [:context/inventory
+                             :context/action-bar
+                             :context/uids-entities
+                             :context/thrown-error
+                             :context/game-paused
+                             :context/game-logic-frame
+                             :context/elapsed-game-time
+                             :context/mouseover-entity
+                             :context/player-message]]
 
              ; requires context/config (debug-windows)
              ; make asserts .... for all dependencies ... everywhere o.o
+             ; TODO context.screens/background-image
              [:context/background-image "ui/moon_background.png"]
              [:context/screens {:first-screen :screens/main-menu
                                 :screens {:screens/game           true
@@ -75,10 +83,10 @@
                                           :screens/minimap        true
                                           :screens/options-menu   true
                                           :screens/property-editor true}}]
+             ; TODO tx/all ?
              [:tx/sound true]
              [:tx/player-modal true]
-             [:context/error-modal true]
-             [:context/game true]]})
+             [:context/error-modal true]]})
 
 (defn -main []
   (app/start app-config))

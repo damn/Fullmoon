@@ -35,14 +35,19 @@
     (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
   nil)
 
-(defmethod transact! :tx/assoc-uids->entities [[_ entity] {:keys [context/uids->entities]}]
+; TODO on error
+; give context snapshot
+; pass to dev app
+; there can look at it ???
+
+(defmethod transact! :tx/assoc-uids->entities [[_ entity] {:keys [context/uids-entities] :as ctx}]
   {:pre [(number? (:entity/uid @entity))]}
-  (swap! uids->entities assoc (:entity/uid @entity) entity)
+  (swap! uids-entities assoc (:entity/uid @entity) entity)
   nil)
 
-(defmethod transact! :tx/dissoc-uids->entities [[_ uid] {:keys [context/uids->entities]}]
-  {:pre [(contains? @uids->entities uid)]}
-  (swap! uids->entities dissoc uid)
+(defmethod transact! :tx/dissoc-uids->entities [[_ uid] {:keys [context/uids-entities]}]
+  {:pre [(contains? @uids-entities uid)]}
+  (swap! uids-entities dissoc uid)
   nil)
 
 (component/def :entity/uid {} uid
@@ -94,11 +99,11 @@
 
 (extend-type api.context.Context
   api.context/EntityComponentSystem
-  (all-entities [{:keys [context/uids->entities]}]
-    (vals @uids->entities))
+  (all-entities [{:keys [context/uids-entities]}]
+    (vals @uids-entities))
 
-  (get-entity [{:keys [context/uids->entities]} uid]
-    (get @uids->entities uid))
+  (get-entity [{:keys [context/uids-entities]} uid]
+    (get @uids-entities uid))
 
   (tick-entities! [{:keys [context/thrown-error] :as ctx} entities*]
     (doseq [entity* entities*]
@@ -118,6 +123,6 @@
     (doseq [entity* entities*]
       (render-entity* entity/render-debug entity* g context)))
 
-  (remove-destroyed-entities! [{:keys [context/uids->entities] :as ctx}]
-    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @uids->entities))]
+  (remove-destroyed-entities! [{:keys [context/uids-entities] :as ctx}]
+    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @uids-entities))]
       (apply-system-transact-all! ctx entity/destroy @entity))))

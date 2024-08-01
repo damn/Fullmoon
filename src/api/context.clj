@@ -156,8 +156,7 @@
   (delete! [_ id]))
 
 (defprotocol InventoryWindow
-  (inventory-window [_])
-  (rebuild-inventory-widgets [_]))
+  (inventory-window [_]))
 
 (defprotocol Counter
   (->counter [_ duration])
@@ -171,7 +170,6 @@
 
 (defprotocol Actionbar
   (->action-bar    [_])
-  (reset-actionbar [_])
   (selected-skill  [_]))
 
 (defprotocol DebugRender ; TODO move out of context api ....

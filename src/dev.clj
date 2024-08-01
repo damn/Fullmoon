@@ -113,6 +113,8 @@
 
  )
 
+; TODO make a menu at top .... with debug options etc...
+
 (comment
  ; TODO make tree of namespace parts ! not so many elements
  ; and all components namespaced names

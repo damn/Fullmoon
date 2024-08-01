@@ -1,23 +1,9 @@
 (ns context.game
-  (:require [app.state :refer [current-context]]
+  (:require [core.component :as component]
             [api.context :as ctx]
-            context.ecs
-            context.elapsed-game-time
-            context.mouseover-entity
-            context.player-message
+            [app.state :refer [current-context]]
             [context.transaction-handler :as txs]
             [context.world :as world]))
-
-; 1.
-; initialize game context @ app
-; context.uids->entities ; 1. problem '->'
-; context.thrown-error
-; context.game-paused? ; 2. problem '?'
-; context.game-logic-frame
-
-; 2.
-; call a context function - ctx/reset-game on all context components
-; which implement that -> main menu doesn't need to know any details !
 
 (defn- fetch-player-entity [ctx]
   {:post [%]}
@@ -26,28 +12,22 @@
 (defn- ->player-entity-context [ctx]
   {:context/player-entity (fetch-player-entity ctx)})
 
-; or just call 'build' with certain args
-; and just those components merge with the original context
-; game-context is just a list of keywords what parts are the game context
+(defn- reset-common-game-context! [{:keys [context/game] :as ctx}]
+  (let [components (map #(vector % nil) game)]
+    (component/load! components)
+    (reduce (fn [ctx [k v]]
+              (assoc ctx k (ctx/create [k v] ctx)))
+            ctx
+            components)))
 
-; TODO values need to be @ the component defined !!
-; not here -
-(defn- reset-common-game-context! [ctx]
-  (ctx/rebuild-inventory-widgets ctx)
-  (ctx/reset-actionbar ctx)
-  (merge {:context/uids->entities (atom {})
-          :context/thrown-error (atom nil)
-          :context/game-paused? (atom nil)
-          :context/game-logic-frame (atom 0)
-          :context/elapsed-game-time (atom 0)
-          :context/mouseover-entity (atom nil)
-          :context/player-message (atom nil)}))
+(component/def :context/game {}
+  components
+  (ctx/create [_ _ctx] components))
 
 (extend-type api.context.Context
   api.context/Game
   (start-new-game [ctx tiled-level]
-    (let [ctx (merge ctx
-                     (reset-common-game-context! ctx)
+    (let [ctx (merge (reset-common-game-context! ctx)
                      {:context/replay-mode? false}
                      (world/->context ctx tiled-level))]
       ;(txs/clear-recorded-txs!)
@@ -64,7 +44,7 @@
   ; otherwise all entities removed with reset-common-game-context!
   (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
   (ctx/remove-destroyed-entities! ctx)
-  (let [ctx (merge ctx (reset-common-game-context! ctx))] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
+  (let [ctx (reset-common-game-context! ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
     (reset! app.state/current-context

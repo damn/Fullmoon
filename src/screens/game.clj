@@ -73,17 +73,17 @@
   (assoc ctx :context/delta-time (min (delta-time ctx) movement/max-delta-time)))
 
 (defn- update-game [{:keys [context/player-entity
-                            context/game-paused?
+                            context/game-paused
                             context/thrown-error
                             context/game-logic-frame]
                      :as ctx}
                     active-entities]
   (let [state-obj (entity/state-obj @player-entity)
         _ (transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
-        paused? (reset! game-paused? (or @thrown-error
-                                         (and pausing?
-                                              (state/pause-game? (entity/state-obj @player-entity))
-                                              (not (player-unpaused? ctx)))))
+        paused? (reset! game-paused (or @thrown-error
+                                        (and pausing?
+                                             (state/pause-game? (entity/state-obj @player-entity))
+                                             (not (player-unpaused? ctx)))))
         ctx (assoc-delta-time ctx)]
     (update-mouseover-entity! ctx) ; this do always so can get debug info even when game not running
     (when-not paused?

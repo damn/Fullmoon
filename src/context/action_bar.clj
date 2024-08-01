@@ -14,8 +14,6 @@
      :button-group (->button-group ctx {:max-check-count 1
                                         :min-check-count 0})}))
 
-; (reset-actionbar ctx)
-
 (comment
  (let [stage (api.context/get-stage @app.state/current-context)]
    (::action-bar (:gdl.context.ui.actors/main-table stage))
@@ -26,10 +24,6 @@
   api.context/Actionbar
   (->action-bar [{{:keys [horizontal-group]} :context/action-bar}]
     horizontal-group)
-
-  (reset-actionbar [{{:keys [horizontal-group button-group]} :context/action-bar}]
-    (clear-children! horizontal-group)
-    (clear! button-group))
 
   (selected-skill [{{:keys [button-group]} :context/action-bar}]
     (when-let [skill-button (checked button-group)]

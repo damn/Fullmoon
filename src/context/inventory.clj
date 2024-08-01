@@ -68,57 +68,6 @@
                                (transact-all! ctx (clicked-cell ctx cell))))))
     stack))
 
-(defn- redo-table [ctx {:keys [^Table table slot->background]}]
-  ; cannot do add-rows, need bag :position idx
-  (let [cell (fn [& args] (apply ->cell ctx slot->background args))]
-    (.clear table)
-    (doto table .add .add
-      (.add ^Actor (cell :inventory.slot/helm))
-      (.add ^Actor (cell :inventory.slot/necklace)) .row)
-    (doto table .add
-      (.add ^Actor (cell :inventory.slot/weapon))
-      (.add ^Actor (cell :inventory.slot/chest))
-      (.add ^Actor (cell :inventory.slot/cloak))
-      (.add ^Actor (cell :inventory.slot/shield)) .row)
-    (doto table .add .add
-      (.add ^Actor (cell :inventory.slot/leg)) .row)
-    (doto table .add
-      (.add ^Actor (cell :inventory.slot/glove))
-      (.add ^Actor (cell :inventory.slot/rings :position [0 0]))
-      (.add ^Actor (cell :inventory.slot/rings :position [1 0]))
-      (.add ^Actor (cell :inventory.slot/boot)) .row)
-    (doseq [y (range (grid/height (:inventory.slot/bag inventory/empty-inventory)))]
-      (doseq [x (range (grid/width (:inventory.slot/bag inventory/empty-inventory)))]
-        (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
-      (.row table))))
-
-(extend-type api.context.Context
-  api.context/InventoryWindow
-  (inventory-window [{{:keys [window]} :context/inventory}]
-    window)
-
-  (rebuild-inventory-widgets [{{:keys [^Window window] :as inventory} :context/inventory :as ctx}]
-    (redo-table ctx inventory)
-    (.pack window)))
-
-(defmethod transact! :tx/set-item-image-in-widget [[_ cell item]
-                                                   {{:keys [table]} :context/inventory :as ctx}]
-  (let [^Actor cell-widget (get table cell)
-        ^Image image-widget (get cell-widget :image)
-        drawable (->texture-region-drawable ctx (:texture (:property/image item)))]
-    (.setMinSize drawable (float cell-size) (float cell-size))
-    (.setDrawable image-widget drawable)
-    (add-tooltip! cell-widget #(player-tooltip-text % item))
-    nil))
-
-(defmethod transact! :tx/remove-item-from-widget [[_ cell]
-                                                  {{:keys [table slot->background]} :context/inventory :as ctx}]
-  (let [^Actor cell-widget (get table cell)
-        ^Image image-widget (get cell-widget :image)]
-    (.setDrawable image-widget (slot->background (cell 0)))
-    (remove-tooltip! cell-widget)
-    nil))
-
 (defn- slot->background [ctx]
   (let [sheet (spritesheet ctx "items/images.png" 48 48)]
     (->> #:inventory.slot {:weapon   0
@@ -143,17 +92,66 @@
 (defn ->inventory-window [{{:keys [window] :as inventory} :context/inventory}]
   window)
 
+(defn- redo-table! [ctx ^Table table slot->background]
+  ; cannot do add-rows, need bag :position idx
+  (let [cell (fn [& args] (apply ->cell ctx slot->background args))]
+    (.clear table)
+    (doto table .add .add
+      (.add ^Actor (cell :inventory.slot/helm))
+      (.add ^Actor (cell :inventory.slot/necklace)) .row)
+    (doto table .add
+      (.add ^Actor (cell :inventory.slot/weapon))
+      (.add ^Actor (cell :inventory.slot/chest))
+      (.add ^Actor (cell :inventory.slot/cloak))
+      (.add ^Actor (cell :inventory.slot/shield)) .row)
+    (doto table .add .add
+      (.add ^Actor (cell :inventory.slot/leg)) .row)
+    (doto table .add
+      (.add ^Actor (cell :inventory.slot/glove))
+      (.add ^Actor (cell :inventory.slot/rings :position [0 0]))
+      (.add ^Actor (cell :inventory.slot/rings :position [1 0]))
+      (.add ^Actor (cell :inventory.slot/boot)) .row)
+    (doseq [y (range (grid/height (:inventory.slot/bag inventory/empty-inventory)))]
+      (doseq [x (range (grid/width (:inventory.slot/bag inventory/empty-inventory)))]
+        (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
+      (.row table))))
+
 (component/def :context/inventory {}
   _
-  (ctx/create [_ context]
-    (let [table (->table context {})]
-      {:window (->window context {:title "Inventory"
+  (ctx/create [_ ctx]
+    (let [table (->table ctx {})
+          slot->background (slot->background ctx)]
+      (redo-table! ctx table slot->background)
+      {:window (->window ctx {:title "Inventory"
                                   :id :inventory-window
                                   :visible? false
-                                  :position [(ctx/gui-viewport-width context)
-                                             (ctx/gui-viewport-height context)]
+                                  :pack? true
+                                  :position [(ctx/gui-viewport-width ctx)
+                                             (ctx/gui-viewport-height ctx)]
                                   :rows [[{:actor table :pad 2}]]})
-       :slot->background (slot->background context)
+       :slot->background slot->background
        :table table})))
 
-; (rebuild-inventory-widgets ctx)
+(extend-type api.context.Context
+  api.context/InventoryWindow
+  (inventory-window [{{:keys [window]} :context/inventory}]
+    window))
+
+(defmethod transact! :tx/set-item-image-in-widget [[_ cell item]
+                                                   {{:keys [table]} :context/inventory :as ctx}]
+  (let [^Actor cell-widget (get table cell)
+        ^Image image-widget (get cell-widget :image)
+        drawable (->texture-region-drawable ctx (:texture (:property/image item)))]
+    (.setMinSize drawable (float cell-size) (float cell-size))
+    (.setDrawable image-widget drawable)
+    (add-tooltip! cell-widget #(player-tooltip-text % item))
+    nil))
+
+(defmethod transact! :tx/remove-item-from-widget [[_ cell]
+                                                  {{:keys [table slot->background]} :context/inventory :as ctx}]
+  (let [^Actor cell-widget (get table cell)
+        ^Image image-widget (get cell-widget :image)]
+    (.setDrawable image-widget (slot->background (cell 0)))
+    (remove-tooltip! cell-widget)
+    nil))
+
