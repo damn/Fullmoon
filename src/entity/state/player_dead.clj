@@ -4,7 +4,7 @@
 
 (defrecord PlayerDead []
   state/PlayerState
-  (player-enter [_] [[:tx/cursor :cursors/black-x]])
+  (player-enter [_] [[:tx.context.cursor/set :cursors/black-x]])
   (pause-game? [_] true)
   (manual-tick [_ entity* context])
   (clicked-inventory-cell [_ entity* cell])

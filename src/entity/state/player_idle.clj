@@ -133,7 +133,7 @@
     (if-let [movement-vector (WASD-movement-vector context)]
       [[:tx/event (:entity/id entity*) :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state context entity*)]
-        (cons [:tx/cursor cursor]
+        (cons [:tx.context.cursor/set cursor]
               (when (button-just-pressed? context buttons/left)
                 (on-click))))))
 

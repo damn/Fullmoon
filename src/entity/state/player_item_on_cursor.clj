@@ -72,7 +72,7 @@
 
   state/State
   (enter [_ {:keys [entity/id]} _ctx]
-    [[:tx/cursor :cursors/hand-grab]
+    [[:tx.context.cursor/set :cursors/hand-grab]
      [:tx/assoc id :entity/item-on-cursor item]])
 
   (exit [_ {:keys [entity/id] :as entity*} ctx]

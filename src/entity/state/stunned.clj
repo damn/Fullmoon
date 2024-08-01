@@ -5,7 +5,7 @@
 
 (defrecord Stunned [counter]
   state/PlayerState
-  (player-enter [_] [[:tx/cursor :cursors/denied]])
+  (player-enter [_] [[:tx.context.cursor/set :cursors/denied]])
   (pause-game? [_] false)
   (manual-tick [_ _entity* context])
   (clicked-inventory-cell [_ entity* cell])

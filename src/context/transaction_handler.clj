@@ -48,7 +48,7 @@
     (doseq [tx txs :when tx]
       (try (let [result (transact! tx ctx)]
              (if (and (nil? result)
-                      (not= :tx/cursor (first tx)))
+                      (not= :tx.context.cursor/set (first tx)))
                (do
                 (when debug-print-txs?
                   (println @game-logic-frame "." (debug-print-tx tx)))

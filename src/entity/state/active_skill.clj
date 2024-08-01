@@ -28,7 +28,7 @@
 
 (defrecord ActiveSkill [skill effect-context counter]
   state/PlayerState
-  (player-enter [_] [[:tx/cursor :cursors/sandclock]])
+  (player-enter [_] [[:tx.context.cursor/set :cursors/sandclock]])
   (pause-game? [_] false)
   (manual-tick [_ entity* context])
   (clicked-inventory-cell [_ entity* cell])

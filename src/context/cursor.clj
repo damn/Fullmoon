@@ -38,6 +38,6 @@
       (ctx/set-cursor! ctx (:cursors/default cursors))
       cursors)))
 
-(defmethod transact! :tx/cursor [[_ cursor-key] ctx]
+(defmethod transact! :tx.context.cursor/set [[_ cursor-key] ctx]
   (ctx/set-cursork! ctx cursor-key)
   nil)
