@@ -23,8 +23,8 @@
 (defn- reset-common-game-context! [{:keys [context/game] :as ctx}]
   (let [components (map #(vector % nil) game)]
     (component/load! components)
-    (reduce (fn [ctx [k v]]
-              (assoc ctx k (ctx/create [k v] ctx)))
+    (reduce (fn [ctx {k 0 :as component}]
+              (assoc ctx k (ctx/create component ctx)))
             ctx
             components)))
 
