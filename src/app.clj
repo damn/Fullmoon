@@ -38,7 +38,9 @@
                                                :property-editor? true
                                                :debug-window? true
                                                :debug-options? true}}}]
-
+             [:effect/all true]
+             [:entity/all true]
+             [:modifier/all true]
              [:property/all true]
              [:context/property-types {:properties/audiovisual true
                                        :properties/creature true

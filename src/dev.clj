@@ -128,6 +128,9 @@
        ;tree-map @@(:context/mouseover-entity ctx)
        tree-map ctx
 
+       ;tree-map (sort-by first core.component/attributes)
+       ;tree-map (sort-by first (methods api.tx/transact!))
+
        ]
    (add-to-stage! ctx (->window ctx {:title "Context Overview"
                                      :close-button? true

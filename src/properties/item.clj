@@ -2,13 +2,7 @@
   (:require [core.component :as component]
             [core.data :as data]
             [api.context :as ctx]
-            [api.properties :as properties]
-            modifier.all))
-
-; modifier add/remove
-; item 'upgrade' colorless to sword fire
-(component/def :item/modifier (data/components-attribute :modifier))
-(component/def :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+            [api.properties :as properties]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
                                       (com.badlogic.gdx.graphics.Color. (float 0.84)
@@ -27,6 +21,10 @@
 (component/def :properties/item {}
   _
   (properties/create [_]
+    ; modifier add/remove
+    ; item 'upgrade' colorless to sword fire
+    (component/def :item/modifier (data/components-attribute :modifier))
+    (component/def :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
     {:id-namespace "items"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :items}]]

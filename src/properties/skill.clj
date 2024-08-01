@@ -4,15 +4,7 @@
             [core.component :as component]
             [core.data :as data]
             [api.context :as ctx]
-            [api.properties :as properties]
-            effect.all))
-
-(component/def :skill/action-time data/pos-attr)
-(component/def :skill/cooldown data/nat-int-attr)
-(component/def :skill/cost data/nat-int-attr)
-(component/def :skill/effect (data/components-attribute :effect))
-(component/def :skill/start-action-sound data/sound)
-(component/def :skill/action-time-modifier-key (data/enum :stats/cast-speed :stats/attack-speed))
+            [api.properties :as properties]))
 
 (def ^:private skill-cost-color "[CYAN]")
 (def ^:private action-time-color "[GOLD]")
@@ -22,6 +14,12 @@
 (component/def :properties/skill {}
   _
   (properties/create [_]
+    (component/def :skill/action-time data/pos-attr)
+    (component/def :skill/cooldown data/nat-int-attr)
+    (component/def :skill/cost data/nat-int-attr)
+    (component/def :skill/effect (data/components-attribute :effect))
+    (component/def :skill/start-action-sound data/sound)
+    (component/def :skill/action-time-modifier-key (data/enum :stats/cast-speed :stats/attack-speed))
     {:id-namespace "skills"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :skills}]]
