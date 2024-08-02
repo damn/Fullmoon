@@ -44,15 +44,17 @@
                           (vector k (or (:schema (get component/attributes k))
                                         :some)))))})
 
+(defn components [ks]
+  {:widget :nested-map
+   :schema (vec (concat [:map {:closed true}]
+                        (for [k ks]
+                          [k {:optional true} (or (:schema (get component/attributes k))
+                                                  :some)])))
+   :components ks})
+
 (defn components-attribute [component-namespace]
-  (let [component-attributes (filter #(= (name component-namespace) (namespace %))
-                                     (keys component/attributes))]
-    {:widget :nested-map
-     :schema (vec (concat [:map {:closed true}]
-                          (for [k component-attributes]
-                            [k {:optional true} (or (:schema (get component/attributes k))
-                                                    :some)])))
-     :components component-attributes})) ; => fetch from schema ? (optional? )
+  (components (filter #(= (name component-namespace) (namespace %))
+                      (keys component/attributes))))
 
 ; TODO similar to map-attribute & components-attribute
 (defn map-attribute-schema [id-attribute attr-ks]

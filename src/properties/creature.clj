@@ -11,7 +11,18 @@
     ; TODO what components required? got some without attack !
     ; also
     ; rename property/creature
-    (defcomponent :property/entity (data/components-attribute :entity))
+    (defcomponent :property/entity (data/components
+                                     [:entity/animation
+                                      :entity/body
+                                      :entity/faction
+                                      :entity/flying?
+                                      :entity/movement
+                                      :entity/reaction-time
+                                      :entity/hp
+                                      :entity/mana
+                                      :entity/inventory
+                                      :entity/skills
+                                      :entity/stats]))
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]

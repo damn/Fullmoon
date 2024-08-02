@@ -5,18 +5,17 @@
 ;;;
 
 ;; added:
-; position
-; state => what is it doing ? what is it requiring ???
+; * position
+; * state => what is it doing ? what is it requiring ???
 ; how is it working ??
 ; # what does it do ?
 ; # what does it depend on ?
 ; # where is it used (as data or api)
-
 ;; player:
-; player?
-; free-skill-points
-; clickable
-; click-distance-tiles
+; * player?
+; * free-skill-points
+; * clickable
+; * click-distance-tiles
 
 ;; spawn:
 ; faction
