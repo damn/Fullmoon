@@ -8,19 +8,18 @@
   (properties/create [_]
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
     (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
-    ; TODO what components optional/required ?
     (defcomponent :creature/entity (data/components
-                                         [:entity/animation
-                                          :entity/body
-                                          :entity/faction
-                                          :entity/flying?
-                                          :entity/movement
-                                          :entity/reaction-time
-                                          :entity/hp
-                                          :entity/mana
-                                          :entity/inventory
-                                          :entity/skills
-                                          :entity/stats]))
+                                     [:entity/animation
+                                      :entity/body
+                                      :entity/faction
+                                      :entity/flying?
+                                      :entity/movement
+                                      :entity/reaction-time
+                                      :entity/hp
+                                      :entity/mana
+                                      :entity/inventory
+                                      :entity/skills
+                                      :entity/stats]))
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]
