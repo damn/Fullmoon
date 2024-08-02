@@ -7,11 +7,9 @@
             [api.tx :refer [transact!]]))
 
 (defcomponent :entity/state {}
-  {:keys [initial-state
-          fsm
-          state-obj
-          state-obj-constructors]}
-  (entity/create-component [_ _components ctx]
+  (entity/create-component [[_ {:keys [fsm initial-state state-obj-constructors]}]
+                            _components
+                            ctx]
     ; initial state is nil, so associng it.
     ; make bug report TODO
     {:fsm (assoc (fsm initial-state nil)  ; throws when initial-state is not part of states
@@ -19,10 +17,10 @@
      :state-obj ((initial-state state-obj-constructors) ctx nil)
      :state-obj-constructors state-obj-constructors})
 
-  (entity/tick         [_ entity* ctx]   (state/tick         state-obj entity*   ctx))
-  (entity/render-below [_ entity* g ctx] (state/render-below state-obj entity* g ctx))
-  (entity/render-above [_ entity* g ctx] (state/render-above state-obj entity* g ctx))
-  (entity/render-info  [_ entity* g ctx] (state/render-info  state-obj entity* g ctx)))
+  (entity/tick         [[_ {:keys [state-obj]}] entity* ctx]   (state/tick         state-obj entity*   ctx))
+  (entity/render-below [[_ {:keys [state-obj]}] entity* g ctx] (state/render-below state-obj entity* g ctx))
+  (entity/render-above [[_ {:keys [state-obj]}] entity* g ctx] (state/render-above state-obj entity* g ctx))
+  (entity/render-info  [[_ {:keys [state-obj]}] entity* g ctx] (state/render-info  state-obj entity* g ctx)))
 
 (extend-type api.entity.Entity
   entity/State

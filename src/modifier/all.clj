@@ -26,36 +26,32 @@
 
 ; TODO has to be integer ?
 (defcomponent :modifier/max-hp {:widget :text-field :schema number?}
-  amount
-  (modifier/text [_] (plus-max-modifier-text "HP" amount))
+  (modifier/text [[_ delta]] (plus-max-modifier-text "HP" delta))
   (modifier/keys [_] [:entity/hp])
-  (modifier/apply   [_ hp] (apply-max-plus  hp amount))
-  (modifier/reverse [_ hp] (apply-max-minus hp amount)))
+  (modifier/apply   [[_ delta] hp] (apply-max-plus  hp delta))
+  (modifier/reverse [[_ delta] hp] (apply-max-minus hp delta)))
 
 ; TODO has to be integer ?
 (defcomponent :modifier/max-mana {:widget :text-field :schema number?}
-  amount
-  (modifier/text [_] (plus-max-modifier-text "Mana" amount))
+  (modifier/text [[_ delta]] (plus-max-modifier-text "Mana" delta))
   (modifier/keys [_] [:entity/mana])
-  (modifier/apply   [_ mana] (apply-max-plus  mana amount))
-  (modifier/reverse [_ mana] (apply-max-minus mana amount)))
+  (modifier/apply   [[_ delta] mana] (apply-max-plus  mana delta))
+  (modifier/reverse [[_ delta] mana] (apply-max-minus mana delta)))
 
 (defn- actions-speed-percent [v]
   (str (check-plus-symbol v) (int (* 100 v))))
 
 (defcomponent :modifier/cast-speed attr/pos-attr
-  amount
-  (modifier/text [_] (str (actions-speed-percent amount) "% Casting-Speed"))
+  (modifier/text [[_ delta]] (str (actions-speed-percent delta) "% Casting-Speed"))
   (modifier/keys [_] [:entity/stats :stats/cast-speed])
-  (modifier/apply   [_ value] (+ (or value 1) amount))
-  (modifier/reverse [_ value] (- value amount)))
+  (modifier/apply   [[_ delta] value] (+ (or value 1) delta))
+  (modifier/reverse [[_ delta] value] (- value delta)))
 
 (defcomponent :modifier/attack-speed attr/pos-attr
-  amount
-  (modifier/text [_] (str (actions-speed-percent amount) "% Attack-Speed"))
+  (modifier/text [[_ delta]] (str (actions-speed-percent delta) "% Attack-Speed"))
   (modifier/keys [_] [:entity/stats :stats/attack-speed])
-  (modifier/apply   [_ value] (+ (or value 1) amount))
-  (modifier/reverse [_ value] (- value amount)))
+  (modifier/apply   [[_ delta] value] (+ (or value 1) delta))
+  (modifier/reverse [[_ delta] value] (- value delta)))
 
 ; TODO move into down modifier/text and common fn ... percent etc. anyway use integer later
 ; also negative possible ?!
@@ -67,19 +63,17 @@
 
 ; TODO no schema
 (defcomponent :modifier/armor-save {:widget :text-field :schema :some}
-  delta
-  (modifier/text [[k _]] (armor-modifier-text k delta))
+  (modifier/text [[k delta]] (armor-modifier-text k delta))
   (modifier/keys [_] [:entity/stats :stats/armor-save])
-  (modifier/apply   [_ value] (+ (or value 0) delta))
-  (modifier/reverse [_ value] (- value delta)))
+  (modifier/apply   [[_ delta] value] (+ (or value 0) delta))
+  (modifier/reverse [[_ delta] value] (- value delta)))
 
 ; TODO no schema
 (defcomponent :modifier/armor-pierce {:widget :text-field :schema :some}
-  delta
-  (modifier/text [[k _]] (armor-modifier-text delta))
+  (modifier/text [[k delta]] (armor-modifier-text delta))
   (modifier/keys [_] [:entity/stats :stats/armor-pierce])
-  (modifier/apply   [_ value] (+ (or value 0) delta))
-  (modifier/reverse [_ value] (- value delta)))
+  (modifier/apply   [[_ delta] value] (+ (or value 0) delta))
+  (modifier/reverse [[_ delta] value] (- value delta)))
 
 (defn- check-damage-modifier-value [[source-or-target
                                      application-type
@@ -114,18 +108,17 @@
                :mult (str (int (* value-delta 100)) "%"))]))
 
 (defcomponent :modifier/damage {:widget :text-field :schema :some}  ; TODO no schema
-  value
-  (modifier/text [_]
+  (modifier/text [[_ value]]
     (assert (check-damage-modifier-value value)
             (str "Wrong value for damage modifier: " value))
     (damage-modifier-text value))
   (modifier/keys [_] [:entity/stats :stats/damage])
-  (modifier/apply [_ stat]
+  (modifier/apply [[_ value] stat]
     (assert (check-damage-modifier-value value)
             (str "Wrong value for damage modifier: " value))
     (update-in stat (drop-last value) #(+ (or % (default-value (get value 1)))
                                           (last value))))
-  (modifier/reverse [_ stat]
+  (modifier/reverse [[_ value] stat]
     (assert (check-damage-modifier-value value)
             (str "Wrong value for damage modifier: " value))
     (update-in stat (drop-last value) - (last value))))

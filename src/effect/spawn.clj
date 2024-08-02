@@ -29,7 +29,7 @@
 
 ; => one to one attr!?
 (defcomponent :effect/spawn {:widget :text-field
-                              :schema [:qualified-keyword {:namespace :creatures}]}
+                             :schema [:qualified-keyword {:namespace :creatures}]}
   (effect/text [[_ creature-id] _ctx]
     (str "Spawns a " (name creature-id)))
 

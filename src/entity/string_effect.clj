@@ -7,12 +7,11 @@
             [api.tx :refer [transact!]]))
 
 (defcomponent :entity/string-effect {}
-  {:keys [text counter] :as this}
-  (entity/tick [[k _] {:keys [entity/id]} context]
+  (entity/tick [[k {:keys [counter]}] {:keys [entity/id]} context]
     (when (stopped? context counter)
       [[:tx.entity/dissoc id k]]))
 
-  (entity/render-above [_ {[x y] :entity/position :keys [entity/body]} g _ctx]
+  (entity/render-above [[_ {:keys [text]}] {[x y] :entity/position :keys [entity/body]} g _ctx]
     (g/draw-text g
                  {:text text
                   :x x

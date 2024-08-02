@@ -41,43 +41,43 @@
                   (+ (:radius (:entity/body entity*)) size 0.1))))
 
 (defcomponent :effect/projectile {:widget :text-field
-                                   :schema [:= true]
-                                   :default-value true}
+                                  :schema [:= true]
+                                  :default-value true}
   (effect/text [_ ctx]
-               (effect-text ctx hit-effect))
+    (effect-text ctx hit-effect))
 
   (effect/valid-params? [_ {:keys [effect/source
                                    effect/target
                                    effect/direction]}]
-                        (and source direction)) ; faction @ source also ?
+    (and source direction)) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
   (effect/useful? [_ {:keys [effect/source effect/target] :as ctx}]
-                  (let [source-p (:entity/position @source)
-                        target-p (:entity/position @target)]
-                    (and (not (path-blocked? ctx
-                                             source-p ; TODO test
-                                             target-p
-                                             size))
-                         ; TODO not taking into account body sizes
-                         (< (v/distance source-p ; entity/distance function protocol EntityPosition
-                                        target-p)
-                            maxrange))))
+    (let [source-p (:entity/position @source)
+          target-p (:entity/position @target)]
+      (and (not (path-blocked? ctx
+                               source-p ; TODO test
+                               target-p
+                               size))
+           ; TODO not taking into account body sizes
+           (< (v/distance source-p ; entity/distance function protocol EntityPosition
+                          target-p)
+              maxrange))))
 
   (transact! [_ {:keys [effect/source
                         effect/direction] :as ctx}]
-             [[:tx/create #:entity {:position (start-point @source direction)
-                                    :faction (:entity/faction @source)
-                                    :body {:width size
-                                           :height size
-                                           :solid? false
-                                           :rotation-angle (v/get-angle-from-vector direction)}
-                                    :flying? true
-                                    :z-order :z-order/effect
-                                    :movement speed
-                                    :movement-vector direction
-                                    :animation (black-projectile ctx)
-                                    :delete-after-duration maxtime
-                                    :plop true
-                                    :projectile-collision {:hit-effect hit-effect
-                                                           :piercing? true}}]]))
+    [[:tx/create #:entity {:position (start-point @source direction)
+                           :faction (:entity/faction @source)
+                           :body {:width size
+                                  :height size
+                                  :solid? false
+                                  :rotation-angle (v/get-angle-from-vector direction)}
+                           :flying? true
+                           :z-order :z-order/effect
+                           :movement speed
+                           :movement-vector direction
+                           :animation (black-projectile ctx)
+                           :delete-after-duration maxtime
+                           :plop true
+                           :projectile-collision {:hit-effect hit-effect
+                                                  :piercing? true}}]]))

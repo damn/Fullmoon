@@ -8,13 +8,14 @@
             [api.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision {}
-  {:keys [hit-effect
-          already-hit-bodies
-          piercing?]}
   (entity/create-component [[_ v] _components _ctx]
     (assoc v :already-hit-bodies #{}))
 
-  (entity/tick [[k _] entity* ctx]
+  (entity/tick [[k {:keys [hit-effect
+                           already-hit-bodies
+                           piercing?]}]
+                entity*
+                ctx]
     (let [cells* (map deref (rectangle->cells (world-grid ctx) (:entity/body entity*)))
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*)

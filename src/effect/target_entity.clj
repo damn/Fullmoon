@@ -37,8 +37,7 @@
                                               [:maxrange pos?]]
                                      :default-value {:hit-effect {}
                                                      :max-range 2.0}}
-  {:keys [maxrange hit-effect]}
-  (effect/text [_ ctx]
+  (effect/text [[_ {:keys [maxrange hit-effect]}] ctx]
     (str "Range " maxrange " meters\n" (effect-text ctx hit-effect)))
 
   ; TODO lOs move to effect/target effect-context creation?
@@ -51,10 +50,10 @@
          (line-of-sight? ctx @source @target)
          (:entity/hp @target)))
 
-  (effect/useful? [_ {:keys [effect/source effect/target]}]
+  (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]}]
     (in-range? @source @target maxrange))
 
-  (transact! [_ {:keys [effect/source effect/target] :as ctx}]
+  (transact! [[_ {:keys [maxrange hit-effect]}] {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -75,7 +74,7 @@
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (effect/render-info [_ g {:keys [effect/source effect/target] :as ctx}]
+  (effect/render-info [[_ {:keys [maxrange]}] g {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source
           target* @target]
       (g/draw-line g
