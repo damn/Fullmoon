@@ -1,4 +1,4 @@
-(ns context.ui.hp-mana-bars
+(ns widgets.hp-mana-bars
   (:require [api.context :as ctx :refer [create-image get-sub-image ->actor]]
             [api.graphics :as g]
             [utils.core :refer [readable-number]]

@@ -1,4 +1,4 @@
-(ns context.ui.debug-window
+(ns widgets.debug-window
   (:require [api.context :as ctx :refer [frames-per-second mouse-on-stage-actor? ->actor ->window ->label]]
             [api.graphics :as g]
             [api.graphics.camera :as camera]

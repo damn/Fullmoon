@@ -1,4 +1,4 @@
-(ns context.ui.entity-info-window
+(ns widgets.entity-info-window
   (:require [api.context :as ctx :refer [->actor ->window ->label]]
             [api.scene2d.ui.label :refer [set-text!]]
             [api.scene2d.group :refer [add-actor!]]

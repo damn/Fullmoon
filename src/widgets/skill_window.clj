@@ -1,4 +1,4 @@
-(ns context.ui.skill-window
+(ns widgets.skill-window
   (:require [api.context :refer [->window ->image-button get-property player-tooltip-text transact-all!]]
             [api.scene2d.actor :refer [add-tooltip!]]
             [api.entity :as entity]
