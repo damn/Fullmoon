@@ -67,17 +67,27 @@
   (transact! [_ {:keys [effect/source
                         effect/direction] :as ctx}]
     [[:tx/create #:entity {:position (start-point @source direction)
-                           :faction (:entity/faction @source)
                            :body {:width size
                                   :height size
                                   :solid? false
                                   :rotation-angle (v/get-angle-from-vector direction)}
+
+                           :animation (black-projectile ctx)
+
                            :flying? true
                            :z-order :z-order/effect
+
+                           :faction (:entity/faction @source)
+
                            :movement speed
                            :movement-vector direction
-                           :animation (black-projectile ctx)
+
                            :delete-after-duration maxtime
+
                            :plop true
                            :projectile-collision {:hit-effect hit-effect
                                                   :piercing? true}}]]))
+
+; => well defined components
+; => what each means, how it interacts, how it depends, what they do
+; which I _need_ => entity schema ??? check @ tx/create ? and at debug mode also @ changes ???

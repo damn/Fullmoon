@@ -2,46 +2,45 @@
   (:require [api.context :as ctx]
             [api.tx :refer [transact!]]))
 
-; * all entities give inventory -> can push up friendlies .... show bag symbol or some dot if they have items
-; or even create enemies w. inventory ....
+;;;
 
+;; added:
 ; position
-; body
-; state (controller!)
+; state => what is it doing ? what is it requiring ???
+; how is it working ??
+; # what does it do ?
+; # what does it depend on ?
+; # where is it used (as data or api)
+
+;; player:
+; player?
+; free-skill-points
+; clickable
+; click-distance-tiles
+
+;; spawn:
 ; faction
 
-; creature properties (not entity!)
+;; IN PROPERTIES:
+
 ; * animation
 ; * body
-; * flying
-
-; * faction
+; * faction ( -> can remove & set manually for opponents ?)
+; * flying => remove for z-order ? -> directly give z-order then with only 2 options !?
 ; * movement
 ; * reaction-time ???
 ; * hp
 ; * mana
-; * inventory
+; * inventory (for npcs???, can push up friendlies .... )
 ; * skills
-; !!! _ stats required _  !!! (and schema check etc.)
+; !!! _ stats required _  ???!!! (and schema check etc.)
 
-; * also NAME text , maybe even generate a 'name' and 'history' with chatgpt of stuff?
+; => make components WELL DEFINED  ( what do they do, where used?, which optional ? , ... ? depend on which ? )
+; => what does 'solid?' mean ???
+; => entity info text...
 
-; all components also:
-; * modifier
-; * effects
-; * to text info
-; * editor widget
-; * documentation
-
-; and all data/components documentation visible (markdown?)
-
-; => generate from 'data/type' the effects/modifiers ( e.g. entity/animation can be changed the color of the animaion with gdx-color)
-; => e.g. a skill can be upgraded and the sound changed
-; e.g. val-max , or entity/state different
-
-; context.game.* make
-
-; inventory/actionbar/windows move out of context -> can be accessed through a fn
+;; Add: name, species, level ?
+; * generate name/ history w. chatgpt ?
 
 (defmethod transact! :tx/creature [[_ creature-id extra-components] ctx]
   (let [entity-components (:property/entity (ctx/get-property ctx creature-id))]

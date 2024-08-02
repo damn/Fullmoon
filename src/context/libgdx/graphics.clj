@@ -1,3 +1,15 @@
+; # what does it depend on ?
+; * tiled/layers & tiled/layer-index => context.libgdx.tiled
+; * context.libgdx.ttf-generator
+
+; # private data usage of ':context.libgdx/graphics' ?
+; * g/render-world-view ( move to ctx itself ?)
+; * g/render-gui-view ( move to ctx itself ?)
+; * g/render-tiled-map ( complicated beast ... !)
+; * draw-rect-actor @ inventory  (pass @ draw ?)
+; used @ image drawer creator ....
+; * used @ ->stage-screen .... & mouse-on-stage-actor?
+; ->hp-mana-bars (actor draw ...)
 (ns ^:no-doc context.libgdx.graphics
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]

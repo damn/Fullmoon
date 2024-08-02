@@ -9,10 +9,11 @@
 ; skipping bodies at too fast movement
 (def min-solid-body-size 0.4)
 
-(defn- draw-bounds [g {[x y] :left-bottom :keys [width height solid?]}]
-  (g/draw-rectangle g x y width height (if solid? color/white color/gray)))
+(def ^:private ^:debug show-body-bounds false)
 
-(def show-body-bounds false)
+(defn- draw-bounds [g {[x y] :left-bottom :keys [width height solid?]}]
+  (when show-body-bounds
+    (g/draw-rectangle g x y width height (if solid? color/white color/gray))))
 
 (defrecord Body [width
                  height
@@ -64,5 +65,4 @@
       :rotate-in-movement-direction? rotate-in-movement-direction?}))
 
   (entity/render-debug [[_ body] _entity* g _ctx]
-    (when show-body-bounds
-      (draw-bounds g body))))
+    (draw-bounds g body)))

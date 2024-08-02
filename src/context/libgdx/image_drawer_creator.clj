@@ -1,3 +1,6 @@
+; what does it depend on ?
+; * cached-texture (assets)
+; * {:keys [world-unit-scale]} :context.libgdx/graphics
 (ns ^:no-doc context.libgdx.image-drawer-creator
   (:require [api.context :as ctx])
   (:import com.badlogic.gdx.graphics.Texture
@@ -53,7 +56,6 @@
   (get-scaled-copy [{{:keys [world-unit-scale]} :context.libgdx/graphics} image scale]
     (assoc-dimensions (assoc image :scale scale)
                       world-unit-scale))
-
 
   (get-sub-image [{{:keys [world-unit-scale]} :context.libgdx/graphics :as ctx}
                   {:keys [file sub-image-bounds] :as image}]

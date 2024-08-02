@@ -81,17 +81,37 @@
    ))
 
 (defn- get-namespaces []
-  (filter #(#{"data" "cdq" "mapgen" "utils" "gdl"}
+  (filter #(#{"api"
+              "app"
+              "context"
+              "core"
+              "data"
+              "effect"
+              "entity"
+              "mapgen"
+              "math"
+              "modifier"
+              "properties"
+              "property"
+              "screens"
+              "tx"
+              "utils"
+              "world"
+              "dev"
+              }
             (first (str/split (name (ns-name %)) #"\.")))
           (all-ns)))
 
 (defn- get-non-fn-vars [nmspace]
   (for [[sym avar] (ns-interns nmspace)
         :let [value @avar]
-        :when (not (or (fn? value)
-                       (instance? clojure.lang.MultiFn value)
-                       #_(:method-map value) ; breaks for stage Ilookup
-                       ))]
+        :when
+        ;(:debug (meta avar))
+
+        (not (or (fn? value)
+                 (instance? clojure.lang.MultiFn value)
+                 #_(:method-map value) ; breaks for stage Ilookup
+                 ))]
     avar))
 
 (comment
