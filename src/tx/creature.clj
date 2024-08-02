@@ -22,12 +22,10 @@
 
 ;; IN PROPERTIES:
 
-; * animation
-; * body
 ; * faction ( -> can remove & set manually for opponents ?)
 ; * flying => remove for z-order ? -> directly give z-order then with only 2 options !?
 ; * movement
-; * reaction-time ???
+; * reaction-time ??? -> not necessary for player.... ?!
 ; * hp
 ; * mana
 ; * inventory (for npcs???, can push up friendlies .... )
@@ -42,7 +40,7 @@
 ; * generate name/ history w. chatgpt ?
 
 (defmethod transact! :tx/creature [[_ creature-id extra-components] ctx]
-  (let [entity-components (:property/entity (ctx/get-property ctx creature-id))]
+  (let [entity-components (:creature/entity (ctx/get-property ctx creature-id))]
     [[:tx/create (merge entity-components
                         extra-components
                         {:entity/z-order (if (:entity/flying? entity-components)

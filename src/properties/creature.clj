@@ -6,30 +6,28 @@
 
 (defcomponent :properties/creature {}
   (properties/create [_]
-    (defcomponent :creature/species {:widget :label      :schema [:qualified-keyword {:namespace :species}]}) ; TODO not used ... but one of?
-    (defcomponent :creature/level   {:widget :text-field :schema [:maybe pos-int?]}) ; pos-int-attr ? ; TODO creature lvl >0, <max-lvls (9 ?)
-    ; TODO what components required? got some without attack !
-    ; also
-    ; rename property/creature
-    (defcomponent :property/entity (data/components
-                                     [:entity/animation
-                                      :entity/body
-                                      :entity/faction
-                                      :entity/flying?
-                                      :entity/movement
-                                      :entity/reaction-time
-                                      :entity/hp
-                                      :entity/mana
-                                      :entity/inventory
-                                      :entity/skills
-                                      :entity/stats]))
+    (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
+    (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
+    ; TODO what components optional/required ?
+    (defcomponent :creature/entity (data/components
+                                         [:entity/animation
+                                          :entity/body
+                                          :entity/faction
+                                          :entity/flying?
+                                          :entity/movement
+                                          :entity/reaction-time
+                                          :entity/hp
+                                          :entity/mana
+                                          :entity/inventory
+                                          :entity/skills
+                                          :entity/stats]))
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]
               [:property/image
                :creature/species
                :creature/level
-               :property/entity])
+               :creature/entity])
      :edn-file-sort-order 1
      :overview {:title "Creatures"
                 :columns 16
@@ -38,7 +36,7 @@
                                      (name (:creature/species %))
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %)
-                                       (case (:entity/faction (:property/entity %))
+                                       (case (:entity/faction (:creature/entity %))
                                          :good "g"
                                          :evil "e"))}
      :->text (fn [_ctx
