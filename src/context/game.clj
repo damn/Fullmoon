@@ -1,17 +1,50 @@
 (ns context.game
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities transact-all! frame->txs windows]]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities transact-all! frame->txs ->actor ->table ->group ->text-button ->action-bar]]
             [api.entity :as entity]
             [api.entity.state :as state]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
             [api.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
+            [api.scene2d.group :as group :refer [children]]
             [api.world.content-grid :refer [active-entities]]
             [app.state :refer [current-context change-screen!]]
+            [context.ui.hp-mana-bars :refer [->hp-mana-bars]]
+            [context.ui.debug-window :as debug-window]
+            [context.ui.entity-info-window :as entity-info-window]
+            [context.player-message :refer [->player-message-actor]]
             [context.world :as world]
-            [entity.movement :as movement]))
+            [entity.movement :as movement]
+            [entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]))
+
+(defn- ->item-on-cursor-actor [context]
+  (->actor context {:draw draw-item-on-cursor}))
+
+; TODO same space/pad as action-bar (actually inventory cells too)
+; => global setting use ?
+(defn- ->action-bar-table [ctx]
+  (->table ctx {:rows [[{:actor (->action-bar ctx)
+                         :expand? true
+                         :bottom? true
+                         :left? true}]]
+                :id ::main-table
+                :cell-defaults {:pad 2}
+                :fill-parent? true}))
+
+(defn- ->windows [context]
+  (->group context {:id :windows
+                    :actors [(debug-window/create context)
+                             (entity-info-window/create context)
+                             (ctx/inventory-window context)]}))
+
+(defn- ->ui-actors [ctx]
+  [(->action-bar-table     ctx)
+   (->hp-mana-bars         ctx)
+   (->windows              ctx)
+   (->item-on-cursor-actor ctx)
+   (->player-message-actor ctx)])
 
 (defn- fetch-player-entity [ctx]
   {:post [%]}
@@ -32,6 +65,14 @@
   (let [ctx (merge (reset-common-game-context! ctx)
                    {:context/replay-mode? false}
                    (world/->context ctx tiled-level))]
+
+    ; TODO do @ replay mode too .... move to reset-common-game-context!
+    (let [stage (:stage (:screens/game (:screens (:context/screens ctx))))] ; cannot use get-stage as we are still in main menu !!
+      (group/clear-children! stage)
+      (doseq [actor (->ui-actors ctx)]
+        (group/add-actor! stage actor)))
+
+
     ;(ctx/clear-recorded-txs! ctx)
     ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
     (world/transact-create-entities-from-tiledmap! ctx)
@@ -57,7 +98,7 @@
 ; for now a function, see context.libgdx.input reload bug
 ; otherwise keys in dev mode may be unbound because dependency order not reflected
 ; because bind-roots
-(defn- hotkey->window [{:keys [context/config] :as ctx}]
+(defn- hotkey->window-id [{:keys [context/config] :as ctx}]
   (merge
    {input.keys/i :inventory-window
     input.keys/e :entity-info-window}
@@ -65,9 +106,9 @@
      {input.keys/z :debug-window})))
 
 (defn- check-window-hotkeys [ctx]
-  (doseq [[hotkey window] (hotkey->window ctx)
+  (doseq [[hotkey window-id] (hotkey->window-id ctx)
           :when (key-just-pressed? ctx hotkey)]
-    (toggle-visible! (ctx/get-window ctx window))))
+    (toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
@@ -81,7 +122,7 @@
     (adjust-zoom (ctx/world-camera context) (- zoom-speed)))
   (check-window-hotkeys context)
   (when (key-just-pressed? context input.keys/escape)
-    (let [windows (windows context)]
+    (let [windows (children (:windows (ctx/get-stage context)))]
       (cond (some visible? windows) (run! #(set-visible! % false) windows)
             :else (change-screen! :screens/options-menu))))
   (when (key-just-pressed? context input.keys/tab)

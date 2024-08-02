@@ -191,9 +191,5 @@
 (defprotocol ErrorModal
   (->error-window [_ throwable]))
 
-(defprotocol Windows
-  (windows [_])
-  (get-window [_ window-id]))
-
 (defprotocol BackgroundImage
   (->background-image [_]))

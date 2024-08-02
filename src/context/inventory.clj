@@ -89,13 +89,11 @@
                    (.tint ^TextureRegionDrawable drawable (->color ctx 1 1 1 0.4))])))
          (into {}))))
 
-(defn ->inventory-window [{{:keys [window] :as inventory} :context/inventory}]
-  window)
-
+; TODO move together with empty-inventory definition ?
 (defn- redo-table! [ctx ^Table table slot->background]
   ; cannot do add-rows, need bag :position idx
   (let [cell (fn [& args] (apply ->cell ctx slot->background args))]
-    (.clear table)
+    (.clear table) ; no need as we create new table ... TODO
     (doto table .add .add
       (.add ^Actor (cell :inventory.slot/helm))
       (.add ^Actor (cell :inventory.slot/necklace)) .row)
@@ -122,12 +120,12 @@
           slot->background (slot->background ctx)]
       (redo-table! ctx table slot->background)
       {:window (->window ctx {:title "Inventory"
-                                  :id :inventory-window
-                                  :visible? false
-                                  :pack? true
-                                  :position [(ctx/gui-viewport-width ctx)
-                                             (ctx/gui-viewport-height ctx)]
-                                  :rows [[{:actor table :pad 2}]]})
+                              :id :inventory-window
+                              :visible? false
+                              :pack? true
+                              :position [(ctx/gui-viewport-width ctx)
+                                         (ctx/gui-viewport-height ctx)]
+                              :rows [[{:actor table :pad 2}]]})
        :slot->background slot->background
        :table table})))
 
@@ -153,4 +151,3 @@
     (.setDrawable image-widget (slot->background (cell 0)))
     (remove-tooltip! cell-widget)
     nil))
-

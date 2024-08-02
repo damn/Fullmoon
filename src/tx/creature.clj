@@ -32,6 +32,19 @@
 ; * skills
 ; !!! _ stats required _  ???!!! (and schema check etc.)
 
+#_(data/components
+ [:entity/animation
+  :entity/body
+  :entity/faction
+  :entity/flying?
+  :entity/movement
+  :entity/reaction-time
+  :entity/hp
+  :entity/mana
+  :entity/inventory
+  :entity/skills
+  :entity/stats])
+
 ; => make components WELL DEFINED  ( what do they do, where used?, which optional ? , ... ? depend on which ? )
 ; => what does 'solid?' mean ???
 ; => entity info text...

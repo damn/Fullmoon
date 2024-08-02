@@ -15,14 +15,16 @@
        :stats (:entity/stats entity*)}
       (select-keys entity*
                    [
-                    ; TODO add 'name!
+                    :entity/faction
+                    :entity/flying?
+                    :entity/movement
+                    :entity/reaction-time
                     :entity/hp ; green, orange, red  bar
                     :entity/mana ; blue bar
+                    ;:entity/skills (too big)
                     :entity/item ; show or not ?
                     :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
-                    :entity/faction
                     :entity/projectile-collision ; -> hit-effect, piercing ? ...
-                    :entity/reaction-time
                     ;:entity/inventory
                     ;:entity/skills
                     ;:entity/state

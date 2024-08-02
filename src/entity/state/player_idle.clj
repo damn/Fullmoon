@@ -39,7 +39,7 @@
 
 (defmethod on-clicked :clickable/player
   [ctx _clicked-entity*]
-  (toggle-visible! (inventory-window ctx))) ; _ TODO _
+  (toggle-visible! (inventory-window ctx))) ; TODO no tx
 
 (defmethod on-clicked :clickable/princess
   [ctx _clicked-entity*]

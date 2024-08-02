@@ -80,7 +80,7 @@
    {:sources #{"src"}
     :output "target/hiera"
     :layout :horizontal
-    ;:cluster-depth 1
+    :cluster-depth 1
     :external false
     :ignore only-component-ns}))
  )
