@@ -140,5 +140,5 @@
           obj
           components))
 
-(defn create  [_ ctx])
-(defn destroy [_ ctx])
+(defsystem create  [_ ctx])
+(defsystem destroy [_ ctx])

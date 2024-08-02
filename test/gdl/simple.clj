@@ -1,5 +1,5 @@
 (ns gdl.simple
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent] :as component]
             [app.libgdx.app :as app]
             [api.context :as ctx]))
 

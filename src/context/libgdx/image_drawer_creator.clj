@@ -1,5 +1,5 @@
 (ns ^:no-doc context.libgdx.image-drawer-creator
-  (:require [api.context :refer [cached-texture]])
+  (:require [api.context :as ctx])
   (:import com.badlogic.gdx.graphics.Texture
            com.badlogic.gdx.graphics.g2d.TextureRegion))
 
@@ -34,7 +34,7 @@
 ; color missing ?
 
 (defn- ->texture-region [ctx file & [x y w h]]
-  (let [^Texture texture (cached-texture ctx file)]
+  (let [^Texture texture (ctx/cached-texture ctx file)]
     (if (and x y w h)
       (TextureRegion. texture (int x) (int y) (int w) (int h))
       (TextureRegion. texture))))

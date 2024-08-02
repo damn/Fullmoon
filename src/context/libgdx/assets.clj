@@ -1,7 +1,7 @@
 (ns ^:no-doc context.libgdx.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx])
+            api.context)
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
