@@ -6,7 +6,7 @@
             [api.scene2d.ui.window :refer [window-title-bar?]]
             [math.vector :as v]
             [utils.wasd-movement :refer [WASD-movement-vector]]
-            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? button-pressed? get-property inventory-window skill-usable-state selected-skill]]
+            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? get-property inventory-window skill-usable-state selected-skill]]
             [api.entity :as entity]
             [api.entity.state :as state]))
 

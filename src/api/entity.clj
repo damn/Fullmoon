@@ -11,7 +11,7 @@
                                        :z-order/ground
                                        :z-order/flying
                                        :z-order/effect]))
-; TODO consolidate names, :z-order/debug missing,...
+; TODO consolidate names, :z-order/debug missing,... (no its a system ...) ?
 
 (defsystem render-below   [_ entity* g ctx])
 (defsystem render-default [_ entity* g ctx])

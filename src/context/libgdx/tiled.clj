@@ -35,11 +35,8 @@
 
 (extend-type TiledMap
   api.maps.tiled/TiledMap
-  (width [tiled-map]
-    (tiled/get-property tiled-map :width))
-
-  (height [tiled-map]
-    (tiled/get-property tiled-map :height))
+  (width  [tiled-map] (tiled/get-property tiled-map :width))
+  (height [tiled-map] (tiled/get-property tiled-map :height))
 
   (layers [tiled-map]
     (.getLayers tiled-map))

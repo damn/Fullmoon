@@ -7,7 +7,7 @@
 (defsystem valid-params? [_ ctx])
 (defmethod valid-params? :default [_ _] true)
 
-(defsystem useful?       [_ ctx])
+(defsystem useful?       [_ ctx]) ; only used @ AI ??
 (defmethod useful? :default [_ _] true)
 
 (defsystem render-info   [_ g ctx])

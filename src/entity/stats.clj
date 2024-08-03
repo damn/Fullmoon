@@ -17,16 +17,16 @@
 (defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
 
 (defcomponent :entity/stats (assoc (data/map-attribute :stats/strength
-                                                        :stats/cast-speed
-                                                        :stats/attack-speed
-                                                        :stats/armor-save
-                                                        :stats/armor-pierce
-                                                        )
-                                    ; TODO also DRY @ modifier.all is default value 1 too...
-                                    :default-value {:stats/strength 1
-                                                    :stats/cast-speed 1
-                                                    :stats/attack-speed 1
-                                                    :stats/armor-save  0
-                                                    :stats/armor-pierce 0
-                                                    }
-                                    )) ; TODO default value missing... empty when created
+                                                       :stats/cast-speed
+                                                       :stats/attack-speed
+                                                       :stats/armor-save
+                                                       :stats/armor-pierce
+                                                       )
+                              ; TODO also DRY @ modifier.all is default value 1 too...
+                              :default-value {:stats/strength 1
+                                              :stats/cast-speed 1
+                                              :stats/attack-speed 1
+                                              :stats/armor-save  0
+                                              :stats/armor-pierce 0
+                                              }
+                              )) ; TODO default value missing... empty when created

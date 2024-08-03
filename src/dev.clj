@@ -160,3 +160,18 @@
                                      :center? true
                                      :rows [[(->scroll-pane-cell ctx [[(->prop-tree ctx (into (sorted-map) tree-map))]])]]
                                      :pack? true}))))
+
+(comment
+
+ ;; learn skill for player
+
+ (require '[api.context :as ctx])
+
+ (let [ctx @app.state/current-context
+       player-id (:entity/id @(:context/player-entity ctx))
+       skill (ctx/get-property ctx :skills/convert)
+       ]
+   (ctx/transact-all! ctx [[:tx/add-skill player-id skill]])
+
+   )
+ )
