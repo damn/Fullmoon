@@ -6,7 +6,7 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:entity/position entity*)
@@ -26,10 +26,10 @@
          (v/scale (entity/direction entity* target*)
                   maxrange)))
 
-(defcomponent :maxrange attr/pos-attr)
+(defcomponent :maxrange data/pos-attr)
 ; TODO how should this work ???
 ; can not contain the other effects properly o.o
-(defcomponent :hit-effect (attr/components-attribute :effect))
+(defcomponent :hit-effect (data/components-attribute :effect))
 
 (defcomponent :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
                                      :schema [:map {:closed true}

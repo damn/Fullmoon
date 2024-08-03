@@ -2,12 +2,12 @@
   (:require [core.component :refer [defcomponent]]
             [data.animation :as animation]
             [api.entity :as entity]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 (defn- tx-assoc-image-current-frame [{:keys [entity/id entity/animation]}]
   [:tx.entity/assoc id :entity/image (animation/current-frame animation)])
 
-(defcomponent :entity/animation attr/animation ; optional
+(defcomponent :entity/animation data/animation ; optional
   (entity/create [_ entity* _ctx]
     [(tx-assoc-image-current-frame entity*)])
 

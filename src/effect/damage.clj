@@ -4,7 +4,7 @@
             [utils.random :as random]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 (defn- effective-armor-save [source* target*]
   (max (- (or (-> target* :entity/stats :stats/armor-save)   0)
@@ -97,9 +97,9 @@
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
-(defcomponent :damage/min-max attr/val-max-attr)
+(defcomponent :damage/min-max data/val-max-attr)
 
-(defcomponent :effect/damage (attr/map-attribute :damage/min-max)
+(defcomponent :effect/damage (data/map-attribute :damage/min-max)
   (effect/text [[_ damage] {:keys [effect/source]}]
     (if source
       (let [modified (effective-damage damage @source)]

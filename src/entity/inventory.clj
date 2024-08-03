@@ -5,7 +5,7 @@
             [api.context :refer [get-property]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 (def empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
@@ -116,7 +116,7 @@
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
-(defcomponent :entity/inventory (attr/one-to-many-ids :properties/item) ; optional
+(defcomponent :entity/inventory (data/one-to-many-ids :properties/item) ; optional
   (entity/create [[_ item-ids] {:keys [entity/id]} context]
     (cons [:tx.entity/assoc id :entity/inventory empty-inventory]
           (for [item-id item-ids]

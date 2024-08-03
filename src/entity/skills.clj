@@ -4,13 +4,13 @@
             [api.context :refer [get-property valid-params? ->counter stopped?]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 ; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
-(defcomponent :entity/skills (attr/one-to-many-ids :properties/skill)
+(defcomponent :entity/skills (data/one-to-many-ids :properties/skill)
   (entity/create-component [[_ skill-ids] _components ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 

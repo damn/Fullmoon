@@ -1,5 +1,5 @@
 (ns entity.flying
   (:require [core.component :refer [defcomponent]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
-(defcomponent :entity/flying? attr/boolean-attr) ; optional, mixed with z-order
+(defcomponent :entity/flying? data/boolean-attr) ; optional, mixed with z-order

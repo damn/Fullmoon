@@ -5,7 +5,7 @@
             [data.val-max :refer [val-max-ratio]]
             [api.entity :as entity]
             [context.ui.config :refer (hpbar-height-px)]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
@@ -25,7 +25,7 @@
 (def ^:private borders-px 1)
 
 ; required for target-entity (remove)
-(defcomponent :entity/hp attr/pos-int-attr
+(defcomponent :entity/hp data/pos-int-attr
   (entity/create-component [[_ max-hp] _components _ctx]
     [max-hp max-hp])
 

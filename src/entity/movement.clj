@@ -5,7 +5,7 @@
             [api.context :refer [world-grid]]
             [entity.body :as body]
             [api.world.grid :refer [valid-position?]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 (def max-delta-time 0.04)
 
@@ -40,7 +40,7 @@
         (try-move ctx entity* [0 ydir]))))
 
 ; optional, only assoc'ing movement-vector
-(defcomponent :entity/movement attr/pos-attr
+(defcomponent :entity/movement data/pos-attr
   (entity/create [[_ tiles-per-second] entity* _ctx]
     (assert (and (:entity/body entity*)
                  (:entity/position entity*)))

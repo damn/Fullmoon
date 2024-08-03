@@ -3,7 +3,7 @@
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.entity :as entity]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
@@ -36,7 +36,7 @@
 (defcomponent :solid? {:widget :label :schema boolean?})
 
 ; TODO body assert >+ min body size?
-(defcomponent :entity/body (attr/map-attribute :width :height :solid?)
+(defcomponent :entity/body (data/map-attribute :width :height :solid?)
   (entity/create-component [_ {:keys [entity/position]
                                [x y] :entity/position
                                {:keys [width

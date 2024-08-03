@@ -3,9 +3,9 @@
             [utils.core :refer [readable-number]]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
-            [core.data :as attr]))
+            [core.data :as data]))
 
-(defcomponent :effect/stun attr/pos-attr
+(defcomponent :effect/stun data/pos-attr
   (effect/text [[_ duration] _ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 

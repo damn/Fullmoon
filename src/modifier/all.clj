@@ -4,7 +4,7 @@
             [core.component :refer [defcomponent]]
             [data.val-max :refer [apply-max]]
             [api.modifier :as modifier]
-            [core.data :as attr]))
+            [core.data :as data]))
 
 ; TODO add movement speed +/- modifier.
 
@@ -41,13 +41,13 @@
 (defn- actions-speed-percent [v]
   (str (check-plus-symbol v) (int (* 100 v))))
 
-(defcomponent :modifier/cast-speed attr/pos-attr
+(defcomponent :modifier/cast-speed data/pos-attr
   (modifier/text [[_ delta]] (str (actions-speed-percent delta) "% Casting-Speed"))
   (modifier/keys [_] [:entity/stats :stats/cast-speed])
   (modifier/apply   [[_ delta] value] (+ (or value 1) delta))
   (modifier/reverse [[_ delta] value] (- value delta)))
 
-(defcomponent :modifier/attack-speed attr/pos-attr
+(defcomponent :modifier/attack-speed data/pos-attr
   (modifier/text [[_ delta]] (str (actions-speed-percent delta) "% Attack-Speed"))
   (modifier/keys [_] [:entity/stats :stats/attack-speed])
   (modifier/apply   [[_ delta] value] (+ (or value 1) delta))
