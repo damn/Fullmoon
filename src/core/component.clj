@@ -26,6 +26,11 @@
 
 (def attributes {})
 
+(defn- k->component-ns [k]
+  (symbol (str (namespace k) "." (name k))))
+
+(def warn-name-ns-mismatch? false)
+
 (defmacro defcomponent
   "Defines a component with key 'k'. User-data attr-map.
   Example:
@@ -33,7 +38,11 @@
     (entity/render [_ g]
       (g/render-animation animation)))"
   ([k attr-map]
-   `(alter-var-root #'attributes assoc ~k ~attr-map))
+   `(do
+     (when (and warn-name-ns-mismatch?
+                (not= (#'k->component-ns ~k) (ns-name *ns*)))
+       (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
+     (alter-var-root #'attributes assoc ~k ~attr-map)))
   ([k attr-map & sys-impls]
    `(do
      (defcomponent ~k ~attr-map)
@@ -102,12 +111,7 @@
                    (system [k v] m ctx)))))
         (keys (methods system))))
 
-
 ; TODO also asserts component exists ! do this maybe first w. schema or sth.
-
-(defn- k->component-ns [k]
-  (symbol (str (namespace k) "." (name k))))
-
 (clojure.core/defn load! [components & {:keys [log?]}]
   (assert (apply distinct? (map first components)))
   (doseq [[k _] components
