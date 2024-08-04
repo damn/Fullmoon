@@ -1,8 +1,6 @@
 (ns context.input
-  (:require api.context
-            api.input.keys
-            api.input.buttons)
-  (:import (com.badlogic.gdx Gdx Input$Buttons Input$Keys)))
+  (:require api.context)
+  (:import com.badlogic.gdx.Gdx))
 
 (extend-type api.context.Context
   api.context/Input
