@@ -12,7 +12,7 @@
             api.scene2d.ui.text-field
             [api.scene2d.ui.widget-group :refer [pack!]]
             api.scene2d.ui.window
-            context.image-drawer-creator)
+            context.image-creator)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Touchable)

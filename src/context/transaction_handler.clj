@@ -1,5 +1,5 @@
 (ns context.transaction-handler
-  (:require context.image-drawer-creator
+  (:require context.image-creator
             [api.context :refer [transact-all!]]
             [api.tx :refer [transact!]]))
 

@@ -15,7 +15,7 @@
 
 
 
-(require 'context.image-drawer-creator)
+(require 'context.image-creator)
 
 (defn- deserialize-image [context {:keys [file sub-image-bounds]}]
   {:pre [file]}
@@ -23,7 +23,7 @@
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
           [tilew tileh]       (drop 2 sub-image-bounds)]
       ; TODO get-sprite does not return Image record => do @ image itself.
-      (context.image-drawer-creator/map->Image
+      (context.image-creator/map->Image
        (get-sprite context
                    {:file file
                     :tilew tileh

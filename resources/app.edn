@@ -21,7 +21,7 @@
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-           [:context/image-drawer-creator]
+           [:context/image-creator]
            [:context/stage]
            [:context/cursor]
            [:context/ui]

@@ -1,4 +1,4 @@
-(ns context.image-drawer-creator
+(ns context.image-creator
   (:require [api.context :as ctx])
   (:import com.badlogic.gdx.graphics.Texture
            com.badlogic.gdx.graphics.g2d.TextureRegion))
