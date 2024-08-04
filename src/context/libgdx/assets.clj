@@ -34,10 +34,13 @@
     manager))
 
 (defcomponent :context.libgdx/assets {}
-  (component/create [[_ folder] _ctx]
-    (let [sound-files   (recursively-search-files folder #{"wav"})
-          texture-files (recursively-search-files folder #{"png" "bmp"})]
-      {:manager (load-all-assets! :log-load-assets? false
+  (component/create [[_ {:keys [folder
+                                sound-file-extensions
+                                image-file-extensions
+                                log-load-assets?]}] _ctx]
+    (let [sound-files   (recursively-search-files folder sound-file-extensions)
+          texture-files (recursively-search-files folder image-file-extensions)]
+      {:manager (load-all-assets! :log-load-assets? log-load-assets?
                                   :sound-files sound-files
                                   :texture-files texture-files)
        :sound-files sound-files

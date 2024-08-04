@@ -1,3 +1,29 @@
+
+
+; make a wiki page which explains _the whole_ structure, game, etc. ablaufe etc.
+; where you can click through with code links etc.
+
+; that would be amazing an open source game where you can see verything that happens
+
+; and pull all values out, e.g. asset manager sound-file-extsion, log?
+
+; or main menu which maps (properites)
+
+; an open source game which is actually documented, with screenshots, connections namespace graphs
+; state diagrams etc.
+
+; leaving out all the unnecessary details
+
+; * how to add a new skill
+; * how to add a new creature
+; ?
+
+; i would like to know how it works.... for any open source game there is _nothing_
+
+; or even design decisions idk,
+
+; also remove 'libgdx' folder .... unnecessary we don't care about libgdx at all
+
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
        :height 900
@@ -11,7 +37,15 @@
  ; * dependencies
  ; generate docs into markdown and put online with expandable easy to find or sth.
 
- :context [[:context.libgdx/graphics {:tile-size 48
+
+ ; TODO remove .libgdx
+ ; TODO move Assets into 1 protocol only, no soundstore...
+
+ :context [[:context.libgdx/assets {:folder "resources/" ; TODO should be set in classpath and not necessary here ?
+                                    :sound-file-extensions #{"wav"}
+                                    :image-file-extensions #{"png" "bmp"}
+                                    :log-load-assets? false}]
+           [:context.libgdx/graphics {:tile-size 48
                                       :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
            ; on require;
            ; * bind-root api.graphics.color
@@ -20,6 +54,7 @@
            ; # what does it depend on ?
            ; * tiled/layers & tiled/layer-index => context.libgdx.tiled
            ; * context.libgdx.ttf-generator
+           ; * images depend on assets ... images loaded ... so assets first ...
 
            ; # private data usage of ':context.libgdx/graphics' ?
            ; * g/render-world-view ( move to ctx itself ?)
@@ -33,26 +68,13 @@
            ; TODO where to put ttf-generator ? extends context but used from graphics ...
            ; TODO src/context/libgdx/graphics/tiled_map_drawer.clj move to tiled because depends on tiled api extensions
 
-           [:context.libgdx/assets "resources/"] ; TODO should be set in classpath and not necessary here ?
-           ; depends on: 'libgdx' -> import statement read ?
-           ; extends protocols : -> read that somehow or put into metadata/craetefn ?
-           ; api.context/SoundStore
-           ; api.context/Assets
-           ; this is actually 3 things - asset-manager - sounds - textures -
-           #_(component/create [[_ folder] _ctx]
-             (let [sound-files   (recursively-search-files folder #{"wav"})
-                   texture-files (recursively-search-files folder #{"png" "bmp"})]
-               {:manager (load-all-assets! :log-load-assets? false
-                                           :sound-files sound-files
-                                           :texture-files texture-files)
-                :sound-files sound-files
-                :texture-files texture-files}))
+
 
            [:context.libgdx/ui true]
-           [:context.libgdx/input true]
-           [:context.libgdx/image-drawer-creator true]
-           [:context.libgdx/stage true]
-           [:context.libgdx/tiled true]
+           [:context.libgdx/input true] ; add by default to app ?
+           [:context.libgdx/image-drawer-creator true] ; -> move to graphics
+           [:context.libgdx/stage true] ; => to ui/graphics ?
+           [:context.libgdx/tiled true] ; => add map renderer here
 
            [:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
@@ -67,12 +89,18 @@
            [:entity/all true]
            [:modifier/all true]
            [:property/all true]
+
+           ; and the whole thing depedns on property/all too
            [:context/property-types {:properties/audiovisual true
-                                     :properties/creature true
-                                     :properties/item true
-                                     :properties/skill true
+                                     :properties/creature true ; depends on entity
+                                     :properties/item true ; depends on modifiers
+                                     :properties/skill true ; depedns on effects
                                      :properties/world true}]
+
+           ; depends on property-types ? -> move together?
+           ; pass property-types here first of all ...
            [:context/properties {:file "resources/properties.edn"}]
+
            [:context/cursor true]
            [:context/builder true]
            [:context/effect true]
