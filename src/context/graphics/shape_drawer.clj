@@ -1,4 +1,4 @@
-(ns context.libgdx.graphics.shape-drawer
+(ns context.graphics.shape-drawer
   (:require [api.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)

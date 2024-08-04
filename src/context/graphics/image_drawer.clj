@@ -1,4 +1,4 @@
-(ns context.libgdx.graphics.image-drawer
+(ns context.graphics.image-drawer
   (:require [api.graphics :as g])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.graphics.g2d.Batch))

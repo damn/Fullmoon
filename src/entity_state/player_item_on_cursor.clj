@@ -94,7 +94,7 @@
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))
 
-(defn draw-item-on-cursor [{:keys [context/player-entity] g :context.libgdx/graphics :as context}]
+(defn draw-item-on-cursor [{:keys [context/player-entity] g :context/graphics :as context}]
   (when (and (= :item-on-cursor (entity/state @player-entity))
              (not (world-item? context)))
     (g/draw-centered-image g

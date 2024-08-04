@@ -95,7 +95,7 @@
                    (->player-entity-context ctx)
                    {:context/replay-mode? true}))))
 
-; for now a function, see context.libgdx.input reload bug
+; for now a function, see context.input reload bug
 ; otherwise keys in dev mode may be unbound because dependency order not reflected
 ; because bind-roots
 (defn- hotkey->window-id [{:keys [context/config] :as ctx}]
@@ -128,7 +128,7 @@
   (when (key-just-pressed? context input.keys/tab)
     (change-screen! :screens/minimap)))
 
-(defn- render-game [{:keys [context/player-entity] g :context.libgdx/graphics :as context}
+(defn- render-game [{:keys [context/player-entity] g :context/graphics :as context}
                     active-entities*]
   (camera/set-position! (ctx/world-camera context)
                         (:entity/position @player-entity))

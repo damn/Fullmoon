@@ -1,4 +1,4 @@
-(ns context.libgdx.input
+(ns context.input
   (:require api.context
             api.input.keys
             api.input.buttons

@@ -7,7 +7,7 @@
   Screen
   (show [_ _context])
   (hide [_ _context])
-  (render [_ {g :context.libgdx/graphics}]
+  (render [_ {g :context/graphics}]
     (g/render-gui-view g #(g/draw-text % {:text "Hello World!" :x 400, :y 300}))))
 
 (defn create-context [default-context]

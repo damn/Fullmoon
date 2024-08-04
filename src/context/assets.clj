@@ -1,4 +1,4 @@
-(ns context.libgdx.assets
+(ns context.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
             api.context)
@@ -33,7 +33,7 @@
     (.finishLoading manager)
     manager))
 
-(defcomponent :context.libgdx/assets {}
+(defcomponent :context/assets {}
   (component/create [[_ {:keys [folder
                                 sound-file-extensions
                                 image-file-extensions
@@ -46,7 +46,7 @@
        :sound-files sound-files
        :texture-files texture-files})))
 
-(defn- this [ctx] (:context.libgdx/assets ctx))
+(defn- this [ctx] (:context/assets ctx))
 
 (extend-type api.context.Context
   api.context/SoundStore

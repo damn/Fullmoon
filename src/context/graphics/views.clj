@@ -1,4 +1,4 @@
-(ns context.libgdx.graphics.views
+(ns context.graphics.views
   (:require [api.graphics :as g])
   (:import com.badlogic.gdx.Gdx
            [com.badlogic.gdx.graphics Color OrthographicCamera]
@@ -47,12 +47,12 @@
                              #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
-(defn update-viewports [{{:keys [gui-viewport world-viewport]} :context.libgdx/graphics} w h]
+(defn update-viewports [{{:keys [gui-viewport world-viewport]} :context/graphics} w h]
   (.update ^Viewport gui-viewport w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update ^Viewport world-viewport w h false))
 
-(defn- viewport-fix-required? [{{:keys [^Viewport gui-viewport]} :context.libgdx/graphics}]
+(defn- viewport-fix-required? [{{:keys [^Viewport gui-viewport]} :context/graphics}]
   (or (not= (.getScreenWidth  gui-viewport) (screen-width))
       (not= (.getScreenHeight gui-viewport) (screen-height))))
 

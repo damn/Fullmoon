@@ -1,4 +1,4 @@
-(ns context.libgdx.ui
+(ns context.ui
   (:require [core.component :refer [defcomponent] :as component]
             [app.state :refer [current-context]]
             [api.context :as ctx]
@@ -12,7 +12,7 @@
             api.scene2d.ui.text-field
             [api.scene2d.ui.widget-group :refer [pack!]]
             api.scene2d.ui.window
-            context.libgdx.image-drawer-creator)
+            context.image-drawer-creator)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Touchable)
@@ -42,7 +42,7 @@
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
 
-(defcomponent :context.libgdx/ui {}
+(defcomponent :context/ui {}
   (component/create [_ _ctx]
     (check-cleanup-visui!)
     (VisUI/load)
@@ -134,7 +134,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image context.libgdx.image_drawer_creator.Image
+(defmethod ->vis-image context.image_drawer_creator.Image
   [{:keys [^TextureRegion texture]}]
   (VisImage. texture))
 

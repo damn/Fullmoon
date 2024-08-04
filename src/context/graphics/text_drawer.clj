@@ -1,7 +1,7 @@
-(ns context.libgdx.graphics.text-drawer
+(ns context.graphics.text-drawer
   (:require [clojure.string :as str]
             api.graphics
-            context.libgdx.ttf-generator)
+            context.ttf-generator)
   (:import com.badlogic.gdx.graphics.g2d.BitmapFont
            com.badlogic.gdx.utils.Align))
 

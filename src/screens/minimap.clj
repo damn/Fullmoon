@@ -49,7 +49,7 @@
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (render [_ {g :context.libgdx/graphics :keys [context/world] :as context}]
+  (render [_ {g :context/graphics :keys [context/world] :as context}]
     (g/render-tiled-map g (:tiled-map world) tile-corner-color-setter)
     (g/render-world-view g
                          (fn [g]

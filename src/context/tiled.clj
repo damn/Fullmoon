@@ -1,4 +1,4 @@
-(ns context.libgdx.tiled
+(ns context.tiled
   (:require api.context
             [api.maps.tiled :as tiled])
   (:import [com.badlogic.gdx.maps MapLayer MapLayers MapProperties]

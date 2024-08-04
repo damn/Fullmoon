@@ -1,7 +1,7 @@
 ; what does it depend on ?
 ; * cached-texture (assets)
-; * {:keys [world-unit-scale]} :context.libgdx/graphics
-(ns context.libgdx.image-drawer-creator
+; * {:keys [world-unit-scale]} :context/graphics
+(ns context.image-drawer-creator
   (:require [api.context :as ctx])
   (:import com.badlogic.gdx.graphics.Texture
            com.badlogic.gdx.graphics.g2d.TextureRegion))
@@ -46,18 +46,18 @@
 
 (extend-type api.context.Context
   api.context/ImageCreator
-  (create-image [{{:keys [world-unit-scale]} :context.libgdx/graphics :as ctx} file]
+  (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file]
     (assoc-dimensions (map->Image {:file file
                                    :scale 1 ; not used anymore as arg (or scale 1) because varargs protocol methods not possible, anyway refactor images
                                    ; take only texture-region, scale,color
                                    :texture (->texture-region ctx file)})
                       world-unit-scale))
 
-  (get-scaled-copy [{{:keys [world-unit-scale]} :context.libgdx/graphics} image scale]
+  (get-scaled-copy [{{:keys [world-unit-scale]} :context/graphics} image scale]
     (assoc-dimensions (assoc image :scale scale)
                       world-unit-scale))
 
-  (get-sub-image [{{:keys [world-unit-scale]} :context.libgdx/graphics :as ctx}
+  (get-sub-image [{{:keys [world-unit-scale]} :context/graphics :as ctx}
                   {:keys [file sub-image-bounds] :as image}]
     (assoc-dimensions (assoc image
                              :scale 1

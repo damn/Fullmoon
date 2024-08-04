@@ -13,10 +13,10 @@
                     :width 800
                     :height 600
                     :full-screen? false}
-              :context [[:context.libgdx/graphics true]
-                        [:context.libgdx/assets true]
-                        [:context.libgdx/image-drawer-creator true]
-                        [:context.libgdx/ui true]
+              :context [[:context/graphics true]
+                        [:context/assets true]
+                        [:context/image-drawer-creator true]
+                        [:context/ui true]
                         [:context/screens {:first-screen :gdl/simple-screen
                                            :screens {:gdl/simple-screen true}}]
                         [:gdl/simple {:logo "logo.png"

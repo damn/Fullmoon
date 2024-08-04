@@ -164,7 +164,7 @@ direction keys: move")
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (render [_ {g :context.libgdx/graphics :as context}]
+  (render [_ {g :context/graphics :as context}]
     (g/render-tiled-map g
                         (:tiled-map @current-data)
                         (constantly color/white))

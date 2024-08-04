@@ -1,4 +1,4 @@
-(ns context.libgdx.graphics
+(ns context.graphics
   (:require [core.component :refer [defcomponent] :as component]
             api.context
             [api.disposable :refer [dispose]]
@@ -6,12 +6,12 @@
             api.graphics.color
             [app.libgdx.utils.reflect :refer [bind-roots]]
             ; loaded as component
-            context.libgdx.graphics.shape-drawer
-            context.libgdx.graphics.text-drawer
-            context.libgdx.graphics.views
+            context.graphics.shape-drawer
+            context.graphics.text-drawer
+            context.graphics.views
             ; loaded just extend graphics, no component data.
-            context.libgdx.graphics.image-drawer
-            context.libgdx.graphics.tiled-map-drawer) ; TODO move to tiled ....
+            context.graphics.image-drawer
+            context.graphics.tiled-map-drawer) ; TODO move to tiled ....
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Pixmap)
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
@@ -20,22 +20,22 @@
             'com.badlogic.gdx.graphics.Color
             "api.graphics.color")
 
-(defcomponent :context.libgdx/graphics {}
+(defcomponent :context/graphics {}
   (component/create [[_ {:keys [tile-size default-font]}] ctx]
     (let [batch (SpriteBatch.)]
       (g/map->Graphics
        (merge {:batch batch}
               ; TODO use shape-drawer/->build
-              (context.libgdx.graphics.shape-drawer/->shape-drawer batch)
-              (context.libgdx.graphics.text-drawer/->build ctx default-font)
-              (context.libgdx.graphics.views/->views tile-size)))))
+              (context.graphics.shape-drawer/->shape-drawer batch)
+              (context.graphics.text-drawer/->build ctx default-font)
+              (context.graphics.views/->views tile-size)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
     (dispose batch)
     (dispose shape-drawer-texture)
     (dispose default-font)))
 
-(defn- this [ctx] (:context.libgdx/graphics ctx))
+(defn- this [ctx] (:context/graphics ctx))
 
 (extend-type api.context.Context
   api.context/Graphics

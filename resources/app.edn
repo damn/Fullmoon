@@ -23,6 +23,9 @@
 ; or even design decisions idk,
 
 ; also remove 'libgdx' folder .... unnecessary we don't care about libgdx at all
+; also from 'app/libgdx'
+
+; even move 'context/graphics/' into just 'graphics/'
 
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
@@ -41,22 +44,22 @@
  ; TODO remove .libgdx
  ; TODO move Assets into 1 protocol only, no soundstore...
 
- :context [[:context.libgdx/assets {:folder "resources/" ; TODO should be set in classpath and not necessary here ?
-                                    :sound-file-extensions #{"wav"}
-                                    :image-file-extensions #{"png" "bmp"}
-                                    :log-load-assets? false}]
-           [:context.libgdx/graphics {:tile-size 48
-                                      :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
+ :context [[:context/assets {:folder "resources/" ; TODO should be set in classpath and not necessary here ?
+                             :sound-file-extensions #{"wav"}
+                             :image-file-extensions #{"png" "bmp"}
+                             :log-load-assets? false}]
+           [:context/graphics {:tile-size 48
+                               :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
            ; on require;
            ; * bind-root api.graphics.color
            ; extend-type over api.context/Graphics
 
            ; # what does it depend on ?
-           ; * tiled/layers & tiled/layer-index => context.libgdx.tiled
-           ; * context.libgdx.ttf-generator
+           ; * tiled/layers & tiled/layer-index => context.tiled
+           ; * context.ttf-generator
            ; * images depend on assets ... images loaded ... so assets first ...
 
-           ; # private data usage of ':context.libgdx/graphics' ?
+           ; # private data usage of ':context/graphics' ?
            ; * g/render-world-view ( move to ctx itself ?)
            ; * g/render-gui-view ( move to ctx itself ?)
            ; * g/render-tiled-map ( complicated beast ... !)
@@ -66,15 +69,15 @@
            ; ->hp-mana-bars (actor draw ...)
 
            ; TODO where to put ttf-generator ? extends context but used from graphics ...
-           ; TODO src/context/libgdx/graphics/tiled_map_drawer.clj move to tiled because depends on tiled api extensions
+           ; TODO src/context/graphics/tiled_map_drawer.clj move to tiled because depends on tiled api extensions
 
 
 
-           [:context.libgdx/ui true]
-           [:context.libgdx/input true] ; add by default to app ?
-           [:context.libgdx/image-drawer-creator true] ; -> move to graphics
-           [:context.libgdx/stage true] ; => to ui/graphics ?
-           [:context.libgdx/tiled true] ; => add map renderer here
+           [:context/ui true]
+           [:context/input true] ; add by default to app ?
+           [:context/image-drawer-creator true] ; -> move to graphics
+           [:context/stage true] ; => to ui/graphics ?
+           [:context/tiled true] ; => add map renderer here
 
            [:context/config {:tag :dev
                              :configs {:prod {:map-editor? false

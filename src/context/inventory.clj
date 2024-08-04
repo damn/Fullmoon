@@ -42,7 +42,7 @@
 (defn- draw-rect-actor ^Widget []
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{:keys [context/player-entity] g :context.libgdx/graphics :as ctx} @current-context
+      (let [{:keys [context/player-entity] g :context/graphics :as ctx} @current-context
             ^Widget this this]
         (draw-cell-rect g
                         player-entity
