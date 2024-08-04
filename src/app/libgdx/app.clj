@@ -1,17 +1,18 @@
 (ns app.libgdx.app
   (:require [core.component :as component]
             [api.context :as ctx]
-            [api.graphics.color :as color]
+            api.disposable
             [context.screens :as screens]
-            [context.libgdx.graphics :as graphics]
+            [context.libgdx.graphics.views :as views]
             [app.state :refer [current-context]])
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
+           com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.utils.ScreenUtils))
 
 (defn ->context [context]
   (component/load! context)
-  (component/build (ctx/->Context) component/create context :log? false))
+  (component/build (ctx/->Context) component/create context :log? true))
 
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []
@@ -25,13 +26,13 @@
       (component/run-system! component/destroy @current-context))
 
     (render []
-      (ScreenUtils/clear color/black)
+      (ScreenUtils/clear Color/BLACK)
       (let [context @current-context]
-        (graphics/fix-viewport-update context)
+        (views/fix-viewport-update context)
         (component/run-system! ctx/render context)))
 
     (resize [w h]
-      (graphics/update-viewports @current-context w h))))
+      (views/update-viewports @current-context w h))))
 
 (defn- lwjgl3-configuration [{:keys [title width height full-screen? fps]}]
   {:pre [title

@@ -1,7 +1,8 @@
 (ns context.libgdx.graphics.tiled-map-drawer
-  (:require api.graphics.Graphics
+  (:require api.graphics
             [api.maps.tiled :as tiled])
-  (:import [com.badlogic.gdx.maps MapRenderer MapLayer]
+  (:import com.badlogic.gdx.graphics.OrthographicCamera
+           [com.badlogic.gdx.maps MapRenderer MapLayer]
            [gdl OrthogonalTiledMapRendererWithColorSetter ColorSetter]))
 
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer

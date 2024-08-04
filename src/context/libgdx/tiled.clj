@@ -78,9 +78,3 @@
                   value (tiled/property-value tiled-map layer position property-key)]
             :when (not (#{:undefined :no-cell} value))]
         [position value]))))
-
-
-
-
-
-

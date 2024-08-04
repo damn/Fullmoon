@@ -7,7 +7,7 @@
 
 ; TODO BitmapFont does not draw world-unit-scale idk how possible, maybe setfontdata something
 ; (did draw world scale @ test ...)
-(defn ->build [default-font]
+(defn ->build [ctx default-font]
   {:default-font (or (and default-font
                           (api.context/generate-ttf ctx default-font))
                      (BitmapFont.))})

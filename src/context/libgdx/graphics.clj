@@ -15,6 +15,7 @@
             api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
+            api.graphics.color
             [app.libgdx.utils.reflect :refer [bind-roots]]
             context.libgdx.graphics.shape-drawer
             context.libgdx.graphics.text-drawer
@@ -33,19 +34,27 @@
             'com.badlogic.gdx.graphics.Color
             "api.graphics.color")
 
-; simple
+(defcomponent :context.libgdx/graphics {}
+  (component/create [[_ {:keys [tile-size default-font]}] ctx]
+    (let [batch (SpriteBatch.)]
+      (g/map->Graphics
+       (merge {:batch batch}
+              (context.libgdx.graphics.shape-drawer/->shape-drawer batch)
+              (context.libgdx.graphics.text-drawer/->build ctx default-font)
+              (context.libgdx.graphics.views/->views tile-size)))))
+
+  (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
+    (dispose batch)
+    (dispose shape-drawer-texture)
+    (dispose default-font)))
+
 (defn- this [ctx] (:context.libgdx/graphics ctx))
 
 (extend-type api.context.Context
   api.context/Graphics
-  ; simple
   (delta-time        [_] (.getDeltaTime       Gdx/graphics))
-  ; simple
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
-  ; complected files & pixmap & new cursor ....
-  ; should we decide to go with libgdx and create a simple helper library ???
-  ; but we are using clojure protocols in order to be able to have a different implementation ....
   (->cursor [_ file hotspot-x hotspot-y]
     (.newCursor Gdx/graphics
                 (Pixmap. (.internal Gdx/files file)) ; TODO pixmap is not disposed ....
@@ -67,17 +76,3 @@
 
   (->color [_ r g b a]
     (Color. (float r) (float g) (float b) (float a))))
-
-(defcomponent :context.libgdx/graphics {}
-  (component/create [[_ {:keys [tile-size default-font]}] ctx]
-    (let [batch (SpriteBatch.)]
-      (g/map->Graphics
-       (merge {:batch batch}
-              (context.libgdx.graphics.shape-drawer/->shape-drawer batch)
-              (context.libgdx.graphics.text-drawer/->build default-font)
-              (context.libgdx.graphics.views/->views tile-size)))))
-
-  (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
-    (dispose default-font)
-    (dispose shape-drawer-texture)
-    (dispose batch)))
