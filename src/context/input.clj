@@ -2,7 +2,7 @@
   (:require api.context
             api.input.keys
             api.input.buttons
-            [app.libgdx.utils.reflect :refer [bind-roots]])
+            [utils.reflect :refer [bind-roots]])
   (:import (com.badlogic.gdx Gdx Input$Buttons Input$Keys)))
 
 (extend-type api.context.Context

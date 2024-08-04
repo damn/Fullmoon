@@ -1,13 +1,13 @@
-(ns app.libgdx.dev
+(ns app.dev
   "Starts a dev loop using clojure.tools.namespace.repl/refresh in order to restart the app without
   restarting the JVM.
   Also starts an nrepl server which will keep up even between app crashes and restarts.
 
   How to use:
-  lein run -m app.libgdx.dev ~app-namespace~ ~app-fn-with-no-args~
+  lein run -m app.dev ~app-namespace~ ~app-fn-with-no-args~
 
   Example:
-  lein run -m app.libgdx.dev gdl.simple-test app
+  lein run -m app.dev gdl.simple-test app
 
   See also project.clj for the `lein dev` shortcut.
 
@@ -16,7 +16,7 @@
 
   You can bind this on a key for smooth dev experience, here in VIM:
   ``` vimscript
-  nmap <F5> :Eval (do (in-ns 'app.libgdx.dev)(restart!))
+  nmap <F5> :Eval (do (in-ns 'app.dev)(restart!))
   ```"
 
   (:require [clojure.java.io :as io]
@@ -65,7 +65,7 @@
     (when-not @app-start-failed
       (do
        (println "refresh")
-       (.bindRoot #'refresh-result (refresh :after 'app.libgdx.dev/dev-loop))
+       (.bindRoot #'refresh-result (refresh :after 'app.dev/dev-loop))
        (p/pretty-pst refresh-result)
        (println "error on refresh")))
     (wait!)

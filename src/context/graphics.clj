@@ -4,7 +4,7 @@
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
             api.graphics.color
-            [app.libgdx.utils.reflect :refer [bind-roots]]
+            [utils.reflect :refer [bind-roots]]
             graphics.shape-drawer
             graphics.text
             graphics.views

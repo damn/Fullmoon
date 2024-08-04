@@ -1,6 +1,6 @@
 (ns app
   (:require [clojure.edn :as edn]
-            [app.libgdx.app :as app]))
+            [app.start :as app]))
 
 (defn -main []
   (-> "resources/app.edn"

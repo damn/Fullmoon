@@ -1,4 +1,4 @@
-(ns app.libgdx.app
+(ns app.start
   (:require [core.component :as component]
             [api.context :as ctx]
             api.disposable
@@ -10,7 +10,7 @@
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.utils.ScreenUtils))
 
-(defn ->context [context]
+(defn- ->context [context]
   (component/load! context)
   (component/build (ctx/->Context) component/create context :log? false))
 

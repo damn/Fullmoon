@@ -1,5 +1,5 @@
 (ns gdl.hello-world
-  (:require [app.libgdx.app :as app]
+  (:require [app.start :as app]
             [api.graphics :as g]
             [api.screen :refer [Screen]]))
 
