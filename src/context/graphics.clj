@@ -5,11 +5,9 @@
             [api.graphics :as g]
             api.graphics.color
             [app.libgdx.utils.reflect :refer [bind-roots]]
-            ; loaded as component
             graphics.shape-drawer
-            graphics.text-drawer
+            graphics.text
             graphics.views
-            ; loaded just extend graphics, no component data.
             graphics.image-drawer
             graphics.tiled-map-drawer) ; TODO move to tiled ....
   (:import com.badlogic.gdx.Gdx
@@ -27,7 +25,7 @@
        (merge {:batch batch}
               ; TODO use shape-drawer/->build
               (graphics.shape-drawer/->shape-drawer batch)
-              (graphics.text-drawer/->build ctx default-font)
+              (graphics.text/->build ctx default-font)
               (graphics.views/->views tile-size)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]

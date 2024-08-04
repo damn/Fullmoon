@@ -1,4 +1,5 @@
 
+; even glossary? ctx, entity*, entity* entity/id, ? ,'g'
 
 ; make a wiki page which explains _the whole_ structure, game, etc. ablaufe etc.
 ; where you can click through with code links etc.
@@ -54,7 +55,9 @@
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
            [:context/graphics {:tile-size 48
-                               :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
+                               :default-font {:file "exocet/films.EXL_____.ttf"
+                                              :size 16
+                                              :quality-scaling 2}}]
            ; on require;
            ; * bind-root api.graphics.color
            ; extend-type over api.context/Graphics
