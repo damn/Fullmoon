@@ -1,4 +1,4 @@
-(ns graphics.tiled-map-drawer ; TODO move to tiled .... operate on ctx itself ....
+(ns graphics.tiled-map-drawer
   (:require api.graphics
             [api.maps.tiled :as tiled])
   (:import com.badlogic.gdx.graphics.OrthographicCamera
@@ -18,12 +18,14 @@
                                                 (apply [_ color x y]
                                                   (color-setter color x y)))))
 
-; TODO memory leak ? put into graphics context record?
-(def ^:private cached-map-renderer (memoize map-renderer-for))
+(defn ->build []
+  {:cached-map-renderer (memoize map-renderer-for)})
 
 (extend-type api.graphics.Graphics
   api.graphics/TiledMapRenderer
-  (render-tiled-map [{:keys [world-camera] :as g} tiled-map color-setter]
+  (render-tiled-map [{:keys [world-camera cached-map-renderer] :as g}
+                     tiled-map
+                     color-setter]
     (let [^MapRenderer map-renderer (cached-map-renderer g tiled-map color-setter)]
       (.update ^OrthographicCamera world-camera)
       (.setView map-renderer world-camera)

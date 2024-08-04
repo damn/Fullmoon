@@ -1,102 +1,9 @@
-
-
-
-; The main thing - document everything w_o libgdx .... just a game ....its a detail ...
-
-
-; clean cluster-depth 1 dependency graph, e.g. utils not -> math ....
-
-
-
-; even glossary? ctx, entity*, entity* entity/id, ? ,'g'
-
-; make a wiki page which explains _the whole_ structure, game, etc. ablaufe etc.
-; where you can click through with code links etc.
-
-; that would be amazing an open source game where you can see verything that happens
-
-; and pull all values out, e.g. asset manager sound-file-extsion, log?
-
-; or main menu which maps (properites)
-
-; an open source game which is actually documented, with screenshots, connections namespace graphs
-; state diagrams etc.
-
-; leaving out all the unnecessary details
-
-; * how to add a new skill
-; * how to add a new creature
-; ?
-
-; i would like to know how it works.... for any open source game there is _nothing_
-
-; or even design decisions idk,
-
-; also remove 'libgdx' folder .... unnecessary we don't care about libgdx at all
-; also from 'app/libgdx'
-
-; even move 'context/graphics/' into just 'graphics/'
-
-; maybe modifier/effect into the place where they are defined or sth ....
-; => effect/sound defined at tx/sound ????? its second order thingy no
-
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
        :height 900
        :full-screen? false
        :fps 60}
-
-
- ; Each context component:
-
- ; * what does it do ? component fns, side -effects (protocol implementations are side effects, should go in create maybe ?)
- ; * dependencies
- ; generate docs into markdown and put online with expandable easy to find or sth.
-
-
- ; TODO remove .libgdx
- ; TODO move Assets into 1 protocol only, no soundstore...
-
- ; => FLAT directory structure ... everything visible ....
-
- :context [[:context/assets {:folder "resources/" ; TODO should be set in classpath and not necessary here ?
-                             :sound-file-extensions #{"wav"}
-                             :image-file-extensions #{"png" "bmp"}
-                             :log-load-assets? false}]
-           [:context/graphics {:tile-size 48
-                               :default-font {:file "exocet/films.EXL_____.ttf"
-                                              :size 16
-                                              :quality-scaling 2}}]
-           ; on require;
-           ; * bind-root api.graphics.color
-           ; extend-type over api.context/Graphics
-
-           ; # what does it depend on ?
-           ; * tiled/layers & tiled/layer-index => context.tiled
-           ; * context.ttf-generator
-           ; * images depend on assets ... images loaded ... so assets first ...
-
-           ; # private data usage of ':context/graphics' ?
-           ; * g/render-world-view ( move to ctx itself ?)
-           ; * g/render-gui-view ( move to ctx itself ?)
-           ; * g/render-tiled-map ( complicated beast ... !)
-           ; * draw-rect-actor @ inventory  (pass @ draw ?)
-           ; used @ image drawer creator ....
-           ; * used @ ->stage-screen .... & mouse-on-stage-actor?
-           ; ->hp-mana-bars (actor draw ...)
-
-           ; TODO where to put ttf-generator ? extends context but used from graphics ...
-           ; TODO src/context/graphics/tiled_map_drawer.clj move to tiled because depends on tiled api extensions
-
-
-
-           [:context/ui true]
-           [:context/input true] ; add by default to app ?
-           [:context/image-drawer-creator true] ; -> move to graphics
-           [:context/stage true] ; => to ui/graphics ?
-           [:context/tiled true] ; => add map renderer here
-
-           [:context/config {:tag :dev
+ :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
                                               :debug-window? false
@@ -105,27 +12,37 @@
                                              :property-editor? true
                                              :debug-window? true
                                              :debug-options? true}}}]
+           [:context/input true]
+           [:context/assets {:folder "resources/"
+                             :sound-file-extensions #{"wav"}
+                             :image-file-extensions #{"png" "bmp"}
+                             :log-load-assets? false}]
+           [:context/graphics {:world-view {:tile-size 48}
+                               :default-font {:file "exocet/films.EXL_____.ttf"
+                                              :size 16
+                                              :quality-scaling 2}}]
+
+           [:graphics/image-drawer true] ; -> together with image creator
+           [:context/image-drawer-creator true] ; -> graphics
+           [:context/stage true] ; -> graphics
+           [:context/cursor true] ; -> graphics
+
+           [:context/ui true]
+           [:context/tiled true]
            [:effect/all true]
            [:entity/all true]
            [:modifier/all true]
            [:property/all true]
-
-           ; and the whole thing depedns on property/all too
            [:context/property-types {:properties/audiovisual true
-                                     :properties/creature true ; depends on entity
-                                     :properties/item true ; depends on modifiers
-                                     :properties/skill true ; depedns on effects
+                                     :properties/creature true
+                                     :properties/item true
+                                     :properties/skill true
                                      :properties/world true}]
-
-           ; depends on property-types ? -> move together?
-           ; pass property-types here first of all ...
            [:context/properties {:file "resources/properties.edn"}]
-
-           [:context/cursor true]
            [:context/builder true]
            [:context/effect true]
            [:context/modifier true]
-           [:context/potential-fields true]
+           [:context/potential-fields true] ; -> world
            [:context/render-debug true]
            [:context/transaction-handler true]
            [:context/inventory true]

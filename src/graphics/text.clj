@@ -26,8 +26,6 @@
     (.setUseIntegerPositions font false) ; otherwise scaling to world-units (/ 1 48)px not visible
     font))
 
-; TODO BitmapFont does not draw world-unit-scale idk how possible, maybe setfontdata something
-; (did draw world scale @ test ...)
 (defn ->build [ctx default-font]
   {:default-font (or (and default-font (generate-ttf default-font))
                      (BitmapFont.))})

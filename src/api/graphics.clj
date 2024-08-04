@@ -12,7 +12,8 @@
                      world-camera
                      world-viewport
                      world-viewport-width
-                     world-viewport-height])
+                     world-viewport-height
+                     cached-map-renderer])
 
 (defprotocol GuiWorldViews
   (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")

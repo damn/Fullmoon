@@ -5,7 +5,7 @@
            com.badlogic.gdx.graphics.g2d.TextureRegion
            space.earlygrey.shapedrawer.ShapeDrawer))
 
-(defn ->shape-drawer [batch]
+(defn ->build [batch]
   (let [texture (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
                                (.setColor Color/WHITE)
                                (.drawPixel 0 0))

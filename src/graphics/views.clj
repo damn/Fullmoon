@@ -6,8 +6,6 @@
            [com.badlogic.gdx.utils.viewport Viewport FitViewport]
            [com.badlogic.gdx.math MathUtils Vector2]))
 
-(def ^:private gui-unit-scale 1)
-
 (defn- screen-width  [] (.getWidth  Gdx/graphics))
 (defn- screen-height [] (.getHeight Gdx/graphics))
 
@@ -25,6 +23,8 @@
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
+
+(def ^:private gui-unit-scale 1)
 
 (defn- render-view [{:keys [^Batch batch
                             shape-drawer
@@ -56,7 +56,7 @@
   (or (not= (.getScreenWidth  gui-viewport) (screen-width))
       (not= (.getScreenHeight gui-viewport) (screen-height))))
 
-; TODO on mac osx, when resizing window, make bug report /  fix it in libgdx?
+; on mac osx, when resizing window, make bug report /  fix it in libgdx
 (defn fix-viewport-update
   "Sometimes the viewport update is not triggered."
   [context]
@@ -80,23 +80,29 @@
   (pixels->world-units [{:keys [world-unit-scale]} pixels]
     (* (int pixels) (float world-unit-scale))))
 
-(defn ->views [tile-size]
+(defn- ->gui-view []
+  (let [gui-camera (OrthographicCamera.)
+        gui-viewport (FitViewport. (screen-width) (screen-height) gui-camera)]
+    {:gui-camera   gui-camera
+     :gui-viewport gui-viewport
+     :gui-viewport-width  (.getWorldWidth  gui-viewport)
+     :gui-viewport-height (.getWorldHeight gui-viewport)}))
+
+(defn- ->world-view [{:keys [tile-size]}]
+  (let [world-unit-scale (/ tile-size)
+        world-camera (OrthographicCamera.)
+        world-viewport (let [width  (* (screen-width) world-unit-scale)
+                             height (* (screen-height) world-unit-scale)
+                             y-down? false]
+                         (.setToOrtho world-camera y-down? width height)
+                         (FitViewport. width height world-camera))]
+    {:world-unit-scale (float world-unit-scale)
+     :world-camera     world-camera
+     :world-viewport   world-viewport
+     :world-viewport-width  (.getWorldWidth  world-viewport)
+     :world-viewport-height (.getWorldHeight world-viewport)}))
+
+(defn ->build [world-view]
   (merge {:unit-scale gui-unit-scale} ; only here because actors want to use drawing without using render-gui-view
-         (let [gui-camera (OrthographicCamera.)
-               gui-viewport (FitViewport. (screen-width) (screen-height) gui-camera)]
-           {:gui-camera   gui-camera
-            :gui-viewport gui-viewport
-            :gui-viewport-width  (.getWorldWidth  gui-viewport)
-            :gui-viewport-height (.getWorldHeight gui-viewport)})
-         (let [world-unit-scale (or (and tile-size (/ tile-size)) 1) ; 1 means we don't even need a world-view => can omit the data then also
-               world-camera (OrthographicCamera.)
-               world-viewport (let [width  (* (screen-width) world-unit-scale)
-                                    height (* (screen-height) world-unit-scale)
-                                    y-down? false]
-                                (.setToOrtho world-camera y-down? width height)
-                                (FitViewport. width height world-camera))]
-           {:world-unit-scale (float world-unit-scale)
-            :world-camera     world-camera
-            :world-viewport   world-viewport
-            :world-viewport-width  (.getWorldWidth  world-viewport)
-            :world-viewport-height (.getWorldHeight world-viewport)})))
+         (->gui-view)
+         (when world-view (->world-view world-view))))

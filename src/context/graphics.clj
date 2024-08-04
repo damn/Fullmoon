@@ -3,25 +3,23 @@
             api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
-            api.graphics.color
             graphics.shape-drawer
             graphics.text
             graphics.views
-            graphics.image-drawer
-            graphics.tiled-map-drawer) ; TODO move to tiled ....
+            graphics.tiled-map-drawer)
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Pixmap)
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
 
 (defcomponent :context/graphics {}
-  (component/create [[_ {:keys [tile-size default-font]}] ctx]
+  (component/create [[_ {:keys [world-view default-font]}] ctx]
     (let [batch (SpriteBatch.)]
       (g/map->Graphics
        (merge {:batch batch}
-              ; TODO use shape-drawer/->build
-              (graphics.shape-drawer/->shape-drawer batch)
+              (graphics.shape-drawer/->build batch)
               (graphics.text/->build ctx default-font)
-              (graphics.views/->views tile-size)))))
+              (graphics.views/->build world-view)
+              (graphics.tiled-map-drawer/->build)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
     (dispose batch)
@@ -36,10 +34,10 @@
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
   (->cursor [_ file hotspot-x hotspot-y]
-    (.newCursor Gdx/graphics
-                (Pixmap. (.internal Gdx/files file)) ; TODO pixmap is not disposed ....
-                hotspot-x
-                hotspot-y))
+    (let [pixmap (Pixmap. (.internal Gdx/files file))
+          cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
+      (dispose pixmap)
+      cursor))
 
   (set-cursor! [_ cursor]
     (.setCursor Gdx/graphics cursor))

@@ -82,5 +82,37 @@
     :layout :horizontal
     :cluster-depth 1
     :external false
-    :ignore only-component-ns}))
+    ;:ignore only-component-ns
+    :ignore #{"data"
+              "utils.wasd-movement" ; utils shouldnt depend on math -> this is controls ....
+              "utils"
+              "core"
+              "api"
+              "math"
+              "widgets"
+              "world"
+              "mapgen"
+              "graphics"
+              "tx"
+              "property"
+              "modifier"
+              "properties"
+              "entity-state.player-item-on-cursor"
+              ; entity-state.player-item-on-cursor -> entity.inventory directly ....
+              "app"
+              "context.ui.config" ; move out of context, just settings .... shouldnt depend entity -> context
+              ; spawn & world -> entity-state also remove (move to tx/creature the 2 FSM's) .... or to 'fsms/'
+              "entity-state"
+              "effect"
+              "dev"
+              "screens.options-menu" ; remove hardcoded deps
+              "screens"
+
+              ; => rest only context/entity is problematic ....
+              ; components should not depend on each other directly ....
+
+
+              }
+
+    }))
  )
