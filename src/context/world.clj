@@ -13,8 +13,6 @@
             [world.grid :refer [create-grid]]
             [world.content-grid :refer [->content-grid]]
             world.render
-            [entity-state.player :as player-state]
-            [entity-state.npc :as npc-state]
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
@@ -154,12 +152,12 @@
                        [:tx/creature
                         (keyword creature-id)
                         #:entity {:position (tile->middle posi)
-                                  :state (npc-state/->state :sleeping)}])))
+                                  :state [:state/npc :sleeping]}])))
     (tiled/remove-layer! tiled-map :creatures)) ; otherwise will be rendered, is visible
   (transact-all! ctx [[:tx/creature
                        :creatures/vampire
                        #:entity {:position (:start-position world)
-                                 :state (player-state/->state :idle)
+                                 :state [:state/player :idle]
                                  :player? true
                                  :free-skill-points 3
                                  :clickable {:type :clickable/player}

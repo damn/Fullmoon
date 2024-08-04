@@ -75,7 +75,10 @@
   [:entity/shout] ; depends on :entity/faction
   [:entity/skills] ; to be usable @ entity/state it depends on :entity/mana - specific skills also require specific components ?! e.g. strength for melee - attack ....
 
-  [:entity/state] ; TODO dependencies as of entity-state components -> move them also out of entity/ folder
+  [:entity/state]
+  ; doesn;t depend on anything but the _creature_ states depend on something! can code defensively or
+  ; adjust creature schema ...
+  ; TODO dependencies as of entity-state components -> move them also out of entity/ folder
   ; body, skills, mana, stats (cast,attack-speed), faction, movement (if should move ....)
 
   ; npc state -> reaction-time

@@ -23,17 +23,16 @@
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions world-unit-scale))))
 
-(defrecord Image [;; 4 fields used for drawing:
-                  texture-region
-                  color ; optional
+(defrecord Image [texture-region
+                  file ; used for serialization
+                  scale ; number for mult. or [w h] -> creates px/wu dim.
                   pixel-dimensions
                   world-unit-dimensions
+                  color ; optional
                   ;;
-                  file ; used for serialization
                   sub-image-bounds ; => is in texture-region data? // only used for creating the texture-region itself -> pass
-                  scale ; can be a number (multiplies original texture-region-dimensions) or [w h] for a fixed size
-                        ; is not used  directly for drawing ....
-                  tilew ;; used @ spritesheet image
+                  ; => maybe pass directly texture-region here
+                  tilew ;; used @ spritesheet  -> maybe make a separate record with :image :tile-w :tile-h ?
                   tileh])
 
 (defn- ->texture-region [ctx file & [x y w h]]

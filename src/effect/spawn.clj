@@ -1,8 +1,7 @@
 (ns effect.spawn
   (:require [core.component :refer [defcomponent]]
             [api.effect :as effect]
-            [api.tx :refer [transact!]]
-            [entity-state.npc :as npc-state]))
+            [api.tx :refer [transact!]]))
 
 ; TODO spawning on player both without error ?! => not valid position checked
 ; also what if someone moves on the target posi ? find nearby valid cell ?
@@ -45,5 +44,5 @@
     [[:tx/creature
       creature-id
       #:entity {:position target-position
-                :state (npc-state/->state :idle)
+                :state [:state/npc :idle]
                 :faction (:entity/faction @source)}]]))
