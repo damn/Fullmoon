@@ -134,7 +134,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image context.image_drawer_creator.Image
+(defmethod ->vis-image context.image_creator.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 

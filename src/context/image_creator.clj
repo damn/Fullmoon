@@ -45,11 +45,11 @@
 (extend-type api.context.Context
   api.context/ImageCreator
   (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file]
-    (->> {:texture-region (->texture-region ctx file)
-          :file file
-          :scale 1}
-         map->Image
-         (assoc-dimensions world-unit-scale)))
+    (-> {:texture-region (->texture-region ctx file)
+         :file file
+         :scale 1}
+        map->Image
+        (assoc-dimensions world-unit-scale)))
 
   (get-scaled-copy [{{:keys [world-unit-scale]} :context/graphics} image scale]
     (-> image
