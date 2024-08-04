@@ -31,7 +31,7 @@
                          texture-region
                          position
                          (unit-dimensions image unit-scale)
-                         0
+                         0 ; rotation
                          color))
 
   (draw-rotated-centered-image [{:keys [batch unit-scale]}

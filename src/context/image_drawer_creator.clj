@@ -23,26 +23,26 @@
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions world-unit-scale))))
 
-; (.getTextureData (.getTexture (:texture-region (first (:frames (:animation @(game.db/get-entity 1)))))))
-; can remove :file @ Image because its in texture-data
-; only TextureRegion doesn't have toString , can implement myself ? so can see which image is being used (in case)
-(defrecord Image [file
-                  texture-region
-                  sub-image-bounds ; => is in texture-region data?
-                  scale
+(defrecord Image [texture-region
+                  color ; optional
                   pixel-dimensions
                   world-unit-dimensions
+                  file ; used for serialization
+                  ;
+                  sub-image-bounds ; => is in texture-region data?
+                  ;;
+                  scale
+                  ; can be a number (multiplies original texture-region-dimensions) or [w h] for a fixed size
+                  ; is not used  directly for drawing ....
+                  ;;
                   tilew
                   tileh])
-; color missing ? - used @ drawer ....
 
 (defn- ->texture-region [ctx file & [x y w h]]
   (let [^Texture texture (ctx/cached-texture ctx file)]
     (if (and x y w h)
       (TextureRegion. texture (int x) (int y) (int w) (int h))
       (TextureRegion. texture))))
-
-; TODO pass texture-region ....
 
 (extend-type api.context.Context
   api.context/ImageCreator
