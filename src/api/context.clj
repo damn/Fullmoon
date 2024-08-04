@@ -44,9 +44,6 @@
   (key-pressed?      [_ k])
   (key-just-pressed? [_ k]))
 
-(defprotocol TrueTypeFontGenerator
-  (generate-ttf [_ {:keys [file size]}]))
-
 (defprotocol ImageCreator
   (create-image [_ file])
   (get-scaled-copy [_ image scale]
