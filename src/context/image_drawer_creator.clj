@@ -1,6 +1,3 @@
-; what does it depend on ?
-; * cached-texture (assets)
-; * {:keys [world-unit-scale]} :context/graphics
 (ns context.image-drawer-creator
   (:require [api.context :as ctx])
   (:import com.badlogic.gdx.graphics.Texture

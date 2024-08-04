@@ -21,12 +21,9 @@
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-
-           [:graphics/image-drawer] ; -> together with image creator
-           [:context/image-drawer-creator] ; -> graphics
-           [:context/stage] ; -> graphics
-           [:context/cursor] ; -> graphics
-
+           [:context/image-drawer-creator]
+           [:context/stage]
+           [:context/cursor]
            [:context/ui]
            [:context/tiled]
            [:effect/all]
@@ -42,7 +39,7 @@
            [:context/builder]
            [:context/effect]
            [:context/modifier]
-           [:context/potential-fields] ; -> world
+           [:context/potential-fields]
            [:context/render-debug]
            [:context/transaction-handler]
            [:context/inventory]
