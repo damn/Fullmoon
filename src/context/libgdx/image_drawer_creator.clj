@@ -1,7 +1,7 @@
 ; what does it depend on ?
 ; * cached-texture (assets)
 ; * {:keys [world-unit-scale]} :context.libgdx/graphics
-(ns ^:no-doc context.libgdx.image-drawer-creator
+(ns context.libgdx.image-drawer-creator
   (:require [api.context :as ctx])
   (:import com.badlogic.gdx.graphics.Texture
            com.badlogic.gdx.graphics.g2d.TextureRegion))

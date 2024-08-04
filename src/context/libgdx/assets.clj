@@ -1,4 +1,4 @@
-(ns ^:no-doc context.libgdx.assets
+(ns context.libgdx.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
             api.context)

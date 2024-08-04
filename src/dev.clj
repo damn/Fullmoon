@@ -185,4 +185,14 @@
                  (str/starts-with? (namespace %) "context"))
            (keys component/attributes))))
 
+ (set! *print-level* nil)
+ (clojure.pprint/pprint api.context/SoundStore)
+
+ ; Each context component:
+
+ ; * what does it do ? component fns, side -effects (protocol implementations are side effects, should go in create maybe ?)
+ ; * dependencies
+ ; generate docs into markdown and put online with expandable easy to find or sth.
+
+
  )

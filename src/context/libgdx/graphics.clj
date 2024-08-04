@@ -10,7 +10,7 @@
 ; used @ image drawer creator ....
 ; * used @ ->stage-screen .... & mouse-on-stage-actor?
 ; ->hp-mana-bars (actor draw ...)
-(ns ^:no-doc context.libgdx.graphics
+(ns context.libgdx.graphics
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
             api.context

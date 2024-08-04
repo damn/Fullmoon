@@ -1,4 +1,4 @@
-(ns ^:no-doc context.libgdx.stage
+(ns context.libgdx.stage
   (:require [api.context :refer [current-screen get-stage delta-time]]
             api.disposable
             [api.graphics :as g]

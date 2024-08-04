@@ -1,4 +1,4 @@
-(ns ^:no-doc context.libgdx.ui
+(ns context.libgdx.ui
   (:require [core.component :refer [defcomponent] :as component]
             [app.state :refer [current-context]]
             [api.context :as ctx]

@@ -55,7 +55,7 @@
 
 (declare ^:private refresh-result)
 
-(defn ^:no-doc dev-loop []
+(defn dev-loop []
   (println "start-app")
   (try (start-app)
        (catch Throwable t
