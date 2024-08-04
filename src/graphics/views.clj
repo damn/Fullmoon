@@ -1,4 +1,4 @@
-(ns context.graphics.views
+(ns graphics.views
   (:require [api.graphics :as g])
   (:import com.badlogic.gdx.Gdx
            [com.badlogic.gdx.graphics Color OrthographicCamera]

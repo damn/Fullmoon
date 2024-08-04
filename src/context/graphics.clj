@@ -6,12 +6,12 @@
             api.graphics.color
             [app.libgdx.utils.reflect :refer [bind-roots]]
             ; loaded as component
-            context.graphics.shape-drawer
-            context.graphics.text-drawer
-            context.graphics.views
+            graphics.shape-drawer
+            graphics.text-drawer
+            graphics.views
             ; loaded just extend graphics, no component data.
-            context.graphics.image-drawer
-            context.graphics.tiled-map-drawer) ; TODO move to tiled ....
+            graphics.image-drawer
+            graphics.tiled-map-drawer) ; TODO move to tiled ....
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Pixmap)
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
@@ -26,9 +26,9 @@
       (g/map->Graphics
        (merge {:batch batch}
               ; TODO use shape-drawer/->build
-              (context.graphics.shape-drawer/->shape-drawer batch)
-              (context.graphics.text-drawer/->build ctx default-font)
-              (context.graphics.views/->views tile-size)))))
+              (graphics.shape-drawer/->shape-drawer batch)
+              (graphics.text-drawer/->build ctx default-font)
+              (graphics.views/->views tile-size)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
     (dispose batch)

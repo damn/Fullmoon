@@ -1,4 +1,4 @@
-(ns context.graphics.text-drawer
+(ns graphics.text-drawer
   (:require [clojure.string :as str]
             api.graphics
             context.ttf-generator)
