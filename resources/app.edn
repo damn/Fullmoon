@@ -17,6 +17,22 @@
            ; * bind-root api.graphics.color
            ; extend-type over api.context/Graphics
 
+           ; # what does it depend on ?
+           ; * tiled/layers & tiled/layer-index => context.libgdx.tiled
+           ; * context.libgdx.ttf-generator
+
+           ; # private data usage of ':context.libgdx/graphics' ?
+           ; * g/render-world-view ( move to ctx itself ?)
+           ; * g/render-gui-view ( move to ctx itself ?)
+           ; * g/render-tiled-map ( complicated beast ... !)
+           ; * draw-rect-actor @ inventory  (pass @ draw ?)
+           ; used @ image drawer creator ....
+           ; * used @ ->stage-screen .... & mouse-on-stage-actor?
+           ; ->hp-mana-bars (actor draw ...)
+
+           ; TODO where to put ttf-generator ? extends context but used from graphics ...
+           ; TODO src/context/libgdx/graphics/tiled_map_drawer.clj move to tiled because depends on tiled api extensions
+
            [:context.libgdx/assets "resources/"] ; TODO should be set in classpath and not necessary here ?
            ; depends on: 'libgdx' -> import statement read ?
            ; extends protocols : -> read that somehow or put into metadata/craetefn ?

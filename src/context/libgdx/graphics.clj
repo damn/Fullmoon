@@ -1,15 +1,3 @@
-; # what does it depend on ?
-; * tiled/layers & tiled/layer-index => context.libgdx.tiled
-; * context.libgdx.ttf-generator
-
-; # private data usage of ':context.libgdx/graphics' ?
-; * g/render-world-view ( move to ctx itself ?)
-; * g/render-gui-view ( move to ctx itself ?)
-; * g/render-tiled-map ( complicated beast ... !)
-; * draw-rect-actor @ inventory  (pass @ draw ?)
-; used @ image drawer creator ....
-; * used @ ->stage-screen .... & mouse-on-stage-actor?
-; ->hp-mana-bars (actor draw ...)
 (ns context.libgdx.graphics
   (:require [core.component :refer [defcomponent] :as component]
             api.context
@@ -23,7 +11,7 @@
             context.libgdx.graphics.views
             ; loaded just extend graphics, no component data.
             context.libgdx.graphics.image-drawer
-            context.libgdx.graphics.tiled-map-drawer) ; move to tiled ....
+            context.libgdx.graphics.tiled-map-drawer) ; TODO move to tiled ....
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Pixmap)
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
