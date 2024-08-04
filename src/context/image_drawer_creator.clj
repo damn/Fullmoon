@@ -23,10 +23,12 @@
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions world-unit-scale))))
 
-(defrecord Image [texture-region
+(defrecord Image [;; 4 fields used for drawing:
+                  texture-region
                   color ; optional
                   pixel-dimensions
                   world-unit-dimensions
+                  ;;
                   file ; used for serialization
                   ;
                   sub-image-bounds ; => is in texture-region data?
@@ -47,27 +49,29 @@
 (extend-type api.context.Context
   api.context/ImageCreator
   (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file]
-    (assoc-dimensions (map->Image {:file file
-                                   :scale 1 ; not used anymore as arg (or scale 1) because varargs protocol methods not possible, anyway refactor images
-                                   ; take only texture-region, scale,color
-                                   :texture-region (->texture-region ctx file)})
-                      world-unit-scale))
+    (->> {:texture-region (->texture-region ctx file)
+          :file file
+          :scale 1}
+         map->Image
+         (assoc-dimensions world-unit-scale)))
 
   (get-scaled-copy [{{:keys [world-unit-scale]} :context/graphics} image scale]
-    (assoc-dimensions (assoc image :scale scale)
-                      world-unit-scale))
+    (-> image
+        (assoc :scale scale)
+        (assoc-dimensions world-unit-scale)))
 
   (get-sub-image [{{:keys [world-unit-scale]} :context/graphics :as ctx}
                   {:keys [file sub-image-bounds] :as image}]
-    (assoc-dimensions (assoc image
-                             :scale 1
-                             :texture-region (apply ->texture-region ctx file sub-image-bounds)
-                             :sub-image-bounds sub-image-bounds)
-                      world-unit-scale))
+    (-> image
+        (assoc :scale 1
+               :texture-region (apply ->texture-region ctx file sub-image-bounds)
+               :sub-image-bounds sub-image-bounds)
+        (assoc-dimensions world-unit-scale)))
 
   (spritesheet [context file tilew tileh]
-    (assoc (api.context/create-image context file) :tilew tilew :tileh tileh))
+    (-> (ctx/create-image context file)
+        (assoc :tilew tilew :tileh tileh)))
 
   (get-sprite [context {:keys [tilew tileh] :as sheet} [x y]]
-    (api.context/get-sub-image context
-                                 (assoc sheet :sub-image-bounds [(* x tilew) (* y tileh) tilew tileh]))))
+    (ctx/get-sub-image context
+                       (assoc sheet :sub-image-bounds [(* x tilew) (* y tileh) tilew tileh]))))
