@@ -135,8 +135,8 @@
   (VisImage. drawable))
 
 (defmethod ->vis-image context.image_drawer_creator.Image
-  [{:keys [^TextureRegion texture]}]
-  (VisImage. texture))
+  [{:keys [^TextureRegion texture-region]}]
+  (VisImage. texture-region))
 
 (extend-type api.context.Context
   api.context/Widgets
@@ -211,7 +211,7 @@
     ([context image on-clicked]
      (api.context/->image-button context image on-clicked {}))
     ([context image on-clicked {:keys [dimensions]}]
-     (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture image))
+     (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture-region image))
            button (VisImageButton. drawable)]
        (when-let [[w h] dimensions]
          (.setMinSize drawable (float w) (float h)))
@@ -273,8 +273,8 @@
         (set-opts opts)))
 
   ; => maybe with VisImage not necessary anymore?
-  (->texture-region-drawable [_ ^TextureRegion texture]
-    (TextureRegionDrawable. texture))
+  (->texture-region-drawable [_ ^TextureRegion texture-region]
+    (TextureRegionDrawable. texture-region))
 
   (->scroll-pane [_ actor]
     (let [scroll-pane (VisScrollPane. actor)]

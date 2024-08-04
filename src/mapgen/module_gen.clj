@@ -196,7 +196,7 @@
   (memoize
    (fn [{:keys [property/id property/image]}]
      (assert (and id image))
-     (let [tile (->static-tiled-map-tile (:texture image))]
+     (let [tile (->static-tiled-map-tile (:texture-region image))]
        (put! (tiled/properties tile) "id" id)
        tile))))
 

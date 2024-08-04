@@ -83,7 +83,7 @@
                            :bag      10} ; transparent
          (map (fn [[slot y]]
                 (let [drawable (->texture-region-drawable ctx
-                                                          (:texture (get-sprite ctx sheet [21 (+ y 2)])))]
+                                                          (:texture-region (get-sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
                    (.tint ^TextureRegionDrawable drawable (->color ctx 1 1 1 0.4))])))
@@ -138,7 +138,7 @@
                                                    {{:keys [table]} :context/inventory :as ctx}]
   (let [^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)
-        drawable (->texture-region-drawable ctx (:texture (:property/image item)))]
+        drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
     (.setMinSize drawable (float cell-size) (float cell-size))
     (.setDrawable image-widget drawable)
     (add-tooltip! cell-widget #(player-tooltip-text % item))
