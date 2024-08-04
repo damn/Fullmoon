@@ -1,44 +1,55 @@
 (ns widgets.entity-info-window
-  (:require [api.context :as ctx :refer [->actor ->window ->label]]
+  (:require [clojure.string :as str]
+            [api.context :as ctx :refer [->actor ->window ->label]]
             [api.scene2d.ui.label :refer [set-text!]]
             [api.scene2d.group :refer [add-actor!]]
             [api.scene2d.ui.widget-group :refer [pack!]]
             [api.entity :as entity]))
 
-; for a list of keys
-; if the entity has that key
-; draw that key ... ( skill as icons ? ....) armor w. icon ?
+; given an ordered list of to be rendered keys
+; calls the to-text function of that key
+; and joins them with newlines ....
+
+(defn- entity->text [{:keys [entity/hp
+                             entity/mana
+                             entity/skills
+
+
+                             entity/projectile-collision
+                             ]
+                      {:keys [stats/strength
+                              stats/cast-speed
+                              stats/attack-speed
+                              stats/armor-save
+                              stats/armor-pierce
+                              ] :as stats} :entity/stats}]
+  ; HP color based on ratio like hp bar samey
+  ; mana color same in the whole app
+  ; TODO name / species / level
+  ; :entity/faction no need to show
+  ; :entity/flying? no need to show
+  ; :entity/movement no need to show speed
+  ; :entity/reaction-time no need to show
+  ; :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
+  ;:entity/inventory (only player for now)
+  [(when hp (str "[RED]Hitpoints: " (hp 0) " / " (hp 1)))
+   (when mana (str "[CYAN]Mana: " (mana 0) " / " (mana 1)))
+   (when skills (str "[WHITE]Skills: " (str/join "," (keys skills))))
+   (when projectile-collision (str "[LIME]Projectile: " projectile-collision))
+   (when (and stats strength) (str "[WHITE]Strength: " strength))
+   (when (and stats cast-speed) (str "[WHITE]Cast-Speed: " cast-speed))
+   (when (and stats attack-speed) (str "[WHITE]Attack-Speed: " attack-speed))
+   (when (and stats armor-save) (str "[WHITE]Armor-Save: " armor-save))
+   (when (and stats armor-pierce) (str "[WHITE]Armor-Pierce: " armor-pierce))
+   ]
+  )
+
 
 (defn- entity-info-text [entity*]
-  (binding [*print-level* nil]
-    (with-out-str
-     (clojure.pprint/pprint
-      (merge
-       (select-keys entity*
-                    [ ; TODO name / species / level
-                     :entity/hp ; green, orange, red  bar
-                     :entity/mana ; blue bar ( or remove if not there )
-                     ; :entity/faction no need to show
-                     ; :entity/flying? no need to show
-                     ; :entity/movement no need to show speed
-                     ; :entity/reaction-time no need to show
-                     ;:entity/skills (too big)
-                     ; :entity/item ; show or not ?
-                     :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
-                     :entity/projectile-collision ; -> hit-effect, piercing ? ...
-                     ;:entity/inventory (only player for now)
-                     ; TODO :entity/skills, just icons .... ?
-                     ;:entity/state
-                     :entity/stats ; damage stats nested map ... not showing ...
-                     ; TODO show a horizontal table like in wh40k ? keep stats simple only AS,Strength,Hp,Mana ... ?
-                     ; no extra stats ? only modifier of that ?!
-
-                     ])
-       {:entity/skills (keys (:entity/skills entity*))
-        ;:entity/state (entity/state entity*)
-        }
-
-             )))))
+  (->> entity*
+       entity->text
+       (remove nil?)
+       (str/join "\n")))
 
 (defn create [context]
   (let [label (->label context "")

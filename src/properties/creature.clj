@@ -9,6 +9,10 @@
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
     (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
     (defcomponent :creature/entity (data/components
+                                     ; TODO define optional / required .... state needs almost all stuff ... ?
+                                     ; or code defensively ... no movement possible ... or no mana ...
+                                     ; no inventory ... ( player )
+                                     ; can re-use npc movement for reaction time even
                                      [:entity/animation
                                       :entity/body
                                       :entity/faction
@@ -30,8 +34,8 @@
      :edn-file-sort-order 1
      :overview {:title "Creatures"
                 :columns 16
-                :image/dimensions [65 65]
-                :sort-by-fn #(vector (or (:creature/level %) 9)
+                :image/dimensions [72 72]
+                :sort-by-fn #(vector (:creature/level %)
                                      (name (:creature/species %))
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %)
