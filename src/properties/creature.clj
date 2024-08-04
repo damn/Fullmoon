@@ -41,13 +41,23 @@
      :->text (fn [_ctx
                   {:keys [property/id
                           creature/species
-                          entity/flying?
-                          entity/skills
-                          entity/inventory
-                          creature/level]}]
-               [(str/capitalize (name id))
-                (str/capitalize (name species))
+                          creature/level
+                          creature/entity]}]
+               [(str/capitalize (name id)) ; == pretty name
+                (str "Species: " (str/capitalize (name species)))
                 (when level (str "Level: " level))
-                (str "Flying? " flying?)
-                (when (seq skills) (str "Spells: " (str/join "," (map name skills))))
-                (when (seq inventory) (str "Items: " (str/join "," (map name inventory))))])}))
+                (binding [*print-level* nil]
+                  (with-out-str
+                   (clojure.pprint/pprint
+                    (select-keys entity
+                                 [;:entity/animation
+                                  ;:entity/body
+                                  :entity/faction
+                                  :entity/flying?
+                                  :entity/movement
+                                  :entity/reaction-time
+                                  :entity/hp
+                                  :entity/mana
+                                  :entity/inventory
+                                  :entity/skills
+                                  :entity/stats]))))])}))

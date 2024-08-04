@@ -5,34 +5,40 @@
             [api.scene2d.ui.widget-group :refer [pack!]]
             [api.entity :as entity]))
 
+; for a list of keys
+; if the entity has that key
+; draw that key ... ( skill as icons ? ....) armor w. icon ?
+
 (defn- entity-info-text [entity*]
   (binding [*print-level* nil]
     (with-out-str
      (clojure.pprint/pprint
-      #_{:uid   (:entity/uid entity*)
-       :state (entity/state entity*)
-       :faction (:entity/faction entity*)
-       :stats (:entity/stats entity*)}
-      (select-keys entity*
-                   [
-                    :entity/faction
-                    :entity/flying?
-                    :entity/movement
-                    :entity/reaction-time
-                    :entity/hp ; green, orange, red  bar
-                    :entity/mana ; blue bar
-                    ;:entity/skills (too big)
-                    :entity/item ; show or not ?
-                    :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
-                    :entity/projectile-collision ; -> hit-effect, piercing ? ...
-                    ;:entity/inventory
-                    ;:entity/skills
-                    ;:entity/state
-                    :entity/stats ; damage stats nested map ... not showing ...
-                    ; TODO show a horizontal table like in wh40k ? keep stats simple only AS,Strength,Hp,Mana ... ?
-                    ; no extra stats ? only modifier of that ?!
+      (merge
+       (select-keys entity*
+                    [ ; TODO name / species / level
+                     :entity/hp ; green, orange, red  bar
+                     :entity/mana ; blue bar ( or remove if not there )
+                     ; :entity/faction no need to show
+                     ; :entity/flying? no need to show
+                     ; :entity/movement no need to show speed
+                     ; :entity/reaction-time no need to show
+                     ;:entity/skills (too big)
+                     ; :entity/item ; show or not ?
+                     :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
+                     :entity/projectile-collision ; -> hit-effect, piercing ? ...
+                     ;:entity/inventory (only player for now)
+                     ; TODO :entity/skills, just icons .... ?
+                     ;:entity/state
+                     :entity/stats ; damage stats nested map ... not showing ...
+                     ; TODO show a horizontal table like in wh40k ? keep stats simple only AS,Strength,Hp,Mana ... ?
+                     ; no extra stats ? only modifier of that ?!
 
-                    ])))))
+                     ])
+       {:entity/skills (keys (:entity/skills entity*))
+        ;:entity/state (entity/state entity*)
+        }
+
+             )))))
 
 (defn create [context]
   (let [label (->label context "")
