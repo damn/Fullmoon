@@ -17,7 +17,7 @@
          rotation)
   (if color (.setColor batch Color/WHITE)))
 
-(defn- unit-dimensions [unit-scale image]
+(defn- unit-dimensions [image unit-scale]
   (if (= unit-scale 1)
     (:pixel-dimensions image)
     (:world-unit-dimensions image)))
@@ -27,20 +27,25 @@
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]
-    (draw-texture-region batch texture-region position (unit-dimensions unit-scale image) 0 color))
+    (draw-texture-region batch
+                         texture-region
+                         position
+                         (unit-dimensions image unit-scale)
+                         0
+                         color))
 
   (draw-rotated-centered-image [{:keys [batch unit-scale]}
                                 {:keys [texture-region color] :as image}
                                 rotation
                                 [x y]]
-    (let [[w h] (unit-dimensions unit-scale image)]
+    (let [[w h] (unit-dimensions image unit-scale)]
       (draw-texture-region batch
-                    texture-region
-                    [(- (float x) (/ (float w) 2))
-                     (- (float y) (/ (float h) 2))]
-                    [w h]
-                    rotation
-                    color)))
+                           texture-region
+                           [(- (float x) (/ (float w) 2))
+                            (- (float y) (/ (float h) 2))]
+                           [w h]
+                           rotation
+                           color)))
 
   (draw-centered-image [this image position]
     (g/draw-rotated-centered-image this image 0 position)))
