@@ -1,12 +1,5 @@
 (ns api.graphics)
 
-; why do I have to know what components I put?
-; => generate records automatically ??
-; but then I use greppabillity for stuff
-; thats a real problem
-; we need records with namespaced keywords
-; or can we use clojure 'struct' s ???? with 'accessor' s ????
-; there needs to be some way to have speed & greppability ....
 (defrecord Graphics [batch
                      shape-drawer
                      default-font

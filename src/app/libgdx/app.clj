@@ -12,7 +12,7 @@
 
 (defn ->context [context]
   (component/load! context)
-  (component/build (ctx/->Context) component/create context :log? true))
+  (component/build (ctx/->Context) component/create context :log? false))
 
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []

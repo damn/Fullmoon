@@ -17,9 +17,11 @@
             [api.graphics :as g]
             api.graphics.color
             [app.libgdx.utils.reflect :refer [bind-roots]]
+            ; loaded as component
             context.libgdx.graphics.shape-drawer
             context.libgdx.graphics.text-drawer
             context.libgdx.graphics.views
+            ; loaded just extend graphics, no component data.
             context.libgdx.graphics.image-drawer
             context.libgdx.graphics.tiled-map-drawer)
   (:import com.badlogic.gdx.Gdx

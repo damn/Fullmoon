@@ -3,15 +3,41 @@
        :height 900
        :full-screen? false
        :fps 60}
+
+
+ ; Each context component:
+
+ ; * what does it do ? component fns, side -effects (protocol implementations are side effects, should go in create maybe ?)
+ ; * dependencies
+ ; generate docs into markdown and put online with expandable easy to find or sth.
+
  :context [[:context.libgdx/graphics {:tile-size 48
                                       :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
+           ; on require;
+           ; * bind-root api.graphics.color
+           ; extend-type over api.context/Graphics
+
            [:context.libgdx/assets "resources/"] ; TODO should be set in classpath and not necessary here ?
+           ; depends on: 'libgdx' -> import statement read ?
+           ; extends protocols : -> read that somehow or put into metadata/craetefn ?
+           ; api.context/SoundStore
+           ; api.context/Assets
+           ; this is actually 3 things - asset-manager - sounds - textures -
+           #_(component/create [[_ folder] _ctx]
+             (let [sound-files   (recursively-search-files folder #{"wav"})
+                   texture-files (recursively-search-files folder #{"png" "bmp"})]
+               {:manager (load-all-assets! :log-load-assets? false
+                                           :sound-files sound-files
+                                           :texture-files texture-files)
+                :sound-files sound-files
+                :texture-files texture-files}))
+
            [:context.libgdx/ui true]
            [:context.libgdx/input true]
            [:context.libgdx/image-drawer-creator true]
            [:context.libgdx/stage true]
            [:context.libgdx/tiled true]
-           [:context.libgdx/ttf-generator true]
+
            [:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false

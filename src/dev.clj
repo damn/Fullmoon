@@ -185,8 +185,4 @@
                  (str/starts-with? (namespace %) "context"))
            (keys component/attributes))))
 
- (set! *print-level* nil)
- (clojure.pprint/pprint api.context/SoundStore)
-
-
  )

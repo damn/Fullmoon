@@ -1,4 +1,4 @@
-(ns context.libgdx.ttf-generator
+(ns context.libgdx.ttf-generator ; TODO move to graphics ... or text drawer ... or just a function
   "Convinience clojure constructor for the java
   com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator class."
   (:require api.context)
