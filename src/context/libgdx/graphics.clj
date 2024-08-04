@@ -23,15 +23,11 @@
             context.libgdx.graphics.views
             ; loaded just extend graphics, no component data.
             context.libgdx.graphics.image-drawer
-            context.libgdx.graphics.tiled-map-drawer)
+            context.libgdx.graphics.tiled-map-drawer) ; move to tiled ....
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Pixmap)
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
 
-; not simple, smell
-; but its necessary to use
-; * host platform colors without having to know its libgdx/java (for exapmle clojurescript, cljc files, any other plattform ...)
-; * with no performance penalties for converting e.g. keywords to color instances
 (bind-roots "com.badlogic.gdx.graphics.Color"
             'com.badlogic.gdx.graphics.Color
             "api.graphics.color")
@@ -41,6 +37,7 @@
     (let [batch (SpriteBatch.)]
       (g/map->Graphics
        (merge {:batch batch}
+              ; TODO use shape-drawer/->build
               (context.libgdx.graphics.shape-drawer/->shape-drawer batch)
               (context.libgdx.graphics.text-drawer/->build ctx default-font)
               (context.libgdx.graphics.views/->views tile-size)))))

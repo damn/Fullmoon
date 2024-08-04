@@ -13,6 +13,13 @@
 (defn- ->clojure-symbol [field]
   (-> field :name name str/lower-case (str/replace #"_" "-") symbol))
 
+; explain here why we do this and alternatives
+; use keyword args.
+
+; not simple, smell
+; but its necessary to use
+; * host platform colors without having to know its libgdx/java (for exapmle clojurescript, cljc files, any other plattform ...)
+; * with no performance penalties for converting e.g. keywords to color instances
 (defn bind-roots [class-str field-type target-ns]
   (doseq [field (relevant-fields class-str field-type)
           :let [avar (find-var (symbol target-ns (str (->clojure-symbol field))))
