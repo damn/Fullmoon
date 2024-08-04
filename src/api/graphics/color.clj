@@ -1,4 +1,5 @@
-(ns api.graphics.color)
+(ns api.graphics.color
+  (:require [utils.reflect :refer [bind-roots]]))
 
 (declare black
          blue
@@ -34,3 +35,7 @@
          violet
          white
          yellow)
+
+(bind-roots "com.badlogic.gdx.graphics.Color"
+            'com.badlogic.gdx.graphics.Color
+            "api.graphics.color")

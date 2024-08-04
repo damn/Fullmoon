@@ -1,4 +1,5 @@
 (ns api.input.keys
+  (:require [utils.reflect :refer [bind-roots]])
   (:refer-clojure :exclude [num]))
 
 (declare a
@@ -184,3 +185,5 @@
          x
          y
          z)
+
+(bind-roots "com.badlogic.gdx.Input$Keys" 'int "api.input.keys")

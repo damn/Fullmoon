@@ -4,7 +4,6 @@
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
             api.graphics.color
-            [utils.reflect :refer [bind-roots]]
             graphics.shape-drawer
             graphics.text
             graphics.views
@@ -13,10 +12,6 @@
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color Pixmap)
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
-
-(bind-roots "com.badlogic.gdx.graphics.Color"
-            'com.badlogic.gdx.graphics.Color
-            "api.graphics.color")
 
 (defcomponent :context/graphics {}
   (component/create [[_ {:keys [tile-size default-font]}] ctx]
