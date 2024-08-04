@@ -1,4 +1,13 @@
 
+
+
+; The main thing - document everything w_o libgdx .... just a game ....its a detail ...
+
+
+; clean cluster-depth 1 dependency graph, e.g. utils not -> math ....
+
+
+
 ; even glossary? ctx, entity*, entity* entity/id, ? ,'g'
 
 ; make a wiki page which explains _the whole_ structure, game, etc. ablaufe etc.
