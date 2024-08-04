@@ -5,7 +5,7 @@
        :fps 60}
  :context [[:context.libgdx/graphics {:tile-size 48
                                       :default-font {:file "exocet/films.EXL_____.ttf" :size 16}}]
-           [:context.libgdx/assets true]
+           [:context.libgdx/assets "resources/"] ; TODO should be set in classpath and not necessary here ?
            [:context.libgdx/ui true]
            [:context.libgdx/input true]
            [:context.libgdx/image-drawer-creator true]

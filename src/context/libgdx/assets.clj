@@ -34,9 +34,8 @@
     manager))
 
 (defcomponent :context.libgdx/assets {}
-  (component/create [_ _ctx]
-    (let [folder "resources/" ; TODO should be set in classpath and not necessary here ?
-          sound-files   (recursively-search-files folder #{"wav"})
+  (component/create [[_ folder] _ctx]
+    (let [sound-files   (recursively-search-files folder #{"wav"})
           texture-files (recursively-search-files folder #{"png" "bmp"})]
       {:manager (load-all-assets! :log-load-assets? false
                                   :sound-files sound-files

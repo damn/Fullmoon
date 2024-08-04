@@ -175,3 +175,14 @@
 
    )
  )
+
+(comment
+
+ (require '[clojure.string :as str])
+ (clojure.pprint/pprint
+  (sort
+   (filter #(and (namespace %)
+                 (str/starts-with? (namespace %) "context"))
+           (keys component/attributes))))
+
+ )

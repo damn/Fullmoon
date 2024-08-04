@@ -4,7 +4,7 @@
        :full-screen? false
        :fps 10}
  :context [[:context.libgdx/graphics true] ; ?
-           [:context.libgdx/assets true] ; ?
+           [:context.libgdx/assets "resources/"] ; ?
            [:context.libgdx/ui true] ; ok
            [:context.libgdx/input true] ; ok
            [:context.libgdx/image-drawer-creator true] ; ?
