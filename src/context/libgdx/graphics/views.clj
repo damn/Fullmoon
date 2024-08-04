@@ -79,7 +79,7 @@
   (pixels->world-units [{:keys [world-unit-scale]} pixels]
     (* (int pixels) (float world-unit-scale))))
 
-(defn- ->views [world-unit-scale]
+(defn- ->views [tile-size]
   (merge {:unit-scale gui-unit-scale} ; only here because actors want to use drawing without using render-gui-view
          (let [gui-camera (OrthographicCamera.)
                gui-viewport (FitViewport. (screen-width) (screen-height) gui-camera)]
@@ -87,7 +87,8 @@
             :gui-viewport gui-viewport
             :gui-viewport-width  (.getWorldWidth  gui-viewport)
             :gui-viewport-height (.getWorldHeight gui-viewport)})
-         (let [world-camera (OrthographicCamera.)
+         (let [(or (and tile-size (/ tile-size)) 1) ; 1 means we don't even need a world-view => can omit the data then also
+               world-camera (OrthographicCamera.)
                world-viewport (let [width  (* (screen-width) world-unit-scale)
                                     height (* (screen-height) world-unit-scale)
                                     y-down? false]
