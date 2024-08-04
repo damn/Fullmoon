@@ -3,7 +3,7 @@
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities transact-all! frame->txs ->actor ->table ->group ->text-button ->action-bar]]
             [api.entity :as entity]
-            [api.entity.state :as state]
+            [api.entity-state :as state]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
@@ -17,7 +17,7 @@
             [context.player-message :refer [->player-message-actor]]
             [context.world :as world]
             [entity.movement :as movement]
-            [entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]))
+            [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]))
 
 (defn- ->item-on-cursor-actor [context]
   (->actor context {:draw draw-item-on-cursor}))

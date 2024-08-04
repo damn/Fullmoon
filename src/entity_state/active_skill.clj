@@ -1,9 +1,9 @@
-(ns entity.state.active-skill
+(ns entity-state.active-skill
   (:require [api.graphics :as g]
             [data.val-max :refer [apply-val]]
             [api.context :refer [valid-params? effect-render-info stopped? finished-ratio ->counter]]
             [api.entity :as entity]
-            [api.entity.state :as state]))
+            [api.entity-state :as state]))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)

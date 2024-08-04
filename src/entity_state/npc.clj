@@ -1,6 +1,6 @@
-(ns entity.state.npc
+(ns entity-state.npc
   (:require [reduce-fsm :as fsm]
-            (entity.state [active-skill :as active-skill]
+            (entity-state [active-skill :as active-skill]
                           [npc-dead :as dead]
                           [npc-idle :as idle]
                           [npc-moving :as moving]

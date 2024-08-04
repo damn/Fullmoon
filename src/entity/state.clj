@@ -3,7 +3,7 @@
             [core.component :refer [defcomponent]]
             [api.context :refer [transact-all!]]
             [api.entity :as entity]
-            [api.entity.state :as state]
+            [api.entity-state :as state]
             [api.tx :refer [transact!]]))
 
 (defcomponent :entity/state {}

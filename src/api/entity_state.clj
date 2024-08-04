@@ -1,4 +1,4 @@
-(ns api.entity.state)
+(ns api.entity-state)
 
 (defprotocol State
   (enter [_ entity* ctx])

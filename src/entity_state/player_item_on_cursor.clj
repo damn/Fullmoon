@@ -1,11 +1,11 @@
-(ns entity.state.player-item-on-cursor
+(ns entity-state.player-item-on-cursor
   (:require [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? item-entity]]
             [api.graphics :as g]
             [api.input.buttons :as buttons]
             [math.vector :as v]
             [api.entity :as entity]
             [entity.inventory :as inventory]
-            [api.entity.state :as state]))
+            [api.entity-state :as state]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)

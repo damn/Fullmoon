@@ -4,7 +4,7 @@
             [api.entity :as entity]
             [api.world.grid :refer [circle->entities]]))
 
-(def ^:private shout-range 6)
+(def ^:private shout-range 3)
 
 ; TODO gets itself also
   ; == faction/friendly? e1 e2 ( entity*/friendly? e*1 e*2) ?

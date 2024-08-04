@@ -2,7 +2,7 @@
   (:require [api.context :refer [->window ->image-button get-property player-tooltip-text transact-all!]]
             [api.scene2d.actor :refer [add-tooltip!]]
             [api.entity :as entity]
-            [api.entity.state :as state]))
+            [api.entity-state :as state]))
 
 (defn- clicked-skill [{:keys [context/player-entity] :as ctx} id]
   (let [entity* @player-entity]

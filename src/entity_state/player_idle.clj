@@ -1,4 +1,4 @@
-(ns entity.state.player-idle
+(ns entity-state.player-idle
   (:require [api.graphics :as g]
             [api.input.buttons :as buttons]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
@@ -8,7 +8,7 @@
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? get-property inventory-window skill-usable-state selected-skill]]
             [api.entity :as entity]
-            [api.entity.state :as state]))
+            [api.entity-state :as state]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]

@@ -1,6 +1,6 @@
-(ns entity.state.player
+(ns entity-state.player
   (:require [reduce-fsm :as fsm]
-            (entity.state [active-skill :as active-skill]
+            (entity-state [active-skill :as active-skill]
                           [player-dead :as dead]
                           [player-found-princess :as found-princess]
                           [player-idle :as idle]

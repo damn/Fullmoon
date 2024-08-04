@@ -1,7 +1,7 @@
-(ns entity.state.stunned
+(ns entity-state.stunned
   (:require [api.graphics :as g]
             [api.context :refer [stopped? ->counter]]
-            [api.entity.state :as state]))
+            [api.entity-state :as state]))
 
 (defrecord Stunned [counter]
   state/PlayerState

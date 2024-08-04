@@ -8,7 +8,7 @@
             [api.graphics.color :as color]
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [api.entity :as entity]
-            [api.entity.state :as state]
+            [api.entity-state :as state]
             [api.tx :refer [transact!]]
             [entity.inventory :as inventory])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
