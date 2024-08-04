@@ -21,15 +21,16 @@
           (extensions (.extension file)) (recur remaining (conj result (str/replace-first (.path file) folder "")))
           :else (recur remaining result))))
 
-(defn- load-asset! [^AssetManager manager file ^Class klass log-load-assets?]
-  (when log-load-assets?
-    (println "load-assets" (str "[" (.getSimpleName klass) "] - [" file "]")))
-  (.load manager file klass))
+(defn- load-assets! [^AssetManager manager files ^Class klass log-load-assets?]
+  (doseq [file files]
+    (when log-load-assets?
+      (println "load-assets" (str "[" (.getSimpleName klass) "] - [" file "]")))
+    (.load manager file klass)))
 
 (defn- load-all-assets! [& {:keys [log-load-assets? sound-files texture-files]}]
   (let [manager (->asset-manager)]
-    (doseq [file sound-files]   (load-asset! manager file Sound   log-load-assets?))
-    (doseq [file texture-files] (load-asset! manager file Texture log-load-assets?))
+    (load-assets! manager sound-files   Sound   log-load-assets?)
+    (load-assets! manager texture-files Texture log-load-assets?)
     (.finishLoading manager)
     manager))
 
@@ -49,11 +50,10 @@
 (defn- this [ctx] (:context/assets ctx))
 
 (extend-type api.context.Context
-  api.context/SoundStore
+  api.context/Assets
   (play-sound! [ctx file]
     (.play ^Sound (get (:manager (this ctx)) file)))
 
-  api.context/Assets
   (cached-texture [ctx file]
     (let [texture  (get (:manager (this ctx)) file)]
       (assert texture)

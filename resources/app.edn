@@ -27,6 +27,9 @@
 
 ; even move 'context/graphics/' into just 'graphics/'
 
+; maybe modifier/effect into the place where they are defined or sth ....
+; => effect/sound defined at tx/sound ????? its second order thingy no
+
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
        :height 900
@@ -43,6 +46,8 @@
 
  ; TODO remove .libgdx
  ; TODO move Assets into 1 protocol only, no soundstore...
+
+ ; => FLAT directory structure ... everything visible ....
 
  :context [[:context/assets {:folder "resources/" ; TODO should be set in classpath and not necessary here ?
                              :sound-file-extensions #{"wav"}

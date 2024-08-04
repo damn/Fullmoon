@@ -56,10 +56,6 @@
   (spritesheet [_ file tilew tileh])
   (get-sprite [_ {:keys [tilew tileh] :as sheet} [x y]]))
 
-(defprotocol SoundStore
-  (play-sound! [_ file]
-               "Sound is already loaded from file, this will perform only a lookup for the sound and play it." ))
-
 (defprotocol Stage
   (->stage-screen [_ {:keys [stage sub-screen]}]
                   "A screen with a stage as an input-processor which gets drawn and 'act'ed after the given sub-screen.
@@ -96,6 +92,7 @@
   (->tiled-map [_ file] "Needs to be disposed."))
 
 (defprotocol Assets
+  (play-sound! [_ file] "Sound is already loaded from file, this will perform only a lookup for the sound and play it.")
   (cached-texture [_ file])
   (all-sound-files   [_])
   (all-texture-files [_]))
