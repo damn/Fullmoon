@@ -12,7 +12,7 @@
                                              :property-editor? true
                                              :debug-window? true
                                              :debug-options? true}}}]
-           [:context/input true]
+           [:context/input]
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
@@ -22,32 +22,32 @@
                                               :size 16
                                               :quality-scaling 2}}]
 
-           [:graphics/image-drawer true] ; -> together with image creator
-           [:context/image-drawer-creator true] ; -> graphics
-           [:context/stage true] ; -> graphics
-           [:context/cursor true] ; -> graphics
+           [:graphics/image-drawer] ; -> together with image creator
+           [:context/image-drawer-creator] ; -> graphics
+           [:context/stage] ; -> graphics
+           [:context/cursor] ; -> graphics
 
-           [:context/ui true]
-           [:context/tiled true]
-           [:effect/all true]
-           [:entity/all true]
-           [:modifier/all true]
-           [:property/all true]
+           [:context/ui]
+           [:context/tiled]
+           [:effect/all]
+           [:entity/all]
+           [:modifier/all]
+           [:property/all]
            [:context/property-types {:properties/audiovisual true
                                      :properties/creature true
                                      :properties/item true
                                      :properties/skill true
                                      :properties/world true}]
            [:context/properties {:file "resources/properties.edn"}]
-           [:context/builder true]
-           [:context/effect true]
-           [:context/modifier true]
-           [:context/potential-fields true] ; -> world
-           [:context/render-debug true]
-           [:context/transaction-handler true]
-           [:context/inventory true]
-           [:context/action-bar true]
-           [:context/ecs true]
+           [:context/builder]
+           [:context/effect]
+           [:context/modifier]
+           [:context/potential-fields] ; -> world
+           [:context/render-debug]
+           [:context/transaction-handler]
+           [:context/inventory]
+           [:context/action-bar]
+           [:context/ecs]
            [:context/game [:context/inventory
                            :context/action-bar
                            :context/uids-entities
@@ -65,9 +65,9 @@
                                         :screens/minimap        true
                                         :screens/options-menu   true
                                         :screens/property-editor true}}]
-           [:tx/audiovisual true]
-           [:tx/creature true]
-           [:tx/entity true]
-           [:tx/sound true]
-           [:tx/player-modal true]
-           [:context/error-modal true]]}
+           [:tx/audiovisual]
+           [:tx/creature]
+           [:tx/entity]
+           [:tx/sound]
+           [:tx/player-modal]
+           [:context/error-modal]]}
