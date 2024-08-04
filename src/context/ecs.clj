@@ -76,16 +76,6 @@
   [:entity/skills] ; to be usable @ entity/state it depends on :entity/mana - specific skills also require specific components ?! e.g. strength for melee - attack ....
 
   [:entity/state]
-  ; doesn;t depend on anything but the _creature_ states depend on something! can code defensively or
-  ; adjust creature schema ...
-  ; TODO dependencies as of entity-state components -> move them also out of entity/ folder
-  ; body, skills, mana, stats (cast,attack-speed), faction, movement (if should move ....)
-
-  ; npc state -> reaction-time
-
-  ; player state - :entity/click-distance-tiles, :entity/free-skill-points, inventory, item-on-cursor
-  ; => player component make
-
   [:entity/stats] ; what do effects do if armor-save is not there ??? or has to be there ???
   [:entity/string-effect] ; depends one entity/body
   [:entity/z-order]

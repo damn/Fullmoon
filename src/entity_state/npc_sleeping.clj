@@ -20,7 +20,7 @@
     ; then nice alert '!' and different entities different alert time
     [[:tx/add-text-effect id "[WHITE]!"]
      [:tx/create #:entity {:position position
-                           :faction  faction
+                           :faction faction
                            :shout (->counter ctx 0.2)}]])
 
   (tick [_ entity* context]
