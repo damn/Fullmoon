@@ -30,14 +30,10 @@
                   world-unit-dimensions
                   ;;
                   file ; used for serialization
-                  ;
-                  sub-image-bounds ; => is in texture-region data?
-                  ;;
-                  scale
-                  ; can be a number (multiplies original texture-region-dimensions) or [w h] for a fixed size
-                  ; is not used  directly for drawing ....
-                  ;;
-                  tilew
+                  sub-image-bounds ; => is in texture-region data? // only used for creating the texture-region itself -> pass
+                  scale ; can be a number (multiplies original texture-region-dimensions) or [w h] for a fixed size
+                        ; is not used  directly for drawing ....
+                  tilew ;; used @ spritesheet image
                   tileh])
 
 (defn- ->texture-region [ctx file & [x y w h]]
@@ -70,7 +66,8 @@
 
   (spritesheet [context file tilew tileh]
     (-> (ctx/create-image context file)
-        (assoc :tilew tilew :tileh tileh)))
+        (assoc :tilew tilew
+               :tileh tileh)))
 
   (get-sprite [context {:keys [tilew tileh] :as sheet} [x y]]
     (ctx/get-sub-image context
