@@ -42,7 +42,8 @@
              up? renders the font over y, otherwise under.
              scale will multiply the drawn text size with the scale."))
 
-(defprotocol ImageDrawer
+(defprotocol Image
+  (->image [_ texture-region])
   (draw-image [_ image position])
   (draw-centered-image [_ image position])
   (draw-rotated-centered-image [_ image rotation position]))

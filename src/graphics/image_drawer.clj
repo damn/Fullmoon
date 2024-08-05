@@ -1,7 +1,15 @@
-(ns graphics.image-drawer
+(ns graphics.image
   (:require [api.graphics :as g])
   (:import [com.badlogic.gdx.graphics Color Texture]
            [com.badlogic.gdx.graphics.g2d Batch TextureRegion]))
+
+(defrecord Image [texture-region
+                  pixel-dimensions
+                  world-unit-dimensions
+                  color ; optional
+                  ;;
+                  scale ; number for mult. or [w h] -> creates px/wu dim. === is TODO _UNUSED_ ???
+                  ])
 
 (defn- draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
   (if color (.setColor batch color))
@@ -22,8 +30,34 @@
     (:pixel-dimensions image)
     (:world-unit-dimensions image)))
 
+(defn- texture-region-dimensions [^TextureRegion texture-region]
+  [(.getRegionWidth  texture-region)
+   (.getRegionHeight texture-region)])
+
+(defn- scale-dimensions [dimensions scale]
+  (mapv (comp float (partial * scale)) dimensions))
+
+(defn- assoc-dimensions [{:keys [texture-region scale] :as image} world-unit-scale]
+  {:pre [(number? world-unit-scale)
+         (or (number? scale)
+             (and (vector? scale)
+                  (number? (scale 0))
+                  (number? (scale 1))))]}
+  (let [pixel-dimensions (if (number? scale)
+                           (scale-dimensions (texture-region-dimensions texture-region) scale)
+                           scale)]
+    (assoc image
+           :pixel-dimensions pixel-dimensions
+           :world-unit-dimensions (scale-dimensions pixel-dimensions world-unit-scale))))
+
 (extend-type api.graphics.Graphics
-  api.graphics/ImageDrawer
+  api.graphics/Image
+  (->image [{:keys [world-unit-scale]} texture-region]
+    (-> {:texture-region texture-region
+         :scale 1}
+        (assoc-dimensions world-unit-scale)
+        map->Image))
+
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]

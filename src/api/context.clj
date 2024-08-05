@@ -46,10 +46,11 @@
 
 (defprotocol ImageCreator
   (create-image [_ file])
-  (get-scaled-copy [_ image scale] "Scaled of original texture-dimensions, not any existing scale.")
   (get-sub-image [_ image [x y w h]])
   (spritesheet [_ file tilew tileh])
-  (get-sprite [_ spritesheet [x y]] "x,y index starting top-left"))
+  (get-sprite [_ spritesheet [x y]] "x,y index starting top-left")
+  ; TODO unused, untested.
+  (get-scaled-copy [_ image scale] "Scaled of original texture-dimensions, not any existing scale."))
 
 (defprotocol Stage
   (->stage-screen [_ {:keys [stage sub-screen]}]
