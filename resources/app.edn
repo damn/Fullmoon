@@ -42,11 +42,9 @@
            [:context/potential-fields]
            [:context/render-debug]
            [:context/transaction-handler]
-           [:context/inventory]
-           [:context/action-bar]
            [:context/ecs]
-           [:context/game [:context/inventory
-                           :context/action-bar
+           [:context/game [:context/action-bar
+                           :context/inventory
                            :context/uids-entities
                            :context/thrown-error
                            :context/game-paused
