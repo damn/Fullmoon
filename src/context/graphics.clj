@@ -3,11 +3,11 @@
             [api.context :as ctx]
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
+            graphics.image
             graphics.shape-drawer
             graphics.text
-            graphics.views
             graphics.tiled-map-drawer
-            graphics.image)
+            graphics.views)
   (:import com.badlogic.gdx.Gdx
            [com.badlogic.gdx.graphics Color Pixmap]
            [com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion]))
@@ -19,8 +19,8 @@
        (merge {:batch batch}
               (graphics.shape-drawer/->build batch)
               (graphics.text/->build ctx default-font)
-              (graphics.views/->build world-view)
-              (graphics.tiled-map-drawer/->build)))))
+              (graphics.tiled-map-drawer/->build)
+              (graphics.views/->build world-view)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
     (dispose batch)
