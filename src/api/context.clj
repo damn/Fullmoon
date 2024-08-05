@@ -51,7 +51,7 @@
   (get-sub-image [_ {:keys [file sub-image-bounds] :as image}]
                  "Coordinates are from original image, not scaled one.")
   (spritesheet [_ file tilew tileh])
-  (get-sprite [_ {:keys [tilew tileh] :as sheet} [x y]]))
+  (get-sprite [_ spritesheet [x y]] "x,y index starting top-left"))
 
 (defprotocol Stage
   (->stage-screen [_ {:keys [stage sub-screen]}]

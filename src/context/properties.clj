@@ -1,36 +1,22 @@
 (ns context.properties
   (:require [clojure.edn :as edn]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [get-sprite create-image]]
+            [api.context :as ctx]
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
-; internally we just call it 'ids->properties' or something ... not db....
-
-; TODO all data private -> can make record out of context later!!!
-; dont access internals of data structure ... ? ?
-
-; TODO also don't hardcode malli dependency ... don't hardcode anything
-; take it to its logical conclusion
-
-
-
-(require 'context.image-creator)
-
-(defn- deserialize-image [context {:keys [file sub-image-bounds]}]
+; TODO directly use index, instead of w/h everywhere !.!
+; => then we have 'sprite' abstraction
+(defn- deserialize-image [ctx {:keys [file sub-image-bounds]}]
   {:pre [file]}
   (if sub-image-bounds
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
           [tilew tileh]       (drop 2 sub-image-bounds)]
-      ; TODO get-sprite does not return Image record => do @ image itself.
-      (context.image-creator/map->Image
-       (get-sprite context
-                   {:file file
-                    :tilew tileh
-                    :tileh tilew}
-                   [(int (/ sprite-x tilew))
-                    (int (/ sprite-y tileh))])))
-    (create-image context file)))
+      (ctx/get-sprite ctx
+                      (ctx/spritesheet ctx file tilew tileh)
+                      [(int (/ sprite-x tilew))
+                       (int (/ sprite-y tileh))]))
+    (ctx/create-image ctx file)))
 
 (defn- serialize-image [image]
   (select-keys image [:file :sub-image-bounds]))

@@ -17,7 +17,46 @@
          rotation)
   (if color (.setColor batch Color/WHITE)))
 
+; TODO remove pixel-/wu-/scale- and just pass 'dimensions' to image ??
+; the dimenions to draw the image at.....
+; how does libgdx Sprite does it ??
+
+; then all the view code will become easier too ... ?
+; where unit-scale used???
+
+; only @ text drawer ....
+
+
+; create image
+; default scale = texture-region itself pixel -dimensions ?
+
+; => only where property image/animation goes to entity it draws to world units ...
+
+
+; property/image
+; property/animation
+; entity/image
+
+; where drawing draws in wu ?? check ...
+
+; only @ entity/image \| entity\/animation & also draw-item-on-cursor / player-item-on-cursor draw world-item ....
+; => only with property\/image => assoc world-unit-scale there?
+
+
+; 1. of all for sure - move image-creator and serialization together with this code
+; => need to pass texture-region ....
+; => then we need to get file out again ....
+; from texture-region ) ;
+; and to string maybe ..
+
+; 2. move spritesheet out, its a separate record ....
+
+; 3. ctx fn ->image with file ??
+
+
 (defn- unit-dimensions [image unit-scale]
+  ;{:post [%]}
+  ;(get (:unit-dimensions image) unit-scale)
   (if (= unit-scale 1)
     (:pixel-dimensions image)
     (:world-unit-dimensions image)))
@@ -49,3 +88,5 @@
 
   (draw-centered-image [this image position]
     (g/draw-rotated-centered-image this image 0 position)))
+
+; vimgrep/draw-image\|draw-rotated-centered-image\|draw-centered-image/g src/** test/**
