@@ -6,7 +6,7 @@
             graphics.shape-drawer
             graphics.text
             graphics.views
-            graphics.tiled-map-drawer ; -> tiled ? ??
+            graphics.tiled-map-drawer
             graphics.image)
   (:import com.badlogic.gdx.Gdx
            [com.badlogic.gdx.graphics Color Pixmap]
