@@ -33,6 +33,15 @@
      :state/npc npc-state/->state)
    initial-state))
 
+; if controller = :controller/player
+; -> add those fields
+; :player? true ; -> api -> 'entity/player?' fn
+; :free-skill-points 3
+; :clickable {:type :clickable/player}
+; :click-distance-tiles 1.5
+
+; otherwise
+
 (defmethod transact! :tx/creature [[_ creature-id components] ctx]
   (assert (:entity/state components))
   (let [creature-components (:creature/entity (ctx/get-property ctx creature-id))]
