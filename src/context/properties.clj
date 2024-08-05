@@ -20,12 +20,24 @@
 
 (import 'com.badlogic.gdx.graphics.g2d.TextureRegion)
 
-(defn- serialize-image [{:keys [^TextureRegion texture-region]}]
-  {:file (.toString (.getTextureData (.getTexture texture-region)))
-   :sub-image-bounds [(.getRegionX texture-region)
-                      (.getRegionY texture-region)
-                      (.getRegionWidth texture-region)
-                      (.getRegionHeight texture-region)]})
+(defn- is-sub-texture? [^TextureRegion texture-region]
+  (let [texture (.getTexture texture-region)]
+    (or (not= (.getRegionWidth  texture-region) (.getWidth  texture))
+        (not= (.getRegionHeight texture-region) (.getHeight texture)))))
+
+(defn- region-bounds [^TextureRegion texture-region]
+  [(.getRegionX texture-region)
+   (.getRegionY texture-region)
+   (.getRegionWidth texture-region)
+   (.getRegionHeight texture-region)])
+
+(defn- texture-region->file [^TextureRegion texture-region]
+  (.toString (.getTextureData (.getTexture texture-region))))
+
+(defn- serialize-image [{:keys [texture-region]}]
+  (merge {:file (texture-region->file texture-region)}
+         (if (is-sub-texture? texture-region)
+           {:sub-image-bounds (region-bounds texture-region)})))
 
 (defn- deserialize-animation [context {:keys [frames frame-duration looping?]}]
   (animation/create (map #(deserialize-image context %) frames)

@@ -1,7 +1,7 @@
 (ns widgets.hp-mana-bars
-  (:require [api.context :as ctx :refer [create-image get-sub-image ->actor]]
+  (:require [utils.core :as utils]
+            [api.context :as ctx]
             [api.graphics :as g]
-            [utils.core :refer [readable-number]]
             [data.val-max :refer [val-max-ratio]]))
 
 (defn- render-infostr-on-bar [{:keys [gui-viewport-width] :as g} infostr y h]
@@ -12,21 +12,21 @@
                 :up? true}))
 
 (defn ->hp-mana-bars [context]
-  (let [rahmen      (create-image context "ui/rahmen.png")
-        hpcontent   (create-image context "ui/hp.png")
-        manacontent (create-image context "ui/mana.png")
+  (let [rahmen      (ctx/create-image context "ui/rahmen.png")
+        hpcontent   (ctx/create-image context "ui/hp.png")
+        manacontent (ctx/create-image context "ui/mana.png")
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         render-hpmana-bar (fn [{g :context/graphics :as ctx} x y contentimg minmaxval name]
                             (g/draw-image g rahmen [x y])
                             (g/draw-image g
-                                          (get-sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                                          (ctx/get-sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                           [x y])
-                            (render-infostr-on-bar g (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) y rahmenh))]
-    (->actor context
-             {:draw (fn [{:keys [context/player-entity] :as ctx}]
-                      (let [x (- (/ (ctx/gui-viewport-width ctx) 2)
-                                 (/ rahmenw 2))
-                            y-hp 5
-                            y-mana (+ y-hp rahmenh)]
-                        (render-hpmana-bar ctx x y-hp   hpcontent   (:entity/hp   @player-entity) "HP")
-                        (render-hpmana-bar ctx x y-mana manacontent (:entity/mana @player-entity) "MP")))})))
+                            (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) y rahmenh))]
+    (ctx/->actor context
+                 {:draw (fn [{:keys [context/player-entity] :as ctx}]
+                          (let [x (- (/ (ctx/gui-viewport-width ctx) 2)
+                                     (/ rahmenw 2))
+                                y-hp 5
+                                y-mana (+ y-hp rahmenh)]
+                            (render-hpmana-bar ctx x y-hp   hpcontent   (:entity/hp   @player-entity) "HP")
+                            (render-hpmana-bar ctx x y-mana manacontent (:entity/mana @player-entity) "MP")))})))
