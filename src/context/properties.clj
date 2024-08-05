@@ -18,8 +18,14 @@
                        (int (/ sprite-y tileh))]))
     (ctx/create-image ctx file)))
 
-(defn- serialize-image [image]
-  (select-keys image [:file :sub-image-bounds]))
+(import 'com.badlogic.gdx.graphics.g2d.TextureRegion)
+
+(defn- serialize-image [{:keys [^TextureRegion texture-region]}]
+  {:file (.toString (.getTextureData (.getTexture texture-region)))
+   :sub-image-bounds [(.getRegionX texture-region)
+                      (.getRegionY texture-region)
+                      (.getRegionWidth texture-region)
+                      (.getRegionHeight texture-region)]})
 
 (defn- deserialize-animation [context {:keys [frames frame-duration looping?]}]
   (animation/create (map #(deserialize-image context %) frames)

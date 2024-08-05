@@ -49,8 +49,6 @@
 ; from texture-region ) ;
 ; and to string maybe ..
 
-; 2. move spritesheet out, its a separate record ....
-
 ; 3. ctx fn ->image with file ??
 
 

@@ -19,7 +19,7 @@
         render-hpmana-bar (fn [{g :context/graphics :as ctx} x y contentimg minmaxval name]
                             (g/draw-image g rahmen [x y])
                             (g/draw-image g
-                                          (get-sub-image ctx (assoc contentimg :sub-image-bounds [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh]))
+                                          (get-sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                           [x y])
                             (render-infostr-on-bar g (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) y rahmenh))]
     (->actor context

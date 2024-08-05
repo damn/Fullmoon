@@ -35,47 +35,51 @@
    (toString [_] "foo"))
  )
 
-(defrecord Image [;; used for drawing:
-                  texture-region
+(defrecord Image [texture-region
                   pixel-dimensions
                   world-unit-dimensions
                   color ; optional
                   ;;
-                  scale ; number for mult. or [w h] -> creates px/wu dim.
-                  ;; used for serialization:
-                  file
-                  sub-image-bounds ; => is in texture-region data? // only used for creating the texture-region itself -> pass
-                  ; => maybe pass directly texture-region here
+                  scale ; number for mult. or [w h] -> creates px/wu dim. === is TODO _UNUSED_ ???
                   ])
 
-(defn- ->texture-region [ctx file & [x y w h]]
-  (let [^Texture texture (ctx/cached-texture ctx file)]
-    (if (and x y w h)
-      (TextureRegion. texture (int x) (int y) (int w) (int h))
-      (TextureRegion. texture))))
+; file & sub-image-bounds is in texture-region ..... !!
+; scale only used for initialisation
+
+(comment
+ (let [ctx @app.state/current-context
+       image (:property/image (ctx/get-property ctx :items/chain-leg))
+       ]
+   [(:sub-image-bounds image)
+    (.getRegionX (:texture-region image))
+    (.getRegionY (:texture-region image))
+    (texture-region-dimensions (:texture-region image))
+    ]
+
+   ))
 
 (extend-type api.context.Context
   api.context/ImageCreator
-  (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file]
-    (-> {:texture-region (->texture-region ctx file)
-         :file file
+  (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file] ; TODO pass ctx to assoc-dimensins ???
+    (-> {:texture-region (TextureRegion. (ctx/cached-texture ctx file))
          :scale 1}
-        map->Image
-        (assoc-dimensions world-unit-scale)))
-
-  (get-scaled-copy [{{:keys [world-unit-scale]} :context/graphics} image scale]
-    (-> image
-        (assoc :scale scale)
-        (assoc-dimensions world-unit-scale)))
+        (assoc-dimensions world-unit-scale)
+        map->Image))
 
   ; only used @ hp-mana-bar & get-sprite ...
   ; remove at least sub-image-bounds & tilew/tileh from Image ...
   (get-sub-image [{{:keys [world-unit-scale]} :context/graphics :as ctx}
-                  {:keys [file sub-image-bounds] :as image}]
+                  {:keys [texture-region]}
+                  [x y w h]]
+    (-> {:texture-region (TextureRegion. texture-region (int x) (int y) (int w) (int h))
+         :scale 1}
+        (assoc-dimensions world-unit-scale)
+        map->Image))
+
+  ; TODO unused
+  (get-scaled-copy [{{:keys [world-unit-scale]} :context/graphics} image scale]
     (-> image
-        (assoc :scale 1
-               :texture-region (apply ->texture-region ctx file sub-image-bounds)
-               :sub-image-bounds sub-image-bounds)
+        (assoc :scale scale)
         (assoc-dimensions world-unit-scale)))
 
   (spritesheet [context file tilew tileh]
@@ -85,6 +89,7 @@
 
   (get-sprite [context {:keys [image tilew tileh]} [x y]]
     (ctx/get-sub-image context
-                       (assoc image :sub-image-bounds [(* x tilew) (* y tileh) tilew tileh]))))
+                       image
+                       [(* x tilew) (* y tileh) tilew tileh])))
 
 ; vimgrep/create-image\|get-scaled-copy\|get-sub-image\|spritesheet\|get-sprite/g src/** test/**
