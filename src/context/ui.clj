@@ -12,7 +12,7 @@
             api.scene2d.ui.text-field
             [api.scene2d.ui.widget-group :refer [pack!]]
             api.scene2d.ui.window
-            context.image-creator)
+            graphics.image)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Touchable)
@@ -134,7 +134,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image context.image_creator.Image
+(defmethod ->vis-image graphics.image.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 

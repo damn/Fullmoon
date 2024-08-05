@@ -1,5 +1,5 @@
 (ns context.transaction-handler
-  (:require context.image-creator
+  (:require graphics.image
             [api.context :refer [transact-all!]]
             [api.tx :refer [transact!]]))
 
@@ -25,7 +25,7 @@
 (defn- debug-print-tx [tx]
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
-                  (instance? context.image_creator.Image %) "<Image>"
+                  (instance? graphics.image.Image %) "<Image>"
                   (instance? data.animation.ImmutableAnimation %) "<Animation>"
                   (instance? api.context.Context %) "<Context>"
                   :else %)

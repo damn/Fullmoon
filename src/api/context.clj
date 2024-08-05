@@ -36,21 +36,18 @@
   (->cursor [_ file hotspot-x hotspot-y] "Needs to be disposed.")
   (set-cursor! [_ cursor])
 
-  (->color [_ r g b a]))
+  (->color [_ r g b a])
+
+  (create-image [_ file])
+  (get-sub-image [_ image [x y w h]])
+  (spritesheet [_ file tilew tileh])
+  (get-sprite [_ spritesheet [x y]] "x,y index starting top-left"))
 
 (defprotocol Input
   (button-pressed?      [_ button])
   (button-just-pressed? [_ button])
   (key-pressed?      [_ k])
   (key-just-pressed? [_ k]))
-
-(defprotocol ImageCreator
-  (create-image [_ file])
-  (get-sub-image [_ image [x y w h]])
-  (spritesheet [_ file tilew tileh])
-  (get-sprite [_ spritesheet [x y]] "x,y index starting top-left")
-  ; TODO unused, untested.
-  (get-scaled-copy [_ image scale] "Scaled of original texture-dimensions, not any existing scale."))
 
 (defprotocol Stage
   (->stage-screen [_ {:keys [stage sub-screen]}]

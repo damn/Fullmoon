@@ -21,9 +21,8 @@
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-           [:context/image-creator]
-           [:context/stage]
-           [:context/cursor]
+           [:context/stage]  ; => graphics ?!
+           [:context/cursor] ; -> graphics
            [:context/ui]
            [:context/tiled]
            [:effect/all]
@@ -36,6 +35,7 @@
                                      :properties/skill true
                                      :properties/world true}]
            [:context/properties {:file "resources/properties.edn"}]
+           [:context/error-modal]
            [:context/builder]
            [:context/effect]
            [:context/modifier]
@@ -62,9 +62,10 @@
                                         :screens/minimap        true
                                         :screens/options-menu   true
                                         :screens/property-editor true}}]
+           ; tx/all ?
            [:tx/audiovisual]
            [:tx/creature]
            [:tx/entity]
            [:tx/sound]
            [:tx/player-modal]
-           [:context/error-modal]]}
+           ]}

@@ -7,8 +7,6 @@
                   pixel-dimensions
                   world-unit-dimensions
                   color ; optional
-                  ;;
-                  scale ; number for mult. or [w h] -> creates px/wu dim. === is TODO _UNUSED_ ???
                   ])
 
 (defn- draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
@@ -37,7 +35,9 @@
 (defn- scale-dimensions [dimensions scale]
   (mapv (comp float (partial * scale)) dimensions))
 
-(defn- assoc-dimensions [{:keys [texture-region scale] :as image} world-unit-scale]
+(defn- assoc-dimensions
+  "scale can be a number for multiplying the texture-region-dimensions or [w h]."
+  [{:keys [texture-region] :as image} {:keys [world-unit-scale]} scale]
   {:pre [(number? world-unit-scale)
          (or (number? scale)
              (and (vector? scale)
@@ -52,10 +52,9 @@
 
 (extend-type api.graphics.Graphics
   api.graphics/Image
-  (->image [{:keys [world-unit-scale]} texture-region]
-    (-> {:texture-region texture-region
-         :scale 1}
-        (assoc-dimensions world-unit-scale)
+  (->image [g texture-region]
+    (-> {:texture-region texture-region}
+        (assoc-dimensions g 1)
         map->Image))
 
   (draw-image [{:keys [batch unit-scale]}
