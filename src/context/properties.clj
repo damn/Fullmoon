@@ -5,8 +5,6 @@
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
-; TODO directly use index, instead of w/h everywhere !.!
-; => then we have 'sprite' abstraction
 (defn- deserialize-image [ctx {:keys [file sub-image-bounds]}]
   {:pre [file]}
   (if sub-image-bounds

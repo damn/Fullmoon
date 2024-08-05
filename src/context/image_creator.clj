@@ -23,18 +23,6 @@
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions world-unit-scale))))
 
-(comment
- (let [ctx @app.state/current-context]
-   (.toString (.getTextureData (.getTexture (:texture-region (:context/background-image ctx)))))
-   )
-
- ; doesnt work String is not a protocol
- ; could proxy it ..
- (extend-type com.badlogic.gdx.graphics.g2d.TextureRegion
-   String
-   (toString [_] "foo"))
- )
-
 (defrecord Image [texture-region
                   pixel-dimensions
                   world-unit-dimensions
@@ -43,31 +31,14 @@
                   scale ; number for mult. or [w h] -> creates px/wu dim. === is TODO _UNUSED_ ???
                   ])
 
-; file & sub-image-bounds is in texture-region ..... !!
-; scale only used for initialisation
-
-(comment
- (let [ctx @app.state/current-context
-       image (:property/image (ctx/get-property ctx :items/chain-leg))
-       ]
-   [(:sub-image-bounds image)
-    (.getRegionX (:texture-region image))
-    (.getRegionY (:texture-region image))
-    (texture-region-dimensions (:texture-region image))
-    ]
-
-   ))
-
 (extend-type api.context.Context
   api.context/ImageCreator
-  (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file] ; TODO pass ctx to assoc-dimensins ???
+  (create-image [{{:keys [world-unit-scale]} :context/graphics :as ctx} file]
     (-> {:texture-region (TextureRegion. (ctx/cached-texture ctx file))
          :scale 1}
         (assoc-dimensions world-unit-scale)
         map->Image))
 
-  ; only used @ hp-mana-bar & get-sprite ...
-  ; remove at least sub-image-bounds & tilew/tileh from Image ...
   (get-sub-image [{{:keys [world-unit-scale]} :context/graphics :as ctx}
                   {:keys [texture-region]}
                   [x y w h]]
@@ -76,7 +47,7 @@
         (assoc-dimensions world-unit-scale)
         map->Image))
 
-  ; TODO unused
+  ; TODO unused, untested.
   (get-scaled-copy [{{:keys [world-unit-scale]} :context/graphics} image scale]
     (-> image
         (assoc :scale scale)
@@ -91,5 +62,3 @@
     (ctx/get-sub-image context
                        image
                        [(* x tilew) (* y tileh) tilew tileh])))
-
-; vimgrep/create-image\|get-scaled-copy\|get-sub-image\|spritesheet\|get-sprite/g src/** test/**

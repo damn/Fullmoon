@@ -67,7 +67,10 @@
                             :pack? true})
         scroll-pane (->scroll-pane ctx table)]
     {:actor scroll-pane
-     :height (min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
+     :width (/ (ctx/gui-viewport-width ctx) 2)
+     :height
+     (- (ctx/gui-viewport-height ctx) 50)
+     #_(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
 
 (comment
  (let [ctx @app.state/current-context
