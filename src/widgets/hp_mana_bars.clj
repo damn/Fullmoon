@@ -12,11 +12,10 @@
                 :up? true}))
 
 (defn ->hp-mana-bars [context]
-  (let [rahmen (create-image context "ui/rahmen.png")
-        rahmenw (first  (:pixel-dimensions rahmen))
-        rahmenh (second (:pixel-dimensions rahmen))
+  (let [rahmen      (create-image context "ui/rahmen.png")
         hpcontent   (create-image context "ui/hp.png")
         manacontent (create-image context "ui/mana.png")
+        [rahmenw rahmenh] (:pixel-dimensions rahmen)
         render-hpmana-bar (fn [{g :context/graphics :as ctx} x y contentimg minmaxval name]
                             (g/draw-image g rahmen [x y])
                             (g/draw-image g
