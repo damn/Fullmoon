@@ -11,7 +11,7 @@
             graphics.tiled-map-drawer
             graphics.views)
   (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.graphics.Color
+           [com.badlogic.gdx.graphics Color OrthographicCamera]
            [com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion]
            com.badlogic.gdx.utils.viewport.Viewport))
 
@@ -32,6 +32,8 @@
     (dispose default-font)))
 
 (defn- this [ctx] (:context/graphics ctx))
+
+(def ^:private gui-unit-scale 1)
 
 (defn- render-view [ctx gui-or-world draw-fn]
   (let [{:keys [^SpriteBatch batch
