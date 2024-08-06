@@ -23,17 +23,16 @@
 (defprotocol Graphics
   (delta-time [_] "the time span between the current frame and the last frame in seconds.")
   (frames-per-second [_] "the average number of frames per second")
+  (->color [_ r g b a]))
 
-
-  (->cursor [_ file hotspot-x hotspot-y] "Needs to be disposed.")
-  (set-cursor! [_ cursor])
-
-  (->color [_ r g b a])
-
+(defprotocol Images
   (create-image [_ file])
   (get-sub-image [_ image [x y w h]])
   (spritesheet [_ file tilew tileh])
   (get-sprite [_ spritesheet [x y]] "x,y index starting top-left"))
+
+(defprotocol Cursors
+  (set-cursor! [_ cursor-key]))
 
 (defprotocol Views
   (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")

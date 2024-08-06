@@ -1,7 +1,6 @@
 (ns context.graphics
-  (:require [utils.core :as utils]
-            [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
+  (:require [core.component :refer [defcomponent] :as component]
+            api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
             graphics.shape-drawer
@@ -11,7 +10,7 @@
             graphics.views)
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Color
-           [com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion]))
+           [com.badlogic.gdx.graphics.g2d SpriteBatch]))
 
 (defcomponent :context/graphics {}
   (component/create [[_ {:keys [world-view default-font]}] ctx]
@@ -36,25 +35,4 @@
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
   (->color [_ r g b a]
-    (Color. (float r) (float g) (float b) (float a)))
-
-  ; to cursors
-  (set-cursor! [ctx cursor-key]
-    (.setCursor Gdx/graphics (utils/safe-get (:cursors (this ctx)) cursor-key)))
-
-  ; to image
-  (create-image [ctx file]
-    (g/->image (this ctx) (TextureRegion. (ctx/cached-texture ctx file))))
-
-  (get-sub-image [ctx {:keys [texture-region]} [x y w h]]
-    (g/->image (this ctx) (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
-
-  (spritesheet [ctx file tilew tileh]
-    {:image (ctx/create-image ctx file)
-     :tilew tilew
-     :tileh tileh})
-
-  (get-sprite [ctx {:keys [image tilew tileh]} [x y]]
-    (ctx/get-sub-image ctx
-                       image
-                       [(* x tilew) (* y tileh) tilew tileh])))
+    (Color. (float r) (float g) (float b) (float a))))

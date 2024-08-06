@@ -1,5 +1,6 @@
 (ns graphics.image
-  (:require [api.graphics :as g])
+  (:require [api.context :as ctx]
+            [api.graphics :as g])
   (:import [com.badlogic.gdx.graphics Color Texture]
            [com.badlogic.gdx.graphics.g2d Batch TextureRegion]))
 
@@ -49,13 +50,13 @@
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions (g/world-unit-scale g)))))
 
+(defn- ->image [g texture-region]
+  (-> {:texture-region texture-region}
+      (assoc-dimensions g 1)
+      map->Image))
+
 (extend-type api.graphics.Graphics
   api.graphics/Image
-  (->image [g texture-region]
-    (-> {:texture-region texture-region}
-        (assoc-dimensions g 1)
-        map->Image))
-
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]
@@ -81,3 +82,21 @@
 
   (draw-centered-image [this image position]
     (g/draw-rotated-centered-image this image 0 position)))
+
+(extend-type api.context.Context
+  api.context/Images
+  (create-image [{g :context/graphics} file]
+    (->image g (TextureRegion. (ctx/cached-texture ctx file))))
+
+  (get-sub-image [{g :context/graphics} {:keys [texture-region]} [x y w h]]
+    (->image g (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
+
+  (spritesheet [ctx file tilew tileh]
+    {:image (ctx/create-image ctx file)
+     :tilew tilew
+     :tileh tileh})
+
+  (get-sprite [ctx {:keys [image tilew tileh]} [x y]]
+    (ctx/get-sub-image ctx
+                       image
+                       [(* x tilew) (* y tileh) tilew tileh])))

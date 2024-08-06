@@ -7,7 +7,7 @@
                      gui-view
                      world-view])
 
-(defprotocol GuiWorldViews
+(defprotocol WorldView
   (pixels->world-units [_ pixels])
   (world-unit-scale [_]))
 
@@ -32,7 +32,6 @@
              scale will multiply the drawn text size with the scale."))
 
 (defprotocol Image
-  (->image [_ texture-region])
   (draw-image [_ image position])
   (draw-centered-image [_ image position])
   (draw-rotated-centered-image [_ image rotation position]))

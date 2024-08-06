@@ -34,7 +34,7 @@
    :world-view (->world-view world-view)})
 
 (extend-type api.graphics.Graphics
-  api.graphics/GuiWorldViews
+  api.graphics/WorldView
   (world-unit-scale [{:keys [world-view]}]
     (:unit-scale world-view))
 
