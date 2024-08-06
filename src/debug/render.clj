@@ -28,17 +28,15 @@
 
 (require '[world.potential-fields :as potential-field])
 
-(defn- tile-debug [{:keys [world-camera
-                           world-viewport-width
-                           world-viewport-height] :as g}
+(defn- tile-debug [{:keys [world-camera] :as g}
                    ctx]
   (let [grid (world-grid ctx)
         [left-x right-x bottom-y top-y] (camera/frustum world-camera)]
 
     (when tile-grid?
       (g/draw-grid g (int left-x) (int bottom-y)
-                   (inc (int world-viewport-width))
-                   (+ 2 (int world-viewport-height))
+                   (inc (int (ctx/world-viewport-width ctx)))
+                   (+ 2 (int (ctx/world-viewport-height ctx)))
                    1 1 [1 1 1 0.8]))
 
     (doseq [[x y] (camera/visible-tiles world-camera)

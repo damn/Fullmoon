@@ -81,28 +81,22 @@
     (* (int pixels) (float world-unit-scale))))
 
 (defn- ->gui-view []
-  (let [gui-camera (OrthographicCamera.)
-        gui-viewport (FitViewport. (screen-width) (screen-height) gui-camera)]
-    {:gui-camera   gui-camera
-     :gui-viewport gui-viewport
-     :gui-viewport-width  (.getWorldWidth  gui-viewport)
-     :gui-viewport-height (.getWorldHeight gui-viewport)}))
+  (let [camera (OrthographicCamera.)]
+    {:gui-camera camera
+     :gui-viewport (FitViewport. (screen-width) (screen-height) camera)}))
 
 (defn- ->world-view [{:keys [tile-size]}]
-  (let [world-unit-scale (/ tile-size)
-        world-camera (OrthographicCamera.)
-        world-viewport (let [width  (* (screen-width) world-unit-scale)
-                             height (* (screen-height) world-unit-scale)
-                             y-down? false]
-                         (.setToOrtho world-camera y-down? width height)
-                         (FitViewport. width height world-camera))]
-    {:world-unit-scale (float world-unit-scale)
-     :world-camera     world-camera
-     :world-viewport   world-viewport
-     :world-viewport-width  (.getWorldWidth  world-viewport)
-     :world-viewport-height (.getWorldHeight world-viewport)}))
+  (let [unit-scale (/ tile-size)
+        camera (OrthographicCamera.)]
+    {:world-unit-scale (float unit-scale)
+     :world-camera camera
+     :world-viewport (let [width  (* (screen-width)  unit-scale)
+                           height (* (screen-height) unit-scale)
+                           y-down? false]
+                       (.setToOrtho camera y-down? width height)
+                       (FitViewport. width height camera))}))
 
 (defn ->build [world-view]
-  (merge {:unit-scale gui-unit-scale} ; only here because actors want to use drawing without using render-gui-view
+  (merge {:unit-scale gui-unit-scale} ; only here because actors want to use drawing without using render-gui-view -> @ context.ui I could pass the gui-unit-scale .....
          (->gui-view)
          (when world-view (->world-view world-view))))

@@ -6,13 +6,9 @@
                      unit-scale
                      gui-camera
                      gui-viewport
-                     gui-viewport-width
-                     gui-viewport-height
                      world-unit-scale
                      world-camera
                      world-viewport
-                     world-viewport-width
-                     world-viewport-height
                      cached-map-renderer])
 
 (defprotocol GuiWorldViews

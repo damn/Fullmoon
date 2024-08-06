@@ -12,7 +12,8 @@
             graphics.views)
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Color
-           [com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion]))
+           [com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion]
+           com.badlogic.gdx.utils.viewport.Viewport))
 
 (defcomponent :context/graphics {}
   (component/create [[_ {:keys [world-view default-font]}] ctx]
@@ -40,15 +41,15 @@
   (set-cursor! [ctx cursor-key]
     (.setCursor Gdx/graphics (utils/safe-get (:cursors (this ctx)) cursor-key)))
 
-  (gui-mouse-position    [ctx] (g/gui-mouse-position    (this ctx)))
-  (world-mouse-position  [ctx] (g/world-mouse-position  (this ctx)))
+  (gui-mouse-position    [ctx] (g/gui-mouse-position   (this ctx)))
+  (world-mouse-position  [ctx] (g/world-mouse-position (this ctx)))
 
-  (gui-viewport-width    [ctx] (:gui-viewport-width    (this ctx)))
-  (gui-viewport-height   [ctx] (:gui-viewport-height   (this ctx)))
+  (gui-viewport-width    [ctx] (.getWorldWidth  ^Viewport (:gui-viewport (this ctx))))
+  (gui-viewport-height   [ctx] (.getWorldHeight ^Viewport (:gui-viewport (this ctx))))
 
-  (world-camera          [ctx] (:world-camera          (this ctx)))
-  (world-viewport-width  [ctx] (:world-viewport-width  (this ctx)))
-  (world-viewport-height [ctx] (:world-viewport-height (this ctx)))
+  (world-camera          [ctx] (:world-camera (this ctx)))
+  (world-viewport-width  [ctx] (.getWorldWidth  ^Viewport (:world-viewport (this ctx))))
+  (world-viewport-height [ctx] (.getWorldHeight ^Viewport (:world-viewport (this ctx))))
 
   (->color [_ r g b a]
     (Color. (float r) (float g) (float b) (float a)))
