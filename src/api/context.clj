@@ -24,17 +24,6 @@
   (delta-time [_] "the time span between the current frame and the last frame in seconds.")
   (frames-per-second [_] "the average number of frames per second")
 
-  (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
-  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context.")
-
-  (gui-mouse-position   [_])
-  (gui-viewport-width   [_])
-  (gui-viewport-height  [_])
-
-  (world-mouse-position  [_])
-  (world-camera          [_])
-  (world-viewport-width  [_])
-  (world-viewport-height [_])
 
   (->cursor [_ file hotspot-x hotspot-y] "Needs to be disposed.")
   (set-cursor! [_ cursor])
@@ -45,6 +34,17 @@
   (get-sub-image [_ image [x y w h]])
   (spritesheet [_ file tilew tileh])
   (get-sprite [_ spritesheet [x y]] "x,y index starting top-left"))
+
+(defprotocol Views
+  (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
+  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context.")
+  (gui-mouse-position   [_])
+  (gui-viewport-width   [_])
+  (gui-viewport-height  [_])
+  (world-mouse-position  [_])
+  (world-camera          [_])
+  (world-viewport-width  [_])
+  (world-viewport-height [_]))
 
 (defprotocol Input
   (button-pressed?      [_ button])

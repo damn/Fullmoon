@@ -9,9 +9,7 @@
 
 (defprotocol GuiWorldViews
   (pixels->world-units [_ pixels])
-  (world-unit-scale [_])
-  (gui-mouse-position [_])
-  (world-mouse-position [_]))
+  (world-unit-scale [_]))
 
 (defprotocol ShapeDrawer
   (draw-ellipse [_ position radius-x radius-y color])
