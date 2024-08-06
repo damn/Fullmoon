@@ -18,6 +18,7 @@
                                              :debug-window? true
                                              :debug-options? true}}}]
            [:context/input]
+           [:context/tiled]
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
@@ -27,7 +28,6 @@
                                               :size 16
                                               :quality-scaling 2}}]
            [:context/ui] ; TODO dispose stage-screens
-           [:context/tiled]
            [:context/transaction-handler] [:tx/all]
            [:context/effect] [:effect/all]
            [:context/ecs] [:entity/all]
@@ -39,7 +39,7 @@
                                      :properties/skill true
                                      :properties/world true}]
            [:context/properties {:file "resources/properties.edn"}]
-           [:context/game [:context/action-bar
+           [:context/game [:context/action-bar ; this is anyway specific to the game context, no need to pass it here??
                            :context/inventory
                            :context/uids-entities
                            :context/thrown-error
@@ -48,7 +48,7 @@
                            :context/elapsed-game-time
                            :context/mouseover-entity
                            :context/player-message]]
-           [:context/screens {:first-screen :screens/main-menu
+           [:context/screens {:first-screen :screens/main-menu ; pass vector, use first screen as first-screen.
                               :screens {:screens/game           true
                                         :screens/main-menu      true
                                         :screens/map-editor     true

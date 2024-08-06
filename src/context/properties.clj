@@ -5,7 +5,7 @@
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
-(defn- deserialize-image [ctx {:keys [file sub-image-bounds]}]
+(defn- edn->image [ctx {:keys [file sub-image-bounds]}]
   {:pre [file]}
   (if sub-image-bounds
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
@@ -32,31 +32,31 @@
 (defn- texture-region->file [^TextureRegion texture-region]
   (.toString (.getTextureData (.getTexture texture-region))))
 
-(defn- serialize-image [{:keys [texture-region]}]
+(defn- image->edn [{:keys [texture-region]}] ; not serializing color,scale.
   (merge {:file (texture-region->file texture-region)}
          (if (is-sub-texture? texture-region)
            {:sub-image-bounds (region-bounds texture-region)})))
 
-(defn- deserialize-animation [context {:keys [frames frame-duration looping?]}]
-  (animation/create (map #(deserialize-image context %) frames)
+(defn- edn->animation [context {:keys [frames frame-duration looping?]}]
+  (animation/create (map #(edn->image context %) frames)
                     :frame-duration frame-duration
                     :looping? looping?))
 
-(defn- serialize-animation [animation]
+(defn- animation->edn [animation]
   (-> animation
-      (update :frames #(map serialize-image %))
+      (update :frames #(map image->edn %))
       (select-keys [:frames :frame-duration :looping?])))
 
 (defn- deserialize [context data]
   (->> data
        (#(if (:property/image %)
-           (update % :property/image (fn [img] (deserialize-image context img)))
+           (update % :property/image (fn [img] (edn->image context img)))
            %))
        (#(if (:property/animation %)
-           (update % :property/animation (fn [anim] (deserialize-animation context anim)))
+           (update % :property/animation (fn [anim] (edn->animation context anim)))
            %))
        (#(if (:entity/animation (:creature/entity %))
-           (update-in % [:creature/entity :entity/animation] (fn [anim] (deserialize-animation context anim)))
+           (update-in % [:creature/entity :entity/animation] (fn [anim] (edn->animation context anim)))
            %))))
 
 ; Other approaches to serialization:
@@ -66,11 +66,11 @@
 ; => simplest way: just define keys which are assets (which are all the same anyway at the moment)
 (defn- serialize [data]
   (->> data
-       (#(if (:property/image %) (update % :property/image serialize-image) %))
+       (#(if (:property/image %) (update % :property/image image->edn) %))
        (#(if (:property/animation %)
-           (update % :property/animation serialize-animation) %))
+           (update % :property/animation animation->edn) %))
        (#(if (:entity/animation (:creature/entity %))
-           (update-in % [:creature/entity :entity/animation] serialize-animation) %))))
+           (update-in % [:creature/entity :entity/animation] animation->edn) %))))
 
 (defn- load-edn [context file]
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
