@@ -41,7 +41,6 @@
                                      :properties/skill true
                                      :properties/world true}]
            [:context/properties {:file "resources/properties.edn"}]
-           [:context/potential-fields] ; -> world ?
            [:context/game [:context/action-bar
                            :context/inventory
                            :context/uids-entities

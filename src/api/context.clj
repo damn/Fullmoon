@@ -115,7 +115,9 @@
   ; TODO explored-grid
   (explored?     [_ position])
   (content-grid [_])
-  (world-grid [_]))
+  (world-grid [_])
+  (update-potential-fields! [_ entities])
+  (potential-field-follow-to-enemy [_ entity]))
 
 (defprotocol EffectInterpreter
   (effect-text        [_ effect])
@@ -125,11 +127,6 @@
 
 (defprotocol Modifier
   (modifier-text [_ modifier]))
-
-; TODO get from world?
-(defprotocol PotentialField
-  (update-potential-fields! [_ entities])
-  (potential-field-follow-to-enemy [_ entity]))
 
 (defprotocol PropertyTypes
   (of-type? [_ property type] "Returns true if the property is of that type.")

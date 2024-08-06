@@ -16,6 +16,7 @@
             [api.world.cell :as cell]
             [world.grid :as world-grid]
             [world.content-grid :as content-grid]
+            [world.potential-fields :as potential-fields]
             world.render
             [mapgen.movement-property :refer (movement-property)]))
 
@@ -53,6 +54,14 @@
 
 (extend-type api.context.Context
   api.context/World
+  (update-potential-fields! [ctx entities]
+    (potential-fields/update-potential-fields! (ctx/world-grid ctx)
+                                               entities))
+
+  (potential-field-follow-to-enemy [ctx entity]
+    (potential-fields/potential-field-follow-to-enemy (ctx/world-grid ctx)
+                                                      entity))
+
   (render-map [ctx]
     (world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
 

@@ -1,4 +1,4 @@
-(ns context.potential-fields
+(ns world.potential-fields
   "Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
   adjacent cells are walls and blocked.
   (important for wavefront-expansion and field-following)
@@ -147,10 +147,9 @@
 (def ^:private factions-iterations {:good 5
                                     :evil 15})
 
-(defn- update-potential-fields*! [context entities] ; TODO call on world-grid ?!..
-  (let [grid (world-grid context)]
-    (doseq [[faction max-iterations] factions-iterations]
-      (update-faction-potential-field grid faction entities max-iterations))))
+(defn update-potential-fields! [world-grid entities]
+  (doseq [[faction max-iterations] factions-iterations]
+    (update-faction-potential-field world-grid faction entities max-iterations)))
 
 ;; MOVEMENT AI
 
@@ -236,29 +235,24 @@
     (and (= 1 (count cells))
          (= cell (first cells)))))
 
-(extend-type api.context.Context ; TODO only on grid this ?!
-  api.context/PotentialField
-  (update-potential-fields! [context entities]
-    (update-potential-fields*! context entities))
-
   ; TODO work with entity* !? occupied-by-other? works with entity not entity* ... not with ids ... hmmm
-  (potential-field-follow-to-enemy [context entity] ; TODO pass faction here, one less dependency.
-    (let [grid (world-grid context)
-          position (:entity/position @entity)
-          own-cell (get grid (->tile position))
-          {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
-      (cond
-       target-entity
-       (v/direction position (:entity/position @target-entity))
+(defn potential-field-follow-to-enemy [world-grid entity] ; TODO pass faction here, one less dependency.
+  (let [grid world-grid
+        position (:entity/position @entity)
+        own-cell (get grid (->tile position))
+        {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
+    (cond
+     target-entity
+     (v/direction position (:entity/position @target-entity))
 
-       (nil? target-cell)
-       nil
+     (nil? target-cell)
+     nil
 
-       :else
-       (when-not (and (= target-cell own-cell)
-                      (cell/occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
-         (when-not (inside-cell? grid @entity target-cell)
-           (v/direction position (:middle @target-cell))))))))
+     :else
+     (when-not (and (= target-cell own-cell)
+                    (cell/occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
+       (when-not (inside-cell? grid @entity target-cell)
+         (v/direction position (:middle @target-cell)))))))
 
 ;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
 
