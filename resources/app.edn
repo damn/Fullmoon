@@ -18,18 +18,33 @@
                                              :debug-window? true
                                              :debug-options? true}}}]
            [:context/input]
-           [:context/tiled]
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
-           ; TODO graphics dispose cursors
-           [:context/graphics {:world-view {:tile-size 48} ; can not be omitted, becuz render-view does sth ?
+           [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
-                                              :quality-scaling 2}}]
-           ; TODO dispose stage-screens
-           [:context/ui]
+                                              :quality-scaling 2}
+                               :cursors {:cursors/default ["default" 0 0]
+                                         :cursors/black-x ["black_x" 0 0]
+                                         :cursors/denied ["denied" 16 16]
+                                         :cursors/hand-grab ["hand003" 4 16]
+                                         :cursors/hand-before-grab ["hand004" 4 16]
+                                         :cursors/hand-before-grab-gray ["hand004_gray" 4 16]
+                                         :cursors/over-button ["hand002" 0 0]
+                                         :cursors/sandclock ["sandclock" 16 16]
+                                         :cursors/walking ["walking" 16 16]
+                                         :cursors/no-skill-selected ["denied003" 0 0]
+                                         :cursors/use-skill ["pointer004" 0 0]
+                                         :cursors/skill-not-usable ["x007" 0 0]
+                                         :cursors/bag ["bag001" 0 0]
+                                         :cursors/move-window ["move002" 16 16]
+                                         :cursors/princess ["exclamation001" 0 0]
+                                         :cursors/princess-gray ["exclamation001_gray" 0 0]}}]
+           [:graphics/image]
+           [:context/tiled]
+           [:context/ui] ; TODO dispose stage-screens
            [:context/properties {:types [:properties/audiovisual
                                          :properties/creature
                                          :properties/item

@@ -5,7 +5,8 @@
                      gui-view
                      world-view
                      default-font
-                     unit-scale])
+                     unit-scale
+                     cursors])
 
 (defprotocol WorldView
   (pixels->world-units [_ pixels])

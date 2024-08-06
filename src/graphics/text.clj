@@ -26,7 +26,7 @@
     (.setUseIntegerPositions font false) ; otherwise scaling to world-units (/ 1 48)px not visible
     font))
 
-(defn ->build [ctx default-font]
+(defn ->build [default-font]
   {:default-font (or (and default-font (generate-ttf default-font))
                      (BitmapFont.))})
 
