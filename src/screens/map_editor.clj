@@ -163,10 +163,10 @@ direction keys: move")
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (render [_ {g :context/graphics :as context}]
-    (g/render-tiled-map g
-                        (:tiled-map @current-data)
-                        (constantly color/white))
+  (render [_ context]
+    (ctx/render-tiled-map context
+                          (:tiled-map @current-data)
+                          (constantly color/white))
     (ctx/render-world-view context #(render-on-map % context))
     (if (key-just-pressed? context input.keys/l)
       (swap! current-data update :show-grid-lines not))

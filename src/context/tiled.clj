@@ -1,13 +1,47 @@
 (ns context.tiled
-  (:require api.context
+  (:require [core.component :refer [defcomponent] :as component]
+            [api.context :as ctx]
             [api.maps.tiled :as tiled])
-  (:import [com.badlogic.gdx.maps MapLayer MapLayers MapProperties]
-           [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
+  (:import com.badlogic.gdx.graphics.OrthographicCamera
+           [com.badlogic.gdx.maps MapRenderer MapLayer MapLayers MapProperties]
+           [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]
+           [gdl OrthogonalTiledMapRendererWithColorSetter ColorSetter]))
+
+; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
+; and when a batch is passed to the constructor
+; we do not need to dispose the renderer
+(defn- map-renderer-for [{:keys [batch world-unit-scale]}
+                         tiled-map
+                         color-setter]
+  (OrthogonalTiledMapRendererWithColorSetter. tiled-map
+                                              (float world-unit-scale)
+                                              batch
+                                              (reify ColorSetter
+                                                (apply [_ color x y]
+                                                  (color-setter color x y)))))
+
+(defcomponent :context/tiled {}
+  (component/create [_ _ctx]
+    (memoize map-renderer-for)))
 
 (extend-type api.context.Context
   api.context/TiledMapLoader
   (->tiled-map [_ file]
-    (.load (TmxMapLoader.) file)))
+    (.load (TmxMapLoader.) file))
+
+  (render-tiled-map [{g :context/graphics cached-map-renderer :context/tiled :as ctx}
+                     tiled-map
+                     color-setter]
+    (let [^MapRenderer map-renderer (cached-map-renderer g tiled-map color-setter)
+          world-camera (ctx/world-camera ctx)]
+      (.update ^OrthographicCamera world-camera)
+      (.setView map-renderer world-camera)
+      (->> tiled-map
+           tiled/layers
+           (filter #(.isVisible ^MapLayer %))
+           (map (partial tiled/layer-index tiled-map))
+           int-array
+           (.render map-renderer)))))
 
 (comment
  ; could do this but slow -> fetch directly necessary properties

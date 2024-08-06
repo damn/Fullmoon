@@ -8,7 +8,6 @@
             graphics.image
             graphics.shape-drawer
             graphics.text
-            graphics.tiled-map-drawer
             graphics.views)
   (:import com.badlogic.gdx.Gdx
            [com.badlogic.gdx.graphics Color OrthographicCamera]
@@ -22,7 +21,6 @@
        (merge {:batch batch}
               (graphics.shape-drawer/->build batch)
               (graphics.text/->build ctx default-font)
-              (graphics.tiled-map-drawer/->build)
               (graphics.views/->build world-view)
               (graphics.cursors/->build)))))
 

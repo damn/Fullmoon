@@ -1,5 +1,5 @@
 (ns world.render
-  (:require [api.graphics :as g]
+  (:require [api.context :as ctx]
             [api.graphics.color :as color]
             [math.raycaster :as raycaster]
             [utils.core :refer [->tile]])
@@ -66,8 +66,8 @@
             (swap! explored-tile-corners assoc (->tile position) true))
           color/white))))
 
-(defn render-map [{:keys [context/world] g :context/graphics}
+(defn render-map [{:keys [context/world] :as ctx}
                   light-position]
   (set-map-render-data! world light-position)
-  (g/render-tiled-map g (:tiled-map world) tile-color-setter)
+  (ctx/render-tiled-map ctx (:tiled-map world) tile-color-setter)
   #_(reset! do-once false))

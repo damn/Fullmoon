@@ -6,8 +6,7 @@
                      unit-scale
                      gui-viewport
                      world-unit-scale
-                     world-viewport
-                     cached-map-renderer])
+                     world-viewport])
 
 (defprotocol GuiWorldViews
   (pixels->world-units [_ pixels])
@@ -39,11 +38,3 @@
   (draw-image [_ image position])
   (draw-centered-image [_ image position])
   (draw-rotated-centered-image [_ image rotation position]))
-
-(defprotocol TiledMapRenderer
-  (render-tiled-map [_ tiled-map color-setter]
-                    "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
-                    Color-setter is a gdl.ColorSetter which is called for every tile-corner to set the color.
-                    Can be used for lights & shadows.
-                    The map-renderers are created and cached internally.
-                    Renders only visible layers."))

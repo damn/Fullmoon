@@ -85,7 +85,13 @@
   (->scroll-pane [_ actor]))
 
 (defprotocol TiledMapLoader
-  (->tiled-map [_ file] "Needs to be disposed."))
+  (->tiled-map [_ file] "Needs to be disposed.")
+  (render-tiled-map [_ tiled-map color-setter]
+                    "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
+                    Color-setter is a gdl.ColorSetter which is called for every tile-corner to set the color.
+                    Can be used for lights & shadows.
+                    The map-renderers are created and cached internally.
+                    Renders only visible layers."))
 
 (defprotocol Assets
   (play-sound! [_ file] "Sound is already loaded from file, this will perform only a lookup for the sound and play it.")

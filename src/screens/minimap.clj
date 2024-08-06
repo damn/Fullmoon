@@ -49,8 +49,8 @@
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (render [_ {g :context/graphics :keys [context/world] :as context}]
-    (g/render-tiled-map g (:tiled-map world) tile-corner-color-setter)
+  (render [_ {:keys [context/world] :as context}]
+    (ctx/render-tiled-map context (:tiled-map world) tile-corner-color-setter)
     (ctx/render-world-view context
                            (fn [g]
                              (g/draw-filled-circle g
