@@ -33,13 +33,33 @@
 
 (defn- this [ctx] (:context/graphics ctx))
 
+(defn- render-view [ctx gui-or-world draw-fn]
+  (let [{:keys [^SpriteBatch batch
+                shape-drawer
+                gui-camera
+                world-camera
+                world-unit-scale] :as g} (this ctx)
+        ^OrthographicCamera camera (case gui-or-world
+                                     :gui gui-camera
+                                     :world world-camera)
+        unit-scale (case gui-or-world
+                     :gui gui-unit-scale
+                     :world world-unit-scale)]
+    (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
+    (.setProjectionMatrix batch (.combined camera))
+    (.begin batch)
+    (g/with-shape-line-width g
+                             unit-scale
+                             #(draw-fn (assoc g :unit-scale unit-scale)))
+    (.end batch)))
+
 (extend-type api.context.Context
   api.context/Graphics
   (delta-time        [_] (.getDeltaTime       Gdx/graphics))
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
-  (set-cursor! [ctx cursor-key]
-    (.setCursor Gdx/graphics (utils/safe-get (:cursors (this ctx)) cursor-key)))
+  (render-gui-view   [ctx render-fn] (render-view ctx :gui   render-fn))
+  (render-world-view [ctx render-fn] (render-view ctx :world render-fn))
 
   (gui-mouse-position    [ctx] (g/gui-mouse-position   (this ctx)))
   (world-mouse-position  [ctx] (g/world-mouse-position (this ctx)))
@@ -53,6 +73,9 @@
 
   (->color [_ r g b a]
     (Color. (float r) (float g) (float b) (float a)))
+
+  (set-cursor! [ctx cursor-key]
+    (.setCursor Gdx/graphics (utils/safe-get (:cursors (this ctx)) cursor-key)))
 
   (create-image [ctx file]
     (g/->image (this ctx) (TextureRegion. (ctx/cached-texture ctx file))))

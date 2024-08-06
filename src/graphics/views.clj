@@ -1,8 +1,7 @@
 (ns graphics.views
-  (:require [api.graphics :as g])
+  (:require api.graphics)
   (:import com.badlogic.gdx.Gdx
-           [com.badlogic.gdx.graphics Color OrthographicCamera]
-           [com.badlogic.gdx.graphics.g2d Batch]
+           com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.utils.viewport Viewport FitViewport]
            [com.badlogic.gdx.math MathUtils Vector2]))
 
@@ -26,27 +25,6 @@
 
 (def ^:private gui-unit-scale 1)
 
-(defn- render-view [{:keys [^Batch batch
-                            shape-drawer
-                            gui-camera
-                            world-camera
-                            world-unit-scale] :as g}
-                    gui-or-world
-                    draw-fn]
-  (let [^OrthographicCamera camera (case gui-or-world
-                                     :gui gui-camera
-                                     :world world-camera)
-        unit-scale (case gui-or-world
-                     :gui gui-unit-scale
-                     :world world-unit-scale)]
-    (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-    (.setProjectionMatrix batch (.combined camera))
-    (.begin batch)
-    (g/with-shape-line-width g
-                             unit-scale
-                             #(draw-fn (assoc g :unit-scale unit-scale)))
-    (.end batch)))
-
 (defn update-viewports [{{:keys [gui-viewport world-viewport]} :context/graphics} w h]
   (.update ^Viewport gui-viewport w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
@@ -65,9 +43,6 @@
 
 (extend-type api.graphics.Graphics
   api.graphics/GuiWorldViews
-  (render-gui-view   [g render-fn] (render-view g :gui   render-fn))
-  (render-world-view [g render-fn] (render-view g :world render-fn))
-
   (gui-mouse-position [{:keys [gui-viewport]}]
     ; TODO mapv int needed?
     (mapv int (unproject-mouse-posi gui-viewport)))

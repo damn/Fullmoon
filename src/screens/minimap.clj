@@ -51,12 +51,12 @@
 
   (render [_ {g :context/graphics :keys [context/world] :as context}]
     (g/render-tiled-map g (:tiled-map world) tile-corner-color-setter)
-    (g/render-world-view g
-                         (fn [g]
-                           (g/draw-filled-circle g
-                                                 (camera/position (ctx/world-camera context))
-                                                 0.5
-                                                 color/green)))
+    (ctx/render-world-view context
+                           (fn [g]
+                             (g/draw-filled-circle g
+                                                   (camera/position (ctx/world-camera context))
+                                                   0.5
+                                                   color/green)))
     (when (or (key-just-pressed? context input.keys/tab)
               (key-just-pressed? context input.keys/escape))
       (change-screen! :screens/game))))

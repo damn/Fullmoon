@@ -1,5 +1,6 @@
 (ns gdl.hello-world
   (:require [app.start :as app]
+            [api.context :as ctx]
             [api.graphics :as g]
             [api.screen :refer [Screen]]))
 
@@ -7,8 +8,8 @@
   Screen
   (show [_ _context])
   (hide [_ _context])
-  (render [_ {g :context/graphics}]
-    (g/render-gui-view g #(g/draw-text % {:text "Hello World!" :x 400, :y 300}))))
+  (render [_ ctx]
+    (ctx/render-gui-view ctx #(g/draw-text % {:text "Hello World!" :x 400, :y 300}))))
 
 (defn create-context [default-context]
   (assoc default-context :context/screens {:my-screen (->MyScreen)

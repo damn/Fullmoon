@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]
-            ; api/
             [app.state :refer [change-screen!]]
             [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [api.graphics :as g]
@@ -16,7 +15,6 @@
             [api.scene2d.group :refer [add-actor!]]
             [api.scene2d.ui.widget-group :refer [pack!]]
             [api.scene2d.ui.label :refer [set-text!]]
-            ; hardcoded dependencies => pull out.
             [mapgen.movement-property :refer (movement-property movement-properties)]
             [mapgen.module-gen :as module-gen]
             [widgets.error-modal :refer [error-window!]]))
@@ -169,7 +167,7 @@ direction keys: move")
     (g/render-tiled-map g
                         (:tiled-map @current-data)
                         (constantly color/white))
-    (g/render-world-view g #(render-on-map % context))
+    (ctx/render-world-view context #(render-on-map % context))
     (if (key-just-pressed? context input.keys/l)
       (swap! current-data update :show-grid-lines not))
     (if (key-just-pressed? context input.keys/m)

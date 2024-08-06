@@ -27,8 +27,8 @@
   screen/Screen
   (show [_ _ctx])
   (hide [_ _ctx])
-  (render [_ {g :context/graphics :as ctx}]
-    (g/render-gui-view g #(draw-test % ctx))))
+  (render [_ ctx]
+    (ctx/render-gui-view ctx #(draw-test % ctx))))
 
 (defcomponent :gdl/simple-screen {}
   (screen/create [_ _ctx] (->Screen)))

@@ -24,6 +24,9 @@
   (delta-time [_] "the time span between the current frame and the last frame in seconds.")
   (frames-per-second [_] "the average number of frames per second")
 
+  (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
+  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context.")
+
   (gui-mouse-position   [_])
   (gui-viewport-width   [_])
   (gui-viewport-height  [_])

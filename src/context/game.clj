@@ -129,21 +129,20 @@
   (when (key-just-pressed? context input.keys/tab)
     (change-screen! :screens/minimap)))
 
-(defn- render-game [{:keys [context/player-entity] g :context/graphics :as context}
-                    active-entities*]
+(defn- render-game [{:keys [context/player-entity] :as context} active-entities*]
   (camera/set-position! (ctx/world-camera context)
                         (:entity/position @player-entity))
   (render-map context)
-  (g/render-world-view g
-                       (fn [g]
-                         (debug-render/before-entities context g)
-                         (render-entities! context
-                                           g
-                                           ; TODO lazy seqS everywhere!
-                                           (->> active-entities*
-                                                (filter :entity/z-order)
-                                                (filter #(line-of-sight? context @player-entity %))))
-                         (debug-render/after-entities context g))))
+  (ctx/render-world-view context
+                         (fn [g]
+                           (debug-render/before-entities context g)
+                           (render-entities! context
+                                             g
+                                             ; TODO lazy seqS everywhere!
+                                             (->> active-entities*
+                                                  (filter :entity/z-order)
+                                                  (filter #(line-of-sight? context @player-entity %))))
+                           (debug-render/after-entities context g))))
 
 (def ^:private pausing? true)
 
