@@ -48,10 +48,9 @@
                            :context/elapsed-game-time
                            :context/mouseover-entity
                            :context/player-message]]
-           [:context/screens {:first-screen :screens/main-menu ; pass vector, use first screen as first-screen.
-                              :screens {:screens/game           true
-                                        :screens/main-menu      true
-                                        :screens/map-editor     true
-                                        :screens/minimap        true
-                                        :screens/options-menu   true
-                                        :screens/property-editor true}}]]}
+           [:context/screens [:screens/main-menu
+                              :screens/game
+                              :screens/map-editor
+                              :screens/minimap
+                              :screens/options-menu
+                              :screens/property-editor]]]}

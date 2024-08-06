@@ -4,15 +4,18 @@
             [api.screen :as screen]))
 
 (defcomponent :context/screens {}
-  (component/create [[_ {:keys [screens] :as this}] ctx]
-    (component/load! screens)
-    (update this :screens component/update-map screen/create ctx))
+  (component/create [[_ screens] ctx]
+    (let [first-screen (first screens)
+          screens (zipmap screens (repeat true))]
+      (component/load! screens)
+      {:screens (component/update-map screens screen/create ctx)
+       :first-screen first-screen}))
 
   (component/destroy [_ ctx]
-               ; TODO dispose all screen stages ....
-               ; call dispose ?
-               ; is it doing anything? because has batch right ? but stuff ... idk
-               )
+    ; TODO dispose all screen stages ....
+    ; call dispose ?
+    ; is it doing anything? because has batch right ? but stuff ... idk
+    )
 
   (ctx/render [_ ctx]
     (screen/render (ctx/current-screen ctx) ctx)))
