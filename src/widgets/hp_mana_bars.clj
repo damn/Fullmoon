@@ -16,17 +16,17 @@
         hpcontent   (ctx/create-image context "ui/hp.png")
         manacontent (ctx/create-image context "ui/mana.png")
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
-        render-hpmana-bar (fn [{g :context/graphics :as ctx} x y contentimg minmaxval name]
+        render-hpmana-bar (fn [g ctx x y contentimg minmaxval name]
                             (g/draw-image g rahmen [x y])
                             (g/draw-image g
                                           (ctx/get-sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                           [x y])
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) y rahmenh))]
     (ctx/->actor context
-                 {:draw (fn [{:keys [context/player-entity] :as ctx}]
+                 {:draw (fn [g {:keys [context/player-entity] :as ctx}]
                           (let [x (- (/ (ctx/gui-viewport-width ctx) 2)
                                      (/ rahmenw 2))
                                 y-hp 5
                                 y-mana (+ y-hp rahmenh)]
-                            (render-hpmana-bar ctx x y-hp   hpcontent   (:entity/hp   @player-entity) "HP")
-                            (render-hpmana-bar ctx x y-mana manacontent (:entity/mana @player-entity) "MP")))})))
+                            (render-hpmana-bar g ctx x y-hp   hpcontent   (:entity/hp   @player-entity) "HP")
+                            (render-hpmana-bar g ctx x y-mana manacontent (:entity/mana @player-entity) "MP")))})))

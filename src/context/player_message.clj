@@ -7,7 +7,7 @@
 (def ^:private duration-seconds 1.5)
 
 (defn- draw-player-message
-  [{:keys [context/player-message] g :context/graphics :as ctx}]
+  [g {:keys [context/player-message] :as ctx}]
   (when-let [{:keys [message]} @player-message]
     (g/draw-text g
                  {:x (/ (ctx/gui-viewport-width ctx) 2)

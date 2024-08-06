@@ -4,12 +4,12 @@
             api.disposable
             [api.graphics :as g]
             [api.screen :as screen]
-            [api.scene2d.actor :as actor :refer [parent]]
+            [api.scene2d.actor :as actor]
             [api.scene2d.group :as group]
             api.scene2d.ui.button
             api.scene2d.ui.button-group
             api.scene2d.ui.label
-            [api.scene2d.ui.table :refer [add-rows!]]
+            [api.scene2d.ui.table :as table]
             api.scene2d.ui.cell
             api.scene2d.ui.text-field
             [api.scene2d.ui.widget-group :refer [pack!]]
@@ -180,7 +180,7 @@
 
 (defn- set-table-opts [^Table table {:keys [rows cell-defaults]}]
   (set-cell-opts (.defaults table) cell-defaults)
-  (add-rows! table rows))
+  (table/add-rows! table rows))
 
 (defn- set-opts [actor opts]
   (set-actor-opts actor opts)
@@ -209,7 +209,8 @@
     (proxy [Actor] []
       (draw [_batch _parent-alpha]
         (when draw
-          (draw @current-context)))
+          (let [ctx @current-context]
+            (draw (:context/graphics ctx) ctx))))
       (act [_delta]
         (when act
           (act @current-context)))))
@@ -446,7 +447,7 @@
     (Tooltip/removeTooltip actor))
 
   (find-ancestor-window [actor]
-    (if-let [p (parent actor)]
+    (if-let [p (actor/parent actor)]
       (if (instance? Window p)
         p
         (actor/find-ancestor-window p))
@@ -478,14 +479,14 @@
   api.scene2d.ui.button/Actor
   (button? [actor]
     (or (button-class? actor)
-        (and (parent actor)
-             (button-class? (parent actor))))))
+        (and (actor/parent actor)
+             (button-class? (actor/parent actor))))))
 
 (extend-type Actor
   api.scene2d.ui.window/Actor
   (window-title-bar? [actor]
     (when (instance? Label actor)
-      (when-let [prnt (parent actor)]
-        (when-let [prnt (parent prnt)]
+      (when-let [prnt (actor/parent actor)]
+        (when-let [prnt (actor/parent prnt)]
           (and (instance? VisWindow prnt)
                (= (.getTitleLabel ^Window prnt) actor)))))))
