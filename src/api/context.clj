@@ -167,10 +167,6 @@
   (->action-bar    [_])
   (selected-skill  [_]))
 
-(defprotocol DebugRender ; TODO move out of context api ....
-  (debug-render-before-entities [_ g])
-  (debug-render-after-entities  [_ g]))
-
 (defprotocol Cursor
   (set-cursork! [_ cursor-key]))
 

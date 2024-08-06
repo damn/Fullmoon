@@ -1,7 +1,7 @@
 (ns context.game
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! debug-render-after-entities debug-render-before-entities transact-all! frame->txs ->actor ->table ->group ->text-button ->action-bar]]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! transact-all! frame->txs ->actor ->table ->group ->text-button ->action-bar]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]
@@ -11,6 +11,7 @@
             [api.scene2d.group :as group :refer [children]]
             [api.world.content-grid :refer [active-entities]]
             [app.state :refer [current-context change-screen!]]
+            [debug.render :as debug-render]
             [widgets.hp-mana-bars :refer [->hp-mana-bars]]
             [widgets.debug-window :as debug-window]
             [widgets.entity-info-window :as entity-info-window]
@@ -135,14 +136,14 @@
   (render-map context)
   (g/render-world-view g
                        (fn [g]
-                         (debug-render-before-entities context g)
+                         (debug-render/before-entities context g)
                          (render-entities! context
                                            g
                                            ; TODO lazy seqS everywhere!
                                            (->> active-entities*
                                                 (filter :entity/z-order)
                                                 (filter #(line-of-sight? context @player-entity %))))
-                         (debug-render-after-entities context g))))
+                         (debug-render/after-entities context g))))
 
 (def ^:private pausing? true)
 

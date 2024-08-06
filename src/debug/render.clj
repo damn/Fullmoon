@@ -1,10 +1,10 @@
-(ns context.render-debug
-  (:require [api.context :as ctx :refer [world-grid]]
+(ns debug.render
+  (:require math.geom
+            [utils.core :refer [->tile]]
+            [api.context :as ctx :refer [world-grid]]
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.graphics.camera :as camera]
-            math.geom
-            [utils.core :refer [->tile]]
             [api.world.grid :refer [circle->cells]]))
 
 ; TODO make check-buttons with debug-window or MENU top screen is good for debug I think
@@ -67,7 +67,6 @@
       #_(when (:monster @cell)
           (@#'g/draw-string x y (str (:id @(:monster @cell))) 1)))))
 
-
 (comment
  (let [ctx @app.state/current-context
        [x y] (->tile (ctx/world-mouse-position ctx))
@@ -90,11 +89,9 @@
                             :air  [1 1 0 0.5]
                             :none [1 0 0 0.5]))))))
 
-(extend-type api.context.Context
-  api.context/DebugRender
-  (debug-render-before-entities [ctx g]
-    (tile-debug g ctx))
+(defn before-entities [ctx g]
+  (tile-debug g ctx))
 
-  (debug-render-after-entities [ctx g]
-    #_(geom-test g ctx)
-    (highlight-mouseover-tile g ctx)))
+(defn after-entities [ctx g]
+  #_(geom-test g ctx)
+  (highlight-mouseover-tile g ctx))
