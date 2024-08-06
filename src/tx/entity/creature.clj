@@ -1,4 +1,4 @@
-(ns tx.creature
+(ns tx.entity.creature
   (:require [api.context :as ctx]
             [api.tx :refer [transact!]]
             [entity-state.player :as player-state]
@@ -42,7 +42,7 @@
 
 ; otherwise
 
-(defmethod transact! :tx/creature [[_ creature-id components] ctx]
+(defmethod transact! :tx.entity/creature [[_ creature-id components] ctx]
   (assert (:entity/state components))
   (let [creature-components (:creature/entity (ctx/get-property ctx creature-id))]
     [[:tx/create (merge creature-components

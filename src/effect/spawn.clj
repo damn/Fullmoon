@@ -41,7 +41,7 @@
 
   (transact! [[_ creature-id] {:keys [effect/source
                                       effect/target-position] :as ctx}]
-    [[:tx/creature
+    [[:tx.entity/creature
       creature-id
       #:entity {:position target-position
                 :state [:state/npc :idle]

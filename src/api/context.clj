@@ -126,11 +126,6 @@
 (defprotocol Modifier
   (modifier-text [_ modifier]))
 
-(defprotocol Builder
-  ; TODO ?
-  (item-entity [_ position item])
-  (line-entity [_ {:keys [start end duration color thick?]}]))
-
 ; TODO get from world?
 (defprotocol PotentialField
   (update-potential-fields! [_ entities])

@@ -1,6 +1,6 @@
 (ns entity-state.player-item-on-cursor
   (:require [math.vector :as v]
-            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? item-entity]]
+            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed?]]
             [api.graphics :as g]
             [api.input.buttons :as buttons]
             [api.entity :as entity]
@@ -82,9 +82,9 @@
     ; on the ground
     (when (:entity/item-on-cursor entity*)
       [[:tx/sound "sounds/bfxr_itemputground.wav"]
-       [:tx/create (item-entity ctx
-                                (item-place-position ctx entity*)
-                                (:entity/item-on-cursor entity*))]
+       [:tx.entity/item
+        (item-place-position ctx entity*)
+        (:entity/item-on-cursor entity*)]
        [:tx.entity/dissoc id :entity/item-on-cursor]]))
 
   (tick [_ entity* _ctx])

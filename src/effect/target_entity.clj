@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [math.vector :as v]
-            [api.context :refer [effect-text line-of-sight? line-entity]]
+            [api.context :refer [effect-text line-of-sight?]]
             [api.effect :as effect]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
@@ -57,12 +57,11 @@
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
-        [[:tx/create (line-entity ctx
-                                  {:start (start-point source* target*)
-                                   :end (:entity/position target*)
-                                   :duration 0.05
-                                   :color [1 0 0 0.75]
-                                   :thick? true})]
+        [[:tx.entity/line-render {:start (start-point source* target*)
+                                  :end (:entity/position target*)
+                                  :duration 0.05
+                                  :color [1 0 0 0.75]
+                                  :thick? true}]
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
@@ -72,7 +71,7 @@
          ; * hitting ground in front of you ( there is another monster )
          ; * -> it doesn't get hit ! hmmm
          ; * either use 'MISS' or get enemy entities at end-point
-         [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
+         [:tx.entity/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
   (effect/render-info [[_ {:keys [maxrange]}] g {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source

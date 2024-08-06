@@ -149,12 +149,12 @@
     (when spawn-enemies?
       (transact-all! ctx
                      (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
-                       [:tx/creature
+                       [:tx.entity/creature
                         (keyword creature-id)
                         #:entity {:position (tile->middle posi)
                                   :state [:state/npc :sleeping]}])))
     (tiled/remove-layer! tiled-map :creatures)) ; otherwise will be rendered, is visible
-  (transact-all! ctx [[:tx/creature
+  (transact-all! ctx [[:tx.entity/creature
                        :creatures/vampire
                        #:entity {:position (:start-position world)
                                  :state [:state/player :idle]
