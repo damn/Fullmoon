@@ -27,8 +27,6 @@
     (dispose shape-drawer-texture)
     (dispose default-font)))
 
-(defn- this [ctx] (:context/graphics ctx))
-
 (extend-type api.context.Context
   api.context/Graphics
   (delta-time        [_] (.getDeltaTime       Gdx/graphics))

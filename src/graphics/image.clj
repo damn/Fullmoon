@@ -85,7 +85,7 @@
 
 (extend-type api.context.Context
   api.context/Images
-  (create-image [{g :context/graphics} file]
+  (create-image [{g :context/graphics :as ctx} file]
     (->image g (TextureRegion. (ctx/cached-texture ctx file))))
 
   (get-sub-image [{g :context/graphics} {:keys [texture-region]} [x y w h]]

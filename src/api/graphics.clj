@@ -2,10 +2,10 @@
 
 (defrecord Graphics [batch
                      shape-drawer
-                     default-font
-                     unit-scale
                      gui-view
-                     world-view])
+                     world-view
+                     default-font
+                     unit-scale])
 
 (defprotocol WorldView
   (pixels->world-units [_ pixels])
