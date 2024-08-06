@@ -1,8 +1,10 @@
 (ns context.graphics
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [utils.core :as utils]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
+            graphics.cursors
             graphics.image
             graphics.shape-drawer
             graphics.text
@@ -20,7 +22,8 @@
               (graphics.shape-drawer/->build batch)
               (graphics.text/->build ctx default-font)
               (graphics.tiled-map-drawer/->build)
-              (graphics.views/->build world-view)))))
+              (graphics.views/->build world-view)
+              (graphics.cursors/->build)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font]}] _ctx]
     (dispose batch)
@@ -34,14 +37,8 @@
   (delta-time        [_] (.getDeltaTime       Gdx/graphics))
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
-  (->cursor [_ file hotspot-x hotspot-y]
-    (let [pixmap (Pixmap. (.internal Gdx/files file))
-          cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
-      (dispose pixmap)
-      cursor))
-
-  (set-cursor! [_ cursor]
-    (.setCursor Gdx/graphics cursor))
+  (set-cursor! [ctx cursor-key]
+    (.setCursor Gdx/graphics (utils/safe-get (:cursors (this ctx)) cursor-key)))
 
   (gui-mouse-position    [ctx] (g/gui-mouse-position    (this ctx)))
   (world-mouse-position  [ctx] (g/world-mouse-position  (this ctx)))

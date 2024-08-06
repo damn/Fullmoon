@@ -1,5 +1,6 @@
 (ns tx.all
-  (:require tx.entity.audiovisual
+  (:require tx.cursor
+            tx.entity.audiovisual
             tx.entity.creature
             tx.entity.item
             tx.entity.line-render

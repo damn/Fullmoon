@@ -25,22 +25,15 @@
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
-                                              :quality-scaling 2}
-                               ; missing:
-                               ; tiled-map-drawer? -> dep on tiled ....
-                               ; text?
-                               ; world-view ?
-                               ; image render ?
-                               }]
-           [:context/cursor] ; depends on graphics
-           [:context/ui] ; -> graphics?, screens, ??
+                                              :quality-scaling 2}}]
+           [:context/ui]
            [:context/tiled]
            [:context/transaction-handler] [:tx/all]
            [:context/effect] [:effect/all]
            [:context/ecs] [:entity/all]
            [:context/modifier] [:modifier/all]
-           [:property/all] ; TODO move together with properties ?!
-           [:context/property-types {:properties/audiovisual true ; TODO move together with properties ?!
+           [:property/all] ; -> properties
+           [:context/property-types {:properties/audiovisual true ; -> properties
                                      :properties/creature true
                                      :properties/item true
                                      :properties/skill true

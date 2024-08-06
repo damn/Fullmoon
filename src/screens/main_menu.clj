@@ -4,7 +4,7 @@
             [app.state :refer [current-context change-screen!]]
             [api.context :as ctx]
             [api.input.keys :as input.keys]
-            [api.screen :as screen]
+            [api.screen :as screen :refer [Screen]]
             [widgets.background-image :refer [->background-image]]
             mapgen.module-gen))
 
@@ -45,10 +45,18 @@
     :cell-defaults {:pad-bottom 25}
     :fill-parent? true}))
 
+(defrecord SubScreen []
+  Screen
+  (show [_ ctx]
+    (ctx/set-cursor! ctx :cursors/default))
+  (hide [_ ctx])
+  (render [_ ctx]))
+
 (defcomponent :screens/main-menu {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx {:actors [(->background-image ctx)
                                       (->buttons ctx)
                                       (ctx/->actor ctx {:act (fn [ctx]
                                                                (when (ctx/key-just-pressed? ctx input.keys/escape)
-                                                                 (ctx/exit-app ctx)))})]})))
+                                                                 (ctx/exit-app ctx)))})]
+                             :sub-screen (->SubScreen)})))

@@ -8,7 +8,7 @@
   (show [_ _context])
 
   (hide [_ ctx]
-    (ctx/set-cursork! ctx :cursors/default))
+    (ctx/set-cursor! ctx :cursors/default))
 
   (render [_ ctx]
     (ctx/render-game ctx)))
