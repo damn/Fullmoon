@@ -1,7 +1,7 @@
 (ns entity-state.npc-sleeping
   (:require [api.graphics :as g]
             [api.graphics.color :as color]
-            [api.context :refer [world-grid ->counter]]
+            [api.context :refer [world-grid]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.world.cell :as cell]))
@@ -19,9 +19,7 @@
     ; TODO make state = alerted, and shout at the end of that !
     ; then nice alert '!' and different entities different alert time
     [[:tx/add-text-effect id "[WHITE]!"]
-     [:tx/create #:entity {:position position
-                           :faction faction
-                           :shout (->counter ctx 0.2)}]])
+     [:tx.entity/shout position faction 0.2]])
 
   (tick [_ entity* context]
     (let [cell ((world-grid context) (entity/tile entity*))]
