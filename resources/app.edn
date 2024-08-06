@@ -23,16 +23,13 @@
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
-           ; TODO move tiledmap renderer out of graphics into tiled....
-           [:context/graphics {:world-view {:tile-size 48} ; TODO graphics dispose cursors, pass components! ( cursors quite game-specific ... )
+           ; TODO graphics dispose cursors
+           [:context/graphics {:world-view {:tile-size 48} ; can not be omitted, becuz render-view does sth ?
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-           [:context/ui] ; TODO dispose stage-screens
-           [:context/transaction-handler] [:tx/all]
-           [:context/effect] [:effect/all]
-           [:context/ecs] [:entity/all]
-           [:context/modifier] [:modifier/all]
+           ; TODO dispose stage-screens
+           [:context/ui]
            [:context/properties {:types [:properties/audiovisual
                                          :properties/creature
                                          :properties/item
@@ -53,4 +50,12 @@
                               :screens/map-editor
                               :screens/minimap
                               :screens/options-menu
-                              :screens/property-editor]]]}
+                              :screens/property-editor]]
+           [:context/transaction-handler]
+           [:context/effect]
+           [:context/ecs]
+           [:context/modifier]
+           [:tx/all]
+           [:effect/all]
+           [:entity/all]
+           [:modifier/all]]}
