@@ -400,7 +400,7 @@
 (defn- ->left-widget [context]
   (->table context {:cell-defaults {:pad 5}
                     :rows (concat
-                           (for [property-type (api.context/property-types context)]
+                           (for [property-type (ctx/property-types context)]
                              [(->text-button context
                                              (:title (api.context/overview context property-type))
                                              #(set-second-widget! % (->overview-table % property-type open-property-editor-window!)))])

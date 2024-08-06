@@ -128,19 +128,17 @@
 (defprotocol Modifier
   (modifier-text [_ modifier]))
 
-(defprotocol PropertyTypes
-  (of-type? [_ property type] "Returns true if the property is of that type.")
-  (validate [_ property {:keys [humanize?]}] "If property is valid as of defined types.")
-  (property->type [_ property])
-  (edn-file-sort-order [_ property-type])
-  (overview [_ property-type])
-  (property-types [_]))
-
 (defprotocol PropertyStore
   (get-property [_ id])
   (all-properties [_ type])
+  (overview [_ property-type])
+  (property-types [_])
   (update! [_ property])
   (delete! [_ id]))
+
+(defprotocol TooltipText
+  (tooltip-text [_ property])
+  (player-tooltip-text [_ property]))
 
 (defprotocol InventoryWindow
   (inventory-window [_]))
@@ -158,7 +156,3 @@
 (defprotocol Actionbar
   (->action-bar    [_])
   (selected-skill  [_]))
-
-(defprotocol TooltipText
-  (tooltip-text [_ property])
-  (player-tooltip-text [_ property]))

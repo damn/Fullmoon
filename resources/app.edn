@@ -23,6 +23,7 @@
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
+           ; TODO move tiledmap renderer out of graphics into tiled....
            [:context/graphics {:world-view {:tile-size 48} ; TODO graphics dispose cursors, pass components! ( cursors quite game-specific ... )
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
@@ -32,13 +33,12 @@
            [:context/effect] [:effect/all]
            [:context/ecs] [:entity/all]
            [:context/modifier] [:modifier/all]
-           [:property/all] ; -> properties
-           [:context/property-types {:properties/audiovisual true ; -> properties
-                                     :properties/creature true
-                                     :properties/item true
-                                     :properties/skill true
-                                     :properties/world true}]
-           [:context/properties {:file "resources/properties.edn"}]
+           [:context/properties {:types [:properties/audiovisual
+                                         :properties/creature
+                                         :properties/item
+                                         :properties/skill
+                                         :properties/world]
+                                 :file "resources/properties.edn"}]
            [:context/game [:context/action-bar ; this is anyway specific to the game context, no need to pass it here??
                            :context/inventory
                            :context/uids-entities

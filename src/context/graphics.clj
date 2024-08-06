@@ -8,7 +8,7 @@
             graphics.image
             graphics.shape-drawer
             graphics.text
-            graphics.tiled-map-drawer
+            graphics.tiled-map-drawer ; -> requires graphics stuff but not part of graphics component! TODO move to tiled...
             graphics.views)
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Color
