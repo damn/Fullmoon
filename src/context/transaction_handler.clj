@@ -1,5 +1,6 @@
 (ns context.transaction-handler
   (:require graphics.image
+            data.animation
             [api.context :refer [transact-all!]]
             [api.tx :refer [transact!]]))
 
