@@ -26,7 +26,7 @@
 (def ^:private cell-entities? false)
 (def ^:private cell-occupied? false)
 
-(require '[context.potential-fields :as potential-field])
+(require '[world.potential-fields :as potential-field])
 
 (defn- tile-debug [{:keys [world-camera
                            world-viewport-width

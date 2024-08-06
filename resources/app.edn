@@ -1,5 +1,5 @@
 ; - document this nicely -
-; - make schema ? -
+; - make schema ! -> telling you missed keys, like I just forgot quality-sclaing.
 ; - make wiki ? -
 ; - make actual editor for it ? -
 ; - mix with properties ? -
@@ -22,13 +22,11 @@
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
-           ; TODO graphics dispose cursors, pass components! ( cursors quite game-specific ... )
-           [:context/graphics {:world-view {:tile-size 48}
+           [:context/graphics {:world-view {:tile-size 48} ; TODO graphics dispose cursors, pass components! ( cursors quite game-specific ... )
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-           ; TODO dispose stage-screens
-           [:context/ui]
+           [:context/ui] ; TODO dispose stage-screens
            [:context/tiled]
            [:context/transaction-handler] [:tx/all]
            [:context/effect] [:effect/all]

@@ -14,8 +14,8 @@
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
-            [world.grid :as world-grid]
-            [world.content-grid :as content-grid]
+            world.grid
+            world.content-grid
             [world.potential-fields :as potential-fields]
             world.render
             [mapgen.movement-property :refer (movement-property)]))
@@ -123,7 +123,7 @@
     arr))
 
 (defn- tiled-map->grid [tiled-map]
-  (world-grid/->build (tiled/width  tiled-map)
+  (world.grid/->build (tiled/width  tiled-map)
                       (tiled/height tiled-map)
                       (fn [position]
                         (case (movement-property tiled-map position)
@@ -140,7 +140,7 @@
             :height h
             :grid grid
             :cell-blocked-boolean-array (->cell-blocked-boolean-array grid)
-            :content-grid (content-grid/->build w h 16 16)
+            :content-grid (world.content-grid/->build w h 16 16)
             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))}))
   ; TODO
   ; (check-not-allowed-diagonals grid)
