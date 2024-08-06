@@ -176,7 +176,7 @@
     :entities #{}
     :occupied #{}}))
 
-(defn create-grid [width height position->value]
+(defn ->build [width height position->value]
   (grid2d/create-grid width height
                       #(->> %
                             position->value

@@ -32,7 +32,7 @@
          (keep grid)
          (mapcat (comp :entities deref)))))
 
-(defn ->content-grid [w h cell-w cell-h]
+(defn ->build [w h cell-w cell-h]
   (->ContentGrid (grid2d/create-grid (inc (int (/ w cell-w))) ; inc because corners
                                      (inc (int (/ h cell-h)))
                                      (fn [idx]

@@ -1,22 +1,22 @@
 (ns context.world
-  (:require [api.disposable :refer [dispose]]
+  (:require [math.raycaster :as raycaster]
+            [math.vector :as v]
+            [utils.core :refer [->tile tile->middle]]
+            [data.grid2d :as grid2d]
+            [api.disposable :refer [dispose]]
+            [api.entity :as entity]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
-            [math.raycaster :as raycaster]
-            [math.vector :as v]
-            [data.grid2d :as grid2d]
-            [utils.core :refer [->tile tile->middle]]
             [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
             [api.tx :refer [transact!]]
-            [world.grid :refer [create-grid]]
-            [world.content-grid :refer [->content-grid]]
-            world.render
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
-            [api.entity :as entity]
+            [world.grid :as world-grid]
+            [world.content-grid :as content-grid]
+            world.render
             [mapgen.movement-property :refer (movement-property)]))
 
 (defn- on-screen? [entity* ctx]
@@ -114,13 +114,13 @@
     arr))
 
 (defn- tiled-map->grid [tiled-map]
-  (create-grid (tiled/width  tiled-map)
-               (tiled/height tiled-map)
-               (fn [position]
-                 (case (movement-property tiled-map position)
-                   "none" :none
-                   "air"  :air
-                   "all"  :all))))
+  (world-grid/->build (tiled/width  tiled-map)
+                      (tiled/height tiled-map)
+                      (fn [position]
+                        (case (movement-property tiled-map position)
+                          "none" :none
+                          "air"  :air
+                          "all"  :all))))
 
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
   (let [grid (tiled-map->grid tiled-map)
@@ -131,7 +131,7 @@
             :height h
             :grid grid
             :cell-blocked-boolean-array (->cell-blocked-boolean-array grid)
-            :content-grid (->content-grid w h 16 16)
+            :content-grid (content-grid/->build w h 16 16)
             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))}))
   ; TODO
   ; (check-not-allowed-diagonals grid)
