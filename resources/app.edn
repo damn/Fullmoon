@@ -21,8 +21,8 @@
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-           [:context/stage]  ; => graphics ?!
-           [:context/cursor] ; -> graphics
+           [:context/stage]
+           [:context/cursor]
            [:context/ui]
            [:context/tiled]
            [:effect/all]
@@ -60,10 +60,8 @@
                                         :screens/minimap        true
                                         :screens/options-menu   true
                                         :screens/property-editor true}}]
-           ; tx/all ?
            [:tx/audiovisual]
            [:tx/creature]
            [:tx/entity]
            [:tx/sound]
-           [:tx/player-modal]
-           ]}
+           [:tx/player-modal]]}
