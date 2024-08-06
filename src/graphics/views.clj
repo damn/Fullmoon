@@ -56,17 +56,16 @@
     (* (int pixels) (float world-unit-scale))))
 
 (defn- ->gui-view []
-  (let [camera (OrthographicCamera.)]
-    {:gui-camera camera
-     :gui-viewport (FitViewport. (screen-width) (screen-height) camera)}))
+  {:gui-viewport (FitViewport. (screen-width)
+                               (screen-height)
+                               (OrthographicCamera.))})
 
 (defn- ->world-view [{:keys [tile-size]}]
-  (let [unit-scale (/ tile-size)
-        camera (OrthographicCamera.)]
+  (let [unit-scale (/ tile-size)]
     {:world-unit-scale (float unit-scale)
-     :world-camera camera
      :world-viewport (let [width  (* (screen-width)  unit-scale)
                            height (* (screen-height) unit-scale)
+                           camera (OrthographicCamera.)
                            y-down? false]
                        (.setToOrtho camera y-down? width height)
                        (FitViewport. width height camera))}))

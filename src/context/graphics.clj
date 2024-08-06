@@ -38,12 +38,13 @@
 (defn- render-view [ctx gui-or-world draw-fn]
   (let [{:keys [^SpriteBatch batch
                 shape-drawer
-                gui-camera
-                world-camera
+                gui-viewport
+                world-viewport
                 world-unit-scale] :as g} (this ctx)
-        ^OrthographicCamera camera (case gui-or-world
-                                     :gui gui-camera
-                                     :world world-camera)
+        ^Viewport viewport (case gui-or-world
+                             :gui   gui-viewport
+                             :world world-viewport)
+        ^OrthographicCamera camera (.getCamera viewport)
         unit-scale (case gui-or-world
                      :gui gui-unit-scale
                      :world world-unit-scale)]
@@ -69,7 +70,7 @@
   (gui-viewport-width    [ctx] (.getWorldWidth  ^Viewport (:gui-viewport (this ctx))))
   (gui-viewport-height   [ctx] (.getWorldHeight ^Viewport (:gui-viewport (this ctx))))
 
-  (world-camera          [ctx] (:world-camera (this ctx)))
+  (world-camera          [ctx] (.getCamera      ^Viewport (:world-viewport (this ctx))))
   (world-viewport-width  [ctx] (.getWorldWidth  ^Viewport (:world-viewport (this ctx))))
   (world-viewport-height [ctx] (.getWorldHeight ^Viewport (:world-viewport (this ctx))))
 

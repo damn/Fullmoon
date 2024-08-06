@@ -28,9 +28,9 @@
 
 (require '[world.potential-fields :as potential-field])
 
-(defn- tile-debug [{:keys [world-camera] :as g}
-                   ctx]
+(defn- tile-debug [g ctx]
   (let [grid (world-grid ctx)
+        world-camera (ctx/world-camera ctx)
         [left-x right-x bottom-y top-y] (camera/frustum world-camera)]
 
     (when tile-grid?

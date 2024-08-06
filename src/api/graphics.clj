@@ -4,10 +4,8 @@
                      shape-drawer
                      default-font
                      unit-scale
-                     gui-camera
                      gui-viewport
                      world-unit-scale
-                     world-camera
                      world-viewport
                      cached-map-renderer])
 
