@@ -180,6 +180,3 @@
 
 (defprotocol ErrorModal
   (->error-window [_ throwable]))
-
-(defprotocol BackgroundImage
-  (->background-image [_]))

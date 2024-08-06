@@ -5,6 +5,7 @@
             [api.context :as ctx]
             [api.input.keys :as input.keys]
             [api.screen :as screen]
+            [widgets.background-image :refer [->background-image]]
             mapgen.module-gen))
 
 (defn- ->vampire-tmx [ctx]
@@ -46,7 +47,7 @@
 
 (defcomponent :screens/main-menu {}
   (screen/create [_ ctx]
-    (ctx/->stage-screen ctx {:actors [(ctx/->background-image ctx)
+    (ctx/->stage-screen ctx {:actors [(->background-image ctx)
                                       (->buttons ctx)
                                       (ctx/->actor ctx {:act (fn [ctx]
                                                                (when (ctx/key-just-pressed? ctx input.keys/escape)

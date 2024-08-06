@@ -33,9 +33,8 @@
            [:entity/all]
            [:context/modifier]
            [:modifier/all]
-           ; TODO move together with properties ?!
-           [:property/all]
-           [:context/property-types {:properties/audiovisual true
+           [:property/all] ; TODO move together with properties ?!
+           [:context/property-types {:properties/audiovisual true ; TODO move together with properties ?!
                                      :properties/creature true
                                      :properties/item true
                                      :properties/skill true
@@ -54,11 +53,6 @@
                            :context/elapsed-game-time
                            :context/mouseover-entity
                            :context/player-message]]
-           [:context/background-image "ui/moon_background.png"] ; -> widgets
-           ; (but where to load the data ?), also hpmanabar ....
-           ; properties ?
-
-           ; -> graphics?
            [:context/screens {:first-screen :screens/main-menu
                               :screens {:screens/game           true
                                         :screens/main-menu      true

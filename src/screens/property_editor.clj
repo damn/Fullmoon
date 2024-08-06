@@ -13,7 +13,8 @@
             [api.scene2d.ui.text-field :as text-field]
             [api.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [api.scene2d.ui.cell :refer [set-actor!]]
-            [api.scene2d.ui.widget-group :refer [pack!]]))
+            [api.scene2d.ui.widget-group :refer [pack!]]
+            [widgets.background-image :refer [->background-image]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows
@@ -408,7 +409,7 @@
 (defcomponent :screens/property-editor {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx
-                        {:actors [(api.context/->background-image ctx)
+                        {:actors [(->background-image ctx)
                                   (->table ctx {:id :main-table
                                                 :rows [[(->left-widget ctx) nil]]
                                                 :fill-parent? true})]})))

@@ -187,3 +187,31 @@
            (keys component/attributes))))
 
  )
+
+
+(comment
+ (import 'com.kotcrab.vis.ui.widget.MenuBar)
+ (import 'com.kotcrab.vis.ui.widget.Menu)
+ (import 'com.kotcrab.vis.ui.widget.MenuItem)
+
+ (defn- ->menu-bar []
+   (let [menu-bar (MenuBar.)
+         app-menu (Menu. "App")]
+     (.addItem app-menu (MenuItem. "New app"))
+     (.addItem app-menu (MenuItem. "Load app"))
+     (.addMenu menu-bar app-menu)
+     (.addMenu menu-bar (Menu. "Properties"))
+     (def mybar menu-bar)
+     menu-bar))
+
+ (defn- ->menu [ctx]
+   (ctx/->table ctx {:rows [[{:actor (.getTable (->menu-bar))
+                              ;:left? true
+                              :expand-x? true
+                              :fill-x? true
+                              :colspan 1}]
+                            [{:actor (ctx/->label ctx "")
+                              :expand? true
+                              :fill-x? true
+                              :fill-y? true}]]
+                     :fill-parent? true})))

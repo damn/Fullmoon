@@ -9,7 +9,8 @@
             context.transaction-handler
             context.render-debug
             context.world
-            entity.body))
+            entity.body
+            [widgets.background-image :refer [->background-image]]))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -94,4 +95,4 @@
    :sub-screen (->SubScreen)})
 
 (defcomponent :screens/options-menu {}
-  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (api.context/->background-image ctx)))))
+  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (->background-image ctx)))))
