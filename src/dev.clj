@@ -168,8 +168,6 @@
 
  ;; learn skill for player
 
- (require '[api.context :as ctx])
-
  (let [ctx @app.state/current-context
        player-id (:entity/id @(:context/player-entity ctx))
        skill (ctx/get-property ctx :skills/convert)

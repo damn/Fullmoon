@@ -29,7 +29,6 @@
                          :expand? true
                          :bottom? true
                          :left? true}]]
-                :id ::main-table
                 :cell-defaults {:pad 2}
                 :fill-parent? true}))
 
