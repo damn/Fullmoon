@@ -11,7 +11,7 @@
             graphics.tiled-map-drawer
             graphics.views)
   (:import com.badlogic.gdx.Gdx
-           [com.badlogic.gdx.graphics Color Pixmap]
+           com.badlogic.gdx.graphics.Color
            [com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion]))
 
 (defcomponent :context/graphics {}
