@@ -66,6 +66,7 @@
                    (world/->context ctx tiled-level))]
 
     ; TODO do @ replay mode too .... move to reset-common-game-context!
+    ; TODO do maybe @ enter screen?
     (let [stage (:stage (:screens/game (:screens (:context/screens ctx))))] ; cannot use get-stage as we are still in main menu !!
       (group/clear-children! stage)
       (doseq [actor (->ui-actors ctx)]

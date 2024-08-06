@@ -21,14 +21,15 @@
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}}]
-           [:context/stage]
-           [:context/cursor]
-           [:context/ui]
+           [:context/cursor] ; -> graphics
+           [:context/stage] ; -> graphics?
+           [:context/ui] ; -> graphics?
            [:context/tiled]
            [:effect/all]
            [:entity/all]
            [:modifier/all]
            [:property/all]
+           ; TODO move together with properties ?!
            [:context/property-types {:properties/audiovisual true
                                      :properties/creature true
                                      :properties/item true
@@ -37,7 +38,7 @@
            [:context/properties {:file "resources/properties.edn"}]
            [:context/error-modal]
            [:context/builder]
-           [:context/effect]
+           [:context/effect] ; depends on transaction-handler .... hmmm
            [:context/modifier]
            [:context/potential-fields]
            [:context/render-debug]
@@ -52,7 +53,11 @@
                            :context/elapsed-game-time
                            :context/mouseover-entity
                            :context/player-message]]
-           [:context/background-image "ui/moon_background.png"]
+           [:context/background-image "ui/moon_background.png"] ; -> widgets
+           ; (but where to load the data ?), also hpmanabar ....
+           ; properties ?
+
+           ; -> graphics?
            [:context/screens {:first-screen :screens/main-menu
                               :screens {:screens/game           true
                                         :screens/main-menu      true
@@ -60,6 +65,7 @@
                                         :screens/minimap        true
                                         :screens/options-menu   true
                                         :screens/property-editor true}}]
+           ; tx/all ?
            [:tx/audiovisual]
            [:tx/creature]
            [:tx/entity]
