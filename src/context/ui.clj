@@ -1,9 +1,11 @@
 (ns context.ui
   (:require [core.component :refer [defcomponent] :as component]
-            [app.state :refer [current-context]]
             [api.context :as ctx]
+            api.disposable
+            [api.graphics :as g]
+            [api.screen :as screen]
             [api.scene2d.actor :as actor :refer [parent]]
-            [api.scene2d.group :refer [add-actor!]]
+            [api.scene2d.group :as group]
             api.scene2d.ui.button
             api.scene2d.ui.button-group
             api.scene2d.ui.label
@@ -12,10 +14,12 @@
             api.scene2d.ui.text-field
             [api.scene2d.ui.widget-group :refer [pack!]]
             api.scene2d.ui.window
+            [app.state :refer [current-context]]
             graphics.image)
-  (:import com.badlogic.gdx.graphics.g2d.TextureRegion
+  (:import com.badlogic.gdx.Gdx
+           com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
-           (com.badlogic.gdx.scenes.scene2d Actor Group Touchable)
+           (com.badlogic.gdx.scenes.scene2d Actor Group Touchable Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Image Button Label Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
@@ -52,6 +56,75 @@
 
   (component/destroy [_ _ctx]
     (VisUI/dispose)))
+
+(defrecord StageScreen [^Stage stage sub-screen]
+  api.disposable/Disposable ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
+  (dispose [_]
+    (.dispose stage))
+
+  api.screen/Screen
+  (show [_ context]
+    (.setInputProcessor Gdx/input stage)
+    (when sub-screen (screen/show sub-screen context)))
+
+  (hide [_ context]
+    (.setInputProcessor Gdx/input nil)
+    (when sub-screen (screen/hide sub-screen context)))
+
+  (render [_ context]
+    ; stage act first so user screen calls change-screen -> is the end of frame
+    ; otherwise would need render-after-stage
+    ; or on change-screen the stage of the current screen would still .act
+    (.act stage (ctx/delta-time context))
+    (when sub-screen (screen/render sub-screen context))
+    (.draw stage)))
+
+(defn- find-actor-with-id [^Group group id]
+  (let [actors (.getChildren group)
+        ids (keep actor/id actors)]
+    (assert (or (empty? ids)
+                (apply distinct? ids)) ; TODO could check @ add
+            (str "Actor ids are not distinct: " (vec ids)))
+    (first (filter #(= id (actor/id %))
+                   actors))))
+
+(extend-type api.context.Context
+  api.context/Stage
+  (->stage-screen [{{:keys [gui-viewport batch]} :context/graphics}
+                   {:keys [actors sub-screen]}]
+    (let [stage (proxy [Stage clojure.lang.ILookup] [gui-viewport batch]
+                  (valAt
+                    ([id]
+                     (find-actor-with-id (.getRoot ^Stage this) id))
+                    ([id not-found]
+                     (or (find-actor-with-id (.getRoot ^Stage this) id)
+                         not-found))))]
+      (doseq [actor actors]
+        (.addActor stage actor))
+      (->StageScreen stage sub-screen)))
+
+  (get-stage [context]
+    (:stage (ctx/current-screen context)))
+
+  (mouse-on-stage-actor? [context]
+    (let [[x y] (g/gui-mouse-position (:context/graphics context))]
+      (.hit ^Stage (ctx/get-stage context) x y true)))
+
+  (add-to-stage! [ctx actor]
+    (-> ctx
+        ctx/get-stage
+        (group/add-actor! actor))))
+
+(extend-type Stage
+  api.scene2d.group/Group
+  (children [stage]
+    (group/children (.getRoot stage)))
+
+  (clear-children! [stage]
+    (group/clear-children! (.getRoot stage)))
+
+  (add-actor! [stage actor]
+    (group/add-actor! (.getRoot stage) actor)))
 
 (defn- ->change-listener [_ on-clicked]
   (proxy [ChangeListener] []
@@ -120,14 +193,6 @@
           (text-button "x" #(.setVisible window false)))
     window)
 
-(defn- find-actor-with-id [^Group group id]
-  (let [actors (.getChildren group)
-        ids (keep actor/id actors)]
-    (assert (or (empty? ids)
-                (apply distinct? ids)) ; TODO could check @ add
-            (str "Actor ids are not distinct: " (vec ids)))
-    (first (filter #(= id (actor/id %))
-                   actors))))
 
 (defmulti ^:private ->vis-image type)
 
@@ -156,7 +221,7 @@
                      (find-actor-with-id this id))
                     ([id not-found]
                      (or (find-actor-with-id this id) not-found))))]
-      (run! #(add-actor! group %) actors)
+      (run! #(group/add-actor! group %) actors)
       (set-opts group opts)))
 
   (->horizontal-group [_ {:keys [space pad]}]
@@ -177,7 +242,7 @@
                      (find-actor-with-id this id))
                     ([id not-found]
                      (or (find-actor-with-id this id) not-found))))]
-      (run! #(add-actor! group %) actors)
+      (run! #(group/add-actor! group %) actors)
       group))
 
   (->button-group [_ {:keys [max-check-count min-check-count]}]
@@ -322,9 +387,6 @@
 
   (clear-children! [group]
     (.clearChildren group))
-
-  (find-actor-with-id [^Group group id]
-    (find-actor-with-id group id))
 
   (add-actor! [group actor]
     (.addActor group actor)))

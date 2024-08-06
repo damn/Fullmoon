@@ -1,3 +1,8 @@
+; - document this nicely -
+; - make schema ? -
+; - make wiki ? -
+; - make actual editor for it ? -
+; - mix with properties ? -
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
        :height 900
@@ -20,10 +25,15 @@
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
-                                              :quality-scaling 2}}]
-           [:context/cursor] ; -> graphics
-           [:context/stage] ; -> graphics?
-           [:context/ui] ; -> graphics?
+                                              :quality-scaling 2}
+                               ; missing:
+                               ; tiled-map-drawer? -> dep on tiled ....
+                               ; text?
+                               ; world-view ?
+                               ; image render ?
+                               }]
+           [:context/cursor] ; depends on graphics
+           [:context/ui] ; -> graphics?, screens, ??
            [:context/tiled]
            [:context/transaction-handler] [:tx/all]
            [:context/effect] [:effect/all]
