@@ -1,6 +1,5 @@
 (ns graphics.cursors
   (:require [utils.core :refer [mapvals]]
-            ;[api.context :as ctx]
             [api.disposable :refer [dispose]])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Pixmap))
@@ -31,8 +30,6 @@
 
 ; TODO dispose all cursors
 (defn ->build []
-  (let [cursors (mapvals (fn [[file x y]]
-                           (->cursor (str "cursors/" file ".png") x y))
-                         cursors)]
-    ;(ctx/set-cursor! ctx (:cursors/default cursors))
-    {:cursors cursors}))
+  {:cursors (mapvals (fn [[file x y]]
+                       (->cursor (str "cursors/" file ".png") x y))
+                     cursors)})
