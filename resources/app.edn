@@ -25,25 +25,26 @@
            [:context/stage] ; -> graphics?
            [:context/ui] ; -> graphics?
            [:context/tiled]
+           [:context/transaction-handler]
+           [:tx/all]
+           [:context/effect] ; -> :context/transaction-handler
            [:effect/all]
+           [:context/ecs] ; -> :context/transaction-handler
            [:entity/all]
+           [:context/modifier]
            [:modifier/all]
-           [:property/all]
            ; TODO move together with properties ?!
+           [:property/all]
            [:context/property-types {:properties/audiovisual true
                                      :properties/creature true
                                      :properties/item true
                                      :properties/skill true
                                      :properties/world true}]
            [:context/properties {:file "resources/properties.edn"}]
-           [:context/error-modal]
-           [:context/builder]
-           [:context/effect] ; depends on transaction-handler .... hmmm
-           [:context/modifier]
-           [:context/potential-fields]
-           [:context/render-debug]
-           [:context/transaction-handler]
-           [:context/ecs]
+           [:context/error-modal] ; -> widgets?
+           [:context/builder] ; -> tx/entity-types? all entity types together .... for overview...
+           [:context/potential-fields] ; -> world ?
+           [:context/render-debug] ; -> out of context API
            [:context/game [:context/action-bar
                            :context/inventory
                            :context/uids-entities
@@ -64,10 +65,4 @@
                                         :screens/map-editor     true
                                         :screens/minimap        true
                                         :screens/options-menu   true
-                                        :screens/property-editor true}}]
-           ; tx/all ?
-           [:tx/audiovisual]
-           [:tx/creature]
-           [:tx/entity]
-           [:tx/sound]
-           [:tx/player-modal]]}
+                                        :screens/property-editor true}}]]}
