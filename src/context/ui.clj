@@ -90,9 +90,10 @@
 
 (extend-type api.context.Context
   api.context/Stage
-  (->stage-screen [{{:keys [gui-viewport batch]} :context/graphics}
+  (->stage-screen [{{:keys [gui-view batch]} :context/graphics}
                    {:keys [actors sub-screen]}]
-    (let [stage (proxy [Stage clojure.lang.ILookup] [gui-viewport batch]
+    (let [gui-viewport (:viewport gui-view)
+          stage (proxy [Stage clojure.lang.ILookup] [gui-viewport batch]
                   (valAt
                     ([id]
                      (find-actor-with-id (.getRoot ^Stage this) id))

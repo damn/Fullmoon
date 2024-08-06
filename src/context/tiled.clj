@@ -1,6 +1,7 @@
 (ns context.tiled
   (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
+            [api.graphics :as g]
             [api.maps.tiled :as tiled])
   (:import com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.maps MapRenderer MapLayer MapLayers MapProperties]
@@ -10,11 +11,11 @@
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
 ; and when a batch is passed to the constructor
 ; we do not need to dispose the renderer
-(defn- map-renderer-for [{:keys [batch world-unit-scale]}
+(defn- map-renderer-for [{:keys [batch] :as g}
                          tiled-map
                          color-setter]
   (OrthogonalTiledMapRendererWithColorSetter. tiled-map
-                                              (float world-unit-scale)
+                                              (float (g/world-unit-scale g))
                                               batch
                                               (reify ColorSetter
                                                 (apply [_ color x y]

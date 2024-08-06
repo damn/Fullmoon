@@ -37,9 +37,8 @@
 
 (defn- assoc-dimensions
   "scale can be a number for multiplying the texture-region-dimensions or [w h]."
-  [{:keys [texture-region] :as image} {:keys [world-unit-scale]} scale]
-  {:pre [(number? world-unit-scale)
-         (or (number? scale)
+  [{:keys [texture-region] :as image} g scale]
+  {:pre [(or (number? scale)
              (and (vector? scale)
                   (number? (scale 0))
                   (number? (scale 1))))]}
@@ -48,7 +47,7 @@
                            scale)]
     (assoc image
            :pixel-dimensions pixel-dimensions
-           :world-unit-dimensions (scale-dimensions pixel-dimensions world-unit-scale))))
+           :world-unit-dimensions (scale-dimensions pixel-dimensions (g/world-unit-scale g)))))
 
 (extend-type api.graphics.Graphics
   api.graphics/Image

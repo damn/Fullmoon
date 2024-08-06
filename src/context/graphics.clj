@@ -31,46 +31,37 @@
 
 (defn- this [ctx] (:context/graphics ctx))
 
-(def ^:private gui-unit-scale 1)
-
-(defn- render-view [ctx gui-or-world draw-fn]
-  (let [{:keys [^SpriteBatch batch
-                shape-drawer
-                gui-viewport
-                world-viewport
-                world-unit-scale] :as g} (this ctx)
-        ^Viewport viewport (case gui-or-world
-                             :gui   gui-viewport
-                             :world world-viewport)
-        ^OrthographicCamera camera (.getCamera viewport)
-        unit-scale (case gui-or-world
-                     :gui gui-unit-scale
-                     :world world-unit-scale)]
+(defn- render-view [ctx view-key draw-fn]
+  (let [{:keys [^SpriteBatch batch shape-drawer] :as g} (this ctx)
+        {:keys [^Viewport viewport unit-scale]} (view-key g)]
     (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-    (.setProjectionMatrix batch (.combined camera))
+    (.setProjectionMatrix batch (.combined (.getCamera viewport)))
     (.begin batch)
     (g/with-shape-line-width g
                              unit-scale
                              #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
+(defn- gui-viewport   ^Viewport [ctx] (-> ctx this :gui-view   :viewport))
+(defn- world-viewport ^Viewport [ctx] (-> ctx this :world-view :viewport))
+
 (extend-type api.context.Context
   api.context/Graphics
   (delta-time        [_] (.getDeltaTime       Gdx/graphics))
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
-  (render-gui-view   [ctx render-fn] (render-view ctx :gui   render-fn))
-  (render-world-view [ctx render-fn] (render-view ctx :world render-fn))
+  (render-gui-view   [ctx render-fn] (render-view ctx :gui-view   render-fn))
+  (render-world-view [ctx render-fn] (render-view ctx :world-view render-fn))
 
   (gui-mouse-position    [ctx] (g/gui-mouse-position   (this ctx)))
   (world-mouse-position  [ctx] (g/world-mouse-position (this ctx)))
 
-  (gui-viewport-width    [ctx] (.getWorldWidth  ^Viewport (:gui-viewport (this ctx))))
-  (gui-viewport-height   [ctx] (.getWorldHeight ^Viewport (:gui-viewport (this ctx))))
+  (gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport ctx)))
+  (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport ctx)))
 
-  (world-camera          [ctx] (.getCamera      ^Viewport (:world-viewport (this ctx))))
-  (world-viewport-width  [ctx] (.getWorldWidth  ^Viewport (:world-viewport (this ctx))))
-  (world-viewport-height [ctx] (.getWorldHeight ^Viewport (:world-viewport (this ctx))))
+  (world-camera          [ctx] (.getCamera      (world-viewport ctx)))
+  (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport ctx)))
+  (world-viewport-height [ctx] (.getWorldHeight (world-viewport ctx)))
 
   (->color [_ r g b a]
     (Color. (float r) (float g) (float b) (float a)))

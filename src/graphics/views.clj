@@ -23,16 +23,17 @@
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
-(def ^:private gui-unit-scale 1)
+(defn- gui-viewport   ^Viewport [{:keys [gui-view]}]   (:viewport gui-view))
+(defn- world-viewport ^Viewport [{:keys [world-view]}] (:viewport world-view))
 
-(defn update-viewports [{{:keys [gui-viewport world-viewport]} :context/graphics} w h]
-  (.update ^Viewport gui-viewport w h true)
+(defn update-viewports [{g :context/graphics} w h]
+  (.update ^Viewport (gui-viewport g) w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
-  (.update ^Viewport world-viewport w h false))
+  (.update ^Viewport (world-viewport g) w h false))
 
-(defn- viewport-fix-required? [{{:keys [^Viewport gui-viewport]} :context/graphics}]
-  (or (not= (.getScreenWidth  gui-viewport) (screen-width))
-      (not= (.getScreenHeight gui-viewport) (screen-height))))
+(defn- viewport-fix-required? [{g :context/graphics}]
+  (or (not= (.getScreenWidth  (gui-viewport g)) (screen-width))
+      (not= (.getScreenHeight (gui-viewport g)) (screen-height))))
 
 ; on mac osx, when resizing window, make bug report /  fix it in libgdx
 (defn fix-viewport-update
@@ -43,34 +44,40 @@
 
 (extend-type api.graphics.Graphics
   api.graphics/GuiWorldViews
-  (gui-mouse-position [{:keys [gui-viewport]}]
+  (gui-mouse-position [g]
     ; TODO mapv int needed?
-    (mapv int (unproject-mouse-posi gui-viewport)))
+    (mapv int (unproject-mouse-posi (gui-viewport g))))
 
-  (world-mouse-position [{:keys [world-viewport]}]
+  (world-mouse-position [g]
     ; TODO clamping only works for gui-viewport ? check. comment if true
     ; TODO ? "Can be negative coordinates, undefined cells."
-    (unproject-mouse-posi world-viewport))
+    (unproject-mouse-posi (world-viewport g)))
 
   (pixels->world-units [{:keys [world-unit-scale]} pixels]
-    (* (int pixels) (float world-unit-scale))))
+    (* (int pixels) (float world-unit-scale)))
+
+  (world-unit-scale [{:keys [world-view]}]
+    (:unit-scale world-view)))
+
+(def ^:private gui-unit-scale 1)
 
 (defn- ->gui-view []
-  {:gui-viewport (FitViewport. (screen-width)
-                               (screen-height)
-                               (OrthographicCamera.))})
+  {:unit-scale gui-unit-scale
+   :viewport (FitViewport. (screen-width)
+                           (screen-height)
+                           (OrthographicCamera.))})
 
 (defn- ->world-view [{:keys [tile-size]}]
   (let [unit-scale (/ tile-size)]
-    {:world-unit-scale (float unit-scale)
-     :world-viewport (let [width  (* (screen-width)  unit-scale)
-                           height (* (screen-height) unit-scale)
-                           camera (OrthographicCamera.)
-                           y-down? false]
-                       (.setToOrtho camera y-down? width height)
-                       (FitViewport. width height camera))}))
+    {:unit-scale (float unit-scale)
+     :viewport (let [width  (* (screen-width)  unit-scale)
+                     height (* (screen-height) unit-scale)
+                     camera (OrthographicCamera.)
+                     y-down? false]
+                 (.setToOrtho camera y-down? width height)
+                 (FitViewport. width height camera))}))
 
 (defn ->build [world-view]
-  (merge {:unit-scale gui-unit-scale} ; only here because actors want to use drawing without using render-gui-view -> @ context.ui I could pass the gui-unit-scale .....
-         (->gui-view)
-         (when world-view (->world-view world-view))))
+  {:unit-scale gui-unit-scale ; only here because actors want to use drawing without using render-gui-view -> @ context.ui I could pass the gui-unit-scale .....
+   :gui-view (->gui-view)
+   :world-view (->world-view world-view)})

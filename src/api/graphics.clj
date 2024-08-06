@@ -4,12 +4,12 @@
                      shape-drawer
                      default-font
                      unit-scale
-                     gui-viewport
-                     world-unit-scale
-                     world-viewport])
+                     gui-view
+                     world-view])
 
 (defprotocol GuiWorldViews
   (pixels->world-units [_ pixels])
+  (world-unit-scale [_])
   (gui-mouse-position [_])
   (world-mouse-position [_]))
 
