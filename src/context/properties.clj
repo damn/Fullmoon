@@ -6,6 +6,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.data :as data]
             [api.context :as ctx]
+            api.properties
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
@@ -120,7 +121,7 @@
 (defcomponent :context/properties {}
   (component/create [[_ {:keys [file types]}] ctx]
     (let [types (zipmap types (repeat true))
-          types (component/update-map types properties/create)]
+          types (component/update-map types api.properties/create)]
       (component/load! types)
       {:file file
        :types types
