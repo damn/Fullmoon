@@ -3,7 +3,7 @@
 
 (defrecord Context [])
 
-(defsystem render  [_ ctx])
+(defsystem render [_ ctx])
 
 (defprotocol Game
   (start-new-game [_ tiled-level])
@@ -177,6 +177,3 @@
 (defprotocol TooltipText
   (tooltip-text [_ property])
   (player-tooltip-text [_ property]))
-
-(defprotocol ErrorModal
-  (->error-window [_ throwable]))

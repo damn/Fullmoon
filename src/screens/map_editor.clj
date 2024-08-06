@@ -4,7 +4,7 @@
             [utils.core :refer [->tile]]
             ; api/
             [app.state :refer [change-screen!]]
-            [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property ->error-window]]
+            [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [api.graphics :as g]
             [api.disposable :refer [dispose]]
             [api.input.keys :as input.keys]
@@ -18,7 +18,8 @@
             [api.scene2d.ui.label :refer [set-text!]]
             ; hardcoded dependencies => pull out.
             [mapgen.movement-property :refer (movement-property movement-properties)]
-            [mapgen.module-gen :as module-gen]))
+            [mapgen.module-gen :as module-gen]
+            [widgets.error-modal :refer [error-window!]]))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -185,7 +186,7 @@ direction keys: move")
                                         (get-property ctx level-id))))]
                         [(->text-button ctx "Generate" #(try (generate % (get-property % level-id))
                                                              (catch Throwable t
-                                                               (->error-window % t)
+                                                               (error-window! % t)
                                                                (println t))))]]
                  :pack? true}))
 

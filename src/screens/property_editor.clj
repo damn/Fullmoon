@@ -5,7 +5,7 @@
             [core.component :refer [defcomponent] :as component]
             ; api
             [app.state :as app :refer [change-screen!]]
-            [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane get-property all-properties tooltip-text ->error-window]]
+            [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor key-just-pressed? add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
             [api.input.keys :as input.keys]
             [api.screen :as screen]
             [api.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
@@ -14,6 +14,7 @@
             [api.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [api.scene2d.ui.cell :refer [set-actor!]]
             [api.scene2d.ui.widget-group :refer [pack!]]
+            [widgets.error-modal :refer [error-window!]]
             [widgets.background-image :refer [->background-image]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
@@ -333,7 +334,7 @@
      (swap! app/current-context f)
      (remove! window)
      (catch Throwable t
-       (->error-window ctx t)))))
+       (error-window! ctx t)))))
 
 (defn ->property-editor-window [context id]
   (let [props (get-property context id)

@@ -40,7 +40,6 @@
                                      :properties/skill true
                                      :properties/world true}]
            [:context/properties {:file "resources/properties.edn"}]
-           [:context/error-modal] ; -> widgets?
            [:context/builder] ; -> tx/entity-types? all entity types together .... for overview...
            [:context/potential-fields] ; -> world ?
            [:context/render-debug] ; -> out of context API
