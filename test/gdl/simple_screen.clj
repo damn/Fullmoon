@@ -5,9 +5,9 @@
             [api.screen :as screen]
             [api.graphics.color :as color]))
 
-(defn draw-test [g {{:keys [special-font logo]} :gdl/simple}]
-  (let [[wx wy] (map #(format "%.2f" %) (g/world-mouse-position g))
-        [gx gy] (g/gui-mouse-position g)
+(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
+  (let [[wx wy] (map #(format "%.2f" %) (ctx/world-mouse-position g))
+        [gx gy] (ctx/gui-mouse-position ctx)
         the-str (str "World x " wx "\n"
                      "World y " wy "\n"
                      "GUI x " gx "\n"

@@ -108,7 +108,7 @@
     (:stage (ctx/current-screen context)))
 
   (mouse-on-stage-actor? [context]
-    (let [[x y] (g/gui-mouse-position (:context/graphics context))]
+    (let [[x y] (ctx/gui-mouse-position context)]
       (.hit ^Stage (ctx/get-stage context) x y true)))
 
   (add-to-stage! [ctx actor]
