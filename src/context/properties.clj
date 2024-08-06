@@ -90,6 +90,7 @@
    (of-type? (type types) property)))
 
 (defn- property->type [types property]
+  {:post [%]}
   (some (fn [[type property-type]]
           (when (of-type? property-type property)
             type))
@@ -121,8 +122,8 @@
 (defcomponent :context/properties {}
   (component/create [[_ {:keys [file types]}] ctx]
     (let [types (zipmap types (repeat true))
+          _ (component/load! types)
           types (component/update-map types api.properties/create)]
-      (component/load! types)
       {:file file
        :types types
        :db (load-edn ctx types file)})))
