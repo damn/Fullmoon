@@ -162,9 +162,6 @@
   (->action-bar    [_])
   (selected-skill  [_]))
 
-(defprotocol Cursor
-  (set-cursork! [_ cursor-key]))
-
 (defprotocol TooltipText
   (tooltip-text [_ property])
   (player-tooltip-text [_ property]))
