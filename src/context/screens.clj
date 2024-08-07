@@ -15,6 +15,14 @@
     ; TODO dispose all screen stages ....
     ; call dispose ?
     ; is it doing anything? because has batch right ? but stuff ... idk
+
+    ; that means we automatically add a stage-screen to each screen??
+    ; _ why not! _ ?
+
+    ; does stage even need disposing? batch is passed as arg ..
+    ; what is there to dispose ?
+    ; i think I checked this before ...
+
     )
 
   (ctx/render [_ ctx]

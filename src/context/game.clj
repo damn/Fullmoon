@@ -1,50 +1,19 @@
 (ns context.game
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! transact-all! frame->txs ->actor ->table ->group ->text-button ->action-bar]]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! transact-all! frame->txs ->text-button]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
             [api.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
-            [api.scene2d.group :as group :refer [children]]
+            [api.scene2d.group :as group]
             [api.world.content-grid :refer [active-entities]]
             [app.state :refer [current-context change-screen!]]
-            [debug.render :as debug-render]
-            [widgets.hp-mana-bars :refer [->hp-mana-bars]]
-            [widgets.debug-window :as debug-window]
-            [widgets.entity-info-window :as entity-info-window]
-            [context.player-message :refer [->player-message-actor]]
             [context.world :as world]
-            [entity.movement :as movement]
-            [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]))
-
-(defn- ->item-on-cursor-actor [context]
-  (->actor context {:draw draw-item-on-cursor}))
-
-; TODO same space/pad as action-bar (actually inventory cells too)
-; => global setting use ?
-(defn- ->action-bar-table [ctx]
-  (->table ctx {:rows [[{:actor (->action-bar ctx)
-                         :expand? true
-                         :bottom? true
-                         :left? true}]]
-                :cell-defaults {:pad 2}
-                :fill-parent? true}))
-
-(defn- ->windows [context]
-  (->group context {:id :windows
-                    :actors [(debug-window/create context)
-                             (entity-info-window/create context)
-                             (ctx/inventory-window context)]}))
-
-(defn- ->ui-actors [ctx]
-  [(->action-bar-table     ctx)
-   (->hp-mana-bars         ctx)
-   (->windows              ctx)
-   (->item-on-cursor-actor ctx)
-   (->player-message-actor ctx)])
+            [debug.render :as debug-render]
+            [entity.movement :as movement]))
 
 (defn- fetch-player-entity [ctx]
   {:post [%]}
@@ -53,7 +22,7 @@
 (defn- ->player-entity-context [ctx]
   {:context/player-entity (fetch-player-entity ctx)})
 
-(defn- reset-common-game-context! [{:keys [context/game] :as ctx}]
+(defn- ->game-context [{:keys [context/game] :as ctx}]
   (let [components (map #(vector % nil) game)]
     (component/load! components)
     (reduce (fn [ctx {k 0 :as component}]
@@ -62,18 +31,9 @@
             components)))
 
 (defn- start-game! [ctx tiled-level]
-  (let [ctx (merge (reset-common-game-context! ctx)
+  (let [ctx (merge (->game-context ctx)
                    {:context/replay-mode? false}
                    (world/->context ctx tiled-level))]
-
-    ; TODO do @ replay mode too .... move to reset-common-game-context!
-    ; TODO do maybe @ enter screen?
-    (let [stage (:stage (:screens/game (:screens (:context/screens ctx))))] ; cannot use get-stage as we are still in main menu !!
-      (group/clear-children! stage)
-      (doseq [actor (->ui-actors ctx)]
-        (group/add-actor! stage actor)))
-
-
     ;(ctx/clear-recorded-txs! ctx)
     ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
     (world/transact-create-entities-from-tiledmap! ctx)
@@ -85,10 +45,10 @@
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
   (ctx/set-record-txs! ctx false)
   ; remove entity connections to world grid/content-grid,
-  ; otherwise all entities removed with reset-common-game-context!
+  ; otherwise all entities removed with ->context
   (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
   (ctx/remove-destroyed-entities! ctx)
-  (let [ctx (reset-common-game-context! ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
+  (let [ctx (->game-context ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
     (reset! app.state/current-context
@@ -123,7 +83,7 @@
     (adjust-zoom (ctx/world-camera context) (- zoom-speed)))
   (check-window-hotkeys context)
   (when (key-just-pressed? context input.keys/escape)
-    (let [windows (children (:windows (ctx/get-stage context)))]
+    (let [windows (group/children (:windows (ctx/get-stage context)))]
       (cond (some visible? windows) (run! #(set-visible! % false) windows)
             :else (change-screen! :screens/options-menu))))
   (when (key-just-pressed? context input.keys/tab)

@@ -25,7 +25,7 @@
   (if color (.setColor batch Color/WHITE)))
 
 (defn- unit-dimensions [image unit-scale]
-  (if (= unit-scale 1)
+  (if (= unit-scale 1) ; TODO hardcoded gui-unit-scale .......
     (:pixel-dimensions image)
     (:world-unit-dimensions image)))
 

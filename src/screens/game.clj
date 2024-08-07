@@ -5,11 +5,9 @@
 
 (defrecord SubScreen []
   Screen
-  (show [_ _context])
-
+  (show [_ _ctx])
   (hide [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
-
   (render [_ ctx]
     (ctx/render-game ctx)))
 

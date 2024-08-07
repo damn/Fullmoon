@@ -2,7 +2,6 @@
   (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             api.disposable
-            [api.graphics :as g]
             [api.screen :as screen]
             [api.scene2d.actor :as actor]
             [api.scene2d.group :as group]
@@ -193,7 +192,6 @@
     (.add (.getTitleTable window)
           (text-button "x" #(.setVisible window false)))
     window)
-
 
 (defmulti ^:private ->vis-image type)
 

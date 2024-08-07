@@ -3,13 +3,14 @@
             api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
-            graphics.cursors
-            graphics.shape-drawer
-            graphics.text
-            graphics.views)
+            (graphics cursors
+                      image
+                      shape-drawer
+                      text
+                      views))
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Color
-           [com.badlogic.gdx.graphics.g2d SpriteBatch]))
+           com.badlogic.gdx.graphics.g2d.SpriteBatch))
 
 ; cannot load batch, shape-drawer, gui/world-view via component/load! because no namespaced keys
 ; could add the namespace 'graphics' manually

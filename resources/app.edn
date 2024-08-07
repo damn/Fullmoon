@@ -8,7 +8,9 @@
        :height 900
        :full-screen? false
        :fps 60}
- :context [[:context/config {:tag :dev
+ :context [
+           ; no dependencies
+           [:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
                                               :debug-window? false
@@ -22,6 +24,8 @@
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
+
+           ; image loading depends on assets, otherwise no dependencies.
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
@@ -42,30 +46,46 @@
                                          :cursors/move-window ["move002" 16 16]
                                          :cursors/princess ["exclamation001" 0 0]
                                          :cursors/princess-gray ["exclamation001_gray" 0 0]}}]
-           [:graphics/image]
+
+           ; depends on graphics: batch & world-view
            [:context/tiled]
-           [:context/ui] ; TODO dispose stage-screens
+
+           ; TODO dispose stage-screens
+           ; depends on graphics: batch & gui-view
+           [:context/ui]
+
+           ; depends on graphics for image,animation edn->data
            [:context/properties {:types [:properties/audiovisual
-                                         :properties/creature
-                                         :properties/item
-                                         :properties/skill
+                                         :properties/creature ; depends on entity
+                                         :properties/item ; depends on modifiers
+                                         :properties/skill ; depends on effects
                                          :properties/world]
                                  :file "resources/properties.edn"}]
-           [:context/game [:context/action-bar ; this is anyway specific to the game context, no need to pass it here??
+
+           ; this is anyway specific to the game context, no need to pass it here??
+           [:context/game [;; widgets
+                           :context/action-bar
                            :context/inventory
+                           :context/player-message
+                           ; => load widgets
+                           :context/game-widgets
+
                            :context/uids-entities
                            :context/thrown-error
                            :context/game-paused
                            :context/game-logic-frame
                            :context/elapsed-game-time
                            :context/mouseover-entity
-                           :context/player-message]]
+                           ]]
+
+           ; no dependencies context/screens, but the screens itself have.
            [:context/screens [:screens/main-menu
                               :screens/game
                               :screens/map-editor
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
+
            [:context/transaction-handler]
            [:context/effect]
            [:context/ecs]
