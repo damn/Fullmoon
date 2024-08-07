@@ -5,12 +5,12 @@
             [api.entity-state :as state]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
-            [api.tx :refer [transact!]]
             [api.world.content-grid :as content-grid]
             app.state
             [game-state.ecs :as ecs]
             [game-state.elapsed-time :as elapsed-time]
             [game-state.mouseover-entity :as mouseover-entity]
+            game-state.player-entity
             game-state.transaction-handler
             [game-state.widgets :as widgets]
             [context.world :as world]
@@ -27,26 +27,19 @@
 ; all tick / update fns should _only_ work on context/game ....
 ; becuz don't need the other stuff ??? properties ???
 
-; if defrecord then also add keys
-; delta-time
-; player-entity
-
-(defmethod transact! :tx.context.game/set-player-entity [[_ entity] ctx]
-  (reset! (:player-entity-ref (:context/game ctx)) entity)
-  nil)
-
 ; TODO
-; transaction-handler
-; world
+; world ?
+
+; if defrecord then also add key 'delta-time'
 (defcomponent :context/game {}
   (component/create [[_ replay-mode?] ctx]
     (merge {:replay-mode? replay-mode?
             :paused? (atom nil)
-            :logic-frame (atom 0)
-            :player-entity-ref (atom nil)} ; a reference to an entity which is again a reference
+            :logic-frame (atom 0)}
            (ecs/->state)
            (elapsed-time/->state)
            (mouseover-entity/->state)
+           (game-state.player-entity/->state)
            (widgets/->state! ctx))))
 
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
