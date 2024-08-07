@@ -96,19 +96,19 @@
 
 (defn- render-game [ctx active-entities*]
   (let [player-entity* (ctx/player-entity* ctx)]
-    (camera/set-position! (ctx/world-camera context)
+    (camera/set-position! (ctx/world-camera ctx)
                           (:entity/position player-entity*))
-    (ctx/render-map context)
-    (ctx/render-world-view context
+    (ctx/render-map ctx)
+    (ctx/render-world-view ctx
                            (fn [g]
-                             (debug-render/before-entities context g)
-                             (ctx/render-entities! context
+                             (debug-render/before-entities ctx g)
+                             (ctx/render-entities! ctx
                                                    g
                                                    ; TODO lazy seqS everywhere!
                                                    (->> active-entities*
                                                         (filter :entity/z-order)
-                                                        (filter #(ctx/line-of-sight? context player-entity* %))))
-                             (debug-render/after-entities context g)))))
+                                                        (filter #(ctx/line-of-sight? ctx player-entity* %))))
+                             (debug-render/after-entities ctx g)))))
 
 (def ^:private pausing? true)
 
@@ -170,8 +170,8 @@
         (replay-game! ctx)
         (update-game ctx active-entities))))
 
-  (delta-time    [ctx] (:delta-time    (:context/game ctx)))
-  (player-entity [ctx] (:player-entity (:context/game ctx))))
+  (delta-time     [ctx]  (:delta-time    (:context/game ctx)))
+  (player-entity* [ctx] @(:player-entity (:context/game ctx)))) ; TODO can do like delta-time and assoc :player-entity* object ! omgwtf
 
 (comment
 
