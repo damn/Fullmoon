@@ -14,8 +14,8 @@
          (filter #(line-of-sight? context @player-entity @%))
          first)))
 
-(defn- ->state []
-  (atom nil))
+(defn ->state []
+  {:mouseover-entity (atom nil)})
 
 (defn- state [ctx]
   (-> ctx :context/game-state :mouseover-entity))

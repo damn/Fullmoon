@@ -2,7 +2,7 @@
   (:require [api.context :refer [stopped?]]))
 
 (defn ->state []
-  (atom 0))
+  {:elapsed-time (atom 0)})
 
 (defn- state [ctx]
   (-> ctx :context/game-state :elapsed-time))
