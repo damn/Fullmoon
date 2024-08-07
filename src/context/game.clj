@@ -54,8 +54,8 @@
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
                    (world/->context ctx tiled-level))]
-    (ctx/clear-recorded-txs! ctx)
-    (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+    ;(ctx/clear-recorded-txs! ctx)
+    ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
     (world/transact-create-entities-from-tiledmap! ctx)
     ;(println "Initial entity txs:")
     ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))

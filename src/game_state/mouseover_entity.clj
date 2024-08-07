@@ -16,10 +16,10 @@
          first)))
 
 (defn ->state []
-  {:mouseover-entity (atom nil)})
+  {:mouseover-entity-ref (atom nil)})
 
 (defn- state [ctx]
-  (-> ctx :context/game :mouseover-entity))
+  (-> ctx :context/game :mouseover-entity-ref))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity
