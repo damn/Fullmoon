@@ -43,9 +43,7 @@
                                   :visible? false
                                   :position [0 (ctx/gui-viewport-height context)]
                                   :rows [[label]]})]
-    (add-actor! window (->actor context
-                                {:act
-                                 #(do
-                                   (set-text! label (debug-infos %))
-                                   (pack! window))}))
+    (add-actor! window (->actor context {:act #(do
+                                                (set-text! label (debug-infos %))
+                                                (pack! window))}))
     window))

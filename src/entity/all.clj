@@ -14,6 +14,7 @@
                     mana
                     mouseover
                     movement
+                    player
                     plop
                     position
                     projectile-collision
