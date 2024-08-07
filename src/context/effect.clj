@@ -26,4 +26,5 @@
 (defmethod transact! :tx/effect [[_ effect-ctx txs] ctx]
   (let [ctx (merge ctx effect-ctx)]
     (assert (valid-params? ctx txs) (pr-str (invalid-tx ctx txs)))
-    (transact-all! ctx txs)))
+    (transact-all! ctx txs))
+  [])

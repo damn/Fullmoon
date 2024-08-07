@@ -58,10 +58,11 @@
           (component/apply-system @system entity* ctx)))
 
 (defmethod transact! :tx/create [[_ components] ctx]
-  (let [entity (atom nil)
-        ctx (ctx/transact-all! ctx [[:tx/setup-entity entity (unique-number!) components]])
-        ctx (apply-system-transact-all! ctx #'entity/create @entity)]
-    ctx))
+  (let [entity (atom nil)]
+    (-> ctx
+        (ctx/transact-all! [[:tx/setup-entity entity (unique-number!) components]])
+        (apply-system-transact-all! #'entity/create @entity))
+    []))
 
 (defmethod transact! :tx/destroy [[_ entity] ctx]
   (swap! entity assoc :entity/destroyed? true)

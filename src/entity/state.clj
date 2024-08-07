@@ -55,4 +55,5 @@
     ctx))
 
 (defmethod transact! :tx/event [[_ entity event params] ctx]
-  (send-event! ctx entity event params))
+  (send-event! ctx entity event params)
+  [])
