@@ -28,8 +28,8 @@
                    {:context/replay-mode? false}
                    (world/->context ctx tiled-level))]
 
-    (ctx/clear-recorded-txs! ctx)
-    (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+    ;(ctx/clear-recorded-txs! ctx)
+    ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
 
     (let [player-entity (world/transact-create-entities-from-tiledmap! ctx)]
       ;(println "Initial entity txs:")
