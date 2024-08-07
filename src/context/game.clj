@@ -12,6 +12,10 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
+; TODO make game context contain all those things
+; not in main context ...... ?
+; e.g. game-paused ?
+
 (defcomponent :context/game {}
   (component/create [_ _ctx]
     [;; widgets load before context/game-widgets
@@ -20,9 +24,9 @@
      :context/player-message
      :context/game-widgets
      ;;
-     :context/uids-entities
-     :context/thrown-error
-     :context/game-paused
+     :context/uids-entities ; move to ecs ?
+     :context/thrown-error  ; move to ecs ?
+     :context/game-paused ; only used in this ns
      :context/game-logic-frame
      :context/elapsed-game-time
      :context/mouseover-entity]))

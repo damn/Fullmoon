@@ -144,25 +144,27 @@
  ; and make for entities/cells too !
  ; and cells no atoms! grid! I change multiple at once ...
  ; maybe only add elements on click -> somehow glyphlayout breaks AFTER this returns successfully
- (let [ctx @app.state/current-context
+ )
+(defn show-context []
+  (let [ctx @app.state/current-context
 
-       position (ctx/world-mouse-position ctx)
-       cell (get (api.context/world-grid ctx) (mapv int position))
+        position (ctx/world-mouse-position ctx)
+        cell (get (api.context/world-grid ctx) (mapv int position))
 
-       ;tree-map @cell
-       ;tree-map @@(:context/mouseover-entity ctx)
-       tree-map ctx
+        ;tree-map @cell
+        ;tree-map @@(:context/mouseover-entity ctx)
+        tree-map ctx
 
-       ;tree-map (sort-by first core.component/attributes)
-       ;tree-map (sort-by first (methods api.tx/transact!))
+        ;tree-map (sort-by first core.component/attributes)
+        ;tree-map (sort-by first (methods api.tx/transact!))
 
-       ]
-   (add-to-stage! ctx (->window ctx {:title "Context Overview"
-                                     :close-button? true
-                                     :close-on-escape? true
-                                     :center? true
-                                     :rows [[(->scroll-pane-cell ctx [[(->prop-tree ctx (into (sorted-map) tree-map))]])]]
-                                     :pack? true}))))
+        ]
+    (add-to-stage! ctx (->window ctx {:title "Context Overview"
+                                      :close-button? true
+                                      :close-on-escape? true
+                                      :center? true
+                                      :rows [[(->scroll-pane-cell ctx [[(->prop-tree ctx (into (sorted-map) tree-map))]])]]
+                                      :pack? true}))))
 
 (comment
 
@@ -215,3 +217,7 @@
                               :fill-x? true
                               :fill-y? true}]]
                      :fill-parent? true})))
+
+(comment
+ (show-context)
+ )

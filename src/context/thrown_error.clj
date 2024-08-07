@@ -3,4 +3,5 @@
             [api.context :as ctx]))
 
 (defcomponent :context/thrown-error {}
-  (component/create [_ _ctx] (atom nil)))
+  (component/create [_ _ctx]
+    (atom nil)))
