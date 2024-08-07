@@ -12,4 +12,4 @@
 (defcomponent :tx/sound data/sound
   (transact! [[_ file] ctx]
     (play-sound! ctx file)
-    nil))
+    ctx))

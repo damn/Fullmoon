@@ -26,7 +26,7 @@
     (add-tooltip! button #(player-tooltip-text % skill))
     (add-actor! horizontal-group button)
     (add! button-group button)
-    nil))
+    ctx))
 
 (defmethod transact! :tx.context.action-bar/remove-skill
   [[_ {:keys [property/id]}] ctx]
@@ -34,7 +34,7 @@
         button (get horizontal-group id)]
     (remove! button)
     (button-group/remove! button-group button)
-    nil))
+    ctx))
 
 (comment
 

@@ -30,17 +30,18 @@
                     (component/update-map entity/create-component components ctx)
                     map->Entity)]
     (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
-  nil)
+  ;(println "tx/setup-entity" (class ctx))
+  ctx)
 
 (defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
   (swap! (:context/game ctx) update :uids-entities assoc (:entity/uid @entity) entity)
-  nil)
+  ctx)
 
 (defmethod transact! :tx/dissoc-uids->entities [[_ uid] ctx]
   {:pre [(contains? (uids-entities ctx) uid)]}
   (swap! (:context/game ctx) update :uids-entities dissoc uid)
-  nil)
+  ctx)
 
 (defcomponent :entity/uid {}
   (entity/create [_ {:keys [entity/id]} _ctx]
@@ -53,7 +54,20 @@
     (swap! cnt inc)))
 
 (defn- apply-system-transact-all! [ctx system entity*]
-  (run! #(ctx/transact-all! ctx %) (component/apply-system system entity* ctx)))
+  ;(println "apply-system-transact-all! " (class ctx))
+  (let [result  (reduce (fn [ctx txs]
+                          (if txs
+                            (try (ctx/transact-all! ctx txs)
+                                 (catch Throwable t
+                                   (throw (ex-info "Error with ctx/transact-all!" {:txs txs} t))))
+                            ctx))
+                        ctx
+                        (component/apply-system @system entity* ctx))]
+    (if result
+      result
+      ctx
+      )
+    ))
 
 (comment
 
@@ -116,14 +130,17 @@
  )
 
 (defmethod transact! :tx/create [[_ components] ctx]
-  (let [entity (atom nil)]
-    (ctx/transact-all! ctx [[:tx/setup-entity entity (unique-number!) components]])
-    (apply-system-transact-all! ctx entity/create @entity))
-  [])
+  (let [entity (atom nil)
+        ctx (ctx/transact-all! ctx [[:tx/setup-entity entity (unique-number!) components]])
+        ;_ (println ":tx/create - result of ctx/transact-all! with tx/setup-entity: " (class ctx))
+        ctx (apply-system-transact-all! ctx #'entity/create @entity)
+        ]
+    ;(println "Result of tx/create: " (class ctx))
+    ctx))
 
-(defmethod transact! :tx/destroy [[_ entity] _ctx]
+(defmethod transact! :tx/destroy [[_ entity] ctx]
   (swap! entity assoc :entity/destroyed? true)
-  nil)
+  ctx)
 
 (defn- handle-entity-error! [ctx entity* throwable]
   (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
@@ -160,11 +177,18 @@
     (get (uids-entities ctx) uid))
 
   (tick-entities! [ctx entities*]
-    (doseq [entity* entities*]
-      (try
-       (apply-system-transact-all! ctx entity/tick entity*)
-       (catch Throwable t
-         (handle-entity-error! ctx entity* t)))))
+    (reduce (fn [ctx entity*]
+              (try
+               (apply-system-transact-all! ctx #'entity/tick entity*)
+               (catch Throwable t
+                 (do (handle-entity-error! ctx entity* t)
+                     ctx
+                     )))
+              )
+            ctx
+            entities*
+            )
+    )
 
   (render-entities! [context g entities*]
     (doseq [entities* (map second ; FIXME lazy seq
@@ -178,5 +202,9 @@
       (render-entity* entity/render-debug entity* g context)))
 
   (remove-destroyed-entities! [ctx]
-    (doseq [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))]
-      (apply-system-transact-all! ctx entity/destroy @entity))))
+    (reduce (fn [ctx entity]
+              (apply-system-transact-all! ctx #'entity/destroy @entity)
+              )
+            ctx
+            (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
+            )))

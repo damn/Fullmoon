@@ -8,7 +8,7 @@
 
 (defmethod transact! :tx/msg-to-player [[_ message] ctx]
   (swap! (:context/game ctx) assoc :player-message {:message message :counter 0})
-  nil)
+  ctx)
 
 (def ^:private duration-seconds 1.5)
 

@@ -99,19 +99,19 @@
   (content-grid/update-entity! (content-grid ctx) entity)
   (when (:entity/body @entity)
     (world-grid/add-entity! (world-grid ctx) entity))
-  nil)
+  ctx)
 
 (defmethod transact! :tx/remove-from-world [[_ entity] ctx]
   (content-grid/remove-entity! (content-grid ctx) entity)
   (when (:entity/body @entity)
     (world-grid/remove-entity! (world-grid ctx) entity))
-  nil)
+  ctx)
 
 (defmethod transact! :tx/position-changed [[_ entity] ctx]
   (content-grid/update-entity! (content-grid ctx) entity)
   (when (:entity/body @entity)
     (world-grid/entity-position-changed! (world-grid ctx) entity))
-  nil)
+  ctx)
 
 (defn- set-cell-blocked-boolean-array [arr cell*]
   (let [[x y] (:position cell*)]
@@ -157,20 +157,22 @@
 (def ^:private spawn-enemies? true)
 
 (defn transact-create-entities-from-tiledmap! [{:keys [context/world] :as ctx}]
-  (let [tiled-map (:tiled-map world)]
-    (when spawn-enemies?
-      (transact-all! ctx
-                     (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
-                       [:tx.entity/creature
-                        (keyword creature-id)
-                        #:entity {:position (tile->middle posi)
-                                  :state [:state/npc :sleeping]}])))
-    (tiled/remove-layer! tiled-map :creatures)) ; otherwise will be rendered, is visible
-  (transact-all! ctx [[:tx.entity/creature
-                       :creatures/vampire
-                       #:entity {:position (:start-position world)
-                                 :state [:state/player :idle]
-                                 :player? true
-                                 :free-skill-points 3
-                                 :clickable {:type :clickable/player}
-                                 :click-distance-tiles 1.5}]]))
+  (let [tiled-map (:tiled-map world)
+        ctx (if spawn-enemies?
+              (transact-all! ctx
+                             (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
+                               [:tx.entity/creature
+                                (keyword creature-id)
+                                #:entity {:position (tile->middle posi)
+                                          :state [:state/npc :sleeping]}]))
+              ctx)
+        _ (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
+        ]
+    (transact-all! ctx [[:tx.entity/creature
+                         :creatures/vampire
+                         #:entity {:position (:start-position world)
+                                   :state [:state/player :idle]
+                                   :player? true
+                                   :free-skill-points 3
+                                   :clickable {:type :clickable/player}
+                                   :click-distance-tiles 1.5}]])))

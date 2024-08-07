@@ -63,8 +63,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (let [ctx @current-context]
-                               (transact-all! ctx (clicked-cell ctx cell))))))
+                             (swap! current-context transact-all! (clicked-cell ctx cell)))))
     stack))
 
 (defn- slot->background [ctx]
@@ -139,7 +138,7 @@
     (.setMinSize drawable (float cell-size) (float cell-size))
     (.setDrawable image-widget drawable)
     (add-tooltip! cell-widget #(player-tooltip-text % item))
-    nil))
+    ctx))
 
 (defmethod transact! :tx/remove-item-from-widget [[_ cell] ctx]
   (let [{:keys [table slot->background]} (get-inventory ctx)
@@ -147,4 +146,4 @@
         ^Image image-widget (get cell-widget :image)]
     (.setDrawable image-widget (slot->background (cell 0)))
     (remove-tooltip! cell-widget)
-    nil))
+    ctx))

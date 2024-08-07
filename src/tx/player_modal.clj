@@ -26,4 +26,4 @@
 
 (defmethod transact! :tx/player-modal [[_ params] ctx]
   (show-player-modal! ctx params)
-  nil)
+  ctx)

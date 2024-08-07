@@ -55,10 +55,11 @@
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
-                   (world/->context ctx tiled-level))]
-    ;(ctx/clear-recorded-txs! ctx)
-    ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
-    (world/transact-create-entities-from-tiledmap! ctx)
+                   (world/->context ctx tiled-level))
+        ;(ctx/clear-recorded-txs! ctx)
+        ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+        ctx (world/transact-create-entities-from-tiledmap! ctx)
+        ]
     ;(println "Initial entity txs:")
     ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
     ctx))
@@ -90,7 +91,7 @@
   (let [game-state (:context/game ctx)
         player-entity (:player-entity @game-state)
         state-obj (entity/state-obj @player-entity)
-        _ (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
+        ctx (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
                          (state/pause-game? (entity/state-obj @player-entity))
@@ -105,11 +106,13 @@
               (let [ctx (-> ctx
                             (update :context.game/logic-frame inc)
                             elapsed-time/update-time)]
+                ; TODO here follow through new ctx........
                 (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
                 (ctx/tick-entities! ctx (map deref active-entities)) ; TODO lazy seqs everywhere!
-                ctx))]
+                ))
+        ]
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
-    ctx))
+    ))
 
 (defn- replay-frame! [ctx]
   (let [game-state (:context/game ctx)]
