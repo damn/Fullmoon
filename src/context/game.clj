@@ -19,6 +19,7 @@
 ; transaction-handler
 ; world
 ; player-entity
+; TODO record contains 'delta-time' (not shown here)
 (defcomponent :context/game {}
   (component/create [_ ctx]
     (merge {:replay-mode? false
@@ -152,7 +153,10 @@
       (render-game context (map deref active-entities))
       (if (:replay-mode? game)
         (replay-game! context)
-        (update-game context active-entities)))))
+        (update-game context active-entities))))
+
+  (delta-time [{:keys [context/game]}]
+    (:delta-time game)))
 
 (comment
 

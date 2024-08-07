@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [math.vector :as v]
             [api.entity :as entity]
-            [api.context :refer [world-grid]]
+            [api.context :as ctx]
             [entity.body :as body]
             [api.world.grid :refer [valid-position?]]
             [core.data :as data]))
@@ -27,7 +27,7 @@
 
 (defn- try-move [ctx entity* direction]
   (let [entity* (update-position entity* (ctx/delta-time ctx) direction)]
-    (when (valid-position? (world-grid ctx) entity*) ; TODO call on ctx shortcut fn
+    (when (valid-position? (ctx/world-grid ctx) entity*) ; TODO call on ctx shortcut fn
       entity*)))
 
 ; TODO sliding threshold
