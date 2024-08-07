@@ -16,8 +16,6 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-; TODO fix recording - replay-mode (replay-frame & start-replay-mode!)
-
 ; TODO
 ; * world ?
 ; * pull last atom out also ?! possible ??
@@ -58,15 +56,15 @@
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
                    (world/->context ctx tiled-level))
-        ;(ctx/clear-recorded-txs! ctx)
-        ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+        ;_ (ctx/clear-recorded-txs! ctx)
+        ;_ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
         ctx (world/transact-create-entities-from-tiledmap! ctx)]
     ;(println "Initial entity txs:")
     ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
     ctx))
 
 (defn- start-replay-mode! [ctx]
-  ; TODO assert we have recorded txs' otherwise just NPE
+  (assert @#'game-state.transaction-handler/record-txs?)
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
   (ctx/set-record-txs! ctx false)
   ; keeping context/world !
@@ -112,31 +110,24 @@
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
-  (let [game-state (:context/game ctx)]
-    (swap! game-state #(-> %
-                           ;(update :logic-frame inc)
-                           ;(assoc-delta-time ctx) ; TODO why here? it was fixed anyway ... IDK how to use it here
-                           ; can choose animation/movement speed ?? movement anyway fixed
-                           ; animation also ???  -> its already covered in txs?
-                           ;(mouseover-entity/update! ctx)
-
-                           ; TODO but for elapsed-time we need delta-time ...
-                           ; how 2 do here without using raw-delta?
-                           ;(elapsed-time/update-time)
-
-                           ))
-    (let [frame-number (:logic-frame @game-state)
-          txs (ctx/frame->txs ctx frame-number)]
-      ;(println frame-number ". " (count txs))
-      (ctx/transact-all! ctx txs))))
+  (let [ctx (-> ctx
+                (update :context.game/logic-frame inc)
+                ; delta-time we don't need: movement & animation are in txs the info
+                ;(mouseover-entity/update! ctx) dont need?!
+                elapsed-time/update-time  ; jut for interest? but not needed?
+                )
+        frame-number (:context.game/logic-frame ctx)
+        txs (ctx/frame->txs ctx frame-number)]
+    ;(println frame-number ". " (count txs))
+    (ctx/transact-all! ctx txs)))
 
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
 (defn- replay-game [ctx]
-  (dotimes [_ replay-speed]
-    (replay-frame! ctx))
-  ctx)
+  (reduce (fn [ctx _] (replay-frame! ctx))
+   ctx
+   (range replay-speed)))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
