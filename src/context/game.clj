@@ -18,10 +18,7 @@
 
 (defcomponent :context/game {}
   (component/create [_ _ctx]
-    [;; widgets load before context/game-widgets
-     :context/player-message
-     :context/game-widgets
-     ;;
+    [:context/game-widgets
      :context/uids-entities ; move to ecs ?
      :context/thrown-error  ; move to ecs ?
      :context/game-paused ; only used in this ns

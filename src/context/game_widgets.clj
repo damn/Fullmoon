@@ -6,7 +6,7 @@
             [api.scene2d.group :as group]
             [api.input.keys :as input.keys]
             [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
-            [context.player-message :refer [->player-message-actor]]
+            [widgets.player-message :as player-message]
             [widgets.action-bar :as action-bar]
             [widgets.debug-window :as debug-window]
             [widgets.entity-info-window :as entity-info-window]
@@ -48,7 +48,7 @@
    (->hp-mana-bars         ctx)
    (->windows              ctx widget-data)
    (->item-on-cursor-actor ctx)
-   (->player-message-actor ctx)])
+   (player-message/->build ctx)])
 
 ; cannot use get-stage as we are still in main menu
 (defn- reset-stage-actors! [ctx widget-data]
@@ -64,7 +64,9 @@
 (defcomponent :context/game-widgets {}
   (component/create [_ ctx]
     (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
-                       :slot->background (inventory/->data ctx)}]
+                       :slot->background (inventory/->data ctx)
+                       :player-message (player-message/->data ctx)
+                       }]
       (reset-stage-actors! ctx widget-data)
       widget-data)))
 

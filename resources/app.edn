@@ -71,8 +71,8 @@
                               :screens/property-editor]]
            [:context/transaction-handler]
            [:context/effect]
-           [:context/ecs] ; -> to context/game ?  (thrown-error & uids-entities)
            [:context/modifier]
+           [:context/ecs] ; -> to context/game ?  (thrown-error & uids-entities)
            [:tx/all]
            [:effect/all]
            [:entity/all]
