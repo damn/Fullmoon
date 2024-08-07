@@ -44,6 +44,10 @@
      (for [[txkey txs] (group-by first txs)]
        [txkey (count txs)])))
 
+  ; TODO fix recording - replay-mode
+
+  ; TODO remove '!' marks ? , but transact-all! can have side-effects e.g. playing sounds, setting cursors ...
+
   ; takes a seq ( not only vector ) of txs (or nils, then skipped)
   ; or returns a new ctx (map? faster than instance??)
   ; TODO recording which ones now? e.g. tx/effect not base lvl tx but returning ctx

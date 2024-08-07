@@ -58,8 +58,7 @@
                    (world/->context ctx tiled-level))
         ;(ctx/clear-recorded-txs! ctx)
         ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
-        ctx (world/transact-create-entities-from-tiledmap! ctx)
-        ]
+        ctx (world/transact-create-entities-from-tiledmap! ctx)]
     ;(println "Initial entity txs:")
     ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
     ctx))

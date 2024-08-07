@@ -165,9 +165,8 @@
                                 (keyword creature-id)
                                 #:entity {:position (tile->middle posi)
                                           :state [:state/npc :sleeping]}]))
-              ctx)
-        _ (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
-        ]
+              ctx)]
+    (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
     (transact-all! ctx [[:tx.entity/creature
                          :creatures/vampire
                          #:entity {:position (:start-position world)
