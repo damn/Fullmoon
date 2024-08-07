@@ -12,7 +12,7 @@
 
   state/State
   (enter [_ _entity* _ctx]
-    [[:tx/sound  "sounds/bfxr_playerdeath.wav"]
+    [[:tx/sound "sounds/bfxr_playerdeath.wav"]
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
                         :button-text ":("

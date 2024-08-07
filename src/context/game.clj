@@ -1,21 +1,18 @@
 (ns context.game
-  (:require [utils.core :refer [safe-get]]
-            [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! transact-all! frame->txs ->text-button]]
+  (:require [core.component :refer [defcomponent] :as component]
+            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! transact-all! frame->txs]]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
-            [api.scene2d.actor :refer [visible? set-visible! toggle-visible!]]
-            [api.scene2d.group :as group]
             [api.world.content-grid :refer [active-entities]]
             [app.state :refer [current-context change-screen!]]
             [context.world :as world]
+            context.game-widgets
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-(defn- ->game-context [{:keys [context/game] :as ctx}]
+(defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
   (let [components (map #(vector % nil) game)]
     (component/load! components)
     (reduce (fn [ctx {k 0 :as component}]
@@ -23,8 +20,8 @@
             ctx
             components)))
 
-(defn- start-game! [ctx tiled-level]
-  (let [ctx (merge (->game-context ctx)
+(defn- start-new-game [ctx tiled-level]
+  (let [ctx (merge (merge-rebuild-game-context ctx)
                    {:context/replay-mode? false}
                    (world/->context ctx tiled-level))]
 
@@ -45,43 +42,30 @@
   (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
   (ctx/remove-destroyed-entities! ctx)
 
-  (let [ctx (->game-context ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
+  (let [ctx (merge-rebuild-game-context ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
 
     (reset! app.state/current-context
             (merge ctx {:context/replay-mode? true}))))
 
-; for now a function, see context.input reload bug
-; otherwise keys in dev mode may be unbound because dependency order not reflected
-; because bind-roots
-(defn- hotkey->window-id [{:keys [context/config] :as ctx}]
-  (merge
-   {input.keys/i :inventory-window
-    input.keys/e :entity-info-window}
-   (when (safe-get config :debug-window?)
-     {input.keys/z :debug-window})))
-
-(defn- check-window-hotkeys [ctx]
-  (doseq [[hotkey window-id] (hotkey->window-id ctx)
-          :when (key-just-pressed? ctx hotkey)]
-    (toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
-
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
 
 (def ^:private zoom-speed 0.05)
 
-(defn- end-of-frame-checks! [context]
-  (when (key-pressed? context input.keys/minus)
-    (adjust-zoom (ctx/world-camera context) zoom-speed))
-  (when (key-pressed? context input.keys/equals)
-    (adjust-zoom (ctx/world-camera context) (- zoom-speed)))
-  (check-window-hotkeys context)
-  (when (key-just-pressed? context input.keys/escape)
-    (let [windows (group/children (:windows (ctx/get-stage context)))]
-      (cond (some visible? windows) (run! #(set-visible! % false) windows)
-            :else (change-screen! :screens/options-menu))))
+(defn- check-zoom-keys [context]
+  (let [camera (ctx/world-camera context)]
+    (when (key-pressed? context input.keys/minus)  (adjust-zoom camera    zoom-speed))
+    (when (key-pressed? context input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
+
+; TODO move to actor/stage listeners ? then input processor used ....
+(defn- check-key-input [context]
+  (check-zoom-keys context)
+  (context.game-widgets/check-window-hotkeys context)
+  (when (and (key-just-pressed? context input.keys/escape)
+             (not (context.game-widgets/close-windows? context)))
+    (change-screen! :screens/options-menu))
   (when (key-just-pressed? context input.keys/tab)
     (change-screen! :screens/minimap)))
 
@@ -129,7 +113,7 @@
       (update-potential-fields! ctx active-entities)
       (tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
     (remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
-    (end-of-frame-checks! ctx)))
+    (check-key-input ctx)))
 
 (defn- replay-frame! [ctx frame-number]
   (update-mouseover-entity! ctx)
@@ -137,7 +121,7 @@
   (let [txs (frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (transact-all! ctx txs))
-  (end-of-frame-checks! ctx))
+  (check-key-input ctx))
 
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
@@ -152,7 +136,7 @@
 (extend-type api.context.Context
   api.context/Game
   (start-new-game [ctx tiled-level]
-    (start-game! ctx tiled-level))
+    (start-new-game ctx tiled-level))
 
   (render-game [{:keys [context/player-entity
                         context/replay-mode?] :as context}]
