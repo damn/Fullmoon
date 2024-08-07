@@ -3,13 +3,13 @@
             [math.vector :as v]
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
+            [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
             [api.disposable :refer [dispose]]
             [api.entity :as entity]
             [api.graphics :as g]
             [api.graphics.camera :as camera]
             [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
-            [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
             [api.tx :refer [transact!]]
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
@@ -170,4 +170,7 @@
                                  :player? true
                                  :free-skill-points 3
                                  :clickable {:type :clickable/player}
-                                 :click-distance-tiles 1.5}]]))
+                                 :click-distance-tiles 1.5}]])
+  (let [player-entity (first (filter #(:entity/player? @%) (ctx/all-entities ctx)))]
+    (assert player-entity)
+    player-entity))
