@@ -38,9 +38,8 @@
 ; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge
-           (ecs/->state) ; exception ...
-           (game-state.player-entity/->state) ; swap
+    (merge (ecs/->state) ; exception -> used in transact!
+           (game-state.player-entity/->state) ; exception -> used in transact!
            (widgets/->state! ctx)))) ; swap
 
 ; TODO  only access everything through functions, or use even
@@ -99,17 +98,17 @@
         ctx (-> ctx
                 (assoc :context.game/paused? paused?)
                 (assoc :context.game/delta-time (->delta-time ctx))
-                elapsed-time/update-time
                 mouseover-entity/update! ; this do always so can get debug info even when game not running
                 )
-        ]
-    (when-not paused?
-      (let [ctx (update ctx :context.game/logic-frame inc)]
-        (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
-        (ctx/tick-entities! ctx (map deref active-entities)))) ; TODO lazy seqs everywhere!
+        ctx (if paused?
+              ctx
+              (let [ctx (-> ctx
+                            (update :context.game/logic-frame inc)
+                            elapsed-time/update-time)]
+                (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
+                (ctx/tick-entities! ctx (map deref active-entities)) ; TODO lazy seqs everywhere!
+                ctx))]
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
-
-
     ctx))
 
 (defn- replay-frame! [ctx]
