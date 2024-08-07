@@ -31,6 +31,9 @@
 ; TODO make some of these fns private ?
 (extend-type api.context.Context
   api.context/ApplicationScreens
+  (current-screen-key [{{:keys [current-screen]} :context/screens}]
+    current-screen)
+
   (current-screen [{{:keys [current-screen screens]} :context/screens}]
     (get screens current-screen))
 

@@ -13,6 +13,7 @@
   (exit-app [_]))
 
 (defprotocol ApplicationScreens
+  (current-screen-key [_])
   (current-screen [_])
   (change-screen [_ new-screen]
                  "Calls screen/hide on the current-screen (if there is one).

@@ -52,11 +52,8 @@
 
 ; cannot use get-stage as we are still in main menu
 (defn- reset-stage-actors! [ctx widget-data]
-  (let [stage (-> ctx
-                  :context/screens
-                  :screens
-                  :screens/game
-                  :stage)]
+  (assert (= :screens/game (ctx/current-screen-key ctx)))
+  (let [stage (ctx/get-stage ctx)]
     (group/clear-children! stage)
     (doseq [actor (->ui-actors ctx widget-data)]
       (group/add-actor! stage actor))))
