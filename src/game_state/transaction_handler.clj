@@ -1,11 +1,10 @@
-(ns context.transaction-handler
+(ns game-state.transaction-handler
   (:require graphics.image
             data.animation
             [api.context :refer [transact-all!]]
             [api.tx :refer [transact!]]))
 
 (def ^:private record-txs? false)
-
 (def ^:private frame->txs (atom nil))
 
 (defn- add-tx-to-frame [frame->txs frame-num tx]
@@ -45,12 +44,12 @@
      (for [[txkey txs] (group-by first txs)]
        [txkey (count txs)])))
 
-  (transact-all! [{{:keys [logic-frame]} :context/game :as ctx} txs]
+  (transact-all! [ctx txs]
     (doseq [tx txs :when tx]
       (try (let [result (transact! tx ctx)]
              (if (and (nil? result)
                       (not= :tx.context.cursor/set (first tx)))
-               (do
+               (let [logic-frame (:logic-frame (:context/game ctx))]
                 (when debug-print-txs?
                   (println @logic-frame "." (debug-print-tx tx)))
                 (when record-txs?

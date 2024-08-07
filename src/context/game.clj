@@ -8,9 +8,10 @@
             [api.tx :refer [transact!]]
             [api.world.content-grid :as content-grid]
             app.state
-            [game-state.mouseover-entity :as mouseover-entity]
-            [game-state.elapsed-time :as elapsed-time]
             [game-state.ecs :as ecs]
+            [game-state.elapsed-time :as elapsed-time]
+            [game-state.mouseover-entity :as mouseover-entity]
+            game-state.transaction-handler
             [game-state.widgets :as widgets]
             [context.world :as world]
             [debug.render :as debug-render]

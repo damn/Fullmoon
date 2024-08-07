@@ -6,7 +6,7 @@
             [api.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.game
-            context.transaction-handler
+            game-state.transaction-handler
             debug.render
             context.world
             entity.body
@@ -41,7 +41,7 @@
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 (def ^:private debug-flags (map ->debug-flag
                                 [#'entity.body/show-body-bounds
-                                 ;#'context.transaction-handler/record-txs?
+                                 ;#'game-state.transaction-handler/record-txs?
                                  #'context.transaction-handler/debug-print-txs?
                                  #'debug.render/tile-grid?
                                  #'debug.render/cell-occupied?

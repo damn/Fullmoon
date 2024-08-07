@@ -67,7 +67,6 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-           [:context/transaction-handler]
            [:context/effect]
            [:context/modifier]
            [:tx/all]
