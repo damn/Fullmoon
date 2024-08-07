@@ -53,10 +53,7 @@
     (swap! cnt inc)))
 
 (defn- apply-system-transact-all! [ctx system entity*]
-  (reduce (fn [ctx txs]
-            (if txs ; TODO if needed?
-              (ctx/transact-all! ctx txs)
-              ctx))
+  (reduce ctx/transact-all!
           ctx
           (component/apply-system @system entity* ctx)))
 
