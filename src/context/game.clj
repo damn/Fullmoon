@@ -12,21 +12,21 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-; TODO make game context contain all those things
-; not in main context ...... ?
-; e.g. game-paused ?
+(defn- ->build-game-state []
+  {:paused? (atom nil)
+   :logic-frame (atom 0)})
 
 (defcomponent :context/game {}
   (component/create [_ _ctx]
-    [:context/game-widgets
-     :context/ecs
-     :context/game-paused ; only used in this ns
-     :context/game-logic-frame
-     :context/elapsed-game-time
-     :context/mouseover-entity]))
+    ; TODO also transaction-handler.....
+    {:components [:context/game-widgets
+                  :context/ecs
+                  :context/elapsed-game-time
+                  :context/mouseover-entity]}))
 
 (defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
-  (let [components (map #(vector % nil) game)]
+  (let [components (map #(vector % nil) (:components game))
+        ctx (assoc-in ctx [:context/game ::state] (->build-game-state))]
     (component/load! components)
     (reduce (fn [ctx {k 0 :as component}]
               (assoc ctx k (component/create component ctx)))
@@ -106,21 +106,20 @@
 (defn- assoc-delta-time [ctx]
   (assoc ctx :context/delta-time (min (ctx/delta-time ctx) movement/max-delta-time)))
 
-(defn- update-game [{:keys [context/player-entity
-                            context/game-paused
-                            context/game-logic-frame]
+(defn- update-game [{:keys [context/player-entity]
+                     {{:keys [paused? logic-frame]} ::state} :context/game
                      :as ctx}
                     active-entities]
   (let [state-obj (entity/state-obj @player-entity)
         _ (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
-        paused? (reset! game-paused (or @(ctx/entity-error ctx)
-                                        (and pausing?
-                                             (state/pause-game? (entity/state-obj @player-entity))
-                                             (not (player-unpaused? ctx)))))
+        paused? (reset! paused? (or @(ctx/entity-error ctx)
+                                    (and pausing?
+                                         (state/pause-game? (entity/state-obj @player-entity))
+                                         (not (player-unpaused? ctx)))))
         ctx (assoc-delta-time ctx)]
     (ctx/update-mouseover-entity! ctx) ; this do always so can get debug info even when game not running
     (when-not paused?
-      (swap! game-logic-frame inc)
+      (swap! logic-frame inc)
       (ctx/update-elapsed-game-time! ctx)
       (ctx/update-potential-fields! ctx active-entities)
       (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
@@ -138,9 +137,9 @@
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
-(defn- replay-game! [{:keys [context/game-logic-frame] :as ctx}]
+(defn- replay-game! [{{{:keys [logic-frame]} ::state} :context/game :as ctx}]
   (dotimes [_ replay-speed]
-    (replay-frame! ctx (swap! game-logic-frame inc))))
+    (replay-frame! ctx (swap! logic-frame inc))))
 
 (extend-type api.context.Context
   api.context/Game

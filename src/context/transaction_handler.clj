@@ -45,16 +45,16 @@
      (for [[txkey txs] (group-by first txs)]
        [txkey (count txs)])))
 
-  (transact-all! [{:keys [context/game-logic-frame] :as ctx} txs]
+  (transact-all! [{{{:keys [logic-frame]} :game.context/state} :context/game :as ctx} txs]
     (doseq [tx txs :when tx]
       (try (let [result (transact! tx ctx)]
              (if (and (nil? result)
                       (not= :tx.context.cursor/set (first tx)))
                (do
                 (when debug-print-txs?
-                  (println @game-logic-frame "." (debug-print-tx tx)))
+                  (println @logic-frame "." (debug-print-tx tx)))
                 (when record-txs?
-                  (swap! frame->txs add-tx-to-frame @game-logic-frame tx)))
+                  (swap! frame->txs add-tx-to-frame @logic-frame tx)))
                (transact-all! ctx result)))
            (catch Throwable t
              (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)} t))))))
