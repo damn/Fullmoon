@@ -45,7 +45,7 @@
 (defn- merge-rebuild-game-context [ctx]
   (update ctx :context/game #(component/create [:context/game %] ctx)))
 
-(defn- start-new-game [ctx tiled-level]
+(defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-rebuild-game-context ctx)
                    (world/->context ctx tiled-level))]
 
@@ -156,20 +156,17 @@
   (dotimes [_ replay-speed]
     (replay-frame! ctx (swap! logic-frame inc))))
 
+(defn render [ctx]
+  (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
+                                                      (ctx/player-entity* ctx))]
+    ; TODO lazy seqS everywhere!
+    (render-game ctx (map deref active-entities))
+    (if (:replay-mode? (:context/game ctx))
+      (replay-game! ctx)
+      (update-game ctx active-entities))))
+
 (extend-type api.context.Context
   api.context/Game
-  (start-new-game [ctx tiled-level]
-    (start-new-game ctx tiled-level))
-
-  (render-game [ctx]
-    (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
-                                                        (ctx/player-entity* ctx))]
-      ; TODO lazy seqS everywhere!
-      (render-game ctx (map deref active-entities))
-      (if (:replay-mode? (:context/game ctx))
-        (replay-game! ctx)
-        (update-game ctx active-entities))))
-
   (delta-time     [ctx]  (:delta-time    (:context/game ctx)))
   (player-entity* [ctx] @(:player-entity (:context/game ctx)))) ; TODO can do like delta-time and assoc :player-entity* object ! omgwtf
 

@@ -5,6 +5,9 @@
             [api.context :as ctx]
             [api.input.keys :as input.keys]
             [api.screen :as screen :refer [Screen]]
+            ; just load here not @ resources because we don't build it yet.
+            ; because ui widgets can only be created @ game screen is current screen
+            [context.game :as game]
             [widgets.background-image :refer [->background-image]]
             mapgen.module-gen))
 
@@ -13,8 +16,8 @@
    :start-position (tile->middle [32 71])})
 
 (defn- start-vampire! [ctx]
-  (swap! current-context ctx/start-new-game (->vampire-tmx ctx))
-  (change-screen! :screens/game))
+  (change-screen! :screens/game)
+  (swap! current-context game/start-new-game (->vampire-tmx ctx)))
 
 (defn- ->rand-module-world [ctx]
   (let [{:keys [tiled-map
@@ -25,8 +28,8 @@
      :start-position (tile->middle start-position)}))
 
 (defn- start-procedural! [ctx]
-  (swap! current-context ctx/start-new-game (->rand-module-world ctx))
-  (change-screen! :screens/game))
+  (change-screen! :screens/game)
+  (swap! current-context game/start-new-game (->rand-module-world ctx)))
 
 (defn- map-editor!      [_ctx] (change-screen! :screens/map-editor))
 (defn- property-editor! [_ctx] (change-screen! :screens/property-editor))

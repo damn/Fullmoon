@@ -67,7 +67,6 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-           [:context/game] ; depends on screens/game for initialising widgets
            [:context/transaction-handler]
            [:context/effect]
            [:context/modifier]

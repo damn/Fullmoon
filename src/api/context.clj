@@ -6,8 +6,6 @@
 (defsystem render [_ ctx])
 
 (defprotocol Game
-  (start-new-game [_ tiled-level])
-  (render-game [_])
   (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
   (player-entity* [_]))
 

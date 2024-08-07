@@ -1,7 +1,8 @@
 (ns screens.game
   (:require [core.component :refer [defcomponent]]
             [api.context :as ctx]
-            [api.screen :as screen :refer [Screen]]))
+            [api.screen :as screen :refer [Screen]]
+            [context.game :as game]))
 
 (defrecord SubScreen []
   Screen
@@ -9,7 +10,7 @@
   (hide [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
   (render [_ ctx]
-    (ctx/render-game ctx)))
+    (game/render ctx)))
 
 (defcomponent :screens/game {}
   (screen/create [_ ctx]
