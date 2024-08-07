@@ -1,11 +1,11 @@
-(ns gdl.simple-screen
+#_(ns gdl.simple-screen
   (:require [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.graphics :as g]
             [api.screen :as screen]
             [api.graphics.color :as color]))
 
-(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
+#_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
   (let [[wx wy] (map #(format "%.2f" %) (ctx/world-mouse-position g))
         [gx gy] (ctx/gui-mouse-position ctx)
         the-str (str "World x " wx "\n"
@@ -23,12 +23,12 @@
                   :x gx,:y gy,:h-align :left,:up? false
                   :scale 2})))
 
-(defrecord Screen []
+#_(defrecord Screen []
   screen/Screen
   (show [_ _ctx])
   (hide [_ _ctx])
-  (render [_ ctx]
+  (render [_]
     (ctx/render-gui-view ctx #(draw-test % ctx))))
 
-(defcomponent :gdl/simple-screen {}
+#_(defcomponent :gdl/simple-screen {}
   (screen/create [_ _ctx] (->Screen)))

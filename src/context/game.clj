@@ -164,8 +164,9 @@
              (not (widgets/close-windows? context)))
         (ctx/change-screen context :screens/options-menu)
 
-        (ctx/key-just-pressed? context input.keys/tab)
-        (ctx/change-screen context :screens/minimap)
+        ; TODO not implementing StageSubScreen so NPE no screen/render!
+        #_(ctx/key-just-pressed? context input.keys/tab)
+        #_(ctx/change-screen context :screens/minimap)
 
         :else
         context))
