@@ -53,7 +53,6 @@
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
     (reset! app.state/current-context
             (merge ctx
-                   (->player-entity-context ctx)
                    {:context/replay-mode? true}))))
 
 ; for now a function, see context.input reload bug
@@ -187,6 +186,9 @@
 
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
+ ; need to set this @ start-new-game for recording of txs for this to work..
+ ;(ctx/clear-recorded-txs! ctx)
+ ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
  (.postRunnable com.badlogic.gdx.Gdx/app
                 (fn []
                   (start-replay-mode!

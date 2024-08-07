@@ -28,6 +28,9 @@
                                  (entity-info-window/create context)
                                  (ctx/inventory-window context)]}))
 
+(defn- ->item-on-cursor-actor [context]
+  (ctx/->actor context {:draw draw-item-on-cursor}))
+
 (defn- ->ui-actors [ctx]
   [(->action-bar-table     ctx)
    (->hp-mana-bars         ctx)
