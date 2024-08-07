@@ -27,8 +27,9 @@
    (keyword? v) v
    (string? v) (pr-str v)
    (boolean? v) v
-   (instance? clojure.lang.Atom v) "[LIME] Atom []"
+   (instance? clojure.lang.Atom v) (str "[LIME] Atom [GRAY]" (class @v) "[]")
    (map? v) (str (class v))
+   (and (vector? v) (< (count v) 3)) v
    (vector? v) (str "Vector "(count v))
    :else (str "[GRAY]" (str v) "[]")))
 
@@ -45,7 +46,7 @@
 (defn- ->nested-nodes [ctx node level v]
   (when (map? v)
     (add-map-nodes! ctx node v (inc level)))
-  (when (vector? v)
+  (when (and (vector? v) (>= (count v) 3))
     (doseq [element v
             :let [el-node (->node (->label ctx (str (->v-str element))))]]
       (.add node el-node))))
