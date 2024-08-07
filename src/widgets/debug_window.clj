@@ -12,12 +12,11 @@
                              :when cooling-down? ]
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
+; TODO component to info-text move to the component itself.....
 (defn- debug-infos [ctx]
-  (let [{:keys [logic-frame
-                elapsed-time]} @(:context/game ctx) ; TODO component to info-text move to the component itself.....
-        world-mouse (ctx/world-mouse-position ctx)]
+  (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
-     "logic-frame: " logic-frame "\n"
+     "logic-frame: " (:context.game/logic-frame ctx) "\n"
      "FPS: " (frames-per-second ctx)  "\n"
      "Zoom: " (camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
@@ -27,7 +26,7 @@
      (when (ctx/entity-error ctx)
        (str "\nERROR!\n " (ctx/entity-error ctx) "\n\n"))
      "paused? " (:context.game/paused? ctx) "\n"
-     "elapsed-time " (utils.core/readable-number elapsed-time) " seconds \n"
+     "elapsed-time " (utils.core/readable-number (:context.game/elapsed-time ctx)) " seconds \n"
      (skill-info (ctx/player-entity* ctx))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]

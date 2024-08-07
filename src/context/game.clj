@@ -38,17 +38,20 @@
 ; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge {:logic-frame 0} ; swap !
+    (merge
            (ecs/->state) ; exception ...
            (mouseover-entity/->state) ; swap
            (game-state.player-entity/->state) ; swap
            (widgets/->state! ctx)))) ; swap
 
+; TODO  only access everything through functions, or use even
+; struct & accessors for speed
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
   (assoc ctx
          :context/game (atom (component/create [:context/game nil] ctx))
          :context.game/replay-mode? replay-mode?
          :context.game/elapsed-time 0
+         :context.game/logic-frame 0
          ))
 
 (defn start-new-game [ctx tiled-level]
@@ -102,11 +105,9 @@
     (swap! game-state #(-> %
                            (mouseover-entity/update! ctx))) ; this do always so can get debug info even when game not running
     (when-not paused?
-      (swap! game-state #(-> %
-                             (update :logic-frame inc)
-                             ))
-      (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
-      (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
+      (let [ctx (update ctx :context.game/logic-frame inc)]
+        (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
+        (ctx/tick-entities! ctx (map deref active-entities)))) ; TODO lazy seqs everywhere!
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
 
 
@@ -115,7 +116,7 @@
 (defn- replay-frame! [ctx]
   (let [game-state (:context/game ctx)]
     (swap! game-state #(-> %
-                           (update :logic-frame inc)
+                           ;(update :logic-frame inc)
                            ;(assoc-delta-time ctx) ; TODO why here? it was fixed anyway ... IDK how to use it here
                            ; can choose animation/movement speed ?? movement anyway fixed
                            ; animation also ???  -> its already covered in txs?
