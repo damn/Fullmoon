@@ -61,14 +61,14 @@
                                          :properties/skill ; depends on effects
                                          :properties/world]
                                  :file "resources/properties.edn"}]
-           [:context/game]
-           ; no dependencies context/screens, but the screens itself have.
            [:context/screens [:screens/main-menu
                               :screens/game
                               :screens/map-editor
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
+           [:context/game]
+           ; no dependencies context/screens, but the screens itself have.
            [:context/transaction-handler]
            [:context/effect]
            [:context/modifier]

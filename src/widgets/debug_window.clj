@@ -15,7 +15,7 @@
 (defn- debug-infos [{:keys [context/player-entity]
                      {:keys [paused?
                              logic-frame
-                             elapsed-time]} :context/game-state
+                             elapsed-time]} :context/game
                      :as ctx}]
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str

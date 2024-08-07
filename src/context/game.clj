@@ -7,23 +7,29 @@
             [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
             app.state
+            [game-state.mouseover-entity :as mouseover-entity]
+            [game-state.elapsed-time :as elapsed-time]
+            [game-state.ecs :as ecs]
+            [game-state.widgets :as widgets]
             [context.world :as world]
-            [context.game-widgets :as game-widgets]
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
+; TODO also delta-time, player-entity, world, replay-mode
+; then componet based do it
+; then move the atom out ....
+; TODO also transaction-handler.....
 (defcomponent :context/game {}
-  (component/create [_ _ctx]
-    [:context/game-state
-     :context/game-widgets]))
+  (component/create [_ ctx]
+    (merge {:paused? (atom nil)
+            :logic-frame (atom 0)}
+           (ecs/->state)
+           (elapsed-time/->state)
+           (mouseover-entity/->state)
+           (widgets/->state! ctx))))
 
-(defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
-  (let [components (map #(vector % nil) game)]
-    (component/load! components)
-    (reduce (fn [ctx {k 0 :as component}]
-              (assoc ctx k (component/create component ctx)))
-            ctx
-            components)))
+(defn- merge-rebuild-game-context [ctx]
+  (update ctx :context/game #(component/create [:context/game %] ctx)))
 
 (defn- start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-rebuild-game-context ctx)
@@ -67,9 +73,9 @@
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [context]
   (check-zoom-keys context)
-  (game-widgets/check-window-hotkeys context)
+  (widgets/check-window-hotkeys context)
   (when (and (ctx/key-just-pressed? context input.keys/escape)
-             (not (game-widgets/close-windows? context)))
+             (not (widgets/close-windows? context)))
     (app.state/change-screen! :screens/options-menu))
   (when (ctx/key-just-pressed? context input.keys/tab)
     (app.state/change-screen! :screens/minimap)))
@@ -99,7 +105,7 @@
   (assoc ctx :context/delta-time (min (ctx/delta-time ctx) movement/max-delta-time)))
 
 (defn- update-game [{:keys [context/player-entity]
-                     {:keys [paused? logic-frame]} :context/game-state
+                     {:keys [paused? logic-frame]} :context/game
                      :as ctx}
                     active-entities]
   (let [state-obj (entity/state-obj @player-entity)
@@ -129,7 +135,7 @@
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
-(defn- replay-game! [{{:keys [logic-frame]} :context/game-state :as ctx}]
+(defn- replay-game! [{{:keys [logic-frame]} :context/game :as ctx}]
   (dotimes [_ replay-speed]
     (replay-frame! ctx (swap! logic-frame inc))))
 

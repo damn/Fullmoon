@@ -4,7 +4,7 @@
             [api.tx :refer [transact!]]))
 
 (defn- get-data [ctx]
-  (:player-message (:context/game-widgets ctx)))
+  (:player-message (:context/game ctx)))
 
 (defmethod transact! :tx/msg-to-player [[_ message] ctx]
   (let [player-message (get-data ctx)]

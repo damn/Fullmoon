@@ -1,4 +1,4 @@
-(ns context.game-widgets
+(ns game-state.widgets
   (:require [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
@@ -26,7 +26,7 @@
 
 (extend-type api.context.Context
   api.context/Actionbar
-  (selected-skill [{{:keys [action-bar/button-group]} :context/game-widgets}]
+  (selected-skill [{{:keys [action-bar/button-group]} :context/game}]
     (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
       (actor/id skill-button)))
 
@@ -61,14 +61,12 @@
     (doseq [actor (->ui-actors ctx widget-data)]
       (group/add-actor! stage actor))))
 
-(defcomponent :context/game-widgets {}
-  (component/create [_ ctx]
-    (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
-                       :slot->background (inventory/->data ctx)
-                       :player-message (player-message/->data ctx)
-                       }]
-      (reset-stage-actors! ctx widget-data)
-      widget-data)))
+(defn ->state! [ctx]
+  (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
+                     :slot->background (inventory/->data ctx)
+                     :player-message (player-message/->data ctx)}]
+    (reset-stage-actors! ctx widget-data)
+    widget-data))
 
 ; TODO maybe here get-widget inventory/action-bar/ ?
 

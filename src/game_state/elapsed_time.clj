@@ -5,7 +5,7 @@
   {:elapsed-time (atom 0)})
 
 (defn- state [ctx]
-  (-> ctx :context/game-state :elapsed-time))
+  (-> ctx :context/game :elapsed-time))
 
 (defrecord ImmutableCounter [duration stop-time])
 

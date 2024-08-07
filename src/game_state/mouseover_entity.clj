@@ -18,7 +18,7 @@
   {:mouseover-entity (atom nil)})
 
 (defn- state [ctx]
-  (-> ctx :context/game-state :mouseover-entity))
+  (-> ctx :context/game :mouseover-entity))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity
