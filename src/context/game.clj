@@ -1,12 +1,12 @@
 (ns context.game
   (:require [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [delta-time key-just-pressed? key-pressed? render-map render-entities! tick-entities! line-of-sight? content-grid remove-destroyed-entities! update-mouseover-entity! update-potential-fields! update-elapsed-game-time! transact-all! frame->txs]]
+            [api.context :as ctx]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
-            [api.world.content-grid :refer [active-entities]]
-            [app.state :refer [current-context change-screen!]]
+            [api.world.content-grid :as content-grid]
+            app.state
             [context.world :as world]
             context.game-widgets
             [debug.render :as debug-render]
@@ -56,42 +56,42 @@
 
 (defn- check-zoom-keys [context]
   (let [camera (ctx/world-camera context)]
-    (when (key-pressed? context input.keys/minus)  (adjust-zoom camera    zoom-speed))
-    (when (key-pressed? context input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
+    (when (ctx/key-pressed? context input.keys/minus)  (adjust-zoom camera    zoom-speed))
+    (when (ctx/key-pressed? context input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
 
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [context]
   (check-zoom-keys context)
   (context.game-widgets/check-window-hotkeys context)
-  (when (and (key-just-pressed? context input.keys/escape)
+  (when (and (ctx/key-just-pressed? context input.keys/escape)
              (not (context.game-widgets/close-windows? context)))
-    (change-screen! :screens/options-menu))
-  (when (key-just-pressed? context input.keys/tab)
-    (change-screen! :screens/minimap)))
+    (app.state/change-screen! :screens/options-menu))
+  (when (ctx/key-just-pressed? context input.keys/tab)
+    (app.state/change-screen! :screens/minimap)))
 
 (defn- render-game [{:keys [context/player-entity] :as context} active-entities*]
   (camera/set-position! (ctx/world-camera context)
                         (:entity/position @player-entity))
-  (render-map context)
+  (ctx/render-map context)
   (ctx/render-world-view context
                          (fn [g]
                            (debug-render/before-entities context g)
-                           (render-entities! context
-                                             g
-                                             ; TODO lazy seqS everywhere!
-                                             (->> active-entities*
-                                                  (filter :entity/z-order)
-                                                  (filter #(line-of-sight? context @player-entity %))))
+                           (ctx/render-entities! context
+                                                 g
+                                                 ; TODO lazy seqS everywhere!
+                                                 (->> active-entities*
+                                                      (filter :entity/z-order)
+                                                      (filter #(ctx/line-of-sight? context @player-entity %))))
                            (debug-render/after-entities context g))))
 
 (def ^:private pausing? true)
 
 (defn- player-unpaused? [ctx]
-  (or (key-just-pressed? ctx input.keys/p)
-      (key-pressed?      ctx input.keys/space)))
+  (or (ctx/key-just-pressed? ctx input.keys/p)
+      (ctx/key-pressed?      ctx input.keys/space)))
 
 (defn- assoc-delta-time [ctx]
-  (assoc ctx :context/delta-time (min (delta-time ctx) movement/max-delta-time)))
+  (assoc ctx :context/delta-time (min (ctx/delta-time ctx) movement/max-delta-time)))
 
 (defn- update-game [{:keys [context/player-entity
                             context/game-paused
@@ -100,27 +100,27 @@
                      :as ctx}
                     active-entities]
   (let [state-obj (entity/state-obj @player-entity)
-        _ (transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
+        _ (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
         paused? (reset! game-paused (or @thrown-error
                                         (and pausing?
                                              (state/pause-game? (entity/state-obj @player-entity))
                                              (not (player-unpaused? ctx)))))
         ctx (assoc-delta-time ctx)]
-    (update-mouseover-entity! ctx) ; this do always so can get debug info even when game not running
+    (ctx/update-mouseover-entity! ctx) ; this do always so can get debug info even when game not running
     (when-not paused?
       (swap! game-logic-frame inc)
-      (update-elapsed-game-time! ctx)
-      (update-potential-fields! ctx active-entities)
-      (tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
-    (remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
+      (ctx/update-elapsed-game-time! ctx)
+      (ctx/update-potential-fields! ctx active-entities)
+      (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
+    (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
     (check-key-input ctx)))
 
 (defn- replay-frame! [ctx frame-number]
-  (update-mouseover-entity! ctx)
-  (update-elapsed-game-time! (assoc-delta-time ctx))
-  (let [txs (frame->txs ctx frame-number)]
+  (ctx/update-mouseover-entity! ctx)
+  (ctx/update-elapsed-game-time! (assoc-delta-time ctx))
+  (let [txs (ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
-    (transact-all! ctx txs))
+    (ctx/transact-all! ctx txs))
   (check-key-input ctx))
 
 ; TODO adjust sound speed also equally ? pitch ?
@@ -140,7 +140,7 @@
 
   (render-game [{:keys [context/player-entity
                         context/replay-mode?] :as context}]
-    (let [active-entities (active-entities (content-grid context) player-entity)]
+    (let [active-entities (content-grid/active-entities (ctx/content-grid context) player-entity)]
       ; TODO lazy seqS everywhere!
       (render-game context (map deref active-entities))
       (if replay-mode?
