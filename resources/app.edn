@@ -67,8 +67,7 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-           [:context/game]
-           ; no dependencies context/screens, but the screens itself have.
+           [:context/game] ; depends on screens/game for initialising widgets
            [:context/transaction-handler]
            [:context/effect]
            [:context/modifier]

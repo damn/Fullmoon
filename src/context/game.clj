@@ -15,13 +15,16 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-; TODO also delta-time, player-entity, world, replay-mode
-; then componet based do it
-; then move the atom out ....
-; TODO also transaction-handler.....
+; TODO
+; transaction-handler
+; world
+; delta-time
+; player-entity
+; replay-mode
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge {:paused? (atom nil)
+    (merge {:replay-mode? false
+            :paused? (atom nil)
             :logic-frame (atom 0)}
            (ecs/->state)
            (elapsed-time/->state)
@@ -33,7 +36,6 @@
 
 (defn- start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-rebuild-game-context ctx)
-                   {:context/replay-mode? false}
                    (world/->context ctx tiled-level))]
 
     ;(ctx/clear-recorded-txs! ctx)
@@ -58,7 +60,7 @@
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
 
     (reset! app.state/current-context
-            (merge ctx {:context/replay-mode? true}))))
+            (assoc-in ctx [:context/game :replay-mode?] true))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
@@ -145,11 +147,11 @@
     (start-new-game ctx tiled-level))
 
   (render-game [{:keys [context/player-entity
-                        context/replay-mode?] :as context}]
+                        context/game] :as context}]
     (let [active-entities (content-grid/active-entities (ctx/content-grid context) player-entity)]
       ; TODO lazy seqS everywhere!
       (render-game context (map deref active-entities))
-      (if replay-mode?
+      (if (:replay-mode? game)
         (replay-game! context)
         (update-game context active-entities)))))
 
