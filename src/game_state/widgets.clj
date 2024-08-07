@@ -26,7 +26,7 @@
 
 (extend-type api.context.Context
   api.context/Actionbar
-  (selected-skill [ctx]
+  (selected-skill [ctx] ; TODO move to action-bar
     (let [{:keys [action-bar/button-group]} @(:context/game ctx)]
       (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
         (actor/id skill-button))))
@@ -59,7 +59,7 @@
     (doseq [actor (->ui-actors ctx widget-data)]
       (group/add-actor! stage actor))))
 
-(defn ->state! [ctx]
+(defn ->state! [ctx] ; TODO move to the component itself
   (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
                      :slot->background (inventory/->data ctx) ; TODO component stuff? - doesnt change....
                      :player-message (player-message/->data ctx)}]

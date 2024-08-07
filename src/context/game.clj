@@ -33,16 +33,20 @@
 ; what does that mean?
 
 ; I can start with moving things out of context/game which dont change at all in a tx like replay-mode?
+
+; => e.g. for paused? I can just return a new ctx @ update-game
+; then the application itself needs to swap! current-context
+; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge {:paused? nil
-            :delta-time nil
-            :logic-frame 0}
-           (ecs/->state)
-           (elapsed-time/->state)
-           (mouseover-entity/->state)
-           (game-state.player-entity/->state)
-           (widgets/->state! ctx))))
+    (merge {:paused? nil ; swap! current context so can see it @ render ...
+            :delta-time nil ; only used inside the loop
+            :logic-frame 0} ; swap !
+           (ecs/->state) ; exception ...
+           (elapsed-time/->state) ; swap
+           (mouseover-entity/->state) ; swap
+           (game-state.player-entity/->state) ; swap
+           (widgets/->state! ctx)))) ; swap
 
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
   (assoc ctx

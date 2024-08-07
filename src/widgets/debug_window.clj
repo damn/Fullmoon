@@ -15,7 +15,7 @@
 (defn- debug-infos [ctx]
   (let [{:keys [paused?
                 logic-frame
-                elapsed-time]} @(:context/game ctx)
+                elapsed-time]} @(:context/game ctx) ; TODO component to info-text move to the component itself.....
         world-mouse (ctx/world-mouse-position ctx)]
     (str
      "logic-frame: " logic-frame "\n"

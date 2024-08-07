@@ -49,7 +49,7 @@
       (try (let [result (transact! tx ctx)]
              (if (and (nil? result)
                       (not= :tx.context.cursor/set (first tx)))
-               (let [logic-frame (:logic-frame @(:context/game ctx))]
+               (let [logic-frame (:logic-frame @(:context/game ctx))] ; TODO only if debug or record deref this...
                 (when debug-print-txs?
                   (println logic-frame "." (debug-print-tx tx)))
                 (when record-txs?
