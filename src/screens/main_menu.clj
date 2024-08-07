@@ -15,10 +15,6 @@
   {:tiled-map (ctx/->tiled-map ctx "maps/vampire.tmx")
    :start-position (tile->middle [32 71])})
 
-(defn- start-vampire! [ctx]
-  (change-screen! :screens/game)
-  (swap! current-context game/start-new-game (->vampire-tmx ctx)))
-
 (defn- ->rand-module-world [ctx]
   (let [{:keys [tiled-map
                 start-position]} (mapgen.module-gen/generate
@@ -26,6 +22,10 @@
                                   (ctx/get-property ctx :worlds/first-level))]
     {:tiled-map tiled-map
      :start-position (tile->middle start-position)}))
+
+(defn- start-vampire! [ctx]
+  (change-screen! :screens/game)
+  (swap! current-context game/start-new-game (->vampire-tmx ctx)))
 
 (defn- start-procedural! [ctx]
   (change-screen! :screens/game)
