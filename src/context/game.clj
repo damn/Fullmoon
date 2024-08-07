@@ -73,11 +73,12 @@
   ; world visibility is not reset ... ...
   ; remove entity connections to world grid/content-grid,
   ; otherwise all entities removed with ->context
-  (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
-  (ctx/remove-destroyed-entities! ctx)
-  (let [ctx (merge-new-game-context ctx :replay-mode? true)]
-    (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
-    ctx))
+  (-> ctx
+      (ctx/transact-all! (for [entity (ctx/all-entities ctx)]
+                           [:tx/destroy entity]))
+      ctx/remove-destroyed-entities!
+      (merge-new-game-context :replay-mode? true)
+      (ctx/transact-all! (ctx/frame->txs ctx 0))))
 
 (def ^:private pausing? true)
 

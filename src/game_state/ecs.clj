@@ -55,13 +55,13 @@
 (defn- apply-system-transact-all! [ctx system entity*]
   (reduce ctx/transact-all!
           ctx
-          (component/apply-system @system entity* ctx)))
+          (component/apply-system system entity* ctx)))
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
     (-> ctx
         (ctx/transact-all! [[:tx/setup-entity entity (unique-number!) components]])
-        (apply-system-transact-all! #'entity/create @entity))
+        (apply-system-transact-all! entity/create @entity))
     []))
 
 (defmethod transact! :tx/destroy [[_ entity] ctx]
@@ -105,7 +105,7 @@
   (tick-entities! [ctx entities*]
     (reduce (fn [ctx entity*]
               (try
-               (apply-system-transact-all! ctx #'entity/tick entity*)
+               (apply-system-transact-all! ctx entity/tick entity*)
                (catch Throwable t
                  (do (handle-entity-error! ctx entity* t)
                      ctx))))
@@ -125,6 +125,6 @@
 
   (remove-destroyed-entities! [ctx]
     (reduce (fn [ctx entity]
-              (apply-system-transact-all! ctx #'entity/destroy @entity))
+              (apply-system-transact-all! ctx entity/destroy @entity))
             ctx
             (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx)))))
