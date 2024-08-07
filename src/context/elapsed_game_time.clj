@@ -1,35 +1,32 @@
 (ns context.elapsed-game-time
-  (:require [core.component :refer [defcomponent] :as component]
-            [api.context :refer [stopped?]]))
+  (:require [api.context :refer [stopped?]]))
 
 (defrecord ImmutableCounter [duration stop-time])
 
-(defcomponent :context/elapsed-game-time {}
-  (component/create [_ _ctx] (atom 0)))
+(defn- elapsed-time [ctx]
+  (-> ctx
+      :context/game
+      :context.game/state
+      :elapsed-time))
 
 (extend-type api.context.Context
   api.context/Counter
-  (->counter [{:keys [context/elapsed-game-time]} duration]
+  (->counter [ctx duration]
     {:pre [(>= duration 0)]}
-    (->ImmutableCounter duration
-                        (+ @elapsed-game-time duration)))
+    (->ImmutableCounter duration (+ @(elapsed-time ctx) duration)))
 
-  (stopped? [{:keys [context/elapsed-game-time]}
-             {:keys [stop-time]}]
-    (>= @elapsed-game-time stop-time))
+  (stopped? [ctx {:keys [stop-time]}]
+    (>= @(elapsed-time ctx) stop-time))
 
-  (reset [{:keys [context/elapsed-game-time]}
-          {:keys [duration] :as counter}]
-    (assoc counter :stop-time (+ @elapsed-game-time duration)))
+  (reset [ctx {:keys [duration] :as counter}]
+    (assoc counter :stop-time (+ @(elapsed-time ctx) duration)))
 
-  (finished-ratio [{:keys [context/elapsed-game-time] :as context}
-                   {:keys [duration stop-time] :as counter}]
+  (finished-ratio [ctx {:keys [duration stop-time] :as counter}]
     {:post [(<= 0 % 1)]}
-    (if (stopped? context counter)
+    (if (stopped? ctx counter)
       0
       ; min 1 because floating point math inaccuracies
-      (min 1 (/ (- stop-time @elapsed-game-time) duration))))
+      (min 1 (/ (- stop-time @(elapsed-time ctx)) duration))))
 
-  (update-elapsed-game-time! [{:keys [context/elapsed-game-time
-                                      context/delta-time]}]
-    (swap! elapsed-game-time + delta-time)))
+  (update-elapsed-game-time! [{:keys [context/delta-time] :as ctx}]
+    (swap! (elapsed-time ctx) + delta-time)))

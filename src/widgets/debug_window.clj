@@ -12,9 +12,10 @@
                              :when cooling-down? ]
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
-(defn- debug-infos [{:keys [context/player-entity
-                            context/elapsed-game-time]
-                     {{:keys [paused? logic-frame]} :context.game/state} :context/game
+(defn- debug-infos [{:keys [context/player-entity]
+                     {{:keys [paused?
+                              logic-frame
+                              elapsed-time]} :context.game/state} :context/game
                      :as ctx}]
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
@@ -28,7 +29,7 @@
      (when @(ctx/entity-error ctx)
        (str "\nERROR!\n " @(ctx/entity-error ctx) "\n\n"))
      "paused? " @paused? "\n"
-     "elapsed-game-time " (utils.core/readable-number @elapsed-game-time) " seconds \n"
+     "elapsed-time " (utils.core/readable-number @elapsed-time) " seconds \n"
      (skill-info @player-entity)
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]

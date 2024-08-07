@@ -12,16 +12,17 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
+; todo also delta-time
 (defn- ->build-game-state []
   {:paused? (atom nil)
-   :logic-frame (atom 0)})
+   :logic-frame (atom 0)
+   :elapsed-time (atom 0)})
 
 (defcomponent :context/game {}
   (component/create [_ _ctx]
     ; TODO also transaction-handler.....
     {:components [:context/game-widgets
                   :context/ecs
-                  :context/elapsed-game-time
                   :context/mouseover-entity]}))
 
 (defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
