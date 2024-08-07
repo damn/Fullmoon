@@ -61,23 +61,7 @@
                                          :properties/skill ; depends on effects
                                          :properties/world]
                                  :file "resources/properties.edn"}]
-
-           ; this is anyway specific to the game context, no need to pass it here??
-           [:context/game [;; widgets
-                           :context/action-bar
-                           :context/inventory
-                           :context/player-message
-                           ; => load widgets
-                           :context/game-widgets
-
-                           :context/uids-entities
-                           :context/thrown-error
-                           :context/game-paused
-                           :context/game-logic-frame
-                           :context/elapsed-game-time
-                           :context/mouseover-entity
-                           ]]
-
+           [:context/game]
            ; no dependencies context/screens, but the screens itself have.
            [:context/screens [:screens/main-menu
                               :screens/game
@@ -85,7 +69,6 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-
            [:context/transaction-handler]
            [:context/effect]
            [:context/ecs]

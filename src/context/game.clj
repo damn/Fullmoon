@@ -13,8 +13,19 @@
             [entity.movement :as movement]))
 
 (defcomponent :context/game {}
-  (component/create [[_ components] _ctx]
-    components))
+  (component/create [_ _ctx]
+    [;; widgets load before context/game-widgets
+     :context/action-bar
+     :context/inventory
+     :context/player-message
+     :context/game-widgets
+     ;;
+     :context/uids-entities
+     :context/thrown-error
+     :context/game-paused
+     :context/game-logic-frame
+     :context/elapsed-game-time
+     :context/mouseover-entity]))
 
 (defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
   (let [components (map #(vector % nil) game)]
