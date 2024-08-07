@@ -125,7 +125,9 @@
       (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
       (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
-    ))
+
+
+    ctx))
 
 (defn- replay-frame! [ctx]
   (let [game-state (:context/game ctx)]
@@ -142,9 +144,10 @@
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
-(defn- replay-game! [ctx]
+(defn- replay-game [ctx]
   (dotimes [_ replay-speed]
-    (replay-frame! ctx)))
+    (replay-frame! ctx))
+  ctx)
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
@@ -176,10 +179,10 @@
                                                       (ctx/player-entity* ctx))]
     ; TODO lazy seqS everywhere!
     (render-game ctx (map deref active-entities))
-    (if (:context.game/replay-mode? ctx)
-      (replay-game! ctx)
-      (update-game ctx active-entities))
-    (check-key-input ctx))) ; not sure I need this @ replay mode ??
+    (let [ctx (if (:context.game/replay-mode? ctx)
+                (replay-game ctx)
+                (update-game ctx active-entities))]
+     (check-key-input ctx)))) ; not sure I need this @ replay mode ??
 
 (extend-type api.context.Context
   api.context/Game
