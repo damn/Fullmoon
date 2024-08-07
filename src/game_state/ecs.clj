@@ -54,73 +54,11 @@
 
 (defn- apply-system-transact-all! [ctx system entity*]
   (reduce (fn [ctx txs]
-            (if txs
-              (try (ctx/transact-all! ctx txs) ;  ?
-                   (catch Throwable t
-                     (throw (ex-info "Error with ctx/transact-all!" {:txs txs} t))))
+            (if txs ; TODO if needed?
+              (ctx/transact-all! ctx txs)
               ctx))
           ctx
           (component/apply-system @system entity* ctx)))
-
-(comment
-
- ; * entity/position obligatory
- ; * all components which use render systems depend on z-order
-
- [:map {:closed true}
-  [:entity/position] ; required - because adds/removes from world with create/destroy
-  [:entity/animation {:optional true}] ; :entity/image shouldn't be there because we assoc it
-  [:entity/body {:optional true}]
-  [:entity/clickable {:optional true}] ; depends on z-order (mouseover-entity filters) & body ( world-grid )
-
-  [:entity/delete-after-animation-stopped? ] ; -> animation ofco.
-  [:entity/delete-after-duration {:optional true}] ; no deps.
-
-  [:entity/faction {:optional true}] ; TODO why projectiles have this ?!
-  ; => context.potential-field/tiles->entities
-  ; => projectile collision don't collide with same faction ...
-  ; so projectile _needs_ it because projectile-collision depends on it ....
-  ; dann noch 'shout' und die API fns friendly/enemy....
-  ; might fix performance if all projectiles don't cause each a potential field ,....
-
-  [:entity/flying?] ; used @ world.cell/cell-blocked? .... linked w. z-order .... move to body ?
-
-  [:entity/hp] ; => body for render....
-
-  [:entity/image] ; position, if body -> reotation angle ?!,
-  ; all who use entity/render need z-order too !!
-  ; I wonder if z-order belongs in body .....
-  ; and body checks that collides? is off for z-order effect/debug/on-ground ?
-
-  [:entity/inventory] ; TODO modifier ... that means if inventory need _all_ modifiable ethingyies or have to check if component is there ...
-
-  [:entity/line-render] ; no deps
-
-  [:entity/mana] ; no deps
-
-  [:entity/mouseover] ; depends on :entity/body
-
-  [:entity/movement] ; depends on :entity/body
-
-  [:entity/plop] ; TODO fix - destroy just for removing data, not making game side effects ( ?!)
-
-  [:entity/projectile-collision] ; depends on :entity/body, :entity/faction (no friendly fire)
-  [:entity/reaction-time]
-  [:entity/shout] ; depends on :entity/faction
-  [:entity/skills] ; to be usable @ entity/state it depends on :entity/mana - specific skills also require specific components ?! e.g. strength for melee - attack ....
-
-  [:entity/state] ; depends on the fsm used , @ creature -> creature properties ....
-  [:entity/stats] ; what do effects do if armor-save is not there ??? or has to be there ???
-  [:entity/string-effect] ; depends one entity/body
-  [:entity/z-order]
-
-  ; TODO components without namespace add ... see txt
-
-  ]
-
- ; dependencies just (assert k) @ the create of that component ?!
- ; or put @ component metadata ... then can check @ creation before calling create-component - fail fast...
- )
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)
