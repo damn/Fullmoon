@@ -42,7 +42,7 @@
 (def ^:private debug-flags (map ->debug-flag
                                 [#'entity.body/show-body-bounds
                                  ;#'game-state.transaction-handler/record-txs?
-                                 #'context.transaction-handler/debug-print-txs?
+                                 #'game-state.transaction-handler/debug-print-txs?
                                  #'debug.render/tile-grid?
                                  #'debug.render/cell-occupied?
                                  #'debug.render/highlight-blocked-cell?

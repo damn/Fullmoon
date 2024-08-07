@@ -26,9 +26,10 @@
 
 (extend-type api.context.Context
   api.context/Actionbar
-  (selected-skill [{{:keys [action-bar/button-group]} :context/game}]
-    (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
-      (actor/id skill-button)))
+  (selected-skill [ctx]
+    (let [{:keys [action-bar/button-group]} @(:context/game ctx)]
+      (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
+        (actor/id skill-button))))
 
   api.context/InventoryWindow
   (inventory-window [ctx]
@@ -60,7 +61,7 @@
 
 (defn ->state! [ctx]
   (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
-                     :slot->background (inventory/->data ctx)
+                     :slot->background (inventory/->data ctx) ; TODO component stuff? - doesnt change....
                      :player-message (player-message/->data ctx)}]
     (reset-stage-actors! ctx widget-data)
     widget-data))

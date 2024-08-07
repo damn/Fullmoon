@@ -129,7 +129,7 @@
 
 (defn- get-inventory [ctx]
   {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
-   :slot->background (:slot->background (:context/game ctx))})
+   :slot->background (:slot->background @(:context/game ctx))})
 
 (defmethod transact! :tx/set-item-image-in-widget [[_ cell item] ctx]
   (let [{:keys [table]} (get-inventory ctx)

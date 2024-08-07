@@ -115,8 +115,7 @@
   (remove-destroyed-entities! [_] "Calls destroy on all entities which are marked with ':tx/destroy'"))
 
 (defprotocol MouseOverEntity
-  (mouseover-entity* [_])
-  (update-mouseover-entity! [_]))
+  (mouseover-entity* [_]))
 
 (defprotocol World
   (render-map [_])
@@ -158,8 +157,7 @@
   (->counter [_ duration])
   (stopped?       [_ counter])
   (reset          [_ counter])
-  (finished-ratio [_ counter])
-  (update-elapsed-game-time! [_]))
+  (finished-ratio [_ counter]))
 
 (defprotocol Skills
   (skill-usable-state [effect-context entity* skill]))

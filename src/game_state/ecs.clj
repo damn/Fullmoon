@@ -8,11 +8,20 @@
             [api.tx :refer [transact!]]))
 
 (defn ->state []
-  {:uids-entities (atom {})
-   :entity-error (atom nil)})
+  {:uids-entities {}
+   :entity-error nil})
 
 (defn- uids-entities [ctx]
-  (-> ctx :context/game :uids-entities))
+  (-> ctx
+      :context/game
+      deref
+      :uids-entities))
+
+(defn- entity-error [ctx]
+  (-> ctx
+      :context/game
+      deref
+      :entity-error))
 
 (defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
   {:pre [(not (contains? components :entity/id))
@@ -25,13 +34,12 @@
 
 (defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
-  (swap! (uids-entities ctx) assoc (:entity/uid @entity) entity)
+  (swap! (:context/game ctx) update :uids-entities assoc (:entity/uid @entity) entity)
   nil)
 
 (defmethod transact! :tx/dissoc-uids->entities [[_ uid] ctx]
-  (let [uids-entities (uids-entities ctx)]
-    (assert (contains? @uids-entities uid))
-    (swap! uids-entities dissoc uid))
+  {:pre [(contains? (uids-entities ctx) uid)]}
+  (swap! (:context/game ctx) update :uids-entities dissoc uid)
   nil)
 
 (defcomponent :entity/uid {}
@@ -119,13 +127,13 @@
 
 (defn- handle-entity-error! [ctx entity* throwable]
   (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
-  (reset! (ctx/entity-error ctx) throwable))
+  (swap! (:context/game ctx) assoc :entity-error throwable))
 
 (defn- render-entity* [system entity* g ctx]
   (try
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
-     (when-not @(ctx/entity-error ctx)
+     (when-not (entity-error ctx)
        (handle-entity-error! ctx entity* t))
      (let [[x y] (:entity/position entity*)]
        (g/draw-text g
@@ -143,13 +151,13 @@
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (entity-error [ctx]
-    (-> ctx :context/game :entity-error))
+    (entity-error ctx))
 
   (all-entities [ctx]
-    (vals @(uids-entities ctx)))
+    (vals (uids-entities ctx)))
 
   (get-entity [ctx uid]
-    (get @(uids-entities ctx) uid))
+    (get (uids-entities ctx) uid))
 
   (tick-entities! [ctx entities*]
     (doseq [entity* entities*]
@@ -170,5 +178,5 @@
       (render-entity* entity/render-debug entity* g context)))
 
   (remove-destroyed-entities! [ctx]
-    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @(uids-entities ctx)))]
+    (doseq [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))]
       (apply-system-transact-all! ctx entity/destroy @entity))))

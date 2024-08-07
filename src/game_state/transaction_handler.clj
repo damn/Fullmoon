@@ -49,11 +49,11 @@
       (try (let [result (transact! tx ctx)]
              (if (and (nil? result)
                       (not= :tx.context.cursor/set (first tx)))
-               (let [logic-frame (:logic-frame (:context/game ctx))]
+               (let [logic-frame (:logic-frame @(:context/game ctx))]
                 (when debug-print-txs?
-                  (println @logic-frame "." (debug-print-tx tx)))
+                  (println logic-frame "." (debug-print-tx tx)))
                 (when record-txs?
-                  (swap! frame->txs add-tx-to-frame @logic-frame tx)))
+                  (swap! frame->txs add-tx-to-frame logic-frame tx)))
                (transact-all! ctx result)))
            (catch Throwable t
              (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)} t))))))

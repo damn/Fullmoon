@@ -12,23 +12,23 @@
                              :when cooling-down? ]
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
-(defn- debug-infos [{{:keys [paused?
-                             logic-frame
-                             elapsed-time]} :context/game
-                     :as ctx}]
-  (let [world-mouse (ctx/world-mouse-position ctx)]
+(defn- debug-infos [ctx]
+  (let [{:keys [paused?
+                logic-frame
+                elapsed-time]} @(:context/game ctx)
+        world-mouse (ctx/world-mouse-position ctx)]
     (str
-     "logic-frame: " @logic-frame "\n"
+     "logic-frame: " logic-frame "\n"
      "FPS: " (frames-per-second ctx)  "\n"
      "Zoom: " (camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (ctx/gui-mouse-position ctx) "\n"
-     (when @(ctx/entity-error ctx)
-       (str "\nERROR!\n " @(ctx/entity-error ctx) "\n\n"))
-     "paused? " @paused? "\n"
-     "elapsed-time " (utils.core/readable-number @elapsed-time) " seconds \n"
+     (when (ctx/entity-error ctx)
+       (str "\nERROR!\n " (ctx/entity-error ctx) "\n\n"))
+     "paused? " paused? "\n"
+     "elapsed-time " (utils.core/readable-number elapsed-time) " seconds \n"
      (skill-info (ctx/player-entity* ctx))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]

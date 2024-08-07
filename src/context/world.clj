@@ -92,6 +92,9 @@
   (world-grid [{:keys [context/world]}]
     (:grid world)))
 
+; TODO add tiled-map & explored-tile-corners here .. context/world used outside ...
+; multiple word-levels possible ...
+
 (defmethod transact! :tx/add-to-world [[_ entity] ctx]
   (content-grid/update-entity! (content-grid ctx) entity)
   (when (:entity/body @entity)

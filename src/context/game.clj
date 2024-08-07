@@ -17,25 +17,16 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-; TODO for using records
-; => use functions everywhere instead of accessing
-; context/foobar
-; or even entity/foobar
-; functions are much better - don't need to know the data !!!
-;  just api ...
-
-; all tick / update fns should _only_ work on context/game ....
-; becuz don't need the other stuff ??? properties ???
-
 ; TODO
-; world ?
-
-; if defrecord then also add key 'delta-time'
+; * world ?
+; * pull last atom out also ?! possible ??
+; => only If I return a new ctx with transact-all! ..... which is a bit crazy ???
 (defcomponent :context/game {}
   (component/create [[_ replay-mode?] ctx]
     (merge {:replay-mode? replay-mode?
-            :paused? (atom nil)
-            :logic-frame (atom 0)}
+            :paused? nil
+            :delta-time nil
+            :logic-frame 0}
            (ecs/->state)
            (elapsed-time/->state)
            (mouseover-entity/->state)
@@ -43,7 +34,7 @@
            (widgets/->state! ctx))))
 
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
-  (assoc ctx :context/game (component/create [:context/game replay-mode?] ctx)))
+  (assoc ctx :context/game (atom (component/create [:context/game replay-mode?] ctx))))
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
@@ -111,60 +102,69 @@
   (or (ctx/key-just-pressed? ctx input.keys/p)
       (ctx/key-pressed?      ctx input.keys/space)))
 
-(defn- assoc-delta-time [ctx]
-  (assoc-in ctx [:context/game :delta-time] (min (ctx/delta-time-raw ctx)
-                                                 movement/max-delta-time)))
+(defn- ->delta-time [ctx]
+  (min (ctx/delta-time-raw ctx) movement/max-delta-time))
 
-(defn- update-game [{{:keys [player-entity-ref
-                             paused?
-                             logic-frame]} :context/game :as ctx}
-                    active-entities]
-  (let [player-entity @player-entity-ref
+(defn- assoc-delta-time [game-state* ctx]
+  (assoc game-state* :delta-time (->delta-time ctx)))
+
+(defn- update-game [ctx active-entities]
+  (let [game-state (:context/game ctx)
+        player-entity (:player-entity @game-state)
         state-obj (entity/state-obj @player-entity)
         _ (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
-        paused? (reset! paused? (or @(ctx/entity-error ctx)
-                                    (and pausing?
-                                         (state/pause-game? (entity/state-obj @player-entity))
-                                         (not (player-unpaused? ctx)))))
-        ctx (assoc-delta-time ctx)]
-    (ctx/update-mouseover-entity! ctx) ; this do always so can get debug info even when game not running
+        paused? (or (ctx/entity-error ctx)
+                    (and pausing?
+                         (state/pause-game? (entity/state-obj @player-entity))
+                         (not (player-unpaused? ctx))))]
+    (swap! game-state #(-> %
+                           (assoc :paused? paused?)
+                           (assoc-delta-time ctx)
+                           (mouseover-entity/update! ctx))) ; this do always so can get debug info even when game not running
     (when-not paused?
-      (swap! logic-frame inc)
-      (ctx/update-elapsed-game-time! ctx)
+      (swap! game-state #(-> %
+                             (update :logic-frame inc)
+                             elapsed-time/update-time))
       (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
       (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
     (check-key-input ctx) ; move after update-game ?
     ))
 
-(defn- replay-frame! [ctx frame-number]
-  (ctx/update-mouseover-entity! ctx)
-  (ctx/update-elapsed-game-time! (assoc-delta-time ctx))
-  (let [txs (ctx/frame->txs ctx frame-number)]
-    ;(println frame-number ". " (count txs))
-    (ctx/transact-all! ctx txs))
+(defn- replay-frame! [ctx]
+  (let [game-state (:context/game ctx)]
+    (swap! game-state #(-> %
+                           (update :logic-frame inc)
+                           (assoc-delta-time ctx) ; TODO why here? it was fixed anyway ...
+                           (mouseover-entity/update! ctx)
+                           (elapsed-time/update-time)))
+    (let [frame-number (:logic-frame @game-state)
+          txs (ctx/frame->txs ctx frame-number)]
+      ;(println frame-number ". " (count txs))
+      (ctx/transact-all! ctx txs)))
   (check-key-input ctx)) ; needed ? options-menu ...
 
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
-(defn- replay-game! [{{:keys [logic-frame]} :context/game :as ctx}]
+(defn- replay-game! [ctx]
   (dotimes [_ replay-speed]
-    (replay-frame! ctx (swap! logic-frame inc))))
+    (replay-frame! ctx)))
 
 (defn render [ctx]
   (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
                                                       (ctx/player-entity* ctx))]
     ; TODO lazy seqS everywhere!
     (render-game ctx (map deref active-entities))
-    (if (:replay-mode? (:context/game ctx))
+    (if (:replay-mode? @(:context/game ctx))
       (replay-game! ctx)
       (update-game ctx active-entities))))
 
 (extend-type api.context.Context
   api.context/Game
-  (delta-time     [ctx]   (:delta-time        (:context/game ctx)))
-  (player-entity* [ctx] @@(:player-entity-ref (:context/game ctx))))
+  (delta-time     [ctx]  (:delta-time    @(:context/game ctx))) ; only used @ movement & animation
+  ; TODO move to game-state.player-entity?
+  (player-entity* [ctx] @(:player-entity @(:context/game ctx))))
 
 (comment
 
