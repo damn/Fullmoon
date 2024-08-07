@@ -21,24 +21,26 @@
 (defn- ->tree []
   (VisTree.))
 
-(defn- expand? [v] ; TODO reuse this below
-  (or (map? v)
-      (vector? v)
-      (instance? clojure.lang.Atom v)))
-
 (defn ->v-str [v]
   (cond
    (number? v) v
    (keyword? v) v
    (string? v) (pr-str v)
    (boolean? v) v
-   (expand? v) "[SKY]->[]"
+   (instance? clojure.lang.Atom v) "[LIME] Atom []"
+   (map? v) (str (class v))
+   (vector? v) (str "Vector "(count v))
    :else (str "[GRAY]" (str v) "[]")))
 
 (defn ->labelstr [k v]
   (str "[LIGHT_GRAY]:"
        (when-let [ns (namespace k)] (str ns "/")) "[WHITE]" (name k)
        ": [GOLD]" (str (->v-str v))))
+
+; TODO expand only on click ... save bandwidth ....
+; crash only on expanding big one ...
+
+(declare add-map-nodes!)
 
 (defn- ->nested-nodes [ctx node level v]
   (when (map? v)
