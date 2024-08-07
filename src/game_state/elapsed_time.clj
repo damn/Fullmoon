@@ -1,14 +1,8 @@
 (ns game-state.elapsed-time
   (:require [api.context :as ctx]))
 
-(defn ->state []
-  {:elapsed-time 0})
-
 (defn- elapsed-time [ctx]
-  (-> ctx
-      :context/game
-      deref
-      :elapsed-time))
+  (:context.game/elapsed-time ctx))
 
 (defrecord ImmutableCounter [duration stop-time])
 
@@ -31,5 +25,5 @@
       ; min 1 because floating point math inaccuracies
       (min 1 (/ (- stop-time (elapsed-time ctx)) duration)))))
 
-(defn update-time [game-state*]
-  (update game-state* :elapsed-time + (:delta-time game-state*))) ; don't use ctx/delta-time here because we don't have recent context at this state....
+(defn update-time [ctx]
+  (update ctx :context.game/elapsed-time + (:context.game/delta-time ctx)))

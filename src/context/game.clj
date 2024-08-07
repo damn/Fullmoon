@@ -40,7 +40,6 @@
   (component/create [_ ctx]
     (merge {:logic-frame 0} ; swap !
            (ecs/->state) ; exception ...
-           (elapsed-time/->state) ; swap
            (mouseover-entity/->state) ; swap
            (game-state.player-entity/->state) ; swap
            (widgets/->state! ctx)))) ; swap
@@ -49,6 +48,7 @@
   (assoc ctx
          :context/game (atom (component/create [:context/game nil] ctx))
          :context.game/replay-mode? replay-mode?
+         :context.game/elapsed-time 0
          ))
 
 (defn start-new-game [ctx tiled-level]
@@ -75,22 +75,6 @@
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
     ctx))
 
-(defn- render-game [ctx active-entities*]
-  (let [player-entity* (ctx/player-entity* ctx)]
-    (camera/set-position! (ctx/world-camera ctx)
-                          (:entity/position player-entity*))
-    (ctx/render-map ctx)
-    (ctx/render-world-view ctx
-                           (fn [g]
-                             (debug-render/before-entities ctx g)
-                             (ctx/render-entities! ctx
-                                                   g
-                                                   ; TODO lazy seqS everywhere!
-                                                   (->> active-entities*
-                                                        (filter :entity/z-order)
-                                                        (filter #(ctx/line-of-sight? ctx player-entity* %))))
-                             (debug-render/after-entities ctx g)))))
-
 (def ^:private pausing? true)
 
 (defn- player-unpaused? [ctx]
@@ -112,6 +96,7 @@
         ctx (-> ctx
                 (assoc :context.game/paused? paused?)
                 (assoc :context.game/delta-time (->delta-time ctx))
+                elapsed-time/update-time
                 )
         ]
     (swap! game-state #(-> %
@@ -119,7 +104,7 @@
     (when-not paused?
       (swap! game-state #(-> %
                              (update :logic-frame inc)
-                             elapsed-time/update-time))
+                             ))
       (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
       (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
@@ -135,7 +120,12 @@
                            ; can choose animation/movement speed ?? movement anyway fixed
                            ; animation also ???  -> its already covered in txs?
                            (mouseover-entity/update! ctx)
-                           (elapsed-time/update-time)))
+
+                           ; TODO but for elapsed-time we need delta-time ...
+                           ; how 2 do here without using raw-delta?
+                           ;(elapsed-time/update-time)
+
+                           ))
     (let [frame-number (:logic-frame @game-state)
           txs (ctx/frame->txs ctx frame-number)]
       ;(println frame-number ". " (count txs))
@@ -173,6 +163,22 @@
 
         :else
         context))
+
+(defn- render-game [ctx active-entities*]
+  (let [player-entity* (ctx/player-entity* ctx)]
+    (camera/set-position! (ctx/world-camera ctx)
+                          (:entity/position player-entity*))
+    (ctx/render-map ctx)
+    (ctx/render-world-view ctx
+                           (fn [g]
+                             (debug-render/before-entities ctx g)
+                             (ctx/render-entities! ctx
+                                                   g
+                                                   ; TODO lazy seqS everywhere!
+                                                   (->> active-entities*
+                                                        (filter :entity/z-order)
+                                                        (filter #(ctx/line-of-sight? ctx player-entity* %))))
+                             (debug-render/after-entities ctx g)))))
 
 (defn render [ctx]
   (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
