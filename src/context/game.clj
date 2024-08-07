@@ -99,20 +99,15 @@
         ctx (-> ctx
                 (assoc :context.game/paused? paused?)
                 (assoc :context.game/delta-time (->delta-time ctx))
-                mouseover-entity/update! ; this do always so can get debug info even when game not running
-                )
+                mouseover-entity/update!) ; this do always so can get debug info even when game not running
         ctx (if paused?
               ctx
               (let [ctx (-> ctx
                             (update :context.game/logic-frame inc)
                             elapsed-time/update-time)]
-                ; TODO here follow through new ctx........
                 (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
-                (ctx/tick-entities! ctx (map deref active-entities)) ; TODO lazy seqs everywhere!
-                ))
-        ]
-    (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
-    ))
+                (ctx/tick-entities! ctx (map deref active-entities))))] ; TODO lazy seqs everywhere!
+    (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
   (let [game-state (:context/game ctx)]

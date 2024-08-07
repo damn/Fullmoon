@@ -5,6 +5,5 @@
   {:player-entity nil})
 
 (defmethod transact! :tx.context.game/set-player-entity [[_ entity] ctx]
-  ;(println ":tx.context.game/set-player-entity called .... ")
   (swap! (:context/game ctx) assoc :player-entity entity)
   ctx)

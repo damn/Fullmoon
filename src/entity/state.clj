@@ -44,16 +44,14 @@
                               (constructor ctx @entity params)
                               (constructor ctx @entity))]
           (reduce (fn [ctx txs-fn]
-                    (transact-all! ctx (txs-fn))
-                    )
+                    (transact-all! ctx (txs-fn)))
                   ctx
                   [#(state/exit      state-obj @entity ctx)
                    #(state/enter new-state-obj @entity ctx)
                    #(if (:entity/player? @entity) (state/player-enter new-state-obj) [])
                    #(vector
                      [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
-                     [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj])]
-                  ))))
+                     [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj])]))))
     ctx))
 
 (defmethod transact! :tx/event [[_ entity event params] ctx]

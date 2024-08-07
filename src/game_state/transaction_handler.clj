@@ -44,70 +44,33 @@
      (for [[txkey txs] (group-by first txs)]
        [txkey (count txs)])))
 
-  ; takes a seq ( not only vector )
-  ; of txs (or nils, then skipped)
-  ; or nil if we do a real side effect and not pass down to other txs
-
-  ; but why do txs which call itself transact-all! return empty vector?
-  ; because probably don't want to be recorded themself
-
-  ; only nils are recorded, the real changes.... I think
-
-  ; so instead of nil we just pass a context back for real transactions?
-  ; and reduce over ctx
-
-  ; don't want to do if instance check
-  ; can I just derive from the type
-  ; then I can find the side-effect transactions also easier with grep...
+  ; takes a seq ( not only vector ) of txs (or nils, then skipped)
+  ; or returns a new ctx (map? faster than instance??)
+  ; TODO recording which ones now? e.g. tx/effect not base lvl tx but returning ctx
+  ; derive from keyword or sth ?
+  ; => make for a way to find it also easier with grep the real txs
   ;(instance? api.context.Context (api.context/->Context))
-
-  ; reduce lazy ?
-
-  ; TODO what at the places where empty vector is returned (dont record?)
   (transact-all! [ctx txs]
-    ;(println "transact-all! with txs: " txs " and ctx " (class ctx))
-    (let [rslt (reduce (fn [ctx tx]
-              ;(println "inside reduce transact-all! with tx " tx " and ctx: " (class ctx))
+    (reduce (fn [ctx tx]
               (if (nil? tx)
                 ctx
                 (try
                  (let [result (transact! tx ctx)]
-                   ;(println "Result of transact! inside tx handler: " (class result))
-                   (assert result
-                           (str "transact! returned nil or falsey: " (debug-print-tx tx))
-                           )
                    (if (and (map? result)
                             #_(not= :tx.context.cursor/set (first tx)))
-
                      (do
                       #_(let [logic-frame (:context.game/logic-frame ctx)] ; TODO only if debug or record deref this...
-                        (when debug-print-txs?
-                          (println logic-frame "." (debug-print-tx tx)))
-                        (when record-txs?
-                          (swap! frame->txs add-tx-to-frame logic-frame tx)))
+                          (when debug-print-txs?
+                            (println logic-frame "." (debug-print-tx tx)))
+                          (when record-txs?
+                            (swap! frame->txs add-tx-to-frame logic-frame tx)))
                       ;(println "map -> return rslt")
                       result)
-
-                     (try
-                      (do
-                       ;(println "no map -> transact-all! with result: " (class result))
-                       (ctx/transact-all! ctx result))
-                          (catch Throwable t
-                            (throw (ex-info "Error with tx result:" {:result result} t)))
-                          )))
-                     (catch Throwable t
-                       (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)} t))))
-                )
-              )
+                     (ctx/transact-all! ctx result)))
+                 (catch Throwable t
+                   (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)} t))))))
             ctx
-            txs
-            )]
-
-      ;(println "Return value of tx-handler/transact-all!: " (class rslt) " of txs: " txs)
-      rslt
-      )
-
-    )
+            txs))
 
   (frame->txs [_ frame-number]
     (@frame->txs frame-number)))
