@@ -7,25 +7,27 @@
             [api.input.keys :as input.keys]
             [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [context.player-message :refer [->player-message-actor]]
+            [widgets.action-bar :as action-bar]
             [widgets.debug-window :as debug-window]
             [widgets.entity-info-window :as entity-info-window]
-            [widgets.hp-mana-bars :refer [->hp-mana-bars]]
-            ))
-
-; depends on these:
-; :context/action-bar
-; :context/inventory
-; :context/player-message
+            [widgets.hp-mana-bars :refer [->hp-mana-bars]]))
 
 ; TODO same space/pad as action-bar (actually inventory cells too)
 ; => global setting use ?
 (defn- ->action-bar-table [ctx]
-  (ctx/->table ctx {:rows [[{:actor (ctx/->action-bar ctx)
+  (ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)
                              :expand? true
                              :bottom? true
                              :left? true}]]
+                    :id ::action-bar-table
                     :cell-defaults {:pad 2}
                     :fill-parent? true}))
+
+(extend-type api.context.Context
+  api.context/Actionbar
+  (selected-skill [{button-group :context/game-widgets}]
+    (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
+      (actor/id skill-button))))
 
 (defn- ->windows [context]
   (ctx/->group context {:id :windows ; TODO namespaced keyword.
@@ -52,12 +54,12 @@
                   :stage)]
     (group/clear-children! stage)
     (doseq [actor (->ui-actors ctx)]
-      (group/add-actor! stage actor))
-    stage))
+      (group/add-actor! stage actor))))
 
 (defcomponent :context/game-widgets {}
   (component/create [_ ctx]
-    (reset-stage-actors! ctx)))
+    (reset-stage-actors! ctx)
+    (action-bar/->button-group ctx)))
 
 ; TODO maybe here get-widget inventory/action-bar/ ?
 

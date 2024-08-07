@@ -170,14 +170,14 @@
 
  ;; learn skill for player
 
- (let [ctx @app.state/current-context
-       player-id (:entity/id @(:context/player-entity ctx))
-       skill (ctx/get-property ctx :skills/convert)
-       ]
-   (ctx/transact-all! ctx [[:tx/add-skill player-id skill]])
 
-   )
  )
+
+(defn learn-skill []
+  (let [ctx @app.state/current-context
+        player-id (:entity/id @(:context/player-entity ctx))
+        skill (ctx/get-property ctx :skills/convert)]
+    (ctx/transact-all! ctx [[:tx/add-skill player-id skill]])))
 
 (comment
 
@@ -219,5 +219,8 @@
                      :fill-parent? true})))
 
 (comment
+
+ (learn-skill)
  (show-context)
+
  )
