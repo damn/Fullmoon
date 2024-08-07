@@ -62,6 +62,9 @@
 (defn ->state! [ctx] ; TODO move to the component itself
   (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
                      :slot->background (inventory/->data ctx) ; TODO component stuff? - doesnt change....
+
+
+                     ; used in transaction -> can't add to :context.game/
                      :player-message (player-message/->data ctx)}]
     (reset-stage-actors! ctx widget-data)
     widget-data))

@@ -40,7 +40,7 @@
   (component/create [_ ctx]
     (merge (ecs/->state) ; exception -> used in transact!
            (game-state.player-entity/->state) ; exception -> used in transact!
-           (widgets/->state! ctx)))) ; swap
+           (widgets/->state! ctx)))) ; exception -> used in transact! (player-message)
 
 ; TODO  only access everything through functions, or use even
 ; struct & accessors for speed
