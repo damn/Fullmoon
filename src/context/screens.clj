@@ -23,10 +23,7 @@
     ; what is there to dispose ?
     ; i think I checked this before ...
 
-    )
-
-  (ctx/render [_ ctx]
-    (screen/render (ctx/current-screen ctx) ctx)))
+    ))
 
 ; TODO make some of these fns private ?
 (extend-type api.context.Context

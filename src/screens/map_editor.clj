@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]
-            [app.state :refer [change-screen!]]
             [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [api.graphics :as g]
             [api.disposable :refer [dispose]]
@@ -173,8 +172,9 @@ direction keys: move")
     (if (key-just-pressed? context input.keys/m)
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (ctx/world-camera context))
-    (when (key-just-pressed? context input.keys/escape)
-      (change-screen! :screens/main-menu))))
+    (if (key-just-pressed? context input.keys/escape)
+      (ctx/change-screen context :screens/main-menu)
+      context)))
 
 (defn ->generate-map-window [ctx level-id]
   (->window ctx {:title "Properties"

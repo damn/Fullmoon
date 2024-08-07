@@ -64,18 +64,18 @@
   api.screen/Screen
   (show [_ context]
     (.setInputProcessor Gdx/input stage)
-    (when sub-screen (screen/show sub-screen context)))
+    (screen/show sub-screen context))
 
   (hide [_ context]
     (.setInputProcessor Gdx/input nil)
-    (when sub-screen (screen/hide sub-screen context)))
+    (screen/hide sub-screen context))
 
-  (render [_ context]
-    ; stage act first so user screen calls change-screen -> is the end of frame
+  (render! [_]
+    ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
-    (.act stage (ctx/delta-time-raw context))
-    (when sub-screen (screen/render sub-screen context))
+    (.act stage (ctx/delta-time-raw @current-context))
+    (swap! current-context #(screen/render sub-screen %))
     (.draw stage)))
 
 (defn- find-actor-with-id [^Group group id]
@@ -86,6 +86,12 @@
             (str "Actor ids are not distinct: " (vec ids)))
     (first (filter #(= id (actor/id %))
                    actors))))
+
+(deftype EmptySubScreen []
+  screen/Screen
+  (show [_ _ctx])
+  (hide [_ _ctx])
+  (render [_ ctx] ctx))
 
 (extend-type api.context.Context
   api.context/Stage
@@ -101,7 +107,7 @@
                          not-found))))]
       (doseq [actor actors]
         (.addActor stage actor))
-      (->StageScreen stage sub-screen)))
+      (->StageScreen stage (or sub-screen (->EmptySubScreen)))))
 
   (get-stage [context]
     (:stage (ctx/current-screen context)))

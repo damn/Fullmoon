@@ -1,6 +1,6 @@
 (ns screens.minimap
   (:require [core.component :refer [defcomponent]]
-            [app.state :refer [current-context change-screen!]]
+            [app.state :refer [current-context]]
             [api.context :as ctx :refer [key-just-pressed? explored?]]
             [api.graphics :as g]
             [api.graphics.color :as color]
@@ -49,6 +49,7 @@
   (hide [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
+  ; TODO fixme not subscreen
   (render [_ {:keys [context/world] :as context}]
     (ctx/render-tiled-map context (:tiled-map world) tile-corner-color-setter)
     (ctx/render-world-view context
@@ -57,9 +58,11 @@
                                                    (camera/position (ctx/world-camera context))
                                                    0.5
                                                    color/green)))
-    (when (or (key-just-pressed? context input.keys/tab)
-              (key-just-pressed? context input.keys/escape))
-      (change-screen! :screens/game))))
+    (if (or (key-just-pressed? context input.keys/tab)
+            (key-just-pressed? context input.keys/escape))
+      (ctx/change-screen context :screens/game)
+      context)))
 
 (defcomponent :screens/minimap {}
-  (screen/create [_ _ctx] (->Screen)))
+  (screen/create [_ _ctx]
+    (->Screen)))

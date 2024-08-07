@@ -6,7 +6,6 @@
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
-            app.state
             [game-state.ecs :as ecs]
             [game-state.elapsed-time :as elapsed-time]
             [game-state.mouseover-entity :as mouseover-entity]
@@ -78,26 +77,6 @@
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
     ctx))
 
-(defn- adjust-zoom [camera by] ; DRY map editor
-  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
-
-(def ^:private zoom-speed 0.05)
-
-(defn- check-zoom-keys [context]
-  (let [camera (ctx/world-camera context)]
-    (when (ctx/key-pressed? context input.keys/minus)  (adjust-zoom camera    zoom-speed))
-    (when (ctx/key-pressed? context input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
-
-; TODO move to actor/stage listeners ? then input processor used ....
-(defn- check-key-input [context]
-  (check-zoom-keys context)
-  (widgets/check-window-hotkeys context)
-  (when (and (ctx/key-just-pressed? context input.keys/escape)
-             (not (widgets/close-windows? context)))
-    (app.state/change-screen! :screens/options-menu))
-  (when (ctx/key-just-pressed? context input.keys/tab)
-    (app.state/change-screen! :screens/minimap)))
-
 (defn- render-game [ctx active-entities*]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx)
@@ -146,7 +125,6 @@
       (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
       (ctx/tick-entities! ctx (map deref active-entities))) ; TODO lazy seqs everywhere!
     (ctx/remove-destroyed-entities! ctx) ; do not pause this as for example pickup item, should be destroyed.
-    (check-key-input ctx) ; move after update-game ?
     ))
 
 (defn- replay-frame! [ctx]
@@ -159,8 +137,7 @@
     (let [frame-number (:logic-frame @game-state)
           txs (ctx/frame->txs ctx frame-number)]
       ;(println frame-number ". " (count txs))
-      (ctx/transact-all! ctx txs)))
-  (check-key-input ctx)) ; needed ? options-menu ...
+      (ctx/transact-all! ctx txs))))
 
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
@@ -169,6 +146,30 @@
   (dotimes [_ replay-speed]
     (replay-frame! ctx)))
 
+(defn- adjust-zoom [camera by] ; DRY map editor
+  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
+
+(def ^:private zoom-speed 0.05)
+
+(defn- check-zoom-keys [context]
+  (let [camera (ctx/world-camera context)]
+    (when (ctx/key-pressed? context input.keys/minus)  (adjust-zoom camera    zoom-speed))
+    (when (ctx/key-pressed? context input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
+
+; TODO move to actor/stage listeners ? then input processor used ....
+(defn- check-key-input [context]
+  (check-zoom-keys context)
+  (widgets/check-window-hotkeys context)
+  (cond (and (ctx/key-just-pressed? context input.keys/escape)
+             (not (widgets/close-windows? context)))
+        (ctx/change-screen context :screens/options-menu)
+
+        (ctx/key-just-pressed? context input.keys/tab)
+        (ctx/change-screen context :screens/minimap)
+
+        :else
+        context))
+
 (defn render [ctx]
   (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
                                                       (ctx/player-entity* ctx))]
@@ -176,7 +177,8 @@
     (render-game ctx (map deref active-entities))
     (if (:context.game/replay-mode? ctx)
       (replay-game! ctx)
-      (update-game ctx active-entities))))
+      (update-game ctx active-entities))
+    (check-key-input ctx))) ; not sure I need this @ replay mode ??
 
 (extend-type api.context.Context
   api.context/Game
@@ -207,6 +209,8 @@
  ; need to set this @ start-new-game for recording of txs for this to work..
  ;(ctx/clear-recorded-txs! ctx)
  ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+
+ (require 'app.state)
  (.postRunnable com.badlogic.gdx.Gdx/app (fn []
                                            (swap! app.state/current-context start-replay-mode!)))
 

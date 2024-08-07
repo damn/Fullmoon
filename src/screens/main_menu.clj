@@ -53,7 +53,7 @@
   (show [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
   (hide [_ ctx])
-  (render [_ ctx]))
+  (render [_ ctx] ctx))
 
 (defcomponent :screens/main-menu {}
   (screen/create [_ ctx]

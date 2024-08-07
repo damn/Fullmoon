@@ -53,9 +53,6 @@
                                  #'context.world/spawn-enemies?
                                  #'world.render/see-all-tiles?]))
 
-(defn- exit []
-  (change-screen! :screens/game))
-
 (def ^:private key-help-text
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
 
@@ -76,7 +73,7 @@
                                      (get-text check-box)
                                      (partial set-state check-box)
                                      (boolean (get-state check-box)))]))
-                   [[(->text-button ctx "Resume" (fn [_ctx] (exit)))]
+                   [[(->text-button ctx "Resume" (fn [_ctx] (change-screen! :screens/game)))]
                     [(->text-button ctx "Exit" (fn [_ctx] (change-screen! :screens/main-menu)))]])
             :fill-parent? true
             :cell-defaults {:pad-bottom 10}}))
@@ -86,8 +83,9 @@
   (show [_ _ctx])
   (hide [_ _ctx])
   (render [_ ctx]
-    (when (key-just-pressed? ctx input.keys/escape)
-      (exit))))
+    (if (key-just-pressed? ctx input.keys/escape)
+      (ctx/change-screen ctx :screens/game)
+      ctx)))
 
 (defn- ->screen [ctx background-image]
   {:actors [background-image

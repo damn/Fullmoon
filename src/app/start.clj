@@ -2,6 +2,7 @@
   (:require [core.component :as component]
             [api.context :as ctx]
             api.disposable
+            [api.screen :as screen]
             [context.screens :as screens]
             [graphics.views :as views]
             [app.state :refer [current-context]])
@@ -26,10 +27,11 @@
       (component/run-system! component/destroy @current-context))
 
     (render []
+      (views/fix-viewport-update @current-context)
       (ScreenUtils/clear Color/BLACK)
-      (let [context @current-context]
-        (views/fix-viewport-update context)
-        (component/run-system! ctx/render context)))
+      (-> @current-context
+          ctx/current-screen
+          screen/render!))
 
     (resize [w h]
       (views/update-viewports @current-context w h))))
