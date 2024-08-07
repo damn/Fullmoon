@@ -38,8 +38,7 @@
 ; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge {:paused? nil ; swap! current context so can see it @ render ...
-            :delta-time nil ; only used inside the loop
+    (merge {:delta-time nil ; not needed outside ctx or next frame or render ... dissoc?
             :logic-frame 0} ; swap !
            (ecs/->state) ; exception ...
            (elapsed-time/->state) ; swap
@@ -113,9 +112,10 @@
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
                          (state/pause-game? (entity/state-obj @player-entity))
-                         (not (player-unpaused? ctx))))]
+                         (not (player-unpaused? ctx))))
+        ctx (assoc ctx :context.game/paused? paused?)
+        ]
     (swap! game-state #(-> %
-                           (assoc :paused? paused?)
                            (assoc-delta-time ctx)
                            (mouseover-entity/update! ctx))) ; this do always so can get debug info even when game not running
     (when-not paused?

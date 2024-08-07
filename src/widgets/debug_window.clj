@@ -13,8 +13,7 @@
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
 (defn- debug-infos [ctx]
-  (let [{:keys [paused?
-                logic-frame
+  (let [{:keys [logic-frame
                 elapsed-time]} @(:context/game ctx) ; TODO component to info-text move to the component itself.....
         world-mouse (ctx/world-mouse-position ctx)]
     (str
@@ -27,7 +26,7 @@
      "GUI: " (ctx/gui-mouse-position ctx) "\n"
      (when (ctx/entity-error ctx)
        (str "\nERROR!\n " (ctx/entity-error ctx) "\n\n"))
-     "paused? " paused? "\n"
+     "paused? " (:context.game/paused? ctx) "\n"
      "elapsed-time " (utils.core/readable-number elapsed-time) " seconds \n"
      (skill-info (ctx/player-entity* ctx))
      ;"\nMouseover-Actor:\n"
