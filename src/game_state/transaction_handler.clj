@@ -31,6 +31,14 @@
                   :else %)
                 tx)))
 
+(defn- tx-happened! [tx ctx]
+  (when (not= :tx.context.cursor/set (first tx))
+    (let [logic-frame (:context.game/logic-frame ctx)] ; TODO only if debug or record deref this...
+      (when debug-print-txs?
+        (println logic-frame "." (debug-print-tx tx)))
+      (when record-txs?
+        (swap! frame->txs add-tx-to-frame logic-frame tx)))))
+
 (extend-type api.context.Context
   api.context/TransactionHandler
   (set-record-txs! [_ bool]
@@ -44,31 +52,15 @@
      (for [[txkey txs] (group-by first txs)]
        [txkey (count txs)])))
 
-  ; TODO fix recording - replay-mode
-
-  ; TODO remove '!' marks ? , but transact-all! can have side-effects e.g. playing sounds, setting cursors ...
-
-  ; takes a seq ( not only vector ) of txs (or nils, then skipped)
-  ; or returns a new ctx (map? faster than instance??)
-  ; TODO recording which ones now? e.g. tx/effect not base lvl tx but returning ctx
-  ; derive from keyword or sth ?
-  ; => make for a way to find it also easier with grep the real txs
-  ;(instance? api.context.Context (api.context/->Context))
   (transact-all! [ctx txs]
     (reduce (fn [ctx tx]
               (if (nil? tx)
                 ctx
                 (try
                  (let [result (transact! tx ctx)]
-                   (if (and (map? result)
-                            #_(not= :tx.context.cursor/set (first tx)))
+                   (if (map? result) ; probably faster than (instance? api.context.Context result)
                      (do
-                      #_(let [logic-frame (:context.game/logic-frame ctx)] ; TODO only if debug or record deref this...
-                          (when debug-print-txs?
-                            (println logic-frame "." (debug-print-tx tx)))
-                          (when record-txs?
-                            (swap! frame->txs add-tx-to-frame logic-frame tx)))
-                      ;(println "map -> return rslt")
+                      (tx-happened! tx ctx)
                       result)
                      (ctx/transact-all! ctx result)))
                  (catch Throwable t
