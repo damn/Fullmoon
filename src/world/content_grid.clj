@@ -23,8 +23,8 @@
         :entity/content-cell
         (swap! update :entities disj entity)))
 
-  (active-entities [_ center-entity]
-    (->> (let [idx (-> @center-entity
+  (active-entities [_ center-entity*]
+    (->> (let [idx (-> center-entity*
                        :entity/content-cell
                        deref
                        :idx)]

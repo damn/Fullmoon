@@ -19,19 +19,20 @@
     (:type (:entity/clickable entity*))))
 
 (defmethod on-clicked :clickable/item
-  [{:keys [context/player-entity] :as context} clicked-entity*]
-  (let [item (:entity/item clicked-entity*)
+  [context clicked-entity*]
+  (let [player-entity* (ctx/player-entity* context)
+        item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
      (visible? (inventory-window context))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:tx/destroy clicked-entity]
-      [:tx/event player-entity :pickup-item item]]
+      [:tx/event (:entity/id player-entity*) :pickup-item item]]
 
-     (entity/can-pickup-item? @player-entity item)
+     (entity/can-pickup-item? player-entity* item)
      [[:tx/sound "sounds/bfxr_pickup.wav"]
       [:tx/destroy clicked-entity]
-      [:tx/pickup-item player-entity item]]
+      [:tx/pickup-item (:entity/id player-entity*) item]]
 
      :else
      [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -43,7 +44,7 @@
 
 (defmethod on-clicked :clickable/princess
   [ctx _clicked-entity*]
-  [[:tx/event (:context/player-entity ctx) :found-princess]])
+  [[:tx/event (:entity/id (ctx/player-entity* ctx)) :found-princess]])
 
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
@@ -72,10 +73,10 @@
      :effect/direction (v/direction (:entity/position entity*) target-position)}))
 
 ; TODO move to inventory-window extend Context
-(defn- inventory-cell-with-item? [{:keys [context/player-entity]} actor]
+(defn- inventory-cell-with-item? [ctx actor]
   (and (parent actor)
        (= "inventory-cell" (actor/name (parent actor)))
-       (get-in (:entity/inventory @player-entity)
+       (get-in (:entity/inventory (ctx/player-entity* ctx))
                (actor/id (parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]

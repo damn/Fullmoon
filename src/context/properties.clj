@@ -226,5 +226,5 @@
 
   (player-tooltip-text [ctx property]
     (api.context/tooltip-text
-     (assoc ctx :effect/source (:context/player-entity ctx))
+     (assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx)))
      property)))

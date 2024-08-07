@@ -23,9 +23,10 @@
                                           [x y])
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ctx/->actor context
-                 {:draw (fn [g {:keys [context/player-entity] :as ctx}]
-                          (let [x (- x (/ rahmenw 2))
+                 {:draw (fn [g ctx]
+                          (let [player-entity* (ctx/player-entity* ctx)
+                                x (- x (/ rahmenw 2))
                                 y-hp 5
                                 y-mana (+ y-hp rahmenh)]
-                            (render-hpmana-bar g ctx x y-hp   hpcontent   (:entity/hp   @player-entity) "HP")
-                            (render-hpmana-bar g ctx x y-mana manacontent (:entity/mana @player-entity) "MP")))})))
+                            (render-hpmana-bar g ctx x y-hp   hpcontent   (:entity/hp   player-entity*) "HP")
+                            (render-hpmana-bar g ctx x y-mana manacontent (:entity/mana player-entity*) "MP")))})))

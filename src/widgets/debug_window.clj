@@ -12,8 +12,8 @@
                              :when cooling-down? ]
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
-(defn- debug-infos [{:keys [context/player-entity]
-                     {:keys [paused?
+(defn- debug-infos [{{:keys [player-entity
+                             paused?
                              logic-frame
                              elapsed-time]} :context/game
                      :as ctx}]

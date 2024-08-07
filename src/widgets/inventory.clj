@@ -20,11 +20,11 @@
 (def ^:private droppable-color    [0   0.6 0 0.8])
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
-(defn- draw-cell-rect [g player-entity x y mouseover? cell]
+(defn- draw-cell-rect [g player-entity* x y mouseover? cell]
   (g/draw-rectangle g x y cell-size cell-size color/gray)
   (when (and mouseover?
-             (= :item-on-cursor (entity/state @player-entity)))
-    (let [item (:entity/item-on-cursor @player-entity)
+             (= :item-on-cursor (entity/state player-entity*)))
+    (let [item (:entity/item-on-cursor player-entity*)
           color (if (inventory/valid-slot? cell item)
                  droppable-color
                  not-allowed-color)]
@@ -40,17 +40,18 @@
 (defn- draw-rect-actor ^Widget []
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{:keys [context/player-entity] g :context/graphics :as ctx} @current-context
+      (let [{g :context/graphics :as ctx} @current-context
+            player-entity* (ctx/player-entity* ctx)
             ^Widget this this]
         (draw-cell-rect g
-                        player-entity
+                        player-entity*
                         (.getX this)
                         (.getY this)
                         (mouseover? this (ctx/gui-mouse-position ctx))
                         (actor/id (actor/parent this)))))))
 
-(defn- clicked-cell [{:keys [context/player-entity] :as ctx} cell]
-  (let [entity* @player-entity]
+(defn- clicked-cell [ctx cell]
+  (let [entity* (ctx/player-entity* ctx)]
     (state/clicked-inventory-cell (entity/state-obj entity*) entity* cell)))
 
 (defn- ->cell [ctx slot->background slot & {:keys [position]}]

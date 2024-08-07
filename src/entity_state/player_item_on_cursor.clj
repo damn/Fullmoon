@@ -94,9 +94,10 @@
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))
 
-(defn draw-item-on-cursor [g {:keys [context/player-entity] :as context}]
-  (when (and (= :item-on-cursor (entity/state @player-entity))
-             (not (world-item? context)))
-    (g/draw-centered-image g
-                           (:property/image (:entity/item-on-cursor @player-entity))
-                           (ctx/gui-mouse-position context))))
+(defn draw-item-on-cursor [g context]
+  (let [player-entity* (ctx/player-entity* context)]
+    (when (and (= :item-on-cursor (entity/state player-entity*))
+               (not (world-item? context)))
+      (g/draw-centered-image g
+                             (:property/image (:entity/item-on-cursor player-entity*))
+                             (ctx/gui-mouse-position context)))))

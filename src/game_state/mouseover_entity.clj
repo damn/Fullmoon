@@ -4,14 +4,15 @@
             [api.entity :as entity]
             [api.world.grid :refer [point->entities]]))
 
-(defn- calculate-mouseover-entity [{:keys [context/player-entity] :as context}]
-  (let [hits (filter #(:entity/z-order @%)
+(defn- calculate-mouseover-entity [context]
+  (let [player-entity* (ctx/player-entity* context)
+        hits (filter #(:entity/z-order @%)
                      (point->entities (world-grid context)
                                       (ctx/world-mouse-position context)))]
     (->> entity/render-order
          (sort-by-order hits #(:entity/z-order @%))
          reverse
-         (filter #(line-of-sight? context @player-entity @%))
+         (filter #(line-of-sight? context player-entity* @%))
          first)))
 
 (defn ->state []

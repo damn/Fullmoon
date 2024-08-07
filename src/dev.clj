@@ -175,7 +175,7 @@
 
 (defn learn-skill []
   (let [ctx @app.state/current-context
-        player-id (:entity/id @(:context/player-entity ctx))
+        player-id (:entity/id (ctx/player-entity* ctx))
         skill (ctx/get-property ctx :skills/convert)]
     (ctx/transact-all! ctx [[:tx/add-skill player-id skill]])))
 
