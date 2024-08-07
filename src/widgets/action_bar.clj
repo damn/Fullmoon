@@ -7,8 +7,7 @@
 
 (defn ->build [ctx]
   (let [group (ctx/->horizontal-group ctx {:pad 2 :space 2})]
-
-    (actor/set-id! group :widgets/action-bar)
+    (actor/set-id! group ::action-bar)
     group))
 
 (defn ->button-group [ctx]
@@ -16,8 +15,8 @@
                            :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
-  {:horizontal-group (:widgets/action-bar (:context.game-widgets/action-bar-table (ctx/get-stage ctx)))
-   :button-group (:action-bar/button-group (:context/game-widgets ctx))})
+  {:horizontal-group (::action-bar (:game-state.widgets/action-bar-table (ctx/get-stage ctx)))
+   :button-group (:action-bar/button-group (:context/game ctx))})
 
 (defmethod transact! :tx.context.action-bar/add-skill
   [[_ {:keys [property/id property/image] :as skill}] ctx]
