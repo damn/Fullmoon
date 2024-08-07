@@ -38,8 +38,7 @@
 ; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge {:delta-time nil ; not needed outside ctx or next frame or render ... dissoc?
-            :logic-frame 0} ; swap !
+    (merge {:logic-frame 0} ; swap !
            (ecs/->state) ; exception ...
            (elapsed-time/->state) ; swap
            (mouseover-entity/->state) ; swap
@@ -101,9 +100,6 @@
 (defn- ->delta-time [ctx]
   (min (ctx/delta-time-raw ctx) movement/max-delta-time))
 
-(defn- assoc-delta-time [game-state* ctx]
-  (assoc game-state* :delta-time (->delta-time ctx)))
-
 (defn- update-game [ctx active-entities]
   (let [game-state (:context/game ctx)
         player-entity (:player-entity @game-state)
@@ -113,10 +109,12 @@
                     (and pausing?
                          (state/pause-game? (entity/state-obj @player-entity))
                          (not (player-unpaused? ctx))))
-        ctx (assoc ctx :context.game/paused? paused?)
+        ctx (-> ctx
+                (assoc :context.game/paused? paused?)
+                (assoc :context.game/delta-time (->delta-time ctx))
+                )
         ]
     (swap! game-state #(-> %
-                           (assoc-delta-time ctx)
                            (mouseover-entity/update! ctx))) ; this do always so can get debug info even when game not running
     (when-not paused?
       (swap! game-state #(-> %
@@ -133,7 +131,9 @@
   (let [game-state (:context/game ctx)]
     (swap! game-state #(-> %
                            (update :logic-frame inc)
-                           (assoc-delta-time ctx) ; TODO why here? it was fixed anyway ...
+                           ;(assoc-delta-time ctx) ; TODO why here? it was fixed anyway ... IDK how to use it here
+                           ; can choose animation/movement speed ?? movement anyway fixed
+                           ; animation also ???  -> its already covered in txs?
                            (mouseover-entity/update! ctx)
                            (elapsed-time/update-time)))
     (let [frame-number (:logic-frame @game-state)
@@ -186,7 +186,7 @@
 
 (extend-type api.context.Context
   api.context/Game
-  (delta-time     [ctx]  (:delta-time    @(:context/game ctx))) ; only used @ movement & animation
+  (delta-time     [ctx]  (:context.game/delta-time ctx)) ; only used @ movement & animation
   ; TODO move to game-state.player-entity?
   (player-entity* [ctx] @(:player-entity @(:context/game ctx))))
 
