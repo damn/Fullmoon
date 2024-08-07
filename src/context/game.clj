@@ -19,7 +19,6 @@
 (defcomponent :context/game {}
   (component/create [_ _ctx]
     [;; widgets load before context/game-widgets
-     :context/inventory
      :context/player-message
      :context/game-widgets
      ;;

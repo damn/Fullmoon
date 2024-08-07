@@ -1,6 +1,5 @@
-(ns context.inventory
-  (:require [core.component :refer [defcomponent] :as component]
-            [data.grid2d :as grid]
+(ns widgets.inventory
+  (:require [data.grid2d :as grid]
             [app.state :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
                                          player-tooltip-text transact-all!]]
@@ -113,29 +112,27 @@
         (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
       (.row table))))
 
-(defcomponent :context/inventory {}
-  (component/create [_ ctx]
-    (let [table (->table ctx {})
-          slot->background (slot->background ctx)]
-      (redo-table! ctx table slot->background)
-      {:window (->window ctx {:title "Inventory"
-                              :id :inventory-window
-                              :visible? false
-                              :pack? true
-                              :position [(ctx/gui-viewport-width ctx)
-                                         (ctx/gui-viewport-height ctx)]
-                              :rows [[{:actor table :pad 2}]]})
-       :slot->background slot->background
-       :table table})))
+(defn ->build [ctx {:keys [slot->background]}]
+  (let [table (->table ctx {:id ::table})]
+    (redo-table! ctx table slot->background)
+    (->window ctx {:title "Inventory"
+                   :id :inventory-window
+                   :visible? false
+                   :pack? true
+                   :position [(ctx/gui-viewport-width ctx)
+                              (ctx/gui-viewport-height ctx)]
+                   :rows [[{:actor table :pad 2}]]})))
 
-(extend-type api.context.Context
-  api.context/InventoryWindow
-  (inventory-window [{{:keys [window]} :context/inventory}]
-    window))
+(defn ->data [ctx]
+  (slot->background ctx))
 
-(defmethod transact! :tx/set-item-image-in-widget [[_ cell item]
-                                                   {{:keys [table]} :context/inventory :as ctx}]
-  (let [^Actor cell-widget (get table cell)
+(defn- get-inventory [ctx]
+  {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
+   :slot->background (:slot->background (:context/game-widgets ctx))})
+
+(defmethod transact! :tx/set-item-image-in-widget [[_ cell item] ctx]
+  (let [{:keys [table]} (get-inventory ctx)
+        ^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)
         drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
     (.setMinSize drawable (float cell-size) (float cell-size))
@@ -143,9 +140,9 @@
     (add-tooltip! cell-widget #(player-tooltip-text % item))
     nil))
 
-(defmethod transact! :tx/remove-item-from-widget [[_ cell]
-                                                  {{:keys [table slot->background]} :context/inventory :as ctx}]
-  (let [^Actor cell-widget (get table cell)
+(defmethod transact! :tx/remove-item-from-widget [[_ cell] ctx]
+  (let [{:keys [table slot->background]} (get-inventory ctx)
+        ^Actor cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)]
     (.setDrawable image-widget (slot->background (cell 0)))
     (remove-tooltip! cell-widget)

@@ -162,5 +162,4 @@
   (skill-usable-state [effect-context entity* skill]))
 
 (defprotocol Actionbar
-  (->action-bar    [_])
   (selected-skill  [_]))
