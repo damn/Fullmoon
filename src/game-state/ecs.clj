@@ -1,4 +1,4 @@
-(ns context.ecs
+(ns game-state.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [sort-by-order]]
             [core.component :refer [defcomponent] :as component]
@@ -7,7 +7,11 @@
             [api.entity :as entity :refer [map->Entity]]
             [api.tx :refer [transact!]]))
 
-(defn- get-uids-entities [ctx]
+(defn ->state []
+  {:uids-entities (atom {})
+   :entity-error (atom nil)})
+
+(defn- uids-entities [ctx]
   (-> ctx :context/game-state :uids-entities))
 
 (defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
@@ -21,11 +25,11 @@
 
 (defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
-  (swap! (get-uids-entities ctx) assoc (:entity/uid @entity) entity)
+  (swap! (uids-entities ctx) assoc (:entity/uid @entity) entity)
   nil)
 
 (defmethod transact! :tx/dissoc-uids->entities [[_ uid] ctx]
-  (let [uids-entities (get-uids-entities ctx)]
+  (let [uids-entities (uids-entities ctx)]
     (assert (contains? @uids-entities uid))
     (swap! uids-entities dissoc uid))
   nil)
@@ -142,10 +146,10 @@
     (-> ctx :context/game-state :entity-error))
 
   (all-entities [ctx]
-    (vals @(get-uids-entities ctx)))
+    (vals @(uids-entities ctx)))
 
   (get-entity [ctx uid]
-    (get @(get-uids-entities ctx) uid))
+    (get @(uids-entities ctx) uid))
 
   (tick-entities! [ctx entities*]
     (doseq [entity* entities*]
@@ -166,5 +170,5 @@
       (render-entity* entity/render-debug entity* g context)))
 
   (remove-destroyed-entities! [ctx]
-    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @(get-uids-entities ctx)))]
+    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @(uids-entities ctx)))]
       (apply-system-transact-all! ctx entity/destroy @entity))))

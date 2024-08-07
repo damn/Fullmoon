@@ -1,4 +1,4 @@
-(ns context.mouseover-entity
+(ns game-state.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
             [api.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [api.entity :as entity]
@@ -14,17 +14,20 @@
          (filter #(line-of-sight? context @player-entity @%))
          first)))
 
-(defn- mouseover-entity-atom [ctx]
+(defn- ->state []
+  (atom nil))
+
+(defn- state [ctx]
   (-> ctx :context/game-state :mouseover-entity))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity
   (mouseover-entity* [ctx]
-    (when-let [entity @(mouseover-entity-atom ctx)]
+    (when-let [entity @(state ctx)]
       @entity))
 
   (update-mouseover-entity! [ctx]
-    (let [entity-ref (mouseover-entity-atom ctx)]
+    (let [entity-ref (state ctx)]
       (when-let [entity @entity-ref]
         (swap! entity dissoc :entity/mouseover?))
       (let [entity (if (mouse-on-stage-actor? ctx)

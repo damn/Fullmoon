@@ -1,29 +1,32 @@
-(ns context.elapsed-game-time
+(ns game-state.elapsed-time
   (:require [api.context :refer [stopped?]]))
 
-(defrecord ImmutableCounter [duration stop-time])
+(defn ->state []
+  (atom 0))
 
-(defn- elapsed-time [ctx]
+(defn- state [ctx]
   (-> ctx :context/game-state :elapsed-time))
+
+(defrecord ImmutableCounter [duration stop-time])
 
 (extend-type api.context.Context
   api.context/Counter
   (->counter [ctx duration]
     {:pre [(>= duration 0)]}
-    (->ImmutableCounter duration (+ @(elapsed-time ctx) duration)))
+    (->ImmutableCounter duration (+ @(state ctx) duration)))
 
   (stopped? [ctx {:keys [stop-time]}]
-    (>= @(elapsed-time ctx) stop-time))
+    (>= @(state ctx) stop-time))
 
   (reset [ctx {:keys [duration] :as counter}]
-    (assoc counter :stop-time (+ @(elapsed-time ctx) duration)))
+    (assoc counter :stop-time (+ @(state ctx) duration)))
 
   (finished-ratio [ctx {:keys [duration stop-time] :as counter}]
     {:post [(<= 0 % 1)]}
     (if (stopped? ctx counter)
       0
       ; min 1 because floating point math inaccuracies
-      (min 1 (/ (- stop-time @(elapsed-time ctx)) duration))))
+      (min 1 (/ (- stop-time @(state ctx)) duration))))
 
   (update-elapsed-game-time! [{:keys [context/delta-time] :as ctx}]
-    (swap! (elapsed-time ctx) + delta-time)))
+    (swap! (state ctx) + delta-time)))
