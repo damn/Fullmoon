@@ -63,7 +63,7 @@
     (add-actor! window (->actor context
                                 {:act (fn [context]
                                         (set-text! label
-                                                   (when-let [entity @(:context/mouseover-entity context)]
-                                                     (entity-info-text @entity)))
+                                                   (when-let [entity* (ctx/mouseover-entity* context)]
+                                                     (entity-info-text entity*)))
                                         (pack! window))}))
     window))

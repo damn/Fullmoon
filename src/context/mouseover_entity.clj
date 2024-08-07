@@ -1,6 +1,5 @@
 (ns context.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
-            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [api.entity :as entity]
             [api.world.grid :refer [point->entities]]))
@@ -15,18 +14,25 @@
          (filter #(line-of-sight? context @player-entity @%))
          first)))
 
-(defcomponent :context/mouseover-entity {}
-  (component/create [_ _ctx] (atom nil)))
+(defn- mouseover-entity-atom [ctx]
+  (-> ctx
+      :context/game
+      :context.game/state
+      :mouseover-entity))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity
-  (update-mouseover-entity! [{:keys [context/mouseover-entity]
-                              :as context}]
-    (when-let [entity @mouseover-entity]
-      (swap! entity dissoc :entity/mouseover?))
-    (let [entity (if (mouse-on-stage-actor? context)
-                   nil
-                   (calculate-mouseover-entity context))]
-      (reset! mouseover-entity entity)
-      (when entity
-        (swap! entity assoc :entity/mouseover? true)))))
+  (mouseover-entity* [ctx]
+    (when-let [entity @(mouseover-entity-atom ctx)]
+      @entity))
+
+  (update-mouseover-entity! [ctx]
+    (let [entity-ref (mouseover-entity-atom ctx)]
+      (when-let [entity @entity-ref]
+        (swap! entity dissoc :entity/mouseover?))
+      (let [entity (if (mouse-on-stage-actor? ctx)
+                     nil
+                     (calculate-mouseover-entity ctx))]
+        (reset! entity-ref entity)
+        (when entity
+          (swap! entity assoc :entity/mouseover? true))))))

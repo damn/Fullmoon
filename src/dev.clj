@@ -152,7 +152,7 @@
         cell (get (api.context/world-grid ctx) (mapv int position))
 
         ;tree-map @cell
-        ;tree-map @@(:context/mouseover-entity ctx)
+        ;tree-map (ctx/mouseover-entity* ctx)
         tree-map ctx
 
         ;tree-map (sort-by first core.component/attributes)

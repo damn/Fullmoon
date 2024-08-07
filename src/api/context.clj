@@ -114,6 +114,7 @@
   (remove-destroyed-entities! [_] "Calls destroy on all entities which are marked with ':tx/destroy'"))
 
 (defprotocol MouseOverEntity
+  (mouseover-entity* [_])
   (update-mouseover-entity! [_]))
 
 (defprotocol World

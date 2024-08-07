@@ -62,13 +62,12 @@
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
 
-(defn- effect-context [{:keys [context/mouseover-entity] :as ctx}
-                       entity*]
-  (let [target @mouseover-entity
-        target-position (or (and target (:entity/position @target))
+(defn- effect-context [ctx entity*]
+  (let [target* (ctx/mouseover-entity* ctx)
+        target-position (or (and target* (:entity/position target*))
                             (ctx/world-mouse-position ctx))]
     {:effect/source (:entity/id entity*)
-     :effect/target target
+     :effect/target (:entity/id target*)
      :effect/target-position target-position
      :effect/direction (v/direction (:entity/position entity*) target-position)}))
 
@@ -87,43 +86,44 @@
      (button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn- ->interaction-state [{:keys [context/mouseover-entity] :as context} entity*]
-  (cond
-   (mouse-on-stage-actor? context)
-   [(mouseover-actor->cursor context)
-    (fn []
-      nil)] ; handled by actors themself, they check player state
+(defn- ->interaction-state [context entity*]
+  (let [mouseover-entity* (ctx/mouseover-entity* context)]
+    (cond
+     (mouse-on-stage-actor? context)
+     [(mouseover-actor->cursor context)
+      (fn []
+        nil)] ; handled by actors themself, they check player state
 
-   (and @mouseover-entity
-        (:entity/clickable @@mouseover-entity))
-   (->clickable-mouseover-entity-interaction context entity* @@mouseover-entity)
+     (and mouseover-entity*
+          (:entity/clickable mouseover-entity*))
+     (->clickable-mouseover-entity-interaction context entity* mouseover-entity*)
 
-   :else
-   (if-let [skill-id (selected-skill context)]
-     (let [effect-context (effect-context context entity*)
-           skill (skill-id (:entity/skills entity*))
-           state (skill-usable-state (merge context effect-context) entity* skill)]
-       (if (= state :usable)
-         (do
-          ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
-          ; different color ?
-          ; => e.g. meditation no TARGET .. etc.
-          [:cursors/use-skill
-           (fn []
-             [[:tx/event (:entity/id entity*) :start-action [skill effect-context]]])])
-         (do
-          ; TODO cursor as of usable state
-          ; cooldown -> sanduhr kleine
-          ; not-enough-mana x mit kreis?
-          ; invalid-params -> depends on params ...
-          [:cursors/skill-not-usable
-           (fn []
-             (denied (case state
-                       :cooldown "Skill is still on cooldown"
-                       :not-enough-mana "Not enough mana"
-                       :invalid-params "Cannot use this here")))])))
-     [:cursors/no-skill-selected
-      (fn [] (denied "No selected skill"))])))
+     :else
+     (if-let [skill-id (selected-skill context)]
+       (let [effect-context (effect-context context entity*)
+             skill (skill-id (:entity/skills entity*))
+             state (skill-usable-state (merge context effect-context) entity* skill)]
+         (if (= state :usable)
+           (do
+            ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
+            ; different color ?
+            ; => e.g. meditation no TARGET .. etc.
+            [:cursors/use-skill
+             (fn []
+               [[:tx/event (:entity/id entity*) :start-action [skill effect-context]]])])
+           (do
+            ; TODO cursor as of usable state
+            ; cooldown -> sanduhr kleine
+            ; not-enough-mana x mit kreis?
+            ; invalid-params -> depends on params ...
+            [:cursors/skill-not-usable
+             (fn []
+               (denied (case state
+                         :cooldown "Skill is still on cooldown"
+                         :not-enough-mana "Not enough mana"
+                         :invalid-params "Cannot use this here")))])))
+       [:cursors/no-skill-selected
+        (fn [] (denied "No selected skill"))]))))
 
 (defrecord PlayerIdle []
   state/PlayerState
