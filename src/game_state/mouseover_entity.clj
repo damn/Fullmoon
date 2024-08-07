@@ -4,14 +4,8 @@
             [api.entity :as entity]
             [api.world.grid :refer [point->entities]]))
 
-(defn ->state []
-  {:mouseover-entity nil})
-
 (defn- mouseover-entity [ctx]
-  (-> ctx
-      :context/game
-      deref
-      :mouseover-entity))
+  (:context.game/mouseover-entity ctx))
 
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (ctx/player-entity* context)
@@ -30,12 +24,12 @@
     (when-let [entity (mouseover-entity ctx)]
       @entity)))
 
-(defn update! [game-state* ctx]
-  (when-let [entity (:mouseover-entity game-state*)]
+(defn update! [ctx]
+  (when-let [entity (mouseover-entity ctx)]
     (swap! entity dissoc :entity/mouseover?))
   (let [entity (if (mouse-on-stage-actor? ctx)
                  nil
                  (calculate-mouseover-entity ctx))]
     (when entity
       (swap! entity assoc :entity/mouseover? true))
-    (assoc game-state* :mouseover-entity entity)))
+    (assoc ctx :context.game/mouseover-entity entity)))

@@ -40,7 +40,6 @@
   (component/create [_ ctx]
     (merge
            (ecs/->state) ; exception ...
-           (mouseover-entity/->state) ; swap
            (game-state.player-entity/->state) ; swap
            (widgets/->state! ctx)))) ; swap
 
@@ -52,6 +51,7 @@
          :context.game/replay-mode? replay-mode?
          :context.game/elapsed-time 0
          :context.game/logic-frame 0
+         :context.game/mouseover-entity nil
          ))
 
 (defn start-new-game [ctx tiled-level]
@@ -100,10 +100,9 @@
                 (assoc :context.game/paused? paused?)
                 (assoc :context.game/delta-time (->delta-time ctx))
                 elapsed-time/update-time
+                mouseover-entity/update! ; this do always so can get debug info even when game not running
                 )
         ]
-    (swap! game-state #(-> %
-                           (mouseover-entity/update! ctx))) ; this do always so can get debug info even when game not running
     (when-not paused?
       (let [ctx (update ctx :context.game/logic-frame inc)]
         (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
@@ -120,7 +119,7 @@
                            ;(assoc-delta-time ctx) ; TODO why here? it was fixed anyway ... IDK how to use it here
                            ; can choose animation/movement speed ?? movement anyway fixed
                            ; animation also ???  -> its already covered in txs?
-                           (mouseover-entity/update! ctx)
+                           ;(mouseover-entity/update! ctx)
 
                            ; TODO but for elapsed-time we need delta-time ...
                            ; how 2 do here without using raw-delta?
