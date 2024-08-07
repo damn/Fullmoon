@@ -18,9 +18,7 @@
 ; TODO
 ; transaction-handler
 ; world
-; delta-time
 ; player-entity
-; replay-mode
 (defcomponent :context/game {}
   (component/create [_ ctx]
     (merge {:replay-mode? false
@@ -104,7 +102,8 @@
       (ctx/key-pressed?      ctx input.keys/space)))
 
 (defn- assoc-delta-time [ctx]
-  (assoc ctx :context/delta-time (min (ctx/delta-time ctx) movement/max-delta-time)))
+  (assoc-in ctx [:context/game :delta-time] (min (ctx/delta-time-raw ctx)
+                                                 movement/max-delta-time)))
 
 (defn- update-game [{:keys [context/player-entity]
                      {:keys [paused? logic-frame]} :context/game

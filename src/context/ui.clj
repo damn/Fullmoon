@@ -74,7 +74,7 @@
     ; stage act first so user screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
-    (.act stage (ctx/delta-time context))
+    (.act stage (ctx/delta-time-raw context))
     (when sub-screen (screen/render sub-screen context))
     (.draw stage)))
 

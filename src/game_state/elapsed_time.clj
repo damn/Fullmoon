@@ -1,5 +1,5 @@
 (ns game-state.elapsed-time
-  (:require [api.context :refer [stopped?]]))
+  (:require [api.context :as ctx]))
 
 (defn ->state []
   {:elapsed-time (atom 0)})
@@ -23,10 +23,10 @@
 
   (finished-ratio [ctx {:keys [duration stop-time] :as counter}]
     {:post [(<= 0 % 1)]}
-    (if (stopped? ctx counter)
+    (if (ctx/stopped? ctx counter)
       0
       ; min 1 because floating point math inaccuracies
       (min 1 (/ (- stop-time @(state ctx)) duration))))
 
-  (update-elapsed-game-time! [{:keys [context/delta-time] :as ctx}]
-    (swap! (state ctx) + delta-time)))
+  (update-elapsed-game-time! [ctx]
+    (swap! (state ctx) + (ctx/delta-time ctx))))

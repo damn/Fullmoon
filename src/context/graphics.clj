@@ -34,7 +34,7 @@
 
 (extend-type api.context.Context
   api.context/Graphics
-  (delta-time        [_] (.getDeltaTime       Gdx/graphics))
+  (delta-time-raw    [_] (.getDeltaTime       Gdx/graphics))
   (frames-per-second [_] (.getFramesPerSecond Gdx/graphics))
 
   (->color [_ r g b a]

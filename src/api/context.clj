@@ -7,7 +7,8 @@
 
 (defprotocol Game
   (start-new-game [_ tiled-level])
-  (render-game [_]))
+  (render-game [_])
+  (delta-time [_] "The update delta-time in the game logic itself. (Bounded)"))
 
 (defprotocol Application
   (exit-app [_]))
@@ -21,7 +22,7 @@
                  returns the context with current-screen set to new-screen."))
 
 (defprotocol Graphics
-  (delta-time [_] "the time span between the current frame and the last frame in seconds.")
+  (delta-time-raw [_] "the time span between the current frame and the last frame in seconds.")
   (frames-per-second [_] "the average number of frames per second")
   (->color [_ r g b a]))
 

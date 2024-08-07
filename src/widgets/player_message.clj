@@ -1,5 +1,5 @@
 (ns widgets.player-message
-  (:require [api.context :as ctx :refer [->actor delta-time]]
+  (:require [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
             [api.tx :refer [transact!]]))
 
@@ -25,7 +25,7 @@
 (defn- check-remove-message [ctx]
   (let [player-message (get-data ctx)]
     (when-let [{:keys [counter]} @player-message]
-      (swap! player-message update :counter + (delta-time ctx))
+      (swap! player-message update :counter + (ctx/delta-time-raw ctx))
       (when (>= counter duration-seconds)
         (reset! player-message nil)))))
 

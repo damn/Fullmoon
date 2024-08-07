@@ -22,11 +22,11 @@
         (update :entity/position apply-delta)
         (update-in [:entity/body :left-bottom] apply-delta))))
 
-(defn- update-position-non-solid [{:keys [context/delta-time] :as ctx} entity* direction]
-  (update-position entity* delta-time direction))
+(defn- update-position-non-solid [ctx entity* direction]
+  (update-position entity* (ctx/delta-time ctx) direction))
 
-(defn- try-move [{:keys [context/delta-time] :as ctx} entity* direction]
-  (let [entity* (update-position entity* delta-time direction)]
+(defn- try-move [ctx entity* direction]
+  (let [entity* (update-position entity* (ctx/delta-time ctx) direction)]
     (when (valid-position? (world-grid ctx) entity*) ; TODO call on ctx shortcut fn
       entity*)))
 
