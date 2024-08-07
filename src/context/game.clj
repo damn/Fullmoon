@@ -21,10 +21,21 @@
 ; * world ?
 ; * pull last atom out also ?! possible ??
 ; => only If I return a new ctx with transact-all! ..... which is a bit crazy ???
+; -> maybe special transaction-fns can do that only? <o.o> Ox.xO
+; => or instead of nil return a certain vector [:new-ctx ctx]
+; and check for [:new-ctx ...] or something ....
+; anyway we want to give ui txs not record them
+; derive ... tx derive from ctx-tx or from foo-tx or ui-tx
+; if ctx-tx then just swap! current-context (mad)
+
+; some things also don't need to be in an atom like replay-mode? or stuff
+; actually only ecs/player-entity because its set in a transaction ...... ????
+; what does that mean?
+
+; I can start with moving things out of context/game which dont change at all in a tx like replay-mode?
 (defcomponent :context/game {}
-  (component/create [[_ replay-mode?] ctx]
-    (merge {:replay-mode? replay-mode?
-            :paused? nil
+  (component/create [_ ctx]
+    (merge {:paused? nil
             :delta-time nil
             :logic-frame 0}
            (ecs/->state)
@@ -34,7 +45,10 @@
            (widgets/->state! ctx))))
 
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
-  (assoc ctx :context/game (atom (component/create [:context/game replay-mode?] ctx))))
+  (assoc ctx
+         :context/game (atom (component/create [:context/game nil] ctx))
+         :context.game/replay-mode? replay-mode?
+         ))
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
@@ -156,7 +170,7 @@
                                                       (ctx/player-entity* ctx))]
     ; TODO lazy seqS everywhere!
     (render-game ctx (map deref active-entities))
-    (if (:replay-mode? @(:context/game ctx))
+    (if (:context.game/replay-mode? ctx)
       (replay-game! ctx)
       (update-game ctx active-entities))))
 
