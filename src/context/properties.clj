@@ -225,6 +225,21 @@
            (str t))))
 
   (player-tooltip-text [ctx property]
-    (api.context/tooltip-text
-     (assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx)))
-     property)))
+    (when (:player-entity (:context/game ctx))
+      (api.context/tooltip-text
+       ; player has item @ start
+       ; =>
+       ; context.world/transact-create-entities-from-tiledmap
+       ; =>
+       ; :tx/set-item-image-in-widget
+       ; =>
+       ; FIXME the bug .... player-entity has not been set yet inside context/game ....
+       ; same problem w. actionbar or wherever player-entity is used
+       ; => avoid player-entity* at initialisation
+       ; assert also earlier
+       ; pass player0entity itself to actionbar/inventory ....
+       ; skill window is same problem ...... if we create it @ start
+       ; there will be no player
+       ; or we create the tooltips on demand
+       (assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx)))
+       property))))
