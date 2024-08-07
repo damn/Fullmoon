@@ -69,6 +69,7 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
+           [:context/elapsed-game-time]
            [:context/mouseover-entity]
            [:context/transaction-handler]
            [:context/ecs]
