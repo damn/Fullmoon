@@ -4,10 +4,7 @@
 (defrecord ImmutableCounter [duration stop-time])
 
 (defn- elapsed-time [ctx]
-  (-> ctx
-      :context/game
-      :context.game/state
-      :elapsed-time))
+  (-> ctx :context/game-state :elapsed-time))
 
 (extend-type api.context.Context
   api.context/Counter

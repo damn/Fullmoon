@@ -15,10 +15,7 @@
          first)))
 
 (defn- mouseover-entity-atom [ctx]
-  (-> ctx
-      :context/game
-      :context.game/state
-      :mouseover-entity))
+  (-> ctx :context/game-state :mouseover-entity))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity

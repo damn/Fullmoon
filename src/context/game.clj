@@ -12,24 +12,13 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-; todo also delta-time, player-entity
-(defn- ->build-game-state []
-  {:paused? (atom nil)
-   :logic-frame (atom 0)
-   :elapsed-time (atom 0)
-   :uids-entities (atom {})
-   :entity-error (atom nil)
-   :mouseover-entity (atom nil)
-   })
-
 (defcomponent :context/game {}
   (component/create [_ _ctx]
-    ; TODO also transaction-handler.....
-    {:components [:context/game-widgets]}))
+    [:context/game-state
+     :context/game-widgets]))
 
 (defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
-  (let [components (map #(vector % nil) (:components game))
-        ctx (assoc-in ctx [:context/game ::state] (->build-game-state))]
+  (let [components (map #(vector % nil) game)]
     (component/load! components)
     (reduce (fn [ctx {k 0 :as component}]
               (assoc ctx k (component/create component ctx)))
@@ -110,7 +99,7 @@
   (assoc ctx :context/delta-time (min (ctx/delta-time ctx) movement/max-delta-time)))
 
 (defn- update-game [{:keys [context/player-entity]
-                     {{:keys [paused? logic-frame]} ::state} :context/game
+                     {:keys [paused? logic-frame]} :context/game-state
                      :as ctx}
                     active-entities]
   (let [state-obj (entity/state-obj @player-entity)
@@ -140,7 +129,7 @@
 ; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
-(defn- replay-game! [{{{:keys [logic-frame]} ::state} :context/game :as ctx}]
+(defn- replay-game! [{{:keys [logic-frame]} :context/game-state :as ctx}]
   (dotimes [_ replay-speed]
     (replay-frame! ctx (swap! logic-frame inc))))
 

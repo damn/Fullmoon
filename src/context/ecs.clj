@@ -8,10 +8,7 @@
             [api.tx :refer [transact!]]))
 
 (defn- get-uids-entities [ctx]
-  (-> ctx
-      :context/game
-      :context.game/state
-      :uids-entities))
+  (-> ctx :context/game-state :uids-entities))
 
 (defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
   {:pre [(not (contains? components :entity/id))
@@ -142,10 +139,7 @@
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (entity-error [ctx]
-    (-> ctx
-        :context/game
-        :context.game/state
-        :entity-error))
+    (-> ctx :context/game-state :entity-error))
 
   (all-entities [ctx]
     (vals @(get-uids-entities ctx)))
