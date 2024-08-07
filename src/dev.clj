@@ -21,8 +21,10 @@
 (defn- ->tree []
   (VisTree.))
 
-(defn- expand? [v]
-  (or (map? v) (vector? v)))
+(defn- expand? [v] ; TODO reuse this below
+  (or (map? v)
+      (vector? v)
+      (instance? clojure.lang.Atom v)))
 
 (defn ->v-str [v]
   (cond
@@ -38,6 +40,14 @@
        (when-let [ns (namespace k)] (str ns "/")) "[WHITE]" (name k)
        ": [GOLD]" (str (->v-str v))))
 
+(defn- ->nested-nodes [ctx node level v]
+  (when (map? v)
+    (add-map-nodes! ctx node v (inc level)))
+  (when (vector? v)
+    (doseq [element v
+            :let [el-node (->node (->label ctx (str (->v-str element))))]]
+      (.add node el-node))))
+
 (defn add-map-nodes! [ctx parent-node m level]
   ;(println "Level: " level " - go deeper? " (< level 4))
   (when (< level 4)
@@ -46,12 +56,9 @@
       (try
        (let [node (->node (->label ctx (->labelstr k v)))]
          (.add parent-node node)
-         (when (map? v)
-           (add-map-nodes! ctx node v (inc level)))
-         (when (vector? v)
-           (doseq [element v
-                   :let [el-node (->node (->label ctx (str (->v-str element))))]]
-             (.add node el-node))))
+         (when (instance? clojure.lang.Atom v)
+           (->nested-nodes ctx node level @v))
+         (->nested-nodes ctx node level v))
        (catch Throwable t
          (println "Error for" k)
          (.add parent-node (->node (->label ctx (str "[RED] "k " - " t)))))))))
