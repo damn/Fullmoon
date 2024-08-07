@@ -45,7 +45,7 @@
      (for [[txkey txs] (group-by first txs)]
        [txkey (count txs)])))
 
-  (transact-all! [{{{:keys [logic-frame]} :game.context/state} :context/game :as ctx} txs]
+  (transact-all! [{{:keys [logic-frame]} :context/game :as ctx} txs]
     (doseq [tx txs :when tx]
       (try (let [result (transact! tx ctx)]
              (if (and (nil? result)

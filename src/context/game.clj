@@ -5,6 +5,7 @@
             [api.entity-state :as state]
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
+            [api.tx :refer [transact!]]
             [api.world.content-grid :as content-grid]
             app.state
             [game-state.mouseover-entity :as mouseover-entity]
@@ -29,50 +30,50 @@
 ; delta-time
 ; player-entity
 
+(defmethod transact! :tx.context.game/set-player-entity [[_ entity] ctx]
+  (reset! (:player-entity-ref (:context/game ctx)) entity)
+  nil)
+
 ; TODO
 ; transaction-handler
 ; world
 (defcomponent :context/game {}
-  (component/create [_ ctx]
-    (merge {:replay-mode? false
+  (component/create [[_ replay-mode?] ctx]
+    (merge {:replay-mode? replay-mode?
             :paused? (atom nil)
-            :logic-frame (atom 0)}
+            :logic-frame (atom 0)
+            :player-entity-ref (atom nil)} ; a reference to an entity which is again a reference
            (ecs/->state)
            (elapsed-time/->state)
            (mouseover-entity/->state)
            (widgets/->state! ctx))))
 
-(defn- merge-new-game-context [ctx]
-  (update ctx :context/game #(component/create [:context/game %] ctx)))
+(defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
+  (assoc ctx :context/game (component/create [:context/game replay-mode?] ctx)))
 
 (defn start-new-game [ctx tiled-level]
-  (let [ctx (merge (merge-new-game-context ctx)
+  (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
                    (world/->context ctx tiled-level))]
-
-    ;(ctx/clear-recorded-txs! ctx)
-    ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
-
-    (let [player-entity (world/transact-create-entities-from-tiledmap! ctx)]
-      ;(println "Initial entity txs:")
-      ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
-      (assoc-in ctx [:context/game :player-entity] player-entity))))
+    (ctx/clear-recorded-txs! ctx)
+    (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+    (world/transact-create-entities-from-tiledmap! ctx)
+    ;(println "Initial entity txs:")
+    ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
+    ctx))
 
 (defn- start-replay-mode! [ctx]
   ; TODO assert we have recorded txs' otherwise just NPE
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
   (ctx/set-record-txs! ctx false)
-
+  ; keeping context/world !
+  ; world visibility is not reset ... ...
   ; remove entity connections to world grid/content-grid,
   ; otherwise all entities removed with ->context
   (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
   (ctx/remove-destroyed-entities! ctx)
-
-  (let [ctx (merge-new-game-context ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
-    ; world visibility is not reset ... ...
+  (let [ctx (merge-new-game-context ctx :replay-mode? true)]
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
-
-    (reset! app.state/current-context
-            (assoc-in ctx [:context/game :replay-mode?] true))))
+    ctx))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
@@ -120,11 +121,12 @@
   (assoc-in ctx [:context/game :delta-time] (min (ctx/delta-time-raw ctx)
                                                  movement/max-delta-time)))
 
-(defn- update-game [{{:keys [player-entity
+(defn- update-game [{{:keys [player-entity-ref
                              paused?
                              logic-frame]} :context/game :as ctx}
                     active-entities]
-  (let [state-obj (entity/state-obj @player-entity)
+  (let [player-entity @player-entity-ref
+        state-obj (entity/state-obj @player-entity)
         _ (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
         paused? (reset! paused? (or @(ctx/entity-error ctx)
                                     (and pausing?
@@ -167,8 +169,8 @@
 
 (extend-type api.context.Context
   api.context/Game
-  (delta-time     [ctx]  (:delta-time    (:context/game ctx)))
-  (player-entity* [ctx] @(:player-entity (:context/game ctx)))) ; TODO can do like delta-time and assoc :player-entity* object ! omgwtf
+  (delta-time     [ctx]   (:delta-time        (:context/game ctx)))
+  (player-entity* [ctx] @@(:player-entity-ref (:context/game ctx))))
 
 (comment
 
@@ -193,9 +195,7 @@
  ; need to set this @ start-new-game for recording of txs for this to work..
  ;(ctx/clear-recorded-txs! ctx)
  ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
- (.postRunnable com.badlogic.gdx.Gdx/app
-                (fn []
-                  (start-replay-mode!
-                   @app.state/current-context)))
+ (.postRunnable com.badlogic.gdx.Gdx/app (fn []
+                                           (swap! app.state/current-context start-replay-mode!)))
 
  )

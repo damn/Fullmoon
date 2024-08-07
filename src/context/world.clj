@@ -170,7 +170,4 @@
                                  :player? true
                                  :free-skill-points 3
                                  :clickable {:type :clickable/player}
-                                 :click-distance-tiles 1.5}]])
-  (let [player-entity (first (filter #(:entity/player? @%) (ctx/all-entities ctx)))]
-    (assert player-entity)
-    player-entity))
+                                 :click-distance-tiles 1.5}]]))

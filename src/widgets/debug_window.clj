@@ -12,8 +12,7 @@
                              :when cooling-down? ]
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
-(defn- debug-infos [{{:keys [player-entity
-                             paused?
+(defn- debug-infos [{{:keys [paused?
                              logic-frame
                              elapsed-time]} :context/game
                      :as ctx}]
@@ -30,7 +29,7 @@
        (str "\nERROR!\n " @(ctx/entity-error ctx) "\n\n"))
      "paused? " @paused? "\n"
      "elapsed-time " (utils.core/readable-number @elapsed-time) " seconds \n"
-     (skill-info @player-entity)
+     (skill-info (ctx/player-entity* ctx))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
