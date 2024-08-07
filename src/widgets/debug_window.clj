@@ -14,7 +14,6 @@
 
 (defn- debug-infos [{:keys [context/game-paused
                             context/player-entity
-                            context/thrown-error
                             context/elapsed-game-time
                             context/game-logic-frame]
                      :as ctx}]
@@ -27,8 +26,8 @@
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (ctx/gui-mouse-position ctx) "\n"
-     (when @thrown-error
-       (str "\nERROR!\n " @thrown-error "\n\n"))
+     (when @(ctx/entity-error ctx)
+       (str "\nERROR!\n " @(ctx/entity-error ctx) "\n\n"))
      "game-paused " @game-paused "\n"
      "elapsed-game-time " (utils.core/readable-number @elapsed-game-time) " seconds \n"
      (skill-info @player-entity)

@@ -106,6 +106,7 @@
   (frame->txs [_ frame-number]))
 
 (defprotocol EntityComponentSystem
+  (entity-error [_] "Error thrown during entity-render or tick.")
   (all-entities [_])
   (get-entity [_ uid])
   (tick-entities!   [_ entities*] "Calls tick system on all components of entities.")

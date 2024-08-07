@@ -8,7 +8,7 @@
             [api.world.content-grid :as content-grid]
             app.state
             [context.world :as world]
-            context.game-widgets
+            [context.game-widgets :as game-widgets]
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
@@ -19,8 +19,7 @@
 (defcomponent :context/game {}
   (component/create [_ _ctx]
     [:context/game-widgets
-     :context/uids-entities ; move to ecs ?
-     :context/thrown-error  ; move to ecs ?
+     :context/ecs
      :context/game-paused ; only used in this ns
      :context/game-logic-frame
      :context/elapsed-game-time
@@ -76,9 +75,9 @@
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [context]
   (check-zoom-keys context)
-  (context.game-widgets/check-window-hotkeys context)
+  (game-widgets/check-window-hotkeys context)
   (when (and (ctx/key-just-pressed? context input.keys/escape)
-             (not (context.game-widgets/close-windows? context)))
+             (not (game-widgets/close-windows? context)))
     (app.state/change-screen! :screens/options-menu))
   (when (ctx/key-just-pressed? context input.keys/tab)
     (app.state/change-screen! :screens/minimap)))
@@ -109,13 +108,12 @@
 
 (defn- update-game [{:keys [context/player-entity
                             context/game-paused
-                            context/thrown-error
                             context/game-logic-frame]
                      :as ctx}
                     active-entities]
   (let [state-obj (entity/state-obj @player-entity)
         _ (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
-        paused? (reset! game-paused (or @thrown-error
+        paused? (reset! game-paused (or @(ctx/entity-error ctx)
                                         (and pausing?
                                              (state/pause-game? (entity/state-obj @player-entity))
                                              (not (player-unpaused? ctx)))))

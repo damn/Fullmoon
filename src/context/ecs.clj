@@ -2,10 +2,18 @@
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [sort-by-order]]
             [core.component :refer [defcomponent] :as component]
-            [api.context :refer [transact-all! get-entity]]
+            [api.context :as ctx]
             [api.graphics :as g]
             [api.entity :as entity :refer [map->Entity]]
             [api.tx :refer [transact!]]))
+
+(defcomponent :context/ecs {}
+  (component/create [_ _ctx]
+    {:uids-entities (atom {})
+     :thrown-error (atom nil)}))
+
+(defn- get-uids-entities [ctx]
+  (:uids-entities (:context/ecs ctx)))
 
 (defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
   {:pre [(not (contains? components :entity/id))
@@ -16,14 +24,15 @@
     (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
   nil)
 
-(defmethod transact! :tx/assoc-uids->entities [[_ entity] {:keys [context/uids-entities] :as ctx}]
+(defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
-  (swap! uids-entities assoc (:entity/uid @entity) entity)
+  (swap! (get-uids-entities ctx) assoc (:entity/uid @entity) entity)
   nil)
 
-(defmethod transact! :tx/dissoc-uids->entities [[_ uid] {:keys [context/uids-entities]}]
-  {:pre [(contains? @uids-entities uid)]}
-  (swap! uids-entities dissoc uid)
+(defmethod transact! :tx/dissoc-uids->entities [[_ uid] ctx]
+  (let [uids-entities (get-uids-entities ctx)]
+    (assert (contains? @uids-entities uid))
+    (swap! uids-entities dissoc uid))
   nil)
 
 (defcomponent :entity/uid {}
@@ -37,7 +46,7 @@
     (swap! cnt inc)))
 
 (defn- apply-system-transact-all! [ctx system entity*]
-  (run! #(transact-all! ctx %) (component/apply-system system entity* ctx)))
+  (run! #(ctx/transact-all! ctx %) (component/apply-system system entity* ctx)))
 
 (comment
 
@@ -101,7 +110,7 @@
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
-    (transact-all! ctx [[:tx/setup-entity entity (unique-number!) components]])
+    (ctx/transact-all! ctx [[:tx/setup-entity entity (unique-number!) components]])
     (apply-system-transact-all! ctx entity/create @entity))
   [])
 
@@ -109,18 +118,15 @@
   (swap! entity assoc :entity/destroyed? true)
   nil)
 
-(defn- handle-entity-error! [{:keys [context/thrown-error]} entity* throwable]
+(defn- handle-entity-error! [ctx entity* throwable]
   (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
-  (reset! thrown-error throwable))
+  (reset! (ctx/entity-error ctx) throwable))
 
-(defn- render-entity* [system
-                       entity*
-                       g
-                       {:keys [context/thrown-error] :as ctx}]
+(defn- render-entity* [system entity* g ctx]
   (try
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
-     (when-not @thrown-error
+     (when-not @(ctx/entity-error ctx)
        (handle-entity-error! ctx entity* t))
      (let [[x y] (:entity/position entity*)]
        (g/draw-text g
@@ -137,13 +143,16 @@
 
 (extend-type api.context.Context
   api.context/EntityComponentSystem
-  (all-entities [{:keys [context/uids-entities]}]
-    (vals @uids-entities))
+  (entity-error [ctx]
+    (:thrown-error (:context/ecs ctx)))
 
-  (get-entity [{:keys [context/uids-entities]} uid]
-    (get @uids-entities uid))
+  (all-entities [ctx]
+    (vals @(get-uids-entities ctx)))
 
-  (tick-entities! [{:keys [context/thrown-error] :as ctx} entities*]
+  (get-entity [ctx uid]
+    (get @(get-uids-entities ctx) uid))
+
+  (tick-entities! [ctx entities*]
     (doseq [entity* entities*]
       (try
        (apply-system-transact-all! ctx entity/tick entity*)
@@ -161,6 +170,6 @@
     (doseq [entity* entities*]
       (render-entity* entity/render-debug entity* g context)))
 
-  (remove-destroyed-entities! [{:keys [context/uids-entities] :as ctx}]
-    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @uids-entities))]
+  (remove-destroyed-entities! [ctx]
+    (doseq [entity (filter (comp :entity/destroyed? deref) (vals @(get-uids-entities ctx)))]
       (apply-system-transact-all! ctx entity/destroy @entity))))
