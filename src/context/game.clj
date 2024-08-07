@@ -42,11 +42,11 @@
            (mouseover-entity/->state)
            (widgets/->state! ctx))))
 
-(defn- merge-rebuild-game-context [ctx]
+(defn- merge-new-game-context [ctx]
   (update ctx :context/game #(component/create [:context/game %] ctx)))
 
 (defn start-new-game [ctx tiled-level]
-  (let [ctx (merge (merge-rebuild-game-context ctx)
+  (let [ctx (merge (merge-new-game-context ctx)
                    (world/->context ctx tiled-level))]
 
     ;(ctx/clear-recorded-txs! ctx)
@@ -67,7 +67,7 @@
   (ctx/transact-all! ctx (for [e (api.context/all-entities ctx)] [:tx/destroy e]))
   (ctx/remove-destroyed-entities! ctx)
 
-  (let [ctx (merge-rebuild-game-context ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
+  (let [ctx (merge-new-game-context ctx)] ; without replay-mode / world ... make it explicit we re-use this here ? assign ?
     ; world visibility is not reset ... ...
     (ctx/transact-all! ctx (ctx/frame->txs ctx 0))
 
