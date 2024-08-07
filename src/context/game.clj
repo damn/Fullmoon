@@ -12,6 +12,10 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
+(defcomponent :context/game {}
+  (component/create [[_ components] _ctx]
+    components))
+
 (defn- merge-rebuild-game-context [{:keys [context/game] :as ctx}]
   (let [components (map #(vector % nil) game)]
     (component/load! components)
@@ -129,9 +133,6 @@
 (defn- replay-game! [{:keys [context/game-logic-frame] :as ctx}]
   (dotimes [_ replay-speed]
     (replay-frame! ctx (swap! game-logic-frame inc))))
-
-(defcomponent :context/game {}
-  (component/create [[_ components] _ctx] components))
 
 (extend-type api.context.Context
   api.context/Game
