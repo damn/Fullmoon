@@ -24,7 +24,7 @@
        reverse
        (filter #(and (= :usable
                         (skill-usable-state effect-ctx entity* %))
-                     (effect-ctx/useful? effect-txs ctx)))
+                     (effect-ctx/useful? effect-ctx (:skill/effect %) ctx)))
        first))
 
 (defrecord NpcIdle []

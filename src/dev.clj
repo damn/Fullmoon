@@ -242,6 +242,10 @@
 (comment
 
  (learn-skill! :skills/projectile)
+ (learn-skill! :skills/spawn)
+ (learn-skill! :skills/meditation)
+ (learn-skill! :skills/melee-attack) ; doesnt draw line
+
  (create-item! :items/blood-glove) ; these items created here ... on pickup dont disappear
  ; becuz not part of ctx ... oop
  (show-context!)

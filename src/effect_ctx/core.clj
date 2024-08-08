@@ -19,4 +19,4 @@
   (mapcat #(effect/txs % effect-ctx) effect))
 
 (defn render-info [effect-ctx g effect]
-  (run! #(effect/render-info % effect-ctx g) effect-txs))
+  (run! #(effect/render-info % effect-ctx g) effect-ctx))

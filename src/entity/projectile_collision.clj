@@ -5,7 +5,8 @@
             [api.context :refer [world-grid]]
             [api.entity :as entity]
             [api.world.grid :refer [rectangle->cells]]
-            [api.world.cell :as cell :refer [cells->entities]]))
+            [api.world.cell :as cell :refer [cells->entities]]
+            [effect-ctx.core :as effect-ctx]))
 
 (defcomponent :entity/projectile-collision {}
   (entity/create-component [[_ v] _components _ctx]
