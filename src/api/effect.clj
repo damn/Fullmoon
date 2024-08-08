@@ -1,14 +1,15 @@
 (ns api.effect
-  (:require [core.component :refer [defsystem]]))
+  (:require [clojure.string :as str]
+            [core.component :refer [defsystem]]))
 
-(defsystem text          [_ ctx])
-(defmethod text :default [_ _])
+(defsystem text          [_])
+(defmethod text :default [_])
 
-(defsystem valid-params? [_ ctx])
-(defmethod valid-params? :default [_ _] true)
+(defsystem valid-params? [_])
+(defmethod valid-params? :default [_] true)
 
 (defsystem useful?       [_ ctx]) ; only used @ AI ??
-(defmethod useful? :default [_ _] true)
+(defmethod useful? :default [_ _ctx] true)
 
-(defsystem render-info   [_ g ctx])
-(defmethod render-info :default [_ _g _ctx])
+(defsystem render-info   [_ g])
+(defmethod render-info :default [_ _g])

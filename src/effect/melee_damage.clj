@@ -9,13 +9,13 @@
     {:damage/min-max [strength strength]}))
 
 (defcomponent :effect/melee-damage {}
-  (effect/text [_ {:keys [effect/source] :as ctx}]
+  (effect/text [[_ {:keys [effect/source] :as effect-ctx}]]
     (if source
-      (effect/text [:effect/damage (entity*->melee-damage @source)] ctx)
+      (effect/text [:effect/damage effect-ctx (entity*->melee-damage @source)])
       "Damage based on entity stats."))
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
+  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and source target))
 
-  (transact! [_ {:keys [effect/source]}]
+  (transact! [[_ {:keys [effect/source]}]]
     [[:effect/damage (entity*->melee-damage @source)]]))

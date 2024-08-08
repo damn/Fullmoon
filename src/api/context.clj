@@ -127,12 +127,6 @@
   (update-potential-fields! [_ entities])
   (potential-field-follow-to-enemy [_ entity]))
 
-(defprotocol EffectInterpreter
-  (effect-text        [_ effect])
-  (valid-params?      [_ effect])
-  (effect-render-info [_ g effect])
-  (effect-useful?     [_ effect]))
-
 (defprotocol Modifier
   (modifier-text [_ modifier]))
 
@@ -156,9 +150,6 @@
   (stopped?       [_ counter])
   (reset          [_ counter])
   (finished-ratio [_ counter]))
-
-(defprotocol Skills
-  (skill-usable-state [effect-context entity* skill]))
 
 (defprotocol Actionbar
   (selected-skill  [_]))

@@ -37,23 +37,25 @@
                                               [:maxrange pos?]]
                                      :default-value {:hit-effect {}
                                                      :max-range 2.0}}
-  (effect/text [[_ {:keys [maxrange hit-effect]}] ctx]
-    (str "Range " maxrange " meters\n" (effect-text ctx hit-effect)))
+  (effect/text [[_ effect-ctx {:keys [maxrange hit-effect]}]]
+    (str "Range " maxrange " meters\n" (effect-text effect-ctx hit-effect)))
 
   ; TODO lOs move to effect/target effect-context creation?
 
   ; TODO target still exists ?! necessary ? what if disappears/dead?
   ; TODO (:entity/hp @target) is valid-params of hit-effect damage !! -> allow anyway and just do nothing then?
-  (effect/valid-params? [_ {:keys [effect/source effect/target] :as ctx}]
+  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and source
          target
-         (line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ...
+         ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ...
          (:entity/hp @target)))
 
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]}]
     (in-range? @source @target maxrange))
 
-  (transact! [[_ {:keys [maxrange hit-effect]}] {:keys [effect/source effect/target] :as ctx}]
+  (transact! [[_
+               {:keys [effect/source effect/target] :as ctx}
+               {:keys [maxrange hit-effect]}]]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -65,7 +67,9 @@
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         [:tx/effect ctx hit-effect]]
+         [:tx/effect ctx hit-effect] ; TODO
+
+         ]
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )
@@ -73,7 +77,10 @@
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx.entity/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (effect/render-info [[_ {:keys [maxrange]}] g {:keys [effect/source effect/target] :as ctx}]
+  (effect/render-info [[_
+                        {:keys [effect/source effect/target]}
+                        {:keys [maxrange]}]
+                       g]
     (let [source* @source
           target* @target]
       (g/draw-line g

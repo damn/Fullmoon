@@ -1,7 +1,7 @@
 (ns entity.skills
   (:require [core.component :refer [defcomponent]]
             [data.val-max :refer [apply-val]]
-            [api.context :refer [get-property valid-params? ->counter stopped?]]
+            [api.context :refer [get-property ->counter stopped?]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
             [core.data :as data]))
@@ -39,14 +39,3 @@
   [[:tx.entity/dissoc-in entity [:entity/skills id]]
    (when (:entity/player? @entity)
      [:tx.context.action-bar/remove-skill skill])])
-
-(extend-type api.context.Context
-  api.context/Skills
-  (skill-usable-state [effect-context
-                       {:keys [entity/mana]}
-                       {:keys [skill/cost skill/cooling-down? skill/effect]}]
-    (cond
-     cooling-down?                               :cooldown
-     (and cost (> cost (mana 0)))                :not-enough-mana
-     (not (valid-params? effect-context effect)) :invalid-params
-     :else                                       :usable)))

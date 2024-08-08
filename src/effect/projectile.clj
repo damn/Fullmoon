@@ -43,16 +43,16 @@
 (defcomponent :effect/projectile {:widget :text-field
                                   :schema [:= true]
                                   :default-value true}
-  (effect/text [_ ctx]
+  (effect/text [[_ effect-ctx]]
     (effect-text ctx hit-effect))
 
-  (effect/valid-params? [_ {:keys [effect/source
-                                   effect/target
-                                   effect/direction]}]
+  (effect/valid-params? [[_ {:keys [effect/source
+                                    effect/target
+                                    effect/direction]}]]
     (and source direction)) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (effect/useful? [_ {:keys [effect/source effect/target] :as ctx}]
+  (effect/useful? [[_ {:keys [effect/source effect/target]}] ctx]
     (let [source-p (:entity/position @source)
           target-p (:entity/position @target)]
       (and (not (path-blocked? ctx
@@ -64,8 +64,7 @@
                           target-p)
               maxrange))))
 
-  (transact! [_ {:keys [effect/source
-                        effect/direction] :as ctx}]
+  (transact! [[_ {:keys [effect/source effect/direction]}]]
     [[:tx/create #:entity {:position (start-point @source direction)
                            :body {:width size
                                   :height size

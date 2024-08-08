@@ -29,18 +29,16 @@
 ; => one to one attr!?
 (defcomponent :effect/spawn {:widget :text-field
                              :schema [:qualified-keyword {:namespace :creatures}]}
-  (effect/text [[_ creature-id] _ctx]
+  (effect/text [[_ _effect-ctx creature-id]]
     (str "Spawns a " (name creature-id)))
 
-  (effect/valid-params? [_ {:keys [effect/source
-                                   effect/target-position]}]
+  (effect/valid-params? [[_ {:keys [effect/source effect/target-position]}]]
     ; TODO line of sight ? / not blocked ..
     (and source
          (:entity/faction @source)
          target-position))
 
-  (transact! [[_ creature-id] {:keys [effect/source
-                                      effect/target-position] :as ctx}]
+  (transact! [[_ {:keys [effect/source effect/target-position]} creature-id]]
     [[:tx.entity/creature
       creature-id
       #:entity {:position target-position

@@ -100,7 +100,7 @@
 (defcomponent :damage/min-max data/val-max-attr)
 
 (defcomponent :effect/damage (data/map-attribute :damage/min-max)
-  (effect/text [[_ damage] {:keys [effect/source]}]
+  (effect/text [[_ {:keys [effect/source]} damage]]
     (if source
       (let [modified (effective-damage damage @source)]
         (if (= damage modified)
@@ -108,10 +108,10 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
+  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and source target))
 
-  (transact! [[_ damage] {:keys [effect/source effect/target]}]
+  (transact! [[_ {:keys [effect/source effect/target]} damage]]
     (let [source* @source
           {:keys [entity/position entity/hp] :as target*} @target]
       (cond

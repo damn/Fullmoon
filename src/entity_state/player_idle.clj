@@ -6,9 +6,10 @@
             [api.scene2d.ui.window :refer [window-title-bar?]]
             [math.vector :as v]
             [utils.wasd-movement :refer [WASD-movement-vector]]
-            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? get-property inventory-window skill-usable-state selected-skill]]
+            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? get-property inventory-window selected-skill]]
             [api.entity :as entity]
-            [api.entity-state :as state]))
+            [api.entity-state :as state]
+            [entity-state.active-skill :refer [skill-usable-state]]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -103,7 +104,7 @@
      (if-let [skill-id (selected-skill context)]
        (let [effect-context (->effect-context context entity*)
              skill (skill-id (:entity/skills entity*))
-             state (skill-usable-state (merge context effect-context) entity* skill)]
+             state (skill-usable-state effect-context entity* skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight

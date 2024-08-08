@@ -6,13 +6,13 @@
             [core.data :as data]))
 
 (defcomponent :effect/convert data/boolean-attr
-  (effect/text [_ _ctx]
+  (effect/text [_]
     "Converts target to your side.")
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
+  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and target
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))
 
-  (transact! [_ {:keys [effect/source effect/target]}]
+  (transact! [[_ {:keys [effect/source effect/target]}]]
     [[:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))

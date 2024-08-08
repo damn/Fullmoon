@@ -1,8 +1,9 @@
 (ns entity-state.npc-idle
-  (:require [api.context :refer [effect-useful? world-grid potential-field-follow-to-enemy skill-usable-state]]
+  (:require [api.context :refer [effect-useful? world-grid potential-field-follow-to-enemy]]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.world.cell :as cell]))
+            [api.world.cell :as cell]
+            [entity-state.active-skill :refer [skill-usable-state]]))
 
 ; TODO here check line of sight instead @ target-entity , otherwise no target...
 ; also fix a schema for the effect-context so I know whats going on
@@ -31,7 +32,7 @@
   (exit  [_ entity* _ctx])
   (tick [_ {:keys [entity/id] :as entity*} context]
     (let [effect-context (->effect-context context entity*)]
-      (if-let [skill (npc-choose-skill (merge context effect-context) entity*)]
+      (if-let [skill (npc-choose-skill effect-context entity*)]
         [[:tx/event id :start-action [skill effect-context]]]
         [[:tx/event id :movement-direction (or (potential-field-follow-to-enemy context id)
                                                [0 0])]]))) ; nil param not accepted @ entity.state
