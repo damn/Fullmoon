@@ -156,8 +156,11 @@
 
 (extend-type api.context.Context
   api.context/Game
-  (delta-time     [ctx]  (:context.game/delta-time ctx)) ; only used @ movement & animation
-  (player-entity* [ctx] @(:context.game/player-entity ctx)))
+  (delta-time     [ctx]  (:context.game/delta-time    ctx)) ; only used @ movement & ( animation - remove there)
+  (player-entity* [ctx]
+    (let [entity (:context.game/player-entity ctx)]
+      (assert entity)
+      @entity)))
 
 (comment
 
