@@ -47,7 +47,7 @@
   (effect/valid-params? [_ {:keys [effect/source effect/target] :as ctx}]
     (and source
          target
-         (line-of-sight? ctx @source @target)
+         (line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ...
          (:entity/hp @target)))
 
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]}]

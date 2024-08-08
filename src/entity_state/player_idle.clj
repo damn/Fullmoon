@@ -63,7 +63,7 @@
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
 
-(defn- effect-context [ctx entity*]
+(defn- ->effect-context [ctx entity*]
   (let [target* (ctx/mouseover-entity* ctx)
         target-position (or (and target* (:entity/position target*))
                             (ctx/world-mouse-position ctx))]
@@ -101,7 +101,7 @@
 
      :else
      (if-let [skill-id (selected-skill context)]
-       (let [effect-context (effect-context context entity*)
+       (let [effect-context (->effect-context context entity*)
              skill (skill-id (:entity/skills entity*))
              state (skill-usable-state (merge context effect-context) entity* skill)]
          (if (= state :usable)

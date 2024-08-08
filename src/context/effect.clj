@@ -33,3 +33,11 @@
     (transact-all! ctx txs))
   ;[]
   )
+
+(comment
+ (let [effect [[:effect/melee-damage true]
+               [:effect/sound "asd.wav"]]
+       ectx {:effect/source :foo
+             :effect/target :bar}]
+   (for [[k & vs] effect]
+     (apply vector k ectx vs))))

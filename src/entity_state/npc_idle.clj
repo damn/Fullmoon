@@ -4,7 +4,9 @@
             [api.entity-state :as state]
             [api.world.cell :as cell]))
 
-(defn- effect-context [context entity*]
+; TODO here check line of sight instead @ target-entity , otherwise no target...
+; also fix a schema for the effect-context so I know whats going on
+(defn- ->effect-context [context entity*]
   (let [cell ((world-grid context) (entity/tile entity*))
         target (cell/nearest-entity @cell (entity/enemy-faction entity*))]
     {:effect/source (:entity/id entity*)
@@ -28,7 +30,7 @@
   (enter [_ entity* _ctx])
   (exit  [_ entity* _ctx])
   (tick [_ {:keys [entity/id] :as entity*} context]
-    (let [effect-context (effect-context context entity*)]
+    (let [effect-context (->effect-context context entity*)]
       (if-let [skill (npc-choose-skill (merge context effect-context) entity*)]
         [[:tx/event id :start-action [skill effect-context]]]
         [[:tx/event id :movement-direction (or (potential-field-follow-to-enemy context id)
