@@ -43,6 +43,9 @@
 (defcomponent :effect/projectile {:widget :text-field
                                   :schema [:= true]
                                   :default-value true}
+  (effect/text [_ effect-ctx]
+    (effect-ctx/text effect-ctx hit-effect))
+
   (effect/valid-params? [_ {:keys [effect/source
                                    effect/target
                                    effect/direction]}]
@@ -60,9 +63,6 @@
            (< (v/distance source-p ; entity/distance function protocol EntityPosition
                           target-p)
               maxrange))))
-
-  (effect/text [_ effect-ctx]
-    (effect-ctx/text effect-ctx hit-effect))
 
   (effect/txs [_ {:keys [effect/source effect/direction]}]
     [[:tx/create #:entity {:position (start-point @source direction)

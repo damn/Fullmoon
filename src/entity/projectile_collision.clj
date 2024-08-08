@@ -32,4 +32,4 @@
        (when destroy?
          [:tx/destroy id])
        (when hit-entity
-         [:tx/effect {:effect/source id :effect/target hit-entity} hit-effect])]))) ; TODO
+         (effect-ctx/txs {:effect/source id :effect/target hit-entity} hit-effect))]))) ; TODO concat ?

@@ -37,6 +37,10 @@
                                               [:maxrange pos?]]
                                      :default-value {:hit-effect {}
                                                      :max-range 2.0}}
+  (effect/text [[_ {:keys [maxrange hit-effect]}] effect-ctx]
+    (str "Range " maxrange " meters\n"
+         (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))))
+
   ; TODO lOs move to effect/target effect-context creation?
   ; TODO target still exists ?! necessary ? what if disappears/dead?
   ; TODO (:entity/hp @target) is valid-params of hit-effect damage !! -> allow anyway and just do nothing then?
@@ -48,10 +52,6 @@
 
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} _ctx]
     (in-range? @source @target maxrange))
-
-  (effect/text [[_ {:keys [maxrange hit-effect]}] effect-ctx]
-    (str "Range " maxrange " meters\n"
-         (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))))
 
   (effect/txs [[_ {:keys [maxrange hit-effect]}]
                 {:keys [effect/source effect/target] :as effect-ctx}]

@@ -99,9 +99,6 @@
 (defcomponent :damage/min-max data/val-max-attr)
 
 (defcomponent :effect/damage (data/map-attribute :damage/min-max)
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
-    (and source target))
-
   (effect/text [[_ damage] {:keys [effect/source]}]
     (if source
       (let [modified (effective-damage damage @source)]
@@ -109,6 +106,9 @@
           (damage->text damage)
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
+
+  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
+    (and source target))
 
   (effect/txs [[_  damage] {:keys [effect/source effect/target]}]
     (let [source* @source
