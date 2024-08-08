@@ -9,7 +9,7 @@
      (defcomponent component# {:widget :label
                                :schema [:= true]
                                :default-value true}
-       (effect/text ~'[_ _ctx]
+       (effect/text ~'[_]
          ~(str "Sets " (name stat) " to max."))
 
        (effect/valid-params? ~'[_ {:keys [effect/source]}]

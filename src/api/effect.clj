@@ -1,6 +1,5 @@
 (ns api.effect
-  (:require [clojure.string :as str]
-            [core.component :refer [defsystem]]))
+  (:require [core.component :refer [defsystem]]))
 
 (defsystem text          [_])
 (defmethod text :default [_])

@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [math.vector :as v]
-            [api.context :refer [effect-text line-of-sight?]]
+            [api.context :refer [line-of-sight?]]
             [api.effect :as effect]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
@@ -38,7 +38,8 @@
                                      :default-value {:hit-effect {}
                                                      :max-range 2.0}}
   (effect/text [[_ effect-ctx {:keys [maxrange hit-effect]}]]
-    (str "Range " maxrange " meters\n" (effect-text effect-ctx hit-effect)))
+    (str "Range " maxrange " meters\n"
+         (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))))
 
   ; TODO lOs move to effect/target effect-context creation?
 
@@ -50,16 +51,17 @@
          ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ...
          (:entity/hp @target)))
 
-  (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]}]
+  (effect/useful? [[_ {:keys [effect/source effect/target]} {:keys [maxrange]}] ctx]
     (in-range? @source @target maxrange))
 
   (transact! [[_
-               {:keys [effect/source effect/target] :as ctx}
+               {:keys [effect/source effect/target] :as effect-ctx}
                {:keys [maxrange hit-effect]}]]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
-        [[:tx.entity/line-render {:start (start-point source* target*)
+        (cons
+         [:tx.entity/line-render {:start (start-point source* target*)
                                   :end (:entity/position target*)
                                   :duration 0.05
                                   :color [1 0 0 0.75]
@@ -67,9 +69,7 @@
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         [:tx/effect ctx hit-effect] ; TODO
-
-         ]
+         (effect-txs/->insert-ctx hit-effect effect-ctx))
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )

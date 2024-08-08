@@ -44,7 +44,7 @@
                                   :schema [:= true]
                                   :default-value true}
   (effect/text [[_ effect-ctx]]
-    (effect-text ctx hit-effect))
+    (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx)))
 
   (effect/valid-params? [[_ {:keys [effect/source
                                     effect/target

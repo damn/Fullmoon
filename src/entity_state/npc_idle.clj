@@ -1,5 +1,6 @@
 (ns entity-state.npc-idle
-  (:require [api.context :refer [effect-useful? world-grid potential-field-follow-to-enemy]]
+  (:require [core.effect-txs :as effect-txs]
+            [api.context :refer [world-grid potential-field-follow-to-enemy]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.world.cell :as cell]
@@ -21,9 +22,11 @@
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable
-                        (skill-usable-state effect-context entity* %))
-                     (effect-useful? effect-context (:skill/effect %))))
+       (filter #(let [effect-txs (effect-txs/->insert-ctx (:skill/effect %)
+                                                          effect-context)]
+                  (and (= :usable
+                          (skill-usable-state effect-txs entity* %)) ; TODO here pass effect-txs
+                       (effect-txs/useful? effect-txs ctx))))
        first))
 
 (defrecord NpcIdle []
@@ -33,7 +36,8 @@
   (tick [_ {:keys [entity/id] :as entity*} context]
     (let [effect-context (->effect-context context entity*)]
       (if-let [skill (npc-choose-skill effect-context entity*)]
-        [[:tx/event id :start-action [skill effect-context]]]
+        [[:tx/event id :start-action [skill (effect-txs/->insert-ctx (:skill/effect skill)
+                                                                     effect-context)]]]
         [[:tx/event id :movement-direction (or (potential-field-follow-to-enemy context id)
                                                [0 0])]]))) ; nil param not accepted @ entity.state
 

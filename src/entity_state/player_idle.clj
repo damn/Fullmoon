@@ -1,5 +1,6 @@
 (ns entity-state.player-idle
-  (:require [api.graphics :as g]
+  (:require [core.effect-txs :as effect-txs]
+            [api.graphics :as g]
             [api.input.buttons :as buttons]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [api.scene2d.ui.button :refer [button?]]
@@ -102,9 +103,10 @@
 
      :else
      (if-let [skill-id (selected-skill context)]
-       (let [effect-context (->effect-context context entity*)
-             skill (skill-id (:entity/skills entity*))
-             state (skill-usable-state effect-context entity* skill)]
+       (let [skill (skill-id (:entity/skills entity*))
+             effect-txs (effect-txs/->insert-ctx (:skill/effect skill)
+                                                 (->effect-context context entity*))
+             state (skill-usable-state effect-txs entity* skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
@@ -112,7 +114,7 @@
             ; => e.g. meditation no TARGET .. etc.
             [:cursors/use-skill
              (fn []
-               [[:tx/event (:entity/id entity*) :start-action [skill effect-context]]])])
+               [[:tx/event (:entity/id entity*) :start-action [skill effect-txs]]])])
            (do
             ; TODO cursor as of usable state
             ; cooldown -> sanduhr kleine

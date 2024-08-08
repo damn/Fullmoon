@@ -48,4 +48,4 @@
                      ": "
                      (readable-number action-time) " seconds" "[]")
                 (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
-                (str effect-color (ctx/effect-text ctx effect) "[]")])})) ; TODO
+                (str effect-color (str/join "\n" (keep effect/text effect-txs)) "[]")])})) ; TODO

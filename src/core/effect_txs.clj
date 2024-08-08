@@ -1,17 +1,24 @@
 (ns core.effect-txs
   (:require [api.effect :as effect]))
 
-(defn text [effect]
-  (str/join "\n" (keep effect/text effect)))
+; TODO
+; text should work also w/o effect-ctx ...
+; so work on 'effect' itself then ??
+; strange effect-txs-or-effect ?
+(defn text [effect-txs]
+  (str/join "\n" (keep effect/text effect-txs)))
+; (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))
+; maybe here just [effect effect-ctx] params?
 
-(defn valid-params? [effect]
-  (every? effect/valid-params? effect))
+; this is actually valid-effect-ctx?
+(defn valid-params? [effect-txs]
+  (every? effect/valid-params? effect-txs))
 
-(defn useful? [txs]
-  (some #(effect/useful? % effect-ctx) txs))
+(defn useful? [effect-txs ctx]
+  (some #(effect/useful? % ctx) effect-txs))
 
-(defn render-info [effect-ctx g txs]
-  (run! #(effect/render-info % g effect-ctx) txs))
+(defn render-info [g effect-txs]
+  (run! #(effect/render-info % g) effect-txs))
 
 (defn ->insert-ctx
   "Inserts the effect-ctx as second element in each effect.
