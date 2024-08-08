@@ -18,8 +18,7 @@
 
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge (game-state.player-entity/->state)
-           (widgets/->state! ctx))))
+    (merge (widgets/->state! ctx))))
 
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
   (merge ctx
@@ -28,6 +27,7 @@
           :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
+         (game-state.player-entity/->state)
          (ecs/->state)))
 
 (defn start-new-game [ctx tiled-level]
@@ -65,13 +65,13 @@
   (min (ctx/delta-time-raw ctx) movement/max-delta-time))
 
 (defn- update-game [ctx active-entities]
-  (let [game-state (:context/game ctx)
-        player-entity (:player-entity @game-state)
-        state-obj (entity/state-obj @player-entity)
-        ctx (ctx/transact-all! ctx (state/manual-tick state-obj @player-entity ctx))
+  (let [ctx (ctx/transact-all! ctx
+                               (state/manual-tick (entity/state-obj (ctx/player-entity* ctx))
+                                                  (ctx/player-entity* ctx)
+                                                  ctx))
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
-                         (state/pause-game? (entity/state-obj @player-entity))
+                         (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))
                          (not (player-unpaused? ctx))))
         ctx (-> ctx
                 (assoc :context.game/paused? paused?)
@@ -160,8 +160,7 @@
 (extend-type api.context.Context
   api.context/Game
   (delta-time     [ctx]  (:context.game/delta-time ctx)) ; only used @ movement & animation
-  ; TODO move to game-state.player-entity?
-  (player-entity* [ctx] @(:player-entity @(:context/game ctx))))
+  (player-entity* [ctx] @(:context.game/player-entity ctx)))
 
 (comment
 
