@@ -10,7 +10,7 @@
 (defcomponent :effect/melee-damage {}
   (effect/text [_ {:keys [effect/source] :as effect-ctx}]
     (if source
-      (effect/text [:effect/damage effect-ctx (entity*->melee-damage @source)]) ; TODO DRY with the transact! fn ...
+      (effect/text [:effect/damage (entity*->melee-damage @source)] effect-ctx) ; TODO DRY with the transact! fn ...
       "Damage based on entity stats."))
 
   (effect/valid-params? [_ {:keys [effect/source effect/target]}]

@@ -38,8 +38,7 @@
                                      :default-value {:hit-effect {}
                                                      :max-range 2.0}}
   (effect/text [[_ {:keys [maxrange hit-effect]}] effect-ctx]
-    (str "Range " maxrange " meters\n"
-         (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))))
+    (str "Range " maxrange " meters\n" (effect-ctx/text effect-ctx hit-effect)))
 
   ; TODO lOs move to effect/target effect-context creation?
   ; TODO target still exists ?! necessary ? what if disappears/dead?

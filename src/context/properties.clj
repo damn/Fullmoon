@@ -226,7 +226,7 @@
 
   (player-tooltip-text [ctx property]
     (when (:context.game/player-entity ctx)
-      (api.context/tooltip-text
+      (ctx/tooltip-text
        ; player has item @ start
        ; =>
        ; context.world/transact-create-entities-from-tiledmap
@@ -241,5 +241,5 @@
        ; skill window is same problem ...... if we create it @ start
        ; there will be no player
        ; or we create the tooltips on demand
-       (assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx))) ; TODO !!
+       ctx ;(assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx))) ; TODO !!
        property))))

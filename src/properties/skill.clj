@@ -4,7 +4,8 @@
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
-            [api.properties :as properties]))
+            [api.properties :as properties]
+            [effect-ctx.core :as effect-ctx]))
 
 (def ^:private skill-cost-color "[CYAN]")
 (def ^:private action-time-color "[GOLD]")
@@ -48,4 +49,6 @@
                      ": "
                      (readable-number action-time) " seconds" "[]")
                 (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
-                (str effect-color (str effect) "[]")])})) ; TODO need effect-ctx ....
+                ; don't used player-entity* as it may be nil when just created
+                (str effect-color (effect-ctx/text {:effect/source (:context.game/player-entity ctx)}
+                                                   effect) "[]")])}))
