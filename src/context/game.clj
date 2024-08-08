@@ -38,20 +38,17 @@
 ; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
-    (merge (ecs/->state) ; exception -> used in transact!
-           (game-state.player-entity/->state) ; exception -> used in transact!
-           (widgets/->state! ctx)))) ; exception -> used in transact! (player-message)
+    (merge (game-state.player-entity/->state)
+           (widgets/->state! ctx))))
 
-; TODO  only access everything through functions, or use even
-; struct & accessors for speed
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
-  (assoc ctx
-         :context/game (atom (component/create [:context/game nil] ctx))
-         :context.game/replay-mode? replay-mode?
-         :context.game/elapsed-time 0
-         :context.game/logic-frame 0
-         :context.game/mouseover-entity nil
-         ))
+  (merge ctx
+         {:context/game (atom (component/create [:context/game nil] ctx))
+          :context.game/replay-mode? replay-mode?
+          :context.game/elapsed-time 0
+          :context.game/logic-frame 0
+          :context.game/mouseover-entity nil}
+         (ecs/->state)))
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)

@@ -8,20 +8,11 @@
             [api.tx :refer [transact!]]))
 
 (defn ->state []
-  {:uids-entities {}
-   :entity-error nil})
+  {:context.game/uids-entities {}
+   :context.game/entity-error nil})
 
-(defn- uids-entities [ctx]
-  (-> ctx
-      :context/game
-      deref
-      :uids-entities))
-
-(defn- entity-error [ctx]
-  (-> ctx
-      :context/game
-      deref
-      :entity-error))
+(defn- uids-entities [ctx] (:context.game/uids-entities ctx))
+(defn- entity-error  [ctx] (:context.game/entity-error  ctx))
 
 (defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
   {:pre [(not (contains? components :entity/id))
@@ -34,13 +25,11 @@
 
 (defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
-  (swap! (:context/game ctx) update :uids-entities assoc (:entity/uid @entity) entity)
-  ctx)
+  (update ctx :context.game/uids-entities assoc (:entity/uid @entity) entity))
 
 (defmethod transact! :tx/dissoc-uids->entities [[_ uid] ctx]
   {:pre [(contains? (uids-entities ctx) uid)]}
-  (swap! (:context/game ctx) update :uids-entities dissoc uid)
-  ctx)
+  (update ctx :context.game/uids-entities dissoc uid))
 
 (defcomponent :entity/uid {}
   (entity/create [_ {:keys [entity/id]} _ctx]
@@ -61,8 +50,7 @@
   (let [entity (atom nil)]
     (-> ctx
         (ctx/transact-all! [[:tx/setup-entity entity (unique-number!) components]])
-        (apply-system-transact-all! entity/create @entity))
-    []))
+        (apply-system-transact-all! entity/create @entity))))
 
 (defmethod transact! :tx/destroy [[_ entity] ctx]
   (swap! entity assoc :entity/destroyed? true)
@@ -70,14 +58,14 @@
 
 (defn- handle-entity-error! [ctx entity* throwable]
   (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
-  (swap! (:context/game ctx) assoc :entity-error throwable))
+  (assoc ctx :context.game/entity-error throwable))
 
 (defn- render-entity* [system entity* g ctx]
   (try
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
      (when-not (entity-error ctx)
-       (handle-entity-error! ctx entity* t))
+       (handle-entity-error! ctx entity* t)) ; TODO doesnt work assoc tx lost
      (let [[x y] (:entity/position entity*)]
        (g/draw-text g
                     {:text (str "Error / entity uid: " (:entity/uid entity*))
@@ -107,8 +95,7 @@
               (try
                (apply-system-transact-all! ctx entity/tick entity*)
                (catch Throwable t
-                 (do (handle-entity-error! ctx entity* t)
-                     ctx))))
+                 (handle-entity-error! ctx entity* t))))
             ctx
             entities*))
 
