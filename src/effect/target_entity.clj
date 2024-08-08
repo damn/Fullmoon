@@ -1,5 +1,6 @@
 (ns effect.target-entity
   (:require [core.component :refer [defcomponent]]
+            [core.effect-txs :as effect-txs]
             [api.graphics :as g]
             [math.vector :as v]
             [api.context :refer [line-of-sight?]]
@@ -56,7 +57,8 @@
 
   (transact! [[_
                {:keys [effect/source effect/target] :as effect-ctx}
-               {:keys [maxrange hit-effect]}]]
+               {:keys [maxrange hit-effect]}]
+              _ctx]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)

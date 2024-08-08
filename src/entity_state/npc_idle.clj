@@ -16,7 +16,7 @@
      :effect/direction (when target
                          (entity/direction entity* @target))}))
 
-(defn- npc-choose-skill [effect-context entity*]
+(defn- npc-choose-skill [effect-context entity* ctx]
   (->> entity*
        :entity/skills
        vals
@@ -35,7 +35,7 @@
   (exit  [_ entity* _ctx])
   (tick [_ {:keys [entity/id] :as entity*} context]
     (let [effect-context (->effect-context context entity*)]
-      (if-let [skill (npc-choose-skill effect-context entity*)]
+      (if-let [skill (npc-choose-skill effect-context entity* context)]
         [[:tx/event id :start-action [skill (effect-txs/->insert-ctx (:skill/effect skill)
                                                                      effect-context)]]]
         [[:tx/event id :movement-direction (or (potential-field-follow-to-enemy context id)

@@ -1,9 +1,10 @@
 (ns effect.projectile
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
+            [core.effect-txs :as effect-txs]
             [math.vector :as v]
             [data.animation :as animation]
-            [api.context :refer [get-sprite spritesheet effect-text path-blocked?]]
+            [api.context :refer [get-sprite spritesheet path-blocked?]]
             [api.effect :as effect]
             [api.tx :refer [transact!]]))
 
@@ -64,7 +65,7 @@
                           target-p)
               maxrange))))
 
-  (transact! [[_ {:keys [effect/source effect/direction]}]]
+  (transact! [[_ {:keys [effect/source effect/direction]}] ctx]
     [[:tx/create #:entity {:position (start-point @source direction)
                            :body {:width size
                                   :height size

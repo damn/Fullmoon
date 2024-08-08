@@ -1,5 +1,6 @@
 (ns core.effect-txs
-  (:require [api.effect :as effect]))
+  (:require [clojure.string :as str]
+            [api.effect :as effect]))
 
 ; TODO
 ; text should work also w/o effect-ctx ...
@@ -17,6 +18,7 @@
 (defn useful? [effect-txs ctx]
   (some #(effect/useful? % ctx) effect-txs))
 
+; TODO called only in 1 place? -> no need to put fn ?
 (defn render-info [g effect-txs]
   (run! #(effect/render-info % g) effect-txs))
 

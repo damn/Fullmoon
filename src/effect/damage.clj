@@ -111,7 +111,7 @@
   (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and source target))
 
-  (transact! [[_ {:keys [effect/source effect/target]} damage]]
+  (transact! [[_ {:keys [effect/source effect/target]} damage] _ctx]
     (let [source* @source
           {:keys [entity/position entity/hp] :as target*} @target]
       (cond

@@ -12,13 +12,13 @@
        (effect/text ~'[_]
          ~(str "Sets " (name stat) " to max."))
 
-       (effect/valid-params? ~'[_ {:keys [effect/source]}]
+       (effect/valid-params? ~'[[_ {:keys [effect/source]}]]
          ~'source)
 
-       (effect/useful? ~'[_ {:keys [effect/source]}]
+       (effect/useful? ~'[[_ {:keys [effect/source]}] _ctx]
          (lower-than-max? (~stat @~'source)))
 
-       (transact! ~'[_ {:keys [effect/source]}]
+       (transact! ~'[[_ {:keys [effect/source]}] _ctx]
          [[:tx.entity/assoc ~'source ~stat (set-to-max (~stat @~'source))]]))))
 
 (def-set-to-max-effect :entity/hp)

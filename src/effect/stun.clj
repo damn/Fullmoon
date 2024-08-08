@@ -12,5 +12,5 @@
   (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and target))
 
-  (transact! [[_ {:keys [effect/target]} duration]]
+  (transact! [[_ {:keys [effect/target]} duration] _ctx]
     [[:tx/event target :stun duration]]))

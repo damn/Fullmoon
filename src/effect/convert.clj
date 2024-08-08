@@ -14,5 +14,5 @@
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))
 
-  (transact! [[_ {:keys [effect/source effect/target]}]]
+  (transact! [[_ {:keys [effect/source effect/target]}] _ctx]
     [[:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))

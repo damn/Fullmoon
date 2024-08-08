@@ -6,5 +6,5 @@
 ; TODO or derive , is-a ???
 
 (defcomponent :effect/sound data/sound
-  (transact! [[_ sound] ctx]
+  (transact! [[_ _effect-ctx sound] _ctx]
     [[:tx/sound sound]]))

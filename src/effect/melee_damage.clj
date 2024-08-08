@@ -17,5 +17,5 @@
   (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
     (and source target))
 
-  (transact! [[_ {:keys [effect/source]}]]
+  (transact! [[_ {:keys [effect/source]}] _ctx]
     [[:effect/damage (entity*->melee-damage @source)]]))

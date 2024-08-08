@@ -241,5 +241,5 @@
        ; skill window is same problem ...... if we create it @ start
        ; there will be no player
        ; or we create the tooltips on demand
-       (assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx)))
+       (assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx))) ; TODO !!
        property))))

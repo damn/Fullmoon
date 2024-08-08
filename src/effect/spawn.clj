@@ -38,7 +38,7 @@
          (:entity/faction @source)
          target-position))
 
-  (transact! [[_ {:keys [effect/source effect/target-position]} creature-id]]
+  (transact! [[_ {:keys [effect/source effect/target-position]} creature-id] _ctx]
     [[:tx.entity/creature
       creature-id
       #:entity {:position target-position
