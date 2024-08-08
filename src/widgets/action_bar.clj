@@ -16,7 +16,7 @@
 
 (defn- get-action-bar [ctx]
   {:horizontal-group (::action-bar (:game-state.widgets/action-bar-table (ctx/get-stage ctx)))
-   :button-group (:action-bar/button-group @(:context/game ctx))})
+   :button-group (:context.game/action-bar ctx)})
 
 (defmethod transact! :tx.context.action-bar/add-skill
   [[_ {:keys [property/id property/image] :as skill}] ctx]

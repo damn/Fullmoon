@@ -1,6 +1,5 @@
 (ns context.game
-  (:require [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
+  (:require [api.context :as ctx]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics.camera :as camera]
@@ -16,19 +15,15 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-(defcomponent :context/game {}
-  (component/create [_ ctx]
-    (merge (widgets/->state! ctx))))
-
 (defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
   (merge ctx
-         {:context/game (atom (component/create [:context/game nil] ctx))
-          :context.game/replay-mode? replay-mode?
+         {:context.game/replay-mode? replay-mode?
           :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
          (game-state.player-entity/->state)
-         (ecs/->state)))
+         (ecs/->state)
+         (widgets/->state! ctx)))
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)

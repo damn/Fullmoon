@@ -27,7 +27,7 @@
 (extend-type api.context.Context
   api.context/Actionbar
   (selected-skill [ctx] ; TODO move to action-bar
-    (let [{:keys [action-bar/button-group]} @(:context/game ctx)]
+    (let [button-group (:context.game/action-bar ctx)]
       (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
         (actor/id skill-button))))
 
@@ -60,12 +60,9 @@
       (group/add-actor! stage actor))))
 
 (defn ->state! [ctx] ; TODO move to the component itself
-  (let [widget-data {:action-bar/button-group (action-bar/->button-group ctx)
-                     :slot->background (inventory/->data ctx) ; TODO component stuff? - doesnt change....
-
-
-                     ; used in transaction -> can't add to :context.game/
-                     :player-message (player-message/->data ctx)}]
+  (let [widget-data {:context.game/action-bar (action-bar/->button-group ctx)
+                     :context.game.inventory/slot->background (inventory/->data ctx) ; TODO component stuff? - doesnt change....
+                     :context.game/player-message nil}]
     (reset-stage-actors! ctx widget-data)
     widget-data))
 

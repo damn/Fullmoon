@@ -4,11 +4,10 @@
             [api.tx :refer [transact!]]))
 
 (defn- player-message [ctx]
-  (:player-message @(:context/game ctx)))
+  (:context.game/player-message ctx))
 
 (defmethod transact! :tx/msg-to-player [[_ message] ctx]
-  (swap! (:context/game ctx) assoc :player-message {:message message :counter 0})
-  ctx)
+  (assoc ctx :context.game/player-message {:message message :counter 0}))
 
 (def ^:private duration-seconds 1.5)
 
@@ -21,15 +20,11 @@
                     :up? true})))
 
 (defn- check-remove-message [ctx]
-  (let [game-state (:context/game ctx)]
-    (when-let [{:keys [counter]} (:player-message @game-state)]
-      (swap! game-state update :player-message update :counter + (ctx/delta-time-raw ctx))
-      (when (>= counter duration-seconds)
-        (swap! game-state assoc :player-message nil)))))
+  (when-let [{:keys [counter]} (player-message ctx)]
+    (swap! app.state/current-context update :context.game/player-message update :counter + (ctx/delta-time-raw ctx))
+    (when (>= counter duration-seconds)
+      (swap! app.state/current-context assoc :context.game/player-message nil))))
 
 (defn ->build [ctx]
   (->actor ctx {:draw draw-player-message
                 :act check-remove-message}))
-
-(defn ->data [_ctx]
-  nil)
