@@ -24,7 +24,12 @@
   (some #(when (not (effect/valid-params? % ctx)) %) txs))
 
 (defmethod transact! :tx/effect [[_ effect-ctx txs] ctx]
-  (let [ctx (merge ctx effect-ctx)]
+  ; effect-ctx overwrites :game.context/uids-entities of new ctx !
+  ; thats why merge effect-ctx ctx and not the other way around...
+  ; make separate effect-ctx passing with the txs values, no need merge ! dont merge !
+  ; => see @ effect/target-entity passing ctx to tx/effect ...
+  (let [ctx (merge effect-ctx ctx)]
     (assert (valid-params? ctx txs) (pr-str (invalid-tx ctx txs)))
     (transact-all! ctx txs))
-  [])
+  ;[]
+  )
