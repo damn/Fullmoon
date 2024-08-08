@@ -21,7 +21,7 @@
           :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
-         (game-state.player-entity/->state)
+         (game-state.player-entity/->state) ; not needed nil ....
          (ecs/->state)
          (widgets/->state! ctx)))
 
@@ -31,6 +31,7 @@
         ;_ (ctx/clear-recorded-txs! ctx)
         ;_ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
         ctx (world/transact-create-entities-from-tiledmap! ctx)]
+    (assert (:context.game/player-entity ctx))
     ;(println "Initial entity txs:")
     ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
     ctx))
@@ -48,7 +49,7 @@
                            [:tx/destroy entity]))
       ctx/remove-destroyed-entities!
       (merge-new-game-context :replay-mode? true)
-      (ctx/transact-all! (ctx/frame->txs ctx 0))))
+      (ctx/transact-all! (ctx/frame->txs ctx 0)))) ; TODO using old ctx value ... ??
 
 (def ^:private pausing? true)
 
@@ -59,11 +60,12 @@
 (defn- ->delta-time [ctx]
   (min (ctx/delta-time-raw ctx) movement/max-delta-time))
 
+(defn- player-manual-state-tick [ctx]
+  (let [entity* (ctx/player-entity* ctx)]
+    (state/manual-tick (entity/state-obj entity*) entity* ctx)))
+
 (defn- update-game [ctx active-entities]
-  (let [ctx (ctx/transact-all! ctx
-                               (state/manual-tick (entity/state-obj (ctx/player-entity* ctx))
-                                                  (ctx/player-entity* ctx)
-                                                  ctx))
+  (let [ctx (ctx/transact-all! ctx (player-manual-state-tick ctx))
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
                          (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))

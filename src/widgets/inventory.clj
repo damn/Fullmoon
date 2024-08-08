@@ -63,7 +63,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! current-context transact-all! (clicked-cell ctx cell)))))
+                             (swap! current-context #(transact-all! % (clicked-cell % cell))))))
     stack))
 
 (defn- slot->background [ctx]

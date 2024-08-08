@@ -155,7 +155,7 @@
  ; and cells no atoms! grid! I change multiple at once ...
  ; maybe only add elements on click -> somehow glyphlayout breaks AFTER this returns successfully
  )
-(defn show-context []
+(defn show-context! []
   (let [ctx @app.state/current-context
 
         position (ctx/world-mouse-position ctx)
@@ -183,11 +183,22 @@
 
  )
 
-(defn learn-skill [skill-id]
-  (let [ctx @app.state/current-context
-        player-id (:entity/id (ctx/player-entity* ctx))
-        skill (ctx/get-property ctx skill-id)]
-    (ctx/transact-all! ctx [[:tx/add-skill player-id skill]])))
+(defn- do-on-ctx! [tx-fn]
+  (swap! app.state/current-context ctx/transact-all! [(tx-fn @app.state/current-context)]))
+
+(defn learn-skill! [skill-id]
+  (do-on-ctx!  (fn [ctx]
+                 [:tx/add-skill
+                  (:entity/id (ctx/player-entity* ctx))
+                  (ctx/get-property ctx skill-id)])))
+
+(defn create-item! [item-id]
+  (do-on-ctx!  (fn [ctx]
+                 [:tx.entity/item
+                  (:entity/position (ctx/player-entity* ctx))
+                  (ctx/get-property ctx item-id)])))
+
+
 
 (comment
 
@@ -230,7 +241,9 @@
 
 (comment
 
- (learn-skill :skills/projectile)
- (show-context)
+ (learn-skill! :skills/projectile)
+ (create-item! :items/blood-glove) ; these items created here ... on pickup dont disappear
+ ; becuz not part of ctx ... oop
+ (show-context!)
 
  )
