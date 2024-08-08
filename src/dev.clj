@@ -183,10 +183,10 @@
 
  )
 
-(defn learn-skill []
+(defn learn-skill [skill-id]
   (let [ctx @app.state/current-context
         player-id (:entity/id (ctx/player-entity* ctx))
-        skill (ctx/get-property ctx :skills/convert)]
+        skill (ctx/get-property ctx skill-id)]
     (ctx/transact-all! ctx [[:tx/add-skill player-id skill]])))
 
 (comment
@@ -230,7 +230,7 @@
 
 (comment
 
- (learn-skill)
+ (learn-skill :skills/projectile)
  (show-context)
 
  )
