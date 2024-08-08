@@ -16,26 +16,6 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-; TODO
-; * world ?
-; * pull last atom out also ?! possible ??
-; => only If I return a new ctx with transact-all! ..... which is a bit crazy ???
-; -> maybe special transaction-fns can do that only? <o.o> Ox.xO
-; => or instead of nil return a certain vector [:new-ctx ctx]
-; and check for [:new-ctx ...] or something ....
-; anyway we want to give ui txs not record them
-; derive ... tx derive from ctx-tx or from foo-tx or ui-tx
-; if ctx-tx then just swap! current-context (mad)
-
-; some things also don't need to be in an atom like replay-mode? or stuff
-; actually only ecs/player-entity because its set in a transaction ...... ????
-; what does that mean?
-
-; I can start with moving things out of context/game which dont change at all in a tx like replay-mode?
-
-; => e.g. for paused? I can just return a new ctx @ update-game
-; then the application itself needs to swap! current-context
-; but be careful with stage ...
 (defcomponent :context/game {}
   (component/create [_ ctx]
     (merge (game-state.player-entity/->state)
