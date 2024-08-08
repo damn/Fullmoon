@@ -1,13 +1,12 @@
 (ns effect.target-entity
-  (:require [core.component :refer [defcomponent]]
-            [core.effect-txs :as effect-txs]
+  (:require [math.vector :as v]
+            [core.component :refer [defcomponent]]
+            [core.data :as data]
             [api.graphics :as g]
-            [math.vector :as v]
             [api.context :refer [line-of-sight?]]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.tx :refer [transact!]]
-            [core.data :as data]))
+            [effect-ctx.core :as effect-ctx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:entity/position entity*)
@@ -38,27 +37,24 @@
                                               [:maxrange pos?]]
                                      :default-value {:hit-effect {}
                                                      :max-range 2.0}}
-  (effect/text [[_ effect-ctx {:keys [maxrange hit-effect]}]]
-    (str "Range " maxrange " meters\n"
-         (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))))
-
   ; TODO lOs move to effect/target effect-context creation?
-
   ; TODO target still exists ?! necessary ? what if disappears/dead?
   ; TODO (:entity/hp @target) is valid-params of hit-effect damage !! -> allow anyway and just do nothing then?
-  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
+  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and source
          target
          ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ...
          (:entity/hp @target)))
 
-  (effect/useful? [[_ {:keys [effect/source effect/target]} {:keys [maxrange]}] ctx]
+  (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} _ctx]
     (in-range? @source @target maxrange))
 
-  (transact! [[_
-               {:keys [effect/source effect/target] :as effect-ctx}
-               {:keys [maxrange hit-effect]}]
-              _ctx]
+  (effect/text [[_ {:keys [maxrange hit-effect]}] effect-ctx]
+    (str "Range " maxrange " meters\n"
+         (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx))))
+
+  (effect/txs [[_ {:keys [maxrange hit-effect]}]
+                {:keys [effect/source effect/target] :as effect-ctx}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -71,7 +67,7 @@
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         (effect-txs/->insert-ctx hit-effect effect-ctx))
+         (effect-ctx/txs effect-ctx hit-effect))
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )
@@ -79,10 +75,7 @@
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx.entity/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (effect/render-info [[_
-                        {:keys [effect/source effect/target]}
-                        {:keys [maxrange]}]
-                       g]
+  (effect/render-info [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} g]
     (let [source* @source
           target* @target]
       (g/draw-line g

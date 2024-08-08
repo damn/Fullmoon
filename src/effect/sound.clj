@@ -1,10 +1,10 @@
 (ns effect.sound
   (:require [core.component :refer [defcomponent]]
-            [api.tx :refer [transact!]]
-            [core.data :as data]))
+            [core.data :as data]
+            [api.effect :as effect]))
 
 ; TODO or derive , is-a ???
 
 (defcomponent :effect/sound data/sound
-  (transact! [[_ _effect-ctx sound] _ctx]
+  (effect/txs [[_ sound] _effect-ctx]
     [[:tx/sound sound]]))

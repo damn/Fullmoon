@@ -1,7 +1,6 @@
 (ns effect.spawn
   (:require [core.component :refer [defcomponent]]
-            [api.effect :as effect]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 ; TODO spawning on player both without error ?! => not valid position checked
 ; also what if someone moves on the target posi ? find nearby valid cell ?
@@ -29,16 +28,16 @@
 ; => one to one attr!?
 (defcomponent :effect/spawn {:widget :text-field
                              :schema [:qualified-keyword {:namespace :creatures}]}
-  (effect/text [[_ _effect-ctx creature-id]]
-    (str "Spawns a " (name creature-id)))
-
-  (effect/valid-params? [[_ {:keys [effect/source effect/target-position]}]]
+  (effect/valid-params? [_ {:keys [effect/source effect/target-position]}]
     ; TODO line of sight ? / not blocked ..
     (and source
          (:entity/faction @source)
          target-position))
 
-  (transact! [[_ {:keys [effect/source effect/target-position]} creature-id] _ctx]
+  (effect/text [[_ creature-id] _effect-ctx]
+    (str "Spawns a " (name creature-id)))
+
+  (effect/txs [[_ creature-id] {:keys [effect/source effect/target-position]}]
     [[:tx.entity/creature
       creature-id
       #:entity {:position target-position

@@ -1,10 +1,9 @@
 (ns effect.damage
   (:require [core.component :refer [defcomponent]]
+            [core.data :as data]
             [data.val-max :refer [apply-val apply-val-max-modifiers]]
             [utils.random :as random]
-            [api.effect :as effect]
-            [api.tx :refer [transact!]]
-            [core.data :as data]))
+            [api.effect :as effect]))
 
 (defn- effective-armor-save [source* target*]
   (max (- (or (-> target* :entity/stats :stats/armor-save)   0)
@@ -100,7 +99,10 @@
 (defcomponent :damage/min-max data/val-max-attr)
 
 (defcomponent :effect/damage (data/map-attribute :damage/min-max)
-  (effect/text [[_ {:keys [effect/source]} damage]]
+  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
+    (and source target))
+
+  (effect/text [[_ damage] {:keys [effect/source]}]
     (if source
       (let [modified (effective-damage damage @source)]
         (if (= damage modified)
@@ -108,10 +110,7 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
-    (and source target))
-
-  (transact! [[_ {:keys [effect/source effect/target]} damage] _ctx]
+  (effect/txs [[_  damage] {:keys [effect/source effect/target]}]
     (let [source* @source
           {:keys [entity/position entity/hp] :as target*} @target]
       (cond

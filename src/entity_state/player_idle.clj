@@ -1,6 +1,5 @@
 (ns entity-state.player-idle
-  (:require [core.effect-txs :as effect-txs]
-            [api.graphics :as g]
+  (:require [api.graphics :as g]
             [api.input.buttons :as buttons]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [api.scene2d.ui.button :refer [button?]]
@@ -65,15 +64,6 @@
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
 
-(defn- ->effect-context [ctx entity*]
-  (let [target* (ctx/mouseover-entity* ctx)
-        target-position (or (and target* (:entity/position target*))
-                            (ctx/world-mouse-position ctx))]
-    {:effect/source (:entity/id entity*)
-     :effect/target (:entity/id target*)
-     :effect/target-position target-position
-     :effect/direction (v/direction (:entity/position entity*) target-position)}))
-
 ; TODO move to inventory-window extend Context
 (defn- inventory-cell-with-item? [ctx actor]
   (and (parent actor)
@@ -88,6 +78,15 @@
      (window-title-bar? actor) :cursors/move-window
      (button? actor) :cursors/over-button
      :else :cursors/default)))
+
+(defn- ->effect-context [ctx entity*]
+  (let [target* (ctx/mouseover-entity* ctx)
+        target-position (or (and target* (:entity/position target*))
+                            (ctx/world-mouse-position ctx))]
+    {:effect/source (:entity/id entity*)
+     :effect/target (:entity/id target*)
+     :effect/target-position target-position
+     :effect/direction (v/direction (:entity/position entity*) target-position)}))
 
 (defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (ctx/mouseover-entity* context)]
@@ -104,9 +103,8 @@
      :else
      (if-let [skill-id (selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
-             effect-txs (effect-txs/->insert-ctx (:skill/effect skill)
-                                                 (->effect-context context entity*))
-             state (skill-usable-state effect-txs entity* skill)]
+             effect-ctx (->effect-context context entity*)
+             state (skill-usable-state effect-ctx entity* skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
@@ -114,7 +112,7 @@
             ; => e.g. meditation no TARGET .. etc.
             [:cursors/use-skill
              (fn []
-               [[:tx/event (:entity/id entity*) :start-action [skill effect-txs]]])])
+               [[:tx/event (:entity/id entity*) :start-action [skill effect-ctx]]])])
            (do
             ; TODO cursor as of usable state
             ; cooldown -> sanduhr kleine

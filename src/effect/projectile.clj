@@ -1,12 +1,11 @@
 (ns effect.projectile
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
-            [core.effect-txs :as effect-txs]
             [math.vector :as v]
             [data.animation :as animation]
             [api.context :refer [get-sprite spritesheet path-blocked?]]
             [api.effect :as effect]
-            [api.tx :refer [transact!]]))
+            [effect-ctx.core :as effect-ctx]))
 
 ; -> range needs to be smaller than potential field range
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
@@ -44,16 +43,13 @@
 (defcomponent :effect/projectile {:widget :text-field
                                   :schema [:= true]
                                   :default-value true}
-  (effect/text [[_ effect-ctx]]
-    (effect-txs/text (effect-txs/->insert-ctx hit-effect effect-ctx)))
-
-  (effect/valid-params? [[_ {:keys [effect/source
-                                    effect/target
-                                    effect/direction]}]]
+  (effect/valid-params? [_ {:keys [effect/source
+                                   effect/target
+                                   effect/direction]}]
     (and source direction)) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (effect/useful? [[_ {:keys [effect/source effect/target]}] ctx]
+  (effect/useful? [_ {:keys [effect/source effect/target]} ctx]
     (let [source-p (:entity/position @source)
           target-p (:entity/position @target)]
       (and (not (path-blocked? ctx
@@ -65,14 +61,17 @@
                           target-p)
               maxrange))))
 
-  (transact! [[_ {:keys [effect/source effect/direction]}] ctx]
+  (effect/text [_ effect-ctx]
+    (effect-ctx/text effect-ctx hit-effect))
+
+  (effect/txs [_ {:keys [effect/source effect/direction]}]
     [[:tx/create #:entity {:position (start-point @source direction)
                            :body {:width size
                                   :height size
                                   :solid? false
                                   :rotation-angle (v/get-angle-from-vector direction)}
 
-                           :animation (black-projectile ctx)
+                           :animation (black-projectile ctx) ; TODO
 
                            :flying? true
                            :z-order :z-order/effect

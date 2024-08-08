@@ -1,7 +1,6 @@
 (ns effect.melee-damage
   (:require [core.component :refer [defcomponent]]
-            [api.effect :as effect]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (defn- entity*->melee-damage [entity*]
   (let [strength (or (:stats/strength (:entity/stats entity*))
@@ -9,13 +8,13 @@
     {:damage/min-max [strength strength]}))
 
 (defcomponent :effect/melee-damage {}
-  (effect/text [[_ {:keys [effect/source] :as effect-ctx}]]
-    (if source
-      (effect/text [:effect/damage effect-ctx (entity*->melee-damage @source)])
-      "Damage based on entity stats."))
-
-  (effect/valid-params? [[_ {:keys [effect/source effect/target]}]]
+  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and source target))
 
-  (transact! [[_ {:keys [effect/source]}] _ctx]
+  (effect/text [_ {:keys [effect/source] :as effect-ctx}]
+    (if source
+      (effect/text [:effect/damage effect-ctx (entity*->melee-damage @source)]) ; TODO DRY with the transact! fn ...
+      "Damage based on entity stats."))
+
+  (effect/txs [_ {:keys [effect/source]}]
     [[:effect/damage (entity*->melee-damage @source)]]))

@@ -1,19 +1,26 @@
 (ns entity-state.active-skill
   (:require [data.val-max :refer [apply-val]]
-            [core.effect-txs :as effect-txs]
             [api.context :refer [stopped? finished-ratio ->counter]]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.graphics :as g] ))
+            [api.graphics :as g]
+            [effect-ctx.core :as effect-ctx]))
 
-(defn skill-usable-state [effect-txs
+(defn skill-usable-state [effect-ctx
                           {:keys [entity/mana]}
                           {:keys [skill/cost skill/cooling-down? skill/effect]}]
   (cond
-   cooling-down?                               :cooldown
-   (and cost (> cost (mana 0)))                :not-enough-mana
-   (not (effect-txs/valid-params? effect-txs)) :invalid-params
-   :else                                       :usable))
+   cooling-down?
+   :cooldown
+
+   (and cost (> cost (mana 0)))
+   :not-enough-mana
+
+   (not (effect-ctx/valid-params? effect-ctx effect))
+   :invalid-params
+
+   :else
+   :usable))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)
@@ -36,7 +43,7 @@
   (when cost
     [:tx.entity/assoc id :entity/mana (apply-val mana #(- % cost))]))
 
-(defrecord ActiveSkill [skill effect-txs counter]
+(defrecord ActiveSkill [skill effect-ctx counter]
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/sandclock]])
   (pause-game? [_] false)
@@ -54,19 +61,19 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (effect-txs/valid-params? effect-txs))
+     (not (effect-ctx/valid-params? effect-ctx (:skill/effect skill)))
      [[:tx/event id :action-done]]
 
      (stopped? context counter)
      (cons [:tx/event id :action-done]
-           effect-txs)))
+           (effect-ctx/txs effect-ctx (:skill/effect skill)))))
 
   (render-below [_ entity* g _ctx])
   (render-above [_ entity* g _ctx])
   (render-info [_ {:keys [entity/position] :as entity*} g ctx]
     (let [{:keys [property/image skill/effect]} skill]
       (draw-skill-icon g image entity* position (finished-ratio ctx counter))
-      (effect-txs/render-info g effect-txs))))
+      (effect-ctx/render-info effect-ctx g (:skill/effect skill)))))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
@@ -74,9 +81,9 @@
               (:skill/action-time-modifier-key skill))
          1)))
 
-(defn ->CreateWithCounter [context entity* [skill effect-txs]]
+(defn ->CreateWithCounter [context entity* [skill effect-ctx]]
   (->ActiveSkill skill
-                 effect-txs
+                 effect-ctx
                  (->> skill
                       :skill/action-time
                       (apply-action-speed-modifier entity* skill)
