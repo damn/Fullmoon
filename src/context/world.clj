@@ -5,6 +5,7 @@
             [data.grid2d :as grid2d]
             [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
             [api.disposable :refer [dispose]]
+            [api.entity :as entity]
             [api.graphics.camera :as camera]
             [api.maps.tiled :as tiled]
             [api.tx :refer [transact!]]
@@ -18,7 +19,7 @@
             [mapgen.movement-property :refer (movement-property)]))
 
 (defn- on-screen? [entity* ctx]
-  (let [[x y] (:entity/position entity*)
+  (let [[x y] (entity/position entity*)
         x (float x)
         y (float y)
         [cx cy] (camera/position (ctx/world-camera ctx))
@@ -67,7 +68,7 @@
          (or (not (:entity/player? source*))
              (on-screen? target* context))
          (not (and los-checks?
-                   (ray-blocked? context (:entity/position source*) (:entity/position target*))))))
+                   (ray-blocked? context (entity/position source*) (entity/position target*))))))
 
   (ray-blocked? [{:keys [context/world]} start target]
     (let [{:keys [cell-blocked-boolean-array width height]} world]
@@ -89,25 +90,19 @@
   (world-grid [{:keys [context/world]}]
     (:grid world)))
 
-; TODO add tiled-map & explored-tile-corners here .. context/world used outside ...
-; multiple word-levels possible ...
-
 (defmethod transact! :tx/add-to-world [[_ entity] ctx]
   (content-grid/update-entity! (content-grid ctx) entity)
-  (when (:entity/body @entity)
-    (world-grid/add-entity! (world-grid ctx) entity))
+  (world-grid/add-entity! (world-grid ctx) entity)
   ctx)
 
 (defmethod transact! :tx/remove-from-world [[_ entity] ctx]
   (content-grid/remove-entity! (content-grid ctx) entity)
-  (when (:entity/body @entity)
-    (world-grid/remove-entity! (world-grid ctx) entity))
+  (world-grid/remove-entity! (world-grid ctx) entity)
   ctx)
 
 (defmethod transact! :tx/position-changed [[_ entity] ctx]
   (content-grid/update-entity! (content-grid ctx) entity)
-  (when (:entity/body @entity)
-    (world-grid/entity-position-changed! (world-grid ctx) entity))
+  (world-grid/entity-position-changed! (world-grid ctx) entity)
   ctx)
 
 (defn- set-cell-blocked-boolean-array [arr cell*]

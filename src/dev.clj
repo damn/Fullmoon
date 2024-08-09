@@ -2,8 +2,8 @@
   (:require [clojure.pprint :refer :all]
             [clojure.string :as str]
             [api.context :as ctx :refer :all]
-            [api.scene2d.actor :as actor]
-            ))
+            [api.entity :as entity]
+            [api.scene2d.actor :as actor]))
 
 (comment
  (defn- all-text-colors []
@@ -162,8 +162,8 @@
         cell (get (api.context/world-grid ctx) (mapv int position))
 
         ;tree-map @cell
-        ;tree-map (ctx/mouseover-entity* ctx)
-        tree-map ctx
+        tree-map (ctx/mouseover-entity* ctx)
+        ;tree-map ctx
 
         ;tree-map (sort-by first core.component/attributes)
         ;tree-map (sort-by first (methods api.tx/transact!))
@@ -195,7 +195,7 @@
 (defn create-item! [item-id]
   (do-on-ctx!  (fn [ctx]
                  [:tx.entity/item
-                  (:entity/position (ctx/player-entity* ctx))
+                  (entity/position (ctx/player-entity* ctx))
                   (ctx/get-property ctx item-id)])))
 
 

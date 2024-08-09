@@ -30,12 +30,12 @@
     [max-hp max-hp])
 
   (entity/render-info [[_ hp]
-                       {[x y] :entity/position
-                        {:keys [width half-width half-height]} :entity/body
-                        :keys [entity/mouseover?]}
+                       {{:keys [width half-width half-height]} :entity/body
+                        :keys [entity/mouseover?] :as entity*}
                        g
                        _ctx]
-    (let [ratio (val-max-ratio hp)]
+    (let [ratio (val-max-ratio hp)
+          [x y] (entity/position entity*)]
       (when (or (< ratio 1) mouseover?)
         (let [x (- x half-width)
               y (+ y half-height)

@@ -50,7 +50,7 @@
                        (v/distance player target)))))
 
 (defn- item-place-position [ctx entity*]
-  (placement-point (:entity/position entity*)
+  (placement-point (entity/position entity*)
                    (ctx/world-mouse-position ctx)
                    ; so you cannot put it out of your own reach
                    (- (:entity/click-distance-tiles entity*) 0.1)))

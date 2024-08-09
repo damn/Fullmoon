@@ -3,7 +3,8 @@
             [core.data :as data]
             [data.val-max :refer [apply-val apply-val-max-modifiers]]
             [utils.random :as random]
-            [api.effect :as effect]))
+            [api.effect :as effect]
+            [api.entity :as entity]))
 
 (defn- effective-armor-save [source* target*]
   (max (- (or (-> target* :entity/stats :stats/armor-save)   0)
@@ -112,7 +113,7 @@
 
   (effect/txs [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
-          {:keys [entity/position entity/hp] :as target*} @target]
+          {:keys [entity/hp] :as target*} @target]
       (cond
        (not hp)
        []
@@ -127,7 +128,7 @@
        (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
              dmg-amount (random/rand-int-between min-max)
              hp (apply-val hp #(- % dmg-amount))]
-         [[:tx.entity/audiovisual position :audiovisuals/damage]
+         [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
           [:tx.entity/assoc target :entity/hp hp]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))

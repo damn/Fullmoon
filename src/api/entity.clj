@@ -21,7 +21,8 @@
 
 (defrecord Entity [])
 
-(defprotocol Position
+(defprotocol Body
+  (position [_] "Center float coordinates.")
   (tile [_] "Center integer coordinates")
   (direction [_ other-entity*] "Returns direction vector from this entity to the other entity."))
 

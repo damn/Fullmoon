@@ -1,6 +1,7 @@
 (ns entity-state.stunned
   (:require [api.graphics :as g]
             [api.context :refer [stopped? ->counter]]
+            [api.entity :as entity]
             [api.entity-state :as state]))
 
 (defrecord Stunned [counter]
@@ -18,8 +19,8 @@
     (when (stopped? ctx counter)
       [[:tx/event (:entity/id entity*) :effect-wears-off]]))
 
-  (render-below [_ {:keys [entity/position]} g _ctx]
-    (g/draw-circle g position 0.5 [1 1 1 0.6]))
+  (render-below [_ entity* g _ctx]
+    (g/draw-circle g (entity/position entity*) 0.5 [1 1 1 0.6]))
 
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))

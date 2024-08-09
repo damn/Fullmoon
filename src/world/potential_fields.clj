@@ -238,12 +238,12 @@
   ; TODO work with entity* !? occupied-by-other? works with entity not entity* ... not with ids ... hmmm
 (defn potential-field-follow-to-enemy [world-grid entity] ; TODO pass faction here, one less dependency.
   (let [grid world-grid
-        position (:entity/position @entity)
+        position (entity/position @entity)
         own-cell (get grid (->tile position))
         {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
     (cond
      target-entity
-     (v/direction position (:entity/position @target-entity))
+     (v/direction position (entity/position @target-entity))
 
      (nil? target-cell)
      nil
@@ -270,7 +270,7 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get (world-grid context) (->tile (:entity/position @body)))
+    (let [occupied-cell (get (world-grid context) (entity/tile @body))
           own-dist (distance-to occupied-cell)
           adj-cells (cached-adjacent-cells grid occupied-cell)
           potential-cells (filter distance-to

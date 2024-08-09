@@ -9,15 +9,15 @@
             [effect-ctx.core :as effect-ctx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
-  (< (- (float (v/distance (:entity/position entity*)
-                           (:entity/position target*)))
+  (< (- (float (v/distance (entity/position entity*)
+                           (entity/position target*)))
         (float (:radius (:entity/body entity*)))
         (float (:radius (:entity/body target*))))
      (float maxrange)))
 
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
-  (v/add (:entity/position entity*)
+  (v/add (entity/position entity*)
          (v/scale (entity/direction entity* target*)
                   (:radius (:entity/body entity*)))))
 
@@ -60,7 +60,7 @@
       (if (in-range? source* target* maxrange)
         (cons
          [:tx.entity/line-render {:start (start-point source* target*)
-                                  :end (:entity/position target*)
+                                  :end (entity/position target*)
                                   :duration 0.05
                                   :color [1 0 0 0.75]
                                   :thick? true}]

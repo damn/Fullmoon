@@ -104,7 +104,7 @@
 (defn- render-game! [ctx active-entities*]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx)
-                          (:entity/position player-entity*))
+                          (entity/position player-entity*))
     (ctx/render-map ctx)
     (ctx/render-world-view ctx
                            (fn [g]

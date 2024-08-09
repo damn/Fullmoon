@@ -4,6 +4,7 @@
             [core.component :refer [defcomponent]]
             [api.context :refer [get-sprite spritesheet path-blocked?]]
             [api.effect :as effect]
+            [api.entity :as entity]
             [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
 
@@ -35,8 +36,8 @@
               [1 12]))
 
 (defmethod transact! :tx.entity/projectile [[_ {:keys [position direction faction]}] ctx]
-  [[:tx/create #:entity {:position position
-                         :body {:width size
+  [[:tx/create #:entity {:body {:position position
+                                :width size
                                 :height size
                                 :solid? false
                                 :rotation-angle (v/get-angle-from-vector direction)}
@@ -53,7 +54,7 @@
 
 
 (defn- start-point [entity* direction]
-  (v/add (:entity/position entity*)
+  (v/add (entity/position entity*)
          (v/scale direction
                   (+ (:radius (:entity/body entity*)) size 0.1))))
 
@@ -70,8 +71,8 @@
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
   (effect/useful? [_ {:keys [effect/source effect/target]} ctx]
-    (let [source-p (:entity/position @source)
-          target-p (:entity/position @target)]
+    (let [source-p (entity/position @source)
+          target-p (entity/position @target)]
       (and (not (path-blocked? ctx
                                source-p ; TODO test
                                target-p

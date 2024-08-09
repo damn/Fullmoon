@@ -70,9 +70,9 @@
 
   (render-below [_ entity* g _ctx])
   (render-above [_ entity* g _ctx])
-  (render-info [_ {:keys [entity/position] :as entity*} g ctx]
+  (render-info [_ entity* g ctx]
     (let [{:keys [property/image skill/effect]} skill]
-      (draw-skill-icon g image entity* position (finished-ratio ctx counter))
+      (draw-skill-icon g image entity* (entity/position entity*) (finished-ratio ctx counter))
       (effect-ctx/render-info effect-ctx g (:skill/effect skill)))))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]

@@ -48,10 +48,27 @@
 (defmethod transact! :tx.entity/creature [[_ creature-id components] ctx]
   (assert (:entity/state components))
   (let [creature-components (:creature/entity (ctx/get-property ctx creature-id))]
-    [[:tx/create (merge creature-components
-                        (update components :entity/state set-state)
-                        {:entity/z-order (if (:entity/flying? creature-components)
-                                           :z-order/flying
-                                           :z-order/ground)}
-                        (when (= creature-id :creatures/lady-a)
-                          {:entity/clickable {:type :clickable/princess}}))]]))
+    [[:tx/create
+      (-> creature-components
+          (update :entity/body assoc :position (:entity/position components)) ; give position separate arg?
+          (merge (dissoc components :entity/position)
+                 {:entity/z-order (if (:entity/flying? creature-components) ; do @ body
+                                    :z-order/flying
+                                    :z-order/ground)}
+                 (when (= creature-id :creatures/lady-a) ; do @ ?
+                   {:entity/clickable {:type :clickable/princess}}))
+          (update :entity/state set-state))]])) ; do @ entity/state itself
+
+(comment
+
+ (set! *print-level* nil)
+ (clojure.pprint/pprint
+  (transact! [:tx.entity/creature :creatures/vampire
+              {:entity/position [1 2]
+               :entity/state [:state/npc :sleeping]}]
+             (reify api.context/PropertyStore
+               (get-property [_ id]
+                 {:creature/entity {:entity/body {:width 5
+                                                  :height 5}}}))))
+
+ )

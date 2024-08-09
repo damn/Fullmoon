@@ -18,7 +18,7 @@
         apply-delta (fn [position]
                       (mapv #(+ %1 (* %2 speed delta)) position direction-vector))]
     (-> entity*
-        (update :entity/position apply-delta)
+        (update-in [:entity/body :position   ] apply-delta)
         (update-in [:entity/body :left-bottom] apply-delta))))
 
 (defn- update-position-non-solid [ctx entity* direction]
@@ -42,7 +42,7 @@
 (defcomponent :entity/movement data/pos-attr
   (entity/create [[_ tiles-per-second] entity* ctx]
     (assert (and (:entity/body entity*)
-                 (:entity/position entity*)))
+                 (entity/position entity*)))
     (assert (<= tiles-per-second (max-speed ctx))))
 
   (entity/tick [_ entity* ctx]
@@ -51,11 +51,10 @@
                   (v/normalised? direction)))
       (when-not (zero? (v/length direction))
         (when-let [{:keys [entity/id
-                           entity/position
                            entity/body]} (if (:solid? (:entity/body entity*))
                                            (update-position-solid     ctx entity* direction)
                                            (update-position-non-solid ctx entity* direction))]
-          [[:tx.entity/assoc    id :entity/position position]
+          [[:tx.entity/assoc-in id [:entity/body :position   ] (:position    body)]
            [:tx.entity/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
            (when (:rotate-in-movement-direction? body)
              [:tx.entity/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])

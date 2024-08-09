@@ -1,11 +1,12 @@
 (ns entity-state.npc-dead
-  (:require [api.entity-state :as state]))
+  (:require [api.entity :as entity]
+            [api.entity-state :as state]))
 
 (defrecord NpcDead []
   state/State
-  (enter [_ {:keys [entity/id entity/position]} _ctx]
+  (enter [_ {:keys [entity/id] :as entity*} _ctx]
     [[:tx/destroy id]
-     [:tx.entity/audiovisual position :audiovisuals/creature-die]])
+     [:tx.entity/audiovisual (entity/position entity*) :audiovisuals/creature-die]])
   (exit [_ entity* _ctx])
   (tick [_ entity* _ctx])
   (render-below [_ entity* g ctx])

@@ -16,7 +16,6 @@
                     movement
                     player
                     plop
-                    position
                     projectile-collision
                     reaction-time
                     shout

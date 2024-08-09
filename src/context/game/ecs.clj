@@ -67,7 +67,7 @@
    (catch Throwable t
      (when-not (entity-error ctx)
        (handle-entity-error! ctx entity* t)) ; TODO doesnt work assoc tx lost
-     (let [[x y] (:entity/position entity*)]
+     (let [[x y] (entity/position entity*)]
        (g/draw-text g
                     {:text (str "Error / entity uid: " (:entity/uid entity*))
                      :x x

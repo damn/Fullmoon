@@ -4,4 +4,4 @@
 
 (defcomponent :entity/plop {}
   (entity/destroy [_ entity* ctx]
-    [[:tx.entity/audiovisual (:entity/position entity*) :audiovisuals/hit-wall]]))
+    [[:tx.entity/audiovisual (entity/position entity*) :audiovisuals/hit-wall]]))

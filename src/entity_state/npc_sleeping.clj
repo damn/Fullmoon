@@ -13,13 +13,11 @@
   state/State
   (enter [_ entity* _ctx])
 
-  (exit [_ {:keys [entity/id
-                   entity/position
-                   entity/faction]} ctx]
+  (exit [_ {:keys [entity/id entity/faction] :as entity*} ctx]
     ; TODO make state = alerted, and shout at the end of that !
     ; then nice alert '!' and different entities different alert time
     [[:tx/add-text-effect id "[WHITE]!"]
-     [:tx.entity/shout position faction 0.2]])
+     [:tx.entity/shout (entity/position entity*) faction 0.2]])
 
   (tick [_ entity* context]
     (let [cell ((world-grid context) (entity/tile entity*))]
@@ -28,10 +26,11 @@
           [[:tx/event (:entity/id entity*) :alert]]))))
 
   (render-below [_ entity* g ctx])
-  (render-above [_ {[x y] :entity/position :keys [entity/body]} g _ctx]
-    (g/draw-text g
-                 {:text "zzz"
-                  :x x
-                  :y (+ y (:half-height body))
-                  :up? true}))
+  (render-above [_ {:keys [entity/body] :as entity*} g _ctx]
+    (let [[x y] (entity/position entity*)]
+      (g/draw-text g
+                   {:text "zzz"
+                    :x x
+                    :y (+ y (:half-height body))
+                    :up? true})))
   (render-info [_ entity* g ctx]))

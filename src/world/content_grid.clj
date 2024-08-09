@@ -1,5 +1,6 @@
 (ns world.content-grid
   (:require [data.grid2d :as grid2d]
+            [api.entity :as entity]
             api.world.content-grid))
 
 ; why needs entity a reference to the cell
@@ -8,8 +9,8 @@
 (defrecord ContentGrid [grid cell-w cell-h]
   api.world.content-grid/ContentGrid
   (update-entity! [_ entity]
-    (let [{:keys [entity/content-cell entity/position]} @entity
-          [x y] position
+    (let [{:keys [entity/content-cell] :as entity*} @entity
+          [x y] (entity/position entity*)
           new-cell (get grid [(int (/ x cell-w))
                               (int (/ y cell-h))])]
       (when-not (= content-cell new-cell)
