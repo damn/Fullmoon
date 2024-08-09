@@ -156,6 +156,11 @@
 
 (def ^:private spawn-enemies? true)
 
+; TODO move together with world/->context .....
+; and supply a reset-world function for the replay mode ....
+; which cleans out contentfields/etc. ?
+; then no remove layers
+; also move transact-all! out ...
 (defn transact-create-entities-from-tiledmap! [{:keys [context/world] :as ctx}]
   (let [tiled-map (:tiled-map world)
         ctx (if spawn-enemies?

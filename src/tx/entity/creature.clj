@@ -27,6 +27,9 @@
 ;;; dissoc here and assign components ....
 ; only npcs need reaction time ....
 
+; TODO move to entity/state component, don'tneed to know about that here .... >
+; but what about controller component stuff ?
+; or entity/controller creates all of this ?
 (defn- set-state [[player-or-npc initial-state]]
   ((case player-or-npc
      :state/player player-state/->state

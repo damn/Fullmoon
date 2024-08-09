@@ -57,5 +57,29 @@
            [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
            [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj]])))))
 
+(comment
+ (require '[entity-state.npc :as npc-state])
+ ; choose a initial state constructor w/o needing ctx
+ ; and new state also no ctx
+ (let [initial-state :sleeping
+       state (npc-state/->state initial-state)
+       components nil
+       ctx nil
+       entity (atom {:entity/player? true
+                     :entity/state (entity/create-component [:entity/state (npc-state/->state initial-state)]
+                                                             components
+                                                             ctx)})
+       event :alert
+       params nil
+       ]
+   (send-event! ctx entity event params)
+
+   ; TODO create fsm picture
+
+   ; TODO why we pass entity and not entity* ?? would be simpler ???
+   )
+
+ )
+
 (defmethod transact! :tx/event [[_ entity event params] ctx]
   (send-event! ctx entity event params))
