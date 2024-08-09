@@ -6,6 +6,20 @@
             [api.modifier :as modifier]
             [core.data :as data]))
 
+(comment
+ {:entity/stats {:stats/one
+                 :stats/two
+                 :stats/modifiers {:stats/two {:operation/add [:one :two :three :four]}}
+                 }}
+
+ ; item adds to modifiers
+
+ ; modifier = 'stat-key', 'operation', 'value'
+
+ ; and removes itself again (assert something is there with value)
+ ; defstat with data defines effects/modifiers with the stat.... based on data/type.
+ )
+
 ; TODO add movement speed +/- modifier.
 
 ; TODO consistent name: 'delta' & 'value'
