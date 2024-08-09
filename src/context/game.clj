@@ -20,7 +20,7 @@
 (defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
          {:context.game/game-loop-mode mode}
-         (ecs/->state)
+         (ecs/->build)
          (time-component/->build)
          (widgets/->state! ctx)))
 

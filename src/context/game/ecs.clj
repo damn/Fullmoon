@@ -7,7 +7,7 @@
             [api.entity :as entity :refer [map->Entity]]
             [api.tx :refer [transact!]]))
 
-(defn ->state []
+(defn ->build []
   {:context.game/uids-entities {}
    :context.game/entity-error nil})
 
