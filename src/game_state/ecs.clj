@@ -14,14 +14,11 @@
 (defn- uids-entities [ctx] (:context.game/uids-entities ctx))
 (defn- entity-error  [ctx] (:context.game/entity-error  ctx))
 
-(defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
-  {:pre [(not (contains? components :entity/id))
-         (not (contains? components :entity/uid))]}
-  (let [entity* (-> components
-                    (component/update-map entity/create-component components ctx)
-                    map->Entity)]
-    (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
-  ctx)
+(defcomponent :entity/uid {}
+  (entity/create [_ {:keys [entity/id]} _ctx]
+    [[:tx/assoc-uids->entities id]])
+  (entity/destroy [[_ uid] _entity* _ctx]
+    [[:tx/dissoc-uids->entities uid]]))
 
 (defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
@@ -31,20 +28,25 @@
   {:pre [(contains? (uids-entities ctx) uid)]}
   (update ctx :context.game/uids-entities dissoc uid))
 
-(defcomponent :entity/uid {}
-  (entity/create [_ {:keys [entity/id]} _ctx]
-    [[:tx/assoc-uids->entities id]])
-  (entity/destroy [[_ uid] _entity* _ctx]
-    [[:tx/dissoc-uids->entities uid]]))
-
-(let [cnt (atom 0)]
-  (defn- unique-number! []
-    (swap! cnt inc)))
-
 (defn- apply-system-transact-all! [ctx system entity*]
   (reduce ctx/transact-all!
           ctx
           (component/apply-system system entity* ctx)))
+
+; this is separate from tx/create so the atom & uid gets recorded in a tx for subsequent
+; transactions....
+(defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
+  {:pre [(not (contains? components :entity/id))
+         (not (contains? components :entity/uid))]}
+  (let [entity* (-> components
+                    (component/update-map entity/create-component components ctx)
+                    map->Entity)]
+    (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
+  ctx)
+
+(let [cnt (atom 0)]
+  (defn- unique-number! []
+    (swap! cnt inc)))
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
