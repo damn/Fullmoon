@@ -13,7 +13,6 @@
                     line-render
                     mana
                     mouseover
-                    movement
                     player
                     plop
                     projectile-collision
