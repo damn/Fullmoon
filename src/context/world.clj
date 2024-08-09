@@ -154,6 +154,11 @@
     (dispose (:tiled-map world)))
   {:context/world (->world-map tiled-level)})
 
+(defn reset [ctx]
+  (assoc ctx :context/world (->world-map (select-keys (:context/world ctx)
+                                                      [:tiled-map
+                                                       :start-position]))))
+
 (def ^:private spawn-enemies? true)
 
 ; TODO move together with world/->context .....

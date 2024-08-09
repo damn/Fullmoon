@@ -39,15 +39,9 @@
   (assert @#'context.game.transaction-handler/record-txs?)
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
   (ctx/set-record-txs! ctx false)
-  ; keeping context/world !
-  ; world visibility is not reset ... ...
-  ; remove entity connections to world grid/content-grid,
-  ; otherwise all entities removed with ->context
   (-> ctx
-      (ctx/transact-all! (for [entity (ctx/all-entities ctx)]
-                           [:tx/destroy entity]))
-      ctx/remove-destroyed-entities!
       (merge-new-game-context :mode :game-loop/replay)
+      world/reset
       (ctx/transact-all! (ctx/frame->txs ctx 0)))) ; TODO using old ctx value ... ??
 
 (def ^:private pausing? true)
@@ -151,12 +145,9 @@
 
 (comment
 
- ; explored-tiles? (TODO)
  ; player message, player modals, etc. all game related state handle ....
  ; game timer is not reset  - continues as if
- ; entities all disappearing, just stop when end reached ....
  ; check other atoms , try to remove atoms ...... !?
-
  ; replay mode no window hotkeys working
  ; buttons working
  ; can remove items from inventory ! changes cursor but does not change back ..
@@ -166,12 +157,7 @@
  ; also cursor is from previous game replay
  ; => all hotkeys etc part of stage input processor make.
  ; set nil for non idle/item in hand states .
-
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
-
- ; need to set this @ start-new-game for recording of txs for this to work..
- ;(ctx/clear-recorded-txs! ctx)
- ;(ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
 
  (require 'app.state)
  (.postRunnable com.badlogic.gdx.Gdx/app (fn []
