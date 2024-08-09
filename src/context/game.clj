@@ -26,7 +26,8 @@
 (defn start-new-game [ctx tiled-level]
   (init-game-context ctx
                      :mode :game-loop/normal
-                     :record-transactions? false))
+                     :record-transactions? true
+                     :tiled-level tiled-level))
 
 (defn- start-replay-mode! [ctx]
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
