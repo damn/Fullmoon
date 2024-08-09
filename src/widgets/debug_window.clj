@@ -16,7 +16,7 @@
 (defn- debug-infos [ctx]
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
-     "logic-frame: " (:context.game/logic-frame ctx) "\n"
+     "logic-frame: " (ctx/logic-frame ctx) "\n"
      "FPS: " (frames-per-second ctx)  "\n"
      "Zoom: " (camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"

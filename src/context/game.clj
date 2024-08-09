@@ -19,7 +19,6 @@
 (defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
          {:context.game/game-loop-mode mode
-          :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
          (time-component/->build)
          (context.game.player-entity/->state) ; not needed nil ....
@@ -76,16 +75,16 @@
                 mouseover-entity/update!) ; this do always so can get debug info even when game not running
         ctx (if paused?
               ctx
-              (let [ctx (-> ctx
-                            (update :context.game/logic-frame inc)
-                            time-component/update-time)]
+              (let [ctx (time-component/update-time ctx)]
                 (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
                 (ctx/tick-entities! ctx (map deref active-entities))))]
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
   (let [ctx (-> ctx
-                (update :context.game/logic-frame inc)
+
+                (update :context.game/logic-frame inc) ; TODO fixme not using time-component here ???
+
                 ; delta-time we don't need: movement & animation are in txs the info
                 ;(mouseover-entity/update! ctx) dont need?!
                 ;elapsed-time/update-time  ; jut for interest? but not needed?

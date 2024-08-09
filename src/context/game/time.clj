@@ -3,7 +3,8 @@
 
 (defn ->build []
   {:context.game/max-delta-time 0.04
-   :context.game/elapsed-time 0})
+   :context.game/elapsed-time 0
+   :context.game/logic-frame 0})
 
 (defrecord Counter [duration stop-time])
 
@@ -12,6 +13,7 @@
   (delta-time     [ctx] (:context.game/delta-time     ctx))
   (max-delta-time [ctx] (:context.game/max-delta-time ctx))
   (elapsed-time   [ctx] (:context.game/elapsed-time   ctx))
+  (logic-frame    [ctx] (:context.game/logic-frame    ctx))
 
   (->counter [ctx duration]
     {:pre [(>= duration 0)]}
@@ -31,7 +33,9 @@
       (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
 
 (defn update-time [ctx]
-  (-> ctx
-      (assoc :context.game/delta-time (min (ctx/delta-time-raw ctx)
-                                           (ctx/max-delta-time ctx)))
-      (update :context.game/elapsed-time + (ctx/delta-time ctx))))
+  (let [delta (min (ctx/delta-time-raw ctx)
+                   (ctx/max-delta-time ctx))]
+    (-> ctx
+        (assoc :context.game/delta-time delta)
+        (update :context.game/elapsed-time + delta)
+        (update :context.game/logic-frame inc))))

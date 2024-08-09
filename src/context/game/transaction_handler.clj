@@ -33,7 +33,7 @@
 
 (defn- tx-happened! [tx ctx]
   (when (not= :tx.context.cursor/set (first tx))
-    (let [logic-frame (:context.game/logic-frame ctx)] ; TODO only if debug or record deref this...
+    (let [logic-frame (ctx/logic-frame ctx)] ; TODO only if debug or record deref this...
       (when debug-print-txs?
         (println logic-frame "." (debug-print-tx tx)))
       (when record-txs?
