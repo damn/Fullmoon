@@ -20,8 +20,8 @@
 (defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
          {:context.game/game-loop-mode mode}
-         (time-component/->build)
          (ecs/->state)
+         (time-component/->build)
          (widgets/->state! ctx)))
 
 (defn start-new-game [ctx tiled-level]
@@ -55,7 +55,6 @@
 (defn- player-unpaused? [ctx]
   (or (ctx/key-just-pressed? ctx input.keys/p)
       (ctx/key-pressed?      ctx input.keys/space)))
-
 
 (defn- player-manual-state-tick [ctx]
   (let [entity* (ctx/player-entity* ctx)]
