@@ -6,9 +6,8 @@
             [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
 
-            [context.game.delta-time :as delta-time]
+            [context.game.time :as time-component]
             [context.game.ecs :as ecs]
-            [context.game.elapsed-time :as elapsed-time]
             [context.game.mouseover-entity :as mouseover-entity]
             context.game.player-entity
             context.game.transaction-handler
@@ -17,15 +16,12 @@
 
             [debug.render :as debug-render]))
 
-
 (defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
          {:context.game/game-loop-mode mode
-
-          :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
-         (delta-time/component)
+         (time-component/->build)
          (context.game.player-entity/->state) ; not needed nil ....
          (ecs/->state)
          (widgets/->state! ctx)))
@@ -82,8 +78,7 @@
               ctx
               (let [ctx (-> ctx
                             (update :context.game/logic-frame inc)
-                            delta-time/set-delta-time
-                            elapsed-time/update-time)]
+                            time-component/update-time)]
                 (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
                 (ctx/tick-entities! ctx (map deref active-entities))))]
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
@@ -93,7 +88,7 @@
                 (update :context.game/logic-frame inc)
                 ; delta-time we don't need: movement & animation are in txs the info
                 ;(mouseover-entity/update! ctx) dont need?!
-                elapsed-time/update-time  ; jut for interest? but not needed?
+                ;elapsed-time/update-time  ; jut for interest? but not needed?
                 )
         frame-number (:context.game/logic-frame ctx)
         txs (ctx/frame->txs ctx frame-number)]

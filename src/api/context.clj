@@ -3,9 +3,14 @@
 
 (defrecord Context [])
 
-(defprotocol DeltaTime
+(defprotocol Time
   (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
-  (max-delta-time [_] "so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions"))
+  (max-delta-time [_] "so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions")
+  (elapsed-time [_] "The elapsed in-game-time (not counting when game is paused).")
+  (->counter [_ duration])
+  (stopped?       [_ counter])
+  (reset          [_ counter])
+  (finished-ratio [_ counter]))
 
 (defprotocol Game
   (player-entity* [_]))
@@ -147,12 +152,6 @@
 
 (defprotocol InventoryWindow
   (inventory-window [_]))
-
-(defprotocol Counter
-  (->counter [_ duration])
-  (stopped?       [_ counter])
-  (reset          [_ counter])
-  (finished-ratio [_ counter]))
 
 (defprotocol Actionbar
   (selected-skill  [_]))

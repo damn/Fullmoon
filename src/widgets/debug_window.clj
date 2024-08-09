@@ -26,7 +26,7 @@
      (when (ctx/entity-error ctx)
        (str "\nERROR!\n " (ctx/entity-error ctx) "\n\n"))
      "paused? " (:context.game/paused? ctx) "\n"
-     "elapsed-time " (utils.core/readable-number (:context.game/elapsed-time ctx)) " seconds \n"
+     "elapsed-time " (utils.core/readable-number (ctx/elapsed-time ctx)) " seconds \n"
      (skill-info (ctx/player-entity* ctx))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]
