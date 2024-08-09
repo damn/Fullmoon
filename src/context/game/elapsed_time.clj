@@ -26,4 +26,4 @@
       (min 1 (/ (- stop-time (elapsed-time ctx)) duration)))))
 
 (defn update-time [ctx]
-  (update ctx :context.game/elapsed-time + (:context.game/delta-time ctx)))
+  (update ctx :context.game/elapsed-time + (ctx/delta-time ctx)))

@@ -11,7 +11,7 @@
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
 (defn- max-speed [ctx]
-  (/ body/min-solid-body-size (:context.game/max-delta-time ctx)))
+  (/ body/min-solid-body-size (ctx/max-delta-time ctx)))
 
 ; for adding speed multiplier modifier -> need to take max-speed into account!
 (defn- update-position [entity* delta direction-vector]
