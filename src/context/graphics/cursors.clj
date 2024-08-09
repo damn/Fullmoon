@@ -1,4 +1,4 @@
-(ns graphics.cursors
+(ns context.graphics.cursors
   (:require [utils.core :as utils :refer [mapvals]]
             [api.disposable :refer [dispose]])
   (:import com.badlogic.gdx.Gdx

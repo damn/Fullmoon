@@ -1,4 +1,4 @@
-(ns graphics.views
+(ns context.graphics.views
   (:require api.context
             [api.graphics :as g])
   (:import com.badlogic.gdx.Gdx

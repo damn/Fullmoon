@@ -4,7 +4,7 @@
             api.disposable
             [api.screen :as screen]
             [context.screens :as screens]
-            [graphics.views :as views]
+            [context.graphics.views :as views]
             [app.state :refer [current-context]])
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
            com.badlogic.gdx.graphics.Color

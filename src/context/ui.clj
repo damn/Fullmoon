@@ -14,7 +14,7 @@
             [api.scene2d.ui.widget-group :refer [pack!]]
             api.scene2d.ui.window
             [app.state :refer [current-context]]
-            graphics.image)
+            context.graphics.image)
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
@@ -204,7 +204,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image graphics.image.Image
+(defmethod ->vis-image context.graphics.image.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 

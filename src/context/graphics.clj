@@ -3,11 +3,11 @@
             api.context
             [api.disposable :refer [dispose]]
             [api.graphics :as g]
-            (graphics cursors
-                      image
-                      shape-drawer
-                      text
-                      views))
+            (context.graphics cursors
+                              image
+                              shape-drawer
+                              text
+                              views))
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.graphics.g2d.SpriteBatch))
@@ -21,10 +21,10 @@
     (let [batch (SpriteBatch.)]
       (g/map->Graphics
        (merge {:batch batch}
-              (graphics.shape-drawer/->build batch)
-              (graphics.text/->build default-font)
-              (graphics.views/->build world-view)
-              (graphics.cursors/->build cursors)))))
+              (context.graphics.shape-drawer/->build batch)
+              (context.graphics.text/->build default-font)
+              (context.graphics.views/->build world-view)
+              (context.graphics.cursors/->build cursors)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}] _ctx]
     (dispose batch)
