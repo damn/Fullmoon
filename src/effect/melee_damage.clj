@@ -12,12 +12,13 @@
 
 (defcomponent :effect/melee-damage {}
   (effect/text [_ {:keys [effect/source] :as effect-ctx}]
-    (if source
-      (effect/text (damage-effect effect-ctx) effect-ctx)
-      "Damage based on entity stats."))
+    (str "Damage based on entity strength."
+         (when source
+           (str "\n" (effect/text (damage-effect effect-ctx)
+                                  effect-ctx)))))
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
-    (and source target))
+  (effect/valid-params? [_ effect-ctx]
+    (effect/valid-params? (damage-effect effect-ctx)))
 
   (effect/txs [_ effect-ctx]
     (effect/txs (damage-effect effect-ctx) effect-ctx)))

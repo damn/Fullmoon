@@ -70,19 +70,13 @@
                                   :height size
                                   :solid? false
                                   :rotation-angle (v/get-angle-from-vector direction)}
-
-                           :animation (black-projectile ctx) ; TODO
-
+                           ;:animation (black-projectile ctx) ; TODO o.o
                            :flying? true
                            :z-order :z-order/effect
-
                            :faction (:entity/faction @source)
-
                            :movement speed
                            :movement-vector direction
-
                            :delete-after-duration maxtime
-
                            :plop true
                            :projectile-collision {:hit-effect hit-effect
                                                   :piercing? true}}]]))

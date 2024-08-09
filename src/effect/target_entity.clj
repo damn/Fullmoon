@@ -41,12 +41,13 @@
     (str "Range " maxrange " meters\n" (effect-ctx/text effect-ctx hit-effect)))
 
   ; TODO lOs move to effect/target effect-context creation?
+  ; => but - cancels attack if losing los ... so needs to be here ....
   ; TODO target still exists ?! necessary ? what if disappears/dead?
   ; TODO (:entity/hp @target) is valid-params of hit-effect damage !! -> allow anyway and just do nothing then?
   (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and source
          target
-         ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ...
+         ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ... ..
          (:entity/hp @target)))
 
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} _ctx]
