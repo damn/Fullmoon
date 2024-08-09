@@ -1,14 +1,11 @@
 (ns context.world
   (:require [math.raycaster :as raycaster]
             [math.vector :as v]
-            [utils.core :refer [->tile tile->middle]]
+            [utils.core :refer [tile->middle]]
             [data.grid2d :as grid2d]
             [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
             [api.disposable :refer [dispose]]
-            [api.entity :as entity]
-            [api.graphics :as g]
             [api.graphics.camera :as camera]
-            [api.graphics.color :as color]
             [api.maps.tiled :as tiled]
             [api.tx :refer [transact!]]
             [api.world.grid :as world-grid]
@@ -164,7 +161,7 @@
     (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
     (transact-all! ctx [[:tx.entity/creature
                          :creatures/vampire
-                         #:entity {:position (:start-position world)
+                         #:entity {:position (tile->middle (:start-position world))
                                    :state [:state/player :idle]
                                    :player? true
                                    :free-skill-points 3

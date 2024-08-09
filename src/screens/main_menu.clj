@@ -1,6 +1,6 @@
 (ns screens.main-menu
   (:require [core.component :refer [defcomponent]]
-            [utils.core :refer [safe-get tile->middle]]
+            [utils.core :refer [safe-get]]
             [app.state :refer [current-context change-screen!]]
             [api.context :as ctx]
             [api.input.keys :as input.keys]
@@ -13,7 +13,7 @@
 
 (defn- ->vampire-tmx [ctx]
   {:tiled-map (ctx/->tiled-map ctx "maps/vampire.tmx")
-   :start-position (tile->middle [32 71])})
+   :start-position [32 71]})
 
 (defn- ->rand-module-world [ctx]
   (let [{:keys [tiled-map
@@ -21,7 +21,7 @@
                                   ctx
                                   (ctx/get-property ctx :worlds/first-level))]
     {:tiled-map tiled-map
-     :start-position (tile->middle start-position)}))
+     :start-position start-position}))
 
 (defn- start-vampire! [ctx]
   (change-screen! :screens/game)
