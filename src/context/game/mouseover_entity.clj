@@ -1,4 +1,4 @@
-(ns game-state.mouseover-entity
+(ns context.game.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
             [api.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [api.entity :as entity]

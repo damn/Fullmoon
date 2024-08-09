@@ -1,4 +1,4 @@
-(ns game-state.player-entity
+(ns context.game.player-entity
   (:require [api.tx :refer [transact!]]))
 
 (defn ->state []

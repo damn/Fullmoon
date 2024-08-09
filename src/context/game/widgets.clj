@@ -1,4 +1,4 @@
-(ns game-state.widgets
+(ns context.game.widgets
   (:require [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]

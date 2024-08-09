@@ -6,12 +6,12 @@
             [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
 
-            [game-state.ecs :as ecs]
-            [game-state.elapsed-time :as elapsed-time]
-            [game-state.mouseover-entity :as mouseover-entity]
-            game-state.player-entity
-            game-state.transaction-handler
-            [game-state.widgets :as widgets]
+            [context.game.ecs :as ecs]
+            [context.game.elapsed-time :as elapsed-time]
+            [context.game.mouseover-entity :as mouseover-entity]
+            context.game.player-entity
+            context.game.transaction-handler
+            [context.game.widgets :as widgets]
             [context.world :as world]
 
             [debug.render :as debug-render]
@@ -23,15 +23,15 @@
           :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
-         (game-state.player-entity/->state) ; not needed nil ....
+         (context.game.player-entity/->state) ; not needed nil ....
          (ecs/->state)
          (widgets/->state! ctx)))
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :mode :game-loop/normal)
                    (world/->context ctx tiled-level))
-        ;_ (ctx/clear-recorded-txs! ctx)
-        ;_ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
+        _ (ctx/clear-recorded-txs! ctx)
+        _ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
         ctx (world/transact-create-entities-from-tiledmap! ctx)]
     (assert (:context.game/player-entity ctx))
     ;(println "Initial entity txs:")
@@ -39,7 +39,7 @@
     ctx))
 
 (defn- start-replay-mode! [ctx]
-  (assert @#'game-state.transaction-handler/record-txs?)
+  (assert @#'context.game.transaction-handler/record-txs?)
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
   (ctx/set-record-txs! ctx false)
   ; keeping context/world !
@@ -107,7 +107,6 @@
   (reduce (fn [ctx _] (replay-frame! ctx))
           ctx
           (range replay-speed)))
-
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))

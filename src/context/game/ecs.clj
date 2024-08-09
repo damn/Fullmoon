@@ -1,4 +1,4 @@
-(ns game-state.ecs
+(ns context.game.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [sort-by-order]]
             [core.component :refer [defcomponent] :as component]

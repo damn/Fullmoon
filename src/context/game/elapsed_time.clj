@@ -1,4 +1,4 @@
-(ns game-state.elapsed-time
+(ns context.game.elapsed-time
   (:require [api.context :as ctx]))
 
 (defn- elapsed-time [ctx]
