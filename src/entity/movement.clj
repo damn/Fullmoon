@@ -7,11 +7,11 @@
             [api.world.grid :refer [valid-position?]]
             [core.data :as data]))
 
-(def max-delta-time 0.04)
 
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
-(def ^:private max-speed (/ body/min-solid-body-size max-delta-time))
+(defn- max-speed [ctx]
+  (/ body/min-solid-body-size (:context.game/max-delta-time ctx)))
 
 ; for adding speed multiplier modifier -> need to take max-speed into account!
 (defn- update-position [entity* delta direction-vector]
@@ -41,10 +41,10 @@
 
 ; optional, only assoc'ing movement-vector
 (defcomponent :entity/movement data/pos-attr
-  (entity/create [[_ tiles-per-second] entity* _ctx]
+  (entity/create [[_ tiles-per-second] entity* ctx]
     (assert (and (:entity/body entity*)
                  (:entity/position entity*)))
-    (assert (<= tiles-per-second max-speed)))
+    (assert (<= tiles-per-second (max-speed ctx))))
 
   (entity/tick [_ entity* ctx]
     (when-let [direction (:entity/movement-vector entity*)]

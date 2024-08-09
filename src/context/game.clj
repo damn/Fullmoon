@@ -14,12 +14,15 @@
             [context.game.widgets :as widgets]
             [context.world :as world]
 
-            [debug.render :as debug-render]
-            [entity.movement :as movement]))
+            [debug.render :as debug-render]))
 
 (defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
          {:context.game/game-loop-mode mode
+
+          :context.game/max-delta-time 0.04 ; so that at low fps the game doesn't jump faster between frames
+          ; :context.game/delta-time  - also a component
+
           :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
@@ -60,7 +63,7 @@
       (ctx/key-pressed?      ctx input.keys/space)))
 
 (defn- ->delta-time [ctx]
-  (min (ctx/delta-time-raw ctx) movement/max-delta-time))
+  (min (ctx/delta-time-raw ctx) (:context.game/max-delta-time ctx)))
 
 (defn- player-manual-state-tick [ctx]
   (let [entity* (ctx/player-entity* ctx)]
@@ -68,7 +71,6 @@
 
 (defmulti game-loop :context.game/game-loop-mode)
 
-; TODO this testable - with txs' only !
 (defmethod game-loop :game-loop/normal [ctx active-entities]
   (let [ctx (ctx/transact-all! ctx (player-manual-state-tick ctx))
         paused? (or (ctx/entity-error ctx)
