@@ -1,8 +1,7 @@
 (ns effect.projectile
   (:require [clojure.string :as str]
-            [core.component :refer [defcomponent]]
             [math.vector :as v]
-            [data.animation :as animation]
+            [core.component :refer [defcomponent]]
             [api.context :refer [get-sprite spritesheet path-blocked?]]
             [api.effect :as effect]
             [api.tx :refer [transact!]]
