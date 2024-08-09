@@ -17,9 +17,9 @@
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
-(defn- merge-new-game-context [ctx & {:keys [replay-mode?]}]
+(defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
-         {:context.game/replay-mode? replay-mode?
+         {:context.game/game-loop-mode mode
           :context.game/elapsed-time 0
           :context.game/logic-frame 0
           :context.game/mouseover-entity nil}
@@ -28,7 +28,7 @@
          (widgets/->state! ctx)))
 
 (defn start-new-game [ctx tiled-level]
-  (let [ctx (merge (merge-new-game-context ctx :replay-mode? false)
+  (let [ctx (merge (merge-new-game-context ctx :mode :game-loop/normal)
                    (world/->context ctx tiled-level))
         ;_ (ctx/clear-recorded-txs! ctx)
         ;_ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
@@ -50,7 +50,7 @@
       (ctx/transact-all! (for [entity (ctx/all-entities ctx)]
                            [:tx/destroy entity]))
       ctx/remove-destroyed-entities!
-      (merge-new-game-context :replay-mode? true)
+      (merge-new-game-context :mode :game-loop/replay)
       (ctx/transact-all! (ctx/frame->txs ctx 0)))) ; TODO using old ctx value ... ??
 
 (def ^:private pausing? true)
@@ -66,7 +66,10 @@
   (let [entity* (ctx/player-entity* ctx)]
     (state/manual-tick (entity/state-obj entity*) entity* ctx)))
 
-(defn- update-game [ctx active-entities]
+(defmulti game-loop :context.game/game-loop-mode)
+
+; TODO this testable - with txs' only !
+(defmethod game-loop :game-loop/normal [ctx active-entities]
   (let [ctx (ctx/transact-all! ctx (player-manual-state-tick ctx))
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
@@ -98,12 +101,13 @@
     (ctx/transact-all! ctx txs)))
 
 ; TODO adjust sound speed also equally ? pitch ?
-(def ^:private replay-speed 2)
+(def ^:private replay-speed 1)
 
-(defn- replay-game [ctx]
+(defmethod game-loop :game-loop/replay [ctx _active-entities]
   (reduce (fn [ctx _] (replay-frame! ctx))
-   ctx
-   (range replay-speed)))
+          ctx
+          (range replay-speed)))
+
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
@@ -130,7 +134,7 @@
         :else
         context))
 
-(defn- render-game [ctx active-entities*]
+(defn- render-game! [ctx active-entities*]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx)
                           (:entity/position player-entity*))
@@ -145,14 +149,14 @@
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))
                              (debug-render/after-entities ctx g)))))
 
+
 (defn render [ctx]
   (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
                                                       (ctx/player-entity* ctx))]
-    (render-game ctx (map deref active-entities))
-    (let [ctx (if (:context.game/replay-mode? ctx)
-                (replay-game ctx)
-                (update-game ctx active-entities))]
-     (check-key-input ctx)))) ; not sure I need this @ replay mode ??
+    (render-game! ctx (map deref active-entities))
+    (-> ctx
+        (game-loop active-entities)
+        check-key-input))) ; not sure I need this @ replay mode ??
 
 (extend-type api.context.Context
   api.context/Game
