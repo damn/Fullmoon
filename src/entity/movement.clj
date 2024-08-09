@@ -1,12 +1,11 @@
 (ns entity.movement
-  (:require [core.component :refer [defcomponent]]
-            [math.vector :as v]
+  (:require [math.vector :as v]
+            [core.component :refer [defcomponent]]
+            [core.data :as data]
             [api.entity :as entity]
             [api.context :as ctx]
-            [entity.body :as body]
             [api.world.grid :refer [valid-position?]]
-            [core.data :as data]))
-
+            [entity.body :as body]))
 
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
