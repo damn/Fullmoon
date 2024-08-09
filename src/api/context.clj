@@ -13,7 +13,7 @@
   (reset          [_ counter])
   (finished-ratio [_ counter]))
 
-(defprotocol Game
+(defprotocol PlayerEntity
   (player-entity* [_]))
 
 (defprotocol Application

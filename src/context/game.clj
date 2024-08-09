@@ -20,7 +20,6 @@
   (merge ctx
          {:context.game/game-loop-mode mode}
          (time-component/->build)
-         (context.game.player-entity/->state) ; not needed nil ....
          (ecs/->state)
          (widgets/->state! ctx)))
 
@@ -30,7 +29,7 @@
         _ (ctx/clear-recorded-txs! ctx)
         _ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
         ctx (world/transact-create-entities-from-tiledmap! ctx)]
-    (assert (:context.game/player-entity ctx))
+    (assert (ctx/player-entity* ctx))
     ;(println "Initial entity txs:")
     ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
     ctx))
@@ -149,13 +148,6 @@
     (-> ctx
         (game-loop active-entities)
         check-key-input))) ; not sure I need this @ replay mode ??
-
-(extend-type api.context.Context
-  api.context/Game
-  (player-entity* [ctx]
-    (let [entity (:context.game/player-entity ctx)]
-      (assert entity)
-      @entity)))
 
 (comment
 

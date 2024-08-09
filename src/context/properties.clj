@@ -225,7 +225,7 @@
            (str t))))
 
   (player-tooltip-text [ctx property]
-    (when (:context.game/player-entity ctx)
+    (when (ctx/player-entity ctx)
       (ctx/tooltip-text
        ; player has item @ start
        ; =>
