@@ -30,6 +30,15 @@
   (state-obj [entity*]
     (-> entity* :entity/state :state-obj)))
 
+(defmethod transact! ::exit [[_ state-obj entity] ctx]
+  (state/exit state-obj @entity ctx))
+
+(defmethod transact! ::enter [[_ state-obj entity] ctx]
+  (state/enter state-obj @entity ctx))
+
+(defmethod transact! ::player-enter [[_ state-obj] ctx]
+  (state/player-enter state-obj))
+
 (defn- send-event! [ctx entity event params]
   (if-let [{:keys [fsm
                    state-obj
@@ -37,25 +46,17 @@
     (let [old-state (:state fsm)
           new-fsm (fsm/fsm-event fsm event)
           new-state (:state new-fsm)]
-      (if (= old-state new-state)
-        ctx
+      (if-not (= old-state new-state)
         (let [constructor (new-state state-obj-constructors)
               new-state-obj (if params
                               (constructor ctx @entity params)
                               (constructor ctx @entity))]
-          (reduce (fn [ctx txs-fn]
-                    (transact-all! ctx (txs-fn)))
-                  ctx
-                  [#(state/exit      state-obj @entity ctx)
-                   #(state/enter new-state-obj @entity ctx)
-                   #(if (:entity/player? @entity) (state/player-enter new-state-obj) [])
-                   #(vector
-                     [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
-                     [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj])]))))
-    ctx))
+          [[::exit state-obj entity]
+           [::enter new-state-obj entity]
+           (if (:entity/player? @entity)
+             [::player-enter new-state-obj])
+           [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
+           [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj]])))))
 
 (defmethod transact! :tx/event [[_ entity event params] ctx]
-  (send-event! ctx entity event params)
-  ;[]
-
-  )
+  (send-event! ctx entity event params))
