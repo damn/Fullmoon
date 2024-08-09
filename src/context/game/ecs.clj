@@ -55,8 +55,7 @@
      [::create-components entity]]))
 
 (defmethod transact! :tx/destroy [[_ entity] ctx]
-  (swap! entity assoc :entity/destroyed? true)
-  ctx)
+  [[:tx.entity/assoc entity :entity/destroyed? true]])
 
 (defn- handle-entity-error! [ctx entity* throwable]
   (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
