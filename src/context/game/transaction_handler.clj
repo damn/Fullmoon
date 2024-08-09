@@ -71,11 +71,14 @@
   (frame->txs [_ frame-number]
     (@frame->txs frame-number)))
 
-(defn initialize [game-loop-mode]
+(defn initialize! [game-loop-mode]
   (case game-loop-mode
     :game-loop/normal (do
                        (clear-recorded-txs!)
                        (set-record-txs! true))
     :game-loop/replay (do
                        (assert record-txs?)
-                       (set-record-txs! false))))
+                       (set-record-txs! false)
+                       ;(println "Initial entity txs:")
+                       ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
+                       )))

@@ -149,24 +149,9 @@
   ; (check-not-allowed-diagonals grid)
   )
 
-(defn ->context [ctx tiled-level]
-  (when-let [world (:context/world ctx)]
-    (dispose (:tiled-map world)))
-  {:context/world (->world-map tiled-level)})
-
-(defn reset [ctx]
-  (assoc ctx :context/world (->world-map (select-keys (:context/world ctx)
-                                                      [:tiled-map
-                                                       :start-position]))))
-
 (def ^:private spawn-enemies? true)
 
-; TODO move together with world/->context .....
-; and supply a reset-world function for the replay mode ....
-; which cleans out contentfields/etc. ?
-; then no remove layers
-; also move transact-all! out ...
-(defn transact-create-entities-from-tiledmap! [{:keys [context/world] :as ctx}]
+(defn- transact-create-entities-from-tiledmap! [{:keys [context/world] :as ctx}]
   (let [tiled-map (:tiled-map world)
         ctx (if spawn-enemies?
               (transact-all! ctx
@@ -185,3 +170,15 @@
                                    :free-skill-points 3
                                    :clickable {:type :clickable/player}
                                    :click-distance-tiles 1.5}]])))
+
+(defn create [ctx tiled-level]
+  (when-let [world (:context/world ctx)]
+    (dispose (:tiled-map world)))
+  (-> ctx
+      (assoc :context/world (->world-map tiled-level))
+      transact-create-entities-from-tiledmap!))
+
+(defn reset [ctx]
+  (assoc ctx :context/world (->world-map (select-keys (:context/world ctx)
+                                                      [:tiled-map
+                                                       :start-position]))))

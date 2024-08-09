@@ -23,16 +23,12 @@
          (ecs/->build)
          (time-component/->build)
          (widgets/->state! ctx)
-         (tx-handler/initialize mode)))
+         (tx-handler/initialize! mode)))
 
 (defn start-new-game [ctx tiled-level]
-  (let [ctx (merge (merge-new-game-context ctx :mode :game-loop/normal)
-                   (world/->context ctx tiled-level))
-        ctx (world/transact-create-entities-from-tiledmap! ctx)]
-    (assert (ctx/player-entity* ctx))
-    ;(println "Initial entity txs:")
-    ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
-    ctx))
+  (-> ctx
+      (merge-new-game-context :mode :game-loop/normal)
+      (world/create tiled-level)))
 
 (defn- start-replay-mode! [ctx]
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
