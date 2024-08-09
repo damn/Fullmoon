@@ -2,10 +2,6 @@
   (:require [clojure.string :as str]
             [api.effect :as effect]))
 
-; TODO maybe even the player/npc effect ctx create here
-; together in 1 place
-; with schema ?
-
 (defn valid-params? [effect-ctx effect]
   (every? #(effect/valid-params? % effect-ctx) effect))
 
