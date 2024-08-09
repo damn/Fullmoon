@@ -4,9 +4,6 @@
             [api.entity :as entity]
             [api.world.grid :refer [point->entities]]))
 
-(defn- mouseover-entity [ctx]
-  (:context.game/mouseover-entity ctx))
-
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (ctx/player-entity* context)
         hits (filter #(:entity/z-order @%)
@@ -17,6 +14,8 @@
          reverse
          (filter #(line-of-sight? context player-entity* @%))
          first)))
+
+(defn- mouseover-entity [ctx] (:context.game/mouseover-entity ctx))
 
 (extend-type api.context.Context
   api.context/MouseOverEntity

@@ -18,8 +18,7 @@
 
 (defn- merge-new-game-context [ctx & {:keys [mode]}]
   (merge ctx
-         {:context.game/game-loop-mode mode
-          :context.game/mouseover-entity nil}
+         {:context.game/game-loop-mode mode}
          (time-component/->build)
          (context.game.player-entity/->state) ; not needed nil ....
          (ecs/->state)
