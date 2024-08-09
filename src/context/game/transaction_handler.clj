@@ -7,6 +7,12 @@
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
 
+(defn- set-record-txs! [bool]
+  (.bindRoot #'record-txs? bool))
+
+(defn- clear-recorded-txs! []
+  (reset! frame->txs {}))
+
 (defn- add-tx-to-frame [frame->txs frame-num tx]
   (update frame->txs frame-num (fn [txs-at-frame]
                                  (if txs-at-frame
@@ -41,12 +47,6 @@
 
 (extend-type api.context.Context
   api.context/TransactionHandler
-  (set-record-txs! [_ bool]
-    (.bindRoot #'record-txs? bool))
-
-  (clear-recorded-txs! [_]
-    (reset! frame->txs {}))
-
   (summarize-txs [_ txs]
     (clojure.pprint/pprint
      (for [[txkey txs] (group-by first txs)]
@@ -70,3 +70,12 @@
 
   (frame->txs [_ frame-number]
     (@frame->txs frame-number)))
+
+(defn initialize [game-loop-mode]
+  (case game-loop-mode
+    :game-loop/normal (do
+                       (clear-recorded-txs!)
+                       (set-record-txs! true))
+    :game-loop/replay (do
+                       (assert record-txs?)
+                       (set-record-txs! false))))

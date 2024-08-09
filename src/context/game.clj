@@ -10,7 +10,7 @@
             [context.game.mouseover-entity :as mouseover-entity]
             context.game.player-entity
             [context.game.time :as time-component]
-            context.game.transaction-handler
+            [context.game.transaction-handler :as tx-handler]
             [context.game.widgets :as widgets]
 
             [context.world :as world]
@@ -22,13 +22,12 @@
          {:context.game/game-loop-mode mode}
          (ecs/->build)
          (time-component/->build)
-         (widgets/->state! ctx)))
+         (widgets/->state! ctx)
+         (tx-handler/initialize mode)))
 
 (defn start-new-game [ctx tiled-level]
   (let [ctx (merge (merge-new-game-context ctx :mode :game-loop/normal)
                    (world/->context ctx tiled-level))
-        _ (ctx/clear-recorded-txs! ctx)
-        _ (ctx/set-record-txs! ctx true) ; TODO set in config ? ignores option menu setting and sets true always.
         ctx (world/transact-create-entities-from-tiledmap! ctx)]
     (assert (ctx/player-entity* ctx))
     ;(println "Initial entity txs:")
@@ -36,9 +35,7 @@
     ctx))
 
 (defn- start-replay-mode! [ctx]
-  (assert @#'context.game.transaction-handler/record-txs?)
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
-  (ctx/set-record-txs! ctx false)
   (-> ctx
       (merge-new-game-context :mode :game-loop/replay)
       world/reset

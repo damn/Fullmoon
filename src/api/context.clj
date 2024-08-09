@@ -108,8 +108,6 @@
   (all-texture-files [_]))
 
 (defprotocol TransactionHandler
-  (set-record-txs! [_ bool])
-  (clear-recorded-txs! [_])
   (summarize-txs [_ txs])
   (transact-all! [_ txs])
   (frame->txs [_ frame-number]))
