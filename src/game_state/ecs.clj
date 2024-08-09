@@ -33,16 +33,17 @@
           ctx
           (component/apply-system system entity* ctx)))
 
-; this is separate from tx/create so the atom & uid gets recorded in a tx for subsequent
-; transactions....
-(defmethod transact! :tx/setup-entity [[_ an-atom uid components] ctx]
+(defmethod transact! ::setup-entity [[_ entity uid components] ctx]
   {:pre [(not (contains? components :entity/id))
          (not (contains? components :entity/uid))]}
-  (let [entity* (-> components
-                    (component/update-map entity/create-component components ctx)
-                    map->Entity)]
-    (reset! an-atom (assoc entity* :entity/id an-atom :entity/uid uid)))
+  (reset! entity (-> components
+                     (assoc :entity/id entity :entity/uid uid)
+                     (component/update-map entity/create-component components ctx)
+                     map->Entity))
   ctx)
+
+(defmethod transact! ::create-components [[_ entity] ctx]
+  (apply concat (component/apply-system entity/create @entity ctx)))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
@@ -50,9 +51,8 @@
 
 (defmethod transact! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
-    (-> ctx
-        (ctx/transact-all! [[:tx/setup-entity entity (unique-number!) components]])
-        (apply-system-transact-all! entity/create @entity))))
+    [[::setup-entity entity (unique-number!) components]
+     [::create-components entity]]))
 
 (defmethod transact! :tx/destroy [[_ entity] ctx]
   (swap! entity assoc :entity/destroyed? true)
