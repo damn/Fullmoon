@@ -14,6 +14,7 @@
   (finished-ratio [_ counter]))
 
 (defprotocol PlayerEntity
+  (player-entity [_])
   (player-entity* [_]))
 
 (defprotocol Application
