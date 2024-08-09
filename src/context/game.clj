@@ -5,38 +5,32 @@
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
-
-            [context.game.ecs :as ecs]
-            [context.game.mouseover-entity :as mouseover-entity]
-            context.game.player-entity
-            [context.game.time :as time-component]
-            [context.game.transaction-handler :as tx-handler]
-            [context.game.widgets :as widgets]
-
+            (context.game [ecs :as ecs]
+                          [mouseover-entity :as mouseover-entity]
+                          player-entity
+                          [time :as time-component]
+                          [transaction-handler :as tx-handler]
+                          [widgets :as widgets])
             [context.world :as world]
-
             [debug.render :as debug-render]))
 
-(defn- merge-new-game-context [ctx & {:keys [mode record-transactions?]}]
-  (merge ctx
-         {:context.game/game-loop-mode mode}
-         (ecs/->build)
-         (time-component/->build)
-         (widgets/->state! ctx)
-         (tx-handler/initialize! mode record-transactions?)))
+(defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
+  (-> ctx
+      (merge {:context.game/game-loop-mode mode}
+             (ecs/->build)
+             (time-component/->build)
+             (widgets/->state! ctx)
+             (tx-handler/initialize! mode record-transactions?))
+      (world/setup-context mode tiled-level)))
 
 (defn start-new-game [ctx tiled-level]
-  (-> ctx
-      (merge-new-game-context :mode :game-loop/normal
-                              :record-transactions? false)
-      (world/create tiled-level)))
+  (init-game-context ctx
+                     :mode :game-loop/normal
+                     :record-transactions? false))
 
 (defn- start-replay-mode! [ctx]
   (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
-  (-> ctx
-      (merge-new-game-context :mode :game-loop/replay)
-      world/reset
-      (ctx/transact-all! (ctx/frame->txs ctx 0)))) ; TODO using old ctx value ... ??
+  (init-game-context ctx :mode :game-loop/replay))
 
 (def ^:private pausing? true)
 
@@ -67,20 +61,13 @@
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
-  (let [ctx (-> ctx
-
-                (update :context.game/logic-frame inc) ; TODO fixme not using time-component here ???
-
-                ; delta-time we don't need: movement & animation are in txs the info
-                ;(mouseover-entity/update! ctx) dont need?!
-                ;elapsed-time/update-time  ; jut for interest? but not needed?
-                )
-        frame-number (:context.game/logic-frame ctx)
+  (let [frame-number (:context.game/logic-frame ctx)
         txs (ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
-    (ctx/transact-all! ctx txs)))
+    (-> ctx
+        (ctx/transact-all! txs)
+        (update :context.game/logic-frame inc))))
 
-; TODO adjust sound speed also equally ? pitch ?
 (def ^:private replay-speed 2)
 
 (defmethod game-loop :game-loop/replay [ctx _active-entities]
@@ -139,6 +126,8 @@
 
 (comment
 
+ ; TODO @replay-mode
+ ; adjust sound speed also equally ? pitch ?
  ; player message, player modals, etc. all game related state handle ....
  ; game timer is not reset  - continues as if
  ; check other atoms , try to remove atoms ...... !?

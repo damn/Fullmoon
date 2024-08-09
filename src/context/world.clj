@@ -171,14 +171,19 @@
                                    :clickable {:type :clickable/player}
                                    :click-distance-tiles 1.5}]])))
 
-(defn create [ctx tiled-level]
+(defn- add-world-context [ctx tiled-level]
   (when-let [world (:context/world ctx)]
     (dispose (:tiled-map world)))
   (-> ctx
       (assoc :context/world (->world-map tiled-level))
       transact-create-entities-from-tiledmap!))
 
-(defn reset [ctx]
+(defn- reset-world-context [ctx]
   (assoc ctx :context/world (->world-map (select-keys (:context/world ctx)
                                                       [:tiled-map
                                                        :start-position]))))
+
+(defn setup-context [ctx mode tiled-level]
+  (case mode
+    :game-loop/normal (add-world-context ctx tiled-level)
+    :game-loop/replay (reset-world-context ctx)))
