@@ -5,6 +5,7 @@
             [api.graphics.camera :as camera]
             [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
+
             [game-state.ecs :as ecs]
             [game-state.elapsed-time :as elapsed-time]
             [game-state.mouseover-entity :as mouseover-entity]
@@ -12,6 +13,7 @@
             game-state.transaction-handler
             [game-state.widgets :as widgets]
             [context.world :as world]
+
             [debug.render :as debug-render]
             [entity.movement :as movement]))
 
@@ -80,7 +82,7 @@
                             (update :context.game/logic-frame inc)
                             elapsed-time/update-time)]
                 (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
-                (ctx/tick-entities! ctx (map deref active-entities))))] ; TODO lazy seqs everywhere!
+                (ctx/tick-entities! ctx (map deref active-entities))))]
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
@@ -138,7 +140,6 @@
                              (debug-render/before-entities ctx g)
                              (ctx/render-entities! ctx
                                                    g
-                                                   ; TODO lazy seqS everywhere!
                                                    (->> active-entities*
                                                         (filter :entity/z-order)
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))
@@ -147,7 +148,6 @@
 (defn render [ctx]
   (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
                                                       (ctx/player-entity* ctx))]
-    ; TODO lazy seqS everywhere!
     (render-game ctx (map deref active-entities))
     (let [ctx (if (:context.game/replay-mode? ctx)
                 (replay-game ctx)
