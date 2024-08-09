@@ -17,17 +17,18 @@
 
             [debug.render :as debug-render]))
 
-(defn- merge-new-game-context [ctx & {:keys [mode]}]
+(defn- merge-new-game-context [ctx & {:keys [mode record-transactions?]}]
   (merge ctx
          {:context.game/game-loop-mode mode}
          (ecs/->build)
          (time-component/->build)
          (widgets/->state! ctx)
-         (tx-handler/initialize! mode)))
+         (tx-handler/initialize! mode record-transactions?)))
 
 (defn start-new-game [ctx tiled-level]
   (-> ctx
-      (merge-new-game-context :mode :game-loop/normal)
+      (merge-new-game-context :mode :game-loop/normal
+                              :record-transactions? false)
       (world/create tiled-level)))
 
 (defn- start-replay-mode! [ctx]
@@ -80,7 +81,7 @@
     (ctx/transact-all! ctx txs)))
 
 ; TODO adjust sound speed also equally ? pitch ?
-(def ^:private replay-speed 1)
+(def ^:private replay-speed 2)
 
 (defmethod game-loop :game-loop/replay [ctx _active-entities]
   (reduce (fn [ctx _] (replay-frame! ctx))

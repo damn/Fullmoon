@@ -71,9 +71,9 @@
   (frame->txs [_ frame-number]
     (@frame->txs frame-number)))
 
-(defn initialize! [game-loop-mode]
+(defn initialize! [game-loop-mode record-transactions?]
   (case game-loop-mode
-    :game-loop/normal (do
+    :game-loop/normal (when record-transactions?
                        (clear-recorded-txs!)
                        (set-record-txs! true))
     :game-loop/replay (do
