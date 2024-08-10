@@ -19,30 +19,31 @@
   (/ min-solid-body-size (ctx/max-delta-time ctx)))
 
 ; for adding speed multiplier modifier -> need to take max-speed into account!
-(defn- update-position [entity* delta direction-vector]
-  (let [speed (:entity/movement entity*)
-        apply-delta (fn [position]
-                      (mapv #(+ %1 (* %2 speed delta)) position direction-vector))]
+(defn- update-position [entity* delta {:keys [direction speed]}]
+  (let [apply-delta (fn [position]
+                      (mapv #(+ %1 (* %2 speed delta)) position direction))]
     (-> entity*
         (update-in [:entity/body :position   ] apply-delta)
         (update-in [:entity/body :left-bottom] apply-delta))))
 
-(defn- update-position-non-solid [ctx entity* direction]
-  (update-position entity* (ctx/delta-time ctx) direction))
+(defn- update-position-non-solid [ctx entity* movement]
+  (update-position entity* (ctx/delta-time ctx) movement))
 
-(defn- try-move [ctx entity* direction]
-  (let [entity* (update-position entity* (ctx/delta-time ctx) direction)]
+; TODO just take body -> make valid-position also take body only ....
+; => flying/z-order into body....
+(defn- try-move [ctx entity* movement]
+  (let [entity* (update-position entity* (ctx/delta-time ctx) movement)]
     (when (valid-position? (ctx/world-grid ctx) entity*) ; TODO call on ctx shortcut fn
       entity*)))
 
 ; TODO sliding threshold
 ; TODO name - with-sliding? 'on'
-(defn- update-position-solid [ctx entity* {vx 0 vy 1 :as direction}]
+(defn- update-position-solid [ctx entity* {[vx vy] :direction :as movement}]
   (let [xdir (Math/signum (float vx))
         ydir (Math/signum (float vy))]
-    (or (try-move ctx entity* direction)
-        (try-move ctx entity* [xdir 0])
-        (try-move ctx entity* [0 ydir]))))
+    (or (try-move ctx entity* movement)
+        (try-move ctx entity* (assoc movement :direction [xdir 0]))
+        (try-move ctx entity* (assoc movement :direction [0 ydir])))))
 
 (def ^:private show-body-bounds false)
 
@@ -50,6 +51,7 @@
   (when show-body-bounds
     (g/draw-rectangle g x y width height (if solid? color/white color/gray))))
 
+; TODO I cannot dissoc any key then I lose the record!
 (defrecord Body [position
                  left-bottom
                  width
@@ -59,6 +61,7 @@
                  radius
                  solid?
                  rotation-angle
+                 movement
                  rotate-in-movement-direction?
                  touched-cells
                  occupied-cells])
@@ -83,7 +86,8 @@
                                      height
                                      solid?
                                      rotation-angle
-                                     rotate-in-movement-direction?]}]
+                                     rotate-in-movement-direction?
+                                     movement]}]
                             _entity*
                             _ctx]
     (assert (and position
@@ -109,7 +113,8 @@
                           (/ height 2)))
       :solid? solid?
       :rotation-angle (or rotation-angle 0)
-      :rotate-in-movement-direction? rotate-in-movement-direction?}))
+      :rotate-in-movement-direction? rotate-in-movement-direction?
+      :movement movement}))
 
   (entity/create [_ {:keys [entity/id]} ctx]
     [[:tx/add-to-world id]])
@@ -120,25 +125,21 @@
   (entity/render-debug [[_ body] _entity* g _ctx]
     (draw-bounds g body))
 
-  (entity/tick [_ entity* ctx]
-    (when-let [direction (:entity/movement-vector entity*)]
+  (entity/tick [[_ body] entity* ctx]
+    (when-let [{:keys [direction speed] :as movement} (:movement body)]
+      (assert (<= speed (max-speed ctx)))
       (assert (or (zero? (v/length direction))
                   (v/normalised? direction)))
       (when-not (zero? (v/length direction))
         (when-let [{:keys [entity/id
-                           entity/body]} (if (:solid? (:entity/body entity*))
-                                           (update-position-solid     ctx entity* direction)
-                                           (update-position-non-solid ctx entity* direction))]
+                           entity/body]} (if (:solid? body)
+                                           (update-position-solid     ctx entity* movement)
+                                           (update-position-non-solid ctx entity* movement))]
           [[:tx.entity/assoc-in id [:entity/body :position   ] (:position    body)]
            [:tx.entity/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
            (when (:rotate-in-movement-direction? body)
              [:tx.entity/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
            [:tx/position-changed id]])))))
-
-(defcomponent :entity/movement data/pos-attr
-  (entity/create [[_ tiles-per-second] entity* ctx]
-    (assert (:entity/body entity*))
-    (assert (<= tiles-per-second (max-speed ctx)))))
 
 (extend-type api.entity.Entity
   entity/Body
@@ -151,6 +152,12 @@
   (direction [entity* other-entity*]
     (v/direction (entity/position entity*) (entity/position other-entity*))))
 
+(defmethod transact! :tx.entity/set-movement [[_ movement] ctx]
+  {:pre [(or (nil? movement)
+             (and (:direction movement) ; continue schema of that ...
+                  (:speed movement)))]}
+  [[:tx.entity/assoc-in id [:entity/body :movement] movement]])
+
 ; add to api: ( don't access :entity/body keyword directly , so I can change to defrecord entity later (:body ) or watever)
 
 ; v/distance used with 2 positions of 2 entities a few times -> ? w. body bounds
@@ -162,8 +169,7 @@
 ; entity/collides? entity*-a entity*-b
 
 ; add components:
-; entity/movement
-; z-order/flying/?/movement-vector...
+; z-order/flying/?
 
 ; also for performance maybe later
 ; not Cell entities but Cell colliding/solid-entities ....

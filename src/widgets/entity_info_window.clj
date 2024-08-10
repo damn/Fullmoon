@@ -13,22 +13,18 @@
 (defn- entity->text [{:keys [entity/hp
                              entity/mana
                              entity/skills
-
-
-                             entity/projectile-collision
-                             ]
-                      {:keys [stats/strength
+                             entity/projectile-collision]
+                      {:keys [stats/movement-speed
+                              stats/strength
                               stats/cast-speed
                               stats/attack-speed
                               stats/armor-save
-                              stats/armor-pierce
-                              ] :as stats} :entity/stats}]
+                              stats/armor-pierce] :as stats} :entity/stats}]
   ; HP color based on ratio like hp bar samey
   ; mana color same in the whole app
   ; TODO name / species / level
   ; :entity/faction no need to show
   ; :entity/flying? no need to show
-  ; :entity/movement no need to show speed
   ; :entity/reaction-time no need to show
   ; :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
   ;:entity/inventory (only player for now)
@@ -41,8 +37,7 @@
    (when (and stats attack-speed) (str "[WHITE]Attack-Speed: " attack-speed))
    (when (and stats armor-save) (str "[WHITE]Armor-Save: " armor-save))
    (when (and stats armor-pierce) (str "[WHITE]Armor-Pierce: " armor-pierce))
-   ]
-  )
+   (when (and stats movement-speed) (str "[WHITE]Movement-Speed: " movement-speed))])
 
 
 (defn- entity-info-text [entity*]

@@ -1,5 +1,6 @@
 (ns entity-state.npc-moving
   (:require [api.context :refer [stopped? ->counter]]
+            [api.entity :as entity]
             [api.entity-state :as state]))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
@@ -7,11 +8,12 @@
 ; also prevents fast twitching around changing directions every frame
 (defrecord NpcMoving [movement-vector counter]
   state/State
-  (enter [_ {:keys [entity/id]} _ctx]
-    [[:tx.entity/assoc id :entity/movement-vector movement-vector]])
+  (enter [_ {:keys [entity/id] :as entity*} _ctx]
+    [[:tx.entity/set-movement id {:direction movement-vector
+                                  :speed (entity/movement-speed entity*)}]])
 
   (exit [_ {:keys [entity/id]} _ctx]
-    [[:tx.entity/dissoc id :entity/movement-vector]])
+    [[:tx.entity/set-movement id nil]])
 
   (tick [_ {:keys [entity/id]} ctx]
     (when (stopped? ctx counter)

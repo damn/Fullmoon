@@ -156,21 +156,24 @@
 
 (comment
 
- ; # Change properties -> disable validate @ update!
+ (defn- migrate [property-type prop-fn]
+   ; TODO disable validation
+   (let [ctx @app.state/current-context]
+     (def write-to-file? false)
+     (time
+      (doseq [prop (map prop-fn (api.context/all-properties ctx property-type))]
+        (print (:property/id prop) ", ")
+        (swap! app.state/current-context ctx/update! prop)))
+     (def write-to-file? true)
+     (write-properties-to-file! @app.state/current-context)
+     nil))
 
- ; == 'db - migration' !
-
- (let [ctx @app.state/current-context
-       props (api.context/all-properties ctx :property.type/misc)
-       props (for [prop props]
-               (-> prop
-                   (assoc
-                    :item/modifier {},
-                    :item/slot :inventory.slot/bag)
-                   (update :property/id (fn [k] (keyword "items" (name k))))))]
-   (def write-to-file? true)
-   (doseq [prop props] (swap! app.state/current-context ctx/update! prop))
-   nil)
+ (migrate :properties/creature
+          #(update % :creature/entity
+                   (fn [entity]
+                     (-> entity
+                         (dissoc :entity/movement)
+                         (update :entity/stats assoc :stats/movement-speed (:entity/movement entity))))))
  )
 
 (extend-type api.context.Context

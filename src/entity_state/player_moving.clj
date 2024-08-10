@@ -1,5 +1,6 @@
 (ns entity-state.player-moving
   (:require [utils.wasd-movement :refer [WASD-movement-vector]]
+            [api.entity :as entity]
             [api.entity-state :as state]))
 
 (defrecord PlayerMoving [movement-vector]
@@ -11,15 +12,17 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ {:keys [entity/id]} _ctx]
-    [[:tx.entity/assoc id :entity/movement-vector movement-vector]])
+  (enter [_ {:keys [entity/id] :as entity*} _ctx]
+    [[:tx.entity/set-movement id {:direction movement-vector
+                                  :speed (entity/movement-speed entity*)}]])
 
   (exit [_ {:keys [entity/id]} _ctx]
-    [[:tx.entity/dissoc id :entity/movement-vector]])
+    [[:tx.entity/set-movement id nil]])
 
-  (tick [_ {:keys [entity/id]} context]
+  (tick [_ {:keys [entity/id] :as entity*} context]
     (if-let [movement-vector (WASD-movement-vector context)]
-      [[:tx.entity/assoc id :entity/movement-vector movement-vector]]
+      [[:tx.entity/set-movement id {:direction movement-vector
+                                    :speed (entity/movement-speed entity*)}]]
       [[:tx/event id :no-movement-input]]))
 
   (render-below [_ entity* g ctx])

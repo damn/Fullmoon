@@ -271,7 +271,6 @@
         :creature/species 4
         :entity/faction 5
         :entity/flying? 6
-        :entity/movement 7
         :entity/reaction-time 8
         :entity/hp 9
         :entity/mana 10

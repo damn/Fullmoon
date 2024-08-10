@@ -39,3 +39,6 @@
 
 (defprotocol Inventory
   (can-pickup-item? [_ item]))
+
+(defprotocol Stats
+  (movement-speed [_]))

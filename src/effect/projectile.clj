@@ -40,13 +40,12 @@
                                 :width size
                                 :height size
                                 :solid? false
-                                :rotation-angle (v/get-angle-from-vector direction)}
+                                :rotation-angle (v/get-angle-from-vector direction)
+                                :movement {:direction direction :speed speed}}
                          :image (black-projectile ctx)
                          :flying? true
                          :z-order :z-order/effect
                          :faction faction
-                         :movement speed
-                         :movement-vector direction
                          :delete-after-duration maxtime
                          :plop true
                          :projectile-collision {:hit-effect hit-effect

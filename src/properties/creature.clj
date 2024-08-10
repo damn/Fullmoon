@@ -13,7 +13,6 @@
                                       :entity/body
                                       :entity/faction
                                       :entity/flying?
-                                      :entity/movement
                                       :entity/reaction-time
                                       :entity/hp
                                       :entity/mana
@@ -54,7 +53,6 @@
                                   ;:entity/body
                                   :entity/faction
                                   :entity/flying?
-                                  :entity/movement
                                   :entity/reaction-time
                                   :entity/hp
                                   :entity/mana
