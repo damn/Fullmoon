@@ -7,11 +7,12 @@
 (defsystem destroy          [_ entity* ctx])
 (defsystem tick             [_ entity* ctx])
 
-(def render-order (utils/define-order [:z-order/on-ground
-                                       :z-order/ground
-                                       :z-order/flying
-                                       :z-order/effect]))
-; TODO consolidate names, :z-order/debug missing,... (no its a system ...) ?
+(def z-orders [:z-order/on-ground
+               :z-order/ground
+               :z-order/flying
+               :z-order/effect])
+
+(def render-order (utils/define-order z-orders))
 
 (defsystem render-below   [_ entity* g ctx])
 (defsystem render-default [_ entity* g ctx])
@@ -19,12 +20,20 @@
 (defsystem render-info    [_ entity* g ctx])
 (defsystem render-debug   [_ entity* g ctx])
 
+(def render-systems [entity/render-below
+                     entity/render-default
+                     entity/render-above
+                     entity/render-info])
+
 (defrecord Entity [])
 
 (defprotocol Body
   (position [_] "Center float coordinates.")
   (tile [_] "Center integer coordinates")
   (direction [_ other-entity*] "Returns direction vector from this entity to the other entity."))
+
+(defprotocol ZOrder
+  (z-order [_]))
 
 (defprotocol State
   (state [_])

@@ -74,12 +74,6 @@
                      :y y
                      :up? true})))))
 
-; TODO similar with define-order --- same fns for z-order keyword ... same name make ?
-(def ^:private render-systems [entity/render-below
-                               entity/render-default
-                               entity/render-above
-                               entity/render-info])
-
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (entity-error [ctx]
@@ -101,11 +95,11 @@
             entities*))
 
   (render-entities! [context g entities*]
-    (doseq [entities* (map second ; FIXME lazy seq
-                           (sort-by-order (group-by :entity/z-order entities*)
+    (doseq [entities* (map second
+                           (sort-by-order (group-by entity/z-order entities*)
                                           first
                                           entity/render-order))
-            system render-systems
+            system entity/render-systems
             entity* entities*]
       (render-entity* system entity* g context))
     (doseq [entity* entities*]

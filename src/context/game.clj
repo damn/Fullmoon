@@ -112,7 +112,7 @@
                              (ctx/render-entities! ctx
                                                    g
                                                    (->> active-entities*
-                                                        (filter :entity/z-order)
+                                                        (filter entity/z-order)
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))
                              (debug-render/after-entities ctx g)))))
 

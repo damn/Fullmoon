@@ -53,6 +53,7 @@
     (g/draw-rectangle g x y width height (if solid? color/white color/gray))))
 
 ; TODO I cannot dissoc any key then I lose the record!
+; check somehow that we get a proper body class always and dont destroy it into a plain map?
 (defrecord Body [position
                  left-bottom
                  width

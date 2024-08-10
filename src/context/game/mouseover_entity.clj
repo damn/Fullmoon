@@ -6,13 +6,13 @@
 
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (ctx/player-entity* context)
-        hits (filter #(and (:entity/z-order @%)
-                           (not= (:entity/z-order @%)
+        hits (filter #(and (entity/z-order @%)
+                           (not= (entity/z-order @%)
                                  :z-order/effect))
                      (point->entities (world-grid context)
                                       (ctx/world-mouse-position context)))]
     (->> entity/render-order
-         (sort-by-order hits #(:entity/z-order @%))
+         (sort-by-order hits #(entity/z-order @%))
          reverse
          (filter #(line-of-sight? context player-entity* @%))
          first)))

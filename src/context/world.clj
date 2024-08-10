@@ -64,7 +64,7 @@
     (world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
 
   (line-of-sight? [context source* target*]
-    (and (:entity/z-order target*)  ; is even an entity which renders something
+    (and (entity/z-order target*)  ; is even an entity which renders something
          (or (not (:entity/player? source*))
              (on-screen? target* context))
          (not (and los-checks?

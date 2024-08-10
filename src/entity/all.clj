@@ -21,4 +21,5 @@
                     skills
                     state
                     stats
-                    string-effect)))
+                    string-effect
+                    z-order)))

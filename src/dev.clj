@@ -240,7 +240,7 @@
                      :fill-parent? true})))
 
 (comment
- (.postRunnable
+ (.postRunnable ; so can see errors ... don't see proper stacktrace if evaluating just in editor
   com.badlogic.gdx.Gdx/app
   (fn []
     (do
