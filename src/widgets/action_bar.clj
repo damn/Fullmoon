@@ -21,7 +21,7 @@
 (defmethod transact! :tx.context.action-bar/add-skill
   [[_ {:keys [property/id property/image] :as skill}] ctx]
   (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-        button (->image-button ctx image (fn [_]))]
+        button (->image-button ctx image (fn [_]) {:dimensions [48 48]})]
     (actor/set-id! button id)
     (add-tooltip! button #(player-tooltip-text % skill))
     (add-actor! horizontal-group button)
