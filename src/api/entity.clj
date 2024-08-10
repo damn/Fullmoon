@@ -20,10 +20,10 @@
 (defsystem render-info    [_ entity* g ctx])
 (defsystem render-debug   [_ entity* g ctx])
 
-(def render-systems [entity/render-below
-                     entity/render-default
-                     entity/render-above
-                     entity/render-info])
+(def render-systems [render-below
+                     render-default
+                     render-above
+                     render-info])
 
 (defrecord Entity [])
 
