@@ -28,7 +28,7 @@
                :creature/entity])
      :edn-file-sort-order 1
      :overview {:title "Creatures"
-                :columns 16
+                :columns 15
                 :image/dimensions [72 72]
                 :sort-by-fn #(vector (:creature/level %)
                                      (name (:creature/species %))

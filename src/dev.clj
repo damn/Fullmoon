@@ -240,11 +240,15 @@
                      :fill-parent? true})))
 
 (comment
- (do
-  (learn-skill! :skills/projectile)
-  (learn-skill! :skills/spawn)
-  (learn-skill! :skills/meditation)
-  (learn-skill! :skills/melee-attack))
+ (.postRunnable
+  com.badlogic.gdx.Gdx/app
+  (fn []
+    (do
+     (learn-skill! :skills/projectile)
+     (learn-skill! :skills/spawn)
+     (learn-skill! :skills/meditation)
+     (learn-skill! :skills/melee-attack))))
+
 
  (create-item! :items/blood-glove)
 

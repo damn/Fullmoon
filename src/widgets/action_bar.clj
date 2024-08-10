@@ -15,7 +15,7 @@
                            :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
-  {:horizontal-group (::action-bar (:contet.game.widgets/action-bar-table (ctx/get-stage ctx)))
+  {:horizontal-group (::action-bar (:context.game.widgets/action-bar-table (ctx/get-stage ctx)))
    :button-group (:context.game/action-bar ctx)})
 
 (defmethod transact! :tx.context.action-bar/add-skill

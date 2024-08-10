@@ -7,6 +7,7 @@
             [api.entity :as entity]
             [api.graphics :as g]
             [api.graphics.color :as color]
+            [api.tx :refer [transact!]]
             [api.world.grid :refer [valid-position?]]))
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
@@ -152,11 +153,11 @@
   (direction [entity* other-entity*]
     (v/direction (entity/position entity*) (entity/position other-entity*))))
 
-(defmethod transact! :tx.entity/set-movement [[_ movement] ctx]
+(defmethod transact! :tx.entity/set-movement [[_ entity movement] ctx]
   {:pre [(or (nil? movement)
              (and (:direction movement) ; continue schema of that ...
                   (:speed movement)))]}
-  [[:tx.entity/assoc-in id [:entity/body :movement] movement]])
+  [[:tx.entity/assoc-in entity [:entity/body :movement] movement]])
 
 ; add to api: ( don't access :entity/body keyword directly , so I can change to defrecord entity later (:body ) or watever)
 

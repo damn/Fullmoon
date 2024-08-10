@@ -282,7 +282,7 @@
 
 ; TODO this is == :optional key @ components-attribute ?
 (defn- removable-component? [k]
-  (#{"tx" "modifier" #_"entity"} (namespace k)))
+  (#{"tx" "modifier" "stats" #_"entity"} (namespace k)))
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->label ctx (name k))
