@@ -50,11 +50,15 @@
   (let [creature-components (:creature/entity (ctx/get-property ctx creature-id))]
     [[:tx/create
       (-> creature-components
-          (update :entity/body assoc :position (:entity/position components)) ; give position separate arg?
+          (dissoc :entity/flying?)
+          (update :entity/body
+                  (fn [body]
+                    (-> body
+                        (assoc :position (:entity/position components)) ; give position separate arg
+                        (assoc :z-order (if (:entity/flying? creature-components)
+                                          :z-order/flying
+                                          :z-order/ground)))))
           (merge (dissoc components :entity/position)
-                 {:entity/z-order (if (:entity/flying? creature-components) ; do @ body
-                                    :z-order/flying
-                                    :z-order/ground)}
                  (when (= creature-id :creatures/lady-a) ; do @ ?
                    {:entity/clickable {:type :clickable/princess}}))
           (update :entity/state set-state))]])) ; do @ entity/state itself
@@ -68,7 +72,8 @@
                :entity/state [:state/npc :sleeping]}]
              (reify api.context/PropertyStore
                (get-property [_ id]
-                 {:creature/entity {:entity/body {:width 5
+                 {:creature/entity {:entity/flying? true
+                                    :entity/body {:width 5
                                                   :height 5}}}))))
 
  )

@@ -6,7 +6,6 @@
                     delete-after-animation-stopped
                     delete-after-duration
                     faction
-                    flying
                     hp
                     image
                     inventory
@@ -21,5 +20,4 @@
                     skills
                     state
                     stats
-                    string-effect
-                    z-order)))
+                    string-effect)))

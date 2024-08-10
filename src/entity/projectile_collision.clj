@@ -26,7 +26,7 @@
                                                        (:entity/body @%)))
                                  (cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(cell/blocked? % entity*) cells*))
+                       (some #(cell/blocked? % (entity/z-order entity*)) cells*))
           id (:entity/id entity*)]
       (concat
        (when hit-entity

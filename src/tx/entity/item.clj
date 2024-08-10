@@ -7,8 +7,8 @@
   [[:tx/create #:entity {:body {:position position
                                 :width 0.5 ; TODO use item-body-dimensions
                                 :height 0.5
-                                :solid? false}
-                         :z-order :z-order/on-ground
+                                :solid? false
+                                :z-order :z-order/on-ground}
                          :image (:property/image item)
                          :item item
                          :clickable {:type :clickable/item

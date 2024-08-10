@@ -8,6 +8,7 @@
   (properties/create [_]
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
     (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
+    (defcomponent :entity/flying? data/boolean-attr)
     (defcomponent :creature/entity (data/components
                                      [:entity/animation
                                       :entity/body

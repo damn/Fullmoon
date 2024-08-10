@@ -10,6 +10,18 @@
             [api.tx :refer [transact!]]
             [api.world.grid :refer [valid-position?]]))
 
+; TODO
+; * this means flying units could go over ground units if I do collision properly ?!=> 2 on top of each other
+; * world/grid cell blocked?
+; 1. problem - potential field uses only none for blocked
+; => for flying units different paths ...
+; 2. problem - flying units collide with non-flying ....
+; used @ potential field
+; flows into air movement tiles
+; confusing
+; different pot field for air units ....?
+
+
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
 (def ^:private min-solid-body-size 0.4)
@@ -62,6 +74,7 @@
                  half-height
                  radius
                  solid?
+                 z-order
                  rotation-angle
                  movement
                  rotate-in-movement-direction?
@@ -80,6 +93,7 @@
 ; TODO body assert >+ min body size @ properties !
 ; TODO this is actually property/entity .. or creature/entity ....
 ; nothing to do with the schema of this component ....
+; :z-order (apply data/enum entity/z-orders)
 (defcomponent :entity/body (data/map-attribute :width :height :solid?)
   (entity/create-component [[_
                              {[x y] :position
@@ -87,20 +101,22 @@
                                      width
                                      height
                                      solid?
+                                     z-order
                                      rotation-angle
                                      rotate-in-movement-direction?
                                      movement]}]
                             _entity*
                             _ctx]
-    (assert (and position
-                 width
-                 height
-                 (>= width  (if solid? min-solid-body-size 0))
-                 (>= height (if solid? min-solid-body-size 0))
-                 (or (nil? solid?)
-                     (boolean? solid?))
-                 (or (nil? rotation-angle)
-                     (<= 0 rotation-angle 360))))
+    (assert position)
+    (assert width)
+    (assert height)
+    (assert (>= width  (if solid? min-solid-body-size 0)))
+    (assert (>= height (if solid? min-solid-body-size 0)))
+    (assert (or (nil? solid?) (boolean? solid?)))
+    (assert ((set entity/z-orders) z-order))
+    (assert (not (and (#{:z-order/effect :z-order/on-ground} z-order) solid?)))
+    (assert (or (nil? rotation-angle)
+                (<= 0 rotation-angle 360)))
     (map->Body
      ; TODO position/left-bottom call to float & at movement too ?
      ; I am sure we have float conversions happening there .... at collision etc.
@@ -114,6 +130,7 @@
       :radius (float (max (/ width  2)
                           (/ height 2)))
       :solid? solid?
+      :z-order z-order
       :rotation-angle (or rotation-angle 0)
       :rotate-in-movement-direction? rotate-in-movement-direction?
       :movement movement}))
@@ -145,8 +162,8 @@
 
 (extend-type api.entity.Entity
   entity/Body
-  (position [entity*]
-    (:position (:entity/body entity*)))
+  (position [entity*] (:position (:entity/body entity*)))
+  (z-order  [entity*] (:z-order  (:entity/body entity*)))
 
   (tile [entity*]
     (->tile (entity/position entity*)))

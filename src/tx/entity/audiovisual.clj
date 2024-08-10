@@ -9,7 +9,7 @@
     [[:tx/sound sound]
      [:tx/create #:entity {:body {:position position
                                   :width 0.5
-                                  :height 0.5}
+                                  :height 0.5
+                                  :z-order :z-order/effect}
                            :animation animation
-                           :z-order :z-order/effect
                            :delete-after-animation-stopped? true}]]))

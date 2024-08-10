@@ -90,9 +90,10 @@
               (:entities @cell))))
 
   (valid-position? [grid {:keys [entity/body entity/uid] :as entity*}]
-    (let [cells* (into [] (map deref) (rectangle->cells grid body))]
-      (and (not-any? #(cell/blocked? % entity*) cells*)
-           (or (not (:solid? body))
+    (let [{:keys [z-order solid?]} body
+          cells* (into [] (map deref) (rectangle->cells grid body))]
+      (and (not-any? #(cell/blocked? % z-order) cells*)
+           (or (not solid?)
                (->> cells*
                     cell/cells->entities
                     (not-any? (fn [other-entity]
@@ -151,10 +152,12 @@
   (blocked? [_]
     (= :none movement))
 
-  (blocked? [_ {:keys [entity/flying?]}]
+  (blocked? [_ z-order]
     (case movement
       :none true
-      :air (not flying?)
+      :air (case z-order
+             :z-order/flying false
+             :z-order/ground true)
       :all false))
 
   (occupied-by-other? [_ entity]

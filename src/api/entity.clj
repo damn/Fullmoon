@@ -30,9 +30,7 @@
 (defprotocol Body
   (position [_] "Center float coordinates.")
   (tile [_] "Center integer coordinates")
-  (direction [_ other-entity*] "Returns direction vector from this entity to the other entity."))
-
-(defprotocol ZOrder
+  (direction [_ other-entity*] "Returns direction vector from this entity to the other entity.")
   (z-order [_]))
 
 (defprotocol State
