@@ -10,24 +10,15 @@
             [api.tx :refer [transact!]]
             [api.world.grid :refer [valid-position?]]))
 
-; TODO
-; * this means flying units could go over ground units if I do collision properly ?!=> 2 on top of each other
-; => but because of same potential field that doesn't work .... would need a separate potential field o.o
+; # :z-order/flying has no effect for now
 
-; also wake-up-range takes potential field distance
-; if I stand directly other side of water they see me but don't react ...
-
-; flying units would also need a completely separate occupied-cell thingy ... madness
-
-; * world/grid cell blocked?
-; 1. problem - potential field uses only none for blocked
-; => for flying units different paths ...
-; 2. problem - flying units collide with non-flying ....
-; used @ potential field
-; flows into air movement tiles
-; confusing
-; different pot field for air units ....?
-
+; * entities with :z-order/flying are not flying over water,etc. (movement/air)
+; because using potential-field for z-order/ground
+; -> would have to add one more potential-field for each faction for z-order/flying
+; * they would also (maybe) need a separate occupied-cells if they don't collide with other
+; * they could also go over ground units and not collide with them
+; ( a test showed then flying OVER player entity )
+; -> so no flying units for now
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
