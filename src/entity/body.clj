@@ -12,6 +12,13 @@
 
 ; TODO
 ; * this means flying units could go over ground units if I do collision properly ?!=> 2 on top of each other
+; => but because of same potential field that doesn't work .... would need a separate potential field o.o
+
+; also wake-up-range takes potential field distance
+; if I stand directly other side of water they see me but don't react ...
+
+; flying units would also need a completely separate occupied-cell thingy ... madness
+
 ; * world/grid cell blocked?
 ; 1. problem - potential field uses only none for blocked
 ; => for flying units different paths ...
@@ -32,7 +39,7 @@
   (/ min-solid-body-size (ctx/max-delta-time ctx)))
 
 ; for adding speed multiplier modifier -> need to take max-speed into account!
-(defn- update-position [entity* delta {:keys [direction speed]}]
+(defn- update-position [entity* delta {:keys [direction speed]}] ; TODO no need entity* just pass body here....
   (let [apply-delta (fn [position]
                       (mapv #(+ %1 (* %2 speed delta)) position direction))]
     (-> entity*
@@ -51,6 +58,8 @@
 
 ; TODO sliding threshold
 ; TODO name - with-sliding? 'on'
+; TODO if direction was [-1 0] and invalid-position then this algorithm tried to move with
+; direection [0 0] which is a waste of processor power...
 (defn- update-position-solid [ctx entity* {[vx vy] :direction :as movement}]
   (let [xdir (Math/signum (float vx))
         ydir (Math/signum (float vy))]
@@ -145,11 +154,14 @@
     (draw-bounds g body))
 
   (entity/tick [[_ body] entity* ctx]
+    ; TODO speed schema, what if nil/0 ? skip ... ?
     (when-let [{:keys [direction speed] :as movement} (:movement body)]
       (assert (<= speed (max-speed ctx)))
       (assert (or (zero? (v/length direction))
                   (v/normalised? direction)))
-      (when-not (zero? (v/length direction))
+      (when-not (or (zero? (v/length direction))
+                    (nil? speed)
+                    (zero? speed))
         (when-let [{:keys [entity/id
                            entity/body]} (if (:solid? body)
                                            (update-position-solid     ctx entity* movement)
@@ -174,7 +186,7 @@
 (defmethod transact! :tx.entity/set-movement [[_ entity movement] ctx]
   {:pre [(or (nil? movement)
              (and (:direction movement) ; continue schema of that ...
-                  (:speed movement)))]}
+                  #_(:speed movement)))]} ; princess no stats/movement-speed, then nil and here assertion-error
   [[:tx.entity/assoc-in entity [:entity/body :movement] movement]])
 
 ; add to api: ( don't access :entity/body keyword directly , so I can change to defrecord entity later (:body ) or watever)

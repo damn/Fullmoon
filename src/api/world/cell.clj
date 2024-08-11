@@ -6,8 +6,7 @@
   (remove-entity [_ entity])
   (add-occupying-entity [_ entity])
   (remove-occupying-entity [_ entity])
-  (blocked? [_]
-            [_ z-order])
+  (blocked? [_ z-order])
   (occupied-by-other? [_ entity]
                       "returns true if there is some occupying body with center-tile = this cell
                       or a multiple-cell-size body which touches this cell.")

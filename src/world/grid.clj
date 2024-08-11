@@ -1,11 +1,11 @@
 (ns world.grid
-  (:require [data.grid2d :as grid2d]
-            [math.geom :as geom]
+  (:require [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
+            [data.grid2d :as grid2d]
             [api.world.grid :refer [rectangle->cells circle->cells valid-position?]]
             [api.world.cell :as cell :refer [cells->entities]]))
 
-(defn- rectangle->tiles
+(defn- rectangle->tiles ; to math geom
   [{[x y] :left-bottom :keys [left-bottom width height]}]
   {:pre [left-bottom width height]}
   (let [x       (float x)
@@ -23,15 +23,15 @@
          [x y])
        [[l b] [l t] [r b] [r t]]))))
 
-(defn- set-cells! [grid entity]
-  (let [cells (rectangle->cells grid (:entity/body @entity))]
+(defn- set-cells! [grid entity] ; set touched cells
+  (let [cells (rectangle->cells grid (:entity/body @entity))] ; entity/rectangle-bounds ?
     (assert (not-any? nil? cells))
-    (swap! entity assoc-in [:entity/body :touched-cells] cells)
+    (swap! entity assoc-in [:entity/body :touched-cells] cells) ; (swap! entity assoc ::touched-cells cells)
     (doseq [cell cells]
       (swap! cell cell/add-entity entity))))
 
 (defn- remove-from-cells! [entity]
-  (doseq [cell (:touched-cells (:entity/body @entity))]
+  (doseq [cell (:touched-cells (:entity/body @entity))] ; ::touched-cells
     (swap! cell cell/remove-entity entity)))
 
 (defn- update-cells! [grid entity]
@@ -54,13 +54,15 @@
     (swap! entity assoc-in [:entity/body :occupied-cells] cells)))
 
 (defn- remove-from-occupied-cells! [entity]
-  (doseq [cell (:occupied-cells (:entity/body @entity))]
+  (doseq [cell (:occupied-cells (:entity/body @entity))] ; ::occupied-cells ....
     (swap! cell cell/remove-occupying-entity entity)))
 
 (defn- update-occupied-cells! [grid entity]
   (remove-from-occupied-cells! entity)
   (set-occupied-cells! grid entity))
 
+; TODO LAZY SEQ @ grid2d/get-8-neighbour-positions !!
+; https://github.com/damn/grid2d/blob/master/src/data/grid2d.clj#L126
 (extend-type data.grid2d.Grid2D
   api.world.grid/Grid
   (cached-adjacent-cells [grid cell]
@@ -89,9 +91,11 @@
       (filter #(geom/point-in-rect? position (:entity/body @%))
               (:entities @cell))))
 
+  ; TODO move to body ??
   (valid-position? [grid {:keys [entity/body entity/uid] :as entity*}]
     (let [{:keys [z-order solid?]} body
-          cells* (into [] (map deref) (rectangle->cells grid body))]
+          cells* (into [] (map deref) (rectangle->cells grid body))] ; similar =code to set-cells! body->calculate-touched-cells.
+      ; some places maybe use cached-touched-cells ....
       (and (not-any? #(cell/blocked? % z-order) cells*)
            (or (not solid?)
                (->> cells*
@@ -106,7 +110,7 @@
   (add-entity! [grid entity]
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (set-cells! grid entity)
-    (when (:solid? (:entity/body @entity))
+    (when (:solid? (:entity/body @entity)) ;FIXM emeaning of solid --- occupies cells ?!?!?!
       (set-occupied-cells! grid entity)))
 
   (remove-entity! [_ entity]
@@ -124,7 +128,7 @@
 ; TODO separate ns?
 
 (defrecord Cell [position
-                 middle ; TODO needed ?
+                 middle ; TODO needed ? only used @ potential-field-follow-to-enemy -> can remove it.
                  adjacent-cells
                  movement
                  entities
@@ -149,9 +153,10 @@
     (assert (get occupied entity))
     (update this :occupied disj entity))
 
-  (blocked? [_]
-    (= :none movement))
-
+  ; * add z-order/on-ground here / z-order/effect
+  ; * check valid positions @ add-entity
+  ; * use namespaced keyword allowed-movement/none / allowed-movement/air -- flying
+  ; allowed-movement/all
   (blocked? [_ z-order]
     (case movement
       :none true
@@ -170,6 +175,7 @@
   (nearest-entity-distance [this faction]
     (-> this faction :distance)))
 
+; TODO I dont understand why black nil cells are working and not throwing excp.
 (defn- create-cell [position movement]
   {:pre [(#{:none :air :all} movement)]}
   (map->Cell

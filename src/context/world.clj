@@ -107,12 +107,10 @@
 
 (defn- set-cell-blocked-boolean-array [arr cell*]
   (let [[x y] (:position cell*)]
-    (aset arr x y (boolean (cell/blocked? cell*)))))
+    (aset arr x y (boolean (cell/blocked? cell* :z-order/flying)))))
 
 (defn- ->cell-blocked-boolean-array [grid]
-  (let [arr (make-array Boolean/TYPE
-                        (grid2d/width grid)
-                        (grid2d/height grid))]
+  (let [arr (make-array Boolean/TYPE (grid2d/width grid) (grid2d/height grid))]
     (doseq [cell (grid2d/cells grid)]
       (set-cell-blocked-boolean-array arr @cell))
     arr))
@@ -126,6 +124,7 @@
                           "air"  :air
                           "all"  :all))))
 
+; TODO make defrecord
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
   (let [grid (tiled-map->grid tiled-map)
         w (grid2d/width  grid)

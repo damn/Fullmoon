@@ -40,7 +40,7 @@
                                 :width size
                                 :height size
                                 :solid? false
-                                :z-order :z-order/effect
+                                :z-order :z-order/flying
                                 :rotation-angle (v/get-angle-from-vector direction)
                                 :movement {:direction direction :speed speed}}
                          :image (black-projectile ctx)
