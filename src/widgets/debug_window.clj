@@ -28,6 +28,8 @@
      "paused? " (:context.game/paused? ctx) "\n"
      "elapsed-time " (utils.core/readable-number (ctx/elapsed-time ctx)) " seconds \n"
      (skill-info (ctx/player-entity* ctx))
+     (when-let [entity* (ctx/mouseover-entity* ctx)]
+       (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
