@@ -1,5 +1,6 @@
 (ns entity.body
   (:require [math.vector :as v]
+            [math.geom :as geom]
             [utils.core :refer [->tile]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
@@ -8,7 +9,8 @@
             [api.graphics :as g]
             [api.graphics.color :as color]
             [api.tx :refer [transact!]]
-            [api.world.grid :refer [valid-position?]]))
+            [api.world.cell :as cell]
+            [api.world.grid :as world-grid]))
 
 ; # :z-order/flying has no effect for now
 
@@ -39,6 +41,22 @@
 
 (defn- update-position-non-solid [ctx entity* movement]
   (update entity* :entity/body update-position (ctx/delta-time ctx) movement))
+
+(defn- valid-position? [grid {:keys [entity/body entity/uid] :as entity*}]
+  (let [{:keys [z-order solid?]} body
+        ; similar =code to set-cells! body->calculate-touched-cells.
+        ; some places maybe use cached-touched-cells ....
+        cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
+    (and (not-any? #(cell/blocked? % z-order) cells*)
+         (or (not solid?)
+             (->> cells*
+                  cell/cells->entities
+                  (not-any? (fn [other-entity]
+                              (let [other-entity* @other-entity
+                                    other-body (:entity/body other-entity*)]
+                                (and (not= (:entity/uid other-entity*) uid)
+                                     (:solid? other-body)
+                                     (geom/collides? other-body body))))))))))
 
 ; TODO just take body -> make valid-position also take body only ....
 ; => flying/z-order into body....
@@ -136,6 +154,7 @@
       :movement movement}))
 
   (entity/create [_ {:keys [entity/id]} ctx]
+    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     [[:tx/add-to-world id]])
 
   (entity/destroy [_ {:keys [entity/id]} ctx]

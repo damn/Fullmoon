@@ -2,7 +2,7 @@
   (:require [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
-            [api.world.grid :refer [rectangle->cells circle->cells valid-position?]]
+            [api.world.grid :refer [rectangle->cells circle->cells]]
             [api.world.cell :as cell :refer [cells->entities]]))
 
 (defn- rectangle->tiles ; to math geom
@@ -91,26 +91,9 @@
       (filter #(geom/point-in-rect? position (:entity/body @%))
               (:entities @cell))))
 
-  ; TODO move to body ??
-  (valid-position? [grid {:keys [entity/body entity/uid] :as entity*}]
-    (let [{:keys [z-order solid?]} body
-          cells* (into [] (map deref) (rectangle->cells grid body))] ; similar =code to set-cells! body->calculate-touched-cells.
-      ; some places maybe use cached-touched-cells ....
-      (and (not-any? #(cell/blocked? % z-order) cells*)
-           (or (not solid?)
-               (->> cells*
-                    cell/cells->entities
-                    (not-any? (fn [other-entity]
-                                (let [other-entity* @other-entity
-                                      other-body (:entity/body other-entity*)]
-                                  (and (not= (:entity/uid other-entity*) uid)
-                                       (:solid? other-body)
-                                       (geom/collides? other-body body))))))))))
-
   (add-entity! [grid entity]
-    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (set-cells! grid entity)
-    (when (:solid? (:entity/body @entity)) ;FIXM emeaning of solid --- occupies cells ?!?!?!
+    (when (:solid? (:entity/body @entity)) ;FIXME meaning of solid --- occupies cells ?!?!?!
       (set-occupied-cells! grid entity)))
 
   (remove-entity! [_ entity]
@@ -119,8 +102,6 @@
       (remove-from-occupied-cells! entity)))
 
   (entity-position-changed! [grid entity]
-    ; do not check this here, as it costs performance. we already have checked before changing position.
-    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (update-cells! grid entity)
     (when (:solid? (:entity/body @entity))
       (update-occupied-cells! grid entity))))

@@ -162,8 +162,8 @@
         cell (get (api.context/world-grid ctx) (mapv int position))
 
         ;tree-map @cell
-        tree-map (ctx/mouseover-entity* ctx)
-        ;tree-map ctx
+        ;tree-map (ctx/mouseover-entity* ctx)
+        tree-map ctx
 
         ;tree-map (sort-by first core.component/attributes)
         ;tree-map (sort-by first (methods api.tx/transact!))
