@@ -48,4 +48,6 @@
   (can-pickup-item? [_ item]))
 
 (defprotocol Stats
+  (hp [_])
+  (mana [_])
   (movement-speed [_]))

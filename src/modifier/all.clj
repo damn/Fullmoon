@@ -41,14 +41,14 @@
 ; TODO has to be integer ?
 (defcomponent :modifier/max-hp {:widget :text-field :schema number?}
   (modifier/text [[_ delta]] (plus-max-modifier-text "HP" delta))
-  (modifier/keys [_] [:entity/hp])
+  (modifier/keys [_] [:entity/stats :stats/hp])
   (modifier/apply   [[_ delta] hp] (apply-max-plus  hp delta))
   (modifier/reverse [[_ delta] hp] (apply-max-minus hp delta)))
 
 ; TODO has to be integer ?
 (defcomponent :modifier/max-mana {:widget :text-field :schema number?}
   (modifier/text [[_ delta]] (plus-max-modifier-text "Mana" delta))
-  (modifier/keys [_] [:entity/mana])
+  (modifier/keys [_] [:entity/stats :stats/mana])
   (modifier/apply   [[_ delta] mana] (apply-max-plus  mana delta))
   (modifier/reverse [[_ delta] mana] (apply-max-minus mana delta)))
 

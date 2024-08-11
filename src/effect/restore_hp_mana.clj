@@ -15,13 +15,13 @@
          ~'source)
 
        (effect/useful? ~'[_ {:keys [effect/source]} _ctx]
-         (lower-than-max? (~stat @~'source)))
+         (lower-than-max? (~stat (:entity/stats @~'source))))
 
        (effect/txs ~'[_ {:keys [effect/source]}]
-         [[:tx.entity/assoc ~'source ~stat (set-to-max (~stat @~'source))]]))))
+         [[:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
 
-(def-set-to-max-effect :entity/hp)
-(def-set-to-max-effect :entity/mana)
+(def-set-to-max-effect :stats/hp)
+(def-set-to-max-effect :stats/mana)
 
 ; effect
 ; key       - :entity/hp

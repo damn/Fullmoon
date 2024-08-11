@@ -6,11 +6,9 @@
                     delete-after-animation-stopped
                     delete-after-duration
                     faction
-                    hp
                     image
                     inventory
                     line-render
-                    mana
                     mouseover
                     player
                     plop

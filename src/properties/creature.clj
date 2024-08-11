@@ -12,14 +12,12 @@
     (defcomponent :creature/entity (data/components
                                      [:entity/animation
                                       :entity/body
-                                      :entity/faction
                                       :entity/flying?
                                       :entity/reaction-time
-                                      :entity/hp
-                                      :entity/mana
+                                      :entity/faction
+                                      :entity/stats
                                       :entity/inventory
-                                      :entity/skills
-                                      :entity/stats]))
+                                      :entity/skills]))
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]
@@ -55,8 +53,6 @@
                                   :entity/faction
                                   :entity/flying?
                                   :entity/reaction-time
-                                  :entity/hp
-                                  :entity/mana
                                   :entity/inventory
                                   :entity/skills
                                   :entity/stats]))))])}))

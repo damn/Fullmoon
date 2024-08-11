@@ -113,7 +113,8 @@
 
   (effect/txs [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
-          {:keys [entity/hp] :as target*} @target]
+          target* @target
+          hp (entity/hp target*)]
       (cond
        (not hp)
        []
@@ -130,5 +131,5 @@
              hp (apply-val hp #(- % dmg-amount))]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          [:tx.entity/assoc target :entity/hp hp]
+          [:tx.entity/assoc-in target [:entity/stats :stats/hp] hp]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))

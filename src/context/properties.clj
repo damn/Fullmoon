@@ -156,8 +156,10 @@
 
 (comment
 
+ ; TODO disable validation @ load-edn & update!
+ ; then activate & reload app.
+
  (defn- migrate [property-type prop-fn]
-   ; TODO disable validation
    (let [ctx @app.state/current-context]
      (def write-to-file? false)
      (time
@@ -168,12 +170,16 @@
      (write-properties-to-file! @app.state/current-context)
      nil))
 
+ ; migration entity/hp -> stats/hp and entity/mana -> stats/mana
+
  (migrate :properties/creature
           #(update % :creature/entity
-                   (fn [entity]
+                   (fn [{:keys [entity/hp entity/mana] :as entity}]
                      (-> entity
-                         (dissoc :entity/movement)
-                         (update :entity/stats assoc :stats/movement-speed (:entity/movement entity))))))
+                         (dissoc :entity/hp :entity/mana)
+                         (update :entity/stats assoc :stats/hp hp)
+                         (update :entity/stats assoc :stats/mana mana)
+                         ))))
  )
 
 (extend-type api.context.Context

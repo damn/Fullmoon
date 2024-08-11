@@ -7,13 +7,13 @@
             [effect-ctx.core :as effect-ctx]))
 
 (defn skill-usable-state [effect-ctx
-                          {:keys [entity/mana]}
+                          entity*
                           {:keys [skill/cost skill/cooling-down? skill/effect]}]
   (cond
    cooling-down?
    :cooldown
 
-   (and cost (> cost (mana 0)))
+   (and cost (> cost ((entity/mana entity*) 0)))
    :not-enough-mana
 
    (not (effect-ctx/valid-params? effect-ctx effect))
@@ -39,9 +39,9 @@
   (when cooldown
     [:tx.entity/assoc-in (:entity/id entity*) [:entity/skills id :skill/cooling-down?] (->counter ctx cooldown)]))
 
-(defn- pay-skill-mana-cost [{:keys [entity/id entity/mana]} {:keys [skill/cost]}]
+(defn- pay-skill-mana-cost [{:keys [entity/id] :as entity*} {:keys [skill/cost]}]
   (when cost
-    [:tx.entity/assoc id :entity/mana (apply-val mana #(- % cost))]))
+    [:tx.entity/assoc-in id [:entity/stats :stats/mana] (apply-val (entity/mana entity*) #(- % cost))]))
 
 (defrecord ActiveSkill [skill effect-ctx counter]
   state/PlayerState

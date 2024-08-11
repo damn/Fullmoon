@@ -1,8 +1,9 @@
 (ns widgets.hp-mana-bars
   (:require [utils.core :as utils]
+            [data.val-max :refer [val-max-ratio]]
             [api.context :as ctx]
-            [api.graphics :as g]
-            [data.val-max :refer [val-max-ratio]]))
+            [api.entity :as entity]
+            [api.graphics :as g]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
   (g/draw-text g {:text infostr
@@ -28,5 +29,5 @@
                                 x (- x (/ rahmenw 2))
                                 y-hp 5
                                 y-mana (+ y-hp rahmenh)]
-                            (render-hpmana-bar g ctx x y-hp   hpcontent   (:entity/hp   player-entity*) "HP")
-                            (render-hpmana-bar g ctx x y-mana manacontent (:entity/mana player-entity*) "MP")))})))
+                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/hp   player-entity*) "HP")
+                            (render-hpmana-bar g ctx x y-mana manacontent (entity/mana player-entity*) "MP")))})))
