@@ -26,6 +26,34 @@
 
 (def attributes {})
 
+(comment
+ (spit "components.txt"
+       (with-out-str
+        (clojure.pprint/pprint (group-by namespace
+                                         (sort (keys attributes))))))
+
+ (spit "components.md"
+       (with-out-str
+        (doseq [[nmsp ks] (group-by namespace
+                                    (sort (keys attributes)))]
+          (println "\n#" nmsp)
+          (doseq [k ks]
+            (println "*" k)))))
+
+ ; & add all tx's ?
+
+ ; -> only components who have a system ???
+ ; -> not skill/cost or something ...
+ ; and each system just add docstring
+ ; and component schema
+ ; then expandable and upload to wiki
+
+ ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
+ ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
+
+ ; -> and after each 'build' I can have a bash script which uploads the components go github
+ )
+
 (defn- k->component-ns [k]
   (symbol (str (namespace k) "." (name k))))
 
@@ -42,6 +70,7 @@
      (when (and warn-name-ns-mismatch?
                 (not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
+     ; TODO attribute overwrite WARNING !
      (alter-var-root #'attributes assoc ~k ~attr-map)))
   ([k attr-map & sys-impls]
    `(do

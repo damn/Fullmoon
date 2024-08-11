@@ -94,8 +94,8 @@
                  rotation-angle
                  movement
                  rotate-in-movement-direction?
-                 touched-cells
-                 occupied-cells])
+                 touched-cells ; remove -> make ns-d kw
+                 occupied-cells]) ; remove -> make ns-d kw
 
 ; TODO how 2 do default values,its not default-values , its non-optional attributes !
 ; similar to components nested-map
