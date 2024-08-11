@@ -29,21 +29,21 @@
 (defn- max-speed [ctx]
   (/ min-solid-body-size (ctx/max-delta-time ctx)))
 
-; for adding speed multiplier modifier -> need to take max-speed into account!
-(defn- update-position [entity* delta {:keys [direction speed]}] ; TODO no need entity* just pass body here....
-  (let [apply-delta (fn [position]
-                      (mapv #(+ %1 (* %2 speed delta)) position direction))]
-    (-> entity*
-        (update-in [:entity/body :position   ] apply-delta)
-        (update-in [:entity/body :left-bottom] apply-delta))))
+(defn- apply-movement-delta [position delta {:keys [direction speed]}]
+  (mapv #(+ %1 (* %2 speed delta)) position direction))
+
+(defn- update-position [body delta movement]
+  (-> body
+      (update :position    apply-movement-delta delta movement)
+      (update :left-bottom apply-movement-delta delta movement)))
 
 (defn- update-position-non-solid [ctx entity* movement]
-  (update-position entity* (ctx/delta-time ctx) movement))
+  (update entity* :entity/body update-position (ctx/delta-time ctx) movement))
 
 ; TODO just take body -> make valid-position also take body only ....
 ; => flying/z-order into body....
 (defn- try-move [ctx entity* movement]
-  (let [entity* (update-position entity* (ctx/delta-time ctx) movement)]
+  (let [entity* (update entity* :entity/body update-position (ctx/delta-time ctx) movement)]
     (when (valid-position? (ctx/world-grid ctx) entity*) ; TODO call on ctx shortcut fn
       entity*)))
 

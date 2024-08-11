@@ -3,6 +3,7 @@
             [core.data :as data]
             [api.entity :as entity]))
 
+; for adding speed multiplier modifier -> need to take max-speed into account!
 (defcomponent :stats/movement-speed data/pos-attr)
 
 (extend-type api.entity.Entity
