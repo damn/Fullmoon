@@ -8,7 +8,7 @@
             context.game
             context.game.transaction-handler
             debug.render
-            context.world
+            context.game.world
             entity.body
             [widgets.background-image :refer [->background-image]]))
 
@@ -49,8 +49,8 @@
                                  #'debug.render/cell-entities?
                                  #'debug.render/potential-field-colors?
                                  #'context.game/pausing?
-                                 #'context.world/los-checks?
-                                 #'context.world/spawn-enemies?
+                                 #'context.game.world/los-checks?
+                                 #'context.game.world/spawn-enemies?
                                  #'world.render/see-all-tiles?]))
 
 (def ^:private key-help-text

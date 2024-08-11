@@ -17,7 +17,7 @@
 
 ; we want min/max explored tiles X / Y and show the whole explored area....
 
-(defn- calculate-zoom [{:keys [context/world] :as ctx}]
+(defn- calculate-zoom [{:keys [context.game/world] :as ctx}]
   (let [positions-explored (map first
                                 (remove (fn [[position value]]
                                           (false? value))
@@ -50,7 +50,7 @@
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
   ; TODO fixme not subscreen
-  (render [_ {:keys [context/world] :as context}]
+  (render [_ {:keys [context.game/world] :as context}]
     (ctx/render-tiled-map context (:tiled-map world) tile-corner-color-setter)
     (ctx/render-world-view context
                            (fn [g]

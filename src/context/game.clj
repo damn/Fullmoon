@@ -10,8 +10,8 @@
                           player-entity
                           [time :as time-component]
                           [transaction-handler :as tx-handler]
-                          [widgets :as widgets])
-            [context.world :as world]
+                          [widgets :as widgets]
+                          [world :as world])
             [debug.render :as debug-render]))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]

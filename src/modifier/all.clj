@@ -6,14 +6,31 @@
             [core.data :as data]
             [api.modifier :as modifier]))
 
+; => all tx/effect/modifier into the namespace from the data
+; e.g. sound tx/effect move into assets ...
+; creature into properties creature
+; damage into stats !
+
+; world/ into context.game.world/
+; context.world into context.game.world
+; debug too away
+; effect-ctx ? idk
+; entity_state into ?
+; screens into context.screens
+; properties into context.properties
+; widgets into context.game.widgets ????
+
 (comment
 
  (set! *print-level* nil)
  (let [entity* {:entity/stats {:stats/modifiers {:stats/hp {[:max :inc] [10]}}}}
-       {:modifier/keys [key operation value]} {:modifier/key :stats/hp
-                                               :modifier/operation [:max :inc]
-                                               :modifier/value 2}]
-   (update-in entity* [:entity/stats :stats/modifiers key operation] conj value))
+       {:modifier/keys [stat operation value]} {:modifier/stat :stats/hp
+                                                :modifier/operation [:max :inc]
+                                                :modifier/value 2}]
+   (update-in entity* [:entity/stats :stats/modifiers stat operation] conj value))
+
+ ; oder: triplets
+ [:stats/hp [:max :inc] 2]
 
  ; @ remove -> find the value & remove it -> assert value was there !
  ; @ stat getter -> apply all modifiers .... of all possible operations
@@ -21,15 +38,11 @@
  ; ( from data )
  ; also define all possible effects through data ... same effects/modifiers for hp/mana
 
+ ; => then define for all stats the modifiers/effects.....
+
+ ; could even have global modifiers, e.g. all humans -50% hp
+
  )
-
-
-; TODO add movement speed +/- modifier.
-
-; TODO consistent name: 'delta' & 'value'
-
-; TODO modifier is always for a stat? move hp/mana into stats? and modifier/stat somehow
-; make common code/namings?! lets see...
 
 (defn- check-plus-symbol [n]
   (case (math/signum n)

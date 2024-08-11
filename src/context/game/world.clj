@@ -1,4 +1,4 @@
-(ns context.world
+(ns context.game.world
   (:require [math.raycaster :as raycaster]
             [math.vector :as v]
             [utils.core :refer [tile->middle]]
@@ -70,7 +70,7 @@
          (not (and los-checks?
                    (ray-blocked? context (entity/position source*) (entity/position target*))))))
 
-  (ray-blocked? [{:keys [context/world]} start target]
+  (ray-blocked? [{:keys [context.game/world]} start target]
     (let [{:keys [cell-blocked-boolean-array width height]} world]
       (raycaster/ray-blocked? cell-blocked-boolean-array width height start target)))
 
@@ -81,13 +81,13 @@
        (ray-blocked? context start2 target2))))
 
   ; TODO put tile param
-  (explored? [{:keys [context/world] :as context} position]
+  (explored? [{:keys [context.game/world] :as context} position]
     (get @(:explored-tile-corners world) position))
 
-  (content-grid [{:keys [context/world]}]
+  (content-grid [{:keys [context.game/world]}]
     (:content-grid world))
 
-  (world-grid [{:keys [context/world]}]
+  (world-grid [{:keys [context.game/world]}]
     (:grid world)))
 
 (defmethod transact! :tx/add-to-world [[_ entity] ctx]
@@ -142,7 +142,7 @@
 
 (def ^:private spawn-enemies? true)
 
-(defn- transact-create-entities-from-tiledmap! [{:keys [context/world] :as ctx}]
+(defn- transact-create-entities-from-tiledmap! [{:keys [context.game/world] :as ctx}]
   (let [tiled-map (:tiled-map world)
         ctx (if spawn-enemies?
               (transact-all! ctx
@@ -163,16 +163,16 @@
                                    :click-distance-tiles 1.5}]])))
 
 (defn- add-world-context [ctx tiled-level]
-  (when-let [world (:context/world ctx)]
+  (when-let [world (:context.game/world ctx)]
     (dispose (:tiled-map world)))
   (-> ctx
-      (assoc :context/world (->world-map tiled-level))
+      (assoc :context.game/world (->world-map tiled-level))
       transact-create-entities-from-tiledmap!))
 
 (defn- reset-world-context [ctx]
-  (assoc ctx :context/world (->world-map (select-keys (:context/world ctx)
-                                                      [:tiled-map
-                                                       :start-position]))))
+  (assoc ctx :context.game/world (->world-map (select-keys (:context.game/world ctx)
+                                                           [:tiled-map
+                                                            :start-position]))))
 
 (defn setup-context [ctx mode tiled-level]
   (case mode
