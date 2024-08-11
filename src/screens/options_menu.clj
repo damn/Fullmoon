@@ -7,7 +7,7 @@
             [utils.core :refer [safe-get]]
             context.game
             context.game.transaction-handler
-            debug.render
+            [context.game.debug-render :as debug-render]
             context.game.world
             entity.body
             [widgets.background-image :refer [->background-image]]))
@@ -43,11 +43,11 @@
                                 [#'entity.body/show-body-bounds
                                  ;#'context.game.transaction-handler/record-txs?
                                  #'context.game.transaction-handler/debug-print-txs?
-                                 #'debug.render/tile-grid?
-                                 #'debug.render/cell-occupied?
-                                 #'debug.render/highlight-blocked-cell?
-                                 #'debug.render/cell-entities?
-                                 #'debug.render/potential-field-colors?
+                                 #'debug-render/tile-grid?
+                                 #'debug-render/cell-occupied?
+                                 #'debug-render/highlight-blocked-cell?
+                                 #'debug-render/cell-entities?
+                                 #'debug-render/potential-field-colors?
                                  #'context.game/pausing?
                                  #'context.game.world/los-checks?
                                  #'context.game.world/spawn-enemies?

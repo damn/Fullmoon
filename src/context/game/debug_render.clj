@@ -1,4 +1,4 @@
-(ns debug.render
+(ns context.game.debug-render
   (:require math.geom
             [utils.core :refer [->tile]]
             [api.context :as ctx :refer [world-grid]]

@@ -11,8 +11,8 @@
                           [time :as time-component]
                           [transaction-handler :as tx-handler]
                           [widgets :as widgets]
-                          [world :as world])
-            [debug.render :as debug-render]))
+                          [world :as world]
+                          [debug-render :as debug-render])))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (-> ctx
