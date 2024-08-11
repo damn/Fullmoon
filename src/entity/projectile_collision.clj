@@ -17,7 +17,11 @@
                            piercing?]}]
                 entity*
                 ctx]
-    (let [cells* (map deref (rectangle->cells (world-grid ctx) (:entity/body entity*))) ; just use touched -cells
+    ; TODO this could be called from body on collision
+    ; for non-solid
+    ; means non colliding with other entities
+    ; but still collding with other stuff here ? o.o
+    (let [cells* (map deref (rectangle->cells (world-grid ctx) (:entity/body entity*))) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))

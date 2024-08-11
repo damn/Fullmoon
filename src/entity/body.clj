@@ -31,50 +31,48 @@
 (defn- max-speed [ctx]
   (/ min-solid-body-size (ctx/max-delta-time ctx)))
 
-(defn- apply-movement-delta [position delta {:keys [direction speed]}]
-  (mapv #(+ %1 (* %2 speed delta)) position direction))
+(defn- move-position [position {:keys [direction speed delta-time]}]
+  (mapv #(+ %1 (* %2 speed delta-time)) position direction))
 
-(defn- update-position [body delta movement]
+(defn- move-body [body movement]
   (-> body
-      (update :position    apply-movement-delta delta movement)
-      (update :left-bottom apply-movement-delta delta movement)))
+      (update :position    move-position movement)
+      (update :left-bottom move-position movement)))
 
-(defn- update-position-non-solid [ctx entity* movement]
-  (update entity* :entity/body update-position (ctx/delta-time ctx) movement))
-
-(defn- valid-position? [grid {:keys [entity/body entity/uid] :as entity*}]
+(defn- valid-position? [grid body entity-id]
   (let [{:keys [z-order solid?]} body
         ; similar =code to set-cells! body->calculate-touched-cells.
         ; some places maybe use cached-touched-cells ....
         cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
     (and (not-any? #(cell/blocked? % z-order) cells*)
-         (or (not solid?)
+         (or (not solid?) ; this not needed as we call this only for valid-position foo
              (->> cells*
-                  cell/cells->entities
+                  cell/cells->entities ; could add new field to Cell solid-entities, here checking all entities
+                  ; also effects, items, .... etc.
                   (not-any? (fn [other-entity]
+                              ; TODO move out fn - entity/same-id?
                               (let [other-entity* @other-entity
                                     other-body (:entity/body other-entity*)]
-                                (and (not= (:entity/uid other-entity*) uid)
+                                (and (not= (:entity/id other-entity*) entity-id)
+                                     ; fn entity/colliding? which checks solid?
                                      (:solid? other-body)
                                      (geom/collides? other-body body))))))))))
 
-; TODO just take body -> make valid-position also take body only ....
-; => flying/z-order into body....
-(defn- try-move [ctx entity* movement]
-  (let [entity* (update entity* :entity/body update-position (ctx/delta-time ctx) movement)]
-    (when (valid-position? (ctx/world-grid ctx) entity*) ; TODO call on ctx shortcut fn
-      entity*)))
+(defn- try-move [grid body entity-id movement]
+  (let [new-body (move-body body movement)]
+    (when (valid-position? grid new-body entity-id)
+      new-body)))
 
 ; TODO sliding threshold
 ; TODO name - with-sliding? 'on'
 ; TODO if direction was [-1 0] and invalid-position then this algorithm tried to move with
 ; direection [0 0] which is a waste of processor power...
-(defn- update-position-solid [ctx entity* {[vx vy] :direction :as movement}]
+(defn- try-move-solid-body [grid body entity-id {[vx vy] :direction :as movement}]
   (let [xdir (Math/signum (float vx))
         ydir (Math/signum (float vy))]
-    (or (try-move ctx entity* movement)
-        (try-move ctx entity* (assoc movement :direction [xdir 0]))
-        (try-move ctx entity* (assoc movement :direction [0 ydir])))))
+    (or (try-move grid body entity-id movement)
+        (try-move grid body entity-id (assoc movement :direction [xdir 0]))
+        (try-move grid body entity-id (assoc movement :direction [0 ydir])))))
 
 (def ^:private show-body-bounds false)
 
@@ -163,7 +161,7 @@
   (entity/render-debug [[_ body] _entity* g _ctx]
     (draw-bounds g body))
 
-  (entity/tick [[_ body] entity* ctx]
+  (entity/tick [[_ body] {:keys [entity/id]} ctx]
     ; TODO speed schema, what if nil/0 ? skip ... ?
     (when-let [{:keys [direction speed] :as movement} (:movement body)]
       (assert (<= speed (max-speed ctx)))
@@ -172,15 +170,15 @@
       (when-not (or (zero? (v/length direction))
                     (nil? speed)
                     (zero? speed))
-        (when-let [{:keys [entity/id
-                           entity/body]} (if (:solid? body)
-                                           (update-position-solid     ctx entity* movement)
-                                           (update-position-non-solid ctx entity* movement))]
-          [[:tx.entity/assoc-in id [:entity/body :position   ] (:position    body)]
-           [:tx.entity/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
-           (when (:rotate-in-movement-direction? body)
-             [:tx.entity/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
-           [:tx/position-changed id]])))))
+        (let [movement (assoc movement :delta-time (ctx/delta-time ctx))]
+          (when-let [body (if (:solid? body)
+                            (try-move-solid-body (ctx/world-grid ctx) body id movement)
+                            (move-body body movement))]
+            [[:tx.entity/assoc-in id [:entity/body :position   ] (:position    body)]
+             [:tx.entity/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
+             (when (:rotate-in-movement-direction? body)
+               [:tx.entity/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
+             [:tx/position-changed id]]))))))
 
 (extend-type api.entity.Entity
   entity/Body
@@ -215,3 +213,5 @@
 ; also for performance maybe later
 ; not Cell entities but Cell colliding/solid-entities ....
 ; all effects/etc. now set touched-cells which is mad.
+
+; TODO add teleport effect ~ or tx
