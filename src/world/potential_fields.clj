@@ -78,6 +78,9 @@
 (defn- remove-field-data! [cell faction]  ; don't dissoc - will lose the Cell record type
   (swap! cell assoc faction nil))
 
+(defn- cell-blocked? [cell*]
+  (cell/blocked? cell* :z-order/ground))
+
 ; TODO performance
 ; * cached-adjacent-non-blocked-cells ? -> no need for cell blocked check?
 ; * sorted-set-by ?
@@ -93,7 +96,7 @@
             adjacent-cell (cached-adjacent-cells grid cell)
             :let [cell* @cell
                   adjacent-cell* @adjacent-cell]
-            :when (not (or (cell/blocked? adjacent-cell*)
+            :when (not (or (cell-blocked? adjacent-cell*)
                            (marked? adjacent-cell*)))
             :let [distance-value (+ (float (distance cell*))
                                     (float (if (diagonal-cells? cell* adjacent-cell*)
@@ -179,7 +182,7 @@
 ; TODO always called with cached-adjacent-cells ...
 (defn- filter-viable-cells [entity adjacent-cells]
   (remove-not-allowed-diagonals
-    (mapv #(when-not (or (cell/blocked? @%)
+    (mapv #(when-not (or (cell-blocked? @%)
                          (cell/occupied-by-other? @% entity))
              %)
           adjacent-cells)))
