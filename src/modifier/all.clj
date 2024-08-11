@@ -1,24 +1,28 @@
 (ns modifier.all
   (:require [clojure.string :as str]
             [clojure.math :as math]
-            [core.component :refer [defcomponent]]
             [data.val-max :refer [apply-max]]
-            [api.modifier :as modifier]
-            [core.data :as data]))
+            [core.component :refer [defcomponent]]
+            [core.data :as data]
+            [api.modifier :as modifier]))
 
 (comment
- {:entity/stats {:stats/one
-                 :stats/two
-                 :stats/modifiers {:stats/two {:operation/add [:one :two :three :four]}}
-                 }}
 
- ; item adds to modifiers
+ (set! *print-level* nil)
+ (let [entity* {:entity/stats {:stats/modifiers {:stats/hp {[:max :inc] [10]}}}}
+       {:modifier/keys [key operation value]} {:modifier/key :stats/hp
+                                               :modifier/operation [:max :inc]
+                                               :modifier/value 2}]
+   (update-in entity* [:entity/stats :stats/modifiers key operation] conj value))
 
- ; modifier = 'stat-key', 'operation', 'value'
+ ; @ remove -> find the value & remove it -> assert value was there !
+ ; @ stat getter -> apply all modifiers .... of all possible operations
+ ; => define all possible operations for each stat
+ ; ( from data )
+ ; also define all possible effects through data ... same effects/modifiers for hp/mana
 
- ; and removes itself again (assert something is there with value)
- ; defstat with data defines effects/modifiers with the stat.... based on data/type.
  )
+
 
 ; TODO add movement speed +/- modifier.
 
