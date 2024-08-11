@@ -51,7 +51,7 @@
                                  #'context.game/pausing?
                                  #'context.game.world/los-checks?
                                  #'context.game.world/spawn-enemies?
-                                 #'world.render/see-all-tiles?]))
+                                 #'context.game.world.render/see-all-tiles?]))
 
 (def ^:private key-help-text
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")

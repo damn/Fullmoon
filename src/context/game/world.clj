@@ -12,10 +12,10 @@
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
-            world.grid
-            world.content-grid
-            [world.potential-fields :as potential-fields]
-            world.render
+            (context.game.world grid
+                                content-grid
+                                [potential-fields :as potential-fields]
+                                render)
             [mapgen.movement-property :refer (movement-property)]))
 
 (defn- on-screen? [entity* ctx]
@@ -61,7 +61,7 @@
                                                       entity))
 
   (render-map [ctx]
-    (world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
+    (context.game.world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
 
   (line-of-sight? [context source* target*]
     (and (entity/z-order target*)  ; is even an entity which renders something
@@ -116,13 +116,13 @@
     arr))
 
 (defn- tiled-map->grid [tiled-map]
-  (world.grid/->build (tiled/width  tiled-map)
-                      (tiled/height tiled-map)
-                      (fn [position]
-                        (case (movement-property tiled-map position)
-                          "none" :none
-                          "air"  :air
-                          "all"  :all))))
+  (context.game.world.grid/->build (tiled/width  tiled-map)
+                                   (tiled/height tiled-map)
+                                   (fn [position]
+                                     (case (movement-property tiled-map position)
+                                       "none" :none
+                                       "air"  :air
+                                       "all"  :all))))
 
 ; TODO make defrecord
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
@@ -134,7 +134,7 @@
             :height h
             :grid grid
             :cell-blocked-boolean-array (->cell-blocked-boolean-array grid)
-            :content-grid (world.content-grid/->build w h 16 16)
+            :content-grid (context.game.world.content-grid/->build w h 16 16)
             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))}))
   ; TODO
   ; (check-not-allowed-diagonals grid)

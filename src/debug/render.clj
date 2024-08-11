@@ -26,7 +26,7 @@
 (def ^:private cell-entities? false)
 (def ^:private cell-occupied? false)
 
-(require '[world.potential-fields :as potential-field])
+(require '[context.game.world.potential-fields :as potential-field])
 
 (defn- tile-debug [g ctx]
   (let [grid (world-grid ctx)

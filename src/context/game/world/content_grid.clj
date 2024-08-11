@@ -1,4 +1,4 @@
-(ns world.content-grid
+(ns context.game.world.content-grid
   (:require [data.grid2d :as grid2d]
             [api.entity :as entity]
             api.world.content-grid))

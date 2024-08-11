@@ -1,4 +1,4 @@
-(ns world.grid
+(ns context.game.world.grid
   (:require [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]

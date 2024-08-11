@@ -1,4 +1,4 @@
-(ns world.render
+(ns context.game.world.render
   (:require [api.context :as ctx]
             [api.graphics.color :as color]
             [math.raycaster :as raycaster]
