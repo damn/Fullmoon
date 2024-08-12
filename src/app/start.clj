@@ -16,7 +16,13 @@
   (component/build (ctx/->Context) component/create context :log? false))
 
 (defn- ->application [context]
-  (proxy [ApplicationAdapter] []
+  (gdx/->application {:create (fn [])
+                      :dispose (fn [])
+                      :render (fn [])
+                      :resize (fn [w h])
+                      }
+   )
+  (gdx/->application-adapter
     (create []
       (->> context
            ->context
@@ -28,7 +34,7 @@
 
     (render []
       (views/fix-viewport-update @current-context)
-      (ScreenUtils/clear Color/BLACK)
+      (screen-utils/clear :color/black)
       (-> @current-context
           ctx/current-screen
           screen/render!))
