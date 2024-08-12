@@ -1,6 +1,5 @@
 (ns entity.stats
   (:require [clojure.string :as str]
-            [clojure.math :as math]
             [data.val-max :refer [val-max-ratio]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
@@ -12,6 +11,7 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
+; * modifier texts
 ; * effect/target-entity - valid-params? broken
 ; * properties.item - :item/modifier no schema
 ; * default values
@@ -21,14 +21,6 @@
 ; * :inc :mult -> use namespaced keyword
 ; * we only work on max so could just use inc/mult @ val-max-modifiers hp/mana
 ; * take max-movement-speed into account @ :stats/movement-speed
-
-#_(defn- check-plus-symbol [n]
-  (case (math/signum n)
-    (0.0 1.0) "+"
-    -1.0 ""))
-
-#_(defn- actions-speed-percent [v]
-  (str (check-plus-symbol v) (int (* 100 v))))
 
 (extend-type api.context.Context
   api.context/Modifier
@@ -104,8 +96,8 @@
 (defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
 (derive :stats/armor-pierce :stat/only-inc)
 
-(defcomponent :stats.damage/deal {})
-(defcomponent :stats.damage/receive {})
+(defcomponent :stats/damage-deal {})
+(defcomponent :stats/damage-receive {})
 
 (extend-type api.entity.Entity
   entity/Stats

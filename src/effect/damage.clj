@@ -43,28 +43,28 @@
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers {:stats.damage/deal {[:val :inc] [1]}}}}
-                            :stats.damage/deal)
+                            {:entity/stats {:stats/modifiers {:stats/damage-deal {[:val :inc] [1]}}}}
+                            :stats/damage-deal)
     #:damage{:min-max [6 10]})
 
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers {:stats.damage/deal {[:max :mult] [2]}}}}
-                            :stats.damage/deal)
+                            {:entity/stats {:stats/modifiers {:stats/damage-deal {[:max :mult] [2]}}}}
+                            :stats/damage-deal)
     #:damage{:min-max [5 30]})
 
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
                             {:entity/stats {:stats/modifiers nil}}
-                            :stats.damage/receive)
+                            :stats/damage-receive)
     #:damage{:min-max [5 10]})
  )
 
 (defn- effective-damage
   ([damage source*]
-   (apply-damage-modifiers damage source* :stats.damage/deal))
+   (apply-damage-modifiers damage source* :stats/damage-deal))
 
   ([damage source* target*]
    (-> (effective-damage damage source*)
-       (apply-damage-modifiers target* :stats.damage/receive))))
+       (apply-damage-modifiers target* :stats/damage-receive))))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [3 10]}

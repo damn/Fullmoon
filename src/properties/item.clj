@@ -19,19 +19,28 @@
 (def ^:private modifier-color "[VIOLET]")
 
 (require '[clojure.string :as str])
+(require '[clojure.math :as math])
+
+(defn- +? [n]
+  (case (math/signum n)
+    (0.0 1.0) "+"
+    -1.0 ""))
+
+(defn- ->percent [v]
+  (str (int (* 100 v)) "%"))
+
 (defn- modifier-text [modifiers]
   (str/join "\n"
             (for [[stat operation value] modifiers]
-              (str (case operation
-                     :inc "+"
-                     :mult "*"
-                     [:val :inc] "+ val"
-                     [:val :mult] "* val"
-                     [:max :inc] "+ max"
-                     [:max :mult] "* max")
-                   value
-                   " "
-                   stat))))
+              (str (+? value)
+                   (case operation
+                     :inc (str value " ")
+                     :mult (str (->percent value) " ")
+                     [:val :inc] (str value " min ")
+                     [:max :inc] (str value " max ")
+                     [:val :mult] (str (->percent value) " min ")
+                     [:max :mult] (str (->percent value) " max "))
+                   (name stat)))))
 
 (defcomponent :properties/item {}
   (properties/create [_]

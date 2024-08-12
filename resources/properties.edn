@@ -3128,7 +3128,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [384 336 48 48]},
   :property/pretty-name "Flame Ring"}
- {:item/modifier [[:stats.damage/deal [:max :mult] 1]],
+ {:item/modifier [[:stats/damage-deal [:max :mult] 1]],
   :item/slot :inventory.slot/helm,
   :property/id :items/studded-helm,
   :property/image
@@ -3200,7 +3200,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Helm Blood"}
- {:item/modifier [[:stats.damage/receive [:val :inc] -1]],
+ {:item/modifier [[:stats/damage-receive [:val :inc] -1]],
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-great,
   :property/image
