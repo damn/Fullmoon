@@ -1,7 +1,7 @@
 (ns context.graphics.image
   (:require [api.context :as ctx]
             [api.graphics :as g])
-  (:import [com.badlogic.gdx.graphics Color Texture]
+  (:import com.badlogic.gdx.graphics.Color
            [com.badlogic.gdx.graphics.g2d Batch TextureRegion]))
 
 (defrecord Image [texture-region

@@ -90,7 +90,7 @@
 ; TODO move together with empty-inventory definition ?
 (defn- redo-table! [ctx ^Table table slot->background]
   ; cannot do add-rows, need bag :position idx
-  (let [cell (fn [& args] (apply ->cell ctx slot->background args))]
+  (let [cell (fn [& args] (apply ->cell ctx slot->background args))] ; TODO cell just return type hint ^Actor
     (.clear table) ; no need as we create new table ... TODO
     (doto table .add .add
       (.add ^Actor (cell :inventory.slot/helm))

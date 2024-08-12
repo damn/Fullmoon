@@ -83,7 +83,7 @@ direction keys: move")
     (set-position! window 0 (ctx/gui-viewport-height ctx))
     window))
 
-(defn- adjust-zoom [camera by]
+(defn- adjust-zoom [camera by] ; DRY context.game
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
 
 ; TODO movement-speed scales with zoom value for big maps useful
