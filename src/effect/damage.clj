@@ -6,10 +6,7 @@
             [api.effect :as effect]
             [api.entity :as entity]))
 
-; breaks for projectile - doesn't have armor-pierce
-; should be part of the hit-effect ...
 (defn- effective-armor-save [source* target*]
-  (println "effective-armor-save " (:entity/uid source*) "," (:entity/uid target*))
   (max (- (or (entity/stat target* :stats/armor-save) 0)
           (or (entity/stat source* :stats/armor-pierce) 0))
        0))
@@ -97,9 +94,6 @@
     #:damage{:min-max [3 10]})
  )
 
-(defn- no-hp-left? [hp]
-  (zero? (hp 0)))
-
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
@@ -122,10 +116,7 @@
           target* @target
           hp (entity/stat target* :stats/hp)]
       (cond
-       (not hp)
-       []
-
-       (no-hp-left? hp)
+       (or (not hp) (zero? (hp 0)))
        []
 
        (armor-saves? source* target*)
@@ -133,16 +124,9 @@
 
        :else
        (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
-             dmg-amount (random/rand-int-between min-max)]
+             dmg-amount (random/rand-int-between min-max)
+             new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-
-          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] (- ((entity/stat target* :stats/hp) 0) dmg-amount)]
-          ;[:tx.entity.stats/hp-val-inc target (- dmg-amount)]
-          ; TODO this doesnt use apply-val , so it goes to [0 5 ] or even negative
-
-
-          ; TODO this doesnt use latest hp ... !
-          [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))
-
-; we need a test for this fn .... ?
+          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
+          [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))
