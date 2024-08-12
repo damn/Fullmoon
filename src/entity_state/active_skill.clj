@@ -42,27 +42,6 @@
   (when cost
     [:tx.entity/assoc-in id [:entity/stats :stats/mana 0] (- ((entity/stat entity* :stats/mana) 0) cost)]))
 
-(comment
- (require '[api.context :as ctx])
-
- (let [entity* (ctx/player-entity* @app.state/current-context)]
-   (pay-skill-mana-cost entity* {:skill/cost 4})
-   ; [46 50] and then next entity/mana returns 25 max .....
-   ; apply-val & apply-max make private ?
-   )
-  @app.state/current-context
-
-  ; mana 92/100 ...
-  ; working with uncalculated mana ....
-  ; o.o
-  ; even with uncalculated hp ....
-
-  ; base value [100 100]
-  ; effective  [50 50]
-  ; now pay 4 mana cost (on effective value)
-
- )
-
 (defrecord ActiveSkill [skill effect-ctx counter]
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/sandclock]])
