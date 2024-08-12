@@ -1,6 +1,5 @@
 (ns entity-state.active-skill
-  (:require [data.val-max :refer [apply-val]]
-            [api.context :refer [stopped? finished-ratio ->counter]]
+  (:require [api.context :refer [stopped? finished-ratio ->counter]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]

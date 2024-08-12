@@ -1,6 +1,5 @@
 (ns entity.skills
   (:require [core.component :refer [defcomponent]]
-            [data.val-max :refer [apply-val]]
             [api.context :refer [get-property ->counter stopped?]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]

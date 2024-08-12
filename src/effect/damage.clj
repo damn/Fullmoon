@@ -1,7 +1,7 @@
 (ns effect.damage
   (:require [core.component :refer [defcomponent]]
             [core.data :as data]
-            [data.val-max :refer [apply-val apply-val-max-modifiers]]
+            [data.val-max :refer [apply-val-max-modifiers]]
             [utils.random :as random]
             [api.effect :as effect]
             [api.entity :as entity]))

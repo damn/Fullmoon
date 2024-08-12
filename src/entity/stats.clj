@@ -11,25 +11,14 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
-; TODO check default/if not values available for each stat if queried
-; e.g. melee damage wha tif strength not available
-; or have to be available ???
-
-; TODO for damage and armor-save could even display a tooltip
-; e.g. 6-12 damage base => modified 6-4
-
-; modifiers placable @ creatures&items ? in editor ? or algorithmically ?
-; => & entities can put in stats/modifiers already prebuilt modifiers for damage
-; e.g. stone golem -10 max damage , +50% armor-save
-; defcomponent :stats/modifier (s) ->
-
 ; TODO
-; * grep entity/stats and move all operations/accessors here through entity API
-; e.g. mana or something uses entity/mana then assoce's minus will mess up if mixing with val
-; * schema for allowed-operations/values/bounds?
-; * test the new transaction functions, not this (leads me to the interface segregation principle to test easily?)
-; * ( editor widgets )
-; * default values armor-save/strength/etc. ? move into component or function (defensive coding still ?)
+; * default values ?
+; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
+; * editable in editor ? or first keep @ properties.edn ?
+; * stats/modifiers in editor / for example max dmg reduced by 5 at stone golem
+; * use :operation/inc / :operation/mult or :op/..
+; * we only work on max so could just use inc/mult @ val-max-modifiers hp/mana
+; * take max-movement-speed into account !
 
 ;; To Readable Text
 
@@ -49,11 +38,6 @@
     #_(->> (for [component modifier] (modifier/text component))
          (str/join "\n"))))
 
-;; Applying/Reversing modifiers
-
-(defn- update-modifiers [entity [stat operation] f]
-  [:tx.entity/update-in entity [:entity/stats :stats/modifiers stat operation] f])
-
 (defn- update-modifiers [entity [stat operation] f]
   [:tx.entity/update-in entity [:entity/stats :stats/modifiers stat operation] f])
 
@@ -67,16 +51,11 @@
                                          {:post [(= (count %) (dec (count values)))]}
                                          (remove #{value} values)))))
 
-; Application Functions
-
-; TODO hp/mana has [:max :inc] and [:max :mult ]
-; check bounds after apply/allowed value range/etc.
-
 (defmulti apply-modifiers (fn [stat _stats] stat))
 
 (defmethod apply-modifiers :stat/plain-number [stat stats]
   (let [modifiers (stat (:stats/modifiers stats))
-        inc-modifiers (reduce + (:inc modifiers)) ; TODO use :operation/inc / :operation/mult or :op/..
+        inc-modifiers (reduce + (:inc modifiers))
         mult-modifiers (reduce + 1 (:mult modifiers))]
     (-> (stat stats)
         (+ inc-modifiers)
@@ -88,40 +67,24 @@
     (-> (stat stats)
         (+ inc-modifiers))))
 
-; TODO use apply-val-max-modifiers
-; and operations only [:max :inc] or [:max :mult]
-; so there is two things:
-; * plain-number or val-max data type
-; * allowed operations
 (defmethod apply-modifiers :stat/val-max [stat stats]
   (let [base-value (stat stats)
         modifiers (stat (:stats/modifiers stats))]
     (data.val-max/apply-val-max-modifiers base-value modifiers)))
 
 (defn- effective-value [entity* stat]
-  ; TODO no armor-save -> NPE
-  ; default-value give here ? or obligatory in all stats have to be available
-  ; => assert then & @ properties schema obligatory
   (apply-modifiers stat (:entity/stats entity*)))
 
-; TODO for hp/mana - val-max
-; we return the actual value of the stat
-; and change it on item
+(defcomponent :stats/hp data/pos-int-attr)
+(derive :stats/hp :stat/val-max)
 
-;; Stat Definitions
-
-(defcomponent :stats/hp data/pos-int-attr) ; this data is creature/hp and not the schema of the stat itself ...
-(derive :stats/hp :stat/val-max) ; pass data type as keyword to defcomponent / defattribute ...
-
-(defcomponent :stats/mana data/nat-int-attr) ; required @ npc state, for cost, check if nil
+(defcomponent :stats/mana data/nat-int-attr)
 (derive :stats/mana :stat/val-max)
 
-(defcomponent :stats/movement-speed data/pos-attr) ; for adding speed multiplier modifier -> need to take max-speed into account!
+(defcomponent :stats/movement-speed data/pos-attr)
 (derive :stats/movement-speed :stat/plain-number)
 
 (defcomponent :stats/strength data/nat-int-attr)
-; TODO this stat applies integer to the result ?
-; => only inc modifiers
 (derive :stats/strength :stat/only-inc)
 
 (let [doc "action-time divided by this stat when a skill is being used.
@@ -132,11 +95,8 @@
       skill-speed-stat (assoc data/pos-attr :doc doc)]
   (defcomponent :stats/cast-speed   skill-speed-stat)
   (defcomponent :stats/attack-speed skill-speed-stat))
-; TODO this is already a mulitplier ...  so we dont have mult stats??
-; only mult ? = as it is multi then only inc ?
 (derive :stats/cast-speed :stat/only-inc)
 (derive :stats/attack-speed :stat/only-inc)
-; TODO added '-1' => value became 0 -> divide by zero !
 
 (defcomponent :stats/armor-save {:widget :text-field :schema number?})
 (derive :stats/armor-save :stat/only-inc)
@@ -186,8 +146,8 @@
       (when (or (< ratio 1) mouseover?)
         (let [x (- x half-width)
               y (+ y half-height)
-              height (g/pixels->world-units g hpbar-height-px) ; pre-calculate it maybe somehow, but will put too much stuff in properties?
-              border (g/pixels->world-units g borders-px)] ; => can actually still use global state? idk
+              height (g/pixels->world-units g hpbar-height-px)
+              border (g/pixels->world-units g borders-px)]
           (g/draw-filled-rectangle g x y width height color/black)
           (g/draw-filled-rectangle g
                                    (+ x border)
@@ -195,12 +155,3 @@
                                    (- (* width ratio) (* 2 border))
                                    (- height (* 2 border))
                                    (hpbar-color ratio)))))))
-
-; New problem:
-; creature have all stats now
-; and missing keys
-
-; => make optional or migrate to add all stats eveverywhere ?
-
-
-

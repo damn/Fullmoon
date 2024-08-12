@@ -38,13 +38,13 @@
 (defn- zero-or-pos-int [value]
   (-> value int (max 0)))
 
-(defn apply-val [[v mx] f]
+(defn- apply-val [[v mx] f]
   {:pre [(m/validate val-max-schema [v mx])]
    :post [(m/validate val-max-schema %)]}
   (let [v (zero-or-pos-int (f v))]
     [(min v mx) mx]))
 
-(defn apply-max [[^int v mx] f]
+(defn- apply-max [[^int v mx] f]
   {:pre [(m/validate val-max-schema [v mx])]
    :post [(m/validate val-max-schema %)]}
   (let [^int mx (zero-or-pos-int (f mx))]
