@@ -9,8 +9,8 @@
 ; TODO move those fns to stats/armor or stats/damage namespace.
 
 (defn- effective-armor-save [source* target*]
-  (max (- (entity/armor-save target*)
-          (entity/armor-pierce source*)) ; TODO not defined .....
+  (max (- (entity/stat target* :stats/armor-save)
+          (entity/stat source* :stats/armor-pierce))
        0))
 
 (comment
@@ -118,7 +118,7 @@
   (effect/txs [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
-          hp (entity/hp target*)]
+          hp (entity/stat target* :stats/hp)]
       (cond
        (not hp)
        []
@@ -137,7 +137,7 @@
              ]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] (- ((entity/hp target*) 0) dmg-amount)]
+          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] (- ((entity/stat target* :stats/hp) 0) dmg-amount)]
           ;[:tx.entity.stats/hp-val-inc target (- dmg-amount)]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))
 

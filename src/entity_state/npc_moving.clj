@@ -10,7 +10,7 @@
   state/State
   (enter [_ {:keys [entity/id] :as entity*} _ctx]
     [[:tx.entity/set-movement id {:direction movement-vector
-                                  :speed (entity/movement-speed entity*)}]])
+                                  :speed (entity/stat entity* :stats/movement-speed)}]])
 
   (exit [_ {:keys [entity/id]} _ctx]
     [[:tx.entity/set-movement id nil]])

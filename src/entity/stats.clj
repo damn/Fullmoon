@@ -147,20 +147,12 @@
 
 (defcomponent :stats.damage/deal {})
 (defcomponent :stats.damage/receive {})
-; TODO fix @ damage
 
 (extend-type api.entity.Entity
   entity/Stats
-  ; TODO just 1 function for getting stat ??
-  ; (entity/stat entity* :stats/hp) ?
-  (->stat [entity* stat] (effective-value entity* stat))
-  (hp             [entity*] (effective-value entity* :stats/hp))
-  (mana           [entity*] (effective-value entity* :stats/mana))
-  (movement-speed [entity*] (effective-value entity* :stats/movement-speed))
-  (armor-save     [entity*] (effective-value entity* :stats/armor-save))
-  (armor-pierce   [entity*] (effective-value entity* :stats/armor-pierce))
-  (strength       [entity*] (effective-value entity* :stats/strength))
-  )
+  (stat [entity* stat]
+    (when (stat (:entity/stats entity*))
+      (effective-value entity* stat))))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
@@ -190,7 +182,7 @@
                         :keys [entity/mouseover?] :as entity*}
                        g
                        _ctx]
-    (let [ratio (val-max-ratio (entity/hp entity*))
+    (let [ratio (val-max-ratio (entity/stat entity* :stats/hp))
           [x y] (entity/position entity*)]
       (when (or (< ratio 1) mouseover?)
         (let [x (- x half-width)

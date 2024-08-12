@@ -13,7 +13,7 @@
    cooling-down?
    :cooldown
 
-   (and cost (> cost ((entity/mana entity*) 0)))
+   (and cost (> cost ((entity/stat entity* :stats/mana) 0)))
    :not-enough-mana
 
    (not (effect-ctx/valid-params? effect-ctx effect))
@@ -41,7 +41,7 @@
 
 (defn- pay-skill-mana-cost [{:keys [entity/id] :as entity*} {:keys [skill/cost]}]
   (when cost
-    [:tx.entity/assoc-in id [:entity/stats :stats/mana 0] (- ((entity/mana entity*) 0) cost)]))
+    [:tx.entity/assoc-in id [:entity/stats :stats/mana 0] (- ((entity/stat entity* :stats/mana) 0) cost)]))
 
 (comment
  (require '[api.context :as ctx])
@@ -98,7 +98,7 @@
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
-     (or (@#'entity.stats/effective-value entity* (:skill/action-time-modifier-key skill)) ; TODO '-stat'
+     (or (entity/stat entity* (:skill/action-time-modifier-key skill)) ; TODO '-stat'
          1))) ; TODO FIX DEFAULT STATS
 
 (defn ->CreateWithCounter [context entity* [skill effect-ctx]]

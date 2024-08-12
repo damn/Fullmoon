@@ -48,7 +48,10 @@
     (and source
          target
          ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ... ..
-         (entity/hp @target)))
+         ; but this cancels it so ... maybe effect/cancel?
+         ;(entity/hp @target)
+
+         ))
 
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} _ctx]
     (in-range? @source @target maxrange))

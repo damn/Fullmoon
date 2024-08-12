@@ -4,7 +4,7 @@
             [api.entity :as entity]))
 
 (defn- entity*->melee-damage [entity*]
-  (let [strength (or (entity/strength entity*) 0)]
+  (let [strength (or (entity/stat entity* :stats/strength) 0)]
     {:damage/min-max [strength strength]}))
 
 (defn- damage-effect [{:keys [effect/source]}]
