@@ -151,7 +151,7 @@
              vals
              (sort-by-type types)
              (map serialize)
-             (map #(into (sorted-map) %))
+             (map #(into (sorted-map) %)) ; TODO sort recursively all stats, then I dont have extra long changelogs always.
              (pprint-spit file)))))))
 
 (comment

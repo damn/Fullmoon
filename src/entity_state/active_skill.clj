@@ -41,7 +41,19 @@
 
 (defn- pay-skill-mana-cost [{:keys [entity/id] :as entity*} {:keys [skill/cost]}]
   (when cost
-    [:tx.entity/assoc-in id [:entity/stats :stats/mana] (apply-val (entity/mana entity*) #(- % cost))]))
+    [:tx.entity/update-in id [:entity/stats :stats/mana 0] #(- % cost)]))
+
+(comment
+ (require '[api.context :as ctx])
+
+ (let [entity* (ctx/player-entity* @app.state/current-context)]
+   (pay-skill-mana-cost entity* {:skill/cost 4})
+   ; [46 50] and then next entity/mana returns 25 max .....
+   ; apply-val & apply-max make private ?
+   )
+  @app.state/current-context
+
+ )
 
 (defrecord ActiveSkill [skill effect-ctx counter]
   state/PlayerState

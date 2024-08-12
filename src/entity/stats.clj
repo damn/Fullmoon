@@ -12,11 +12,25 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; 1. resources/properties.edn grep 'modifier\/'
+
 ; 2. src/effect/damage.clj deactivate
+
+; TODO check default/if not values available for each stat if queried
+; e.g. melee damage wha tif strength not available
+; or have to be available ???
+
+; TODO for damage and armor-save could even display a tooltip
+; e.g. 6-12 damage base => modified 6-4
+; => & entities can put in stats/modifiers already prebuilt modifiers for damage
+
+; e.g. stone golem -10 max damage , +50% armor-save
+
+; modifiers placable @ creatures&items ? in editor ? or algorithmically ?
 
 ; TODO
 ; * maybe deactivate damage modifiers at first @ effect/damage
 ; * grep entity/stats and move all operations/accessors here through entity API
+; e.g. mana or something uses entity/mana then assoce's minus will mess up if mixing with val
 ; * replace modifiers @ properties.edn
 ; * schema for allowed-operations/values/bounds?
 ; * test the new transaction functions, not this (leads me to the interface segregation principle to test easily?)
@@ -68,7 +82,7 @@
 
 (defmethod apply-modifiers :stat/plain-number [stat stats]
   (let [modifiers (stat (:stats/modifiers stats))
-        inc-modifiers  (reduce + (:inc modifiers)) ; TODO use :operation/inc / :operation/mult or :op/..
+        inc-modifiers (reduce + (:inc modifiers)) ; TODO use :operation/inc / :operation/mult or :op/..
         mult-modifiers (reduce + 1 (:mult modifiers))]
     (-> (stat stats)
         (+ inc-modifiers)
@@ -76,7 +90,7 @@
 
 (defmethod apply-modifiers :stat/only-inc [stat stats]
   (let [modifiers (stat (:stats/modifiers stats))
-        inc-modifiers  (reduce + (:inc modifiers))]
+        inc-modifiers (reduce + (:inc modifiers))]
     (-> (stat stats)
         (+ inc-modifiers))))
 
@@ -91,6 +105,9 @@
     (data.val-max/apply-val-max-modifiers base-value modifiers)))
 
 (defn- effective-value [entity* stat]
+  ; TODO no armor-save -> NPE
+  ; default-value give here ? or obligatory in all stats have to be available
+  ; => assert then & @ properties schema obligatory
   (apply-modifiers stat (:entity/stats entity*)))
 
 ;; Stat Definitions

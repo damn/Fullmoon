@@ -9,8 +9,8 @@
 ; TODO move those fns to stats/armor or stats/damage namespace.
 
 (defn- effective-armor-save [source* target*]
-  (max (- (or (entity/armor-save target*) 0)
-          (or (entity/armor-pierce source*) 0))
+  (max (- (entity/armor-save target*)
+          (entity/armor-pierce source*))
        0))
 
 (comment
@@ -133,7 +133,6 @@
              dmg-amount (random/rand-int-between min-max)
              ;_ (println "dmg-amount: " dmg-amount)
              hp (apply-val (:stats/hp (:entity/stats target*)) #(- % dmg-amount))]
-         ;(println "dmg-amount: " dmg-amount)
          ;(println "new hp:" hp)
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
