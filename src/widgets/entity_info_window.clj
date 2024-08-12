@@ -36,6 +36,9 @@
   ; :entity/reaction-time no need to show
   ; :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
   ;:entity/inventory (only player for now)
+
+  ; TODO move this to the component itself together with ....
+
   [(when (and stats hp) (str "[RED]Hitpoints: " (hp 0) " / " (hp 1)))
    (when (and stats mana) (str "[CYAN]Mana: " (mana 0) " / " (mana 1)))
    (when (and stats strength) (str "[WHITE]Strength: " strength))

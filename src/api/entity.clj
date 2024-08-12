@@ -47,7 +47,12 @@
 (defprotocol Inventory
   (can-pickup-item? [_ item]))
 
+; TODO Interface Segregation Principle
+; => each stat extend entity separately, defined in separate file ?
 (defprotocol Stats
   (hp [_])
   (mana [_])
-  (movement-speed [_]))
+  (movement-speed [_])
+  (armor-save [_])
+  (armor-pierce [_])
+  )

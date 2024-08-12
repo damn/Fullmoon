@@ -7,8 +7,8 @@
             [api.entity :as entity]))
 
 (defn- effective-armor-save [source* target*]
-  (max (- (or (-> target* :entity/stats :stats/armor-save)   0)
-          (or (-> source* :entity/stats :stats/armor-pierce) 0))
+  (max (- (or (entity/armor-save target*) 0)
+          (or (entity/armor-pierce source*) 0))
        0))
 
 (comment
