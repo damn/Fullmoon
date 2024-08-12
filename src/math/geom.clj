@@ -1,24 +1,5 @@
 (ns math.geom
-  "API wrapping com.badlogic.gdx.math.Intersector"
-  (:import (com.badlogic.gdx.math Rectangle Circle Intersector)))
-
-(defmulti ^:private collides?* (fn [a b] [(class a) (class b)]))
-
-(defmethod collides?* [Circle Circle]
-  [^Circle a ^Circle b]
-  (Intersector/overlaps a b))
-
-(defmethod collides?* [Rectangle Rectangle]
-  [^Rectangle a ^Rectangle b]
-  (Intersector/overlaps a b))
-
-(defmethod collides?* [Rectangle Circle]
-  [^Rectangle rect ^Circle circle]
-  (Intersector/overlaps circle rect))
-
-(defmethod collides?* [Circle Rectangle]
-  [^Circle circle ^Rectangle rect]
-  (Intersector/overlaps circle rect))
+  (:require [clj.gdx.math :as math]))
 
 (defn- rectangle? [{[x y] :left-bottom :keys [width height]}]
   (and x y width height))
@@ -28,19 +9,19 @@
 
 (defn- m->shape [m]
   (cond
-   (rectangle? m) (let [{[x y] :left-bottom :keys [width height]} m]
-                       (Rectangle. x y width height))
+   (rectangle? m) (let [{:keys [left-bottom width height]} m]
+                    (math/->rectangle left-bottom width height))
 
-   (circle? m) (let [{[x y] :position :keys [radius]} m]
-                    (Circle. x y radius))
+   (circle? m) (let [{:keys [position radius]} m]
+                 (math/->circle position radius))
 
    :else (throw (Error. (str m)))))
 
 (defn collides? [a b]
-  (collides?* (m->shape a) (m->shape b)))
+  (math/overlaps? (m->shape a) (m->shape b)))
 
-(defn point-in-rect? [[x y] rectangle]
-  (.contains ^Rectangle (m->shape rectangle) x y))
+(defn point-in-rect? [point rectangle]
+  (math/contains? (m->shape rectangle) point))
 
 (defn circle->outer-rectangle [{[x y] :position :keys [radius] :as circle}]
   {:pre [(circle? circle)]}
