@@ -142,6 +142,14 @@
 
 (def ^:private write-to-file? true)
 
+(defn- sort-map [m]
+  (into (sorted-map)
+        (zipmap (keys m)
+                (map #(if (map? %)
+                        (sort-map %)
+                        %)
+                     (vals m)))))
+
 (defn- write-properties-to-file! [{{:keys [types db file]} :context/properties :as ctx}]
   (when write-to-file?
     (.start
@@ -151,7 +159,7 @@
              vals
              (sort-by-type types)
              (map serialize)
-             (map #(into (sorted-map) %)) ; TODO sort recursively all stats, then I dont have extra long changelogs always.
+             (map sort-map)
              (pprint-spit file)))))))
 
 (comment
