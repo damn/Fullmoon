@@ -41,15 +41,17 @@
 
   [(when (and stats hp) (str "[RED]Hitpoints: " (hp 0) " / " (hp 1)))
    (when (and stats mana) (str "[CYAN]Mana: " (mana 0) " / " (mana 1)))
-   (when (and stats strength) (str "[WHITE]Strength: " strength))
+   (when (and stats strength) (str "[WHITE]Strength: " (entity/strength entity*)))
    (when (and stats cast-speed) (str "[WHITE]Cast-Speed: " cast-speed))
    (when (and stats attack-speed) (str "[WHITE]Attack-Speed: " attack-speed))
    (when (and stats armor-save) (str "[WHITE]Armor-Save: " armor-save))
    (when (and stats armor-pierce) (str "[WHITE]Armor-Pierce: " armor-pierce))
+
    ; TODO readable-number (8.3999999999 )
    (when-let [stat (entity/movement-speed entity*)] ; TODO nil check .... ?
      ; TODO print green/red base +/- modifiers like in wc3...
      (str "[WHITE]Movement-Speed: " stat))
+
    (str "[LIME] " (binding [*print-level* nil] (with-out-str (clojure.pprint/pprint modifiers))))
 
    (when skills (str "[WHITE]Skills: " (str/join "," (keys skills))))

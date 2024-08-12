@@ -55,6 +55,7 @@
  [5 5]
  (apply-val [3 5] (partial * -5))
  [0 5]
+
  (apply-max [3 5] (partial * -5))
  [0 0]
  (apply-max [3 5] (partial * 1.5))
@@ -64,16 +65,18 @@
  )
 
 ; [operant operation]
-(defn apply-val-max-modifier [val-max [[val-or-max inc-or-mult] value]]
+; TODO use operation op => :+ :- :*, :set-to-max ??
+(defn- apply-val-max-modifier [val-max [[val-or-max inc-or-mult] values]]
   {:pre [(m/validate val-max-schema val-max)]
    :post [(m/validate val-max-schema %)]}
   (let [f (case inc-or-mult
-            :inc  (partial + value) ; TODO use operation op => :+ :- :*, :set-to-max
-            :mult (partial * value))]
+            :inc  #(reduce + % values)
+            :mult #(* % (reduce + 1 values)))]
     ((case val-or-max
        :val apply-val
        :max apply-max)
-     val-max f)))
+     val-max
+     f)))
 
 (defn- inc<mult [[[val-or-max inc-or-mult] value]]
   (case inc-or-mult
@@ -86,11 +89,22 @@
   [val-max modifiers]
   {:pre [(m/validate val-max-schema val-max)]
    :post [(m/validate val-max-schema %)]}
-  (reduce apply-val-max-modifier
+  (reduce (fn [vmx modifiers]
+            ;(println "apply vmx: " vmx " modifiers: " modifiers)
+            (let [rslt (apply-val-max-modifier vmx modifiers)]
+              ;(println "rslt: " rslt)
+              rslt))
           val-max
           (sort-by inc<mult modifiers)))
 
 (comment
+ (= (apply-val-max-modifiers [5 10]
+                             {[:max :mult] [2]
+                              [:val :mult] [1.5]
+                              [:val :inc] [1 2]
+                              [:max :inc] [1]})
+    [20 33])
+
  (= (apply-val-max-modifiers
      [5 10]
      {[:max :mult] 2

@@ -11,6 +11,9 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
+; 1. resources/properties.edn grep 'modifier\/'
+; 2. src/effect/damage.clj deactivate
+
 ; TODO
 ; * maybe deactivate damage modifiers at first @ effect/damage
 ; * grep entity/stats and move all operations/accessors here through entity API
@@ -64,17 +67,28 @@
 (defmulti apply-modifiers (fn [stat _stats] stat))
 
 (defmethod apply-modifiers :stat/plain-number [stat stats]
-  (let [base-value (stat stats)
-        modifiers (stat (:stats/modifiers stats))
-        inc-modifiers  (reduce + (:inc  modifiers))
+  (let [modifiers (stat (:stats/modifiers stats))
+        inc-modifiers  (reduce + (:inc modifiers)) ; TODO use :operation/inc / :operation/mult or :op/..
         mult-modifiers (reduce + 1 (:mult modifiers))]
-    (-> base-value
+    (-> (stat stats)
         (+ inc-modifiers)
         (* mult-modifiers))))
 
+(defmethod apply-modifiers :stat/only-inc [stat stats]
+  (let [modifiers (stat (:stats/modifiers stats))
+        inc-modifiers  (reduce + (:inc modifiers))]
+    (-> (stat stats)
+        (+ inc-modifiers))))
+
+; TODO use apply-val-max-modifiers
+; and operations only [:max :inc] or [:max :mult]
+; so there is two things:
+; * plain-number or val-max data type
+; * allowed operations
 (defmethod apply-modifiers :stat/val-max [stat stats]
-  (stat stats)
-  )
+  (let [base-value (stat stats)
+        modifiers (stat (:stats/modifiers stats))]
+    (data.val-max/apply-val-max-modifiers base-value modifiers)))
 
 (defn- effective-value [entity* stat]
   (apply-modifiers stat (:entity/stats entity*)))
@@ -90,7 +104,10 @@
 (defcomponent :stats/movement-speed data/pos-attr) ; for adding speed multiplier modifier -> need to take max-speed into account!
 (derive :stats/movement-speed :stat/plain-number)
 
-(defcomponent :stats/strength data/nat-int-attr) ; TODO this stat applies integer to the result ?
+(defcomponent :stats/strength data/nat-int-attr)
+; TODO this stat applies integer to the result ?
+; => only inc modifiers
+(derive :stats/strength :stat/only-inc)
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -101,15 +118,24 @@
   (defcomponent :stats/cast-speed   skill-speed-stat)
   (defcomponent :stats/attack-speed skill-speed-stat))
 ; TODO this is already a mulitplier ...  so we dont have mult stats??
+; only mult ? = as it is multi then only inc ?
+(derive :stats/cast-speed :stat/only-inc)
+(derive :stats/attack-speed :stat/only-inc)
 
-(defcomponent :stats/armor-save   {:widget :text-field :schema number?})
+(defcomponent :stats/armor-save {:widget :text-field :schema number?})
+(derive :stats/armor-save :stat/only-inc)
+
 (defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
+(derive :stats/armor-pierce :stat/only-inc)
 
 (defcomponent :stats.damage/deal {})
 (defcomponent :stats.damage/receive {})
+; TODO fix @ damage
 
 (extend-type api.entity.Entity
   entity/Stats
+  ; TODO just 1 function for getting stat ??
+  ; (entity/stat entity* :stats/hp) ?
   (hp             [entity*] (effective-value entity* :stats/hp))
   (mana           [entity*] (effective-value entity* :stats/mana))
   (movement-speed [entity*] (effective-value entity* :stats/movement-speed))

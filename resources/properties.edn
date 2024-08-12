@@ -1967,7 +1967,12 @@
    :entity/flying? false,
    :entity/reaction-time 0.2,
    :entity/inventory
-   #{:items/cloak-royal :items/shield-vorpal-buckler},
+   #{:items/cloak-royal
+     :items/shield-vorpal-buckler
+     :items/shield-mystic-great
+     :items/ring-copper
+     :items/cloth-boot
+     :items/necklace-eye},
    :entity/skills #{},
    :entity/stats
    {:stats/armor-pierce 0,
@@ -3189,7 +3194,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Helm Blood"}
- {:item/modifier {},
+ {:item/modifier [[:stats.damage/receive [:val :inc] -1]],
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-great,
   :property/image
@@ -3213,7 +3218,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [288 144 48 48]},
   :property/pretty-name "Shortbow"}
- {:item/modifier {},
+ {:item/modifier [[:stats/mana [:max :mult] -0.5]],
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-copper,
   :property/image
@@ -3261,7 +3266,10 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Gold Ring"}
- {:item/modifier {},
+ {:item/modifier
+  [[:stats/hp [:max :inc] 10]
+   [:stats/hp [:max :inc] 5]
+   [:stats/hp [:max :mult] 0.05]],
   :item/slot :inventory.slot/boot,
   :property/id :items/cloth-boot,
   :property/image
@@ -3273,7 +3281,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [0 48 48 48]},
   :property/pretty-name "Brown Book"}
- {:item/modifier {},
+ {:item/modifier [[:stats/strength :inc 5]],
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-eye,
   :property/image

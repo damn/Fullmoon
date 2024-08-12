@@ -6,6 +6,8 @@
             [api.effect :as effect]
             [api.entity :as entity]))
 
+; TODO move those fns to stats/armor or stats/damage namespace.
+
 (defn- effective-armor-save [source* target*]
   (max (- (or (entity/armor-save target*) 0)
           (or (entity/armor-pierce source*) 0))
@@ -28,41 +30,41 @@
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {[:val :inc] 3})
+                            {[:val :inc] [3]})
     #:damage{:min-max [8 10]})
  )
 
-(defn- damage-stats [entity*]
-  (-> entity* :entity/stats :stats/damage))
+(defn- damage-deal-modifiers    [entity*] (-> entity* :entity/stats :stats/modifiers :stats.damage/deal))
+(defn- damage-receive-modifiers [entity*] (-> entity* :entity/stats :stats/modifiers :stats.damage/receive))
 
-(defn- apply-source-modifiers [damage source*]
-  (apply-damage-modifiers damage (-> source* damage-stats :damage/deal)))
+(defn- apply-damage-deal-modifiers [damage source*]
+  (apply-damage-modifiers damage (damage-deal-modifiers source*)))
 
-(defn- apply-target-modifiers [damage target*]
-  (apply-damage-modifiers damage (-> target* damage-stats :damage/receive)))
+(defn- apply-damage-receive-modifiers [damage target*]
+  (apply-damage-modifiers damage (damage-receive-modifiers target*)))
 
 (comment
- (= (apply-source-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/damage {:damage/deal {[:val :inc] 1}}}})
+ (= (apply-damage-deal-modifiers {:damage/min-max [5 10]}
+                                 {:entity/stats {:stats/modifiers {:stats.damage/deal {[:val :inc] [1]}}}})
     #:damage{:min-max [6 10]})
 
- (= (apply-source-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/damage {:damage/deal {[:val :inc] 1}}}})
-    #:damage{:min-max [6 10]})
-
- (= (apply-source-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/damage {:damage/deal {[:max :mult] 3}}}})
+ (= (apply-damage-deal-modifiers {:damage/min-max [5 10]}
+                                 {:entity/stats {:stats/modifiers {:stats.damage/deal {[:max :mult] [2]}}}})
     #:damage{:min-max [5 30]})
  )
 
 (defn- effective-damage
   ([damage source*]
+   ; apply to damage
+   ; stats.damage/deal
    (-> damage
-       (apply-source-modifiers source*)))
+       (apply-damage-deal-modifiers source*)))
   ([damage source* target*]
+   ; apply to damage
+   ; stats.damage/deal & stats.damage/receive
    (-> damage
-       (apply-source-modifiers source*)
-       (apply-target-modifiers target*))))
+       (apply-damage-deal-modifiers source*)
+       (apply-damage-receive-modifiers target*))))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [3 10]}
@@ -127,9 +129,20 @@
 
        :else
        (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
+             ;_ (println "Damage/min-max: " min-max)
              dmg-amount (random/rand-int-between min-max)
-             hp (apply-val hp #(- % dmg-amount))]
+             ;_ (println "dmg-amount: " dmg-amount)
+             hp (apply-val (:stats/hp (:entity/stats target*)) #(- % dmg-amount))]
+         ;(println "dmg-amount: " dmg-amount)
+         ;(println "new hp:" hp)
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
+          ; TODO this breaks, directly oveerwriting the entity/hp (which is using calculated new stats)
+          ; with something new
           [:tx.entity/assoc-in target [:entity/stats :stats/hp] hp]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))
+
+; TODO can I write a test for this ????
+; should be possible ....
+; could also deref source/target at effect-ctx applications .....
+; like in entity ticks or so
