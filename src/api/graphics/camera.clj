@@ -1,5 +1,4 @@
 (ns api.graphics.camera
-  "Convinience functions operating on com.badlogic.gdx.graphics.OrthographicCamera."
   (:import com.badlogic.gdx.graphics.OrthographicCamera
            com.badlogic.gdx.math.Vector3))
 
@@ -13,7 +12,7 @@
 (defn reset-zoom! [^OrthographicCamera camera]
   (set! (.zoom camera) 1.0))
 
-(defn position [^OrthographicCamera camera]
+(defn position [^OrthographicCamera camera] ; just Camera
   [(.x (.position camera))
    (.y (.position camera))])
 
