@@ -14,8 +14,8 @@
 
 (defn- ->gui-view []
   {:unit-scale gui-unit-scale
-   :viewport (FitViewport. (screen-width)
-                           (screen-height)
+   :viewport (FitViewport. (graphics/width)
+                           (graphics/height)
                            (OrthographicCamera.))})
 
 (defn- ->world-view [{:keys [tile-size]}]

@@ -1,12 +1,12 @@
 (ns context.game.world.render
-  (:require [api.context :as ctx]
+  (:require [clj.gdx.graphics :as graphics]
+            [api.context :as ctx]
             [api.graphics.color :as color]
             [math.raycaster :as raycaster]
-            [utils.core :refer [->tile]])
-  (:import com.badlogic.gdx.graphics.Color))
+            [utils.core :refer [->tile]]))
 
 (def ^:private explored-tile-color
-  (Color. (float 0.5) (float 0.5) (float 0.5) (float 1)))
+  (graphics/->color 0.5 0.5 0.5 1))
 
 (def ^:private light-cache (atom nil))
 (declare ^:private map-render-data)
