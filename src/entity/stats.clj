@@ -110,6 +110,10 @@
   ; => assert then & @ properties schema obligatory
   (apply-modifiers stat (:entity/stats entity*)))
 
+; TODO for hp/mana - val-max
+; we return the actual value of the stat
+; and change it on item
+
 ;; Stat Definitions
 
 (defcomponent :stats/hp data/pos-int-attr) ; this data is creature/hp and not the schema of the stat itself ...

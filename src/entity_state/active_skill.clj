@@ -41,7 +41,7 @@
 
 (defn- pay-skill-mana-cost [{:keys [entity/id] :as entity*} {:keys [skill/cost]}]
   (when cost
-    [:tx.entity/update-in id [:entity/stats :stats/mana 0] #(- % cost)]))
+    [:tx.entity/assoc-in id [:entity/stats :stats/mana 0] (- ((entity/mana entity*) 0) cost)]))
 
 (comment
  (require '[api.context :as ctx])
@@ -52,6 +52,15 @@
    ; apply-val & apply-max make private ?
    )
   @app.state/current-context
+
+  ; mana 92/100 ...
+  ; working with uncalculated mana ....
+  ; o.o
+  ; even with uncalculated hp ....
+
+  ; base value [100 100]
+  ; effective  [50 50]
+  ; now pay 4 mana cost (on effective value)
 
  )
 

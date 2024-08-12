@@ -10,7 +10,7 @@
 
 (defn- effective-armor-save [source* target*]
   (max (- (entity/armor-save target*)
-          (entity/armor-pierce source*))
+          (entity/armor-pierce source*)) ; TODO not defined .....
        0))
 
 (comment
@@ -22,49 +22,51 @@
 (defn- armor-saves? [source* target*]
   (< (rand) (effective-armor-save source* target*)))
 
-(defn- apply-damage-modifiers [{:keys [damage/min-max] :as damage}
-                               modifiers]
-  (if modifiers
-    (update damage :damage/min-max apply-val-max-modifiers modifiers)
-    damage))
+(defn- apply-modifiers [{:keys [damage/min-max] :as damage}
+                        modifiers]
+  (update damage :damage/min-max apply-val-max-modifiers modifiers))
+
+(comment
+ (= (apply-modifiers {:damage/min-max [5 10]}
+                     {[:val :inc] [3]})
+    #:damage{:min-max [8 10]})
+
+ (= (apply-modifiers {:damage/min-max [5 10]}
+                     nil)
+    #:damage{:min-max [5 10]})
+
+ )
+
+(defn- modifiers [entity* stat]
+  (-> entity* :entity/stats :stats/modifiers stat))
+
+(defn- apply-damage-modifiers [damage entity* stat]
+  (apply-modifiers damage (modifiers entity* stat)))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {[:val :inc] [3]})
-    #:damage{:min-max [8 10]})
- )
-
-(defn- damage-deal-modifiers    [entity*] (-> entity* :entity/stats :stats/modifiers :stats.damage/deal))
-(defn- damage-receive-modifiers [entity*] (-> entity* :entity/stats :stats/modifiers :stats.damage/receive))
-
-(defn- apply-damage-deal-modifiers [damage source*]
-  (apply-damage-modifiers damage (damage-deal-modifiers source*)))
-
-(defn- apply-damage-receive-modifiers [damage target*]
-  (apply-damage-modifiers damage (damage-receive-modifiers target*)))
-
-(comment
- (= (apply-damage-deal-modifiers {:damage/min-max [5 10]}
-                                 {:entity/stats {:stats/modifiers {:stats.damage/deal {[:val :inc] [1]}}}})
+                            {:entity/stats {:stats/modifiers {:stats.damage/deal {[:val :inc] [1]}}}}
+                            :stats.damage/deal)
     #:damage{:min-max [6 10]})
 
- (= (apply-damage-deal-modifiers {:damage/min-max [5 10]}
-                                 {:entity/stats {:stats/modifiers {:stats.damage/deal {[:max :mult] [2]}}}})
+ (= (apply-damage-modifiers {:damage/min-max [5 10]}
+                            {:entity/stats {:stats/modifiers {:stats.damage/deal {[:max :mult] [2]}}}}
+                            :stats.damage/deal)
     #:damage{:min-max [5 30]})
+
+ (= (apply-damage-modifiers {:damage/min-max [5 10]}
+                            {:entity/stats {:stats/modifiers nil}}
+                            :stats.damage/receive)
+    #:damage{:min-max [5 10]})
  )
 
 (defn- effective-damage
   ([damage source*]
-   ; apply to damage
-   ; stats.damage/deal
-   (-> damage
-       (apply-damage-deal-modifiers source*)))
+   (apply-damage-modifiers damage source* :stats.damage/deal))
+
   ([damage source* target*]
-   ; apply to damage
-   ; stats.damage/deal & stats.damage/receive
-   (-> damage
-       (apply-damage-deal-modifiers source*)
-       (apply-damage-receive-modifiers target*))))
+   (-> (effective-damage damage source*)
+       (apply-damage-modifiers target* :stats.damage/receive))))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [3 10]}
@@ -82,15 +84,15 @@
     #:damage{:min-max [1 20]})
 
  (= (effective-damage {:damage/min-max [3 10]}
-                      {:entity/stats {:stats/damage {:damage/deal {[:max :mult] 2
-                                                                   [:val :mult] 1.5
-                                                                   [:val :inc] 1
-                                                                   [:max :inc] 0}}}}
-                      {:entity/stats {:stats/damage {:damage/receive {[:max :mult] 1
-                                                                      [:val :mult] 1
-                                                                      [:val :inc] -5
-                                                                      [:max :inc] 0}}}})
-    #:damage{:min-max [1 20]})
+                      {:entity/stats {:stats/damage {:damage/deal {[:max :mult] [2]
+                                                                   [:val :mult] [1.5]
+                                                                   [:val :inc] [1]
+                                                                   [:max :inc] [0]}}}}
+                      {:entity/stats {:stats/damage {:damage/receive {[:max :mult] [1]
+                                                                      [:val :mult] [1]
+                                                                      [:val :inc] [-5]
+                                                                      [:max :inc] [0]}}}})
+    #:damage{:min-max [3 10]})
  )
 
 (defn- no-hp-left? [hp]
@@ -132,13 +134,11 @@
              ;_ (println "Damage/min-max: " min-max)
              dmg-amount (random/rand-int-between min-max)
              ;_ (println "dmg-amount: " dmg-amount)
-             hp (apply-val (:stats/hp (:entity/stats target*)) #(- % dmg-amount))]
-         ;(println "new hp:" hp)
+             ]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          ; TODO this breaks, directly oveerwriting the entity/hp (which is using calculated new stats)
-          ; with something new
-          [:tx.entity/assoc-in target [:entity/stats :stats/hp] hp]
+          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] (- ((entity/hp target*) 0) dmg-amount)]
+          ;[:tx.entity.stats/hp-val-inc target (- dmg-amount)]
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))
 
 ; TODO can I write a test for this ????
