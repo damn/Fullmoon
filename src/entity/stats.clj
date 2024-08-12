@@ -12,15 +12,15 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
-; * default values ?
+; * effect/target-entity - valid-params? broken
+; * properties.item - :item/modifier no schema
+; * default values
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
 ; * editable in editor ? or first keep @ properties.edn ?
 ; * stats/modifiers in editor / for example max dmg reduced by 5 at stone golem
-; * use :operation/inc / :operation/mult or :op/..
+; * :inc :mult -> use namespaced keyword
 ; * we only work on max so could just use inc/mult @ val-max-modifiers hp/mana
-; * take max-movement-speed into account !
-
-;; To Readable Text
+; * take max-movement-speed into account @ :stats/movement-speed
 
 #_(defn- check-plus-symbol [n]
   (case (math/signum n)

@@ -18,6 +18,21 @@
 
 (def ^:private modifier-color "[VIOLET]")
 
+(require '[clojure.string :as str])
+(defn- modifier-text [modifiers]
+  (str/join "\n"
+            (for [[stat operation value] modifiers]
+              (str (case operation
+                     :inc "+"
+                     :mult "*"
+                     [:val :inc] "+ val"
+                     [:val :mult] "* val"
+                     [:max :inc] "+ max"
+                     [:max :mult] "* max")
+                   value
+                   " "
+                   stat))))
+
 (defcomponent :properties/item {}
   (properties/create [_]
     ; modifier add/remove
@@ -47,4 +62,5 @@
                           item/modifier]
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
-                (when (seq modifier) (str modifier-color (ctx/modifier-text ctx modifier) "[]"))])}))
+                (when (seq modifier)
+                  (str modifier-color (modifier-text modifier) "[]"))])}))

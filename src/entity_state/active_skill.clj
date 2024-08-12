@@ -76,8 +76,8 @@
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
-     (or (entity/stat entity* (:skill/action-time-modifier-key skill)) ; TODO '-stat'
-         1))) ; TODO FIX DEFAULT STATS
+     (or (entity/stat entity* (:skill/action-time-modifier-key skill))
+         1)))
 
 (defn ->CreateWithCounter [context entity* [skill effect-ctx]]
   (->ActiveSkill skill

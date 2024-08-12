@@ -25,16 +25,22 @@
   {:pre [(m/validate val-max-schema [v mx])]}
   [mx mx])
 
+(defn- ->max-zero-int [v]
+  (-> v int (max 0)))
+
 (defn- apply-val-max-modifier [val-max [[val-or-max inc-or-mult] values]]
   {:pre [(m/validate val-max-schema val-max)]
    :post [(m/validate val-max-schema %)]}
   (let [f (case inc-or-mult
-            :inc  #(reduce + % values)
+            :inc #(reduce + % values)
             :mult #(* % (reduce + 1 values)))
-        [v mx] ((case val-or-max :val apply-val :max apply-max)
+        [v mx] ((case val-or-max
+                  :val (fn [[v mx] f] [(f v) mx])
+                  :max (fn [[v mx] f] [v (f mx)]))
                 val-max
                 f)
-        mx (-> mx int (max 0))]
+        v  (->max-zero-int v)
+        mx (->max-zero-int mx)]
     [(min v mx) mx]))
 
 (defn- inc<mult [[[val-or-max inc-or-mult] value]]
@@ -52,26 +58,25 @@
           (sort-by inc<mult modifiers)))
 
 (comment
- (= (apply-val-max-modifiers [5 10]
-                             {[:max :mult] [2]
-                              [:val :mult] [1.5]
-                              [:val :inc] [1 2]
-                              [:max :inc] [1]})
-    [20 33])
+ (and
+  (= (apply-val-max-modifiers [5 10]
+                              {[:max :mult] [2]
+                               [:val :mult] [1.5]
+                               [:val :inc] [1 2]
+                               [:max :inc] [1]})
+     [20 33])
 
- (= (apply-val-max-modifiers
-     [5 10]
-     {[:max :mult] [2]
-      [:val :mult] [1.5]
-      [:val :inc] [1]
-      [:max :inc] [1]})
-    [15 33])
+  (= (apply-val-max-modifiers [5 10]
+                              {[:max :mult] [2]
+                               [:val :mult] [1.5]
+                               [:val :inc] [1]
+                               [:max :inc] [1]})
+     [15 33])
 
- (= (apply-val-max-modifiers
-     [9 22]
-     {[:max :mult] [0.7]
-      [:val :mult] [1]
-      [:val :inc] [-2]
-      [:max :inc] [0]})
-    [14 37])
+  (= (apply-val-max-modifiers [9 22]
+                              {[:max :mult] [0.7]
+                               [:val :mult] [1]
+                               [:val :inc] [-2]
+                               [:max :inc] [0]})
+     [14 37]))
  )
