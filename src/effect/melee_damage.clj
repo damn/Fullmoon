@@ -1,10 +1,10 @@
 (ns effect.melee-damage
   (:require [core.component :refer [defcomponent]]
-            [api.effect :as effect]))
+            [api.effect :as effect]
+            [api.entity :as entity]))
 
 (defn- entity*->melee-damage [entity*]
-  (let [strength (or (:stats/strength (:entity/stats entity*))
-                     0)]
+  (let [strength (or (entity/strength entity*) 0)]
     {:damage/min-max [strength strength]}))
 
 (defn- damage-effect [{:keys [effect/source]}]

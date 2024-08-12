@@ -55,4 +55,5 @@
   (movement-speed [_])
   (armor-save [_])
   (armor-pierce [_])
+  (strength [_])
   )

@@ -12,6 +12,7 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
+; * maybe deactivate damage modifiers at first @ effect/damage
 ; * grep entity/stats and move all operations/accessors here through entity API
 ; * replace modifiers @ properties.edn
 ; * schema for allowed-operations/values/bounds?
@@ -114,6 +115,7 @@
   (movement-speed [entity*] (effective-value entity* :stats/movement-speed))
   (armor-save     [entity*] (effective-value entity* :stats/armor-save))
   (armor-pierce   [entity*] (effective-value entity* :stats/armor-pierce))
+  (strength       [entity*] (effective-value entity* :stats/strength))
   )
 
 (def ^:private hpbar-colors
