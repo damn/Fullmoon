@@ -6,14 +6,16 @@
             [api.effect :as effect]
             [api.entity :as entity]))
 
-; TODO move those fns to stats/armor or stats/damage namespace.
-
+; breaks for projectile - doesn't have armor-pierce
+; should be part of the hit-effect ...
 (defn- effective-armor-save [source* target*]
-  (max (- (entity/stat target* :stats/armor-save)
-          (entity/stat source* :stats/armor-pierce))
+  (println "effective-armor-save " (:entity/uid source*) "," (:entity/uid target*))
+  (max (- (or (entity/stat target* :stats/armor-save) 0)
+          (or (entity/stat source* :stats/armor-pierce) 0))
        0))
 
 (comment
+ ; broken
  (let [source* {:entity/stats {:stats/armor-pierce 0.4}}
        target* {:entity/stats {:stats/armor-save   0.5}}]
    (effective-armor-save source* target*))
@@ -131,17 +133,16 @@
 
        :else
        (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
-             ;_ (println "Damage/min-max: " min-max)
-             dmg-amount (random/rand-int-between min-max)
-             ;_ (println "dmg-amount: " dmg-amount)
-             ]
+             dmg-amount (random/rand-int-between min-max)]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
+
           [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] (- ((entity/stat target* :stats/hp) 0) dmg-amount)]
           ;[:tx.entity.stats/hp-val-inc target (- dmg-amount)]
+          ; TODO this doesnt use apply-val , so it goes to [0 5 ] or even negative
+
+
+          ; TODO this doesnt use latest hp ... !
           [:tx/event target (if (no-hp-left? hp) :kill :alert)]])))))
 
-; TODO can I write a test for this ????
-; should be possible ....
-; could also deref source/target at effect-ctx applications .....
-; like in entity ticks or so
+; we need a test for this fn .... ?
