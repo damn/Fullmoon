@@ -26,7 +26,6 @@
 ; TODO
 ; * grep entity/stats and move all operations/accessors here through entity API
 ; e.g. mana or something uses entity/mana then assoce's minus will mess up if mixing with val
-; * replace modifiers @ properties.edn
 ; * schema for allowed-operations/values/bounds?
 ; * test the new transaction functions, not this (leads me to the interface segregation principle to test easily?)
 ; * ( editor widgets )

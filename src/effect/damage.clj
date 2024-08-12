@@ -21,8 +21,7 @@
 (defn- armor-saves? [source* target*]
   (< (rand) (effective-armor-save source* target*)))
 
-(defn- apply-modifiers [{:keys [damage/min-max] :as damage}
-                        modifiers]
+(defn- apply-modifiers [{:keys [damage/min-max] :as damage} modifiers]
   (update damage :damage/min-max apply-val-max-modifiers modifiers))
 
 (comment
