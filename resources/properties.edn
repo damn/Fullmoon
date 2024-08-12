@@ -1954,8 +1954,7 @@
   :property/image
   {:file "creatures/images.png", :sub-image-bounds [144 576 48 48]}}
  {:creature/entity
-  {:entity/faction :evil,
-   :entity/animation
+  {:entity/animation
    {:frames
     ({:file "creatures/animations/vampire-1.png"}
      {:file "creatures/animations/vampire-2.png"}
@@ -1963,20 +1962,22 @@
      {:file "creatures/animations/vampire-4.png"}),
     :frame-duration 0.1,
     :looping? true},
+   :entity/body {:height 2/3, :solid? true, :width 17/24},
+   :entity/faction :evil,
+   :entity/flying? false,
    :entity/reaction-time 0.2,
-   :entity/inventory #{},
+   :entity/inventory
+   #{:items/cloak-royal :items/shield-vorpal-buckler},
+   :entity/skills #{},
    :entity/stats
    {:stats/armor-pierce 0,
     :stats/armor-save 0,
     :stats/attack-speed 1,
     :stats/cast-speed 1,
-    :stats/strength 1,
-    :stats/movement-speed 6,
     :stats/hp 100,
-    :stats/mana 100},
-   :entity/body {:height 2/3, :solid? true, :width 17/24},
-   :entity/flying? false,
-   :entity/skills #{}},
+    :stats/mana 100,
+    :stats/movement-speed 6,
+    :stats/strength 1}},
   :creature/level nil,
   :creature/species :species/vampire,
   :property/id :creatures/vampire,
@@ -2834,13 +2835,13 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [0 384 48 48]},
   :property/pretty-name "Open Large Skull"}
- {:item/modifier {},
+ {:item/modifier [[:stats/movement-speed :mult 0.4]],
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-royal,
   :property/image
   {:file "items/images.png", :sub-image-bounds [480 528 48 48]},
   :property/pretty-name "Royal Cloak"}
- {:item/modifier {:modifier/max-hp 5, :modifier/armor-save 0.5},
+ {:item/modifier [[:stats/movement-speed :inc 0.5]],
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-buckler,
   :property/image

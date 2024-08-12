@@ -22,7 +22,10 @@
   (properties/create [_]
     ; modifier add/remove
     ; item 'upgrade' colorless to sword fire
-    (defcomponent :item/modifier (data/components-attribute :modifier))
+    (defcomponent :item/modifier
+      {:widget :label
+       :schema :some}
+      #_(data/components-attribute :modifier))
     (defcomponent :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
     {:id-namespace "items"
      :schema (data/map-attribute-schema

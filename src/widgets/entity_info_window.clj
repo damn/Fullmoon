@@ -6,12 +6,18 @@
             [api.scene2d.ui.widget-group :refer [pack!]]
             [api.entity :as entity]))
 
+; TODO item in hand -> highlight possible inventory slot already (half transparency)
+
 ; given an ordered list of to be rendered keys
 ; calls the to-text function of that key
 ; and joins them with newlines ....
 
+; TODO use functions !!!
+; no plain data accesss
+; => getting modifiers ...
 (defn- entity->text [{:keys [entity/skills
                              entity/projectile-collision]
+                      :as entity*
                       {:keys [stats/hp
                               stats/mana
                               stats/movement-speed
@@ -19,7 +25,9 @@
                               stats/cast-speed
                               stats/attack-speed
                               stats/armor-save
-                              stats/armor-pierce] :as stats} :entity/stats}]
+                              stats/armor-pierce
+                              stats/modifiers
+                              ] :as stats} :entity/stats}]
   ; HP color based on ratio like hp bar samey
   ; mana color same in the whole app
   ; TODO name / species / level
@@ -35,7 +43,11 @@
    (when (and stats attack-speed) (str "[WHITE]Attack-Speed: " attack-speed))
    (when (and stats armor-save) (str "[WHITE]Armor-Save: " armor-save))
    (when (and stats armor-pierce) (str "[WHITE]Armor-Pierce: " armor-pierce))
-   (when (and stats movement-speed) (str "[WHITE]Movement-Speed: " movement-speed))
+   ; TODO readable-number (8.3999999999 )
+   (when-let [stat (entity/movement-speed entity*)] ; TODO nil check .... ?
+     ; TODO print green/red base +/- modifiers like in wc3...
+     (str "[WHITE]Movement-Speed: " stat))
+   (str "[LIME] " (binding [*print-level* nil] (with-out-str (clojure.pprint/pprint modifiers))))
 
    (when skills (str "[WHITE]Skills: " (str/join "," (keys skills))))
    (when projectile-collision (str "[LIME]Projectile: " projectile-collision))])
