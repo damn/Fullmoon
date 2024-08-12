@@ -6,15 +6,6 @@
             [api.scene2d.ui.widget-group :refer [pack!]]
             [api.entity :as entity]))
 
-; TODO item in hand -> highlight possible inventory slot already (half transparency)
-
-; given an ordered list of to be rendered keys
-; calls the to-text function of that key
-; and joins them with newlines ....
-
-; TODO use functions !!!
-; no plain data accesss
-; => getting modifiers ...
 (defn- entity->text [{:keys [entity/skills
                              entity/projectile-collision]
                       :as entity*
@@ -38,6 +29,9 @@
   ;:entity/inventory (only player for now)
 
   ; TODO move this to the component itself together with ....
+
+  ; for each stat
+  ; entity/->stat-value ....
 
   [(when (and stats hp) (str "[RED]Hitpoints: " (hp 0) " / " (hp 1)))
    (when (and stats mana) (str "[CYAN]Mana: " (mana 0) " / " (mana 1)))

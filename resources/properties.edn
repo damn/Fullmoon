@@ -1975,6 +1975,7 @@
      :items/studded-helm
      :items/shield-mystic-great
      :items/ring-copper
+     :items/ring-gold
      :items/cloth-boot
      :items/necklace-eye},
    :entity/skills #{},
@@ -3120,7 +3121,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [0 144 48 48]},
   :property/pretty-name "Spear"}
- {:item/modifier {:modifier/damage [:damage/deal [:max :mult] 2]},
+ {:item/modifier {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-flame,
   :property/image
@@ -3192,7 +3193,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [240 0 48 48]},
   :property/pretty-name "Bone Key"}
- {:item/modifier {:modifier/cast-speed 0.3},
+ {:item/modifier {},
   :item/slot :inventory.slot/helm,
   :property/id :items/blood-helm,
   :property/image
@@ -3228,7 +3229,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [48 336 48 48]},
   :property/pretty-name "Copper Ring"}
- {:item/modifier {:modifier/damage [:damage/receive [:max :inc] -1]},
+ {:item/modifier {},
   :item/slot :inventory.slot/leg,
   :property/id :items/wild-leg,
   :property/image
@@ -3264,7 +3265,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [432 96 48 48]},
   :property/pretty-name "Mace"}
- {:item/modifier {:modifier/damage [:damage/deal [:val :inc] 5]},
+ {:item/modifier [[:stats/cast-speed :inc 0.5]],
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-gold,
   :property/image
@@ -3429,7 +3430,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [384 96 48 48]},
   :property/pretty-name "Greataxe"}
- {:item/modifier {:modifier/armor-save 0.2},
+ {:item/modifier {},
   :item/slot :inventory.slot/chest,
   :property/id :items/blood-chest,
   :property/image
@@ -3447,7 +3448,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [0 192 48 48]},
   :property/pretty-name "Vorpal Sword Magic"}
- {:item/modifier {:modifier/attack-speed 0.5},
+ {:item/modifier {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-dark,
   :property/image
@@ -3471,7 +3472,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [192 240 48 48]},
   :property/pretty-name "Buckler Iron Shield"}
- {:item/modifier {:modifier/max-mana 100},
+ {:item/modifier {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-blood,
   :property/image
@@ -3639,7 +3640,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Pearl Ring"}
- {:item/modifier {:modifier/damage [:damage/receive [:val :inc] -3]},
+ {:item/modifier {},
   :item/slot :inventory.slot/glove,
   :property/id :items/blood-glove,
   :property/image

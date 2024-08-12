@@ -11,24 +11,19 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
-; 1. resources/properties.edn grep 'modifier\/'
-
-; 2. src/effect/damage.clj deactivate
-
 ; TODO check default/if not values available for each stat if queried
 ; e.g. melee damage wha tif strength not available
 ; or have to be available ???
 
 ; TODO for damage and armor-save could even display a tooltip
 ; e.g. 6-12 damage base => modified 6-4
-; => & entities can put in stats/modifiers already prebuilt modifiers for damage
-
-; e.g. stone golem -10 max damage , +50% armor-save
 
 ; modifiers placable @ creatures&items ? in editor ? or algorithmically ?
+; => & entities can put in stats/modifiers already prebuilt modifiers for damage
+; e.g. stone golem -10 max damage , +50% armor-save
+; defcomponent :stats/modifier (s) ->
 
 ; TODO
-; * maybe deactivate damage modifiers at first @ effect/damage
 ; * grep entity/stats and move all operations/accessors here through entity API
 ; e.g. mana or something uses entity/mana then assoce's minus will mess up if mixing with val
 ; * replace modifiers @ properties.edn
@@ -142,6 +137,7 @@
 ; only mult ? = as it is multi then only inc ?
 (derive :stats/cast-speed :stat/only-inc)
 (derive :stats/attack-speed :stat/only-inc)
+; TODO added '-1' => value became 0 -> divide by zero !
 
 (defcomponent :stats/armor-save {:widget :text-field :schema number?})
 (derive :stats/armor-save :stat/only-inc)
@@ -157,6 +153,7 @@
   entity/Stats
   ; TODO just 1 function for getting stat ??
   ; (entity/stat entity* :stats/hp) ?
+  (->stat [entity* stat] (effective-value entity* stat))
   (hp             [entity*] (effective-value entity* :stats/hp))
   (mana           [entity*] (effective-value entity* :stats/mana))
   (movement-speed [entity*] (effective-value entity* :stats/movement-speed))
