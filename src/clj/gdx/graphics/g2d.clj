@@ -7,7 +7,7 @@
    (TextureRegion. texture))
 
   ([texture-region [x y w h]]
-   (TextureRegion. texture (int x) (int y) (int w) (int h))))
+   (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
 
 (defn ->sprite-batch []
   (SpriteBatch.))

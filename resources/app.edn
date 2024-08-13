@@ -8,8 +8,7 @@
        :height 900
        :full-screen? false
        :fps 60}
- :context [
-           ; no dependencies
+ :context [; no dependencies
            [:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
@@ -19,7 +18,6 @@
                                              :property-editor? true
                                              :debug-window? true
                                              :debug-options? true}}}]
-           [:context/input]
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}

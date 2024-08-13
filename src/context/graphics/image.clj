@@ -1,6 +1,7 @@
 (ns context.graphics.image
   (:require [clj.gdx.graphics.g2d :as g2d]
             [clj.gdx.graphics.g2d.batch :as batch]
+            [clj.gdx.graphics.g2d.texture-region :as texture-region]
             [api.context :as ctx]
             [api.graphics :as g]))
 
@@ -14,10 +15,6 @@
     (:pixel-dimensions image)
     (:world-unit-dimensions image)))
 
-(defn- texture-region-dimensions [^TextureRegion texture-region]
-  [(.getRegionWidth  texture-region)
-   (.getRegionHeight texture-region)])
-
 (defn- scale-dimensions [dimensions scale]
   (mapv (comp float (partial * scale)) dimensions))
 
@@ -29,7 +26,7 @@
                   (number? (scale 0))
                   (number? (scale 1))))]}
   (let [pixel-dimensions (if (number? scale)
-                           (scale-dimensions (texture-region-dimensions texture-region) scale)
+                           (scale-dimensions (texture-region/dimensions texture-region) scale)
                            scale)]
     (assoc image
            :pixel-dimensions pixel-dimensions

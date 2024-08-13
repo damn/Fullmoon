@@ -1,12 +1,13 @@
 (ns screens.minimap
-  (:require [clj.gdx.input :as input]
+  (:require [clj.gdx.graphics.color :as color]
+            [clj.gdx.graphics.orthographic-camera :as orthographic-camera]
+            [clj.gdx.input :as input]
+            [clj.gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
             [app.state :refer [current-context]]
             [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
-            [clj.gdx.graphics.color :as color]
             [api.graphics.camera :as camera]
-            [clj.gdx.input.keys :as input.keys]
             [api.screen :as screen]))
 
 ; 28.4 viewportwidth
@@ -45,10 +46,10 @@
 (deftype Screen []
   api.screen/Screen
   (show [_ ctx]
-    (camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
+    (orthographic-camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
 
   (hide [_ ctx]
-    (camera/reset-zoom! (ctx/world-camera ctx)))
+    (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
 
   ; TODO fixme not subscreen
   (render [_ {:keys [context.game/world] :as context}]

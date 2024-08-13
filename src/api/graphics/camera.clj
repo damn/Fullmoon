@@ -25,10 +25,10 @@
 ; could do only with left-bottom and top-right points
 (defn calculate-zoom
   "Calculates the zoom value for camera to see all the 4 points."
-  [^OrthographicCamera camera & {:keys [left top right bottom]}]
-  (let [viewport-width  (.viewportWidth  camera)
-        viewport-height (.viewportHeight camera)
-        [px py] (position camera)
+  [camera & {:keys [left top right bottom]}]
+  (let [viewport-width  (camera/viewport-width  camera)
+        viewport-height (camera/viewport-height camera)
+        [px py] (camera/position camera)
         px (float px)
         py (float py)
         leftx (float (left 0))

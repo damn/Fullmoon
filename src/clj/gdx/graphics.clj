@@ -25,8 +25,8 @@
 (defn set-cursor [cursor]
   (.setCursor Gdx/graphics cursor))
 
-(defn ->pix-map [file]
-  (PixMap. file))
+(defn ->pixmap [file]
+  (Pixmap. file))
 
 (defn- ->color
   ([r g b]
