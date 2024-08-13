@@ -1,0 +1,36 @@
+(comment
+
+ :vimgrep/TODO/g src/gdx/** test/**
+
+; TODO namespaced keyword access data ?
+; -> is there a tool for it ( java-bean ? ) to-clj ?
+ (let [{:camera/keys [position
+                      viewport-width
+                      viewport-height]} camera]
+
+   )
+
+(comment
+ (clojure.pprint/pprint
+  (bean
+   (->fit-viewport 10 10 (graphics/->orthographic-camera))))
+
+ {:bottomGutterHeight 0,
+  :rightGutterWidth 1440,
+  :screenX 0,
+  :screenHeight 0,
+  :screenY 0,
+  :screenWidth 0,
+  :class com.badlogic.gdx.utils.viewport.FitViewport,
+  :scaling
+  #object[com.badlogic.gdx.utils.Scaling$1 0x7fbc09e3 "com.badlogic.gdx.utils.Scaling$1@7fbc09e3"],
+  :worldHeight 10.0,
+  :camera
+  #object[com.badlogic.gdx.graphics.OrthographicCamera 0x75b46b74 "com.badlogic.gdx.graphics.OrthographicCamera@75b46b74"],
+  :topGutterY 0,
+  :topGutterHeight 900,
+  :leftGutterWidth 0,
+  :rightGutterX 0,
+  :worldWidth 10.0}
+ )
+)

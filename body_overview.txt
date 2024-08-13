@@ -1,0 +1,29 @@
+
+# Component Overview entity.body
+
+## This is schema of component
+
+* :z-order/flying has no effect for now for 'solid'
+* min-solid-body-size 0.4
+* (<= speed (max-speed ctx))
+* z-order -> cell-blocked foo
+* movement is try-move sliding
+* solid?
+* movement assoc -> direction-vector, speed
+* (not (and (#{:z-order/effect :z-order/on-ground} z-order) solid?))
+
+## These are component fn documentations:
+
+* create -> add to world
+* destroy -> remove from world
+* tick -> if movement ... moves
+* :rotate-in-movement-direction? -> rotates
+
+
+###
+
+=> this is just the public API and has to be clear
+=> where do I put/generate this ???
+in markdown file ? or inside editor ?
+
+=> generate documentation for all your components / even tx's (use defcomponent then )

@@ -16,5 +16,6 @@
 (defn update [^Viewport viewport screen-width screen-height center-camera?]
   (.update viewport screen-width screen-height center-camera?))
 
+; TODO Take & return clojure [x y] vector
 (defn unproject ^Vector2 [^Viewport viewport ^Vector2 vector2]
   (.unproject viewport vector2))

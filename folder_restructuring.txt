@@ -1,0 +1,30 @@
+  ▸ api/
+  ▸ app/
+  ▸ context/
+  ▸ core/
+  ▸ data/
+  ▸ entity/
+  ▸ mapgen/
+  ▸ math/
+  ▸ utils/
+
+
+  ▸ entity_state/ => entity/state & api.entity.state
+
+  => where the fn is defined:
+  ▸ tx/
+  ▸ effect/
+  ▸ modifier/
+
+  => to context. ???
+  ▸ properties/
+  ▸ screens/ => context.game.screensk
+
+  ▸ widgets/ => context.game.widgets
+
+
+    app.clj => to app/
+
+    dev.clj (doesn;t count )
+▸ effect_ctx/  ?
+
