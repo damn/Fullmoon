@@ -3,7 +3,7 @@
             [api.context :as ctx]
             [api.graphics :as g]
             [api.screen :as screen]
-            [api.graphics.color :as color]))
+            [clj.gdx.graphics.color :as color]))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
   (let [[wx wy] (map #(format "%.2f" %) (ctx/world-mouse-position g))

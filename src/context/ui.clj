@@ -1,5 +1,6 @@
 (ns context.ui
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [clj.gdx.input :as input]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             api.disposable
             [api.screen :as screen]
@@ -15,8 +16,7 @@
             api.scene2d.ui.window
             [app.state :refer [current-context]]
             context.graphics.image)
-  (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.graphics.g2d.TextureRegion
+  (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Touchable Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Image Button Label Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
@@ -63,11 +63,11 @@
 
   api.screen/Screen
   (show [_ context]
-    (.setInputProcessor Gdx/input stage)
+    (input/set-processor! stage)
     (screen/show sub-screen context))
 
   (hide [_ context]
-    (.setInputProcessor Gdx/input nil)
+    (input/set-processor! nil)
     (screen/hide sub-screen context))
 
   (render! [_]
