@@ -62,8 +62,8 @@
                     view-key
                     draw-fn]
   (let [{:keys [^Viewport viewport unit-scale]} (view-key g)]
-    (.setColor batch color/white) ; fix scene2d.ui.tooltip flickering
-    (.setProjectionMatrix batch (.combined (.getCamera viewport)))
+    (batch/set-color batch color/white) ; fix scene2d.ui.tooltip flickering
+    (batch/set-projection-matrix batch (.combined (.getCamera viewport)))
     (batch/begin batch)
     (g/with-shape-line-width g
                              unit-scale

@@ -26,5 +26,5 @@
   [(.x (.position camera))
    (.y (.position camera))])
 
-(defn viewport-width  [camera] (.viewportWidth  camera))
-(defn viewport-height [camera] (.viewportHeight camera))
+(defn viewport-width  [^Camera camera] (.viewportWidth  camera))
+(defn viewport-height [^Camera camera] (.viewportHeight camera))

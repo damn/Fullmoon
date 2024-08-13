@@ -1,5 +1,6 @@
 (ns gdx.graphics
   (:import com.badlogic.gdx.Gdx
+           com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color
                                       OrthographicCamera
                                       Pixmap)))
@@ -26,8 +27,8 @@
 (defn set-cursor [cursor]
   (.setCursor Gdx/graphics cursor))
 
-(defn ->pixmap [file]
-  (Pixmap. file))
+(defn ->pixmap [^FileHandle file-handle]
+  (Pixmap. file-handle))
 
 (defn ->color
   ([r g b]
@@ -35,5 +36,5 @@
   ([r g b a]
    (Color. (float r) (float g) (float b) (float a))))
 
-(defn ->orthographic-camera []
+(defn ->orthographic-camera ^OrthographicCamera []
   (OrthographicCamera.))

@@ -1,12 +1,13 @@
 (ns gdx.graphics.g2d
-  (:import (com.badlogic.gdx.graphics.g2d TextureRegion
+  (:import com.badlogic.gdx.graphics.Texture
+           (com.badlogic.gdx.graphics.g2d TextureRegion
                                           SpriteBatch)))
 
 (defn ->texture-region
-  ([texture]
+  ([^Texture texture]
    (TextureRegion. texture))
 
-  ([texture-region [x y w h]]
+  ([^TextureRegion texture-region [x y w h]]
    (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
 
 (defn ->sprite-batch []
