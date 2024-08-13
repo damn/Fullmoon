@@ -11,15 +11,6 @@
   (set! (.y (.position camera)) (float y))
   (.update camera))
 
-(comment
-; TODO namespaced keyword access data ?
- (let [{:camera/keys [position
-                      viewport-width
-                      viewport-height]} camera]
-
-   )
-)
-
 (defn frustum [^Camera camera]
   (.frustum camera))
 
