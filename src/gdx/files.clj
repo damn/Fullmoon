@@ -1,4 +1,4 @@
-(ns clj.gdx.files
+(ns gdx.files
   (:import com.badlogic.gdx.Gdx))
 
 (defn internal [file]

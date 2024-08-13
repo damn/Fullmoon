@@ -1,6 +1,6 @@
 (ns entity-state.player-idle
-  (:require [clj.gdx.input :as input]
-            [clj.gdx.input.buttons :as buttons]
+  (:require [gdx.input :as input]
+            [gdx.input.buttons :as buttons]
             [api.graphics :as g]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [api.scene2d.ui.button :refer [button?]]

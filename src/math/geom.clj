@@ -1,5 +1,5 @@
 (ns math.geom
-  (:require [clj.gdx.math :as math]))
+  (:require [gdx.math :as math]))
 
 (defn- rectangle? [{[x y] :left-bottom :keys [width height]}]
   (and x y width height))

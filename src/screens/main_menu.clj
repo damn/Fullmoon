@@ -1,7 +1,7 @@
 (ns screens.main-menu
-  (:require [clj.gdx.app :as app]
-            [clj.gdx.input :as input]
-            [clj.gdx.input.keys :as input.keys]
+  (:require [gdx.app :as app]
+            [gdx.input :as input]
+            [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
             [utils.core :refer [safe-get]]
             [app.state :refer [current-context change-screen!]]

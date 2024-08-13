@@ -1,6 +1,6 @@
 (ns widgets.debug-window
-  (:require [clj.gdx.graphics :as graphics]
-            [clj.gdx.graphics.orthographic-camera :as orthographic-camera]
+  (:require [gdx.graphics :as graphics]
+            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [api.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
             [api.graphics :as g]
             [api.scene2d.group :refer [add-actor!]]

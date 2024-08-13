@@ -1,3 +1,3 @@
-(ns clj.gdx.graphics.pixmap
+(ns gdx.graphics.pixmap
   (:import com.badlogic.gdx.graphics.Pixmap))
 

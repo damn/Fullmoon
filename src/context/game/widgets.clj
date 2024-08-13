@@ -1,6 +1,6 @@
 (ns context.game.widgets
-  (:require [clj.gdx.input :as input]
-            [clj.gdx.input.keys :as input.keys]
+  (:require [gdx.input :as input]
+            [gdx.input.keys :as input.keys]
             [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]

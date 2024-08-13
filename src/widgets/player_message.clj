@@ -1,5 +1,5 @@
 (ns widgets.player-message
-  (:require [clj.gdx.graphics :as graphics]
+  (:require [gdx.graphics :as graphics]
             [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
             [api.tx :refer [transact!]]

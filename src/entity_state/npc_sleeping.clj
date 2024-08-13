@@ -1,6 +1,6 @@
 (ns entity-state.npc-sleeping
   (:require [api.graphics :as g]
-            [clj.gdx.graphics.color :as color]
+            [gdx.graphics.color :as color]
             [api.context :refer [world-grid]]
             [api.entity :as entity]
             [api.entity-state :as state]

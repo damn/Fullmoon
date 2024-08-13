@@ -1,7 +1,7 @@
 (ns context.game
-  (:require [clj.gdx.app :as app]
-            [clj.gdx.input :as input]
-            [clj.gdx.input.keys :as input.keys]
+  (:require [gdx.app :as app]
+            [gdx.input :as input]
+            [gdx.input.keys :as input.keys]
             [api.context :as ctx]
             [api.entity :as entity]
             [api.entity-state :as state]

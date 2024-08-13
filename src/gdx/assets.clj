@@ -1,4 +1,4 @@
-(ns clj.gdx.assets
+(ns gdx.assets
   (:import com.badlogic.gdx.assets.AssetManager))
 
 (defn ->manager ^AssetManager []

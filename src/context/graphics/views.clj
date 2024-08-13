@@ -1,8 +1,8 @@
 (ns context.graphics.views
-  (:require [clj.gdx.graphics :as graphics]
-            [clj.gdx.graphics.color :as color]
-            [clj.gdx.graphics.g2d.batch :as batch]
-            [clj.gdx.input :as input]
+  (:require [gdx.graphics :as graphics]
+            [gdx.graphics.color :as color]
+            [gdx.graphics.g2d.batch :as batch]
+            [gdx.input :as input]
             api.context
             [api.graphics :as g])
   (:import [com.badlogic.gdx.utils.viewport Viewport FitViewport]

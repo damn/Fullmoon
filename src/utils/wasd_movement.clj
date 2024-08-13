@@ -1,6 +1,6 @@
 (ns utils.wasd-movement
-  (:require [clj.gdx.input :as input]
-            [clj.gdx.input.keys :as input.keys]
+  (:require [gdx.input :as input]
+            [gdx.input.keys :as input.keys]
             [math.vector :as v]))
 
 (defn- add-vs [vs]

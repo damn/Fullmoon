@@ -1,6 +1,6 @@
 (ns context.graphics.shape-drawer
-  (:require [clj.gdx.graphics :as graphics]
-            [clj.gdx.graphics.color :as color]
+  (:require [gdx.graphics :as graphics]
+            [gdx.graphics.color :as color]
             [api.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)

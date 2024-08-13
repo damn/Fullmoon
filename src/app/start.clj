@@ -1,6 +1,6 @@
 (ns app.start
-  (:require [clj.gdx :as gdx]
-            [clj.gdx.backends.lwjgl3 :as lwjgl3]
+  (:require [gdx :as gdx]
+            [gdx.backends.lwjgl3 :as lwjgl3]
             [core.component :as component]
             [api.context :as ctx]
             api.disposable

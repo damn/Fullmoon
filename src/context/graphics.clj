@@ -1,5 +1,5 @@
 (ns context.graphics
-  (:require [clj.gdx.graphics.g2d :as g2d]
+  (:require [gdx.graphics.g2d :as g2d]
             [core.component :refer [defcomponent] :as component]
             api.context
             [api.disposable :refer [dispose]]

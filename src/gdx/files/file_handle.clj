@@ -1,4 +1,4 @@
-(ns clj.gdx.files.file-handle
+(ns gdx.files.file-handle
   (:import com.badlogic.gdx.files.FileHandle))
 
 (defn list       [file] (.list        file))

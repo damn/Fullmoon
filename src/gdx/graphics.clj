@@ -1,4 +1,4 @@
-(ns clj.gdx.graphics
+(ns gdx.graphics
   (:import com.badlogic.gdx.Gdx
            (com.badlogic.gdx.graphics Color
                                       OrthographicCamera

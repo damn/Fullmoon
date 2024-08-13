@@ -1,7 +1,7 @@
 (ns context.game.world.render
-  (:require [clj.gdx.graphics :as graphics]
+  (:require [gdx.graphics :as graphics]
             [api.context :as ctx]
-            [clj.gdx.graphics.color :as color]
+            [gdx.graphics.color :as color]
             [math.raycaster :as raycaster]
             [utils.core :refer [->tile]]))
 

@@ -1,6 +1,6 @@
 (ns context.graphics.cursors
-  (:require [clj.gdx.files :as files]
-            [clj.gdx.graphics :as graphics]
+  (:require [gdx.files :as files]
+            [gdx.graphics :as graphics]
             [utils.core :as utils :refer [mapvals]]
             [api.disposable :refer [dispose]]))
 

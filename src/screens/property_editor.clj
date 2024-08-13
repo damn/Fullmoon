@@ -2,8 +2,8 @@
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
             [malli.core :as m]
-            [clj.gdx.input :as input]
-            [clj.gdx.input.keys :as input.keys]
+            [gdx.input :as input]
+            [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             ; api
             [app.state :as app :refer [change-screen!]]

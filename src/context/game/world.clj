@@ -1,5 +1,5 @@
 (ns context.game.world
-  (:require [clj.gdx.graphics.camera :as camera]
+  (:require [gdx.graphics.camera :as camera]
             [math.raycaster :as raycaster]
             [math.vector :as v]
             [utils.core :refer [tile->middle]]

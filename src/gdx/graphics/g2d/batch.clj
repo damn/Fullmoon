@@ -1,5 +1,5 @@
-(ns clj.gdx.graphics.g2d.batch
-  (:require [clj.gdx.graphics.color :as color])
+(ns gdx.graphics.g2d.batch
+  (:require [gdx.graphics.color :as color])
   (:import com.badlogic.gdx.graphics.g2d.Batch))
 
 (defn begin [batch]

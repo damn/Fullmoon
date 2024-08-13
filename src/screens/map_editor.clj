@@ -1,7 +1,7 @@
 (ns screens.map-editor
-  (:require [clj.gdx.input :as input]
-            [clj.gdx.input.keys :as input.keys]
-            [clj.gdx.graphics.color :as color]
+  (:require [gdx.input :as input]
+            [gdx.input.keys :as input.keys]
+            [gdx.graphics.color :as color]
             [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]

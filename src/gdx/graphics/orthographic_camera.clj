@@ -1,4 +1,4 @@
-(ns clj.gdx.graphics.orthographic-camera
+(ns gdx.graphics.orthographic-camera
   (:import com.badlogic.gdx.graphics.OrthographicCamera))
 
 (defn zoom [^OrthographicCamera camera]

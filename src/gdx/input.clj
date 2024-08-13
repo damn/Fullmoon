@@ -1,4 +1,4 @@
-(ns clj.gdx.input
+(ns gdx.input
   (:import com.badlogic.gdx.Gdx))
 
 ; TODO pass keywords and/or buttons to pressed?-fns

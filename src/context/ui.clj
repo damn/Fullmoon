@@ -1,5 +1,5 @@
 (ns context.ui
-  (:require [clj.gdx.input :as input]
+  (:require [gdx.input :as input]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             api.disposable

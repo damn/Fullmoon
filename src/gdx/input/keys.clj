@@ -1,4 +1,4 @@
-(ns clj.gdx.input.keys
+(ns gdx.input.keys
   (:require [utils.reflect :refer [bind-roots]])
   (:refer-clojure :exclude [num]))
 
@@ -186,4 +186,4 @@
          y
          z)
 
-(bind-roots "com.badlogic.gdx.Input$Keys" 'int "clj.gdx.input.keys")
+(bind-roots "com.badlogic.gdx.Input$Keys" 'int "gdx.input.keys")

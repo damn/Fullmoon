@@ -1,5 +1,5 @@
 (ns api.graphics.camera
-  (:require [clj.gdx.graphics.camera :as camera])
+  (:require [gdx.graphics.camera :as camera])
   (:import com.badlogic.gdx.math.Vector3))
 
 (defn frustum [camera]

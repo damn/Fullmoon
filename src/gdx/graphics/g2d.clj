@@ -1,4 +1,4 @@
-(ns clj.gdx.graphics.g2d
+(ns gdx.graphics.g2d
   (:import (com.badlogic.gdx.graphics.g2d TextureRegion
                                           SpriteBatch)))
 

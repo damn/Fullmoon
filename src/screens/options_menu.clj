@@ -1,10 +1,10 @@
 (ns screens.options-menu
-  (:require [clj.gdx.input :as input]
+  (:require [gdx.input :as input]
             [core.component :refer [defcomponent]]
             [app.state :refer [change-screen!]]
             [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box ->table]]
-            [clj.gdx.input.keys :as input.keys]
+            [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.game
             context.game.transaction-handler

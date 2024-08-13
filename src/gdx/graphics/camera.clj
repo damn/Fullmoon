@@ -1,4 +1,4 @@
-(ns clj.gdx.graphics.camera
+(ns gdx.graphics.camera
   (:import com.badlogic.gdx.graphics.Camera))
 
 (defn set-position! [^Camera camera [x y]]

@@ -1,4 +1,4 @@
-(ns clj.gdx
+(ns gdx
   (:import com.badlogic.gdx.ApplicationListener))
 
 (defn ->application-listener [& {:keys [create

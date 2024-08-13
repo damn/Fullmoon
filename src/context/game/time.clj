@@ -1,5 +1,5 @@
 (ns context.game.time
-  (:require [clj.gdx.graphics :as graphics]
+  (:require [gdx.graphics :as graphics]
             [api.context :as ctx]))
 
 (defn ->build []

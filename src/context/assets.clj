@@ -1,8 +1,8 @@
 (ns context.assets
   (:require [clojure.string :as str]
-            [clj.gdx.assets :as assets]
-            [clj.gdx.files :as files]
-            [clj.gdx.files.file-handle :as file-handle]
+            [gdx.assets :as assets]
+            [gdx.files :as files]
+            [gdx.files.file-handle :as file-handle]
             [core.component :refer [defcomponent] :as component]
             api.context))
 

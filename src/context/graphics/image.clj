@@ -1,7 +1,7 @@
 (ns context.graphics.image
-  (:require [clj.gdx.graphics.g2d :as g2d]
-            [clj.gdx.graphics.g2d.batch :as batch]
-            [clj.gdx.graphics.g2d.texture-region :as texture-region]
+  (:require [gdx.graphics.g2d :as g2d]
+            [gdx.graphics.g2d.batch :as batch]
+            [gdx.graphics.g2d.texture-region :as texture-region]
             [api.context :as ctx]
             [api.graphics :as g]))
 

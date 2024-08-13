@@ -1,9 +1,9 @@
 (ns entity-state.player-item-on-cursor
-  (:require [clj.gdx.input :as input]
+  (:require [gdx.input :as input]
             [math.vector :as v]
             [api.context :as ctx :refer [mouse-on-stage-actor?]]
             [api.graphics :as g]
-            [clj.gdx.input.buttons :as buttons]
+            [gdx.input.buttons :as buttons]
             [api.entity :as entity]
             [api.entity-state :as state]
             [entity.inventory :as inventory]))
