@@ -1,30 +1,34 @@
 (ns context.graphics.views
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
+            [gdx.graphics.camera :as camera]
             [gdx.graphics.g2d.batch :as batch]
             [gdx.input :as input]
+            [gdx.utils.viewport :refer [->fit-viewport]]
+            [gdx.utils.viewport.viewport :as viewport]
             api.context
             [api.graphics :as g])
-  (:import [com.badlogic.gdx.utils.viewport Viewport FitViewport]
-           [com.badlogic.gdx.math MathUtils Vector2]))
+  (:import [com.badlogic.gdx.math MathUtils Vector2]))
 
 (def ^:private gui-unit-scale 1)
 
 (defn- ->gui-view []
   {:unit-scale gui-unit-scale
-   :viewport (FitViewport. (graphics/width)
-                           (graphics/height)
-                           (graphics/->orthographic-camera))})
+   :viewport (->fit-viewport (graphics/width)
+                             (graphics/height)
+                             (graphics/->orthographic-camera))})
 
 (defn- ->world-view [{:keys [tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
-     :viewport (let [width  (* (graphics/width)  unit-scale)
-                     height (* (graphics/height) unit-scale)
+     :viewport (let [world-width  (* (graphics/width)  unit-scale)
+                     world-height (* (graphics/height) unit-scale)
                      camera (graphics/->orthographic-camera)
                      y-down? false]
-                 (.setToOrtho camera y-down? width height)
-                 (FitViewport. width height camera))}))
+                 (.setToOrtho camera y-down? world-width world-height)
+                 (->fit-viewport world-width
+                                 world-height
+                                 camera))}))
 
 (defn ->build [world-view]
   {:unit-scale gui-unit-scale ; only here because actors want to use drawing without using render-gui-view -> @ context.ui I could pass the gui-unit-scale .....
@@ -39,17 +43,17 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (g/world-unit-scale g))))
 
-(defn- gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
-(defn- world-viewport ^Viewport [g] (-> g :world-view :viewport))
+(defn- gui-viewport   [g] (-> g :gui-view   :viewport))
+(defn- world-viewport [g] (-> g :world-view :viewport))
 
 (defn update-viewports [{g :context/graphics} w h]
-  (.update ^Viewport (gui-viewport g) w h true)
+  (viewport/update (gui-viewport g) w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
-  (.update ^Viewport (world-viewport g) w h false))
+  (viewport/update (world-viewport g) w h false))
 
 (defn- viewport-fix-required? [{g :context/graphics}]
-  (or (not= (.getScreenWidth  (gui-viewport g)) (graphics/width))
-      (not= (.getScreenHeight (gui-viewport g)) (graphics/height))))
+  (or (not= (viewport/screen-width  (gui-viewport g)) (graphics/width))
+      (not= (viewport/screen-height (gui-viewport g)) (graphics/height))))
 
 ; on mac osx, when resizing window, make bug report /  fix it in libgdx
 (defn fix-viewport-update
@@ -61,9 +65,9 @@
 (defn- render-view [{{:keys [batch shape-drawer] :as g} :context/graphics}
                     view-key
                     draw-fn]
-  (let [{:keys [^Viewport viewport unit-scale]} (view-key g)]
+  (let [{:keys [viewport unit-scale]} (view-key g)]
     (batch/set-color batch color/white) ; fix scene2d.ui.tooltip flickering
-    (batch/set-projection-matrix batch (.combined (.getCamera viewport)))
+    (batch/set-projection-matrix batch (camera/combined (viewport/camera viewport)))
     (batch/begin batch)
     (g/with-shape-line-width g
                              unit-scale
@@ -75,14 +79,14 @@
 
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
-(defn- unproject-mouse-posi [^Viewport viewport]
+(defn- unproject-mouse-posi [viewport]
   (let [mouse-x (clamp (input/x)
-                       (.getLeftGutterWidth viewport)
-                       (.getRightGutterX viewport))
+                       (viewport/left-gutter-width viewport)
+                       (viewport/right-gutter-x viewport))
         mouse-y (clamp (input/y)
-                       (.getTopGutterHeight viewport)
-                       (.getTopGutterY viewport))
-        coords (.unproject viewport (Vector2. mouse-x mouse-y))]
+                       (viewport/top-gutter-height viewport)
+                       (viewport/top-gutter-y viewport))
+        coords (viewport/unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
 (defn- gui-mouse-position [g]
@@ -102,8 +106,8 @@
   (render-world-view [ctx render-fn] (render-view ctx :world-view render-fn))
   (gui-mouse-position    [ctx] (gui-mouse-position              (gr ctx)))
   (world-mouse-position  [ctx] (world-mouse-position            (gr ctx)))
-  (gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
-  (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
-  (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
-  (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx)))))
+  (gui-viewport-width    [ctx] (viewport/world-width  (gui-viewport   (gr ctx))))
+  (gui-viewport-height   [ctx] (viewport/world-height (gui-viewport   (gr ctx))))
+  (world-camera          [ctx] (viewport/camera       (world-viewport (gr ctx))))
+  (world-viewport-width  [ctx] (viewport/world-width  (world-viewport (gr ctx))))
+  (world-viewport-height [ctx] (viewport/world-height (world-viewport (gr ctx)))))

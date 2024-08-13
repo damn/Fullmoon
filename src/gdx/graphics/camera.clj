@@ -20,3 +20,6 @@
 
 (defn viewport-width  [^Camera camera] (.viewportWidth  camera))
 (defn viewport-height [^Camera camera] (.viewportHeight camera))
+
+(defn combined [^Camera camera]
+  (.combined camera))
