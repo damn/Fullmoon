@@ -23,11 +23,11 @@
           :else
           (recur remaining result))))
 
-(defn- load-assets! [manager files klass log-load-assets?]
+(defn- load-assets! [manager files ^Class class log-load-assets?]
   (doseq [file files]
     (when log-load-assets?
-      (println "load-assets" (str "[" (.getSimpleName klass) "] - [" file "]")))
-    (manager/load manager file klass)))
+      (println "load-assets" (str "[" (.getSimpleName class) "] - [" file "]")))
+    (manager/load manager file class)))
 
 (defn- load-all-assets! [& {:keys [log-load-assets? sound-files texture-files]}]
   (let [manager (assets/->manager)]

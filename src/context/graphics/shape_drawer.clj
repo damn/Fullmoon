@@ -9,7 +9,7 @@
 
 (defn ->build [batch]
   (let [texture (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                               (.setColor color/white)
+                               (.setColor ^Color color/white)
                                (.drawPixel 0 0))
                       texture (Texture. pixmap)]
                   (.dispose pixmap)
