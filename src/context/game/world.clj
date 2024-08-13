@@ -1,11 +1,11 @@
 (ns context.game.world
   (:require [gdx.graphics.camera :as camera]
+            [gdx.utils.disposable :refer [dispose]]
             [math.raycaster :as raycaster]
             [math.vector :as v]
             [utils.core :refer [tile->middle]]
             [data.grid2d :as grid2d]
             [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
-            [api.disposable :refer [dispose]]
             [api.entity :as entity]
             [api.maps.tiled :as tiled]
             [api.tx :refer [transact!]]

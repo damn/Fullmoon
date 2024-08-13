@@ -30,4 +30,3 @@
 (defmethod overlaps? [Circle Rectangle]
   [^Circle circle ^Rectangle rect]
   (Intersector/overlaps circle rect))
-

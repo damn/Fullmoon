@@ -1,9 +1,8 @@
 (ns context.graphics
   (:require [gdx.graphics.g2d :as g2d]
+            [gdx.utils.disposable :refer [dispose]]
             [core.component :refer [defcomponent] :as component]
-            api.context
-            [api.disposable :refer [dispose]]
-            [api.graphics :as g]
+            api.graphics
             (context.graphics cursors
                               image
                               shape-drawer
@@ -16,8 +15,8 @@
 ; but as batch, shape-drawer & gui-view is required for everything to work we can hide them as well.
 (defcomponent :context/graphics {}
   (component/create [[_ {:keys [world-view default-font cursors]}] _ctx]
-    (let [batch (g2d/->sprite-batch)]
-      (g/map->Graphics
+    (api.graphics/map->Graphics
+     (let [batch (g2d/->sprite-batch)]
        (merge {:batch batch}
               (context.graphics.shape-drawer/->build batch)
               (context.graphics.text/->build default-font)

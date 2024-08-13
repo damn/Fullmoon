@@ -3,7 +3,6 @@
             [gdx.input :as input]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
-            api.disposable
             [api.screen :as screen]
             [api.scene2d.actor :as actor]
             [api.scene2d.group :as group]
@@ -57,11 +56,8 @@
   (component/destroy [_ _ctx]
     (VisUI/dispose)))
 
+; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defrecord StageScreen [^Stage stage sub-screen]
-  api.disposable/Disposable ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
-  (dispose [_]
-    (.dispose stage))
-
   api.screen/Screen
   (show [_ context]
     (input/set-processor! stage)

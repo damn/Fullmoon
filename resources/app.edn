@@ -61,7 +61,7 @@
                                  :file "resources/properties.edn"}]
            [:context/screens [:screens/main-menu
                               :screens/game
-                              :screens/map-editor
+                              :screens/map-editor ; TODO tiled-map not disposed as cannot implement java interface at record?
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]

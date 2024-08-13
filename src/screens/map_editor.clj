@@ -4,12 +4,12 @@
             [gdx.graphics.color :as color]
             [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
+            [gdx.utils.disposable :refer [dispose]]
             [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]
             [api.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [api.graphics :as g]
-            [api.disposable :refer [dispose]]
             [api.screen :as screen]
             api.graphics.camera
             [api.maps.tiled :as tiled]
@@ -155,8 +155,9 @@ direction keys: move")
     (show-whole-map! (ctx/world-camera context) tiled-map)))
 
 (defrecord SubScreen [current-data]
-  api.disposable/Disposable
-  (dispose [_]
+  ; TODO ?
+  ;com.badlogic.gdx.utils.Disposable
+  #_(dispose [_]
     (dispose (:tiled-map @current-data)))
 
   api.screen/Screen

@@ -1,8 +1,8 @@
 (ns context.graphics.cursors
   (:require [gdx.files :as files]
             [gdx.graphics :as graphics]
-            [utils.core :as utils :refer [mapvals]]
-            [api.disposable :refer [dispose]]))
+            [gdx.utils.disposable :refer [dispose]]
+            [utils.core :as utils :refer [mapvals]]))
 
 (defn- ->cursor [file hotspot]
   (let [pixmap (graphics/->pixmap (files/internal file))

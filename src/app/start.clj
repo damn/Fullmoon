@@ -5,7 +5,6 @@
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
             [api.context :as ctx]
-            api.disposable
             [api.screen :as screen]
             [context.screens :as screens]
             [context.graphics.views :as views]
@@ -45,8 +44,3 @@
   (assert (:context config))
   (lwjgl3/->application (->application (:context config))
                         (lwjgl3/->configuration (:app config))))
-
-(extend-type com.badlogic.gdx.utils.Disposable
-  api.disposable/Disposable
-  (dispose [this]
-    (.dispose this)))

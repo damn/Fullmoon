@@ -2,12 +2,13 @@
   (:refer-clojure :exclude [update])
   (:import com.badlogic.gdx.graphics.Camera))
 
+; TODO include always ?
+#_(defn update [^Camera camera]
+  (.update camera))
+
 (defn set-position! [^Camera camera [x y]]
   (set! (.x (.position camera)) (float x))
   (set! (.y (.position camera)) (float y))
-  #_(.update camera)) ; TODO no update ? check
-
-(defn update [^Camera camera]
   (.update camera))
 
 (comment
