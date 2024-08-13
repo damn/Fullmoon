@@ -1,9 +1,11 @@
 (ns context.game
-  (:require [api.context :as ctx]
+  (:require [clj.gdx.app :as app]
+            [clj.gdx.input :as input]
+            [clj.gdx.input.keys :as input.keys]
+            [api.context :as ctx]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics.camera :as camera]
-            [api.input.keys :as input.keys]
             [api.world.content-grid :as content-grid]
             (context.game [ecs :as ecs]
                           [mouseover-entity :as mouseover-entity]
@@ -30,7 +32,7 @@
                      :tiled-level tiled-level))
 
 (defn- start-replay-mode! [ctx]
-  (.setInputProcessor com.badlogic.gdx.Gdx/input nil)
+  (input/set-processor! nil)
   (init-game-context ctx :mode :game-loop/replay))
 
 (def ^:private pausing? true)
@@ -144,7 +146,8 @@
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
  (require 'app.state)
- (.postRunnable com.badlogic.gdx.Gdx/app (fn []
-                                           (swap! app.state/current-context start-replay-mode!)))
+ (app/post-runnable!
+  (fn []
+    (swap! app.state/current-context start-replay-mode!)))
 
  )

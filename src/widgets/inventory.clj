@@ -4,7 +4,7 @@
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
                                          player-tooltip-text transact-all!]]
             [api.graphics :as g]
-            [api.graphics.color :as color]
+            [clj.gdx.graphics.color :as color]
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [api.entity :as entity]
             [api.entity-state :as state]

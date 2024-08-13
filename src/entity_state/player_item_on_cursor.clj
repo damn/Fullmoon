@@ -2,7 +2,7 @@
   (:require [math.vector :as v]
             [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed?]]
             [api.graphics :as g]
-            [api.input.buttons :as buttons]
+            [clj.gdx.input.buttons :as buttons]
             [api.entity :as entity]
             [api.entity-state :as state]
             [entity.inventory :as inventory]))

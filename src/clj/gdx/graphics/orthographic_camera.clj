@@ -5,8 +5,8 @@
   (.zoom camera))
 
 (defn set-zoom! [^OrthographicCamera camera amount]
-  (set! (.zoom camera) amount)
-  (.update camera))
+  (set! (.zoom camera) amount) ; float ?
+  (.update camera)) ; TODO
 
-(defn reset-zoom! [^OrthographicCamera camera]
-  (set! (.zoom camera) 1.0))
+(defn reset-zoom! [camera]
+  (set-zoom! camera 1))

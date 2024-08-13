@@ -1,18 +1,12 @@
 (ns api.graphics.camera
-  (:import com.badlogic.gdx.graphics.OrthographicCamera
-           com.badlogic.gdx.math.Vector3))
+  (:require [clj.gdx.graphics.camera :as camera])
+  (:import com.badlogic.gdx.math.Vector3))
 
-(defn position [^OrthographicCamera camera] ; just Camera
-  [(.x (.position camera))
-   (.y (.position camera))])
-
-(defn set-position! [^OrthographicCamera camera [x y]]
-  (set! (.x (.position camera)) (float x))
-  (set! (.y (.position camera)) (float y))
-  (.update camera))
-
-(defn frustum [^OrthographicCamera camera]
-  (let [frustum-points (for [^Vector3 point (take 4 (.planePoints (.frustum camera)))
+(defn frustum [camera]
+  ; TODO math.Vector3
+  (let [frustum-points (for [^Vector3 point (take 4
+                                                  (.planePoints ; TODO math.Frustum
+                                                   (camera/frustum camera)))
                              :let [x (.x point)
                                    y (.y point)]]
                          [x y])

@@ -1,6 +1,6 @@
 (ns utils.wasd-movement
   (:require [api.context :refer [key-pressed?]]
-            [api.input.keys :as input.keys]
+            [clj.gdx.input.keys :as input.keys]
             [math.vector :as v]))
 
 (defn- add-vs [vs]

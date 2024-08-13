@@ -7,7 +7,7 @@
             [api.context :as ctx]
             [api.entity :as entity]
             [api.graphics :as g]
-            [api.graphics.color :as color]
+            [clj.gdx.graphics.color :as color]
             [api.tx :refer [transact!]]
             [api.world.cell :as cell]
             [api.world.grid :as world-grid]))

@@ -3,7 +3,7 @@
             [utils.core :refer [->tile]]
             [api.context :as ctx :refer [world-grid]]
             [api.graphics :as g]
-            [api.graphics.color :as color]
+            [clj.gdx.graphics.color :as color]
             [api.graphics.camera :as camera]
             [api.world.grid :refer [circle->cells]]))
 

@@ -3,7 +3,7 @@
             [utils.core :refer [safe-get]]
             [app.state :refer [current-context change-screen!]]
             [api.context :as ctx]
-            [api.input.keys :as input.keys]
+            [clj.gdx.input.keys :as input.keys]
             [api.screen :as screen :refer [Screen]]
             ; just load here not @ resources because we don't build it yet.
             ; because ui widgets can only be created @ game screen is current screen

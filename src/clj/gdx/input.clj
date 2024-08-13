@@ -1,4 +1,5 @@
-(ns clj.gdx.input)
+(ns clj.gdx.input
+  (:import com.badlogic.gdx.Gdx))
 
-(defn set-processor [processor]
+(defn set-processor! [processor]
   (.setInputProcessor Gdx/input processor))

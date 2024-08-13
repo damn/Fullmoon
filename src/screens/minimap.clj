@@ -3,9 +3,9 @@
             [app.state :refer [current-context]]
             [api.context :as ctx :refer [key-just-pressed? explored?]]
             [api.graphics :as g]
-            [api.graphics.color :as color]
+            [clj.gdx.graphics.color :as color]
             [api.graphics.camera :as camera]
-            [api.input.keys :as input.keys]
+            [clj.gdx.input.keys :as input.keys]
             [api.screen :as screen]))
 
 ; 28.4 viewportwidth

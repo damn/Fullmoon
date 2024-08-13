@@ -3,7 +3,7 @@
             [app.state :refer [change-screen!]]
             [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
-            [api.input.keys :as input.keys]
+            [clj.gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.game
             context.game.transaction-handler

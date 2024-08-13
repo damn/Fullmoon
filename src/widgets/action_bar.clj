@@ -38,7 +38,7 @@
 
 (comment
 
- ;[api.input.keys :as input.keys]
+ ;[clj.gdx.input.keys :as input.keys]
  (comment
   (def sword-button (.getChecked button-group))
   (.setChecked sword-button false)

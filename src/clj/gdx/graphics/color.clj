@@ -1,4 +1,4 @@
-(ns api.graphics.color
+(ns clj.gdx.graphics.color
   (:require [utils.reflect :refer [bind-roots]]))
 
 (declare black
@@ -38,4 +38,4 @@
 
 (bind-roots "com.badlogic.gdx.graphics.Color"
             'com.badlogic.gdx.graphics.Color
-            "api.graphics.color")
+            "clj.gdx.graphics.color")

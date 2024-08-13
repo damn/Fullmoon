@@ -6,7 +6,7 @@
             api.context
             [api.entity :as entity]
             [api.graphics :as g]
-            [api.graphics.color :as color]
+            [clj.gdx.graphics.color :as color]
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
