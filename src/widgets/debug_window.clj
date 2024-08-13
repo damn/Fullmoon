@@ -1,7 +1,8 @@
 (ns widgets.debug-window
-  (:require [api.context :as ctx :refer [frames-per-second mouse-on-stage-actor? ->actor ->window ->label]]
+  (:require [clj.gdx.graphics :as graphics]
+            [clj.gdx.graphics.orthographic-camera :as orthographic-camera]
+            [api.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
             [api.graphics :as g]
-            [api.graphics.camera :as camera]
             [api.scene2d.group :refer [add-actor!]]
             [api.scene2d.ui.label :refer [set-text!]]
             [api.scene2d.ui.widget-group :refer [pack!]]))
@@ -17,8 +18,8 @@
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
      "logic-frame: " (ctx/logic-frame ctx) "\n"
-     "FPS: " (frames-per-second ctx)  "\n"
-     "Zoom: " (camera/zoom (ctx/world-camera ctx)) "\n"
+     "FPS: " (graphics/frames-per-second ctx)  "\n"
+     "Zoom: " (orthographic-camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"

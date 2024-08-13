@@ -1,7 +1,9 @@
 (ns widgets.player-message
-  (:require [api.context :as ctx :refer [->actor]]
+  (:require [clj.gdx.graphics :as graphics]
+            [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
-            [api.tx :refer [transact!]]))
+            [api.tx :refer [transact!]]
+            app.state))
 
 (defn- player-message [ctx]
   (:context.game/player-message ctx))
@@ -21,7 +23,7 @@
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (player-message ctx)]
-    (swap! app.state/current-context update :context.game/player-message update :counter + (ctx/delta-time-raw ctx))
+    (swap! app.state/current-context update :context.game/player-message update :counter + (graphics/delta-time ctx))
     (when (>= counter duration-seconds)
       (swap! app.state/current-context assoc :context.game/player-message nil))))
 
