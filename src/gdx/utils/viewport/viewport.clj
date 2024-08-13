@@ -1,6 +1,7 @@
 (ns gdx.utils.viewport.viewport
   (:refer-clojure :exclude [update])
-  (:import com.badlogic.gdx.utils.viewport.Viewport))
+  (:import com.badlogic.gdx.math.Vector2
+           com.badlogic.gdx.utils.viewport.Viewport))
 
 (defn screen-width      [^Viewport viewport] (.getScreenWidth     viewport))
 (defn screen-height     [^Viewport viewport] (.getScreenHeight    viewport))
@@ -15,5 +16,5 @@
 (defn update [^Viewport viewport screen-width screen-height center-camera?]
   (.update viewport screen-width screen-height center-camera?))
 
-(defn unproject [^Viewport viewport vector2]
+(defn unproject ^Vector2 [^Viewport viewport ^Vector2 vector2]
   (.unproject viewport vector2))
