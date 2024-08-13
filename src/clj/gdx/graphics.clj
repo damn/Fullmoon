@@ -1,6 +1,7 @@
 (ns clj.gdx.graphics
   (:import com.badlogic.gdx.Gdx
-           (com.badlogic.gdx.graphics OrthographicCamera
+           (com.badlogic.gdx.graphics Color
+                                      OrthographicCamera
                                       Pixmap)))
 
 (defn delta-time
@@ -28,9 +29,9 @@
 (defn ->pixmap [file]
   (Pixmap. file))
 
-(defn- ->color
+(defn ->color
   ([r g b]
-   (->Color r g b 1))
+   (->color r g b 1))
   ([r g b a]
    (Color. (float r) (float g) (float b) (float a))))
 

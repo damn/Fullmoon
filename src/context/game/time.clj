@@ -1,5 +1,6 @@
 (ns context.game.time
-  (:require [api.context :as ctx]))
+  (:require [clj.gdx.graphics :as graphics]
+            [api.context :as ctx]))
 
 (defn ->build []
   {:context.game/max-delta-time 0.04
@@ -33,7 +34,7 @@
       (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
 
 (defn update-time [ctx]
-  (let [delta (min (ctx/delta-time-raw ctx)
+  (let [delta (min (graphics/delta-time ctx)
                    (ctx/max-delta-time ctx))]
     (-> ctx
         (assoc :context.game/delta-time delta)

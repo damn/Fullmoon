@@ -1,13 +1,14 @@
 (ns screens.minimap
   (:require [clj.gdx.graphics.color :as color]
             [clj.gdx.graphics.orthographic-camera :as orthographic-camera]
+            [clj.gdx.graphics.camera :as camera]
             [clj.gdx.input :as input]
             [clj.gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
             [app.state :refer [current-context]]
             [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
-            [api.graphics.camera :as camera]
+            api.graphics.camera
             [api.screen :as screen]))
 
 ; 28.4 viewportwidth
@@ -28,11 +29,11 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (camera/calculate-zoom (ctx/world-camera ctx)
-                           :left left
-                           :top top
-                           :right right
-                           :bottom bottom)))
+    (api.graphics.camera/calculate-zoom (ctx/world-camera ctx)
+                                        :left left
+                                        :top top
+                                        :right right
+                                        :bottom bottom)))
 
 ; TODO FIXME deref'fing current-context at each tile corner
 ; massive performance issue - probably

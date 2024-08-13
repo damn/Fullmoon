@@ -14,14 +14,14 @@
   {:unit-scale gui-unit-scale
    :viewport (FitViewport. (graphics/width)
                            (graphics/height)
-                           (->orthographic-camera))})
+                           (graphics/->orthographic-camera))})
 
 (defn- ->world-view [{:keys [tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
      :viewport (let [width  (* (graphics/width)  unit-scale)
                      height (* (graphics/height) unit-scale)
-                     camera (->orthographic-camera)
+                     camera (graphics/->orthographic-camera)
                      y-down? false]
                  (.setToOrtho camera y-down? width height)
                  (FitViewport. width height camera))}))
@@ -56,7 +56,7 @@
   "Sometimes the viewport update is not triggered."
   [context]
   (when (viewport-fix-required? context)
-    (update-viewports context (screen-width) (screen-height))))
+    (update-viewports context (graphics/width) (graphics/height))))
 
 (defn- render-view [{{:keys [batch shape-drawer] :as g} :context/graphics}
                     view-key
