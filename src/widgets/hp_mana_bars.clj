@@ -29,5 +29,5 @@
                                 x (- x (/ rahmenw 2))
                                 y-hp 5
                                 y-mana (+ y-hp rahmenh)]
-                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/hp   player-entity*) "HP")
-                            (render-hpmana-bar g ctx x y-mana manacontent (entity/mana player-entity*) "MP")))})))
+                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
+                            (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))

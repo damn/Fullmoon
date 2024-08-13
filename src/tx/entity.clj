@@ -20,3 +20,6 @@
   (swap! entity update-in (drop-last ks) dissoc (last ks))
   ctx)
 
+(defmethod transact! :tx.entity/update-in [[_ entity ks f] ctx]
+  (swap! entity update-in ks f)
+  ctx)

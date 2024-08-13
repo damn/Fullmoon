@@ -1,6 +1,5 @@
 (ns entity-state.active-skill
-  (:require [data.val-max :refer [apply-val]]
-            [api.context :refer [stopped? finished-ratio ->counter]]
+  (:require [api.context :refer [stopped? finished-ratio ->counter]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]
@@ -13,7 +12,7 @@
    cooling-down?
    :cooldown
 
-   (and cost (> cost ((entity/mana entity*) 0)))
+   (and cost (> cost ((entity/stat entity* :stats/mana) 0)))
    :not-enough-mana
 
    (not (effect-ctx/valid-params? effect-ctx effect))
@@ -41,7 +40,7 @@
 
 (defn- pay-skill-mana-cost [{:keys [entity/id] :as entity*} {:keys [skill/cost]}]
   (when cost
-    [:tx.entity/assoc-in id [:entity/stats :stats/mana] (apply-val (entity/mana entity*) #(- % cost))]))
+    [:tx.entity/assoc-in id [:entity/stats :stats/mana 0] (- ((entity/stat entity* :stats/mana) 0) cost)]))
 
 (defrecord ActiveSkill [skill effect-ctx counter]
   state/PlayerState
@@ -77,8 +76,7 @@
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
-     (or (get (:entity/stats entity*)
-              (:skill/action-time-modifier-key skill))
+     (or (entity/stat entity* (:skill/action-time-modifier-key skill))
          1)))
 
 (defn ->CreateWithCounter [context entity* [skill effect-ctx]]

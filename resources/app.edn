@@ -67,8 +67,6 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-           [:context/modifier]
            [:tx/all]
            [:effect/all]
-           [:entity/all]
-           [:modifier/all]]}
+           [:entity/all]]}

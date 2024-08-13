@@ -16,7 +16,7 @@
            com.badlogic.gdx.scenes.scene2d.utils.ClickListener
            com.badlogic.gdx.math.Vector2))
 
-(def ^:private cell-size 48)
+(def ^:private cell-size 72)
 (def ^:private droppable-color    [0   0.6 0 0.8])
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
@@ -90,7 +90,7 @@
 ; TODO move together with empty-inventory definition ?
 (defn- redo-table! [ctx ^Table table slot->background]
   ; cannot do add-rows, need bag :position idx
-  (let [cell (fn [& args] (apply ->cell ctx slot->background args))]
+  (let [cell (fn [& args] (apply ->cell ctx slot->background args))] ; TODO cell just return type hint ^Actor
     (.clear table) ; no need as we create new table ... TODO
     (doto table .add .add
       (.add ^Actor (cell :inventory.slot/helm))

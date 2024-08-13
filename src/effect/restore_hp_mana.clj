@@ -29,8 +29,8 @@
 ; value = here no value
 
 #_(defcomponent :effect/set-to-max {:widget :label
-                                  :schema [:= true]
-                                  :default-value true}
+                                    :schema [:= true]
+                                    :default-value true}
   (effect/text [[_ stat] _effect-ctx]
     (str "Sets " (name stat) " to max."))
 

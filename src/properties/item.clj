@@ -18,11 +18,38 @@
 
 (def ^:private modifier-color "[VIOLET]")
 
+(require '[clojure.string :as str])
+(require '[clojure.math :as math])
+
+(defn- +? [n]
+  (case (math/signum n)
+    (0.0 1.0) "+"
+    -1.0 ""))
+
+(defn- ->percent [v]
+  (str (int (* 100 v)) "%"))
+
+(defn- modifier-text [modifiers]
+  (str/join "\n"
+            (for [[stat operation value] modifiers]
+              (str (+? value)
+                   (case operation
+                     :inc (str value " ")
+                     :mult (str (->percent value) " ")
+                     [:val :inc] (str value " min ")
+                     [:max :inc] (str value " max ")
+                     [:val :mult] (str (->percent value) " min ")
+                     [:max :mult] (str (->percent value) " max "))
+                   (name stat)))))
+
 (defcomponent :properties/item {}
   (properties/create [_]
     ; modifier add/remove
     ; item 'upgrade' colorless to sword fire
-    (defcomponent :item/modifier (data/components-attribute :modifier))
+    (defcomponent :item/modifier
+      {:widget :label
+       :schema :some}
+      #_(data/components-attribute :modifier))
     (defcomponent :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
     {:id-namespace "items"
      :schema (data/map-attribute-schema
@@ -44,4 +71,5 @@
                           item/modifier]
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
-                (when (seq modifier) (str modifier-color (ctx/modifier-text ctx modifier) "[]"))])}))
+                (when (seq modifier)
+                  (str modifier-color (modifier-text modifier) "[]"))])}))

@@ -48,6 +48,4 @@
   (can-pickup-item? [_ item]))
 
 (defprotocol Stats
-  (hp [_])
-  (mana [_])
-  (movement-speed [_]))
+  (stat [_ stat] "Calculating value of the stat w. modifiers"))
