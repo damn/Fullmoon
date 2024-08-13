@@ -1,13 +1,14 @@
 (ns screens.map-editor
-  (:require [clojure.string :as str]
+  (:require [clj.gdx.input :as input]
+            [clj.gdx.input.keys :as input.keys]
+            [clj.gdx.graphics.color :as color]
+            [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]
-            [api.context :as ctx :refer [key-pressed? key-just-pressed? ->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
+            [api.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [api.graphics :as g]
             [api.disposable :refer [dispose]]
-            [clj.gdx.input.keys :as input.keys]
             [api.screen :as screen]
-            [clj.gdx.graphics.color :as color]
             [api.graphics.camera :as camera]
             [api.maps.tiled :as tiled]
             [api.scene2d.actor :refer [set-position!]]
@@ -93,19 +94,19 @@ direction keys: move")
 ; TODO textfield takes control !
 ; TODO PLUS symbol shift & = symbol on keyboard not registered
 (defn- camera-controls [context camera]
-  (when (key-pressed? context input.keys/shift-left)
+  (when (input/key-pressed? input.keys/shift-left)
     (adjust-zoom camera    zoom-speed))
-  (when (key-pressed? context input.keys/minus)
+  (when (input/key-pressed? input.keys/minus)
     (adjust-zoom camera (- zoom-speed)))
   (let [apply-position (fn [idx f]
                          (camera/set-position! camera
                                                (update (camera/position camera)
                                                        idx
                                                        #(f % camera-movement-speed))))]
-    (if (key-pressed? context input.keys/left)  (apply-position 0 -))
-    (if (key-pressed? context input.keys/right) (apply-position 0 +))
-    (if (key-pressed? context input.keys/up)    (apply-position 1 +))
-    (if (key-pressed? context input.keys/down)  (apply-position 1 -))))
+    (if (input/key-pressed? input.keys/left)  (apply-position 0 -))
+    (if (input/key-pressed? input.keys/right) (apply-position 0 +))
+    (if (input/key-pressed? input.keys/up)    (apply-position 1 +))
+    (if (input/key-pressed? input.keys/down)  (apply-position 1 -))))
 
 #_(def ^:private show-area-level-colors true)
 ; TODO unused
@@ -169,10 +170,10 @@ direction keys: move")
     (ctx/render-world-view context #(render-on-map % context))
     (if (key-just-pressed? context input.keys/l)
       (swap! current-data update :show-grid-lines not))
-    (if (key-just-pressed? context input.keys/m)
+    (if (input/key-just-pressed? input.keys/m)
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (ctx/world-camera context))
-    (if (key-just-pressed? context input.keys/escape)
+    (if (input/key-just-pressed? input.keys/escape)
       (ctx/change-screen context :screens/main-menu)
       context)))
 

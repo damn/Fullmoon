@@ -6,17 +6,18 @@
             [context.screens :as screens]
             [context.graphics.views :as views]
             [app.state :refer [current-context]])
-  (:import (com.badlogic.gdx Gdx ApplicationAdapter)
-           com.badlogic.gdx.graphics.Color
+  (:import com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
-           com.badlogic.gdx.utils.ScreenUtils))
+           ;com.badlogic.gdx.utils.ScreenUtils
+
+           ))
 
 (defn- ->context [context]
   (component/load! context)
   (component/build (ctx/->Context) component/create context :log? false))
 
 (defn- ->application [context]
-  (gdx/->application {:create (fn [])
+  #_(gdx/->application {:create (fn [])
                       :dispose (fn [])
                       :render (fn [])
                       :resize (fn [w h])
@@ -34,7 +35,7 @@
 
     (render []
       (views/fix-viewport-update @current-context)
-      (screen-utils/clear :color/black)
+      ;(screen-utils/clear :color/black)
       (-> @current-context
           ctx/current-screen
           screen/render!))
@@ -68,11 +69,6 @@
   (assert (:context config))
   (Lwjgl3Application. (->application (:context config))
                       (lwjgl3-configuration (:app config))))
-
-(extend-type api.context.Context
-  api.context/Application
-  (exit-app [_]
-    (.exit Gdx/app)))
 
 (extend-type com.badlogic.gdx.utils.Disposable
   api.disposable/Disposable

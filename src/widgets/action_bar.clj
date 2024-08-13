@@ -1,5 +1,5 @@
 (ns widgets.action-bar
-  (:require [api.context :as ctx :refer [->image-button key-just-pressed? player-tooltip-text]]
+  (:require [api.context :as ctx :refer [->image-button player-tooltip-text]]
             [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [api.scene2d.group :refer [clear-children! add-actor!]]
             [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
@@ -52,7 +52,7 @@
  (defn up-skill-hotkeys []
    #_(doseq [slot slot-keys
              :let [skill-id (slot @slot->skill-id)]
-             :when (and (key-just-pressed? context (number-str->input-key (name slot)))
+             :when (and (input//key-just-pressed? (number-str->input-key (name slot)))
                         skill-id)]
        (.setChecked ^Button (.findActor horizontal-group (str skill-id)) true)))
 

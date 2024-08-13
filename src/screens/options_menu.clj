@@ -1,8 +1,9 @@
 (ns screens.options-menu
-  (:require [core.component :refer [defcomponent]]
+  (:require [clj.gdx.input :as input]
+            [core.component :refer [defcomponent]]
             [app.state :refer [change-screen!]]
             [api.screen :as screen]
-            [api.context :as ctx :refer [->text-button ->check-box key-just-pressed? ->table]]
+            [api.context :as ctx :refer [->text-button ->check-box ->table]]
             [clj.gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.game
@@ -83,7 +84,7 @@
   (show [_ _ctx])
   (hide [_ _ctx])
   (render [_ ctx]
-    (if (key-just-pressed? ctx input.keys/escape)
+    (if (input/key-just-pressed? input.keys/escape)
       (ctx/change-screen ctx :screens/game)
       ctx)))
 

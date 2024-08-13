@@ -1,7 +1,8 @@
 (ns screens.minimap
-  (:require [core.component :refer [defcomponent]]
+  (:require [clj.gdx.input :as input]
+            [core.component :refer [defcomponent]]
             [app.state :refer [current-context]]
-            [api.context :as ctx :refer [key-just-pressed? explored?]]
+            [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
             [clj.gdx.graphics.color :as color]
             [api.graphics.camera :as camera]
@@ -58,8 +59,8 @@
                                                    (camera/position (ctx/world-camera context))
                                                    0.5
                                                    color/green)))
-    (if (or (key-just-pressed? context input.keys/tab)
-            (key-just-pressed? context input.keys/escape))
+    (if (or (input/key-just-pressed? input.keys/tab)
+            (input/key-just-pressed? input.keys/escape))
       (ctx/change-screen context :screens/game)
       context)))
 

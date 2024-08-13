@@ -1,6 +1,7 @@
 (ns entity-state.player-item-on-cursor
-  (:require [math.vector :as v]
-            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed?]]
+  (:require [clj.gdx.input :as input]
+            [math.vector :as v]
+            [api.context :as ctx :refer [mouse-on-stage-actor?]]
             [api.graphics :as g]
             [clj.gdx.input.buttons :as buttons]
             [api.entity :as entity]
@@ -63,7 +64,7 @@
   (player-enter [_])
   (pause-game? [_] true)
   (manual-tick [_ entity* context]
-    (when (and (button-just-pressed? context buttons/left)
+    (when (and (input/button-just-pressed? buttons/left)
                (world-item? context))
       [[:tx/event (:entity/id entity*) :drop-item]]))
   (clicked-inventory-cell [_ entity* cell]

@@ -1,12 +1,13 @@
 (ns entity-state.player-idle
-  (:require [api.graphics :as g]
+  (:require [clj.gdx.input :as input]
             [clj.gdx.input.buttons :as buttons]
+            [api.graphics :as g]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [api.scene2d.ui.button :refer [button?]]
             [api.scene2d.ui.window :refer [window-title-bar?]]
             [math.vector :as v]
             [utils.wasd-movement :refer [WASD-movement-vector]]
-            [api.context :as ctx :refer [mouse-on-stage-actor? button-just-pressed? get-property inventory-window selected-skill]]
+            [api.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
             [api.entity :as entity]
             [api.entity-state :as state]
             [entity-state.active-skill :refer [skill-usable-state]]))
@@ -136,7 +137,7 @@
       [[:tx/event (:entity/id entity*) :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state context entity*)]
         (cons [:tx.context.cursor/set cursor]
-              (when (button-just-pressed? context buttons/left)
+              (when (input/button-just-pressed? buttons/left)
                 (on-click))))))
 
   (clicked-inventory-cell [_ {:keys [entity/id entity/inventory]} cell]

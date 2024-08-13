@@ -17,9 +17,6 @@
   (player-entity [_])
   (player-entity* [_]))
 
-(defprotocol Application
-  (exit-app [_]))
-
 (defprotocol ApplicationScreens
   (current-screen-key [_])
   (current-screen [_])
@@ -28,11 +25,6 @@
                  Throws AssertionError when the context does not have a new-screen.
                  Calls screen/show on the new screen and
                  returns the context with current-screen set to new-screen."))
-
-(defprotocol Graphics
-  (delta-time-raw [_] "The time span between the current frame and the last frame in seconds.")
-  (frames-per-second [_] "The average number of frames per second")
-  (->color [_ r g b a]))
 
 (defprotocol Images
   (create-image [_ file])
@@ -53,12 +45,6 @@
   (world-camera          [_])
   (world-viewport-width  [_])
   (world-viewport-height [_]))
-
-(defprotocol Input
-  (button-pressed?      [_ button])
-  (button-just-pressed? [_ button])
-  (key-pressed?      [_ k])
-  (key-just-pressed? [_ k]))
 
 (defprotocol Stage
   (->stage-screen [_ {:keys [stage sub-screen]}]

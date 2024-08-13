@@ -1,14 +1,12 @@
 (ns context.graphics.views
-  (:require api.context
+  (:require [clj.gdx.graphics :as graphics]
+            [clj.gdx.graphics.color :as color]
+            [clj.gdx.graphics.g2d.batch :as batch]
+            [clj.gdx.input :as input]
+            api.context
             [api.graphics :as g])
-  (:import com.badlogic.gdx.Gdx
-           [com.badlogic.gdx.graphics Color OrthographicCamera]
-           com.badlogic.gdx.graphics.g2d.Batch
-           [com.badlogic.gdx.utils.viewport Viewport FitViewport]
+  (:import [com.badlogic.gdx.utils.viewport Viewport FitViewport]
            [com.badlogic.gdx.math MathUtils Vector2]))
-
-(defn- screen-width  [] (.getWidth  Gdx/graphics))
-(defn- screen-height [] (.getHeight Gdx/graphics))
 
 (def ^:private gui-unit-scale 1)
 
@@ -16,14 +14,14 @@
   {:unit-scale gui-unit-scale
    :viewport (FitViewport. (graphics/width)
                            (graphics/height)
-                           (OrthographicCamera.))})
+                           (->orthographic-camera))})
 
 (defn- ->world-view [{:keys [tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
-     :viewport (let [width  (* (screen-width)  unit-scale)
-                     height (* (screen-height) unit-scale)
-                     camera (OrthographicCamera.)
+     :viewport (let [width  (* (graphics/width)  unit-scale)
+                     height (* (graphics/height) unit-scale)
+                     camera (->orthographic-camera)
                      y-down? false]
                  (.setToOrtho camera y-down? width height)
                  (FitViewport. width height camera))}))
@@ -50,8 +48,8 @@
   (.update ^Viewport (world-viewport g) w h false))
 
 (defn- viewport-fix-required? [{g :context/graphics}]
-  (or (not= (.getScreenWidth  (gui-viewport g)) (screen-width))
-      (not= (.getScreenHeight (gui-viewport g)) (screen-height))))
+  (or (not= (.getScreenWidth  (gui-viewport g)) (graphics/width))
+      (not= (.getScreenHeight (gui-viewport g)) (graphics/height))))
 
 ; on mac osx, when resizing window, make bug report /  fix it in libgdx
 (defn fix-viewport-update
@@ -60,17 +58,17 @@
   (when (viewport-fix-required? context)
     (update-viewports context (screen-width) (screen-height))))
 
-(defn- render-view [{{:keys [^Batch batch shape-drawer] :as g} :context/graphics}
+(defn- render-view [{{:keys [batch shape-drawer] :as g} :context/graphics}
                     view-key
                     draw-fn]
   (let [{:keys [^Viewport viewport unit-scale]} (view-key g)]
-    (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
+    (.setColor batch color/white) ; fix scene2d.ui.tooltip flickering
     (.setProjectionMatrix batch (.combined (.getCamera viewport)))
-    (.begin batch)
+    (batch/begin batch)
     (g/with-shape-line-width g
                              unit-scale
                              #(draw-fn (assoc g :unit-scale unit-scale)))
-    (.end batch)))
+    (batch/begin batch)))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
@@ -78,10 +76,10 @@
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [^Viewport viewport]
-  (let [mouse-x (clamp (.getX Gdx/input)
+  (let [mouse-x (clamp (input/x)
                        (.getLeftGutterWidth viewport)
                        (.getRightGutterX viewport))
-        mouse-y (clamp (.getY Gdx/input)
+        mouse-y (clamp (input/y)
                        (.getTopGutterHeight viewport)
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]

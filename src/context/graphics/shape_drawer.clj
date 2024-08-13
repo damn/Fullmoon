@@ -1,5 +1,7 @@
 (ns context.graphics.shape-drawer
-  (:require [api.graphics :as g])
+  (:require [clj.gdx.graphics :as graphics]
+            [clj.gdx.graphics.color :as color]
+            [api.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)
            com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -7,7 +9,7 @@
 
 (defn ->build [batch]
   (let [texture (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                               (.setColor Color/WHITE)
+                               (.setColor color/white)
                                (.drawPixel 0 0))
                       texture (Texture. pixmap)]
                   (.dispose pixmap)
@@ -18,16 +20,10 @@
 (defn- degree->radians [degree]
   (* (float degree) MathUtils/degreesToRadians))
 
-(defn- ->Color
-  ([r g b]
-   (->Color r g b 1))
-  ([r g b a]
-   (Color. (float r) (float g) (float b) (float a))))
-
 (defn- ->color ^Color [color]
   (if (= Color (class color))
     color
-    (apply ->Color color)))
+    (apply graphics/->color color)))
 
 (defn- set-color [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (->color color)))

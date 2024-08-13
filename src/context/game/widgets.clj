@@ -1,10 +1,11 @@
 (ns context.game.widgets
-  (:require [utils.core :as utils]
+  (:require [clj.gdx.input :as input]
+            [clj.gdx.input.keys :as input.keys]
+            [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.scene2d.actor :as actor]
             [api.scene2d.group :as group]
-            [clj.gdx.input.keys :as input.keys]
             [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [widgets.player-message :as player-message]
             [widgets.action-bar :as action-bar]
@@ -80,7 +81,7 @@
 
 (defn check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
-          :when (ctx/key-just-pressed? ctx hotkey)]
+          :when (input/key-just-pressed? hotkey)]
     (actor/toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
 
 (defn close-windows? [context]

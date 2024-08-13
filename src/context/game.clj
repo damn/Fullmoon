@@ -37,9 +37,9 @@
 
 (def ^:private pausing? true)
 
-(defn- player-unpaused? [ctx]
-  (or (ctx/key-just-pressed? ctx input.keys/p)
-      (ctx/key-pressed?      ctx input.keys/space)))
+(defn- player-unpaused? []
+  (or (input/key-just-pressed? input.keys/p)
+      (input/key-pressed?      input.keys/space)))
 
 (defn- player-manual-state-tick [ctx]
   (let [entity* (ctx/player-entity* ctx)]
@@ -52,7 +52,7 @@
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
                          (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))
-                         (not (player-unpaused? ctx))))
+                         (not (player-unpaused?))))
         ctx (-> ctx
                 (assoc :context.game/paused? paused?)
                 mouseover-entity/update!) ; this do always so can get debug info even when game not running
@@ -85,19 +85,19 @@
 
 (defn- check-zoom-keys [context]
   (let [camera (ctx/world-camera context)]
-    (when (ctx/key-pressed? context input.keys/minus)  (adjust-zoom camera    zoom-speed))
-    (when (ctx/key-pressed? context input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
+    (when (input/key-pressed? input.keys/minus)  (adjust-zoom camera    zoom-speed))
+    (when (input/key-pressed? input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
 
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [context]
   (check-zoom-keys context)
   (widgets/check-window-hotkeys context)
-  (cond (and (ctx/key-just-pressed? context input.keys/escape)
+  (cond (and (input/key-just-pressed? input.keys/escape)
              (not (widgets/close-windows? context)))
         (ctx/change-screen context :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen/render!
-        #_(ctx/key-just-pressed? context input.keys/tab)
+        #_(input/key-just-pressed? input.keys/tab)
         #_(ctx/change-screen context :screens/minimap)
 
         :else

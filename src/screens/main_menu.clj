@@ -1,9 +1,11 @@
 (ns screens.main-menu
-  (:require [core.component :refer [defcomponent]]
+  (:require [clj.gdx.app :as app]
+            [clj.gdx.input :as input]
+            [clj.gdx.input.keys :as input.keys]
+            [core.component :refer [defcomponent]]
             [utils.core :refer [safe-get]]
             [app.state :refer [current-context change-screen!]]
             [api.context :as ctx]
-            [clj.gdx.input.keys :as input.keys]
             [api.screen :as screen :refer [Screen]]
             ; just load here not @ resources because we don't build it yet.
             ; because ui widgets can only be created @ game screen is current screen
@@ -59,7 +61,7 @@
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx {:actors [(->background-image ctx)
                                       (->buttons ctx)
-                                      (ctx/->actor ctx {:act (fn [ctx]
-                                                               (when (ctx/key-just-pressed? ctx input.keys/escape)
-                                                                 (ctx/exit-app ctx)))})]
+                                      (ctx/->actor ctx {:act (fn [_ctx]
+                                                               (when (input/key-just-pressed? input.keys/escape)
+                                                                 (app/exit)))})]
                              :sub-screen (->SubScreen)})))

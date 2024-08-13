@@ -2,6 +2,12 @@
   (:require [clj.gdx.graphics.color :as color])
   (:import com.badlogic.gdx.graphics.g2d.Batch))
 
+(defn begin [batch]
+  (.begin batch))
+
+(defn end [batch]
+  (.end batch))
+
 ; TODO [x y] is center or left-bottom ?
 ; why rotation origin calculations ?!
 (defn draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
