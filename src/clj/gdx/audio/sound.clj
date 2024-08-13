@@ -1,4 +1,4 @@
-(ns clj.gdx.audio.sound ; TODO sound ....
+(ns clj.gdx.audio.sound
   (:import com.badlogic.gdx.audio.Sound))
 
 (defn play [sound]
