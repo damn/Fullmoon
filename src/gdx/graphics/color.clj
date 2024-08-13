@@ -1,41 +1,37 @@
 (ns gdx.graphics.color
-  (:require [utils.reflect :refer [bind-roots]]))
+  (:import com.badlogic.gdx.graphics.Color))
 
-(declare black
-         blue
-         brown
-         chartreuse
-         clear
-         coral
-         cyan
-         dark-gray
-         firebrick
-         forest
-         gold
-         goldenrod
-         gray
-         green
-         light-gray
-         lime
-         magenta
-         maroon
-         navy
-         olive
-         orange
-         pink
-         purple
-         red
-         royal
-         salmon
-         scarlet
-         sky
-         slate
-         tan
-         teal
-         violet
-         white
-         yellow)
-
-(bind-roots "com.badlogic.gdx.graphics.Color"
-            'com.badlogic.gdx.graphics.Color
-            "gdx.graphics.color")
+(def black Color/BLACK)
+(def blue Color/BLUE)
+(def brown Color/BROWN)
+(def chartreuse Color/CHARTREUSE)
+(def clear Color/CLEAR)
+(def coral Color/CORAL)
+(def cyan Color/CYAN)
+(def dark-gray Color/DARK_GRAY)
+(def firebrick Color/FIREBRICK)
+(def forest Color/FOREST)
+(def gold Color/GOLD)
+(def goldenrod Color/GOLDENROD)
+(def gray Color/GRAY)
+(def green Color/GREEN)
+(def light-gray Color/LIGHT_GRAY)
+(def lime Color/LIME)
+(def magenta Color/MAGENTA)
+(def maroon Color/MAROON)
+(def navy Color/NAVY)
+(def olive Color/OLIVE)
+(def orange Color/ORANGE)
+(def pink Color/PINK)
+(def purple Color/PURPLE)
+(def red Color/RED)
+(def royal Color/ROYAL)
+(def salmon Color/SALMON)
+(def scarlet Color/SCARLET)
+(def sky Color/SKY)
+(def slate Color/SLATE)
+(def tan Color/TAN)
+(def teal Color/TEAL)
+(def violet Color/VIOLET)
+(def white Color/WHITE)
+(def yellow Color/YELLOW)

@@ -1,10 +1,8 @@
 (ns gdx.input.buttons
-  (:require [utils.reflect :refer [bind-roots]]))
+  (:import com.badlogic.gdx.Input$Buttons))
 
-(declare back
-         forward
-         left
-         middle
-         right)
-
-(bind-roots "com.badlogic.gdx.Input$Buttons" 'int "gdx.input.buttons")
+(def back Input$Buttons/BACK)
+(def forward Input$Buttons/FORWARD)
+(def left Input$Buttons/LEFT)
+(def middle Input$Buttons/MIDDLE)
+(def right Input$Buttons/RIGHT)
