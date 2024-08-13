@@ -1,11 +1,12 @@
 (ns context.game
   (:require [gdx.app :as app]
+            [gdx.graphics.camera :as camera]
+            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [api.context :as ctx]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.graphics.camera :as camera]
             [api.world.content-grid :as content-grid]
             (context.game [ecs :as ecs]
                           [mouseover-entity :as mouseover-entity]
@@ -79,7 +80,7 @@
           (range replay-speed)))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
-  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
+  (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
 
 (def ^:private zoom-speed 0.05)
 

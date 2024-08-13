@@ -18,7 +18,7 @@
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
      "logic-frame: " (ctx/logic-frame ctx) "\n"
-     "FPS: " (graphics/frames-per-second ctx)  "\n"
+     "FPS: " (graphics/frames-per-second)  "\n"
      "Zoom: " (orthographic-camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"

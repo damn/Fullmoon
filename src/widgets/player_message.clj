@@ -23,7 +23,7 @@
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (player-message ctx)]
-    (swap! app.state/current-context update :context.game/player-message update :counter + (graphics/delta-time ctx))
+    (swap! app.state/current-context update :context.game/player-message update :counter + (graphics/delta-time))
     (when (>= counter duration-seconds)
       (swap! app.state/current-context assoc :context.game/player-message nil))))
 

@@ -68,7 +68,7 @@
     (g/with-shape-line-width g
                              unit-scale
                              #(draw-fn (assoc g :unit-scale unit-scale)))
-    (batch/begin batch)))
+    (batch/end batch)))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))

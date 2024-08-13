@@ -1,6 +1,8 @@
 (ns context.assets
   (:require [clojure.string :as str]
             [gdx.assets :as assets]
+            [gdx.assets.manager :as manager]
+            [gdx.audio.sound :as sound]
             [gdx.files :as files]
             [gdx.files.file-handle :as file-handle]
             [core.component :refer [defcomponent] :as component]
@@ -33,7 +35,7 @@
     ; separate sound/texture loading on demand....
     (load-assets! manager sound-files   com.badlogic.gdx.audio.Sound      log-load-assets?)
     (load-assets! manager texture-files com.badlogic.gdx.graphics.Texture log-load-assets?)
-    (.AssetManager/finish-loading #_.finishLoading manager)
+    (manager/finish-loading manager)
     manager))
 
 (defcomponent :context/assets {}

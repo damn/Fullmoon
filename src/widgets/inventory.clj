@@ -1,10 +1,11 @@
 (ns widgets.inventory
-  (:require [data.grid2d :as grid]
+  (:require [gdx.graphics :as graphics]
+            [gdx.graphics.color :as color]
+            [data.grid2d :as grid]
             [app.state :refer [current-context]]
-            [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->color ->stack ->image-widget
+            [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
                                          player-tooltip-text transact-all!]]
             [api.graphics :as g]
-            [gdx.graphics.color :as color]
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [api.entity :as entity]
             [api.entity-state :as state]
@@ -84,7 +85,7 @@
                                                           (:texture-region (get-sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
-                   (.tint ^TextureRegionDrawable drawable (->color ctx 1 1 1 0.4))])))
+                   (.tint ^TextureRegionDrawable drawable (graphics/->color 1 1 1 0.4))])))
          (into {}))))
 
 ; TODO move together with empty-inventory definition ?

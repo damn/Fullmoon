@@ -1,10 +1,14 @@
 (ns gdx.graphics.camera
+  (:refer-clojure :exclude [update])
   (:import com.badlogic.gdx.graphics.Camera))
 
 (defn set-position! [^Camera camera [x y]]
   (set! (.x (.position camera)) (float x))
   (set! (.y (.position camera)) (float y))
-  (.update camera)) ; TODO no update ?
+  #_(.update camera)) ; TODO no update ? check
+
+(defn update [^Camera camera]
+  (.update camera))
 
 (comment
 ; TODO namespaced keyword access data ?
@@ -16,7 +20,7 @@
 )
 
 (defn frustum [^Camera camera]
-  (.furstum camera))
+  (.frustum camera))
 
 (defn position [^Camera camera]
   [(.x (.position camera))

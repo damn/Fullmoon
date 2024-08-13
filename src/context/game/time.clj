@@ -34,8 +34,7 @@
       (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
 
 (defn update-time [ctx]
-  (let [delta (min (graphics/delta-time ctx)
-                   (ctx/max-delta-time ctx))]
+  (let [delta (min (graphics/delta-time) (ctx/max-delta-time ctx))]
     (-> ctx
         (assoc :context.game/delta-time delta)
         (update :context.game/elapsed-time + delta)

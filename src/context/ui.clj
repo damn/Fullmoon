@@ -1,5 +1,6 @@
 (ns context.ui
-  (:require [gdx.input :as input]
+  (:require [gdx.graphics :as graphics]
+            [gdx.input :as input]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             api.disposable
@@ -74,7 +75,7 @@
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
-    (.act stage (ctx/delta-time-raw @current-context))
+    (.act stage (graphics/delta-time))
     (swap! current-context #(screen/render sub-screen %))
     (.draw stage)))
 

@@ -2,6 +2,8 @@
   (:require [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.graphics.color :as color]
+            [gdx.graphics.camera :as camera]
+            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [utils.core :refer [->tile]]
@@ -9,7 +11,7 @@
             [api.graphics :as g]
             [api.disposable :refer [dispose]]
             [api.screen :as screen]
-            [api.graphics.camera :as camera]
+            api.graphics.camera
             [api.maps.tiled :as tiled]
             [api.scene2d.actor :refer [set-position!]]
             [api.scene2d.group :refer [add-actor!]]
@@ -32,12 +34,13 @@
   (camera/set-position! camera
                         [(/ (tiled/width  tiled-map) 2)
                          (/ (tiled/height tiled-map) 2)])
-  (camera/set-zoom! camera
-                    (camera/calculate-zoom camera
-                                           :left [0 0]
-                                           :top [0 (tiled/height tiled-map)]
-                                           :right [(tiled/width tiled-map) 0]
-                                           :bottom [0 0])))
+  (orthographic-camera/set-zoom! camera
+                                 (api.graphics.camera/calculate-zoom
+                                  camera
+                                  :left [0 0]
+                                  :top [0 (tiled/height tiled-map)]
+                                  :right [(tiled/width tiled-map) 0]
+                                  :bottom [0 0])))
 
 (defn- current-data [ctx]
   (-> ctx
@@ -85,7 +88,7 @@ direction keys: move")
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
-  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
+  (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
 
 ; TODO movement-speed scales with zoom value for big maps useful
 (def ^:private camera-movement-speed 1)
@@ -118,7 +121,7 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (camera/visible-tiles (ctx/world-camera ctx))
+        visible-tiles (api.graphics.camera/visible-tiles (ctx/world-camera ctx))
         [x y] (->tile (ctx/world-mouse-position ctx))]
     (g/draw-rectangle g x y 1 1 color/white)
     (when start-position
@@ -161,14 +164,14 @@ direction keys: move")
     (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
 
   (hide [_ ctx]
-    (camera/reset-zoom! (ctx/world-camera ctx)))
+    (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
 
   (render [_ context]
     (ctx/render-tiled-map context
                           (:tiled-map @current-data)
                           (constantly color/white))
     (ctx/render-world-view context #(render-on-map % context))
-    (if (key-just-pressed? context input.keys/l)
+    (if (input/key-just-pressed? input.keys/l)
       (swap! current-data update :show-grid-lines not))
     (if (input/key-just-pressed? input.keys/m)
       (swap! current-data update :show-movement-properties not))

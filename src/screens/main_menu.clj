@@ -46,7 +46,8 @@
                      [(ctx/->text-button ctx "Map editor" map-editor!)])
                    (when (safe-get config :property-editor?)
                      [(ctx/->text-button ctx "Property editor" property-editor!)])
-                   [(ctx/->text-button ctx "Exit" ctx/exit-app)]])
+                   [(ctx/->text-button ctx "Exit" (fn [_ctx]
+                                                    (app/exit)))]])
     :cell-defaults {:pad-bottom 25}
     :fill-parent? true}))
 
