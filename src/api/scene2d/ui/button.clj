@@ -1,4 +1,13 @@
-(ns api.scene2d.ui.button)
+(ns api.scene2d.ui.button
+  (:require [api.scene2d.actor :as actor])
+  (:import com.badlogic.gdx.scenes.scene2d.ui.Button))
 
-(defprotocol Actor
-  (button? [_] "Returns true if the actor is a button."))
+(defn- button-class? [actor]
+  (some #(= Button %) (supers (class actor))))
+
+(defn button?
+  "Returns true if the actor or its parent is a button."
+  [actor]
+  (or (button-class? actor)
+      (and (actor/parent actor)
+           (button-class? (actor/parent actor)))))

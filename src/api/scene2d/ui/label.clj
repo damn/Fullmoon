@@ -1,4 +1,5 @@
-(ns api.scene2d.ui.label)
+(ns api.scene2d.ui.label
+  (:import com.badlogic.gdx.scenes.scene2d.ui.Label))
 
-(defprotocol Label
-  (set-text! [_ text]))
+(defn set-text! [^Label label ^CharSequence text]
+  (.setText label text))

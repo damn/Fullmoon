@@ -121,7 +121,7 @@
   (update-potential-fields! [_ entities])
   (potential-field-follow-to-enemy [_ entity]))
 
-(defprotocol Modifier
+(defprotocol Modifier ; ?? TODO
   (modifier-text [_ modifier]))
 
 (defprotocol PropertyStore

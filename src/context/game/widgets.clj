@@ -55,10 +55,10 @@
 ; cannot use get-stage as we are still in main menu
 (defn- reset-stage-actors! [ctx widget-data]
   (assert (= :screens/game (ctx/current-screen-key ctx)))
-  (let [stage (ctx/get-stage ctx)]
-    (group/clear-children! stage)
+  (let [^com.badlogic.gdx.scenes.scene2d.Stage stage (ctx/get-stage ctx)]
+    (.clear stage)
     (doseq [actor (->ui-actors ctx widget-data)]
-      (group/add-actor! stage actor))))
+      (.addActor stage actor))))
 
 (defn ->state! [ctx] ; TODO move to the component itself
   (let [widget-data {:context.game/action-bar (action-bar/->button-group ctx)
