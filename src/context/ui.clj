@@ -163,7 +163,9 @@
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defmacro proxy-ILookup [class args]
+(defmacro proxy-ILookup
+  "For actors inheriting from Group."
+  [class args]
   `(proxy [~class clojure.lang.ILookup] ~args
      (valAt
        ([id#]
