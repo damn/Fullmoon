@@ -1,6 +1,6 @@
 (ns context.ui
-  (:require [gdx.graphics :as graphics]
-            [gdx.input :as input]
+  (:require [gdx.input :as input]
+            [gdx.scene2d.stage :as stage]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.screen :as screen]
@@ -51,7 +51,7 @@
     (VisUI/dispose)))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
-(defrecord StageScreen [^Stage stage sub-screen]
+(defrecord StageScreen [stage sub-screen]
   api.screen/Screen
   (show [_ context]
     (input/set-processor! stage)
@@ -65,9 +65,9 @@
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
-    (.act stage (graphics/delta-time))
+    (stage/act! stage)
     (swap! current-context #(screen/render sub-screen %))
-    (.draw stage)))
+    (stage/draw stage)))
 
 (defn- find-actor-with-id [^Group group id]
   (let [actors (.getChildren group)
@@ -92,25 +92,25 @@
           stage (proxy [Stage clojure.lang.ILookup] [gui-viewport batch]
                   (valAt
                     ([id]
-                     (find-actor-with-id (.getRoot ^Stage this) id))
+                     (find-actor-with-id (stage/root this) id))
                     ([id not-found]
-                     (or (find-actor-with-id (.getRoot ^Stage this) id)
+                     (or (find-actor-with-id (stage/root this) id)
                          not-found))))]
-      (doseq [actor actors]
-        (.addActor stage actor))
+      (stage/add-actors! stage actors)
       (->StageScreen stage (or sub-screen (->EmptySubScreen)))))
 
   (get-stage [context]
     (:stage (ctx/current-screen context)))
 
   (mouse-on-stage-actor? [context]
-    (let [[x y] (ctx/gui-mouse-position context)]
-      (.hit ^Stage (ctx/get-stage context) x y true)))
+    (stage/hit (ctx/get-stage context)
+               (ctx/gui-mouse-position context)
+               :touchable? true))
 
   (add-to-stage! [ctx actor]
     (-> ctx
-        ^Stage ctx/get-stage
-        (.addActor actor))))
+        ctx/get-stage
+        (stage/add-actor! actor))))
 
 (defn- ->change-listener [on-clicked]
   (proxy [ChangeListener] []
