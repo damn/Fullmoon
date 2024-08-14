@@ -133,7 +133,7 @@
 
 (defmethod transact! :tx/set-item-image-in-widget [[_ cell item] ctx]
   (let [{:keys [table]} (get-inventory ctx)
-        ^Actor cell-widget (get table cell)
+        cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)
         drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
     (.setMinSize drawable (float cell-size) (float cell-size))
@@ -143,7 +143,7 @@
 
 (defmethod transact! :tx/remove-item-from-widget [[_ cell] ctx]
   (let [{:keys [table slot->background]} (get-inventory ctx)
-        ^Actor cell-widget (get table cell)
+        cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)]
     (.setDrawable image-widget (slot->background (cell 0)))
     (remove-tooltip! cell-widget)
