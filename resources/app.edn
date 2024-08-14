@@ -66,8 +66,6 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-
-           [:effect/stun]
            [:effect/target-entity]
 
            [:entity/animation]

@@ -6,8 +6,7 @@
             [api.effect :as effect]
             [api.properties :as properties]
             [api.tx :refer [transact!]]
-            [entity-state.player :as player-state]
-            [entity-state.npc :as npc-state]))
+            [entity-state.fsms :as fsms]))
 
 (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
 
@@ -99,8 +98,8 @@
 ; or entity/controller creates all of this ?
 (defn- set-state [[player-or-npc initial-state]]
   ((case player-or-npc
-     :state/player player-state/->state
-     :state/npc npc-state/->state)
+     :state/player fsms/->player-state
+     :state/npc fsms/->npc-state)
    initial-state))
 
 ; if controller = :controller/player

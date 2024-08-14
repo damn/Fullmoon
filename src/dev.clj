@@ -247,7 +247,9 @@
                        (learn-skill! :skills/projectile)
                        (learn-skill! :skills/spawn)
                        (learn-skill! :skills/meditation)
-                       (learn-skill! :skills/melee-attack))))
+                       (learn-skill! :skills/melee-attack)
+                       (learn-skill! :skills/death-ray)
+                       )))
 
 
  (create-item! :items/blood-glove)
