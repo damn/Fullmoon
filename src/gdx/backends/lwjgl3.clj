@@ -1,5 +1,6 @@
 (ns gdx.backends.lwjgl3
-  (:import (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
+  (:import (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application
+                                             Lwjgl3ApplicationConfiguration)))
 
 (defn ->application [application-listener lwjgl3-configuration]
   (Lwjgl3Application. application-listener lwjgl3-configuration))

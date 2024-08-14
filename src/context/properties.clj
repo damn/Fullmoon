@@ -15,6 +15,20 @@
 (defcomponent :property/animation   data/animation)
 (defcomponent :property/sound       data/sound)
 
+(comment
+ (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
+ (let [atlas (TextureAtlas. "creatures/creatures.atlas")
+       region (.findRegion atlas "foo")]
+
+   ; change image->edn if it has :atlas
+   ; then just call .findRegion
+   ; bugt how to do edn->image ?? in this case ??
+   ; do I need that even ?
+
+   )
+
+ )
+
 (defn- edn->image [ctx {:keys [file sub-image-bounds]}]
   {:pre [file]}
   (if sub-image-bounds

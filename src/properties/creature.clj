@@ -4,6 +4,15 @@
             [core.data :as data]
             [api.properties :as properties]))
 
+(import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
+
+(comment
+ (let [atlas (TextureAtlas. "creatures/creatures.atlas")
+       region (.findRegion atlas "foo")
+       ]
+
+   ))
+
 (defcomponent :properties/creature {}
   (properties/create [_]
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})

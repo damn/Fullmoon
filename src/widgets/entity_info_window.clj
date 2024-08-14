@@ -20,7 +20,6 @@
 ; mana color same in the whole app
 ; TODO name / species / level
 ; :entity/faction no need to show
-; :entity/flying? no need to show
 ; :entity/reaction-time no need to show
 ; :entity/delete-after-duration  ; bar like in wc3 blue ? projec.
 ; :entity/inventory (only player for now)

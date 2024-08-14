@@ -35,8 +35,6 @@
 
 X :entity/delete-after-animation-stopped? -> animation
 
-X :entity/flying? -> creatures
-
 -> stats
 X :entity/faction
 X :entity/reaction-time

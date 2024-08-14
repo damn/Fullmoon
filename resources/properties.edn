@@ -19,6 +19,18 @@
   :skill/effect
   {:effect/convert true, :effect/sound "sounds/bfxr_burrow.wav"},
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
+ {:property/id :skills/bow,
+  :property/image
+  {:file "skills/images.png", :sub-image-bounds [96 64 32 32]},
+  :skill/action-time 1.5,
+  :skill/action-time-modifier-key :stats/attack-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effect
+  {:effect/target-entity
+   {:hit-effect {:effect/damage {:damage/min-max [0 10]}},
+    :maxrange 5}},
+  :skill/start-action-sound "sounds/slash.wav"}
  {:property/id :skills/meditation,
   :property/image
   {:file "skills/images.png", :sub-image-bounds [64 96 32 32]},
@@ -963,7 +975,7 @@
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
-   :entity/skills #{},
+   :entity/skills #{:skills/bow},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 6,
@@ -1982,7 +1994,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/armor-pierce 0,
-    :stats/armor-save 5,
+    :stats/armor-save 0,
     :stats/attack-speed 1,
     :stats/cast-speed 1,
     :stats/hp 100,
