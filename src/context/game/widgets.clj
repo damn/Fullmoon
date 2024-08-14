@@ -12,7 +12,8 @@
             [widgets.debug-window :as debug-window]
             [widgets.entity-info-window :as entity-info-window]
             [widgets.inventory :as inventory]
-            [widgets.hp-mana-bars :refer [->hp-mana-bars]]))
+            [widgets.hp-mana-bars :refer [->hp-mana-bars]]
+            widgets.player-modal))
 
 ; TODO same space/pad as action-bar (actually inventory cells too)
 ; => global setting use ?

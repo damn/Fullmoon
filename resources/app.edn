@@ -23,7 +23,7 @@
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
 
-           ; image loading depends on assets, otherwise no dependencies.
+           ; image loading depends on assets, otherwise no dependencies. (-> only that function !)
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
@@ -45,11 +45,11 @@
                                          :cursors/princess ["exclamation001" [0 0]]
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
 
-           ; depends on graphics: batch & world-view
+           ; depends on graphics: batch & world-view (only render map !)
            [:context/tiled]
 
            ; TODO dispose stage-screens
-           ; depends on graphics: batch & gui-view
+           ; depends on graphics: batch & gui-view (only stage !)
            [:context/ui]
 
            ; depends on graphics for image,animation edn->data
@@ -65,6 +65,32 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-           [:tx/all]
-           [:effect/all]
-           [:entity/all]]}
+           [:effect/convert]
+           [:effect/damage]
+           [:effect/melee-damage]
+           [:effect/projectile]
+           [:effect/restore-hp-mana]
+           [:effect/sound]
+           [:effect/spawn]
+           [:effect/stun]
+           [:effect/target-entity]
+
+           [:entity/animation]
+           [:entity/body]
+           [:entity/clickable]
+           [:entity/delete-after-animation-stopped]
+           [:entity/delete-after-duration]
+           [:entity/faction]
+           [:entity/image]
+           [:entity/inventory]
+           [:entity/line-render]
+           [:entity/mouseover]
+           [:entity/player]
+           [:entity/plop]
+           [:entity/projectile-collision]
+           [:entity/reaction-time]
+           [:entity/shout]
+           [:entity/skills]
+           [:entity/state]
+           [:entity/stats]
+           [:entity/string-effect]]}

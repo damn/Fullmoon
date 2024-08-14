@@ -1,7 +1,9 @@
 (ns properties.audiovisual
   (:require [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.properties :as properties]))
+            [api.context :as ctx]
+            [api.properties :as properties]
+            [api.tx :refer [transact!]]))
 
 (defcomponent :properties/audiovisual {}
   (properties/create [_]
@@ -15,3 +17,15 @@
                 :columns 10
                 :image/dimensions [96 96]} ; ??
      }))
+
+(defmethod transact! :tx.entity/audiovisual [[_ position id] ctx]
+  ; assert property of type audiovisual
+  (let [{:keys [property/sound
+                property/animation]} (ctx/get-property ctx id)]
+    [[:tx/sound sound]
+     [:tx/create #:entity {:body {:position position
+                                  :width 0.5
+                                  :height 0.5
+                                  :z-order :z-order/effect}
+                           :animation animation
+                           :delete-after-animation-stopped? true}]]))
