@@ -112,7 +112,7 @@
         ^Stage ctx/get-stage
         (.addActor actor))))
 
-(defn- ->change-listener [_ on-clicked]
+(defn- ->change-listener [on-clicked]
   (proxy [ChangeListener] []
     (changed [event actor]
       (on-clicked (assoc @current-context :actor actor)))))
@@ -209,7 +209,7 @@
 
   (->text-button [context text on-clicked]
     (let [button (VisTextButton. ^String text)]
-      (.addListener button (->change-listener context on-clicked))
+      (.addListener button (->change-listener on-clicked))
       button))
 
   (->check-box [context text on-clicked checked?]
@@ -236,7 +236,7 @@
            button (VisImageButton. drawable)]
        (when-let [[w h] dimensions]
          (.setMinSize drawable (float w) (float h)))
-       (.addListener button (->change-listener context on-clicked))
+       (.addListener button (->change-listener on-clicked))
        button)))
 
   (->table ^Table [_ opts]
