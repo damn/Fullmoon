@@ -3,9 +3,8 @@
   (:import com.badlogic.gdx.math.Vector3))
 
 (defn frustum [camera]
-  ; TODO math.Vector3
   (let [frustum-points (for [^Vector3 point (take 4
-                                                  (.planePoints ; TODO math.Frustum
+                                                  (.planePoints
                                                    (camera/frustum camera)))
                              :let [x (.x point)
                                    y (.y point)]]

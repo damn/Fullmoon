@@ -3,8 +3,7 @@
             [api.context :as ctx]
             [api.graphics :as g]
             [api.maps.tiled :as tiled])
-  (:import com.badlogic.gdx.graphics.OrthographicCamera
-           [com.badlogic.gdx.maps MapRenderer MapLayer MapLayers MapProperties]
+  (:import [com.badlogic.gdx.maps MapRenderer MapLayer MapLayers MapProperties]
            [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]
            [gdl OrthogonalTiledMapRendererWithColorSetter ColorSetter]))
 
@@ -35,7 +34,6 @@
                      color-setter]
     (let [^MapRenderer map-renderer (cached-map-renderer g tiled-map color-setter)
           world-camera (ctx/world-camera ctx)]
-      (.update ^OrthographicCamera world-camera)
       (.setView map-renderer world-camera)
       (->> tiled-map
            tiled/layers
