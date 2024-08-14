@@ -1,7 +1,8 @@
 (ns effect.melee-damage
   (:require [core.component :refer [defcomponent]]
             [api.effect :as effect]
-            [api.entity :as entity]))
+            [api.entity :as entity]
+            [api.tx :refer [transact!]]))
 
 (defn- entity*->melee-damage [entity*]
   (let [strength (or (entity/stat entity* :stats/strength) 0)]
@@ -20,5 +21,5 @@
   (effect/valid-params? [_ effect-ctx]
     (effect/valid-params? (damage-effect effect-ctx)))
 
-  (effect/txs [_ effect-ctx]
-    (effect/txs (damage-effect effect-ctx) effect-ctx)))
+  (transact! [_ ctx]
+    [(damage-effect ctx)]))

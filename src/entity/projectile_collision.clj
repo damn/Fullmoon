@@ -5,8 +5,7 @@
             [api.context :refer [world-grid]]
             [api.entity :as entity]
             [api.world.grid :refer [rectangle->cells]]
-            [api.world.cell :as cell :refer [cells->entities]]
-            [effect-ctx.core :as effect-ctx]))
+            [api.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision {}
   (entity/create-component [[_ v] _components _ctx]
@@ -32,10 +31,9 @@
           destroy? (or (and hit-entity (not piercing?))
                        (some #(cell/blocked? % (entity/z-order entity*)) cells*))
           id (:entity/id entity*)]
-      (concat
-       (when hit-entity
-         [[:tx.entity/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]]) ; this is only necessary in case of not piercing ...
+      [(when hit-entity
+         [:tx.entity/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
        (when destroy?
-         [[:tx/destroy id]])
+         [:tx/destroy id])
        (when hit-entity
-         (effect-ctx/txs {:effect/source id :effect/target hit-entity} hit-effect))))))
+         [:tx/effect {:effect/source id :effect/target hit-entity} hit-effect])])))

@@ -80,7 +80,7 @@
                           target-p)
               maxrange))))
 
-  (effect/txs [_ {:keys [effect/source effect/direction]}]
+  (transact! [_ {:keys [effect/source effect/direction]}]
     [[:tx.entity/projectile {:position (start-point @source direction)
                              :direction direction
                              :faction (:entity/faction @source)}]]))

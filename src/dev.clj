@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [api.context :as ctx :refer :all]
             [api.entity :as entity]
-            [api.scene2d.actor :as actor]))
+            [api.scene2d.actor :as actor]
+            [gdx.app :as app]))
 
 (comment
  (defn- all-text-colors []
@@ -240,14 +241,13 @@
                      :fill-parent? true})))
 
 (comment
- (.postRunnable ; so can see errors ... don't see proper stacktrace if evaluating just in editor
-  com.badlogic.gdx.Gdx/app
-  (fn []
-    (do
-     (learn-skill! :skills/projectile)
-     (learn-skill! :skills/spawn)
-     (learn-skill! :skills/meditation)
-     (learn-skill! :skills/melee-attack))))
+ ; so can see errors ... don't see proper stacktrace if evaluating just in editor
+ (app/post-runnable (fn []
+                      (do
+                       (learn-skill! :skills/projectile)
+                       (learn-skill! :skills/spawn)
+                       (learn-skill! :skills/meditation)
+                       (learn-skill! :skills/melee-attack))))
 
 
  (create-item! :items/blood-glove)

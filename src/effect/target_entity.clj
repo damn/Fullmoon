@@ -6,6 +6,7 @@
             [api.context :refer [line-of-sight?]]
             [api.effect :as effect]
             [api.entity :as entity]
+            [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
@@ -36,7 +37,13 @@
                                               [:hit-effect [:map]]
                                               [:maxrange pos?]]
                                      :default-value {:hit-effect {}
-                                                     :max-range 2.0}}
+                                                     :max-range 2.0}
+                                     :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
+                                          Cancels if line of sight is lost.
+                                          Draws a red/yellow line wheter the target is inside the max range.
+                                          If the effect is to be done and target out of range -> draws a hit-ground-effect
+                                          on the max location."
+                                     }
   (effect/text [[_ {:keys [maxrange hit-effect]}] effect-ctx]
     (str "Range " maxrange " meters\n" (effect-ctx/text effect-ctx hit-effect)))
 
@@ -56,8 +63,8 @@
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} _ctx]
     (in-range? @source @target maxrange))
 
-  (effect/txs [[_ {:keys [maxrange hit-effect]}]
-                {:keys [effect/source effect/target] :as effect-ctx}]
+  (transact! [[_ {:keys [maxrange hit-effect]}]
+              {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -70,7 +77,7 @@
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         (effect-ctx/txs effect-ctx hit-effect))
+         hit-effect)
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )

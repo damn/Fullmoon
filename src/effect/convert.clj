@@ -2,7 +2,8 @@
   (:require [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
-            [api.entity :as entity]))
+            [api.entity :as entity]
+            [api.tx :refer [transact!]]))
 
 (defcomponent :effect/convert data/boolean-attr
   (effect/text [_ _effect-ctx]
@@ -13,5 +14,5 @@
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))
 
-  (effect/txs [_ {:keys [effect/source effect/target]}]
+  (transact! [_ {:keys [effect/source effect/target]}]
     [[:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))

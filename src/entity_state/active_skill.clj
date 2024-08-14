@@ -64,8 +64,8 @@
      [[:tx/event id :action-done]]
 
      (stopped? context counter)
-     (cons [:tx/event id :action-done]
-           (effect-ctx/txs effect-ctx (:skill/effect skill)))))
+     [[:tx/event id :action-done]
+      [:tx/effect effect-ctx (:skill/effect skill)]]))
 
   (render-below [_ entity* g _ctx])
   (render-above [_ entity* g _ctx])

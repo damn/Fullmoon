@@ -146,7 +146,7 @@
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
  (require 'app.state)
- (app/post-runnable!
+ (app/post-runnable
   (fn []
     (swap! app.state/current-context start-replay-mode!)))
 

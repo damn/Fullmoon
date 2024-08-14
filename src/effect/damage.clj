@@ -4,7 +4,8 @@
             [data.val-max :refer [apply-val-max-modifiers]]
             [utils.random :as random]
             [api.effect :as effect]
-            [api.entity :as entity]))
+            [api.entity :as entity]
+            [api.tx :refer [transact!]]))
 
 (defn- effective-armor-save [source* target*]
   (max (- (or (entity/stat target* :stats/armor-save) 0)
@@ -110,7 +111,7 @@
   (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and source target))
 
-  (effect/txs [[_ damage] {:keys [effect/source effect/target]}]
+  (transact! [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]

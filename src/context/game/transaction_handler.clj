@@ -42,7 +42,8 @@
     (let [logic-frame (ctx/logic-frame ctx)] ; TODO only if debug or record deref this...
       (when debug-print-txs?
         (println logic-frame "." (debug-print-tx tx)))
-      (when record-txs?
+      (when (and record-txs?
+                 (not= (first tx) :tx/effect))
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
 (extend-type api.context.Context

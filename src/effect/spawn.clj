@@ -1,6 +1,7 @@
 (ns effect.spawn
   (:require [core.component :refer [defcomponent]]
-            [api.effect :as effect]))
+            [api.effect :as effect]
+            [api.tx :refer [transact!]]))
 
 ; TODO spawning on player both without error ?! => not valid position checked
 ; also what if someone moves on the target posi ? find nearby valid cell ?
@@ -37,7 +38,7 @@
          (:entity/faction @source)
          target-position))
 
-  (effect/txs [[_ creature-id] {:keys [effect/source effect/target-position]}]
+  (transact! [[_ creature-id] {:keys [effect/source effect/target-position]}]
     [[:tx.entity/creature
       creature-id
       #:entity {:position target-position
