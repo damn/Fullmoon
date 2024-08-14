@@ -54,9 +54,10 @@
 
            ; depends on graphics for image,animation edn->data
            [:context/properties {:types [:properties/audiovisual
-                                         :properties/creature ; depends on entity
-                                         :properties/item ; depends on modifiers
-                                         :properties/skill ; depends on effects
+                                         :properties/creature
+                                         :properties/item
+                                         :properties/projectile
+                                         :properties/skill
                                          :properties/world]
                                  :file "resources/properties.edn"}]
            [:context/screens [:screens/main-menu
@@ -65,13 +66,7 @@
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]
-           [:effect/convert]
-           [:effect/damage]
-           [:effect/melee-damage]
-           [:effect/projectile]
-           [:effect/restore-hp-mana]
-           [:effect/sound]
-           [:effect/spawn]
+
            [:effect/stun]
            [:effect/target-entity]
 

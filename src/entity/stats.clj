@@ -1,9 +1,11 @@
 (ns entity.stats
   (:require [clojure.string :as str]
-            [data.val-max :refer [val-max-ratio]]
+            [utils.random :as random]
+            [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifiers]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
             api.context
+            [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
             [gdx.graphics.color :as color]
@@ -147,3 +149,195 @@
                                    (- (* width ratio) (* 2 border))
                                    (- height (* 2 border))
                                    (hpbar-color ratio)))))))
+
+
+(defmacro def-set-to-max-effect [stat]
+  `(let [component# ~(keyword "effect" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))]
+     (defcomponent component# {:widget :label
+                               :schema [:= true]
+                               :default-value true}
+       (effect/text ~'[_ _effect-ctx]
+         ~(str "Sets " (name stat) " to max."))
+
+       (effect/valid-params? ~'[_ {:keys [effect/source]}]
+         ~'source)
+
+       (effect/useful? ~'[_ {:keys [effect/source]} _ctx]
+         (lower-than-max? (~stat (:entity/stats @~'source))))
+
+       (transact! ~'[_ {:keys [effect/source]}]
+         [[:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
+
+(def-set-to-max-effect :stats/hp)
+(def-set-to-max-effect :stats/mana)
+
+#_(defcomponent :effect/set-to-max {:widget :label
+                                    :schema [:= true]
+                                    :default-value true}
+  (effect/text [[_ stat] _effect-ctx]
+    (str "Sets " (name stat) " to max."))
+
+  (effect/valid-params? [_ {:keys [effect/source]}]
+    source)
+
+  (effect/useful? [[_ stat] {:keys [effect/source]} _ctx]
+    (lower-than-max? (stat @source)))
+
+  (effect/txs [[_ stat] {:keys [effect/source]}]
+    [[:tx.entity/assoc source stat (set-to-max (stat @source))]]))
+
+; this as macro ... ? component which sets the value of another component ??
+#_(defcomponent :effect/set-mana-to-max {:widget :label
+                                         :schema [:= true]
+                                         :default-value true}
+  (effect/valid-params? [_ {:keys [effect/source]}] source)
+  (effect/text    [_ _effect-ctx]     (effect/text    [:effect/set-to-max :entity/mana]))
+  (effect/useful? [_ effect-ctx _ctx] (effect/useful? [:effect/set-to-max :entity/mana] effect-ctx))
+  (effect/txs     [_ effect-ctx]      (effect/txs     [:effect/set-to-max :entity/mana] effect-ctx)))
+
+#_[:effect/set-to-max :entity/hp]
+#_[:effect/set-to-max :entity/mana]
+
+(defn- entity*->melee-damage [entity*]
+  (let [strength (or (entity/stat entity* :stats/strength) 0)]
+    {:damage/min-max [strength strength]}))
+
+(defn- damage-effect [{:keys [effect/source]}]
+  [:effect/damage (entity*->melee-damage @source)])
+
+(defcomponent :effect/melee-damage {}
+  (effect/text [_ {:keys [effect/source] :as effect-ctx}]
+    (str "Damage based on entity strength."
+         (when source
+           (str "\n" (effect/text (damage-effect effect-ctx)
+                                  effect-ctx)))))
+
+  (effect/valid-params? [_ effect-ctx]
+    (effect/valid-params? (damage-effect effect-ctx)))
+
+  (transact! [_ ctx]
+    [(damage-effect ctx)]))
+
+(defn- effective-armor-save [source* target*]
+  (max (- (or (entity/stat target* :stats/armor-save) 0)
+          (or (entity/stat source* :stats/armor-pierce) 0))
+       0))
+
+(comment
+ ; broken
+ (let [source* {:entity/stats {:stats/armor-pierce 0.4}}
+       target* {:entity/stats {:stats/armor-save   0.5}}]
+   (effective-armor-save source* target*))
+ )
+
+(defn- armor-saves? [source* target*]
+  (< (rand) (effective-armor-save source* target*)))
+
+(defn- dmg-apply-modifiers [{:keys [damage/min-max] :as damage} modifiers]
+  (update damage :damage/min-max apply-val-max-modifiers modifiers))
+
+(comment
+ (= (dmg-apply-modifiers {:damage/min-max [5 10]}
+                         {[:val :inc] [3]})
+    #:damage{:min-max [8 10]})
+
+ (= (dmg-apply-modifiers {:damage/min-max [5 10]}
+                         nil)
+    #:damage{:min-max [5 10]})
+
+ )
+
+(defn- modifiers [entity* stat]
+  (-> entity* :entity/stats :stats/modifiers stat))
+
+(defn- apply-damage-modifiers [damage entity* stat]
+  (dmg-apply-modifiers damage (modifiers entity* stat)))
+
+(comment
+ (= (apply-damage-modifiers {:damage/min-max [5 10]}
+                            {:entity/stats {:stats/modifiers {:stats/damage-deal {[:val :inc] [1]}}}}
+                            :stats/damage-deal)
+    #:damage{:min-max [6 10]})
+
+ (= (apply-damage-modifiers {:damage/min-max [5 10]}
+                            {:entity/stats {:stats/modifiers {:stats/damage-deal {[:max :mult] [2]}}}}
+                            :stats/damage-deal)
+    #:damage{:min-max [5 30]})
+
+ (= (apply-damage-modifiers {:damage/min-max [5 10]}
+                            {:entity/stats {:stats/modifiers nil}}
+                            :stats/damage-receive)
+    #:damage{:min-max [5 10]})
+ )
+
+(defn- effective-damage
+  ([damage source*]
+   (apply-damage-modifiers damage source* :stats/damage-deal))
+
+  ([damage source* target*]
+   (-> (effective-damage damage source*)
+       (apply-damage-modifiers target* :stats/damage-receive))))
+
+(comment
+ (= (apply-damage-modifiers {:damage/min-max [3 10]}
+                            {[:max :mult] 2
+                             [:val :mult] 1.5
+                             [:val :inc] 1
+                             [:max :inc] 0})
+    #:damage{:min-max [6 20]})
+
+ (= (apply-damage-modifiers {:damage/min-max [6 20]}
+                            {[:max :mult] 1
+                             [:val :mult] 1
+                             [:val :inc] -5
+                             [:max :inc] 0})
+    #:damage{:min-max [1 20]})
+
+ (= (effective-damage {:damage/min-max [3 10]}
+                      {:entity/stats {:stats/damage {:damage/deal {[:max :mult] [2]
+                                                                   [:val :mult] [1.5]
+                                                                   [:val :inc] [1]
+                                                                   [:max :inc] [0]}}}}
+                      {:entity/stats {:stats/damage {:damage/receive {[:max :mult] [1]
+                                                                      [:val :mult] [1]
+                                                                      [:val :inc] [-5]
+                                                                      [:max :inc] [0]}}}})
+    #:damage{:min-max [3 10]})
+ )
+
+(defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
+  (str min-dmg "-" max-dmg " damage"))
+
+(defcomponent :damage/min-max data/val-max-attr)
+
+(defcomponent :effect/damage (data/map-attribute :damage/min-max)
+  (effect/text [[_ damage] {:keys [effect/source]}]
+    (if source
+      (let [modified (effective-damage damage @source)]
+        (if (= damage modified)
+          (damage->text damage)
+          (str (damage->text damage) "\nModified: " (damage->text modified))))
+      (damage->text damage))) ; property menu no source,modifiers
+
+  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
+    (and source target))
+
+  (transact! [[_ damage] {:keys [effect/source effect/target]}]
+    (let [source* @source
+          target* @target
+          hp (entity/stat target* :stats/hp)]
+      (cond
+       (or (not hp) (zero? (hp 0)))
+       []
+
+       (armor-saves? source* target*)
+       [[:tx/add-text-effect target "[WHITE]ARMOR"]] ; TODO !_!_!_!_!_!
+
+       :else
+       (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
+             dmg-amount (random/rand-int-between min-max)
+             new-hp-val (max (- (hp 0) dmg-amount) 0)]
+         [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
+          [:tx/add-text-effect target (str "[RED]" dmg-amount)]
+          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
+          [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))

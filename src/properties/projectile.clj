@@ -1,12 +1,27 @@
-(ns effect.projectile
+(ns properties.projectile
   (:require [clojure.string :as str]
             [math.vector :as v]
             [core.component :refer [defcomponent]]
+            [core.data :as data]
             [api.context :refer [get-sprite spritesheet path-blocked?]]
             [api.effect :as effect]
             [api.entity :as entity]
+            [api.properties :as properties]
             [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
+
+(defcomponent :properties/projectile {}
+  (properties/create [_]
+    {:id-namespace "projectiles"
+     :schema (data/map-attribute-schema
+              [:property/id [:qualified-keyword {:namespace :skills}]]
+              [:property/image])
+     :edn-file-sort-order 0
+     :overview {:title "Projectile"
+                :columns 16
+                :image/dimensions [48 48]}
+     :->text (fn [ctx {:keys [property/id]}]
+               [(str/capitalize (name id))])}))
 
 ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
