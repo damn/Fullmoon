@@ -1,10 +1,15 @@
 (ns context.tiled
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [gdx.maps.map-renderer :as map-renderer]
+            [gdx.maps.map-layer :as map-layer]
+            [gdx.maps.map-layers :as map-layers]
+            [gdx.maps.map-properties :as properties]
+            [gdx.maps.tiled.tmx-map-loader :refer [->tmx-map-loader] :as tmx-map-loader]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.graphics :as g]
             [api.maps.tiled :as tiled])
-  (:import [com.badlogic.gdx.maps MapRenderer MapLayer MapLayers MapProperties]
-           [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]
+  (:import com.badlogic.gdx.maps.MapLayer
+           [com.badlogic.gdx.maps.tiled TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]
            [gdl OrthogonalTiledMapRendererWithColorSetter ColorSetter]))
 
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
@@ -27,20 +32,19 @@
 (extend-type api.context.Context
   api.context/TiledMapLoader
   (->tiled-map [_ file]
-    (.load (TmxMapLoader.) file))
+    (tmx-map-loader/load (->tmx-map-loader) file))
 
   (render-tiled-map [{g :context/graphics cached-map-renderer :context/tiled :as ctx}
                      tiled-map
                      color-setter]
-    (let [^MapRenderer map-renderer (cached-map-renderer g tiled-map color-setter)
+    (let [map-renderer (cached-map-renderer g tiled-map color-setter)
           world-camera (ctx/world-camera ctx)]
-      (.setView map-renderer world-camera)
+      (map-renderer/set-view! map-renderer world-camera)
       (->> tiled-map
            tiled/layers
-           (filter #(.isVisible ^MapLayer %))
+           (filter map-layer/visible?)
            (map (partial tiled/layer-index tiled-map))
-           int-array
-           (.render map-renderer)))))
+           (map-renderer/render map-renderer)))))
 
 (comment
  ; could do this but slow -> fetch directly necessary properties
@@ -51,7 +55,7 @@
  )
 
 (defn- lookup [has-properties key]
-  (.get ^MapProperties (tiled/properties has-properties) (name key)))
+  (properties/get (tiled/properties has-properties) (name key)))
 
 (extend-protocol api.maps.tiled/HasProperties
   TiledMap
@@ -75,15 +79,15 @@
     (.getLayers tiled-map))
 
   (layer-index [tiled-map layer]
-    (let [idx (.getIndex ^MapLayers (tiled/layers tiled-map) ^String (tiled/layer-name layer))]
-      (when-not (= -1 idx)
-        idx)))
+    (map-layers/index (tiled/layers tiled-map)
+                      (tiled/layer-name layer)))
 
   (get-layer [tiled-map layer-name]
-    (.get ^MapLayers (tiled/layers tiled-map) ^String layer-name))
+    (map-layers/get (tiled/layers tiled-map) layer-name))
 
   (remove-layer! [tiled-map layer]
-    (.remove ^MapLayers (tiled/layers tiled-map) ^Integer (tiled/layer-index tiled-map layer)))
+    (map-layers/remove! (tiled/layers tiled-map)
+                        (tiled/layer-index tiled-map layer)))
 
   (cell-at [tiled-map layer [x y]]
     (when-let [layer (tiled/get-layer tiled-map (tiled/layer-name layer))]

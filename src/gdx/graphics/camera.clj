@@ -3,7 +3,7 @@
   (:import com.badlogic.gdx.graphics.Camera))
 
 ; TODO include always ?
-#_(defn update [^Camera camera]
+(defn update [^Camera camera]
   (.update camera))
 
 (defn set-position! [^Camera camera [x y]]
