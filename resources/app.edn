@@ -52,17 +52,16 @@
 
            [:entity/player]
 
-           [:entity/plop]
+           [:entity/plop] ; unclear/but ok for now
            [:entity/projectile-collision]
 
            [:entity/state]
 
-           [:entity/shout]
-           [:entity/faction]
-           [:entity/reaction-time]
+           [:entity/shout]  ; unclear/but ok for now
+           [:entity/faction] ; unclear/but ok for now
 
-           [:entity/stats]
-           [:entity/string-effect]
+           [:entity/stats] ; unclear
+           [:entity/string-effect] ; unclear
 
            [:entity/skills]
            [:entity/inventory]
@@ -70,9 +69,9 @@
            [:effect/target-entity]
 
            [:context/properties {:types [:properties/audiovisual
-                                         :properties/creature
+                                         :properties/creature ; unclear
                                          :properties/item
-                                         :properties/projectile
+                                         :properties/projectile ; unclear
                                          :properties/skill
                                          :properties/world]
                                  :file "resources/properties.edn"}]
