@@ -19,6 +19,16 @@
 
 (def ^:private modifier-color "[VIOLET]")
 
+(comment
+
+ ; Modifier:
+ [[:stats/strength :inc 5]]
+ ; vector ...
+ ; make map of
+ {[:stats/strength :inc] 5}
+ ; => component is tuple ....
+ )
+
 (require '[clojure.string :as str])
 (require '[clojure.math :as math])
 

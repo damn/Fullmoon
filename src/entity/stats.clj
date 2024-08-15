@@ -45,9 +45,9 @@
                                          {:post [(= (count %) (dec (count values)))]}
                                          (remove #{value} values)))))
 
-(defmulti apply-modifiers (fn [stat _stats] stat))
+(defmulti ->effective-value (fn [stat _stats] stat))
 
-(defmethod apply-modifiers :stat/plain-number [stat stats]
+(defmethod ->effective-value :stat/plain-number [stat stats]
   (let [modifiers (stat (:stats/modifiers stats))
         inc-modifiers (reduce + (:inc modifiers))
         mult-modifiers (reduce + 1 (:mult modifiers))]
@@ -55,25 +55,29 @@
         (+ inc-modifiers)
         (* mult-modifiers))))
 
-(defmethod apply-modifiers :stat/only-inc [stat stats]
+(defmethod ->effective-value :stat/only-inc [stat stats]
   (let [modifiers (stat (:stats/modifiers stats))
         inc-modifiers (reduce + (:inc modifiers))]
     (-> (stat stats)
         (+ inc-modifiers))))
 
-(defmethod apply-modifiers :stat/val-max [stat stats]
+(defmethod ->effective-value :stat/val-max [stat stats]
   (let [base-value (stat stats)
         modifiers (stat (:stats/modifiers stats))]
     (data.val-max/apply-val-max-modifiers base-value modifiers)))
-
-(defn- effective-value [stats stat]
-  (apply-modifiers stat stats))
 
 (defcomponent :stats/hp data/pos-int-attr)
 (derive :stats/hp :stat/val-max)
 
 (defcomponent :stats/mana data/nat-int-attr)
 (derive :stats/mana :stat/val-max)
+
+; hp & mana have [:max :inc] and [:max :mult] operations
+; only going on max so can just make :inc and :mult
+
+; so defining modifiers [:stats/hp :inc] [:stats/hp :mult] , same for mana
+; based on the data ... ? (val-max)
+; manual ?
 
 (defcomponent :stats/movement-speed data/pos-attr)
 (derive :stats/movement-speed :stat/plain-number)
@@ -103,9 +107,9 @@
 
 (extend-type api.entity.Entity
   entity/Stats
-  (stat [{:keys [entity/stats]} stat] ; TODO 'key'
-    (when (stat stats)
-      (effective-value stats stat))))
+  (stat [{:keys [entity/stats]} stat-k]
+    (when (stat-k stats)
+      (->effective-value stat-k stats))))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
@@ -148,7 +152,7 @@
                    (for [k stats-keywords
                          :let [stat (k stats)]
                          :when stat]
-                     (str (name k) ": " (effective-value stats k))))
+                     (str (name k) ": " (->effective-value k stats))))
          (when modifiers
            (str "\n[LIME] Modifiers:\n"
                 (binding [*print-level* nil]
