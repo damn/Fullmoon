@@ -1,15 +1,9 @@
-; - document this nicely -
-; - make schema ! -> telling you missed keys, like I just forgot quality-sclaing.
-; - make wiki ? -
-; - make actual editor for it ? -
-; - mix with properties ? -
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
        :height 900
-       :full-screen? false
+       :full-screen? false ; TODO fix full-screen bug @ gdx.backends.lwjgl3
        :fps 60}
- :context [; no dependencies
-           [:context/config {:tag :dev
+ :context [[:context/config {:tag :dev ; TODO pass as commandline arg
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
                                               :debug-window? false
@@ -22,8 +16,6 @@
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
-
-           ; image loading depends on assets, otherwise no dependencies. (-> only that function !)
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
@@ -44,15 +36,39 @@
                                          :cursors/move-window ["move002" [16 16]]
                                          :cursors/princess ["exclamation001" [0 0]]
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
+           [:context/tiled] ; can move map-renderer into graphics and tiled just api/gdx fns
+           [:context/vis-ui] ; TODO dispose stage-screens
 
-           ; depends on graphics: batch & world-view (only render map !)
-           [:context/tiled]
+           [:entity/body]
 
-           ; TODO dispose stage-screens
-           ; depends on graphics: batch & gui-view (only stage !)
-           [:context/ui]
+           [:entity/image]
+           [:entity/animation]
+           [:entity/delete-after-animation-stopped]
+           [:entity/line-render]
 
-           ; depends on graphics for image,animation edn->data
+           [:entity/clickable]
+           [:entity/delete-after-duration]
+           [:entity/mouseover]
+
+           [:entity/player]
+
+           [:entity/plop]
+           [:entity/projectile-collision]
+
+           [:entity/state]
+
+           [:entity/shout]
+           [:entity/faction]
+           [:entity/reaction-time]
+
+           [:entity/stats]
+           [:entity/string-effect]
+
+           [:entity/skills]
+           [:entity/inventory]
+
+           [:effect/target-entity]
+
            [:context/properties {:types [:properties/audiovisual
                                          :properties/creature
                                          :properties/item
@@ -62,28 +78,7 @@
                                  :file "resources/properties.edn"}]
            [:context/screens [:screens/main-menu
                               :screens/game
-                              :screens/map-editor ; TODO tiled-map not disposed as cannot implement java interface at record?
+                              :screens/map-editor ; TODO tiled-map not disposed anymore at screen dispose
                               :screens/minimap
                               :screens/options-menu
-                              :screens/property-editor]]
-           [:effect/target-entity]
-
-           [:entity/animation]
-           [:entity/body]
-           [:entity/clickable]
-           [:entity/delete-after-animation-stopped]
-           [:entity/delete-after-duration]
-           [:entity/faction]
-           [:entity/image]
-           [:entity/inventory]
-           [:entity/line-render]
-           [:entity/mouseover]
-           [:entity/player]
-           [:entity/plop]
-           [:entity/projectile-collision]
-           [:entity/reaction-time]
-           [:entity/shout]
-           [:entity/skills]
-           [:entity/state]
-           [:entity/stats]
-           [:entity/string-effect]]}
+                              :screens/property-editor]]]}

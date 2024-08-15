@@ -1,4 +1,4 @@
-(ns context.ui
+(ns context.vis-ui
   (:require [gdx.input :as input]
             [gdx.scene2d.stage :as stage]
             [core.component :refer [defcomponent] :as component]
@@ -39,7 +39,7 @@
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
 
-(defcomponent :context/ui {}
+(defcomponent :context/vis-ui {}
   (component/create [_ _ctx]
     (check-cleanup-visui!)
     (VisUI/load)
