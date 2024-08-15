@@ -60,8 +60,8 @@
            [:entity/shout]  ; unclear/but ok for now
            [:entity/faction] ; unclear/but ok for now
 
-           [:entity/stats] ; unclear
-           [:entity/string-effect] ; unclear
+           [:entity/stats] ; FIXME TODO #1
+           [:entity/string-effect] ; unclear/but ok for now
 
            [:entity/skills]
            [:entity/inventory]
@@ -69,9 +69,9 @@
            [:effect/target-entity]
 
            [:context/properties {:types [:properties/audiovisual
-                                         :properties/creature ; unclear
+                                         :properties/creature ; FIXME TODO #2
                                          :properties/item
-                                         :properties/projectile ; unclear
+                                         :properties/projectile ; FIXME TODO #3
                                          :properties/skill
                                          :properties/world]
                                  :file "resources/properties.edn"}]

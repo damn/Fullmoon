@@ -34,14 +34,6 @@
                    [1 1 1 0.5])
     (g/draw-image g icon [(- (float x) radius) y])))
 
-(defn- set-skill-to-cooldown [entity* {:keys [property/id skill/cooldown] :as skill} ctx]
-  (when cooldown
-    [:tx.entity/assoc-in (:entity/id entity*) [:entity/skills id :skill/cooling-down?] (->counter ctx cooldown)]))
-
-(defn- pay-skill-mana-cost [{:keys [entity/id] :as entity*} {:keys [skill/cost]}]
-  (when cost
-    [:tx.entity/assoc-in id [:entity/stats :stats/mana 0] (- ((entity/stat entity* :stats/mana) 0) cost)]))
-
 (defrecord ActiveSkill [skill effect-ctx counter]
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/sandclock]])
@@ -51,10 +43,12 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ entity* ctx]
+  (enter [_ {:keys [entity/id]} ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
-     (set-skill-to-cooldown entity* skill ctx)
-     (pay-skill-mana-cost entity* skill)])
+     (when (:skill/cooldown skill)
+       [:tx.entity/assoc-in id [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
+     (when-not (zero? (:skill/cost skill))
+       [:tx.entity.stats/pay-mana-cost id (:skill/cost skill)])])
 
   (exit [_ entity* _ctx])
 

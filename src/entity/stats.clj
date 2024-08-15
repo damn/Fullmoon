@@ -150,6 +150,19 @@
                                    (- height (* 2 border))
                                    (hpbar-color ratio)))))))
 
+(defmethod transact! :tx.entity.stats/pay-mana-cost [[_ entity cost] _ctx]
+  (let [mana-val ((entity/stat @entity :stats/mana) 0)]
+    (assert (<= cost mana-val))
+    [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]]))
+
+(comment
+ (let [mana-val 4
+       entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       mana-cost 3
+       resulting-mana (- mana-val mana-cost)]
+   (= (transact! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+      [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+ )
 
 (defmacro def-set-to-max-effect [stat]
   `(let [component# ~(keyword "effect" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))]
