@@ -3,6 +3,7 @@
        :height 900
        :full-screen? false ; TODO fix full-screen bug @ gdx.backends.lwjgl3
        :fps 60}
+
  :context [[:context/config {:tag :dev ; TODO pass as commandline arg
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
@@ -12,10 +13,12 @@
                                              :property-editor? true
                                              :debug-window? true
                                              :debug-options? true}}}]
+
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
+
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
@@ -36,7 +39,9 @@
                                          :cursors/move-window ["move002" [16 16]]
                                          :cursors/princess ["exclamation001" [0 0]]
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
+
            [:context/tiled] ; can move map-renderer into graphics and tiled just api/gdx fns
+
            [:context/vis-ui] ; TODO dispose stage-screens
 
            [:entity/body]
@@ -75,6 +80,7 @@
                                          :properties/skill
                                          :properties/world]
                                  :file "resources/properties.edn"}]
+
            [:context/screens [:screens/main-menu
                               :screens/game
                               :screens/map-editor ; TODO tiled-map not disposed anymore at screen dispose
