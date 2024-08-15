@@ -17,12 +17,16 @@
 
    ))
 
+; TODO add name/species/level as components to entity
+; so can make info-text
 (defcomponent :properties/creature {}
   (properties/create [_]
+
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
     (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
     (defcomponent :entity/flying? data/boolean-attr)
     (defcomponent :entity/reaction-time data/pos-attr)
+
     (defcomponent :creature/entity (data/components
                                      [:entity/animation
                                       :entity/body
@@ -32,6 +36,7 @@
                                       :entity/stats
                                       :entity/inventory
                                       :entity/skills]))
+
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]

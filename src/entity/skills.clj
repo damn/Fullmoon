@@ -1,5 +1,6 @@
 (ns entity.skills
-  (:require [core.component :refer [defcomponent]]
+  (:require [clojure.string :as str]
+            [core.component :refer [defcomponent]]
             [api.context :refer [get-property ->counter stopped?]]
             [api.entity :as entity]
             [api.tx :refer [transact!]]
@@ -12,6 +13,9 @@
 (defcomponent :entity/skills (data/one-to-many-ids :properties/skill)
   (entity/create-component [[_ skill-ids] _components ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
+
+  (entity/info-text [[_ skills] _ctx]
+    (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]"))
 
   (entity/tick [[k skills] entity* ctx]
     (for [{:keys [property/id skill/cooling-down?]} (vals skills)

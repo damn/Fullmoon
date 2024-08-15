@@ -5,7 +5,9 @@
             [api.entity :as entity]
             [api.tx :refer [transact!]]))
 
-(defcomponent :entity/faction (data/enum :good :evil))
+(defcomponent :entity/faction (data/enum :good :evil)
+  (entity/info-text [[_ faction] _ctx]
+    (str "[SLATE]Faction: " (name faction) "[]")))
 
 (extend-type api.entity.Entity
   entity/Faction

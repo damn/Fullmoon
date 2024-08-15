@@ -66,8 +66,8 @@
         modifiers (stat (:stats/modifiers stats))]
     (data.val-max/apply-val-max-modifiers base-value modifiers)))
 
-(defn- effective-value [entity* stat]
-  (apply-modifiers stat (:entity/stats entity*)))
+(defn- effective-value [stats stat]
+  (apply-modifiers stat stats))
 
 (defcomponent :stats/hp data/pos-int-attr)
 (derive :stats/hp :stat/val-max)
@@ -103,9 +103,9 @@
 
 (extend-type api.entity.Entity
   entity/Stats
-  (stat [entity* stat]
-    (when (stat (:entity/stats entity*))
-      (effective-value entity* stat))))
+  (stat [{:keys [entity/stats]} stat] ; TODO 'key'
+    (when (stat stats)
+      (effective-value stats stat))))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
@@ -124,11 +124,36 @@
 
 (def ^:private borders-px 1)
 
+(def ^:private stats-keywords
+  [:stats/hp
+   :stats/mana
+   :stats/movement-speed
+   :stats/strength
+   :stats/cast-speed
+   :stats/attack-speed
+   :stats/armor-save
+   :stats/armor-pierce])
+
 (defcomponent :entity/stats (data/components-attribute :stats)
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
         (update :stats/hp (fn [hp] [hp hp]))
         (update :stats/mana (fn [mana] [mana mana])) ))
+
+  ; TODO proper texts...
+  ; HP color based on ratio like hp bar samey
+  ; mana color same in the whole app
+  (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
+    (str (str/join "\n"
+                   (for [k stats-keywords
+                         :let [stat (k stats)]
+                         :when stat]
+                     (str (name k) ": " (effective-value stats k))))
+         (when modifiers
+           (str "\n[LIME] Modifiers:\n"
+                (binding [*print-level* nil]
+                  (with-out-str
+                   (clojure.pprint/pprint (sort-by key modifiers))))))))
 
   (entity/render-info [_
                        {{:keys [width half-width half-height]} :entity/body

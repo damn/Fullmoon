@@ -7,6 +7,9 @@
 (defsystem destroy          [_ entity* ctx])
 (defsystem tick             [_ entity* ctx])
 
+(defsystem info-text          [_ ctx])
+(defmethod info-text :default [_ ctx])
+
 (def z-orders [:z-order/on-ground
                :z-order/ground
                :z-order/flying
