@@ -13,7 +13,6 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
-; * modifier texts
 ; * effect/target-entity - valid-params? broken
 ; * properties.item - :item/modifier no schema
 ; * default values
@@ -23,14 +22,6 @@
 ; * :inc :mult -> use namespaced keyword
 ; * we only work on max so could just use inc/mult @ val-max-modifiers hp/mana
 ; * take max-movement-speed into account @ :stats/movement-speed
-
-(extend-type api.context.Context
-  api.context/Modifier
-  (modifier-text [_ modifier] ; only called at properties.item
-    (binding [*print-level* nil]
-      (with-out-str (clojure.pprint/pprint modifier)))
-    #_(->> (for [component modifier] (modifier/text component))
-         (str/join "\n"))))
 
 (defn- update-modifiers [entity [stat operation] f]
   [:tx.entity/update-in entity [:entity/stats :stats/modifiers stat operation] f])
@@ -68,6 +59,16 @@
 
 (defcomponent :stats/hp data/pos-int-attr)
 (derive :stats/hp :stat/val-max)
+
+; TODO mark somehow as 'modifier'
+; then can use schema of defcomponent :item/modifier
+; and generate automatically ... based on data ? <(o.o)>
+(comment
+
+ (defcomponent [:stats/hp [:max :inc]] {})
+ (defcomponent [:stats/hp [:max :mult]] {})
+
+ )
 
 (defcomponent :stats/mana data/nat-int-attr)
 (derive :stats/mana :stat/val-max)

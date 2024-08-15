@@ -71,7 +71,8 @@
                 (not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
      ; TODO attribute overwrite WARNING !
-     (alter-var-root #'attributes assoc ~k ~attr-map)))
+     (alter-var-root #'attributes assoc ~k ~attr-map)
+     ~k))
   ([k attr-map & sys-impls]
    `(do
      (defcomponent ~k ~attr-map)
