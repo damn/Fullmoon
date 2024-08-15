@@ -1,14 +1,13 @@
 (ns entity.stats
   (:require [clojure.string :as str]
+            [gdx.graphics.color :as color]
             [utils.random :as random]
             [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifiers]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            api.context
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
-            [gdx.graphics.color :as color]
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
