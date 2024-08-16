@@ -12,19 +12,19 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
-; * properties.item - :item/modifier no schema
 ; * default values
+
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
-; * editable in editor ? or first keep @ properties.edn ?
-; * stats/modifiers in editor / for example max dmg reduced by 5 at stone golem
-; * :inc :mult -> use namespaced keyword
-; * we only work on max so could just use inc/mult @ val-max-modifiers hp/mana
 ; * take max-movement-speed into account @ :stats/movement-speed
 
-; modifier / modifier-component
-; or modifiers/ modifier
-; and effects/effect
-; effects/usable? .... plural ?
+; * :stats/modifiers in editor / for example max dmg reduced by 5 at stone golem => but is a sequence ... ???
+
+; * :inc :mult -> use namespaced keyword
+
+; * modifier / modifier-component
+  ; or modifiers/ modifier
+  ; and effects/effect
+  ; effects/usable? .... plural ?
 
 (defn- update-modifiers [entity modifier f]
   [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
@@ -41,6 +41,10 @@
 
 (defmulti ->effective-value (fn [stat _stats] stat))
 
+; get modifiers where [stat op] stat matches
+; for each op it knows how to apply itself and in which
+; order ?
+
 (defmethod ->effective-value :stat/plain-number [stat stats]
   (let [modifiers (:stats/modifiers stats)]
     (-> (stat stats)
@@ -52,27 +56,55 @@
     (-> (stat stats)
         (+ (reduce + (get modifiers [stat :inc]))))))
 
+(defmulti apply-operation (fn [operation _base-value _values] operation))
+
+(defmethod apply-operation :op/inc [_ base-value values]
+  (reduce + base-value values))
+
+(defmethod apply-operation :op/mult [_ base-value values]
+  (* base-value (reduce + 1 values)))
+
+(defmethod apply-operation [:max :inc] [operation base-value values]
+  (apply-val-max-modifier base-value [operation values]))
+
+(defmethod apply-operation [:max :mult] [operation base-value values]
+  (apply-val-max-modifier base-value [operation values]))
+
+(defn- apply-operation [value operation]
+
+  )
+
 (defmethod ->effective-value :stat/val-max [stat stats]
-  (let [modifiers (:stats/modifiers stats)]
+  (let [modifiers (:stats/modifiers stats)
+        operations (:stat/modifier-operations (get core.component/attributes :stats/hp))]
+    (reduce
+     (fn [base-value operation]
+       (apply-operation base-value operation))
+     (stat stats)
+     operations
+     )
     (data.val-max/apply-val-max-modifiers (stat stats)
                                           {[:max :inc]  (get modifiers [stat [:max :inc]])
                                            [:max :mult] (get modifiers [stat [:max :mult]])})))
 
-(defcomponent :stats/hp data/pos-int-attr)
+(defcomponent :stats/hp (assoc data/pos-int-attr
+                          :stat/modifier-operations [[:max :inc]
+                                                     [:max :mult]]
+                          ))
+
+
+
 (derive :stats/hp :stat/val-max)
-
-; TODO mark somehow as 'modifier'
-; then can use schema of defcomponent :item/modifier
-; and generate automatically ... based on data ? <(o.o)>
-(comment
-
- (defcomponent [:stats/hp [:max :inc]] {})
- (defcomponent [:stats/hp [:max :mult]] {})
-
- )
+(defcomponent [:stats/hp [:max :inc]]  {:type :component/modifier
+                                        :widget :text-field
+                                        :schema int?})
+(defcomponent [:stats/hp [:max :mult]] {:type :component/modifier})
 
 (defcomponent :stats/mana data/nat-int-attr)
 (derive :stats/mana :stat/val-max)
+
+(defcomponent [:stats/mana [:max :inc]]  {:type :component/modifier})
+(defcomponent [:stats/mana [:max :mult]] {:type :component/modifier})
 
 ; hp & mana have [:max :inc] and [:max :mult] operations
 ; only going on max so can just make :inc and :mult
@@ -84,8 +116,13 @@
 (defcomponent :stats/movement-speed data/pos-attr)
 (derive :stats/movement-speed :stat/plain-number)
 
+(defcomponent [:stats/movement-speed :inc]  {:type :component/modifier})
+(defcomponent [:stats/movement-speed :mult] {:type :component/modifier})
+
 (defcomponent :stats/strength data/nat-int-attr)
 (derive :stats/strength :stat/only-inc)
+
+(defcomponent [:stats/strength :inc] {:type :component/modifier})
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -98,14 +135,31 @@
 (derive :stats/cast-speed :stat/only-inc)
 (derive :stats/attack-speed :stat/only-inc)
 
+(defcomponent [:stats/cast-speed :inc] {:type :component/modifier})
+(defcomponent [:stats/attack-speed :inc] {:type :component/modifier})
+
 (defcomponent :stats/armor-save {:widget :text-field :schema number?})
 (derive :stats/armor-save :stat/only-inc)
+
+(defcomponent [:stats/armor-save :inc] {:type :component/modifier})
 
 (defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
 (derive :stats/armor-pierce :stat/only-inc)
 
+(defcomponent [:stats/armor-pierce :inc] {:type :component/modifier})
+
 (defcomponent :stats/damage-deal {})
 (defcomponent :stats/damage-receive {})
+
+(defcomponent [:stats/damage-deal [:val :inc]]  {:type :component/modifier})
+(defcomponent [:stats/damage-deal [:val :mult]] {:type :component/modifier})
+(defcomponent [:stats/damage-deal [:max :inc]]  {:type :component/modifier})
+(defcomponent [:stats/damage-deal [:max :mult]] {:type :component/modifier})
+
+(defcomponent [:stats/damage-receive [:val :inc]]  {:type :component/modifier})
+(defcomponent [:stats/damage-receive [:val :mult]] {:type :component/modifier})
+(defcomponent [:stats/damage-receive [:max :inc]]  {:type :component/modifier})
+(defcomponent [:stats/damage-receive [:max :mult]] {:type :component/modifier})
 
 (extend-type api.entity.Entity
   entity/Stats
@@ -139,7 +193,9 @@
    :stats/cast-speed
    :stats/attack-speed
    :stats/armor-save
-   :stats/armor-pierce])
+   :stats/armor-pierce
+   ; TODO damage deal/receive ?
+   ])
 
 (defcomponent :entity/stats (data/components-attribute :stats)
   (entity/create-component [[_ stats] _components _ctx]

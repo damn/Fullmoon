@@ -68,7 +68,7 @@
   ([k attr-map]
    `(do
      (when (and warn-name-ns-mismatch?
-                (not= (#'k->component-ns ~k) (ns-name *ns*)))
+                #_(not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
      ; TODO attribute overwrite WARNING !
      (alter-var-root #'attributes assoc ~k ~attr-map)
@@ -80,7 +80,9 @@
              :let [sys-var (resolve sys)
                    sys-params (:params (meta sys-var))
                    fn-params (first fn-body)
-                   method-name (symbol (str (name (symbol sys-var)) "." (name k)))]]
+                   method-name (symbol (str (name (symbol sys-var))
+                                            (when (keyword? k)
+                                              (str "." (name k)))))]]
          (do
           (when-not sys-var
             (throw (IllegalArgumentException. (str sys " does not exist."))))

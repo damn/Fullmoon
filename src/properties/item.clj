@@ -28,11 +28,12 @@
   (properties/create [_]
     ; modifier add/remove
     ; item 'upgrade' colorless to sword fire
-    (defcomponent :item/modifier
-      {:widget :label
-       :schema :some}
-      #_(data/components-attribute :modifier))
-    (defcomponent :item/slot     {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+    (defcomponent :item/modifier (data/components
+                                   (map first (filter (fn [[k data]]
+                                                        (= (:type data) :component/modifier))
+                                                      core.component/attributes))))
+
+    (defcomponent :item/slot {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
     {:id-namespace "items"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :items}]]

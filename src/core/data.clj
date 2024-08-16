@@ -53,7 +53,8 @@
    :components ks})
 
 (defn components-attribute [component-namespace]
-  (components (filter #(= (name component-namespace) (namespace %))
+  (components (filter #(and (keyword? %)
+                            (= (name component-namespace) (namespace %)))
                       (keys component/attributes))))
 
 ; TODO similar to map-attribute & components-attribute
