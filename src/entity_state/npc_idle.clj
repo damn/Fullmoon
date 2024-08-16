@@ -12,7 +12,8 @@
 
 (defn- ->effect-context [ctx entity*]
   (let [target (nearest-enemy ctx entity*)
-        target (when (ctx/line-of-sight? ctx entity* @target) target)]
+        target (when (and target (ctx/line-of-sight? ctx entity* @target))
+                 target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
      :effect/direction (when target (entity/direction entity* @target))}))

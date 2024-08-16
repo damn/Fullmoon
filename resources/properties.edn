@@ -2349,7 +2349,10 @@
    :entity/reaction-time 0.2,
    :entity/skills #{},
    :entity/stats
-   {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
+   {:stats/hp 350,
+    :stats/mana 11,
+    :stats/modifiers {[:stats/damage-receive [:max :mult]] -0.9},
+    :stats/movement-speed 2}},
   :creature/level 10,
   :creature/species :species/golem,
   :property/id :creatures/golem-stone,
@@ -3665,7 +3668,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Pearl Ring"}
- {:item/modifier {[:stats/strength :inc] 3.3},
+ {:item/modifier {[:stats/strength :inc] 3},
   :item/slot :inventory.slot/glove,
   :property/id :items/blood-glove,
   :property/image

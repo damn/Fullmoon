@@ -1313,6 +1313,11 @@
     <property name="id" value="creatures/snake"/>
    </properties>
   </tile>
+  <tile id="95">
+   <properties>
+    <property name="id" value="creatures/golem-stone"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="891" name="uf_items" tilewidth="48" tileheight="48" tilecount="484" columns="22">
   <image source="uf_items.png" width="1056" height="1056"/>

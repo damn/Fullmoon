@@ -78,8 +78,9 @@
    (let [modifiers (:stats/modifiers stats)
          operations (:stat/modifier-operations (get core.component/attributes stat-k))]
      (reduce (fn [base-value op]
-               ;(println "base-value: " base-value " , op: " op)
-               (apply-operation op base-value (get modifiers [stat-k op])))
+               (if-let [modifier-values (get modifiers [stat-k op])]
+                 (apply-operation op base-value modifier-values)
+                 base-value))
              base-value
              (sort-by op-order operations)))))
 
@@ -177,6 +178,14 @@
                              [:val :inc]
                              [:val :mult]])
 
+(defcomponent :stats/modifiers
+  (data/components
+    (map first (filter (fn [[k data]]
+                         (= (:type data) :component/modifier))
+                       core.component/attributes))))
+
+; TODO they need to be made into a seq ....
+
 
 (extend-type api.entity.Entity
   entity/Stats
@@ -214,11 +223,14 @@
    ; TODO damage deal/receive ?
    ])
 
-(defcomponent :entity/stats (data/components-attribute :stats)
+(defcomponent :entity/stats (data/components-attribute :stats) ; TODO do not contain damage-deal/receive, but contain stats/modifiers
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
         (update :stats/hp (fn [hp] [hp hp]))
-        (update :stats/mana (fn [mana] [mana mana]))))
+        (update :stats/mana (fn [mana] [mana mana]))
+        (update :stats/modifiers (fn [mods-values]
+                                   (zipmap (keys mods-values)
+                                           (map vector (vals mods-values)))))))
 
   ; TODO proper texts...
   ; HP color based on ratio like hp bar samey
