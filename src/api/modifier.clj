@@ -2,11 +2,15 @@
   (:require [clojure.string :as str]
             [clojure.math :as math]))
 
-; TODO in case of damage receive negative values are positive .... so green ... o.o
+; For now no green/red color for positive/negative numbers
+; as :stats/damage-receive negative value would be red but actually a useful buff
+(def ^:private positive-modifier-color "[CYAN]" #_"[LIME]")
+(def ^:private negative-modifier-color "[CYAN]" #_"[SCARLET]")
+
 (defn- +? [n]
   (case (math/signum n)
-    (0.0 1.0) "[LIME]+"
-    -1.0 "[SCARLET]"))
+    (0.0 1.0) (str positive-modifier-color "+")
+    -1.0 (str negative-modifier-color "")))
 
 (defn- ->percent [v]
   (str (int (* 100 v)) "%"))
