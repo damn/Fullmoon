@@ -32,7 +32,7 @@
    cooling-down?
    :cooldown
 
-   (and cost (> cost ((entity/stat entity* :stats/mana) 0)))
+   (> cost ((entity/stat entity* :stats/mana) 0))
    :not-enough-mana
 
    (not (valid-params? effect-ctx effect))
