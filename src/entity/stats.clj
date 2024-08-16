@@ -89,7 +89,7 @@
 (defmethod apply-operation :op/val-max  [operation base-value values]
   (apply-val-max-modifier base-value [operation values]))
 
-(defn- op-order [operation]
+(defn- op-order [[[_stat-k operation] _values]]
   (case operation
     :inc 0
     :mult 1
@@ -101,22 +101,28 @@
 (defn- ->effective-value
   ([stat-k stats]
    (->effective-value (stat-k stats) stat-k stats))
+
   ([base-value stat-k stats]
-   (let [modifiers (:stats/modifiers stats)
-         operations (filter (fn [[[k _op] _values]] (= k stat-k)) modifiers)]
-     (reduce (fn [base-value op]
-               (if-let [modifier-values (get modifiers [stat-k op])]
-                 (apply-operation op base-value modifier-values)
-                 base-value))
-             base-value
-             (sort-by op-order operations)))))
+   (->> stats
+        :stats/modifiers
+        (filter (fn [[[k _op] _values]] (= k stat-k)))
+        (sort-by op-order)
+        (reduce (fn [base-value [[_k operation] values]]
+                  (apply-operation operation base-value values))
+                base-value))))
 
 (comment
 
  (= (->effective-value [5 10]
                        :stats/damage-deal
-                       {:stats/modifiers {[:stats/damage-deal [:val :inc]] [30]}})
+                       {:stats/modifiers {[:stats/damage-deal [:val :inc]] [30]
+                                          [:fooz :barz] [ 1 2 3 ]}})
     [35 35])
+
+ (= (->effective-value [5 10]
+                       :stats/damage-deal
+                       {:stats/modifiers {}})
+    [5 10])
 
 
  (= (->effective-value :stats/hp
