@@ -103,7 +103,7 @@
    (->effective-value (stat-k stats) stat-k stats))
   ([base-value stat-k stats]
    (let [modifiers (:stats/modifiers stats)
-         operations (:stat/modifier-operations (get core.component/attributes stat-k))]
+         operations (filter (fn [[[k _op] _values]] (= k stat-k)) modifiers)]
      (reduce (fn [base-value op]
                (if-let [modifier-values (get modifiers [stat-k op])]
                  (apply-operation op base-value modifier-values)
@@ -154,27 +154,25 @@
           :widget :text-field
           :schema number?}})
 
-(defn defstat [stat-k attr-data & {:keys [stat/modifier-operations]}]
-  (defcomponent stat-k
-    (assoc attr-data :stat/modifier-operations modifier-operations))
-
+(defn defstat [stat-k attr-data & {:keys [operations]}]
+  (defcomponent stat-k attr-data)
   (doseq [op modifier-operations]
     (defcomponent [stat-k op] (get operation-components-base op)))
   stat-k)
 
 (defstat :stats/hp data/pos-int-attr
-  :stat/modifier-operations [[:max :inc]
-                             [:max :mult]])
+  :operations [[:max :inc]
+               [:max :mult]])
 
 (defstat :stats/mana data/nat-int-attr
-  :stat/modifier-operations [[:max :inc]
-                             [:max :mult]])
+  :operations [[:max :inc]
+               [:max :mult]])
 
 (defstat :stats/movement-speed data/pos-attr
-  :stat/modifier-operations [:inc :mult])
+  :operations [:inc :mult])
 
 (defstat :stats/strength data/nat-int-attr
-  :stat/modifier-operations [:inc])
+  :operations [:inc])
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -184,30 +182,30 @@
       skill-speed-stat (assoc data/pos-attr :doc doc)
       operations [:inc]]
   (defstat :stats/cast-speed skill-speed-stat
-    :stat/modifier-operations operations)
+    :operations operations)
   (defstat :stats/attack-speed skill-speed-stat
-    :stat/modifier-operations operations))
+    :operations operations))
 
 (defstat :stats/armor-save {:widget :text-field :schema number?}
-  :stat/modifier-operations [:inc])
+  :operations [:inc])
 
 (defstat :stats/armor-pierce {:widget :text-field :schema number?}
-  :stat/modifier-operations [:inc])
+  :operations [:inc])
 
 ; TODO this is not a real stat ... ?
 ; only as modifiers ?
 ; don't add to :entity/stats component .....
 (defstat :stats/damage-deal {}
-  :stat/modifier-operations [[:max :inc]
-                             [:max :mult]
-                             [:val :inc]
-                             [:val :mult]])
+  :operations [[:max :inc]
+               [:max :mult]
+               [:val :inc]
+               [:val :mult]])
 
 (defstat :stats/damage-receive {}
-  :stat/modifier-operations [[:max :inc]
-                             [:max :mult]
-                             [:val :inc]
-                             [:val :mult]])
+  :operations [[:max :inc]
+               [:max :mult]
+               [:val :inc]
+               [:val :mult]])
 
 (defcomponent :stats/modifiers
   (data/components
