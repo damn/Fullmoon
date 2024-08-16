@@ -162,7 +162,7 @@
 
 (defn defstat [stat-k attr-data & {:keys [operations]}]
   (defcomponent stat-k attr-data)
-  (doseq [op modifier-operations]
+  (doseq [op operations]
     (defcomponent [stat-k op] (get operation-components-base op)))
   stat-k)
 
