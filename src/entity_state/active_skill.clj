@@ -25,14 +25,17 @@
 (defn- valid-params? [effect-ctx effect]
   (every? #(effect/valid-params? % effect-ctx) effect))
 
+(defn- not-enough-mana? [entity* {:keys [skill/cost]}]
+  (> cost ((entity/stat entity* :stats/mana) 0)))
+
 (defn skill-usable-state [effect-ctx
                           entity*
-                          {:keys [skill/cost skill/cooling-down? skill/effect]}]
+                          {:keys [skill/cooling-down? skill/effect] :as skill}]
   (cond
    cooling-down?
    :cooldown
 
-   (> cost ((entity/stat entity* :stats/mana) 0))
+   (not-enough-mana? entity* skill)
    :not-enough-mana
 
    (not (valid-params? effect-ctx effect))
