@@ -1996,6 +1996,7 @@
    #{:items/cloak-royal
      :items/shield-vorpal-buckler
      :items/studded-helm
+     :items/blood-helm
      :items/shield-mystic-great
      :items/ring-copper
      :items/ring-gold
@@ -3133,7 +3134,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [48 624 48 48]},
   :property/pretty-name "Boot Leather"}
- {:item/modifier {},
+ {:item/modifier {[:stats/hp [:max :inc]] 2},
   :item/slot :inventory.slot/glove,
   :property/id :items/chain-glove,
   :property/image
@@ -3217,7 +3218,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [240 0 48 48]},
   :property/pretty-name "Bone Key"}
- {:item/modifier {},
+ {:item/modifier {[:stats/hp [:max :inc]] -200},
   :item/slot :inventory.slot/helm,
   :property/id :items/blood-helm,
   :property/image
@@ -3295,8 +3296,8 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Gold Ring"}
-{:item/modifier {[:stats/hp [:max :inc]] 10
-                 [:stats/hp [:max :mult]] 0.05},
+ {:item/modifier
+  {[:stats/hp [:max :inc]] 10, [:stats/hp [:max :mult]] 0.05},
   :item/slot :inventory.slot/boot,
   :property/id :items/cloth-boot,
   :property/image
