@@ -180,10 +180,10 @@
   (effect/text [[_ creature-id] _effect-ctx]
     (str "Spawns a " (name creature-id)))
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target-position]}]
+  (effect/usable? [_ {:keys [effect/source effect/target-position]}]
     ; TODO line of sight ? / not blocked ..
-    (and source
-         (:entity/faction @source)
+    ; (part of target-position make)
+    (and (:entity/faction @source)
          target-position))
 
   (transact! [[_ creature-id] {:keys [effect/source effect/target-position]}]

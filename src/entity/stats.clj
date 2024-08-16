@@ -201,8 +201,7 @@
        (effect/text ~'[_ _effect-ctx]
          ~(str "Sets " (name stat) " to max."))
 
-       (effect/valid-params? ~'[_ {:keys [effect/source]}]
-         ~'source)
+       (effect/usable? ~'[_ _effect-ctx] true)
 
        (effect/useful? ~'[_ {:keys [effect/source]} _ctx]
          (lower-than-max? (~stat (:entity/stats @~'source))))
@@ -219,7 +218,7 @@
   (effect/text [[_ stat] _effect-ctx]
     (str "Sets " (name stat) " to max."))
 
-  (effect/valid-params? [_ {:keys [effect/source]}]
+  (effect/usable? [_ {:keys [effect/source]}]
     source)
 
   (effect/useful? [[_ stat] {:keys [effect/source]} _ctx]
@@ -232,7 +231,7 @@
 #_(defcomponent :effect/set-mana-to-max {:widget :label
                                          :schema [:= true]
                                          :default-value true}
-  (effect/valid-params? [_ {:keys [effect/source]}] source)
+  (effect/usable? [_ {:keys [effect/source]}] source)
   (effect/text    [_ _effect-ctx]     (effect/text    [:effect/set-to-max :entity/mana]))
   (effect/useful? [_ effect-ctx _ctx] (effect/useful? [:effect/set-to-max :entity/mana] effect-ctx))
   (effect/txs     [_ effect-ctx]      (effect/txs     [:effect/set-to-max :entity/mana] effect-ctx)))
@@ -254,8 +253,8 @@
            (str "\n" (effect/text (damage-effect effect-ctx)
                                   effect-ctx)))))
 
-  (effect/valid-params? [_ effect-ctx]
-    (effect/valid-params? (damage-effect effect-ctx)))
+  (effect/usable? [_ effect-ctx]
+    (effect/usable? (damage-effect effect-ctx)))
 
   (transact! [_ ctx]
     [(damage-effect ctx)]))
@@ -361,8 +360,12 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
-    (and source target))
+  (effect/usable? [_ {:keys [effect/target]}]
+    (and target
+         ; TODO is damage-able (don't attack projectiles ...)
+         ; ? but nearest-enemy anyway ?
+         ; player can attack projectiles ??
+         ))
 
   (transact! [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source

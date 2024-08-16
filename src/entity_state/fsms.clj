@@ -98,8 +98,10 @@
   (effect/text [[_ duration] _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
-    (and target))
+  (effect/usable? [_ {:keys [effect/target]}]
+    (and target
+         ; TODO has entity/state creature ?
+         ))
 
   (transact! [[_ duration] {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
@@ -108,8 +110,10 @@
   (effect/text [_ _effect-ctx]
     "Kills target")
 
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
-    (and target))
+  (effect/usable? [_ {:keys [effect/source effect/target]}]
+    (and target
+         ; TODO has entity/state creature ?
+         ))
 
   (transact! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))

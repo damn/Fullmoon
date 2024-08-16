@@ -41,20 +41,12 @@
                                      :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
 Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
   (effect/text [[_ {:keys [maxrange hit-effect]}] effect-ctx]
-    (str "Range " maxrange " meters\n" (effect-ctx/text effect-ctx hit-effect)))
+    (str "Range " maxrange " meters\n"
+         (effect-ctx/text effect-ctx hit-effect)))
 
-  ; TODO lOs move to effect/target effect-context creation?
-  ; => but - cancels attack if losing los ... so needs to be here ....
-  ; TODO target still exists ?! necessary ? what if disappears/dead?
-  ; TODO (:entity/hp @target) is valid-params of hit-effect damage !! -> allow anyway and just do nothing then?
-  ; => archer attacked projectile ! not possible ! see exactly which effects/which applied components/etc.
-  (effect/valid-params? [_ {:keys [effect/source effect/target]}]
-    (and source
-         target
-         ;(line-of-sight? ctx @source @target) ; TODO make it @ effect-context creation that only targets w. line of sight ... ..
-         ; but this cancels it so ... maybe effect/cancel?
-         ;(entity/hp @target)
-
+  (effect/usable? [_ {:keys [effect/target]}]
+    (and target
+         ; TODO hit-effect requirements check
          ))
 
   (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} _ctx]

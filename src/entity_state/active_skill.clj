@@ -6,15 +6,6 @@
             [api.graphics :as g]
             [api.tx :refer [transact!]]))
 
-(defmethod transact! :tx/effect [[_ effect-ctx effect] ctx]
-  (-> ctx
-      (merge effect-ctx)
-      (ctx/transact-all! effect)
-      (dissoc :effect/source
-              :effect/target
-              :effect/direction
-              :effect/target-position)))
-
 ; SCHEMA effect-ctx
 ; * source = always available
 ; # npc:
@@ -25,14 +16,6 @@
 ;  * target-position  = always available
 ;  * direction  = always available
 
-(defn- check-remove-target [effect-ctx ctx]
-  (update effect-ctx :effect/target
-          (fn [target]
-            (when (and target
-                       (not (:entity/destroyed? @target))
-                       (ctx/line-of-sight? ctx @source @target))
-              target))))
-
 ; TODO
 ; also target not destroyed
 ; line of sight part of all target fof ?
@@ -40,11 +23,30 @@
 ; damage -> hp ...
 ; move armor out of damage fofo
 ; stun needs creature state ..
-(defn- valid-params? [{:keys [effect/source effect/target] :as effect-ctx}
+
+(defmethod transact! :tx/effect [[_ effect-ctx effect] ctx]
+  (-> ctx
+      (merge effect-ctx)
+      (ctx/transact-all! effect)
+      (dissoc :effect/source
+              :effect/target
+              :effect/direction
+              :effect/target-position)))
+
+; would have to do this only if effect even needs target ... ?
+(defn- check-remove-target [{:keys [effect/source] :as effect-ctx} ctx]
+  (update effect-ctx :effect/target
+          (fn [target]
+            (when (and target
+                       (not (:entity/destroyed? @target))
+                       (ctx/line-of-sight? ctx @source @target))
+              target))))
+
+(defn- usable? [{:keys [effect/source effect/target] :as effect-ctx}
                       effect
                       ctx]
   (let [effect-ctx (check-remove-target effect-ctx ctx)]
-    (every? #(effect/valid-params? % effect-ctx) effect)))
+    (every? #(effect/usable? % effect-ctx) effect)))
 
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
   (> cost ((entity/stat entity* :stats/mana) 0)))
@@ -60,7 +62,7 @@
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (valid-params? effect-ctx effect ctx))
+   (not (usable? effect-ctx effect ctx))
    :invalid-params
 
    :else
@@ -99,7 +101,7 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (valid-params? effect-ctx (:skill/effect skill) context))
+     (not (usable? effect-ctx (:skill/effect skill) context))
      [[:tx/event id :action-done]
       ; TODO some sound ?
       ]

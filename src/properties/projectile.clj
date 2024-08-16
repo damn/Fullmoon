@@ -77,10 +77,9 @@
   (effect/text [_ effect-ctx]
     (effect-ctx/text effect-ctx hit-effect))
 
-  (effect/valid-params? [_ {:keys [effect/source
-                                   effect/target
-                                   effect/direction]}]
-    (and source direction)) ; faction @ source also ?
+  ; TODO for npcs need target -- anyway only with direction
+  (effect/usable? [_ {:keys [effect/direction]}]
+    direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
   (effect/useful? [_ {:keys [effect/source effect/target]} ctx]

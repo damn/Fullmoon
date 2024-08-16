@@ -1288,6 +1288,11 @@
  </tileset>
  <tileset firstgid="761" name="uf_heroes_simple" tilewidth="48" tileheight="48" tilecount="130" columns="10">
   <image source="uf_heroes_simple.png" width="480" height="624"/>
+  <tile id="0">
+   <properties>
+    <property name="id" value="creatures/wizard"/>
+   </properties>
+  </tile>
   <tile id="3">
    <properties>
     <property name="id" value="creatures/archer"/>
