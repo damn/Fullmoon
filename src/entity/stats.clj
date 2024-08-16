@@ -79,15 +79,16 @@
 (defn- stat-k->pretty-name [stat-k]
   (str/capitalize (name stat-k)))
 
+; TODO see D2 arreat summit
 (defn info-text [[[stat-k operation] value]]
   (str (+? value)
        (case operation
          :inc (str value " ")
          :mult (str (->percent value) " ")
-         [:val :inc] (str value " min ")
-         [:max :inc] (str value " max ")
-         [:val :mult] (str (->percent value) " min ")
-         [:max :mult] (str (->percent value) " max "))
+         [:val :inc] (str value " minimum ")
+         [:max :inc] (str value " maximum ")
+         [:val :mult] (str (->percent value) " minimum ")
+         [:max :mult] (str (->percent value) " maximum "))
        (stat-k->pretty-name stat-k)
        "[]"))
 
@@ -217,7 +218,8 @@
                [:max :mult]])
 
 (defstat :stats/movement-speed data/pos-attr ; TODO only mult required
-  :operations [:inc :mult])
+  :operations [:inc
+               :mult])
 
 (defstat :stats/strength data/nat-int-attr
   :operations [:inc])
@@ -240,18 +242,13 @@
 (defstat :stats/armor-pierce {:widget :text-field :schema number?}
   :operations [:inc])
 
-; TODO apply to calculated damage, no need max/val
-; also @ max hp
-; -> so also only inc/mult no val-max ??
-(defmodifiers :stats/damage-deal [[:max :inc]
-                                  [:max :mult]
-                                  [:val :inc]
-                                  [:val :mult]])
+(defmodifiers :stats/damage-deal [[:val :inc]
+                                  [:val :mult]
+                                  [:max :inc]
+                                  [:max :mult]])
 
-(defmodifiers :stats/damage-receive [[:max :inc]
-                                     [:max :mult]
-                                     [:val :inc]
-                                     [:val :mult]])
+(defmodifiers :stats/damage-receive [:inc
+                                     :mult])
 
 ; only :stats/damage-deal & :stats/damage-receive
 ; the rest can be set through the base-values
@@ -494,61 +491,30 @@
 (defn- armor-saves? [source* target*]
   (< (rand) (effective-armor-save source* target*)))
 
-(defn- apply-damage-modifiers [damage entity* stat]
-  (update damage :damage/min-max ->effective-value stat (:entity/stats entity*)))
+(defn- ->effective-damage [damage source*]
+  (update damage :damage/min-max ->effective-value :stats/damage-deal (:entity/stats source*)))
 
 (comment
- (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers {[:stats/damage-deal [:val :inc]] [1]}}}
-                            :stats/damage-deal)
-    #:damage{:min-max [6 10]})
+ (let [->stats (fn [mods] {:entity/stats {:stats/modifiers mods}})]
+   (and
+    (= (->effective-damage {:damage/min-max [5 10]}
+                         (->stats
+                          {[:stats/damage-deal [:val :inc]] [1 5 10]
+                           [:stats/damage-deal [:val :mult]] [0.2 0.3]
+                           [:stats/damage-deal [:max :mult]] [1]}))
+       #:damage{:min-max [31 62]})
 
- (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers {[:stats/damage-deal [:max :mult]] [2]}}}
-                            :stats/damage-deal)
-    #:damage{:min-max [5 30]})
+    (= (->effective-damage {:damage/min-max [5 10]}
+                         (->stats {[:stats/damage-deal [:val :inc]] [1]}))
+       #:damage{:min-max [6 10]})
 
- (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers nil}}
-                            :stats/damage-receive)
-    #:damage{:min-max [5 10]})
- )
+    (= (->effective-damage {:damage/min-max [5 10]}
+                         (->stats {[:stats/damage-deal [:max :mult]] [2]}))
+       #:damage{:min-max [5 30]})
 
-(defn- effective-damage
-  ([damage source*]
-   (apply-damage-modifiers damage source* :stats/damage-deal))
-
-  ([damage source* target*]
-   (-> (effective-damage damage source*)
-       (apply-damage-modifiers target* :stats/damage-receive))))
-
-(comment
- ; broken
- (= (apply-damage-modifiers {:damage/min-max [3 10]}
-                            {[:max :mult] 2
-                             [:val :mult] 1.5
-                             [:val :inc] 1
-                             [:max :inc] 0})
-    #:damage{:min-max [6 20]})
-
- (= (apply-damage-modifiers {:damage/min-max [6 20]}
-                            {[:max :mult] 1
-                             [:val :mult] 1
-                             [:val :inc] -5
-                             [:max :inc] 0})
-    #:damage{:min-max [1 20]})
-
- (= (effective-damage {:damage/min-max [3 10]}
-                      {:entity/stats {:stats/damage {:damage/deal {[:max :mult] [2]
-                                                                   [:val :mult] [1.5]
-                                                                   [:val :inc] [1]
-                                                                   [:max :inc] [0]}}}}
-                      {:entity/stats {:stats/damage {:damage/receive {[:max :mult] [1]
-                                                                      [:val :mult] [1]
-                                                                      [:val :inc] [-5]
-                                                                      [:max :inc] [0]}}}})
-    #:damage{:min-max [3 10]})
- )
+    (= (->effective-damage {:damage/min-max [5 10]}
+                         (->stats nil))
+       #:damage{:min-max [5 10]}))))
 
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
@@ -558,7 +524,7 @@
 (defcomponent :effect/damage (data/map-attribute :damage/min-max)
   (effect/text [[_ damage] {:keys [effect/source]}]
     (if source
-      (let [modified (effective-damage damage @source)]
+      (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
           (damage->text damage)
           (str (damage->text damage) "\nModified: " (damage->text modified))))
@@ -581,8 +547,12 @@
        [[:tx/add-text-effect target "[WHITE]ARMOR"]] ; TODO !_!_!_!_!_!
 
        :else
-       (let [{:keys [damage/min-max]} (effective-damage damage source* target*)
+       (let [{:keys [damage/min-max]} (->effective-damage damage source*)
+             ;_ (println "\nmin-max:" min-max)
              dmg-amount (random/rand-int-between min-max)
+             ;_ (println "dmg-amount: " dmg-amount)
+             dmg-amount (->pos-int (->effective-value dmg-amount :stats/damage-receive (:entity/stats target*)))
+             ;_ (println "effective dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]

@@ -2351,7 +2351,7 @@
    :entity/stats
    {:stats/hp 350,
     :stats/mana 0,
-    :stats/modifiers {[:stats/damage-receive [:max :mult]] -0.9},
+    :stats/modifiers {[:stats/damage-receive :mult] -0.9},
     :stats/movement-speed 2,
     :stats/strength 10}},
   :creature/level 10,
@@ -3230,7 +3230,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Helm Blood"}
- {:item/modifier {[:stats/damage-receive [:val :inc]] -1},
+ {:item/modifier {[:stats/damage-receive :inc] -1},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-great,
   :property/image
