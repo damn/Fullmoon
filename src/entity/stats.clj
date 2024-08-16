@@ -1,5 +1,6 @@
 (ns entity.stats
   (:require [clojure.string :as str]
+            [clojure.math :as math]
             [gdx.graphics.color :as color]
             [utils.random :as random]
             [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifier]]
@@ -8,9 +9,33 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
-            [api.modifier :as modifier]
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
+
+; For now no green/red color for positive/negative numbers
+; as :stats/damage-receive negative value would be red but actually a useful buff
+(def ^:private positive-modifier-color "[CYAN]" #_"[LIME]")
+(def ^:private negative-modifier-color "[CYAN]" #_"[SCARLET]")
+
+(defn- +? [n]
+  (case (math/signum n)
+    (0.0 1.0) (str positive-modifier-color "+")
+    -1.0 (str negative-modifier-color "")))
+
+(defn- ->percent [v]
+  (str (int (* 100 v)) "%"))
+
+(defn info-text [[[stat operation] value]]
+  (str (+? value)
+       (case operation
+         :inc (str value " ")
+         :mult (str (->percent value) " ")
+         [:val :inc] (str value " min ")
+         [:max :inc] (str value " max ")
+         [:val :mult] (str (->percent value) " min ")
+         [:max :mult] (str (->percent value) " max "))
+       (name stat)
+       "[]"))
 
 ; TODO
 ; * default values / schema for creature stats.... (which required/optional ...)
@@ -278,7 +303,7 @@
            (str "\n"
                 (str/join "\n"
                           (for [[modifier values] modifiers]
-                            (modifier/info-text [modifier (reduce + values)])))))))
+                            (info-text [modifier (reduce + values)])))))))
 
   (entity/render-info [_
                        {{:keys [width half-width half-height]} :entity/body

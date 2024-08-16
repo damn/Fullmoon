@@ -3,9 +3,9 @@
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
-            [api.modifier :as modifier]
             [api.properties :as properties]
-            [api.tx :refer [transact!]]))
+            [api.tx :refer [transact!]]
+            entity.stats))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
                                       (com.badlogic.gdx.graphics.Color. (float 0.84)
@@ -20,7 +20,7 @@
                                                                           (float 1)))
 
 (defn- modifier-text [modifiers]
-  (str/join "\n" (map modifier/info-text modifiers)))
+  (str/join "\n" (map entity.stats/info-text modifiers)))
 
 (defcomponent :properties/item {}
   (properties/create [_]
