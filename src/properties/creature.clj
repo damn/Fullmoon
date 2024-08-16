@@ -4,6 +4,7 @@
             [core.data :as data]
             [api.context :as ctx]
             [api.effect :as effect]
+            [api.entity :as entity]
             [api.properties :as properties]
             [api.tx :refer [transact!]]
             [entity-state.fsms :as fsms]))
@@ -14,11 +15,16 @@
  (let [atlas (TextureAtlas. "creatures/creatures.atlas")
        region (.findRegion atlas "foo")
        ]
-
    ))
 
-; TODO add name/species/level as components to entity
-; so can make info-text
+(defcomponent :entity.creature/name {}
+  (entity/info-text [[_ name] _ctx]
+    name))
+
+(defcomponent :entity.creature/species {}
+  (entity/info-text [[_ species] _ctx]
+    (str "[LIGHT_GRAY]Species: " species "[]")))
+
 (defcomponent :properties/creature {}
   (properties/create [_]
 
@@ -119,7 +125,8 @@
 
 (defmethod transact! :tx.entity/creature [[_ creature-id components] ctx]
   (assert (:entity/state components))
-  (let [creature-components (:creature/entity (ctx/get-property ctx creature-id))]
+  (let [props (ctx/get-property ctx creature-id)
+        creature-components (:creature/entity props)]
     [[:tx/create
       (-> creature-components
           (dissoc :entity/flying?)
@@ -133,7 +140,9 @@
           (merge (dissoc components :entity/position)
                  (when (= creature-id :creatures/lady-a) ; do @ ?
                    {:entity/clickable {:type :clickable/princess}}))
-          (update :entity/state set-state))]])) ; do @ entity/state itself
+          (update :entity/state set-state)  ; do @ entity/state itself
+          (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
+                 :entity.creature/species (str/capitalize (name (:creature/species props)))))]]))
 
 (comment
 

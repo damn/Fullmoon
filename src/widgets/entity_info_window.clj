@@ -13,10 +13,26 @@
 ; grep for: str/join "\n"
 ; and then add small ICONS/extra widgets (e.g. progress bar for delete after duration ) !!! => fatafoooobabababbuuu
 ; * fixed Reihenfolge
+
+(def ^:private info-text-key-order
+  [:entity.creature/name
+   :entity.creature/species
+   ;:entity/faction
+   ;:entity/state
+   :entity/stats
+   :entity/skills
+   ;;
+   :entity/delete-after-duration
+   :entity/projectile-collision])
+
 (defn- entity-info-text [entity* ctx]
-  (->> entity*
-       (keep #(entity/info-text % ctx))
-       (str/join "\n")))
+  (str/join "\n"
+            (for [k info-text-key-order
+                  :let [component (k entity*)
+                        text (when component
+                               (entity/info-text [k component] ctx))]
+                  :when text]
+              text)))
 
 (defn create [context]
   (let [label (->label context "")
