@@ -13,40 +13,12 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
-;;;; endless game - no goal - items durability - skills durability - alwauys new lvl created -
-; - different combinations of enemeis/etc -
-
-; => also : stats separate stat & operations for modifiers
-; modifier is then stat -> 'operation components'
-; different things - stats w. base-values - stats/modifiers with all modifieres -
-
-; => maybe move movement-speed into body, mana into skills, ?
-
-; TODO now I know the problem - princess is your enemy .. not your faction
-; should be neutral ?
-; could even make entities when I come close they fight for me ?
-
-; TODO can damage princess through projectile! doesn't check if usable?
-; applies all effects on entity ....
-; so all transact's have to check if the component is availalbe or filter ?
-; maybe call it 'applicable?'
-; and check everywhere we use tx/effect ....
-
-; TODO
-; * default values / schema for creature stats.... (which required/optional ...)
-
-; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
-; * take max-movement-speed into account @ :stats/movement-speed
-
-; * damage min/max applied doesn't make sense ... its half a damage difference
-; make like D2 ...
-
-; * :inc :mult -> use namespaced keyword
-
-; * modifier / modifier-component
-  ; or modifiers/ modifier
-  ; and effects/effect
-  ; effects/usable? .... plural ?
+; TODO default-values dont make sense
+; e.g. in magic creatures have explicitly 0 power
+; here they have 0 power but implicitly
+; also the code doesnt want to know e.g. armor calculations
+; => make it explicit ...
+; only attack/cast-speed is quite uninteresting ? could hide ?
 
 (defn- tx-update-modifiers [entity modifier f]
   [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
@@ -127,6 +99,9 @@
       :val [v (max v mx)]
       :max [(min v mx) mx])))
 
+; In case of val-max operations (damage, hp, mana)
+; we create 4 unique op keywords
+
 (comment
  (and
   (= (apply-operation [:val :inc] [5 10] 30) [35 35])
@@ -134,8 +109,7 @@
   (= (apply-operation [:val :mult] [5 10] 2) [15 15])
   (= (apply-operation [:val :mult] [5 10] 1.3) [11 11])
   (= (apply-operation [:max :mult] [5 10] -0.8) [1 1])
-  (= (apply-operation [:max :mult] [5 10] -0.9) [0 0])
-  )
+  (= (apply-operation [:max :mult] [5 10] -0.9) [0 0]))
  )
 
 (defn- op-order [[[_stat-k operation] _values]]
@@ -147,6 +121,9 @@
     [:max :inc] 0
     [:max :mult] 1))
 
+; TODO
+; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
+; * take max-movement-speed into account @ :stats/movement-speed
 (defn- ->effective-value [base-value stat-k stats]
   (->> stats
        :stats/modifiers
