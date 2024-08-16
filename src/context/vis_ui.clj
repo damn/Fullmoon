@@ -39,10 +39,11 @@
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
 
+
 (defcomponent :context/vis-ui {}
   (component/create [_ _ctx]
     (check-cleanup-visui!)
-    (VisUI/load)
+    (VisUI/load #_VisUI$SkinScale/X2)
     (font-enable-markup!)
     (set-tooltip-config!)
     true)
