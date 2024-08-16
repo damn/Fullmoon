@@ -28,7 +28,7 @@
 (defn- ->max-zero-int [v]
   (-> v int (max 0)))
 
-(defn- apply-val-max-modifier [val-max [[val-or-max inc-or-mult] values]]
+(defn apply-val-max-modifier [val-max [[val-or-max inc-or-mult] values]]
   {:pre [(m/validate val-max-schema val-max)]
    :post [(m/validate val-max-schema %)]}
   (let [f (case inc-or-mult

@@ -2,7 +2,9 @@
   (:require [clojure.string :as str]
             [gdx.graphics.color :as color]
             [utils.random :as random]
-            [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifiers]]
+            [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifiers
+                                  apply-val-max-modifier
+                                  ]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
@@ -39,69 +41,77 @@
                                         {:post [(= (count %) (dec (count values)))]}
                                         (remove #{value} values)))))
 
-(defmulti ->effective-value (fn [stat _stats] stat))
+(defmulti apply-operation (fn [operation _base-value _values]
+                            (cond
+                             (#{[:max :inc]
+                                [:max :mult]
+                                [:val :inc]
+                                [:val :mult]} operation)
+                             :op/val-max
 
-; get modifiers where [stat op] stat matches
-; for each op it knows how to apply itself and in which
-; order ?
+                             :else
+                             operation)))
 
-(defmethod ->effective-value :stat/plain-number [stat stats]
-  (let [modifiers (:stats/modifiers stats)]
-    (-> (stat stats)
-        (+ (reduce + (get modifiers [stat :inc])))
-        (* (reduce + 1 (get modifiers [stat :mult]))))))
-
-(defmethod ->effective-value :stat/only-inc [stat stats]
-  (let [modifiers (:stats/modifiers stats)]
-    (-> (stat stats)
-        (+ (reduce + (get modifiers [stat :inc]))))))
-
-(defmulti apply-operation (fn [operation _base-value _values] operation))
-
-(defmethod apply-operation :op/inc [_ base-value values]
+; TODO use :op/inc / :op/mult ....?
+(defmethod apply-operation :inc [_ base-value values]
   (reduce + base-value values))
 
-(defmethod apply-operation :op/mult [_ base-value values]
+(defmethod apply-operation :mult [_ base-value values]
   (* base-value (reduce + 1 values)))
 
-(defmethod apply-operation [:max :inc] [operation base-value values]
+(defmethod apply-operation :op/val-max  [operation base-value values]
   (apply-val-max-modifier base-value [operation values]))
 
-(defmethod apply-operation [:max :mult] [operation base-value values]
-  (apply-val-max-modifier base-value [operation values]))
+(defn- op-order [operation]
+  (case operation
+    :inc 0
+    :mult 1
+    [:val :inc] 0
+    [:val :mult] 1
+    [:max :inc] 0
+    [:max :mult] 1))
 
-(defn- apply-operation [value operation]
-
-  )
-
-(defmethod ->effective-value :stat/val-max [stat stats]
+(defn- ->effective-value [stat-k stats]
   (let [modifiers (:stats/modifiers stats)
-        operations (:stat/modifier-operations (get core.component/attributes :stats/hp))]
-    (reduce
-     (fn [base-value operation]
-       (apply-operation base-value operation))
-     (stat stats)
-     operations
-     )
-    (data.val-max/apply-val-max-modifiers (stat stats)
-                                          {[:max :inc]  (get modifiers [stat [:max :inc]])
-                                           [:max :mult] (get modifiers [stat [:max :mult]])})))
+        base-value (stat-k stats)
+        operations (:stat/modifier-operations (get core.component/attributes stat-k))]
+    (reduce (fn [base-value op]
+              ;(println "base-value: " base-value " , op: " op)
+              (apply-operation op base-value (get modifiers [stat-k op])))
+            base-value
+            (sort-by op-order operations))))
+
+(comment
+ (= (->effective-value :stats/hp
+                       {:stats/modifiers {[:stats/hp [:max :inc]] [10 1]
+                                          [:stats/hp [:max :mult]] [0.5]}
+                        :stats/hp [100 100]})
+    [100 166])
+
+ (= (->effective-value :stats/movement-speed
+                       {:stats/modifiers {[:stats/movement-speed :inc] [2]
+                                          [:stats/movement-speed :mult] [0.1 0.2]}
+                        :stats/movement-speed 3})
+    6.5)
+
+ )
 
 (defcomponent :stats/hp (assoc data/pos-int-attr
                           :stat/modifier-operations [[:max :inc]
-                                                     [:max :mult]]
-                          ))
+                                                     [:max :mult]]))
 
+; TODO generate modifier components automatically from the stat component (defstat ?)
 
-
-(derive :stats/hp :stat/val-max)
 (defcomponent [:stats/hp [:max :inc]]  {:type :component/modifier
                                         :widget :text-field
                                         :schema int?})
-(defcomponent [:stats/hp [:max :mult]] {:type :component/modifier})
+(defcomponent [:stats/hp [:max :mult]] {:type :component/modifier
+                                        ; TODO
+                                        })
 
-(defcomponent :stats/mana data/nat-int-attr)
-(derive :stats/mana :stat/val-max)
+(defcomponent :stats/mana (assoc data/nat-int-attr
+                            :stat/modifier-operations [[:max :inc]
+                                                       [:max :mult]]))
 
 (defcomponent [:stats/mana [:max :inc]]  {:type :component/modifier})
 (defcomponent [:stats/mana [:max :mult]] {:type :component/modifier})
@@ -113,14 +123,14 @@
 ; based on the data ... ? (val-max)
 ; manual ?
 
-(defcomponent :stats/movement-speed data/pos-attr)
-(derive :stats/movement-speed :stat/plain-number)
+(defcomponent :stats/movement-speed (assoc data/pos-attr
+                                      :stat/modifier-operations [:inc
+                                                                 :mult]))
 
 (defcomponent [:stats/movement-speed :inc]  {:type :component/modifier})
 (defcomponent [:stats/movement-speed :mult] {:type :component/modifier})
 
 (defcomponent :stats/strength data/nat-int-attr)
-(derive :stats/strength :stat/only-inc)
 
 (defcomponent [:stats/strength :inc] {:type :component/modifier})
 
@@ -132,19 +142,15 @@
       skill-speed-stat (assoc data/pos-attr :doc doc)]
   (defcomponent :stats/cast-speed   skill-speed-stat)
   (defcomponent :stats/attack-speed skill-speed-stat))
-(derive :stats/cast-speed :stat/only-inc)
-(derive :stats/attack-speed :stat/only-inc)
 
 (defcomponent [:stats/cast-speed :inc] {:type :component/modifier})
 (defcomponent [:stats/attack-speed :inc] {:type :component/modifier})
 
 (defcomponent :stats/armor-save {:widget :text-field :schema number?})
-(derive :stats/armor-save :stat/only-inc)
 
 (defcomponent [:stats/armor-save :inc] {:type :component/modifier})
 
 (defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
-(derive :stats/armor-pierce :stat/only-inc)
 
 (defcomponent [:stats/armor-pierce :inc] {:type :component/modifier})
 
