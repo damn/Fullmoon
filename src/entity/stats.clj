@@ -2,9 +2,7 @@
   (:require [clojure.string :as str]
             [gdx.graphics.color :as color]
             [utils.random :as random]
-            [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifiers
-                                  apply-val-max-modifier
-                                  ]]
+            [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifier]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
@@ -71,17 +69,26 @@
     [:max :inc] 0
     [:max :mult] 1))
 
-(defn- ->effective-value [stat-k stats]
-  (let [modifiers (:stats/modifiers stats)
-        base-value (stat-k stats)
-        operations (:stat/modifier-operations (get core.component/attributes stat-k))]
-    (reduce (fn [base-value op]
-              ;(println "base-value: " base-value " , op: " op)
-              (apply-operation op base-value (get modifiers [stat-k op])))
-            base-value
-            (sort-by op-order operations))))
+(defn- ->effective-value
+  ([stat-k stats]
+   (->effective-value (stat-k stats) stat-k stats))
+  ([base-value stat-k stats]
+   (let [modifiers (:stats/modifiers stats)
+         operations (:stat/modifier-operations (get core.component/attributes stat-k))]
+     (reduce (fn [base-value op]
+               ;(println "base-value: " base-value " , op: " op)
+               (apply-operation op base-value (get modifiers [stat-k op])))
+             base-value
+             (sort-by op-order operations)))))
 
 (comment
+
+ (= (->effective-value [5 10]
+                       :stats/damage-deal
+                       {:stats/modifiers {[:stats/damage-deal [:val :inc]] [30]}})
+    [35 35])
+
+
  (= (->effective-value :stats/hp
                        {:stats/modifiers {[:stats/hp [:max :inc]] [10 1]
                                           [:stats/hp [:max :mult]] [0.5]}
@@ -154,8 +161,16 @@
 
 (defcomponent [:stats/armor-pierce :inc] {:type :component/modifier})
 
-(defcomponent :stats/damage-deal {})
-(defcomponent :stats/damage-receive {})
+; TODO these two don't have a 'damage' value
+; only modifiers applied to an actual damage val-max ....
+(defcomponent :stats/damage-deal {:stat/modifier-operations [[:max :inc]
+                                                             [:max :mult]
+                                                             [:val :inc]
+                                                             [:val :mult]]})
+(defcomponent :stats/damage-receive {:stat/modifier-operations [[:max :inc]
+                                                                [:max :mult]
+                                                                [:val :inc]
+                                                                [:val :mult]]})
 
 (defcomponent [:stats/damage-deal [:val :inc]]  {:type :component/modifier})
 (defcomponent [:stats/damage-deal [:val :mult]] {:type :component/modifier})
@@ -339,30 +354,9 @@
 (defn- armor-saves? [source* target*]
   (< (rand) (effective-armor-save source* target*)))
 
-(defn- dmg-apply-modifiers [{:keys [damage/min-max] :as damage} modifiers]
-  (update damage :damage/min-max apply-val-max-modifiers modifiers))
-
-(comment
- (= (dmg-apply-modifiers {:damage/min-max [5 10]}
-                         {[:val :inc] [3]})
-    #:damage{:min-max [8 10]})
-
- (= (dmg-apply-modifiers {:damage/min-max [5 10]}
-                         nil)
-    #:damage{:min-max [5 10]})
-
- )
-
-; -> use ->effective-value ??
-(defn- dmg-modifiers [entity* stat]
-  (let [modifiers  (-> entity* :entity/stats :stats/modifiers)]
-    {[:val :inc]  (get modifiers [stat [:val :inc]])
-     [:val :mult] (get modifiers [stat [:val :mult]])
-     [:max :inc]  (get modifiers [stat [:max :inc]])
-     [:max :mult] (get modifiers [stat [:max :mult]])}))
-
 (defn- apply-damage-modifiers [damage entity* stat]
-  (dmg-apply-modifiers damage (dmg-modifiers entity* stat)))
+  (update damage :damage/min-max
+          ->effective-value stat (:entity/stats entity*)))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
