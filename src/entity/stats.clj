@@ -323,20 +323,21 @@
                         :keys [entity/mouseover?] :as entity*}
                        g
                        _ctx]
-    (let [ratio (val-max-ratio (entity/stat entity* :stats/hp))
-          [x y] (entity/position entity*)]
-      (when (or (< ratio 1) mouseover?)
-        (let [x (- x half-width)
-              y (+ y half-height)
-              height (g/pixels->world-units g hpbar-height-px)
-              border (g/pixels->world-units g borders-px)]
-          (g/draw-filled-rectangle g x y width height color/black)
-          (g/draw-filled-rectangle g
-                                   (+ x border)
-                                   (+ y border)
-                                   (- (* width ratio) (* 2 border))
-                                   (- height (* 2 border))
-                                   (hpbar-color ratio)))))))
+    (when-let [hp (entity/stat entity* :stats/hp)]
+      (let [ratio (val-max-ratio hp)
+            [x y] (entity/position entity*)]
+        (when (or (< ratio 1) mouseover?)
+          (let [x (- x half-width)
+                y (+ y half-height)
+                height (g/pixels->world-units g hpbar-height-px)
+                border (g/pixels->world-units g borders-px)]
+            (g/draw-filled-rectangle g x y width height color/black)
+            (g/draw-filled-rectangle g
+                                     (+ x border)
+                                     (+ y border)
+                                     (- (* width ratio) (* 2 border))
+                                     (- height (* 2 border))
+                                     (hpbar-color ratio))))))))
 
 (defmethod transact! :tx.entity.stats/pay-mana-cost [[_ entity cost] _ctx]
   (let [mana-val ((entity/stat @entity :stats/mana) 0)]
