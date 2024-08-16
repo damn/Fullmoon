@@ -19,8 +19,6 @@
                                                                           (float 1)
                                                                           (float 1)))
 
-(def ^:private modifier-color "[VIOLET]")
-
 (defn- modifier-text [modifiers]
   (str/join "\n" (map modifier/info-text modifiers)))
 
@@ -55,7 +53,7 @@
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
                 (when (seq modifier)
-                  (str modifier-color (modifier-text modifier) "[]"))])}))
+                  (modifier-text modifier))])}))
 
 ; TODO use image w. shadows spritesheet
 (defmethod transact! :tx.entity/item  [[_ position item] _ctx]

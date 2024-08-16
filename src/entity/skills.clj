@@ -15,7 +15,8 @@
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 
   (entity/info-text [[_ skills] _ctx]
-    (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]"))
+    (when (seq skills)
+      (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
 
   (entity/tick [[k skills] entity* ctx]
     (for [{:keys [property/id skill/cooling-down?]} (vals skills)

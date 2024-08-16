@@ -8,6 +8,7 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
+            [api.modifier :as modifier]
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
@@ -53,6 +54,8 @@
                              operation)))
 
 ; TODO use :op/inc / :op/mult ....?
+; TODO @ data.val-max DRY
+; TODO all modifiers always get reduce + 'd
 (defmethod apply-operation :inc [_ base-value values]
   (reduce + base-value values))
 
@@ -222,8 +225,6 @@
    ; TODO damage deal/receive ?
    ])
 
-
-
 (defcomponent :entity/stats (data/components
                               (filter #(and (keyword? %)
                                             (= (name :stats) (namespace %))
@@ -238,19 +239,20 @@
                                            (map vector (vals mods-values)))))))
 
   ; TODO proper texts...
-  ; HP color based on ratio like hp bar samey
+  ; HP color based on ratio like hp bar samey (take same color definitions etc.)
   ; mana color same in the whole app
+  ; red positive/green negative
   (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
     (str (str/join "\n"
                    (for [k stats-keywords
                          :let [stat (k stats)]
                          :when stat]
                      (str (name k) ": " (->effective-value k stats))))
-         (when modifiers
-           (str "\n[LIME] Modifiers:\n"
-                (binding [*print-level* nil]
-                  (with-out-str
-                   (clojure.pprint/pprint (sort-by key modifiers))))))))
+         (when (seq modifiers)
+           (str "\n"
+                (str/join "\n"
+                          (for [[modifier values] modifiers]
+                            (modifier/info-text [modifier (reduce + values)])))))))
 
   (entity/render-info [_
                        {{:keys [width half-width half-height]} :entity/body
