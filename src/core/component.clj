@@ -6,7 +6,7 @@
 ; => the intersection of systems for each component
 ; => can also visualize that then
 
-(def ^:private warn-on-override true)
+(def warn-on-override true)
 
 (defmacro defsystem
   "Defines a component function with the given parameter vector.
@@ -61,9 +61,9 @@
 
 (defmacro defcomponent
   ([k attr-map]
-   (when (and warn-on-override (get attributes k))
-     (println "WARNING: Overwriting defcomponent " k))
    `(do
+     (when (and warn-on-override (get attributes ~k))
+       (println "WARNING: Overwriting defcomponent " ~k))
      (when (and warn-name-ns-mismatch?
                 #_(not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))

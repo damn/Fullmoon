@@ -134,8 +134,8 @@
     (defcomponent ~stat-k
       (assoc ~attr-data :stat/modifier-operations ~modifier-operations))
 
-    ~@(for [op modifier-operations]
-      `(defcomponent [~stat-k ~op] (get operation-components-base ~op)))
+    (doseq [op# ~modifier-operations]
+      (defcomponent [~stat-k op#] (get operation-components-base op#)))
     ~stat-k))
 
 (defstat :stats/hp data/pos-int-attr :stat/modifier-operations [[:max :inc]
