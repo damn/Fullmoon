@@ -42,7 +42,7 @@
 
 (defn- modifier-text [modifiers]
   (str/join "\n"
-            (for [[stat operation value] modifiers]
+            (for [[[stat operation] value] modifiers]
               (str (+? value)
                    (case operation
                      :inc (str value " ")

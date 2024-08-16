@@ -43,7 +43,7 @@
         mx (->max-zero-int mx)]
     [(min v mx) mx]))
 
-(defn- inc<mult [[[val-or-max inc-or-mult] value]]
+(defn- inc<mult [[[val-or-max inc-or-mult] _values]]
   (case inc-or-mult
     :inc 0
     :mult 1))

@@ -21,39 +21,42 @@
 ; * we only work on max so could just use inc/mult @ val-max-modifiers hp/mana
 ; * take max-movement-speed into account @ :stats/movement-speed
 
-(defn- update-modifiers [entity [stat operation] f]
-  [:tx.entity/update-in entity [:entity/stats :stats/modifiers stat operation] f])
+; modifier / modifier-component
+; or modifiers/ modifier
+; and effects/effect
+; effects/usable? .... plural ?
 
-(defmethod transact! :tx/apply-modifier [[_ entity modifier] ctx]
-  (for [{value 2 :as component} modifier]
-    (update-modifiers entity component #(conj % value))))
+(defn- update-modifiers [entity modifier f]
+  [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
 
-(defmethod transact! :tx/reverse-modifier [[_ entity modifier] ctx]
-  (for [{value 2 :as component} modifier]
-    (update-modifiers entity component (fn [values]
-                                         {:post [(= (count %) (dec (count values)))]}
-                                         (remove #{value} values)))))
+(defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
+  (for [[modifier value] modifiers]
+    (update-modifiers entity modifier #(conj % value))))
+
+(defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
+  (for [[modifier value] modifiers]
+    (update-modifiers entity modifier (fn [values]
+                                        {:post [(= (count %) (dec (count values)))]}
+                                        (remove #{value} values)))))
 
 (defmulti ->effective-value (fn [stat _stats] stat))
 
 (defmethod ->effective-value :stat/plain-number [stat stats]
-  (let [modifiers (stat (:stats/modifiers stats))
-        inc-modifiers (reduce + (:inc modifiers))
-        mult-modifiers (reduce + 1 (:mult modifiers))]
+  (let [modifiers (:stats/modifiers stats)]
     (-> (stat stats)
-        (+ inc-modifiers)
-        (* mult-modifiers))))
+        (+ (reduce + (get modifiers [stat :inc])))
+        (* (reduce + 1 (get modifiers [stat :mult]))))))
 
 (defmethod ->effective-value :stat/only-inc [stat stats]
-  (let [modifiers (stat (:stats/modifiers stats))
-        inc-modifiers (reduce + (:inc modifiers))]
+  (let [modifiers (:stats/modifiers stats)]
     (-> (stat stats)
-        (+ inc-modifiers))))
+        (+ (reduce + (get modifiers [stat :inc]))))))
 
 (defmethod ->effective-value :stat/val-max [stat stats]
-  (let [base-value (stat stats)
-        modifiers (stat (:stats/modifiers stats))]
-    (data.val-max/apply-val-max-modifiers base-value modifiers)))
+  (let [modifiers (:stats/modifiers stats)]
+    (data.val-max/apply-val-max-modifiers (stat stats)
+                                          {[:max :inc]  (get modifiers [stat [:max :inc]])
+                                           [:max :mult] (get modifiers [stat [:max :mult]])})))
 
 (defcomponent :stats/hp data/pos-int-attr)
 (derive :stats/hp :stat/val-max)
@@ -110,6 +113,7 @@
     (when (stat-k stats)
       (->effective-value stat-k stats))))
 
+; TODO remove vector shaboink -> gdx.graphics.color/->color use.
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
    :darkgreen [0 0.5 0]
@@ -141,7 +145,7 @@
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
         (update :stats/hp (fn [hp] [hp hp]))
-        (update :stats/mana (fn [mana] [mana mana])) ))
+        (update :stats/mana (fn [mana] [mana mana]))))
 
   ; TODO proper texts...
   ; HP color based on ratio like hp bar samey
@@ -287,20 +291,25 @@
 
  )
 
-(defn- modifiers [entity* stat]
-  (-> entity* :entity/stats :stats/modifiers stat))
+; -> use ->effective-value ??
+(defn- dmg-modifiers [entity* stat]
+  (let [modifiers  (-> entity* :entity/stats :stats/modifiers)]
+    {[:val :inc]  (get modifiers [stat [:val :inc]])
+     [:val :mult] (get modifiers [stat [:val :mult]])
+     [:max :inc]  (get modifiers [stat [:max :inc]])
+     [:max :mult] (get modifiers [stat [:max :mult]])}))
 
 (defn- apply-damage-modifiers [damage entity* stat]
-  (dmg-apply-modifiers damage (modifiers entity* stat)))
+  (dmg-apply-modifiers damage (dmg-modifiers entity* stat)))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers {:stats/damage-deal {[:val :inc] [1]}}}}
+                            {:entity/stats {:stats/modifiers {[:stats/damage-deal [:val :inc]] [1]}}}
                             :stats/damage-deal)
     #:damage{:min-max [6 10]})
 
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
-                            {:entity/stats {:stats/modifiers {:stats/damage-deal {[:max :mult] [2]}}}}
+                            {:entity/stats {:stats/modifiers {[:stats/damage-deal [:max :mult]] [2]}}}
                             :stats/damage-deal)
     #:damage{:min-max [5 30]})
 
@@ -319,6 +328,7 @@
        (apply-damage-modifiers target* :stats/damage-receive))))
 
 (comment
+ ; broken
  (= (apply-damage-modifiers {:damage/min-max [3 10]}
                             {[:max :mult] 2
                              [:val :mult] 1.5
