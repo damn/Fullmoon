@@ -20,20 +20,58 @@
 ; => make it explicit ...
 ; only attack/cast-speed is quite uninteresting ? could hide ?
 
-(defn- tx-update-modifiers [entity modifier f]
-  [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
+(defn- conj-value [value]
+  (fn [values]
+    (conj values value)))
 
-(defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
-  (for [[modifier value] modifiers]
-    (tx-update-modifiers entity modifier #(conj % value))))
-
-(defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
-  (for [[modifier value] modifiers]
-    (tx-update-modifiers entity modifier (fn [values]
-                                           {:post [(= (count %) (dec (count values)))]}
-                                           (remove #{value} values)))))
 ; TODO if no values remaining -> remove the modifier itself
 ; or ignore it if values total is 0 at infotext.
+(defn- remove-value [value]
+  (fn [values]
+    {:post [(= (count %) (dec (count values)))]}
+    (remove #{value} values)))
+
+(defn- txs-update-modifiers [entity modifiers f]
+  (for [[modifier-k operations-m] modifiers
+        [operation-k value] operations-m]
+    [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier-k operation-k] (f value)]))
+
+(comment
+ (= (txs-update-modifiers :entity
+                         {:modifier/hp {:op/max-inc 5
+                                        :op/max-mult 0.3}
+                          :modifier/movement-speed {:op/mult 0.1}}
+                         :fn/add-value)
+    [[:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-inc] :fn/add-value]
+     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-mult] :fn/add-value]
+     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn/add-value]])
+ )
+
+; TODO plural
+(defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
+  (txs-update-modifiers entity modifiers conj-value))
+
+; TODO plural
+(defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
+  (txs-update-modifiers entity modifiers remove-value))
+
+(defcomponent :op/inc {:widget :text-field
+                       :schema number?}) ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
+
+(defcomponent :op/mult {:widget :text-field
+                        :schema number?})
+
+(defcomponent :op/max-inc {:widget :text-field
+                           :schema int?})
+
+(defcomponent :op/max-mult {:widget :text-field
+                            :schema number?})
+
+(defcomponent :op/val-inc {:widget :text-field
+                           :schema int?})
+
+(defcomponent :op/val-mult {:widget :text-field
+                            :schema number?})
 
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
@@ -48,50 +86,46 @@
 (defn- ->percent [v]
   (str (int (* 100 v)) "%"))
 
-(defn- stat-k->pretty-name [stat-k]
-  (str/capitalize (name stat-k)))
+(defn- k->pretty-name [k]
+  (str/capitalize (name k)))
 
-; TODO see D2 arreat summit
-(defn info-text [[[stat-k operation] value]]
+(defn info-text [modifier-k operation-k value]
   (str (+? value)
-       (case operation
-         :inc (str value " ")
-         :mult (str (->percent value) " ")
-         [:val :inc] (str value " minimum ")
-         [:max :inc] (str value " maximum ")
-         [:val :mult] (str (->percent value) " minimum ")
-         [:max :mult] (str (->percent value) " maximum "))
-       (stat-k->pretty-name stat-k)
+       (case operation-k
+         :op/inc (str value " ")
+         :op/mult (str (->percent value) " ")
+         :op/val-inc (str value " minimum ")
+         :op/max-inc (str value " maximum ")
+         :op/val-mult (str (->percent value) " minimum ")
+         :op/max-mult (str (->percent value) " maximum "))
+       (k->pretty-name modifier-k)
        "[]"))
 
-(defmulti apply-operation (fn [operation _base-value _value]
-                            (cond
-                             (#{[:max :inc]
-                                [:max :mult]
-                                [:val :inc]
-                                [:val :mult]} operation)
-                             :op/val-max
+(defmulti apply-operation (fn [operation-k _base-value _value]
+                            operation-k))
 
-                             :else
-                             operation)))
-
-; TODO use :op/inc / :op/mult ....?
-; TODO @ data.val-max DRY
-; TODO all modifiers always get reduce + 'd
-(defmethod apply-operation :inc [_ base-value value]
+(defmethod apply-operation :op/inc [_ base-value value]
   (+ base-value value))
 
-(defmethod apply-operation :mult [_ base-value value]
+(defmethod apply-operation :op/mult [_ base-value value]
   (* base-value (inc value)))
 
 (defn- ->pos-int [v]
   (-> v int (max 0)))
 
-(defmethod apply-operation :op/val-max [[val-or-max operation] val-max value]
+(defn- val-max-op-k->parts [op-k]
+  (mapv keyword (str/split (name op-k) #"-")))
+
+(comment
+ (= (val-max-op-k->parts :op/val-inc) [:val :inc])
+ )
+
+(defmethod apply-operation :op/val-max [operation-k val-max value]
   {:post [(m/validate val-max-schema %)]}
   (assert (m/validate val-max-schema val-max)
           (str "Invalid val-max-schema: " (pr-str val-max)))
-  (let [f #(apply-operation operation % value)
+  (let [[val-or-max inc-or-mult] (val-max-op-k->parts operation-k)
+        f #(apply-operation (keyword "op" (name inc-or-mult)) % value)
         [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
         v  (->pos-int v)
         mx (->pos-int mx)]
@@ -99,107 +133,84 @@
       :val [v (max v mx)]
       :max [(min v mx) mx])))
 
-; In case of val-max operations (damage, hp, mana)
-; we create 4 unique op keywords
+(derive :op/max-inc :op/val-max)
+(derive :op/max-mult :op/val-max)
+(derive :op/val-inc :op/val-max)
+(derive :op/val-mult :op/val-max)
 
 (comment
  (and
-  (= (apply-operation [:val :inc] [5 10] 30) [35 35])
-  (= (apply-operation [:max :mult] [5 10] -0.5) [5 5])
-  (= (apply-operation [:val :mult] [5 10] 2) [15 15])
-  (= (apply-operation [:val :mult] [5 10] 1.3) [11 11])
-  (= (apply-operation [:max :mult] [5 10] -0.8) [1 1])
-  (= (apply-operation [:max :mult] [5 10] -0.9) [0 0]))
+  (= (apply-operation :op/val-inc [5 10] 30) [35 35])
+  (= (apply-operation :op/max-mult [5 10] -0.5) [5 5])
+  (= (apply-operation :op/val-mult [5 10] 2) [15 15])
+  (= (apply-operation :op/val-mult [5 10] 1.3) [11 11])
+  (= (apply-operation :op/max-mult [5 10] -0.8) [1 1])
+  (= (apply-operation :op/max-mult [5 10] -0.9) [0 0]))
  )
 
-(defn- op-order [[[_stat-k operation] _values]]
-  (case operation
-    :inc 0
-    :mult 1
-    [:val :inc] 0
-    [:val :mult] 1
-    [:max :inc] 0
-    [:max :mult] 1))
+(defn- op-order [[operation-k _values]]
+  (case operation-k
+    :op/inc 0
+    :op/mult 1
+    :op/val-inc 0
+    :op/val-mult 1
+    :op/max-inc 0
+    :op/max-mult 1))
 
 ; TODO
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
 ; * take max-movement-speed into account @ :stats/movement-speed
-(defn- ->effective-value [base-value stat-k stats]
+(defn- ->effective-value [base-value modifier-k stats]
   (->> stats
        :stats/modifiers
-       (filter (fn [[[k _op] _values]] (= k stat-k))) ; TODO don't filter but get modifiers stat-k
+       modifier-k
        (sort-by op-order)
-       (reduce (fn [base-value [[_k operation] values]] ; now we have [operation values]
-                 (apply-operation operation base-value (apply + values)))
+       (reduce (fn [base-value [operation-k values]]
+                 (apply-operation operation-k base-value (apply + values)))
                base-value)))
 
 (comment
  (and
   (= (->effective-value [5 10]
-                        :stats/damage-deal
-                        {:stats/modifiers {[:stats/damage-deal [:val :inc]] [30]
-                                           [:fooz :barz] [ 1 2 3 ]}})
+                        :modifier/damage-deal
+                        {:stats/modifiers {:modifier/damage-deal {:op/val-inc [30]}
+                                           :stats/fooz-barz {:op/babu [1 2 3]}}})
      [35 35])
   (= (->effective-value [5 10]
-                        :stats/damage-deal
+                        :modifier/damage-deal
                         {:stats/modifiers {}})
      [5 10])
   (= (->effective-value [100 100]
                         :stats/hp
-                        {:stats/modifiers {[:stats/hp [:max :inc]] [10 1]
-                                           [:stats/hp [:max :mult]] [0.5]}})
+                        {:stats/modifiers {:stats/hp {:op/max-inc [10 1]
+                                                      :op/max-mult [0.5]}}})
      [100 166])
   (= (->effective-value 3
                         :stats/movement-speed
-                        {:stats/modifiers {[:stats/movement-speed :inc] [2]
-                                           [:stats/movement-speed :mult] [0.1 0.2]}})
+                        {:stats/modifiers {:stats/movement-speed {:op/inc [2]
+                                                                  :op/mult [0.1 0.2]}}})
      6.5))
  )
 
-(def ^:private operation-components-base
-  {[:max :inc] {:type :component/modifier
-                :widget :text-field
-                :schema int?}
-   [:max :mult] {:type :component/modifier
-                 :widget :text-field
-                 :schema number?}
-   [:val :inc] {:type :component/modifier
-                :widget :text-field
-                :schema int?}
-   [:val :mult] {:type :component/modifier
-                 :widget :text-field
-                 :schema number?}
-   :inc {:type :component/modifier
-         :widget :text-field
-         :schema number?}
-   ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
-   :mult {:type :component/modifier
-          :widget :text-field
-          :schema number?}})
+(defn defmodifier [modifier-k operations]
+  (defcomponent modifier-k (data/components operations)))
 
-(defn defmodifiers [stat-k operations]
-  (doseq [op operations]
-    (defcomponent [stat-k op] (get operation-components-base op))))
-
-(defn defstat [stat-k attr-data & {:keys [operations]}]
-  (defcomponent stat-k attr-data)
-  (defmodifiers stat-k operations)
-  stat-k)
+(defn defstat [stat-k metam & {:keys [operations]}]
+  (defcomponent stat-k metam)
+  (defmodifier (keyword "modifier" (name stat-k)) operations))
 
 (defstat :stats/hp data/pos-int-attr
-  :operations [[:max :inc]
-               [:max :mult]])
+  :operations [:op/max-inc :op/max-mult])
 
 (defstat :stats/mana data/nat-int-attr
-  :operations [[:max :inc]
-               [:max :mult]])
+  :operations [:op/max-inc :op/max-mult])
 
-(defstat :stats/movement-speed data/pos-attr ; TODO only mult required
-  :operations [:inc
-               :mult])
+; TODO only mult required  ( ? )
+(defstat :stats/movement-speed data/pos-attr
+  :operations [:op/inc :op/mult])
 
 (defstat :stats/strength data/nat-int-attr
-  :operations [:inc])
+  :operations [:op/inc])
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -207,36 +218,25 @@
           For example:
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
       skill-speed-stat (assoc data/pos-attr :doc doc)
-      operations [:inc]]
-  (defstat :stats/cast-speed skill-speed-stat
-    :operations operations)
-  (defstat :stats/attack-speed skill-speed-stat
-    :operations operations))
+      operations [:op/inc]]
+  (defstat :stats/cast-speed   skill-speed-stat :operations operations)
+  (defstat :stats/attack-speed skill-speed-stat :operations operations))
 
 (defstat :stats/armor-save {:widget :text-field :schema number?}
-  :operations [:inc])
+  :operations [:op/inc])
 
 (defstat :stats/armor-pierce {:widget :text-field :schema number?}
-  :operations [:inc])
+  :operations [:op/inc])
 
-(defmodifiers :stats/damage-deal [[:val :inc]
-                                  [:val :mult]
-                                  [:max :inc]
-                                  [:max :mult]])
+; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
+; just inc/mult ?
+; or even mana/hp does it make a difference ?
+(defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
-(defmodifiers :stats/damage-receive [:inc
-                                     :mult])
+(defmodifier :modifier/damage-receive [:op/inc :op/mult])
 
-; only :stats/damage-deal & :stats/damage-receive
-; the rest can be set through the base-values
-(defn- modifiers-without-base-value []
-  (map first
-       (filter (fn [[k data]]
-                 (and (= (:type data) :component/modifier)
-                      (not (get core.component/attributes (first k)))))
-               core.component/attributes)))
-
-(defcomponent :stats/modifiers (data/components (modifiers-without-base-value)))
+(defcomponent :stats/modifiers (data/components [:modifier/damage-deal
+                                                 :modifier/damage-receive]))
 
 (extend-type api.entity.Entity
   entity/Stats
@@ -261,7 +261,6 @@
     (color hpbar-colors)))
 
 (def ^:private borders-px 1)
-
 
 (comment
 
@@ -297,15 +296,14 @@
   ; but maybe would be good to have 'required' key ....
   ; also default values defined with the stat itself ?
   ; armor-pierce move out of here ...
-  [:stats/hp
-   :stats/mana ; TODO check for not-enough-mana .... but only if skills are there ! so can omit it..
+  [:stats/hp ; made optional but bug w. projectile transact damage anyway not checking usable?
+   :stats/mana ; made optional @ active-skill
    :stats/movement-speed
    :stats/strength  ; default value 0
    :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
    :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
    :stats/armor-save ; default-value 0
    :stats/armor-pierce ; default-value 0
-   ; TODO damage deal/receive ?
    ])
 
 ; TODO use data/components
@@ -320,16 +318,23 @@
 ; for example then cannot attack the princess ... ?
 
 ; then the create component here have to move into the component itself.
+(defn- build-modifiers [modifiers]
+  (into {} (for [[modifier-k operations] modifiers]
+             [modifier-k (into {} (for [[operation-k value] operations]
+                                    [operation-k [value]]))])))
+
+(comment
+ (=
+  {:modifier/damage-receive {:op/mult [-0.9]}}
+  (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
+ )
 
 (defcomponent :entity/stats (data/components-attribute :stats)
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))
-        (update :stats/modifiers (fn [mods-values]
-                                   (when mods-values
-                                     (zipmap (keys mods-values)
-                                             (map vector (vals mods-values))))))))
+        (update :stats/modifiers build-modifiers)))
 
   ; TODO proper texts...
   ; HP color based on ratio like hp bar samey (take same color definitions etc.)
@@ -345,12 +350,21 @@
                    (for [stat-k stats-keywords
                          :let [base-value (stat-k stats)]
                          :when base-value]
-                     (str (stat-k->pretty-name stat-k) ": " (->effective-value base-value stat-k stats))))
+                     (str (k->pretty-name stat-k) ": " (->effective-value base-value stat-k stats))))
          (when (seq modifiers)
            (str "\n"
                 (str/join "\n"
-                          (for [[modifier values] modifiers]
-                            (info-text [modifier (reduce + values)])))))))
+                          (for [[modifier-k operations] modifiers
+                                [operation-k values] operations]
+                            (info-text modifier-k operation-k (reduce + values))))))))
+
+  #_(comment
+    (let [ctx @app.state/current-context
+          entity (api.context/get-entity ctx 55)]
+      (-> @entity
+          :entity/stats
+          :stats/modifiers
+          str)))
 
   (entity/render-info [_
                        {{:keys [width half-width half-height]} :entity/body
@@ -469,28 +483,27 @@
   (< (rand) (effective-armor-save source* target*)))
 
 (defn- ->effective-damage [damage source*]
-  (update damage :damage/min-max ->effective-value :stats/damage-deal (:entity/stats source*)))
+  (update damage :damage/min-max ->effective-value :modifier/damage-deal (:entity/stats source*)))
 
 (comment
  (let [->stats (fn [mods] {:entity/stats {:stats/modifiers mods}})]
    (and
     (= (->effective-damage {:damage/min-max [5 10]}
-                         (->stats
-                          {[:stats/damage-deal [:val :inc]] [1 5 10]
-                           [:stats/damage-deal [:val :mult]] [0.2 0.3]
-                           [:stats/damage-deal [:max :mult]] [1]}))
+                           (->stats {:modifier/damage-deal {:op/val-inc [1 5 10]
+                                                            :op/val-mult [0.2 0.3]
+                                                            :op/max-mult [1]}}))
        #:damage{:min-max [31 62]})
 
     (= (->effective-damage {:damage/min-max [5 10]}
-                         (->stats {[:stats/damage-deal [:val :inc]] [1]}))
+                           (->stats {:modifier/damage-deal {:op/val-inc [1]}}))
        #:damage{:min-max [6 10]})
 
     (= (->effective-damage {:damage/min-max [5 10]}
-                         (->stats {[:stats/damage-deal [:max :mult]] [2]}))
+                           (->stats {:modifier/damage-deal {:op/max-mult [2]}}))
        #:damage{:min-max [5 30]})
 
     (= (->effective-damage {:damage/min-max [5 10]}
-                         (->stats nil))
+                           (->stats nil))
        #:damage{:min-max [5 10]}))))
 
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
@@ -528,7 +541,7 @@
              ;_ (println "\nmin-max:" min-max)
              dmg-amount (random/rand-int-between min-max)
              ;_ (println "dmg-amount: " dmg-amount)
-             dmg-amount (->pos-int (->effective-value dmg-amount :stats/damage-receive (:entity/stats target*)))
+             dmg-amount (->pos-int (->effective-value dmg-amount :modifier/damage-receive (:entity/stats target*)))
              ;_ (println "effective dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]

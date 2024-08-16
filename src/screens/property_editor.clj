@@ -147,7 +147,7 @@
                                  :cell-defaults {:pad 5}})]
        (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
                                                       (:components (component/attributes k))))]
-                           [(->text-button ctx (str nested-k)
+                           [(->text-button ctx (name nested-k)
                                            (fn [ctx]
                                              (remove! window)
                                              (add-actor! attribute-widget-group
@@ -287,7 +287,7 @@
   )
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
-  (let [label (->label ctx (str k))
+  (let [label (->label ctx (name k))
         _ (when-let [doc (:doc (get component/attributes k))]
             (add-tooltip! label doc))
         value-widget (->value-widget [k v] ctx)
@@ -323,7 +323,7 @@
 
 (defn- attribute-widget-group->data [group]
   (into {} (for [k (map actor/id (children group))
-                 :let [table (get group k)
+                 :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
              [k (value-widget->data k value-widget)])))
 

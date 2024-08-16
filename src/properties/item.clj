@@ -20,16 +20,20 @@
                                                                           (float 1)))
 
 (defn- modifier-text [modifiers]
-  (str/join "\n" (map entity.stats/info-text modifiers)))
+  (str/join "\n"
+            (for [[modifier-k operations] modifiers
+                  [operation-k value] operations]
+              (entity.stats/info-text modifier-k operation-k value))))
 
 (defcomponent :properties/item {}
   (properties/create [_]
-    (defcomponent :item/modifier (data/components
-                                   (map first (filter (fn [[k data]]
-                                                        (= (:type data) :component/modifier))
-                                                      core.component/attributes))))
 
-    (defcomponent :item/slot {:widget :label :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+    (defcomponent :item/modifier ; TODO plural
+      (data/components-attribute :modifier))
+
+    (defcomponent :item/slot {:widget :label
+                              :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+
     {:id-namespace "items"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :items}]]
