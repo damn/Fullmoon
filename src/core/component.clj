@@ -63,7 +63,7 @@
   ([k attr-map] ; TODO this arity doesn't need to be a macro ....
    `(do
      (when (and warn-on-override (get attributes ~k))
-       (println "WARNING: Overwriting defcomponent " ~k))
+       (println "WARNING: Overwriting defcomponent" ~k))
      (when (and warn-name-ns-mismatch?
                 #_(not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
