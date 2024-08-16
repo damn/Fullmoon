@@ -58,7 +58,10 @@
 (defn- ->percent [v]
   (str (int (* 100 v)) "%"))
 
-(defn info-text [[[stat operation] value]]
+(defn- stat-k->pretty-name [stat-k]
+  (str/capitalize (name stat)))
+
+(defn info-text [[[stat-k operation] value]]
   (str (+? value)
        (case operation
          :inc (str value " ")
@@ -67,7 +70,7 @@
          [:max :inc] (str value " max ")
          [:val :mult] (str (->percent value) " min ")
          [:max :mult] (str (->percent value) " max "))
-       (str/capitalize (name stat))
+       (stat-k->pretty-name stat-k)
        "[]"))
 
 (defmulti apply-operation (fn [operation _base-value _values]
@@ -307,7 +310,7 @@
                    (for [stat-k stats-keywords
                          :let [base-value (stat-k stats)]
                          :when base-value]
-                     (str (str/capitalize (name stat-k)) ": " (->effective-value base-value stat-k stats))))
+                     (str (stat-k->pretty-name stat-k) ": " (->effective-value base-value stat-k stats))))
          (when (seq modifiers)
            (str "\n"
                 (str/join "\n"
