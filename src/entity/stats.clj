@@ -28,6 +28,23 @@
   ; and effects/effect
   ; effects/usable? .... plural ?
 
+(defn- tx-update-modifiers [entity modifier f]
+  [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
+
+(defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
+  (for [[modifier value] modifiers]
+    (tx-update-modifiers entity modifier #(conj % value))))
+
+(defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
+  (for [[modifier value] modifiers]
+    (tx-update-modifiers entity modifier (fn [values]
+                                           {:post [(= (count %) (dec (count values)))]}
+                                           (remove #{value} values)))))
+
+; TODO data.operations ???
+; or each data/foo defines its operations - modifiers/effects .... !
+; open-closed principle ... cannot extend datas/operations ...
+
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
 (def ^:private positive-modifier-color "[CYAN]" #_"[LIME]")
@@ -52,19 +69,6 @@
          [:max :mult] (str (->percent value) " max "))
        (str/capitalize (name stat))
        "[]"))
-
-(defn- tx-update-modifiers [entity modifier f]
-  [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
-
-(defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
-  (for [[modifier value] modifiers]
-    (tx-update-modifiers entity modifier #(conj % value))))
-
-(defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
-  (for [[modifier value] modifiers]
-    (tx-update-modifiers entity modifier (fn [values]
-                                           {:post [(= (count %) (dec (count values)))]}
-                                           (remove #{value} values)))))
 
 (defmulti apply-operation (fn [operation _base-value _values]
                             (cond
@@ -98,18 +102,14 @@
     [:max :inc] 0
     [:max :mult] 1))
 
-(defn- ->effective-value
-  ([stat-k stats]
-   (->effective-value (stat-k stats) stat-k stats))
-
-  ([base-value stat-k stats]
-   (->> stats
-        :stats/modifiers
-        (filter (fn [[[k _op] _values]] (= k stat-k)))
-        (sort-by op-order)
-        (reduce (fn [base-value [[_k operation] values]]
-                  (apply-operation operation base-value values))
-                base-value))))
+(defn- ->effective-value [base-value stat-k stats]
+  (->> stats
+       :stats/modifiers
+       (filter (fn [[[k _op] _values]] (= k stat-k)))
+       (sort-by op-order)
+       (reduce (fn [base-value [[_k operation] values]]
+                 (apply-operation operation base-value values))
+               base-value)))
 
 (comment
 
@@ -224,8 +224,8 @@
 (extend-type api.entity.Entity
   entity/Stats
   (stat [{:keys [entity/stats]} stat-k]
-    (when (stat-k stats)
-      (->effective-value stat-k stats))))
+    (when-let [base-value (stat-k stats)]
+      (->effective-value base-value stat-k stats))))
 
 ; TODO remove vector shaboink -> gdx.graphics.color/->color use.
 (def ^:private hpbar-colors
@@ -304,10 +304,10 @@
   ; red positive/green negative
   (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
     (str (str/join "\n"
-                   (for [k stats-keywords
-                         :let [stat (k stats)]
-                         :when stat]
-                     (str (name k) ": " (->effective-value k stats))))
+                   (for [stat-k stats-keywords
+                         :let [base-value (stat-k stats)]
+                         :when base-value]
+                     (str (name k) ": " (->effective-value base-value stat-k stats))))
          (when (seq modifiers)
            (str "\n"
                 (str/join "\n"
