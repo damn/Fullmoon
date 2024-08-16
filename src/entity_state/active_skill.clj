@@ -1,9 +1,29 @@
 (ns entity-state.active-skill
-  (:require [api.context :refer [stopped? finished-ratio ->counter]]
+  (:require [api.context :as ctx :refer [stopped? finished-ratio ->counter]]
+            [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]
-            [effect-ctx.core :as effect-ctx]))
+            [api.tx :refer [transact!]]))
+
+(defmethod transact! :tx/effect [[_ effect-ctx effect] ctx]
+  (-> ctx
+      (merge effect-ctx)
+      (ctx/transact-all! effect)
+      (dissoc :effect/source
+              :effect/target
+              :effect/direction
+              :effect/target-position)))
+
+; TODO
+; also target not destroyed
+; line of sight part of all target fof ?
+; source anyway available no need check  ?
+; damage -> hp ...
+; move armor out of damage fofo
+; stun needs creature state ..
+(defn- valid-params? [effect-ctx effect]
+  (every? #(effect/valid-params? % effect-ctx) effect))
 
 (defn skill-usable-state [effect-ctx
                           entity*
@@ -15,7 +35,7 @@
    (and cost (> cost ((entity/stat entity* :stats/mana) 0)))
    :not-enough-mana
 
-   (not (effect-ctx/valid-params? effect-ctx effect))
+   (not (valid-params? effect-ctx effect))
    :invalid-params
 
    :else
@@ -54,7 +74,7 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (effect-ctx/valid-params? effect-ctx (:skill/effect skill)))
+     (not (valid-params? effect-ctx (:skill/effect skill)))
      [[:tx/event id :action-done]]
 
      (stopped? context counter)
@@ -66,7 +86,7 @@
   (render-info [_ entity* g ctx]
     (let [{:keys [property/image skill/effect]} skill]
       (draw-skill-icon g image entity* (entity/position entity*) (finished-ratio ctx counter))
-      (effect-ctx/render-info effect-ctx g (:skill/effect skill)))))
+      (run! #(effect/render-info % effect-ctx g) effect))))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time

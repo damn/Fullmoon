@@ -1,9 +1,9 @@
 (ns entity-state.npc-idle
   (:require [api.context :refer [world-grid potential-field-follow-to-enemy]]
+            [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.world.cell :as cell]
-            [effect-ctx.core :as effect-ctx]
             [entity-state.active-skill :refer [skill-usable-state]]))
 
 ; TODO here check line of sight instead @ target-entity , otherwise no target...
@@ -16,6 +16,9 @@
      :effect/direction (when target
                          (entity/direction entity* @target))}))
 
+(defn- useful? [effect-ctx effect ctx]
+  (some #(effect/useful? % effect-ctx ctx) effect))
+
 (defn- npc-choose-skill [effect-ctx entity* ctx]
   (->> entity*
        :entity/skills
@@ -24,7 +27,7 @@
        reverse
        (filter #(and (= :usable
                         (skill-usable-state effect-ctx entity* %))
-                     (effect-ctx/useful? effect-ctx (:skill/effect %) ctx)))
+                     (useful? effect-ctx (:skill/effect %) ctx)))
        first))
 
 (defrecord NpcIdle []

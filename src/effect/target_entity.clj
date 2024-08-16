@@ -47,6 +47,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
   ; => but - cancels attack if losing los ... so needs to be here ....
   ; TODO target still exists ?! necessary ? what if disappears/dead?
   ; TODO (:entity/hp @target) is valid-params of hit-effect damage !! -> allow anyway and just do nothing then?
+  ; => archer attacked projectile ! not possible ! see exactly which effects/which applied components/etc.
   (effect/valid-params? [_ {:keys [effect/source effect/target]}]
     (and source
          target
