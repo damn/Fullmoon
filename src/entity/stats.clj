@@ -114,15 +114,20 @@
 (defn- ->max-zero-int [v]
   (-> v int (max 0)))
 
-(defn- apply-val-max-modifier [val-max [[val-or-max inc-or-mult] value]]
+(comment
+ (and
+  (= (apply-operation [:val :inc] [5 10] 30)
+     [35 35])
+
+  (= (apply-operation [:max :mult] [5 10] -0.5)
+     [5 5]))
+ )
+
+(defmethod apply-operation :op/val-max [[val-or-max operation] val-max value]
   {:post [(m/validate val-max-schema %)]}
   (assert (m/validate val-max-schema val-max)
           (str "Invalid val-max-schema: " (pr-str val-max)))
-  ; TODO similar ops / as in stats ....
-  ; move there ??
-  (let [f (case inc-or-mult
-            :inc #(+ % value)
-            :mult #(* % (inc value)))
+  (let [f #(apply-operation operation % value)
         [v mx] ((case val-or-max
                   :val (fn [[v mx] f] [(f v) mx])
                   :max (fn [[v mx] f] [v (f mx)]))
@@ -133,18 +138,6 @@
     (case val-or-max
       :val [v (max v mx)]
       :max [(min v mx) mx])))
-
-(comment
- (and
-  (= (apply-val-max-modifier [5 10] [[:val :inc] 30])
-     [35 35])
-
-  (= (apply-val-max-modifier [5 10] [[:max :mult] -0.5])
-     [5 5]))
- )
-
-(defmethod apply-operation :op/val-max  [operation base-value value]
-  (apply-val-max-modifier base-value [operation value]))
 
 (defn- op-order [[[_stat-k operation] _values]]
   (case operation
