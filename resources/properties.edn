@@ -1995,13 +1995,15 @@
    :entity/inventory
    #{:items/cloak-royal
      :items/shield-vorpal-buckler
+     :items/chain-leg
      :items/studded-helm
      :items/blood-helm
      :items/shield-mystic-great
      :items/ring-copper
      :items/ring-gold
      :items/cloth-boot
-     :items/necklace-eye},
+     :items/necklace-eye
+     :items/blood-glove},
    :entity/reaction-time 0.02,
    :entity/skills #{},
    :entity/stats
@@ -3080,7 +3082,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [576 0 48 48]},
   :property/pretty-name "Black Potion"}
- {:item/modifier {},
+ {:item/modifier {[:stats/damage-deal [:val :mult]] 3},
   :item/slot :inventory.slot/leg,
   :property/id :items/chain-leg,
   :property/image
@@ -3663,7 +3665,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Pearl Ring"}
- {:item/modifier {},
+ {:item/modifier {[:stats/strength :inc] 3.3},
   :item/slot :inventory.slot/glove,
   :property/id :items/blood-glove,
   :property/image

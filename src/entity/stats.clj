@@ -12,12 +12,14 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
-; * default values
+; * default values / schema for creature stats.... (which required/optional ...)
 
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
 ; * take max-movement-speed into account @ :stats/movement-speed
 
 ; * :stats/modifiers in editor / for example max dmg reduced by 5 at stone golem => but is a sequence ... ???
+; * damage min/max applied doesn't make sense ... its half a damage difference
+; make like D2 ...
 
 ; * :inc :mult -> use namespaced keyword
 
@@ -103,84 +105,78 @@
 
  )
 
-(defcomponent :stats/hp (assoc data/pos-int-attr
-                          :stat/modifier-operations [[:max :inc]
-                                                     [:max :mult]]))
+(def ^:private operation-components-base
+  {[:max :inc] {:type :component/modifier
+                :widget :text-field
+                :schema int?}
+   [:max :mult] {:type :component/modifier
+                 :widget :text-field
+                 :schema number?}
+   [:val :inc] {:type :component/modifier
+                :widget :text-field
+                :schema int?}
+   [:val :mult] {:type :component/modifier
+                 :widget :text-field
+                 :schema number?}
+   :inc {:type :component/modifier
+         :widget :text-field
+         :schema number?}
+   ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
+   :mult {:type :component/modifier
+          :widget :text-field
+          :schema number?} })
 
-; TODO generate modifier components automatically from the stat component (defstat ?)
+(defmacro defstat [stat-k attr-data & {:keys [stat/modifier-operations]}]
+  `(do
+    (defcomponent ~stat-k
+      (assoc ~attr-data :stat/modifier-operations ~modifier-operations))
 
-(defcomponent [:stats/hp [:max :inc]]  {:type :component/modifier
-                                        :widget :text-field
-                                        :schema int?})
-(defcomponent [:stats/hp [:max :mult]] {:type :component/modifier
-                                        ; TODO
-                                        })
+    (doseq [op# ~modifier-operations]
+      (defcomponent [~stat-k op#] (get operation-components-base op#)))
+    ~stat-k))
 
-(defcomponent :stats/mana (assoc data/nat-int-attr
-                            :stat/modifier-operations [[:max :inc]
-                                                       [:max :mult]]))
+; TODO no warnings getting on redef?
+(defstat :stats/hp data/pos-int-attr :stat/modifier-operations [[:max :inc]
+                                                                [:max :mult]])
 
-(defcomponent [:stats/mana [:max :inc]]  {:type :component/modifier})
-(defcomponent [:stats/mana [:max :mult]] {:type :component/modifier})
+(defstat :stats/mana data/nat-int-attr :stat/modifier-operations [[:max :inc]
+                                                                  [:max :mult]])
 
-; hp & mana have [:max :inc] and [:max :mult] operations
-; only going on max so can just make :inc and :mult
+(defstat :stats/movement-speed data/pos-attr :stat/modifier-operations [:inc :mult])
 
-; so defining modifiers [:stats/hp :inc] [:stats/hp :mult] , same for mana
-; based on the data ... ? (val-max)
-; manual ?
-
-(defcomponent :stats/movement-speed (assoc data/pos-attr
-                                      :stat/modifier-operations [:inc
-                                                                 :mult]))
-
-(defcomponent [:stats/movement-speed :inc]  {:type :component/modifier})
-(defcomponent [:stats/movement-speed :mult] {:type :component/modifier})
-
-(defcomponent :stats/strength data/nat-int-attr)
-
-(defcomponent [:stats/strength :inc] {:type :component/modifier})
+(defstat :stats/strength data/nat-int-attr :stat/modifier-operations [:inc])
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
 
           For example:
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
-      skill-speed-stat (assoc data/pos-attr :doc doc)]
-  (defcomponent :stats/cast-speed   skill-speed-stat)
-  (defcomponent :stats/attack-speed skill-speed-stat))
+      skill-speed-stat (assoc data/pos-attr :doc doc)
+      operations [:inc]]
+  (defstat :stats/cast-speed skill-speed-stat :stat/modifier-operations operations)
+  (defstat :stats/attack-speed skill-speed-stat :stat/modifier-operations operations))
 
-(defcomponent [:stats/cast-speed :inc] {:type :component/modifier})
-(defcomponent [:stats/attack-speed :inc] {:type :component/modifier})
+(defstat :stats/armor-save {:widget :text-field :schema number?}
+  :stat/modifier-operations [:inc])
 
-(defcomponent :stats/armor-save {:widget :text-field :schema number?})
+(defstat :stats/armor-pierce {:widget :text-field :schema number?}
+  :stat/modifier-operations [:inc])
 
-(defcomponent [:stats/armor-save :inc] {:type :component/modifier})
+; TODO this is not a real stat ... ?
+; only as modifiers ?
+; don't add to :entity/stats component .....
+(defstat :stats/damage-deal {}
+  :stat/modifier-operations [[:max :inc]
+                             [:max :mult]
+                             [:val :inc]
+                             [:val :mult]])
 
-(defcomponent :stats/armor-pierce {:widget :text-field :schema number?})
+(defstat :stats/damage-receive {}
+  :stat/modifier-operations [[:max :inc]
+                             [:max :mult]
+                             [:val :inc]
+                             [:val :mult]])
 
-(defcomponent [:stats/armor-pierce :inc] {:type :component/modifier})
-
-; TODO these two don't have a 'damage' value
-; only modifiers applied to an actual damage val-max ....
-(defcomponent :stats/damage-deal {:stat/modifier-operations [[:max :inc]
-                                                             [:max :mult]
-                                                             [:val :inc]
-                                                             [:val :mult]]})
-(defcomponent :stats/damage-receive {:stat/modifier-operations [[:max :inc]
-                                                                [:max :mult]
-                                                                [:val :inc]
-                                                                [:val :mult]]})
-
-(defcomponent [:stats/damage-deal [:val :inc]]  {:type :component/modifier})
-(defcomponent [:stats/damage-deal [:val :mult]] {:type :component/modifier})
-(defcomponent [:stats/damage-deal [:max :inc]]  {:type :component/modifier})
-(defcomponent [:stats/damage-deal [:max :mult]] {:type :component/modifier})
-
-(defcomponent [:stats/damage-receive [:val :inc]]  {:type :component/modifier})
-(defcomponent [:stats/damage-receive [:val :mult]] {:type :component/modifier})
-(defcomponent [:stats/damage-receive [:max :inc]]  {:type :component/modifier})
-(defcomponent [:stats/damage-receive [:max :mult]] {:type :component/modifier})
 
 (extend-type api.entity.Entity
   entity/Stats
