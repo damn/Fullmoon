@@ -18,7 +18,6 @@
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
 ; * take max-movement-speed into account @ :stats/movement-speed
 
-; * :stats/modifiers in editor / for example max dmg reduced by 5 at stone golem => but is a sequence ... ???
 ; * damage min/max applied doesn't make sense ... its half a damage difference
 ; make like D2 ...
 
@@ -135,11 +134,10 @@
     (defcomponent ~stat-k
       (assoc ~attr-data :stat/modifier-operations ~modifier-operations))
 
-    (doseq [op# ~modifier-operations]
-      (defcomponent [~stat-k op#] (get operation-components-base op#)))
+    ~@(for [op modifier-operations]
+      `(defcomponent [~stat-k ~op] (get operation-components-base ~op)))
     ~stat-k))
 
-; TODO no warnings getting on redef?
 (defstat :stats/hp data/pos-int-attr :stat/modifier-operations [[:max :inc]
                                                                 [:max :mult]])
 
@@ -213,15 +211,43 @@
 
 (def ^:private borders-px 1)
 
+
+(comment
+
+ (set! *print-level* nil)
+
+ ; only lady/lord a&b dont have hp/mana/movement-speed ....
+ ; => check if it can be optional
+ ; => default-values move to stats ...
+
+ (map :property/id
+      (filter #(let [{:stats/keys [hp mana movement-speed]} (:entity/stats (:creature/entity %))
+
+                     rslt (not (and hp mana movement-speed))
+                     ]
+                 (println [hp mana movement-speed])
+                 (println rslt)
+                 rslt
+                 )
+              (api.context/all-properties @app.state/current-context :properties/creature)))
+
+ )
+
+
+
 (def ^:private stats-keywords
+  ; hp/mana/movement-speed given for all entities ?
+  ; but maybe would be good to have 'required' key ....
+  ; also default values defined with the stat itself ?
+  ; armor-pierce move out of here ...
   [:stats/hp
    :stats/mana
    :stats/movement-speed
-   :stats/strength
-   :stats/cast-speed
-   :stats/attack-speed
-   :stats/armor-save
-   :stats/armor-pierce
+   :stats/strength  ; default value 0
+   :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
+   :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
+   :stats/armor-save ; default-value 0
+   :stats/armor-pierce ; default-value 0
    ; TODO damage deal/receive ?
    ])
 

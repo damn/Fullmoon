@@ -60,17 +60,13 @@
 (def warn-name-ns-mismatch? false)
 
 (defmacro defcomponent
-  "Defines a component with key 'k'. User-data attr-map.
-  Example:
-  (defcomponent :entity/animation {:schema animation}
-    (entity/render [_ g]
-      (g/render-animation animation)))"
   ([k attr-map]
+   (when (and warn-on-override (get attributes k))
+     (println "WARNING: Overwriting defcomponent " k))
    `(do
      (when (and warn-name-ns-mismatch?
                 #_(not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
-     ; TODO attribute overwrite WARNING !
      (alter-var-root #'attributes assoc ~k ~attr-map)
      ~k))
   ([k attr-map & sys-impls]
