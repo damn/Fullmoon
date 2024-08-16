@@ -1,20 +1,21 @@
 (ns entity-state.npc-idle
-  (:require [api.context :refer [world-grid potential-field-follow-to-enemy]]
+  (:require [api.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
             [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.world.cell :as cell]
             [entity-state.active-skill :refer [skill-usable-state]]))
 
-; TODO here check line of sight instead @ target-entity , otherwise no target...
-; also fix a schema for the effect-context so I know whats going on
-(defn- ->effect-context [context entity*]
-  (let [cell ((world-grid context) (entity/tile entity*))
-        target (cell/nearest-entity @cell (entity/enemy-faction entity*))]
+(defn- nearest-enemy [ctx entity*]
+  (cell/nearest-entity @((world-grid ctx) (entity/tile entity*))
+                       (entity/enemy-faction entity*)))
+
+(defn- ->effect-context [ctx entity*]
+  (let [target (nearest-enemy ctx entity*)
+        target (when (ctx/line-of-sight? ctx entity* @target) target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
-     :effect/direction (when target
-                         (entity/direction entity* @target))}))
+     :effect/direction (when target (entity/direction entity* @target))}))
 
 (defn- useful? [effect-ctx effect ctx]
   (some #(effect/useful? % effect-ctx ctx) effect))
@@ -25,8 +26,7 @@
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable
-                        (skill-usable-state effect-ctx entity* %))
+       (filter #(and (= :usable (skill-usable-state effect-ctx entity* % ctx))
                      (useful? effect-ctx (:skill/effect %) ctx)))
        first))
 

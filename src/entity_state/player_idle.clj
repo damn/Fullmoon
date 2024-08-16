@@ -105,7 +105,7 @@
      (if-let [skill-id (selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->effect-context context entity*)
-             state (skill-usable-state effect-ctx entity* skill)]
+             state (skill-usable-state effect-ctx entity* skill context)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight

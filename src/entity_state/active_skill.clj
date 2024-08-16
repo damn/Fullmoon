@@ -15,6 +15,24 @@
               :effect/direction
               :effect/target-position)))
 
+; SCHEMA effect-ctx
+; * source = always available
+; # npc:
+;   * target = maybe
+;   * direction = maybe
+; # player
+;  * target = maybe
+;  * target-position  = always available
+;  * direction  = always available
+
+(defn- check-remove-target [effect-ctx ctx]
+  (update effect-ctx :effect/target
+          (fn [target]
+            (when (and target
+                       (not (:entity/destroyed? @target))
+                       (ctx/line-of-sight? ctx @source @target))
+              target))))
+
 ; TODO
 ; also target not destroyed
 ; line of sight part of all target fof ?
@@ -22,15 +40,19 @@
 ; damage -> hp ...
 ; move armor out of damage fofo
 ; stun needs creature state ..
-(defn- valid-params? [effect-ctx effect]
-  (every? #(effect/valid-params? % effect-ctx) effect))
+(defn- valid-params? [{:keys [effect/source effect/target] :as effect-ctx}
+                      effect
+                      ctx]
+  (let [effect-ctx (check-remove-target effect-ctx ctx)]
+    (every? #(effect/valid-params? % effect-ctx) effect)))
 
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
   (> cost ((entity/stat entity* :stats/mana) 0)))
 
 (defn skill-usable-state [effect-ctx
                           entity*
-                          {:keys [skill/cooling-down? skill/effect] :as skill}]
+                          {:keys [skill/cooling-down? skill/effect] :as skill}
+                          ctx]
   (cond
    cooling-down?
    :cooldown
@@ -38,7 +60,7 @@
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (valid-params? effect-ctx effect))
+   (not (valid-params? effect-ctx effect ctx))
    :invalid-params
 
    :else
@@ -77,8 +99,10 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (valid-params? effect-ctx (:skill/effect skill)))
-     [[:tx/event id :action-done]]
+     (not (valid-params? effect-ctx (:skill/effect skill) context))
+     [[:tx/event id :action-done]
+      ; TODO some sound ?
+      ]
 
      (stopped? context counter)
      [[:tx/event id :action-done]
