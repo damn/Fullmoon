@@ -180,12 +180,11 @@
 
 (defcomponent :stats/modifiers
   (data/components
-    (map first (filter (fn [[k data]]
-                         (= (:type data) :component/modifier))
-                       core.component/attributes))))
-
-; TODO they need to be made into a seq ....
-
+    (filter (fn [[stat op]]
+              (#{:stats/damage-deal :stats/damage-receive} stat) )
+            (map first (filter (fn [[k data]]
+                                 (= (:type data) :component/modifier))
+                               core.component/attributes)))))
 
 (extend-type api.entity.Entity
   entity/Stats
@@ -223,7 +222,13 @@
    ; TODO damage deal/receive ?
    ])
 
-(defcomponent :entity/stats (data/components-attribute :stats) ; TODO do not contain damage-deal/receive, but contain stats/modifiers
+
+
+(defcomponent :entity/stats (data/components
+                              (filter #(and (keyword? %)
+                                            (= (name :stats) (namespace %))
+                                            (not (#{:stats/damage-deal :stats/damage-receive} %)))
+                                      (keys core.component/attributes)))
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
         (update :stats/hp (fn [hp] [hp hp]))
