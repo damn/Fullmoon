@@ -152,26 +152,29 @@
    ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
    :mult {:type :component/modifier
           :widget :text-field
-          :schema number?} })
+          :schema number?}})
 
-(defmacro defstat [stat-k attr-data & {:keys [stat/modifier-operations]}]
-  `(do
-    (defcomponent ~stat-k
-      (assoc ~attr-data :stat/modifier-operations ~modifier-operations))
+(defn defstat [stat-k attr-data & {:keys [stat/modifier-operations]}]
+  (defcomponent stat-k
+    (assoc attr-data :stat/modifier-operations modifier-operations))
 
-    (doseq [op# ~modifier-operations]
-      (defcomponent [~stat-k op#] (get operation-components-base op#)))
-    ~stat-k))
+  (doseq [op modifier-operations]
+    (defcomponent [stat-k op] (get operation-components-base op)))
+  stat-k)
 
-(defstat :stats/hp data/pos-int-attr :stat/modifier-operations [[:max :inc]
-                                                                [:max :mult]])
+(defstat :stats/hp data/pos-int-attr
+  :stat/modifier-operations [[:max :inc]
+                             [:max :mult]])
 
-(defstat :stats/mana data/nat-int-attr :stat/modifier-operations [[:max :inc]
-                                                                  [:max :mult]])
+(defstat :stats/mana data/nat-int-attr
+  :stat/modifier-operations [[:max :inc]
+                             [:max :mult]])
 
-(defstat :stats/movement-speed data/pos-attr :stat/modifier-operations [:inc :mult])
+(defstat :stats/movement-speed data/pos-attr
+  :stat/modifier-operations [:inc :mult])
 
-(defstat :stats/strength data/nat-int-attr :stat/modifier-operations [:inc])
+(defstat :stats/strength data/nat-int-attr
+  :stat/modifier-operations [:inc])
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -180,8 +183,10 @@
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
       skill-speed-stat (assoc data/pos-attr :doc doc)
       operations [:inc]]
-  (defstat :stats/cast-speed skill-speed-stat :stat/modifier-operations operations)
-  (defstat :stats/attack-speed skill-speed-stat :stat/modifier-operations operations))
+  (defstat :stats/cast-speed skill-speed-stat
+    :stat/modifier-operations operations)
+  (defstat :stats/attack-speed skill-speed-stat
+    :stat/modifier-operations operations))
 
 (defstat :stats/armor-save {:widget :text-field :schema number?}
   :stat/modifier-operations [:inc])

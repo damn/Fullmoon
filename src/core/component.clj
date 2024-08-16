@@ -60,7 +60,7 @@
 (def warn-name-ns-mismatch? false)
 
 (defmacro defcomponent
-  ([k attr-map]
+  ([k attr-map] ; TODO this arity doesn't need to be a macro ....
    `(do
      (when (and warn-on-override (get attributes ~k))
        (println "WARNING: Overwriting defcomponent " ~k))
