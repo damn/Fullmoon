@@ -12,6 +12,22 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
+; TODO
+; * default values / schema for creature stats.... (which required/optional ...)
+
+; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
+; * take max-movement-speed into account @ :stats/movement-speed
+
+; * damage min/max applied doesn't make sense ... its half a damage difference
+; make like D2 ...
+
+; * :inc :mult -> use namespaced keyword
+
+; * modifier / modifier-component
+  ; or modifiers/ modifier
+  ; and effects/effect
+  ; effects/usable? .... plural ?
+
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
 (def ^:private positive-modifier-color "[CYAN]" #_"[LIME]")
@@ -34,37 +50,21 @@
          [:max :inc] (str value " max ")
          [:val :mult] (str (->percent value) " min ")
          [:max :mult] (str (->percent value) " max "))
-       (name stat)
+       (str/capitalize (name stat))
        "[]"))
 
-; TODO
-; * default values / schema for creature stats.... (which required/optional ...)
-
-; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
-; * take max-movement-speed into account @ :stats/movement-speed
-
-; * damage min/max applied doesn't make sense ... its half a damage difference
-; make like D2 ...
-
-; * :inc :mult -> use namespaced keyword
-
-; * modifier / modifier-component
-  ; or modifiers/ modifier
-  ; and effects/effect
-  ; effects/usable? .... plural ?
-
-(defn- update-modifiers [entity modifier f]
+(defn- tx-update-modifiers [entity modifier f]
   [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier] f])
 
 (defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
   (for [[modifier value] modifiers]
-    (update-modifiers entity modifier #(conj % value))))
+    (tx-update-modifiers entity modifier #(conj % value))))
 
 (defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
   (for [[modifier value] modifiers]
-    (update-modifiers entity modifier (fn [values]
-                                        {:post [(= (count %) (dec (count values)))]}
-                                        (remove #{value} values)))))
+    (tx-update-modifiers entity modifier (fn [values]
+                                           {:post [(= (count %) (dec (count values)))]}
+                                           (remove #{value} values)))))
 
 (defmulti apply-operation (fn [operation _base-value _values]
                             (cond
