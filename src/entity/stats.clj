@@ -307,7 +307,7 @@
                    (for [stat-k stats-keywords
                          :let [base-value (stat-k stats)]
                          :when base-value]
-                     (str (name k) ": " (->effective-value base-value stat-k stats))))
+                     (str (str/capitalize (name stat-k)) ": " (->effective-value base-value stat-k stats))))
          (when (seq modifiers)
            (str "\n"
                 (str/join "\n"
@@ -430,8 +430,7 @@
   (< (rand) (effective-armor-save source* target*)))
 
 (defn- apply-damage-modifiers [damage entity* stat]
-  (update damage :damage/min-max
-          ->effective-value stat (:entity/stats entity*)))
+  (update damage :damage/min-max ->effective-value stat (:entity/stats entity*)))
 
 (comment
  (= (apply-damage-modifiers {:damage/min-max [5 10]}
