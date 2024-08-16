@@ -24,8 +24,6 @@
 
 (defcomponent :properties/item {}
   (properties/create [_]
-    ; modifier add/remove
-    ; item 'upgrade' colorless to sword fire
     (defcomponent :item/modifier (data/components
                                    (map first (filter (fn [[k data]]
                                                         (= (:type data) :component/modifier))
