@@ -1,9 +1,10 @@
 (ns entity.stats
   (:require [clojure.string :as str]
             [clojure.math :as math]
+            [malli.core :as m]
             [gdx.graphics.color :as color]
             [utils.random :as random]
-            [data.val-max :refer [val-max-ratio lower-than-max? set-to-max apply-val-max-modifier]]
+            [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
@@ -109,6 +110,38 @@
 
 (defmethod apply-operation :mult [_ base-value value]
   (* base-value (inc value)))
+
+(defn- ->max-zero-int [v]
+  (-> v int (max 0)))
+
+(defn- apply-val-max-modifier [val-max [[val-or-max inc-or-mult] value]]
+  {:post [(m/validate val-max-schema %)]}
+  (assert (m/validate val-max-schema val-max)
+          (str "Invalid val-max-schema: " (pr-str val-max)))
+  ; TODO similar ops / as in stats ....
+  ; move there ??
+  (let [f (case inc-or-mult
+            :inc #(+ % value)
+            :mult #(* % (inc value)))
+        [v mx] ((case val-or-max
+                  :val (fn [[v mx] f] [(f v) mx])
+                  :max (fn [[v mx] f] [v (f mx)]))
+                val-max
+                f)
+        v  (->max-zero-int v)
+        mx (->max-zero-int mx)]
+    (case val-or-max
+      :val [v (max v mx)]
+      :max [(min v mx) mx])))
+
+(comment
+ (and
+  (= (apply-val-max-modifier [5 10] [[:val :inc] 30])
+     [35 35])
+
+  (= (apply-val-max-modifier [5 10] [[:max :mult] -0.5])
+     [5 5]))
+ )
 
 (defmethod apply-operation :op/val-max  [operation base-value value]
   (apply-val-max-modifier base-value [operation value]))
