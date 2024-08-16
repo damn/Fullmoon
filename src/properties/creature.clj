@@ -33,7 +33,7 @@
     (defcomponent :entity/flying? data/boolean-attr)
     (defcomponent :entity/reaction-time data/pos-attr)
 
-    (defcomponent :creature/entity (data/components
+    (defcomponent :creature/entity (data/components ; TODO no required/optional settings ! just cannot remove & already there !
                                      [:entity/animation
                                       :entity/body
                                       :entity/flying?

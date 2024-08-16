@@ -19,7 +19,7 @@
    :entity.creature/species
    ;:entity/faction
    ;:entity/state
-   :entity/stats
+   :entity/stats ; TODO don't need to show movement-speed actually
    :entity/skills
    ;;
    :entity/delete-after-duration

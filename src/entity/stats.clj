@@ -12,6 +12,25 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
+;;;; endless game - no goal - items durability - skills durability - alwauys new lvl created -
+; - different combinations of enemeis/etc -
+
+; => also : stats separate stat & operations for modifiers
+; modifier is then stat -> 'operation components'
+; different things - stats w. base-values - stats/modifiers with all modifieres -
+
+; => maybe move movement-speed into body, mana into skills, ?
+
+; TODO now I know the problem - princess is your enemy .. not your faction
+; should be neutral ?
+; could even make entities when I come close they fight for me ?
+
+; TODO can damage princess through projectile! doesn't check if usable?
+; applies all effects on entity ....
+; so all transact's have to check if the component is availalbe or filter ?
+; maybe call it 'applicable?'
+; and check everywhere we use tx/effect ....
+
 ; TODO
 ; * default values / schema for creature stats.... (which required/optional ...)
 
@@ -40,10 +59,8 @@
     (tx-update-modifiers entity modifier (fn [values]
                                            {:post [(= (count %) (dec (count values)))]}
                                            (remove #{value} values)))))
-
-; TODO data.operations ???
-; or each data/foo defines its operations - modifiers/effects .... !
-; open-closed principle ... cannot extend datas/operations ...
+; TODO if no values remaining -> remove the modifier itself
+; or ignore it if values total is 0 at infotext.
 
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
@@ -73,7 +90,7 @@
        (stat-k->pretty-name stat-k)
        "[]"))
 
-(defmulti apply-operation (fn [operation _base-value _values]
+(defmulti apply-operation (fn [operation _base-value _value]
                             (cond
                              (#{[:max :inc]
                                 [:max :mult]
@@ -87,14 +104,14 @@
 ; TODO use :op/inc / :op/mult ....?
 ; TODO @ data.val-max DRY
 ; TODO all modifiers always get reduce + 'd
-(defmethod apply-operation :inc [_ base-value values]
-  (reduce + base-value values))
+(defmethod apply-operation :inc [_ base-value value]
+  (+ base-value value))
 
-(defmethod apply-operation :mult [_ base-value values]
-  (* base-value (reduce + 1 values)))
+(defmethod apply-operation :mult [_ base-value value]
+  (* base-value (inc value)))
 
-(defmethod apply-operation :op/val-max  [operation base-value values]
-  (apply-val-max-modifier base-value [operation values]))
+(defmethod apply-operation :op/val-max  [operation base-value value]
+  (apply-val-max-modifier base-value [operation value]))
 
 (defn- op-order [[[_stat-k operation] _values]]
   (case operation
@@ -108,10 +125,10 @@
 (defn- ->effective-value [base-value stat-k stats]
   (->> stats
        :stats/modifiers
-       (filter (fn [[[k _op] _values]] (= k stat-k)))
+       (filter (fn [[[k _op] _values]] (= k stat-k))) ; TODO don't filter but get modifiers stat-k
        (sort-by op-order)
-       (reduce (fn [base-value [[_k operation] values]]
-                 (apply-operation operation base-value values))
+       (reduce (fn [base-value [[_k operation] values]] ; now we have [operation values]
+                 (apply-operation operation base-value (apply + values)))
                base-value)))
 
 (comment
@@ -226,8 +243,7 @@
                       (not (get core.component/attributes (first k)))))
                core.component/attributes)))
 
-(defcomponent :stats/modifiers
-  (data/components (modifiers-without-base-value)))
+(defcomponent :stats/modifiers (data/components (modifiers-without-base-value)))
 
 (extend-type api.entity.Entity
   entity/Stats
@@ -276,6 +292,12 @@
  )
 
 
+; TODO make it all required like in MTG
+; then can make effects, e.g. destroy target creature with strength < 3
+; mana needed ? idk
+; cast-speed/attack-speed also idk (maybe dexterity, intelligence)
+; armor-pierce into an effect.... like in wh40k.
+
 
 (def ^:private stats-keywords
   ; hp/mana/movement-speed given for all entities ?
@@ -283,7 +305,7 @@
   ; also default values defined with the stat itself ?
   ; armor-pierce move out of here ...
   [:stats/hp
-   :stats/mana
+   :stats/mana ; TODO check for not-enough-mana .... but only if skills are there ! so can omit it..
    :stats/movement-speed
    :stats/strength  ; default value 0
    :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
@@ -293,20 +315,39 @@
    ; TODO damage deal/receive ?
    ])
 
+; TODO use data/components
+; and pass :optional or not ....
+; see where else we use data/components ....
+; or make it into the component itself if optional or not
+; but depends on usage ?
+; possible different usage component at different places?
+; e.g. audiovisual ?
+
+; or make even hp or movement-speed optional
+; for example then cannot attack the princess ... ?
+
+; then the create component here have to move into the component itself.
+
 (defcomponent :entity/stats (data/components-attribute :stats)
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
-        (update :stats/hp (fn [hp] [hp hp]))
-        (update :stats/mana (fn [mana] [mana mana]))
+        (update :stats/hp (fn [hp] (when hp [hp hp])))
+        (update :stats/mana (fn [mana] (when mana [mana mana])))
         (update :stats/modifiers (fn [mods-values]
-                                   (zipmap (keys mods-values)
-                                           (map vector (vals mods-values)))))))
+                                   (when mods-values
+                                     (zipmap (keys mods-values)
+                                             (map vector (vals mods-values))))))))
 
   ; TODO proper texts...
   ; HP color based on ratio like hp bar samey (take same color definitions etc.)
   ; mana color same in the whole app
   ; red positive/green negative
   (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
+    ; TODO use component/info-text
+    ; each stat derives from :component/stat
+    ; and stat/modifiers has its own info-text method
+    ; => only those which are there ....
+    ; which should be there or not ????
     (str (str/join "\n"
                    (for [stat-k stats-keywords
                          :let [base-value (stat-k stats)]

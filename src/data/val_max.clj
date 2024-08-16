@@ -28,17 +28,15 @@
 (defn- ->max-zero-int [v]
   (-> v int (max 0)))
 
-(defn apply-val-max-modifier [val-max [[val-or-max inc-or-mult] values]]
+(defn apply-val-max-modifier [val-max [[val-or-max inc-or-mult] value]]
   {:post [(m/validate val-max-schema %)]}
   (assert (m/validate val-max-schema val-max)
           (str "Invalid val-max-schema: " (pr-str val-max)))
-  (assert (coll? values)
-          (str "Values should be a coll?: " (pr-str values) ". Called with val-max: " (pr-str val-max) " , op:" (pr-str [val-or-max inc-or-mult])))
   ; TODO similar ops / as in stats ....
   ; move there ??
   (let [f (case inc-or-mult
-            :inc #(reduce + % values)
-            :mult #(* % (reduce + 1 values)))
+            :inc #(+ % value)
+            :mult #(* % (inc value)))
         [v mx] ((case val-or-max
                   :val (fn [[v mx] f] [(f v) mx])
                   :max (fn [[v mx] f] [v (f mx)]))
@@ -51,13 +49,10 @@
       :max [(min v mx) mx])))
 
 (comment
- (= (apply-val-max-modifier [5 10]
-                            [[:val :inc] [30]])
-    [35 35]
-    )
- (= (apply-val-max-modifier [5 10]
-                            [[:max :mult] [-0.5]])
-    [5 5])
+ (and
+  (= (apply-val-max-modifier [5 10] [[:val :inc] 30])
+     [35 35])
 
-
+  (= (apply-val-max-modifier [5 10] [[:max :mult] -0.5])
+     [5 5]))
  )
