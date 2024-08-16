@@ -1,7 +1,9 @@
 (ns properties.item
-  (:require [core.component :refer [defcomponent]]
+  (:require [clojure.string :as str]
+            [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
+            [api.modifier :as modifier]
             [api.properties :as properties]
             [api.tx :refer [transact!]]))
 
@@ -19,39 +21,8 @@
 
 (def ^:private modifier-color "[VIOLET]")
 
-(comment
-
- ; Modifier:
- [[:stats/strength :inc 5]]
- ; vector ...
- ; make map of
- {[:stats/strength :inc] 5}
- ; => component is tuple ....
- )
-
-(require '[clojure.string :as str])
-(require '[clojure.math :as math])
-
-(defn- +? [n]
-  (case (math/signum n)
-    (0.0 1.0) "+"
-    -1.0 ""))
-
-(defn- ->percent [v]
-  (str (int (* 100 v)) "%"))
-
 (defn- modifier-text [modifiers]
-  (str/join "\n"
-            (for [[[stat operation] value] modifiers]
-              (str (+? value)
-                   (case operation
-                     :inc (str value " ")
-                     :mult (str (->percent value) " ")
-                     [:val :inc] (str value " min ")
-                     [:max :inc] (str value " max ")
-                     [:val :mult] (str (->percent value) " min ")
-                     [:max :mult] (str (->percent value) " max "))
-                   (name stat)))))
+  (str/join "\n" (map modifier/info-text modifiers)))
 
 (defcomponent :properties/item {}
   (properties/create [_]
