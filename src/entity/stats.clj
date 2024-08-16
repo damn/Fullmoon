@@ -111,33 +111,31 @@
 (defmethod apply-operation :mult [_ base-value value]
   (* base-value (inc value)))
 
-(defn- ->max-zero-int [v]
+(defn- ->pos-int [v]
   (-> v int (max 0)))
-
-(comment
- (and
-  (= (apply-operation [:val :inc] [5 10] 30)
-     [35 35])
-
-  (= (apply-operation [:max :mult] [5 10] -0.5)
-     [5 5]))
- )
 
 (defmethod apply-operation :op/val-max [[val-or-max operation] val-max value]
   {:post [(m/validate val-max-schema %)]}
   (assert (m/validate val-max-schema val-max)
           (str "Invalid val-max-schema: " (pr-str val-max)))
   (let [f #(apply-operation operation % value)
-        [v mx] ((case val-or-max
-                  :val (fn [[v mx] f] [(f v) mx])
-                  :max (fn [[v mx] f] [v (f mx)]))
-                val-max
-                f)
-        v  (->max-zero-int v)
-        mx (->max-zero-int mx)]
+        [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
+        v  (->pos-int v)
+        mx (->pos-int mx)]
     (case val-or-max
       :val [v (max v mx)]
       :max [(min v mx) mx])))
+
+(comment
+ (and
+  (= (apply-operation [:val :inc] [5 10] 30) [35 35])
+  (= (apply-operation [:max :mult] [5 10] -0.5) [5 5])
+  (= (apply-operation [:val :mult] [5 10] 2) [15 15])
+  (= (apply-operation [:val :mult] [5 10] 1.3) [11 11])
+  (= (apply-operation [:max :mult] [5 10] -0.8) [1 1])
+  (= (apply-operation [:max :mult] [5 10] -0.9) [0 0])
+  )
+ )
 
 (defn- op-order [[[_stat-k operation] _values]]
   (case operation
