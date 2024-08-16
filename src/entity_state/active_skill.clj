@@ -41,8 +41,13 @@
   (let [effect-ctx (check-remove-target effect-ctx ctx)]
     (effect-ctx/usable? effect-ctx effect)))
 
+(defn- mana-value [entity*]
+  (if-let [mana (entity/stat entity* :stats/mana)]
+    (mana 0)
+    0))
+
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
-  (> cost ((entity/stat entity* :stats/mana) 0)))
+  (> cost (mana-value entity*)))
 
 (defn skill-usable-state [effect-ctx
                           entity*
