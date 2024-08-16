@@ -156,31 +156,26 @@
                base-value)))
 
 (comment
-
- (= (->effective-value [5 10]
-                       :stats/damage-deal
-                       {:stats/modifiers {[:stats/damage-deal [:val :inc]] [30]
-                                          [:fooz :barz] [ 1 2 3 ]}})
-    [35 35])
-
- (= (->effective-value [5 10]
-                       :stats/damage-deal
-                       {:stats/modifiers {}})
-    [5 10])
-
-
- (= (->effective-value :stats/hp
-                       {:stats/modifiers {[:stats/hp [:max :inc]] [10 1]
-                                          [:stats/hp [:max :mult]] [0.5]}
-                        :stats/hp [100 100]})
-    [100 166])
-
- (= (->effective-value :stats/movement-speed
-                       {:stats/modifiers {[:stats/movement-speed :inc] [2]
-                                          [:stats/movement-speed :mult] [0.1 0.2]}
-                        :stats/movement-speed 3})
-    6.5)
-
+ (and
+  (= (->effective-value [5 10]
+                        :stats/damage-deal
+                        {:stats/modifiers {[:stats/damage-deal [:val :inc]] [30]
+                                           [:fooz :barz] [ 1 2 3 ]}})
+     [35 35])
+  (= (->effective-value [5 10]
+                        :stats/damage-deal
+                        {:stats/modifiers {}})
+     [5 10])
+  (= (->effective-value [100 100]
+                        :stats/hp
+                        {:stats/modifiers {[:stats/hp [:max :inc]] [10 1]
+                                           [:stats/hp [:max :mult]] [0.5]}})
+     [100 166])
+  (= (->effective-value 3
+                        :stats/movement-speed
+                        {:stats/modifiers {[:stats/movement-speed :inc] [2]
+                                           [:stats/movement-speed :mult] [0.1 0.2]}})
+     6.5))
  )
 
 (def ^:private operation-components-base
