@@ -59,7 +59,7 @@
   (str (int (* 100 v)) "%"))
 
 (defn- stat-k->pretty-name [stat-k]
-  (str/capitalize (name stat)))
+  (str/capitalize (name stat-k)))
 
 (defn info-text [[[stat-k operation] value]]
   (str (+? value)
@@ -163,10 +163,13 @@
           :widget :text-field
           :schema number?}})
 
+(defn defmodifiers [stat-k operations]
+  (doseq [op operations]
+    (defcomponent [stat-k op] (get operation-components-base op))))
+
 (defn defstat [stat-k attr-data & {:keys [operations]}]
   (defcomponent stat-k attr-data)
-  (doseq [op operations]
-    (defcomponent [stat-k op] (get operation-components-base op)))
+  (defmodifiers stat-k operations)
   stat-k)
 
 (defstat :stats/hp data/pos-int-attr
@@ -177,7 +180,7 @@
   :operations [[:max :inc]
                [:max :mult]])
 
-(defstat :stats/movement-speed data/pos-attr
+(defstat :stats/movement-speed data/pos-attr ; TODO only mult required
   :operations [:inc :mult])
 
 (defstat :stats/strength data/nat-int-attr
@@ -201,28 +204,30 @@
 (defstat :stats/armor-pierce {:widget :text-field :schema number?}
   :operations [:inc])
 
-; TODO this is not a real stat ... ?
-; only as modifiers ?
-; don't add to :entity/stats component .....
-(defstat :stats/damage-deal {}
-  :operations [[:max :inc]
-               [:max :mult]
-               [:val :inc]
-               [:val :mult]])
+; TODO apply to calculated damage, no need max/val
+; also @ max hp
+; -> so also only inc/mult no val-max ??
+(defmodifiers :stats/damage-deal [[:max :inc]
+                                  [:max :mult]
+                                  [:val :inc]
+                                  [:val :mult]])
 
-(defstat :stats/damage-receive {}
-  :operations [[:max :inc]
-               [:max :mult]
-               [:val :inc]
-               [:val :mult]])
+(defmodifiers :stats/damage-receive [[:max :inc]
+                                     [:max :mult]
+                                     [:val :inc]
+                                     [:val :mult]])
+
+; only :stats/damage-deal & :stats/damage-receive
+; the rest can be set through the base-values
+(defn- modifiers-without-base-value []
+  (map first
+       (filter (fn [[k data]]
+                 (and (= (:type data) :component/modifier)
+                      (not (get core.component/attributes (first k)))))
+               core.component/attributes)))
 
 (defcomponent :stats/modifiers
-  (data/components
-    (filter (fn [[stat op]]
-              (#{:stats/damage-deal :stats/damage-receive} stat) )
-            (map first (filter (fn [[k data]]
-                                 (= (:type data) :component/modifier))
-                               core.component/attributes)))))
+  (data/components (modifiers-without-base-value)))
 
 (extend-type api.entity.Entity
   entity/Stats
@@ -288,11 +293,7 @@
    ; TODO damage deal/receive ?
    ])
 
-(defcomponent :entity/stats (data/components
-                              (filter #(and (keyword? %)
-                                            (= (name :stats) (namespace %))
-                                            (not (#{:stats/damage-deal :stats/damage-receive} %)))
-                                      (keys core.component/attributes)))
+(defcomponent :entity/stats (data/components-attribute :stats)
   (entity/create-component [[_ stats] _components _ctx]
     (-> stats
         (update :stats/hp (fn [hp] [hp hp]))
