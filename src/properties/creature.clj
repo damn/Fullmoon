@@ -181,7 +181,7 @@
     (str "Spawns a " (name creature-id)))
 
   (effect/usable? [_ {:keys [effect/source effect/target-position]}]
-    ; TODO line of sight ? / not blocked ..
+    ; TODO line of sight ? / not blocked tile..
     ; (part of target-position make)
     (and (:entity/faction @source)
          target-position))

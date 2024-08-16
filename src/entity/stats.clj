@@ -12,7 +12,6 @@
             [context.ui.config :refer (hpbar-height-px)]))
 
 ; TODO
-; * effect/target-entity - valid-params? broken
 ; * properties.item - :item/modifier no schema
 ; * default values
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
@@ -254,7 +253,7 @@
                                   effect-ctx)))))
 
   (effect/usable? [_ effect-ctx]
-    (effect/usable? (damage-effect effect-ctx)))
+    (effect/usable? (damage-effect effect-ctx) effect-ctx))
 
   (transact! [_ ctx]
     [(damage-effect ctx)]))
@@ -362,17 +361,15 @@
 
   (effect/usable? [_ {:keys [effect/target]}]
     (and target
-         ; TODO is damage-able (don't attack projectiles ...)
-         ; ? but nearest-enemy anyway ?
-         ; player can attack projectiles ??
-         ))
+         ; TODO check for creature stats itself ? or just hp ?
+         (entity/stat @target :stats/hp)))
 
   (transact! [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]
       (cond
-       (or (not hp) (zero? (hp 0)))
+       (zero? (hp 0))
        []
 
        (armor-saves? source* target*)

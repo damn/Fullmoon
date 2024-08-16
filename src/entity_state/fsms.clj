@@ -100,8 +100,7 @@
 
   (effect/usable? [_ {:keys [effect/target]}]
     (and target
-         ; TODO has entity/state creature ?
-         ))
+         (:entity/state @target)))
 
   (transact! [[_ duration] {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
@@ -112,8 +111,7 @@
 
   (effect/usable? [_ {:keys [effect/source effect/target]}]
     (and target
-         ; TODO has entity/state creature ?
-         ))
+         (:entity/state @target)))
 
   (transact! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))

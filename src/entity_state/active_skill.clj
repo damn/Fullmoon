@@ -4,7 +4,8 @@
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]
-            [api.tx :refer [transact!]]))
+            [api.tx :refer [transact!]]
+            [effect-ctx.core :as effect-ctx]))
 
 ; SCHEMA effect-ctx
 ; * source = always available
@@ -15,14 +16,6 @@
 ;  * target = maybe
 ;  * target-position  = always available
 ;  * direction  = always available
-
-; TODO
-; also target not destroyed
-; line of sight part of all target fof ?
-; source anyway available no need check  ?
-; damage -> hp ...
-; move armor out of damage fofo
-; stun needs creature state ..
 
 (defmethod transact! :tx/effect [[_ effect-ctx effect] ctx]
   (-> ctx
@@ -43,10 +36,10 @@
               target))))
 
 (defn- usable? [{:keys [effect/source effect/target] :as effect-ctx}
-                      effect
-                      ctx]
+                effect
+                ctx]
   (let [effect-ctx (check-remove-target effect-ctx ctx)]
-    (every? #(effect/usable? % effect-ctx) effect)))
+    (effect-ctx/usable? effect-ctx effect)))
 
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
   (> cost ((entity/stat entity* :stats/mana) 0)))
