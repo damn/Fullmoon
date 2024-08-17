@@ -10,8 +10,8 @@
 ; whhile api.effect-component could be a separate API?
 ; or usable itself is recursive ? like text ?
 
-(defn text [effect-ctx effect]
-  (str/join "\n" (keep #(effect/text % effect-ctx) effect)))
+(defn text [effect-ctx effects]
+  (str/join "\n" (keep #(effect/text % effect-ctx) effects)))
 
 (defn usable? [effect-ctx effect]
   (every? #(effect/usable? % effect-ctx) effect))

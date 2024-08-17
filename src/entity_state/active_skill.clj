@@ -17,10 +17,13 @@
 ;  * target-position  = always available
 ;  * direction  = always available
 
-(defmethod transact! :tx/effect [[_ effect-ctx effect] ctx]
+; maybe move to transaction handler & call it :tx/with-ctx
+; and dissoc-ks (keys of extra-ctx)
+; its a more general thing than tx/effect
+(defmethod transact! :tx/effect [[_ effect-ctx effects] ctx]
   (-> ctx
       (merge effect-ctx)
-      (ctx/transact-all! effect)
+      (ctx/transact-all! effects)
       (dissoc :effect/source
               :effect/target
               :effect/direction
@@ -36,10 +39,10 @@
               target))))
 
 (defn- usable? [{:keys [effect/source effect/target] :as effect-ctx}
-                effect
+                effects
                 ctx]
   (let [effect-ctx (check-remove-target effect-ctx ctx)]
-    (effect-ctx/usable? effect-ctx effect)))
+    (effect-ctx/usable? effect-ctx effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]
@@ -99,21 +102,21 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (usable? effect-ctx (:skill/effect skill) context))
+     (not (usable? effect-ctx (:skill/effects skill) context))
      [[:tx/event id :action-done]
       ; TODO some sound ?
       ]
 
      (stopped? context counter)
      [[:tx/event id :action-done]
-      [:tx/effect effect-ctx (:skill/effect skill)]]))
+      [:tx/effect effect-ctx (:skill/effects skill)]]))
 
   (render-below [_ entity* g _ctx])
   (render-above [_ entity* g _ctx])
   (render-info [_ entity* g ctx]
-    (let [{:keys [property/image skill/effect]} skill]
+    (let [{:keys [property/image skill/effects]} skill]
       (draw-skill-icon g image entity* (entity/position entity*) (finished-ratio ctx counter))
-      (run! #(effect/render-info % effect-ctx g) effect))))
+      (run! #(effect/render-info % effect-ctx g) effects))))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time

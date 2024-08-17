@@ -48,7 +48,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
   (effect/usable? [[_ {:keys [hit-effect]}]
                    {:keys [effect/target] :as effect-ctx}]
     (and target
-         (effect-ctx/usable? effect-ctx hit-effect)))
+         (effect-ctx/usable? effect-ctx hit-effect))) ; TODO here not like in active-skill check-remove-target ... ?
 
   (effect/useful? [[_ {:keys [maxrange]}]
                    {:keys [effect/source effect/target]}

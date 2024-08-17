@@ -17,7 +17,7 @@
     (defcomponent :skill/action-time data/pos-attr)
     (defcomponent :skill/cooldown data/nat-int-attr)
     (defcomponent :skill/cost data/nat-int-attr)
-    (defcomponent :skill/effect (data/components-attribute :effect))
+    (defcomponent :skill/effects (data/components-attribute :effect))
     (defcomponent :skill/start-action-sound data/sound)
     (defcomponent :skill/action-time-modifier-key (data/enum :stats/cast-speed :stats/attack-speed))
     {:id-namespace "skills"
@@ -27,7 +27,7 @@
                :skill/action-time
                :skill/cooldown
                :skill/cost
-               :skill/effect
+               :skill/effects
                :skill/start-action-sound
                :skill/action-time-modifier-key])
      :edn-file-sort-order 0
@@ -38,7 +38,7 @@
                               skill/action-time
                               skill/cooldown
                               skill/cost
-                              skill/effect
+                              skill/effects
                               skill/action-time-modifier-key]}]
                [(str/capitalize (name id))
                 (str skill-cost-color "Cost: " cost "[]")
@@ -49,6 +49,6 @@
                      ": "
                      (readable-number action-time) " seconds" "[]")
                 (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
-                ; don't used player-entity* as it may be nil when just created
+                ; don't used player-entity* as it may be nil when just created, could use the current property creature @ editor
                 (str effect-color (effect-ctx/text {:effect/source (ctx/player-entity ctx)}
-                                                   effect) "[]")])}))
+                                                   effects) "[]")])}))

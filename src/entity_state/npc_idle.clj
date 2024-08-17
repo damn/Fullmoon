@@ -18,8 +18,8 @@
      :effect/target target
      :effect/direction (when target (entity/direction entity* @target))}))
 
-(defn- useful? [effect-ctx effect ctx]
-  (some #(effect/useful? % effect-ctx ctx) effect))
+(defn- useful? [effect-ctx effects ctx]
+  (some #(effect/useful? % effect-ctx ctx) effects))
 
 (defn- npc-choose-skill [effect-ctx entity* ctx]
   (->> entity*
@@ -28,7 +28,7 @@
        (sort-by #(or (:skill/cost %) 0))
        reverse
        (filter #(and (= :usable (skill-usable-state effect-ctx entity* % ctx))
-                     (useful? effect-ctx (:skill/effect %) ctx)))
+                     (useful? effect-ctx (:skill/effects %) ctx)))
        first))
 
 (defrecord NpcIdle []

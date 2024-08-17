@@ -5,7 +5,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 0,
-  :skill/effect
+  :skill/effects
   {:effect/sound "sounds/bfxr_shield_consume.wav",
    :effect/spawn :creatures/skeleton-warrior},
   :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
@@ -16,7 +16,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 20,
-  :skill/effect
+  :skill/effects
   {:effect/convert true, :effect/sound "sounds/bfxr_burrow.wav"},
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
  {:property/id :skills/bow,
@@ -26,7 +26,7 @@
   :skill/action-time-modifier-key :stats/attack-speed,
   :skill/cooldown 0,
   :skill/cost 0,
-  :skill/effect
+  :skill/effects
   {:effect/target-entity
    {:hit-effect {:effect/damage {:damage/min-max [0 10]}},
     :maxrange 5}},
@@ -38,7 +38,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 1,
-  :skill/effect
+  :skill/effects
   {:effect/sound "sounds/bfxr_click.wav",
    :effect/stats-mana-set-to-max true},
   :skill/start-action-sound "sounds/shoot.wav"}
@@ -49,7 +49,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 3,
   :skill/cost 10,
-  :skill/effect
+  :skill/effects
   {:effect/target-entity
    {:hit-effect {:effect/kill true}, :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_bossdeath.wav"}
@@ -60,7 +60,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 4,
-  :skill/effect
+  :skill/effects
   {:effect/projectile true,
    :effect/sound "sounds/bfxr_waypointunlock.wav"},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
@@ -71,7 +71,7 @@
   :skill/action-time-modifier-key :stats/attack-speed,
   :skill/cooldown 0,
   :skill/cost 0,
-  :skill/effect
+  :skill/effects
   {:effect/target-entity
    {:hit-effect {:effect/melee-damage true}, :maxrange 0.5}},
   :skill/start-action-sound "sounds/slash.wav"}
