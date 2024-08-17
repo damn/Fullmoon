@@ -14,11 +14,11 @@
 
   ; TODO add proper effect-ctx here for effect-ctx/text
   ; TODO DRY! LIME color for effects ...
-  (entity/info-text [[_ {:keys [hit-effect piercing?]}] _ctx]
+  (entity/info-text [[_ {:keys [hit-effects piercing?]}] _ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
-         "[LIME]" (effect-ctx/text {} hit-effect) "[]"))
+         "[LIME]" (effect-ctx/text {} hit-effects) "[]"))
 
-  (entity/tick [[k {:keys [hit-effect
+  (entity/tick [[k {:keys [hit-effects
                            already-hit-bodies
                            piercing?]}]
                 entity*
@@ -43,4 +43,4 @@
        (when destroy?
          [:tx/destroy id])
        (when hit-entity
-         [:tx/effect {:effect/source id :effect/target hit-entity} hit-effect])])))
+         [:tx/effect {:effect/source id :effect/target hit-entity} hit-effects])])))

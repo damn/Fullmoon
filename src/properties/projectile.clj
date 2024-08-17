@@ -39,7 +39,7 @@
  (or (not chance)
      (random/percent-chance chance)))
 
-(def ^:private hit-effect
+(def ^:private hit-effects
   [[:effect/damage {:damage/min-max [4 8]}]
    [:effect/stun 0.5]
    ;[:stun {:duration 0.2} {:chance 100}]
@@ -62,7 +62,7 @@
                          :faction faction
                          :delete-after-duration maxtime
                          :plop true
-                         :projectile-collision {:hit-effect hit-effect
+                         :projectile-collision {:hit-effects hit-effects
                                                 :piercing? true}}]])
 
 
@@ -75,7 +75,7 @@
                                   :schema [:= true]
                                   :default-value true}
   (effect/text [_ effect-ctx]
-    (effect-ctx/text effect-ctx hit-effect))
+    (effect-ctx/text effect-ctx hit-effects))
 
   ; TODO for npcs need target -- anyway only with direction
   (effect/usable? [_ {:keys [effect/direction]}]

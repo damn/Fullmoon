@@ -30,32 +30,32 @@
 (defcomponent :maxrange data/pos-attr)
 ; TODO how should this work ???
 ; can not contain the other effects properly o.o
-(defcomponent :hit-effect (data/components-attribute :effect))
+(defcomponent :hit-effects (data/components-attribute :effect))
 
 (defcomponent :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
                                      :schema [:map {:closed true}
-                                              [:hit-effect [:map]]
+                                              [:hit-effects [:map]]
                                               [:maxrange pos?]]
-                                     :default-value {:hit-effect {}
+                                     :default-value {:hit-effects {}
                                                      :max-range 2.0}
                                      :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
 Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
-  (effect/text [[_ {:keys [maxrange hit-effect]}]
+  (effect/text [[_ {:keys [maxrange hit-effects]}]
                 effect-ctx]
     (str "Range " maxrange " meters\n"
-         (effect-ctx/text effect-ctx hit-effect)))
+         (effect-ctx/text effect-ctx hit-effects)))
 
-  (effect/usable? [[_ {:keys [hit-effect]}]
+  (effect/usable? [[_ {:keys [hit-effects]}]
                    {:keys [effect/target] :as effect-ctx}]
     (and target
-         (effect-ctx/usable? effect-ctx hit-effect))) ; TODO here not like in active-skill check-remove-target ... ?
+         (effect-ctx/usable? effect-ctx hit-effects))) ; TODO here not like in active-skill check-remove-target ... ?
 
   (effect/useful? [[_ {:keys [maxrange]}]
                    {:keys [effect/source effect/target]}
                    _ctx]
     (in-range? @source @target maxrange))
 
-  (transact! [[_ {:keys [maxrange hit-effect]}]
+  (transact! [[_ {:keys [maxrange hit-effects]}]
               {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
@@ -69,7 +69,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         hit-effect)
+         hit-effects)
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )
