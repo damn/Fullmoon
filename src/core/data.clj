@@ -52,14 +52,9 @@
                                                   :some)])))
    :components ks})
 
-(defn namespace->components [ns]
-  (filter (fn [[k comp-meta]]
-            (and (keyword? k)
-                 (= (name ns) (namespace k))))
-          component/attributes))
-
-(defn components-attribute [ns]
-  (components (map first (namespace->components ns))))
+(defn components-attribute [component-namespace]
+  (components (filter #(= (name component-namespace) (namespace %))
+                      (keys component/attributes))))
 
 ; TODO similar to map-attribute & components-attribute
 (defn map-attribute-schema [id-attribute attr-ks]
