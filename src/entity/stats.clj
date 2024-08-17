@@ -190,18 +190,10 @@
   (defcomponent stat-k metam)
   (defmodifier (stat-k->modifier-k stat-k) operations))
 
-(defstat :stats/hp data/pos-int-attr
-  :operations [:op/max-inc :op/max-mult])
-
-(defstat :stats/mana data/nat-int-attr
-  :operations [:op/max-inc :op/max-mult])
-
-; TODO only mult required  ( ? )
-(defstat :stats/movement-speed data/pos-attr
-  :operations [:op/inc :op/mult])
-
-(defstat :stats/strength data/nat-int-attr
-  :operations [:op/inc])
+(defstat :stats/hp             data/pos-int-attr :operations [:op/max-inc :op/max-mult])
+(defstat :stats/mana           data/nat-int-attr :operations [:op/max-inc :op/max-mult])
+(defstat :stats/movement-speed data/pos-attr     :operations [:op/inc :op/mult]) ; TODO only mult required  ( ? )
+(defstat :stats/strength       data/nat-int-attr :operations [:op/inc])
 
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
@@ -213,17 +205,13 @@
   (defstat :stats/cast-speed   skill-speed-stat :operations operations)
   (defstat :stats/attack-speed skill-speed-stat :operations operations))
 
-(defstat :stats/armor-save {:widget :text-field :schema number?}
-  :operations [:op/inc])
-
-(defstat :stats/armor-pierce {:widget :text-field :schema number?}
-  :operations [:op/inc])
+(defstat :stats/armor-save   {:widget :text-field :schema number?} :operations [:op/inc])
+(defstat :stats/armor-pierce {:widget :text-field :schema number?} :operations [:op/inc])
 
 ; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
 ; just inc/mult ?
 ; or even mana/hp does it make a difference ?
-(defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
-
+(defmodifier :modifier/damage-deal    [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-receive [:op/inc :op/mult])
 
 (defcomponent :stats/modifiers (data/components [:modifier/damage-deal
