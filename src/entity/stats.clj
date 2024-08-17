@@ -5,7 +5,7 @@
             [gdx.graphics.color :as color]
             [utils.random :as random]
             [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defsystem defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
             [api.entity :as entity]
@@ -82,6 +82,9 @@
       :val [v (max v mx)]
       :max [(min v mx) mx])))
 
+(defn- ->percent [v]
+  (str (int (* 100 v)) "%"))
+
 (defcomponent :op/inc {:widget :text-field :schema number?} ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
   (operation-text [[_ value]] (str value " "))
   (apply-operation [[_ value] base-value] (+ base-value value))
@@ -132,13 +135,10 @@
     (0.0 1.0) (str positive-modifier-color "+")
     -1.0 (str negative-modifier-color "")))
 
-(defn- ->percent [v]
-  (str (int (* 100 v)) "%"))
-
 (defn- k->pretty-name [k]
   (str/capitalize (name k)))
 
-(defn info-text [modifier-k operation-k value]
+(defn info-text [modifier-k [operation-k value]]
   (str (+? value)
        (operation-text [operation-k value])
        (k->pretty-name modifier-k)
