@@ -161,6 +161,7 @@
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
 ; * take max-movement-speed into account @ :stats/movement-speed
 (defn- ->effective-value [base-value modifier-k stats]
+  {:pre [(= "modifier" (namespace modifier-k))]}
   (->> stats
        :stats/modifiers
        modifier-k
@@ -195,9 +196,12 @@
 (defn defmodifier [modifier-k operations]
   (defcomponent modifier-k (data/components operations)))
 
+(defn- stat-k->modifier-k [stat-k]
+  (keyword "modifier" (name stat-k)))
+
 (defn defstat [stat-k metam & {:keys [operations]}]
   (defcomponent stat-k metam)
-  (defmodifier (keyword "modifier" (name stat-k)) operations))
+  (defmodifier (stat-k->modifier-k stat-k) operations))
 
 (defstat :stats/hp data/pos-int-attr
   :operations [:op/max-inc :op/max-mult])
@@ -242,7 +246,7 @@
   entity/Stats
   (stat [{:keys [entity/stats]} stat-k]
     (when-let [base-value (stat-k stats)]
-      (->effective-value base-value stat-k stats))))
+      (->effective-value base-value (stat-k->modifier-k stat-k) stats))))
 
 ; TODO remove vector shaboink -> gdx.graphics.color/->color use.
 (def ^:private hpbar-colors
@@ -350,7 +354,7 @@
                    (for [stat-k stats-keywords
                          :let [base-value (stat-k stats)]
                          :when base-value]
-                     (str (k->pretty-name stat-k) ": " (->effective-value base-value stat-k stats))))
+                     (str (k->pretty-name stat-k) ": " (->effective-value base-value (stat-k->modifier-k stat-k) stats))))
          (when (seq modifiers)
            (str "\n"
                 (str/join "\n"
