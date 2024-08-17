@@ -22,8 +22,8 @@
 (defn- modifier-text [modifiers]
   (str/join "\n"
             (for [[modifier-k operations] modifiers
-                  [operation-k value] operations]
-              (entity.stats/info-text modifier-k operation-k value))))
+                  operation operations]
+              (entity.stats/info-text modifier-k operation))))
 
 (defcomponent :properties/item {}
   (properties/create [_]
