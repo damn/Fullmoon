@@ -10,11 +10,6 @@
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
-(defcomponent :property/pretty-name data/string-attr)
-(defcomponent :property/image       data/image)
-(defcomponent :property/animation   data/animation)
-(defcomponent :property/sound       data/sound)
-
 (comment
  (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
  (let [atlas (TextureAtlas. "creatures/creatures.atlas")
@@ -135,6 +130,10 @@
 
 (defcomponent :context/properties {}
   (component/create [[_ {:keys [file types]}] ctx]
+    (defcomponent :property/pretty-name data/string-attr)
+    (defcomponent :property/image       data/image)
+    (defcomponent :property/animation   data/animation)
+    (defcomponent :property/sound       data/sound)
     (let [types (zipmap types (repeat true))
           _ (component/load! types)
           types (component/update-map types api.properties/create)]
