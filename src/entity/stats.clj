@@ -13,23 +13,14 @@
             [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
-; TODO default-values dont make sense
-; e.g. in magic creatures have explicitly 0 power
-; here they have 0 power but implicitly
-; also the code doesnt want to know e.g. armor calculations
-; => make it explicit ...
-; only attack/cast-speed is quite uninteresting ? could hide ?
-
 (defn- conj-value [value]
   (fn [values]
     (conj values value)))
 
-; TODO if no values remaining -> remove the modifier itself
-; or ignore it if values total is 0 at infotext.
 (defn- remove-value [value]
   (fn [values]
     {:post [(= (count %) (dec (count values)))]}
-    (remove #{value} values)))
+    (vec (remove #{value} values)))) ; vec so can inspect and not 'lazy-seq'
 
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations-m] modifiers
@@ -41,10 +32,10 @@
                          {:modifier/hp {:op/max-inc 5
                                         :op/max-mult 0.3}
                           :modifier/movement-speed {:op/mult 0.1}}
-                         :fn/add-value)
-    [[:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-inc] :fn/add-value]
-     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-mult] :fn/add-value]
-     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn/add-value]])
+                         (fn [value] :fn))
+    [[:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-inc] :fn]
+     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-mult] :fn]
+     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
 ; TODO plural
@@ -269,6 +260,12 @@
 ; cast-speed/attack-speed also idk (maybe dexterity, intelligence)
 ; armor-pierce into an effect.... like in wh40k.
 
+; TODO default-values dont make sense
+; e.g. in magic creatures have explicitly 0 power
+; here they have 0 power but implicitly
+; also the code doesnt want to know e.g. armor calculations
+; => make it explicit ...
+; only attack/cast-speed is quite uninteresting ? could hide ?
 
 (def ^:private stats-keywords
   ; hp/mana/movement-speed given for all entities ?
@@ -315,27 +312,23 @@
         (update :stats/mana (fn [mana] (when mana [mana mana])))
         (update :stats/modifiers build-modifiers)))
 
-  ; TODO proper texts...
+  ; TODO proper texts... / widgets / icons ?
   ; HP color based on ratio like hp bar samey (take same color definitions etc.)
   ; mana color same in the whole app
   ; red positive/green negative
   (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
-    ; TODO use component/info-text
-    ; each stat derives from :component/stat
-    ; and stat/modifiers has its own info-text method
-    ; => only those which are there ....
-    ; which should be there or not ????
     (str (str/join "\n"
                    (for [stat-k stats-keywords
                          :let [base-value (stat-k stats)]
                          :when base-value]
                      (str (k->pretty-name stat-k) ": " (->effective-value base-value (stat-k->modifier-k stat-k) stats))))
-         (when (seq modifiers)
-           (str "\n"
-                (str/join "\n"
-                          (for [[modifier-k operations] modifiers
-                                [operation-k values] operations]
-                            (info-text modifier-k [operation-k (reduce + values)])))))))
+         (let [text-parts (for [[modifier-k operations] modifiers
+                                [operation-k values] operations
+                                :let [value (reduce + values)]
+                                :when (not (zero? value))]
+                            (info-text modifier-k [operation-k value]))]
+           (when (seq text-parts)
+             (str "\n" (str/join "\n" text-parts))))))
 
   #_(comment
     (let [ctx @app.state/current-context

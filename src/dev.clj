@@ -30,7 +30,7 @@
    (boolean? v) v
    (instance? clojure.lang.Atom v) (str "[LIME] Atom [GRAY]" (class @v) "[]")
    (map? v) (str (class v))
-   (and (vector? v) (< (count v) 3)) v
+   (and (vector? v) (< (count v) 3)) (pr-str v)
    (vector? v) (str "Vector "(count v))
    :else (str "[GRAY]" (str v) "[]")))
 
@@ -163,8 +163,8 @@
         cell (get (api.context/world-grid ctx) (mapv int position))
 
         ;tree-map @cell
-        ;tree-map (ctx/mouseover-entity* ctx)
-        tree-map ctx
+        tree-map (ctx/mouseover-entity* ctx)
+        ;tree-map ctx
 
         ;tree-map (sort-by first core.component/attributes)
         ;tree-map (sort-by first (methods api.tx/transact!))
@@ -255,5 +255,13 @@
  (create-item! :items/blood-glove)
 
  (show-context!)
+
+ (let [ctx @app.state/current-context
+       pl (ctx/player-entity* ctx)
+       ]
+   (-> pl
+       :entity/stats
+       :stats/modifiers
+       :modifier/mana))
 
  )
