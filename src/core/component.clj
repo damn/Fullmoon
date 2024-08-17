@@ -60,12 +60,12 @@
 (def warn-name-ns-mismatch? false)
 
 (defmacro defcomponent
-  ([k attr-map] ; TODO this arity doesn't need to be a macro ....
+  ([k attr-map]
    `(do
      (when (and warn-on-override (get attributes ~k))
        (println "WARNING: Overwriting defcomponent" ~k))
      (when (and warn-name-ns-mismatch?
-                #_(not= (#'k->component-ns ~k) (ns-name *ns*)))
+                (not= (#'k->component-ns ~k) (ns-name *ns*)))
        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
      (alter-var-root #'attributes assoc ~k ~attr-map)
      ~k))
@@ -76,9 +76,7 @@
              :let [sys-var (resolve sys)
                    sys-params (:params (meta sys-var))
                    fn-params (first fn-body)
-                   method-name (symbol (str (name (symbol sys-var))
-                                            (when (keyword? k)
-                                              (str "." (name k)))))]]
+                   method-name (symbol (str (name (symbol sys-var)) "." (name k)))]]
          (do
           (when-not sys-var
             (throw (IllegalArgumentException. (str sys " does not exist."))))
