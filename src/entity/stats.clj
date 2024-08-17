@@ -23,8 +23,8 @@
     (vec (remove #{value} values)))) ; vec so can inspect and not 'lazy-seq'
 
 (defn- txs-update-modifiers [entity modifiers f]
-  (for [[modifier-k operations-m] modifiers
-        [operation-k value] operations-m]
+  (for [[modifier-k operations] modifiers
+        [operation-k value] operations]
     [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier-k operation-k] (f value)]))
 
 (comment
@@ -38,12 +38,10 @@
      [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
-; TODO plural
-(defmethod transact! :tx/apply-modifier [[_ entity modifiers] ctx]
+(defmethod transact! :tx/apply-modifiers [[_ entity modifiers] _ctx]
   (txs-update-modifiers entity modifiers conj-value))
 
-; TODO plural
-(defmethod transact! :tx/reverse-modifier [[_ entity modifiers] ctx]
+(defmethod transact! :tx/reverse-modifiers [[_ entity modifiers] _ctx]
   (txs-update-modifiers entity modifiers remove-value))
 
 (defn- ->pos-int [v]

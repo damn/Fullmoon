@@ -27,8 +27,9 @@
 (defcomponent :properties/item {}
   (properties/create [_]
 
-    (defcomponent :item/modifier ; TODO plural
-      (data/components-attribute :modifier))
+    ; could make optional - shorter properties.edn ...
+    ; and some items could just be fluff
+    (defcomponent :item/modifiers (data/components-attribute :modifier))
 
     (defcomponent :item/slot {:widget :label
                               :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!

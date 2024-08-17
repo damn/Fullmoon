@@ -49,7 +49,7 @@
                  (valid-slot? cell item))))
   [[:tx.entity/assoc-in id (cons :entity/inventory cell) item]
    (when (applies-modifiers? cell)
-     [:tx/apply-modifier id (:item/modifier item)])
+     [:tx/apply-modifiers id (:item/modifiers item)])
    (when (:entity/player? entity*)
      [:tx/set-item-image-in-widget cell item])])
 
@@ -58,7 +58,7 @@
     (assert item)
     [[:tx.entity/assoc-in id (cons :entity/inventory cell) nil]
      (when (applies-modifiers? cell)
-       [:tx/reverse-modifier id (:item/modifier item)])
+       [:tx/reverse-modifiers id (:item/modifiers item)])
      (when (:entity/player? entity*)
        [:tx/remove-item-from-widget cell])]))
 
