@@ -31,6 +31,14 @@
                      (useful? effect-ctx (:skill/effects %) ctx)))
        first))
 
+(comment
+ (let [uid 76
+       ctx @app.state/current-context
+       entity* @(api.context/get-entity ctx uid)
+       effect-ctx (->effect-context ctx entity*)]
+   (npc-choose-skill effect-ctx entity* ctx))
+ )
+
 (defrecord NpcIdle []
   state/State
   (enter [_ entity* _ctx])

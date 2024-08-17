@@ -40,7 +40,7 @@
               [:property/pretty-name
                :property/image
                :item/slot
-               :item/modifier])
+               :item/modifiers])
      :edn-file-sort-order 3
      :overview {:title "Items"
                 :columns 17
@@ -51,11 +51,11 @@
                                      (name (:property/id %)))}
      :->text (fn [ctx
                   {:keys [property/pretty-name
-                          item/modifier]
+                          item/modifiers]
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
-                (when (seq modifier)
-                  (modifier-text modifier))])}))
+                (when (seq modifiers)
+                  (modifier-text modifiers))])}))
 
 ; TODO use image w. shadows spritesheet
 (defmethod transact! :tx.entity/item  [[_ position item] _ctx]

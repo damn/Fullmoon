@@ -71,7 +71,7 @@
            [:entity/skills]
            [:entity/inventory]
 
-           [:effect/target-entity]
+           [:effect/target-entity] ; TODO big mess
 
            [:context/properties {:types [:properties/audiovisual
                                          :properties/creature ; FIXME TODO #2

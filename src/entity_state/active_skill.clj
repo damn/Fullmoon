@@ -41,8 +41,9 @@
 (defn- usable? [{:keys [effect/source effect/target] :as effect-ctx}
                 effects
                 ctx]
-  (let [effect-ctx (check-remove-target effect-ctx ctx)]
-    (effect-ctx/usable? effect-ctx effects)))
+  (-> effect-ctx
+      (check-remove-target ctx)
+      (effect-ctx/usable? effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]
@@ -54,7 +55,7 @@
 
 (defn skill-usable-state [effect-ctx
                           entity*
-                          {:keys [skill/cooling-down? skill/effect] :as skill}
+                          {:keys [skill/cooling-down? skill/effects] :as skill}
                           ctx]
   (cond
    cooling-down?
@@ -63,7 +64,7 @@
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (usable? effect-ctx effect ctx))
+   (not (usable? effect-ctx effects ctx))
    :invalid-params
 
    :else

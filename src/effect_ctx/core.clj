@@ -13,5 +13,5 @@
 (defn text [effect-ctx effects]
   (str/join "\n" (keep #(effect/text % effect-ctx) effects)))
 
-(defn usable? [effect-ctx effect]
-  (every? #(effect/usable? % effect-ctx) effect))
+(defn usable? [effect-ctx effects]
+  (every? #(effect/usable? % effect-ctx) effects))

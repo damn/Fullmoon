@@ -53,6 +53,8 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
   (effect/useful? [[_ {:keys [maxrange]}]
                    {:keys [effect/source effect/target]}
                    _ctx]
+    (assert source)
+    (assert target)
     (in-range? @source @target maxrange))
 
   (transact! [[_ {:keys [maxrange hit-effects]}]

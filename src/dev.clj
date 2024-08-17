@@ -242,6 +242,9 @@
 
 (comment
  ; so can see errors ... don't see proper stacktrace if evaluating just in editor
+
+ ; TODO I want to maintain the test-map with test-items & test-skills
+ ; - maybe put in the map-properties player items/skills ....
  (app/post-runnable (fn []
                       (do
                        (learn-skill! :skills/projectile)
