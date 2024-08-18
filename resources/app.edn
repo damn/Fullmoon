@@ -17,7 +17,7 @@
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
            [:context/graphics {:world-view {:tile-size 48}
-                               :default-font {:file "exocet/films.EXL_____.ttf"
+                               :default-font {:file "fonts/exocet/films.EXL_____.ttf"
                                               :size 16
                                               :quality-scaling 2}
                                :cursors {:cursors/default ["default" [0 0]]
