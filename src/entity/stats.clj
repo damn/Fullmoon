@@ -418,6 +418,7 @@
 
 ; TODO sound will be played twice !
 ; => or re-add effect/sound & make it useful? false ....
+; also this is target-self
 (def-set-to-max-effect :stats/hp)
 (def-set-to-max-effect :stats/mana)
 

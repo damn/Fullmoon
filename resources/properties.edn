@@ -1825,6 +1825,26 @@
   {:entity/animation
    {:frame-duration 0.1,
     :frames
+    ({:file "creatures/animations/bone-dragon-1.png"}
+     {:file "creatures/animations/bone-dragon-2.png"}
+     {:file "creatures/animations/bone-dragon-3.png"}
+     {:file "creatures/animations/bone-dragon-4.png"}),
+    :looping? true},
+   :entity/body {:height 1, :solid? true, :width 1},
+   :entity/faction :good,
+   :entity/flying? false,
+   :entity/reaction-time 0.2,
+   :entity/skills #{},
+   :entity/stats
+   {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
+  :creature/level 5,
+  :creature/species :species/dragon,
+  :property/id :creatures/bone-dragon,
+  :property/image {:file "creatures/animations/bone-dragon-1.png"}}
+ {:creature/entity
+  {:entity/animation
+   {:frame-duration 0.1,
+    :frames
     ({:file "creatures/animations/golem-metal-1.png"}
      {:file "creatures/animations/golem-metal-2.png"}
      {:file "creatures/animations/golem-metal-3.png"}
