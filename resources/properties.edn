@@ -1587,9 +1587,7 @@
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
-   :entity/skills #{},
-   :entity/stats
-   {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.4}},
+   :entity/stats {:stats/mana 11}},
   :creature/level 10,
   :creature/species :species/banshee,
   :property/id :creatures/banshee,
