@@ -417,35 +417,9 @@
           [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
 
 ; TODO sound will be played twice !
+; => or re-add effect/sound & make it useful? false ....
 (def-set-to-max-effect :stats/hp)
 (def-set-to-max-effect :stats/mana)
-
-#_(defcomponent :effect/set-to-max {:widget :label
-                                    :schema [:= true]
-                                    :default-value true}
-  (effect/text [[_ stat] _effect-ctx]
-    (str "Sets " (name stat) " to max."))
-
-  (effect/applicable? [_ {:keys [effect/source]}]
-    source)
-
-  (effect/useful? [[_ stat] {:keys [effect/source]} _ctx]
-    (lower-than-max? (stat @source)))
-
-  (effect/txs [[_ stat] {:keys [effect/source]}]
-    [[:tx.entity/assoc source stat (set-to-max (stat @source))]]))
-
-; this as macro ... ? component which sets the value of another component ??
-#_(defcomponent :effect/set-mana-to-max {:widget :label
-                                         :schema [:= true]
-                                         :default-value true}
-  (effect/applicable? [_ {:keys [effect/source]}] source)
-  (effect/text    [_ _effect-ctx]     (effect/text    [:effect/set-to-max :entity/mana]))
-  (effect/useful? [_ effect-ctx _ctx] (effect/useful? [:effect/set-to-max :entity/mana] effect-ctx))
-  (effect/txs     [_ effect-ctx]      (effect/txs     [:effect/set-to-max :entity/mana] effect-ctx)))
-
-#_[:effect/set-to-max :entity/hp]
-#_[:effect/set-to-max :entity/mana]
 
 (defn- entity*->melee-damage [entity*]
   (let [strength (or (entity/stat entity* :stats/strength) 0)]
