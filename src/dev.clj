@@ -246,6 +246,7 @@
                        (learn-skill! :skills/meditation)
                        (learn-skill! :skills/melee-attack)
                        (learn-skill! :skills/death-ray)
+                       (learn-skill! :skills/convert)
                        )))
 
 
