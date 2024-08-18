@@ -4164,11 +4164,22 @@
   :world/princess :creatures/lady-a,
   :world/spawn-rate 0.05}
  {:property/animation
+  {:frame-duration 0.1,
+   :frames
+   ({:file "images/oryx_16bit_scifi_FX_lg_trans.png",
+     :sub-image-bounds [64 64 32 32]}
+    {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
+     :sub-image-bounds [96 64 32 32]}),
+   :looping? nil},
+  :property/id :audiovisuals/convert,
+  :property/sound "sounds/bfxr_burrow.wav"}
+ {:property/animation
   {:frame-duration 0.05,
    :frames
    ({:file "images/uf_FX_impact.png", :sub-image-bounds [144 0 48 48]}
     {:file "images/uf_FX_impact.png", :sub-image-bounds [192 0 48 48]}
-    {:file "images/uf_FX_impact.png", :sub-image-bounds [240 0 48 48]}),
+    {:file "images/uf_FX_impact.png",
+     :sub-image-bounds [240 0 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/damage,
   :property/sound "sounds/bfxr_normalhit.wav"}
@@ -4189,7 +4200,8 @@
    :frames
    ({:file "images/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
     {:file "images/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
-    {:file "images/uf_FX_impact.png", :sub-image-bounds [384 48 48 48]}),
+    {:file "images/uf_FX_impact.png",
+     :sub-image-bounds [384 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/unused,
   :property/sound "sounds/bfxr_curse.wav"}
@@ -4210,7 +4222,8 @@
    :frames
    ({:file "images/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
     {:file "images/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
-    {:file "images/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
+    {:file "images/uf_FX_impact.png",
+     :sub-image-bounds [96 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/hit-ground,
   :property/sound "sounds/bfxr_fisthit.wav"}
