@@ -5,8 +5,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 0,
-  :skill/effects
-  {:effect/spawn :creatures/skeleton-warrior},
+  :skill/effects {:effect/spawn :creatures/skeleton-warrior},
   :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
  {:property/id :skills/convert,
   :property/image
@@ -2346,7 +2345,6 @@
    :entity/skills #{:skills/melee-attack},
    :entity/stats
    {:stats/hp 350,
-    :stats/mana 0,
     :stats/modifiers {:modifier/damage-receive {:op/mult -0.9}},
     :stats/movement-speed 2,
     :stats/strength 10}},
