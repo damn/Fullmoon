@@ -247,6 +247,7 @@
                        (learn-skill! :skills/melee-attack)
                        (learn-skill! :skills/death-ray)
                        (learn-skill! :skills/convert)
+                       (learn-skill! :skills/blood-curse)
                        )))
 
 

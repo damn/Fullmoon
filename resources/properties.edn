@@ -16,6 +16,15 @@
   :skill/cost 20,
   :skill/effects {:effect/convert true},
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
+ {:property/id :skills/blood-curse,
+  :property/image
+  {:file "skills/images.png", :sub-image-bounds [128 0 32 32]},
+  :skill/action-time 1,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 1,
+  :skill/effects {:effect/hp {:op/val-mult -0.25}},
+  :skill/start-action-sound "sounds/bfxr_healmonsters.wav"}
  {:property/id :skills/bow,
   :property/image
   {:file "skills/images.png", :sub-image-bounds [96 64 32 32]},

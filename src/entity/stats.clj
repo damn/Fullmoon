@@ -142,11 +142,11 @@
 (defn- k->pretty-name [k]
   (str/capitalize (name k)))
 
-(defn- info-text [modifier-k [operation-k value]]
+(defn- info-text [effect-or-modifier-k [operation-k value]]
   (str (+? value)
        (operation-text [operation-k value])
        " "
-       (k->pretty-name modifier-k)
+       (k->pretty-name effect-or-modifier-k)
        "[]"))
 
 (defn modifiers-text [item-modifiers]
@@ -242,33 +242,57 @@
 (defstat :stats/hp   data/pos-int-attr :operations [:op/max-inc :op/max-mult])
 (defstat :stats/mana data/nat-int-attr :operations [:op/max-inc :op/max-mult])
 
-; Options
-; * restrict @ entity.body movement code -> not transparent to player
-; * restrict @ op add/mult -> not transparent
-; * allow modifier values to add up to > max but restrict the stat-value itself ...
-; (if maxxed show like D2 max resistances in gold ?)
-; * limit it @ item total values (brittle)
+; Create effects for this stat for each effect operation
+; existing operations are modifier operations
+(defn- effect-k->stat-k [effect-k]
+  (keyword "stats" (name effect-k)))
 
-; TODO bounds max movement speed ... // min 0 ?
-;  -> but entity.body/max-speed requrires ctx for max-delta-time
-; or init it as a var somewhere ?
-; only mult required ?
-(require '[entity.body :as body])
-;  TODO also stat schema itself set max-speed ....
-; body/max-speed
+; TODO says here 'Minimum' hp instead of just 'HP'
+; Sets to 0 but don't kills
+; Could even set to a specific value ->
+; op/set-to-ratio 0.5 ....
+; sets the hp to 50%...
 
-; the >0 part comes also from data/pos-attr ....
-; the operations also come from data/pos-attr ....
-; the data itself actually defines all operations/etc.
-(defstat :stats/movement-speed data/pos-attr :operations [:op/inc :op/mult])
+; is called :base-effect so it doesn't show up in (data/namespace-components :effect) list in editor
+; I could even create one effect for each operation, no need to add them together?
+(defcomponent ::stat-effect {}
+  (effect/text [[k operations] _effect-ctx]
+    (str/join "\n" (map #(info-text k %) operations)))
 
-; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
-; (op/inc allows e.g. increaese by float 1.3 or -1.2)
-; in this case add a 'bounds' fn for calling ->int
-; or do it @ melee-damage calculations ?
+  (effect/applicable? [[k _] {:keys [effect/target]}]
+    (and target
+         (entity/stat @target (effect-k->stat-k k))))
+
+  (effect/useful? [_ _effect-ctx _ctx] true)
+
+  (transact! [[effect-k operations] {:keys [effect/target]}]
+    (let [stat-k (effect-k->stat-k effect-k)]
+      (when-let [effective-value (entity/stat @target stat-k)]
+        [[:tx.entity/assoc-in target [:entity/stats stat-k]
+          (reduce (fn [value operation] (apply-operation operation value))
+                  effective-value
+                  operations)]]))))
+
+(defcomponent :effect/hp (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]))
+(derive :effect/hp ::stat-effect)
+
+(defcomponent :effect/mana (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]))
+(derive :effect/mana ::stat-effect)
+
+; * TODO clamp/post-process effective-values @ stat-k->effective-value
+; * just don't create movement-speed increases too much?
+; * dont remove strength <0 or floating point modifiers  (op/int-inc ?)
+; * cast/attack speed dont decrease below 0 ??
+
+; TODO clamp between 0 and max-speed ( same as entity.body/movement-speed-schema )
+(defstat :stats/movement-speed {:widget :text-field
+                                :schema entity.body/movement-speed-schema}
+  :operations [:op/inc :op/mult])
+
+; TODO clamp into ->pos-int
 (defstat :stats/strength data/nat-int-attr :operations [:op/inc])
 
-; TODO here >0 ?
+; TODO here >0
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
 
