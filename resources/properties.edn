@@ -37,6 +37,15 @@
    {:hit-effects {:effect/damage {:damage/min-max [0 10]}},
     :maxrange 5}},
   :skill/start-action-sound "sounds/slash.wav"}
+ {:property/id :skills/slow,
+  :property/image
+  {:file "skills/images.png", :sub-image-bounds [64 64 32 32]},
+  :skill/action-time 0.4,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 5,
+  :skill/effects {:effect/movement-speed {:op/mult -0.5}},
+  :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
  {:property/id :skills/meditation,
   :property/image
   {:file "skills/images.png", :sub-image-bounds [64 96 32 32]},

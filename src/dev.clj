@@ -248,6 +248,7 @@
                        (learn-skill! :skills/death-ray)
                        (learn-skill! :skills/convert)
                        (learn-skill! :skills/blood-curse)
+                       (learn-skill! :skills/slow)
                        )))
 
 

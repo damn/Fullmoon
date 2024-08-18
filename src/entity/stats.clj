@@ -212,7 +212,7 @@
 (def ^:private stats-info-text-order
   [:stats/hp
    :stats/mana
-   ;:stats/movement-speed
+   :stats/movement-speed
    :stats/strength
    :stats/cast-speed
    :stats/attack-speed
@@ -242,8 +242,6 @@
 (defstat :stats/hp   data/pos-int-attr :operations [:op/max-inc :op/max-mult])
 (defstat :stats/mana data/nat-int-attr :operations [:op/max-inc :op/max-mult])
 
-; Create effects for this stat for each effect operation
-; existing operations are modifier operations
 (defn- effect-k->stat-k [effect-k]
   (keyword "stats" (name effect-k)))
 
@@ -253,8 +251,8 @@
 ; op/set-to-ratio 0.5 ....
 ; sets the hp to 50%...
 
-; is called :base-effect so it doesn't show up in (data/namespace-components :effect) list in editor
-; I could even create one effect for each operation, no need to add them together?
+; is called ::stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
+; for :skill/effects
 (defcomponent ::stat-effect {}
   (effect/text [[k operations] _effect-ctx]
     (str/join "\n" (map #(info-text k %) operations)))
@@ -288,6 +286,12 @@
 (defstat :stats/movement-speed {:widget :text-field
                                 :schema entity.body/movement-speed-schema}
   :operations [:op/inc :op/mult])
+
+; TODO show the stat in different color red/green if it was permanently modified ?
+; or an icon even on the creature
+; also we want audiovisuals always ...
+(defcomponent :effect/movement-speed (data/components [:op/mult]))
+(derive :effect/movement-speed ::stat-effect)
 
 ; TODO clamp into ->pos-int
 (defstat :stats/strength data/nat-int-attr :operations [:op/inc])
