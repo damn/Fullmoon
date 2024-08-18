@@ -209,13 +209,14 @@
   (when-let [base-value (stat-k stats)]
     (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
 
-; default-values explicit @ stat
+; TODO default-values explicit @ stat
 ; cast-attack speed not interesting / hide ? or on dexterity ?
 ; armor-pierce move into an hit-effect
+; TODO adjust stats-info-text when a stat is not there....
 (def ^:private stats-info-text-order
-  [:stats/hp ; made optional but bug w. projectile transact damage anyway not checking usable?
+  [:stats/hp ; made optional
    :stats/mana ; made optional @ active-skill
-   :stats/movement-speed ; optional ? default-value?
+   ;:stats/movement-speed ; optional ? default-value?
    :stats/strength  ; default value 0
    :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
    :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
@@ -230,9 +231,10 @@
 ; * readable-number on ->effective-value but doesn't work on val-max ->pretty-value fn ?
 (defn- stats-info-texts [stats]
   (str/join "\n"
-            (for [stat-k stats-info-text-order]
-              (str (k->pretty-name stat-k) ": " (stat-k->effective-value stat-k stats)))))
-
+            (for [stat-k stats-info-text-order
+                  :let [value (stat-k->effective-value stat-k stats)]
+                  :when value]
+              (str (k->pretty-name stat-k) ": " value))))
 
 (defn defmodifier [modifier-k operations]
   (defcomponent modifier-k (data/components operations)))
