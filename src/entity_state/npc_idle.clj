@@ -19,7 +19,12 @@
      :effect/direction (when target (entity/direction entity* @target))}))
 
 (defn- useful? [effect-ctx effects ctx]
-  (some #(effect/useful? % effect-ctx ctx) effects))
+  ;(println "Check useful? for effects: " (map first effects))
+  (let [applicable-effects (filter #(effect/applicable? % effect-ctx) effects)
+        ;_ (println "applicable-effects: " (map first applicable-effects))
+        useful-effect (some #(effect/useful? % effect-ctx ctx) applicable-effects)]
+    ;(println "Useful: " useful-effect)
+    useful-effect))
 
 (defn- npc-choose-skill [effect-ctx entity* ctx]
   (->> entity*

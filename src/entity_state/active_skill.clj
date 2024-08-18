@@ -23,7 +23,7 @@
 (defmethod transact! :tx/effect [[_ effect-ctx effects] ctx]
   (-> ctx
       (merge effect-ctx)
-      (ctx/transact-all! effects)
+      (ctx/transact-all! (filter #(effect/applicable? % effect-ctx) effects))
       (dissoc :effect/source
               :effect/target
               :effect/direction
@@ -38,12 +38,12 @@
                        (ctx/line-of-sight? ctx @source @target))
               target))))
 
-(defn- usable? [{:keys [effect/source effect/target] :as effect-ctx}
-                effects
-                ctx]
+(defn- applicable? [{:keys [effect/source effect/target] :as effect-ctx}
+                    effects
+                    ctx]
   (-> effect-ctx
       (check-remove-target ctx)
-      (effect-ctx/usable? effects)))
+      (effect-ctx/applicable? effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]
@@ -64,7 +64,7 @@
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (usable? effect-ctx effects ctx))
+   (not (applicable? effect-ctx effects ctx))
    :invalid-params
 
    :else
@@ -103,7 +103,7 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (usable? effect-ctx (:skill/effects skill) context))
+     (not (applicable? effect-ctx (:skill/effects skill) context))
      [[:tx/event id :action-done]
       ; TODO some sound ?
       ]

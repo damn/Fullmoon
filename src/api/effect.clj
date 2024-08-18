@@ -4,8 +4,8 @@
 (defsystem text          [_ effect-ctx])
 (defmethod text :default [_ effect-ctx])
 
-(defsystem usable?          [_ effect-ctx])
-(defmethod usable? :default [_ effect-ctx] true)
+(defsystem applicable?          [_ effect-ctx])
+(defmethod applicable? :default [_ effect-ctx] true)
 
 (defsystem useful?          [_ effect-ctx ctx]) ; used for NPCs
 (defmethod useful? :default [_ effect-ctx ctx] true)

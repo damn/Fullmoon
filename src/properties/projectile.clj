@@ -28,7 +28,7 @@
 
 (def ^:private size 0.5)
 (def ^:private maxrange 10)
-(def ^:private speed 10)
+(def ^:private speed 10) ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 (def ^:private maxtime (/ maxrange speed))
 
 (comment
@@ -78,7 +78,7 @@
     (effect-ctx/text effect-ctx hit-effects))
 
   ; TODO for npcs need target -- anyway only with direction
-  (effect/usable? [_ {:keys [effect/direction]}]
+  (effect/applicable? [_ {:keys [effect/direction]}]
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?

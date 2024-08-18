@@ -94,11 +94,13 @@
    :fsm npc-fsm
    :state-obj-constructors npc-state-obj-constructors})
 
+; TODO these two actually go to :entity.creature/state as they are related to that fsm
+
 (defcomponent :effect/stun data/pos-attr
   (effect/text [[_ duration] _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (effect/usable? [_ {:keys [effect/target]}]
+  (effect/applicable? [_ {:keys [effect/target]}]
     (and target
          (:entity/state @target)))
 
@@ -109,7 +111,7 @@
   (effect/text [_ _effect-ctx]
     "Kills target")
 
-  (effect/usable? [_ {:keys [effect/source effect/target]}]
+  (effect/applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (:entity/state @target)))
 

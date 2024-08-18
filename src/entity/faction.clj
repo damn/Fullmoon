@@ -23,7 +23,7 @@
   (effect/text [_ _effect-ctx]
     "Converts target to your side.")
 
-  (effect/usable? [_ {:keys [effect/source effect/target]}]
+  (effect/applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))

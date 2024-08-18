@@ -45,10 +45,10 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
     (str "Range " maxrange " meters\n"
          (effect-ctx/text effect-ctx hit-effects)))
 
-  (effect/usable? [[_ {:keys [hit-effects]}]
-                   {:keys [effect/target] :as effect-ctx}]
+  (effect/applicable? [[_ {:keys [hit-effects]}]
+                       {:keys [effect/target] :as effect-ctx}]
     (and target
-         (effect-ctx/usable? effect-ctx hit-effects))) ; TODO here not like in active-skill check-remove-target ... ?
+         (effect-ctx/applicable? effect-ctx hit-effects)))
 
   (effect/useful? [[_ {:keys [maxrange]}]
                    {:keys [effect/source effect/target]}
