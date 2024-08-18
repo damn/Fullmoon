@@ -50,5 +50,5 @@
                      (readable-number action-time) " seconds" "[]")
                 (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
                 ; don't used player-entity* as it may be nil when just created, could use the current property creature @ editor
-                (str effect-color (effect-ctx/text {:effect/source (ctx/player-entity ctx)}
+                (str effect-color (effect-ctx/text (assoc ctx :effect/source (ctx/player-entity ctx))
                                                    effects) "[]")])}))

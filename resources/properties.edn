@@ -73,7 +73,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 4,
-  :skill/effects {:effect/projectile true},
+  :skill/effects {:effect/projectile :projectiles/black},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/melee-attack,
   :property/image
@@ -4213,4 +4213,20 @@
     {:file "fx/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/hit-ground,
-  :property/sound "sounds/bfxr_fisthit.wav"})
+  :property/sound "sounds/bfxr_fisthit.wav"}
+ {:projectile/effects
+  {:effect/damage {:damage/min-max [4 8]}, :effect/stun 0.5},
+  :projectile/max-range 10,
+  :projectile/piercing? true,
+  :projectile/speed 10,
+  :property/id :projectiles/black,
+  :property/image
+  {:file "fx/uf_FX.png", :sub-image-bounds [24 288 24 24]}}
+ {:projectile/effects {:effect/kill true},
+  :projectile/max-range 15,
+  :projectile/piercing? true,
+  :projectile/speed 10,
+  :property/id :projectiles/double-fireball,
+  :property/image
+  {:file "fx/oryx_16bit_scifi_FX_lg_trans.png",
+   :sub-image-bounds [32 192 32 32]}})

@@ -3,103 +3,120 @@
             [math.vector :as v]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.context :refer [get-sprite spritesheet path-blocked?]]
+            [api.context :as ctx]
             [api.effect :as effect]
             [api.entity :as entity]
             [api.properties :as properties]
             [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
 
+; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
+
 (defcomponent :properties/projectile {}
   (properties/create [_]
+
+    ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
+    ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
+    (defcomponent :projectile/max-range data/pos-int-attr)
+    (defcomponent :projectile/speed data/pos-int-attr)
+    (defcomponent :projectile/effects (data/components-attribute :effect))
+    (defcomponent :projectile/piercing? data/boolean-attr)
+
     {:id-namespace "projectiles"
      :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :skills}]]
-              [:property/image])
-     :edn-file-sort-order 0
+              [:property/id [:qualified-keyword {:namespace :projectiles}]]
+              [:property/image ; TODO what is optional/obligatory??
+               :projectile/max-range
+               :projectile/speed
+               :projectile/effects
+               :projectile/piercing?])
+     :edn-file-sort-order 8
      :overview {:title "Projectile"
                 :columns 16
                 :image/dimensions [48 48]}
      :->text (fn [ctx {:keys [property/id]}]
                [(str/capitalize (name id))])}))
 
-; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
-; -> first range check then ray ! otherwise somewhere in contentfield out of sight
+(defn- projectile-size [projectile-property]
+  (first (:world-unit-dimensions (:property/image projectile-property))))
 
-(def ^:private size 0.5)
-(def ^:private maxrange 10)
-(def ^:private speed 10) ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
-(def ^:private maxtime (/ maxrange speed))
+(defmethod transact! :tx.entity/projectile [[_ projectile-id {:keys [position direction faction]}]
+                                            ctx]
+  (let [{:keys [property/image
+                projectile/max-range
+                projectile/speed
+                projectile/effects
+                projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
+        size (projectile-size prop)]
+    [[:tx/create #:entity {:body {:position position
+                                  :width size
+                                  :height size
+                                  :solid? false
+                                  :z-order :z-order/flying
+                                  :rotation-angle (v/get-angle-from-vector direction)
+                                  :movement {:direction direction
+                                             :speed speed}}
+                           :image image
+                           :faction faction
+                           :delete-after-duration (/ max-range speed)
+                           :plop true
+                           :projectile-collision {:hit-effects effects
+                                                  :piercing? piercing?}}]]))
 
-(comment
- ; for chance to do hit-effect -> use this code @ hit-effects
- ; (extend hit-effects with chance , not effects themself)
- ; and hit-effects to text ...hmmm
- [utils.random :as random]
- (or (not chance)
-     (random/percent-chance chance)))
-
-(def ^:private hit-effects
-  [[:effect/damage {:damage/min-max [4 8]}]
-   [:effect/stun 0.5]
-   ;[:stun {:duration 0.2} {:chance 100}]
-   ])
-
-(defn- black-projectile [context]
-  (get-sprite context
-              (spritesheet context "fx/uf_FX.png" 24 24)
-              [1 12]))
-
-(defmethod transact! :tx.entity/projectile [[_ {:keys [position direction faction]}] ctx]
-  [[:tx/create #:entity {:body {:position position
-                                :width size
-                                :height size
-                                :solid? false
-                                :z-order :z-order/flying
-                                :rotation-angle (v/get-angle-from-vector direction)
-                                :movement {:direction direction :speed speed}}
-                         :image (black-projectile ctx)
-                         :faction faction
-                         :delete-after-duration maxtime
-                         :plop true
-                         :projectile-collision {:hit-effects hit-effects
-                                                :piercing? true}}]])
-
-
-(defn- start-point [entity* direction]
+(defn- start-point [entity* direction size]
   (v/add (entity/position entity*)
          (v/scale direction
                   (+ (:radius (:entity/body entity*)) size 0.1))))
 
+; TODO effect/text ... shouldn't have source/target dmg stuff ....
+; as it is just sent .....
+; or we adjust the effect when we send it ....
 (defcomponent :effect/projectile {:widget :text-field
-                                  :schema [:= true]
-                                  :default-value true}
-  (effect/text [_ effect-ctx]
-    (effect-ctx/text effect-ctx hit-effects))
+                                  :schema [:qualified-keyword {:namespace :projectiles}]}
+  (effect/text [[_ projectile-id] ctx]
+    (effect-ctx/text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
 
   ; TODO for npcs need target -- anyway only with direction
   (effect/applicable? [_ {:keys [effect/direction]}]
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (effect/useful? [_ {:keys [effect/source effect/target]} ctx]
+  (effect/useful? [[_ projectile-id]
+                   {:keys [effect/source effect/target]}
+                   ctx]
     (let [source-p (entity/position @source)
-          target-p (entity/position @target)]
-      (and (not (path-blocked? ctx
-                               source-p ; TODO test
-                               target-p
-                               size))
+          target-p (entity/position @target)
+          prop (ctx/get-property ctx projectile-id)]
+      (and (not (ctx/path-blocked? ctx ; TODO test
+                                   source-p
+                                   target-p
+                                   (projectile-size prop)))
            ; TODO not taking into account body sizes
            (< (v/distance source-p ; entity/distance function protocol EntityPosition
                           target-p)
-              maxrange))))
+              (:projectile/max-range prop)))))
 
-  (transact! [_ {:keys [effect/source effect/direction]}]
+  (transact! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
-     [:tx.entity/projectile {:position (start-point @source direction)
-                             :direction direction
-                             :faction (:entity/faction @source)}]]))
+     [:tx.entity/projectile
+      projectile-id
+      {:position (start-point @source
+                              direction
+                              (projectile-size (ctx/get-property ctx projectile-id)))
+       :direction direction
+       :faction (:entity/faction @source)}]]))
 
-; => well defined components
-; => what each means, how it interacts, how it depends, what they do
-; which I _need_ => entity schema ??? check @ tx/create ? and at debug mode also @ changes ???
+(comment
+ ; mass shooting
+ (for [direction (map math.vector/normalise
+                      [[1 0]
+                       [1 1]
+                       [1 -1]
+                       [0 1]
+                       [0 -1]
+                       [-1 -1]
+                       [-1 1]
+                       [-1 0]])]
+   [:tx.entity/projectile projectile-id ...]
+   )
+ )
