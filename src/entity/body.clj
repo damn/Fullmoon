@@ -30,6 +30,8 @@
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
 (def max-speed (/ min-solid-body-size max-delta-time))
 
+(def movement-speed-schema [:and number? [:>= 0] [:<= max-speed]])
+
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
 
@@ -161,9 +163,8 @@
     (draw-bounds g body))
 
   (entity/tick [[_ body] {:keys [entity/id]} ctx]
-    ; TODO speed schema, what if nil/0 ? skip ... ?
     (when-let [{:keys [direction speed] :as movement} (:movement body)]
-      (assert (<= speed max-speed))
+      (assert (and (>= speed 0) (<= speed max-speed)))
       (assert (or (zero? (v/length direction))
                   (v/normalised? direction)))
       (when-not (or (zero? (v/length direction))

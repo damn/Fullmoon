@@ -209,19 +209,15 @@
   (when-let [base-value (stat-k stats)]
     (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
 
-; TODO default-values explicit @ stat
-; cast-attack speed not interesting / hide ? or on dexterity ?
-; armor-pierce move into an hit-effect
-; TODO adjust stats-info-text when a stat is not there....
 (def ^:private stats-info-text-order
-  [:stats/hp ; made optional
-   :stats/mana ; made optional @ active-skill
-   ;:stats/movement-speed ; optional ? default-value?
-   :stats/strength  ; default value 0
-   :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
-   :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
-   :stats/armor-save ; default-value 0
-   :stats/armor-pierce ; default-value 0
+  [:stats/hp
+   :stats/mana
+   ;:stats/movement-speed
+   :stats/strength
+   :stats/cast-speed
+   :stats/attack-speed
+   :stats/armor-save
+   :stats/armor-pierce
    ])
 
 ; widgets / icons ? (see WoW )
@@ -340,14 +336,6 @@
     (str (stats-info-texts stats)
          (stats-modifiers-info-text (:stats/modifiers stats))))
 
-  #_(comment
-    (let [ctx @app.state/current-context
-          entity (api.context/get-entity ctx 55)]
-      (-> @entity
-          :entity/stats
-          :stats/modifiers
-          str)))
-
   (entity/render-info [_
                        {{:keys [width half-width half-height]} :entity/body
                         :keys [entity/mouseover?] :as entity*}
@@ -400,6 +388,7 @@
          [[:tx/sound "sounds/bfxr_click.wav"]
           [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
 
+; TODO sound will be played twice !
 (def-set-to-max-effect :stats/hp)
 (def-set-to-max-effect :stats/mana)
 
