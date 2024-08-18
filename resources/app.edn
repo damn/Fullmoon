@@ -1,10 +1,9 @@
 {:app {:title "Cyber Dungeon Quest"
        :width  1440
        :height 900
-       :full-screen? false ; TODO fix full-screen bug @ gdx.backends.lwjgl3
+       :full-screen? false
        :fps 60}
-
- :context [[:context/config {:tag :dev ; TODO pass as commandline arg
+ :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
                                               :debug-window? false
@@ -13,12 +12,10 @@
                                              :property-editor? true
                                              :debug-window? true
                                              :debug-options? true}}}]
-
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
-
            [:context/graphics {:world-view {:tile-size 48}
                                :default-font {:file "exocet/films.EXL_____.ttf"
                                               :size 16
@@ -39,10 +36,8 @@
                                          :cursors/move-window ["move002" [16 16]]
                                          :cursors/princess ["exclamation001" [0 0]]
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
-
-           [:context/tiled] ; can move map-renderer into graphics and tiled just api/gdx fns
-
-           [:context/vis-ui] ; TODO dispose stage-screens
+           [:context/tiled]
+           [:context/vis-ui]
 
            [:entity/body]
 
@@ -57,33 +52,32 @@
 
            [:entity/player]
 
-           [:entity/plop] ; unclear/but ok for now
+           [:entity/plop]
            [:entity/projectile-collision]
 
            [:entity/state]
 
-           [:entity/shout]  ; unclear/but ok for now
-           [:entity/faction] ; unclear/but ok for now
+           [:entity/shout]
+           [:entity/faction]
 
-           [:entity/stats] ; FIXME TODO #1
-           [:entity/string-effect] ; unclear/but ok for now
+           [:entity/stats]
+           [:entity/string-effect]
 
            [:entity/skills]
            [:entity/inventory]
 
-           [:effect/target-entity] ; TODO big mess
+           [:effect/target-entity]
 
            [:context/properties {:types [:properties/audiovisual
-                                         :properties/creature ; FIXME TODO #2
+                                         :properties/creature
                                          :properties/item
-                                         :properties/projectile ; FIXME TODO #3
+                                         :properties/projectile
                                          :properties/skill
                                          :properties/world]
                                  :file "resources/properties.edn"}]
-
            [:context/screens [:screens/main-menu
                               :screens/game
-                              :screens/map-editor ; TODO tiled-map not disposed anymore at screen dispose
+                              :screens/map-editor
                               :screens/minimap
                               :screens/options-menu
                               :screens/property-editor]]]}
