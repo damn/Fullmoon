@@ -37,7 +37,7 @@
   :skill/action-time 7,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
-  :skill/cost 1,
+  :skill/cost 0,
   :skill/effects
   {:effect/sound "sounds/bfxr_click.wav",
    :effect/stats-mana-set-to-max true},
