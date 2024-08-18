@@ -1,5 +1,6 @@
 (ns entity.body
-  (:require [math.vector :as v]
+  (:require [malli.core :as m]
+            [math.vector :as v]
             [math.geom :as geom]
             [utils.core :refer [->tile]]
             [core.component :refer [defcomponent]]
@@ -31,6 +32,7 @@
 (def max-speed (/ min-solid-body-size max-delta-time))
 
 (def movement-speed-schema [:and number? [:>= 0] [:<= max-speed]])
+(def ^:private movement-speed-schema* (m/schema movement-speed-schema))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
@@ -164,7 +166,7 @@
 
   (entity/tick [[_ body] {:keys [entity/id]} ctx]
     (when-let [{:keys [direction speed] :as movement} (:movement body)]
-      (assert (and (>= speed 0) (<= speed max-speed)))
+      (assert (m/validate movement-speed-schema* speed))
       (assert (or (zero? (v/length direction))
                   (v/normalised? direction)))
       (when-not (or (zero? (v/length direction))
