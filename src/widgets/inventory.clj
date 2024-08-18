@@ -68,7 +68,7 @@
     stack))
 
 (defn- slot->background [ctx]
-  (let [sheet (spritesheet ctx "items/images.png" 48 48)]
+  (let [sheet (spritesheet ctx "images/items.png" 48 48)]
     (->> #:inventory.slot {:weapon   0
                            :shield   1
                            :rings    2

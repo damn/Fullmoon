@@ -1,6 +1,6 @@
 ({:property/id :skills/spawn,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [160 64 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [160 64 32 32]},
   :skill/action-time 0.4,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
@@ -9,7 +9,7 @@
   :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
  {:property/id :skills/convert,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [0 64 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [0 64 32 32]},
   :skill/action-time 1,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
@@ -18,7 +18,7 @@
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
  {:property/id :skills/blood-curse,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [128 0 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [128 0 32 32]},
   :skill/action-time 1,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
@@ -27,7 +27,7 @@
   :skill/start-action-sound "sounds/bfxr_healmonsters.wav"}
  {:property/id :skills/bow,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [96 64 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [96 64 32 32]},
   :skill/action-time 1.5,
   :skill/action-time-modifier-key :stats/attack-speed,
   :skill/cooldown 0,
@@ -39,7 +39,7 @@
   :skill/start-action-sound "sounds/slash.wav"}
  {:property/id :skills/slow,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [64 64 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [64 64 32 32]},
   :skill/action-time 0.4,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
@@ -48,7 +48,7 @@
   :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
  {:property/id :skills/meditation,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [64 96 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [64 96 32 32]},
   :skill/action-time 7,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
@@ -57,7 +57,7 @@
   :skill/start-action-sound "sounds/shoot.wav"}
  {:property/id :skills/death-ray,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [32 96 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [32 96 32 32]},
   :skill/action-time 0.666,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 3,
@@ -68,7 +68,7 @@
   :skill/start-action-sound "sounds/bfxr_bossdeath.wav"}
  {:property/id :skills/projectile,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [96 32 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
   :skill/action-time 0.4,
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
@@ -77,7 +77,7 @@
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/melee-attack,
   :property/image
-  {:file "skills/images.png", :sub-image-bounds [0 0 32 32]},
+  {:file "images/skills.png", :sub-image-bounds [0 0 32 32]},
   :skill/action-time 0.5,
   :skill/action-time-modifier-key :stats/attack-speed,
   :skill/cooldown 0,
@@ -90,10 +90,10 @@
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/toad-horned-1.png"}
-     {:file "creatures/animations/toad-horned-2.png"}
-     {:file "creatures/animations/toad-horned-3.png"}
-     {:file "creatures/animations/toad-horned-4.png"}),
+    ({:file "images/animations/toad-horned-1.png"}
+     {:file "images/animations/toad-horned-2.png"}
+     {:file "images/animations/toad-horned-3.png"}
+     {:file "images/animations/toad-horned-4.png"}),
     :looping? true},
    :entity/body {:height 11/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -106,15 +106,15 @@
   :creature/species :species/toad,
   :property/id :creatures/toad-horned,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/goblin-warrior-1.png"}
-     {:file "creatures/animations/goblin-warrior-2.png"}
-     {:file "creatures/animations/goblin-warrior-3.png"}
-     {:file "creatures/animations/goblin-warrior-4.png"}),
+    ({:file "images/animations/goblin-warrior-1.png"}
+     {:file "images/animations/goblin-warrior-2.png"}
+     {:file "images/animations/goblin-warrior-3.png"}
+     {:file "images/animations/goblin-warrior-4.png"}),
     :looping? true},
    :entity/body {:height 29/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -133,15 +133,15 @@
   :creature/species :species/goblin,
   :property/id :creatures/goblin-warrior,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lizardman-blue-shaman-1.png"}
-     {:file "creatures/animations/lizardman-blue-shaman-2.png"}
-     {:file "creatures/animations/lizardman-blue-shaman-3.png"}
-     {:file "creatures/animations/lizardman-blue-shaman-4.png"}),
+    ({:file "images/animations/lizardman-blue-shaman-1.png"}
+     {:file "images/animations/lizardman-blue-shaman-2.png"}
+     {:file "images/animations/lizardman-blue-shaman-3.png"}
+     {:file "images/animations/lizardman-blue-shaman-4.png"}),
     :looping? true},
    :entity/body {:height 37/48, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -154,15 +154,15 @@
   :creature/species :species/lizardman-blue,
   :property/id :creatures/lizardman-blue-shaman,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/barbarian-f-1.png"}
-     {:file "creatures/animations/barbarian-f-2.png"}
-     {:file "creatures/animations/barbarian-f-3.png"}
-     {:file "creatures/animations/barbarian-f-4.png"}),
+    ({:file "images/animations/barbarian-f-1.png"}
+     {:file "images/animations/barbarian-f-2.png"}
+     {:file "images/animations/barbarian-f-3.png"}
+     {:file "images/animations/barbarian-f-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -175,15 +175,15 @@
   :creature/species :species/barbarian,
   :property/id :creatures/barbarian-f,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/mummy-1.png"}
-     {:file "creatures/animations/mummy-2.png"}
-     {:file "creatures/animations/mummy-3.png"}
-     {:file "creatures/animations/mummy-4.png"}),
+    ({:file "images/animations/mummy-1.png"}
+     {:file "images/animations/mummy-2.png"}
+     {:file "images/animations/mummy-3.png"}
+     {:file "images/animations/mummy-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -196,15 +196,15 @@
   :creature/species :species/mummy,
   :property/id :creatures/mummy,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/helion-1.png"}
-     {:file "creatures/animations/helion-2.png"}
-     {:file "creatures/animations/helion-3.png"}
-     {:file "creatures/animations/helion-4.png"}),
+    ({:file "images/animations/helion-1.png"}
+     {:file "images/animations/helion-2.png"}
+     {:file "images/animations/helion-3.png"}
+     {:file "images/animations/helion-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -221,15 +221,15 @@
   :creature/species :species/human,
   :property/id :creatures/helion,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/priest-1.png"}
-     {:file "creatures/animations/priest-2.png"}
-     {:file "creatures/animations/priest-3.png"}
-     {:file "creatures/animations/priest-4.png"}),
+    ({:file "images/animations/priest-1.png"}
+     {:file "images/animations/priest-2.png"}
+     {:file "images/animations/priest-3.png"}
+     {:file "images/animations/priest-4.png"}),
     :looping? true},
    :entity/body {:height 17/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -242,15 +242,15 @@
   :creature/species :species/human,
   :property/id :creatures/priest,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lizardman-green-spear-1.png"}
-     {:file "creatures/animations/lizardman-green-spear-2.png"}
-     {:file "creatures/animations/lizardman-green-spear-3.png"}
-     {:file "creatures/animations/lizardman-green-spear-4.png"}),
+    ({:file "images/animations/lizardman-green-spear-1.png"}
+     {:file "images/animations/lizardman-green-spear-2.png"}
+     {:file "images/animations/lizardman-green-spear-3.png"}
+     {:file "images/animations/lizardman-green-spear-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -263,15 +263,15 @@
   :creature/species :species/lizardman-green,
   :property/id :creatures/lizardman-green-spear,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dwarf-cleric-1.png"}
-     {:file "creatures/animations/dwarf-cleric-2.png"}
-     {:file "creatures/animations/dwarf-cleric-3.png"}
-     {:file "creatures/animations/dwarf-cleric-4.png"}),
+    ({:file "images/animations/dwarf-cleric-1.png"}
+     {:file "images/animations/dwarf-cleric-2.png"}
+     {:file "images/animations/dwarf-cleric-3.png"}
+     {:file "images/animations/dwarf-cleric-4.png"}),
     :looping? true},
    :entity/body {:height 9/16, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -284,15 +284,15 @@
   :creature/species :species/dwarf,
   :property/id :creatures/dwarf-cleric,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/thief-1.png"}
-     {:file "creatures/animations/thief-2.png"}
-     {:file "creatures/animations/thief-3.png"}
-     {:file "creatures/animations/thief-4.png"}),
+    ({:file "images/animations/thief-1.png"}
+     {:file "images/animations/thief-2.png"}
+     {:file "images/animations/thief-3.png"}
+     {:file "images/animations/thief-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -305,15 +305,15 @@
   :creature/species :species/human,
   :property/id :creatures/thief,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lizardman-green-shaman-1.png"}
-     {:file "creatures/animations/lizardman-green-shaman-2.png"}
-     {:file "creatures/animations/lizardman-green-shaman-3.png"}
-     {:file "creatures/animations/lizardman-green-shaman-4.png"}),
+    ({:file "images/animations/lizardman-green-shaman-1.png"}
+     {:file "images/animations/lizardman-green-shaman-2.png"}
+     {:file "images/animations/lizardman-green-shaman-3.png"}
+     {:file "images/animations/lizardman-green-shaman-4.png"}),
     :looping? true},
    :entity/body {:height 37/48, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -326,15 +326,15 @@
   :creature/species :species/lizardman-green,
   :property/id :creatures/lizardman-green-shaman,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/beholder-1.png"}
-     {:file "creatures/animations/beholder-2.png"}
-     {:file "creatures/animations/beholder-3.png"}
-     {:file "creatures/animations/beholder-4.png"}),
+    ({:file "images/animations/beholder-1.png"}
+     {:file "images/animations/beholder-2.png"}
+     {:file "images/animations/beholder-3.png"}
+     {:file "images/animations/beholder-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -347,15 +347,15 @@
   :creature/species :species/beholder,
   :property/id :creatures/beholder,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/spider-brown-1.png"}
-     {:file "creatures/animations/spider-brown-2.png"}
-     {:file "creatures/animations/spider-brown-3.png"}
-     {:file "creatures/animations/spider-brown-4.png"}),
+    ({:file "images/animations/spider-brown-1.png"}
+     {:file "images/animations/spider-brown-2.png"}
+     {:file "images/animations/spider-brown-3.png"}
+     {:file "images/animations/spider-brown-4.png"}),
     :looping? true},
    :entity/body {:height 19/48, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -368,15 +368,15 @@
   :creature/species :species/spider,
   :property/id :creatures/spider-brown,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/vampire-lord-1.png"}
-     {:file "creatures/animations/vampire-lord-2.png"}
-     {:file "creatures/animations/vampire-lord-3.png"}
-     {:file "creatures/animations/vampire-lord-4.png"}),
+    ({:file "images/animations/vampire-lord-1.png"}
+     {:file "images/animations/vampire-lord-2.png"}
+     {:file "images/animations/vampire-lord-3.png"}
+     {:file "images/animations/vampire-lord-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -390,15 +390,15 @@
   :creature/species :species/vampire,
   :property/id :creatures/vampire-lord,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/witch-1.png"}
-     {:file "creatures/animations/witch-2.png"}
-     {:file "creatures/animations/witch-3.png"}
-     {:file "creatures/animations/witch-4.png"}),
+    ({:file "images/animations/witch-1.png"}
+     {:file "images/animations/witch-2.png"}
+     {:file "images/animations/witch-3.png"}
+     {:file "images/animations/witch-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -411,15 +411,15 @@
   :creature/species :species/human,
   :property/id :creatures/witch,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/minstrel-f-1.png"}
-     {:file "creatures/animations/minstrel-f-2.png"}
-     {:file "creatures/animations/minstrel-f-3.png"}
-     {:file "creatures/animations/minstrel-f-4.png"}),
+    ({:file "images/animations/minstrel-f-1.png"}
+     {:file "images/animations/minstrel-f-2.png"}
+     {:file "images/animations/minstrel-f-3.png"}
+     {:file "images/animations/minstrel-f-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -432,15 +432,15 @@
   :creature/species :species/human,
   :property/id :creatures/minstrel-f,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lady-b-1.png"}
-     {:file "creatures/animations/lady-b-2.png"}
-     {:file "creatures/animations/lady-b-3.png"}
-     {:file "creatures/animations/lady-b-4.png"}),
+    ({:file "images/animations/lady-b-1.png"}
+     {:file "images/animations/lady-b-2.png"}
+     {:file "images/animations/lady-b-3.png"}
+     {:file "images/animations/lady-b-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -452,15 +452,15 @@
   :creature/species :species/human,
   :property/id :creatures/lady-b,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dwarf-1.png"}
-     {:file "creatures/animations/dwarf-2.png"}
-     {:file "creatures/animations/dwarf-3.png"}
-     {:file "creatures/animations/dwarf-4.png"}),
+    ({:file "images/animations/dwarf-1.png"}
+     {:file "images/animations/dwarf-2.png"}
+     {:file "images/animations/dwarf-3.png"}
+     {:file "images/animations/dwarf-4.png"}),
     :looping? true},
    :entity/body {:height 9/16, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -473,15 +473,15 @@
   :creature/species :species/dwarf,
   :property/id :creatures/dwarf,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elemental-air-1.png"}
-     {:file "creatures/animations/elemental-air-2.png"}
-     {:file "creatures/animations/elemental-air-3.png"}
-     {:file "creatures/animations/elemental-air-4.png"}),
+    ({:file "images/animations/elemental-air-1.png"}
+     {:file "images/animations/elemental-air-2.png"}
+     {:file "images/animations/elemental-air-3.png"}
+     {:file "images/animations/elemental-air-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -494,15 +494,15 @@
   :creature/species :species/elemental,
   :property/id :creatures/elemental-air,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/beetle-fire-1.png"}
-     {:file "creatures/animations/beetle-fire-2.png"}
-     {:file "creatures/animations/beetle-fire-3.png"}
-     {:file "creatures/animations/beetle-fire-4.png"}),
+    ({:file "images/animations/beetle-fire-1.png"}
+     {:file "images/animations/beetle-fire-2.png"}
+     {:file "images/animations/beetle-fire-3.png"}
+     {:file "images/animations/beetle-fire-4.png"}),
     :looping? true},
    :entity/body {:height 5/12, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -515,15 +515,15 @@
   :creature/species :species/beetle,
   :property/id :creatures/beetle-fire,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/warrior-f-1.png"}
-     {:file "creatures/animations/warrior-f-2.png"}
-     {:file "creatures/animations/warrior-f-3.png"}
-     {:file "creatures/animations/warrior-f-4.png"}),
+    ({:file "images/animations/warrior-f-1.png"}
+     {:file "images/animations/warrior-f-2.png"}
+     {:file "images/animations/warrior-f-3.png"}
+     {:file "images/animations/warrior-f-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -536,15 +536,15 @@
   :creature/species :species/human,
   :property/id :creatures/warrior-f,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/golem-mud-1.png"}
-     {:file "creatures/animations/golem-mud-2.png"}
-     {:file "creatures/animations/golem-mud-3.png"}
-     {:file "creatures/animations/golem-mud-4.png"}),
+    ({:file "images/animations/golem-mud-1.png"}
+     {:file "images/animations/golem-mud-2.png"}
+     {:file "images/animations/golem-mud-3.png"}
+     {:file "images/animations/golem-mud-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -557,15 +557,15 @@
   :creature/species :species/golem,
   :property/id :creatures/golem-mud,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/merchant-f-1.png"}
-     {:file "creatures/animations/merchant-f-2.png"}
-     {:file "creatures/animations/merchant-f-3.png"}
-     {:file "creatures/animations/merchant-f-4.png"}),
+    ({:file "images/animations/merchant-f-1.png"}
+     {:file "images/animations/merchant-f-2.png"}
+     {:file "images/animations/merchant-f-3.png"}
+     {:file "images/animations/merchant-f-4.png"}),
     :looping? true},
    :entity/body {:height 29/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -578,15 +578,15 @@
   :creature/species :species/human,
   :property/id :creatures/merchant-f,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/minstrel-m-1.png"}
-     {:file "creatures/animations/minstrel-m-2.png"}
-     {:file "creatures/animations/minstrel-m-3.png"}
-     {:file "creatures/animations/minstrel-m-4.png"}),
+    ({:file "images/animations/minstrel-m-1.png"}
+     {:file "images/animations/minstrel-m-2.png"}
+     {:file "images/animations/minstrel-m-3.png"}
+     {:file "images/animations/minstrel-m-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -599,15 +599,15 @@
   :creature/species :species/human,
   :property/id :creatures/minstrel-m,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/spirit-greater-1.png"}
-     {:file "creatures/animations/spirit-greater-2.png"}
-     {:file "creatures/animations/spirit-greater-3.png"}
-     {:file "creatures/animations/spirit-greater-4.png"}),
+    ({:file "images/animations/spirit-greater-1.png"}
+     {:file "images/animations/spirit-greater-2.png"}
+     {:file "images/animations/spirit-greater-3.png"}
+     {:file "images/animations/spirit-greater-4.png"}),
     :looping? true},
    :entity/body {:height 5/6, :solid? true, :width 3/4},
    :entity/faction :good,
@@ -620,15 +620,15 @@
   :creature/species :species/spirit,
   :property/id :creatures/spirit-greater,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/knight-1.png"}
-     {:file "creatures/animations/knight-2.png"}
-     {:file "creatures/animations/knight-3.png"}
-     {:file "creatures/animations/knight-4.png"}),
+    ({:file "images/animations/knight-1.png"}
+     {:file "images/animations/knight-2.png"}
+     {:file "images/animations/knight-3.png"}
+     {:file "images/animations/knight-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -648,15 +648,15 @@
   :creature/species :species/human,
   :property/id :creatures/knight,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/zombie-b-1.png"}
-     {:file "creatures/animations/zombie-b-2.png"}
-     {:file "creatures/animations/zombie-b-3.png"}
-     {:file "creatures/animations/zombie-b-4.png"}),
+    ({:file "images/animations/zombie-b-1.png"}
+     {:file "images/animations/zombie-b-2.png"}
+     {:file "images/animations/zombie-b-3.png"}
+     {:file "images/animations/zombie-b-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -669,15 +669,15 @@
   :creature/species :species/zombie,
   :property/id :creatures/zombie-b,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/demon-green-1.png"}
-     {:file "creatures/animations/demon-green-2.png"}
-     {:file "creatures/animations/demon-green-3.png"}
-     {:file "creatures/animations/demon-green-4.png"}),
+    ({:file "images/animations/demon-green-1.png"}
+     {:file "images/animations/demon-green-2.png"}
+     {:file "images/animations/demon-green-3.png"}
+     {:file "images/animations/demon-green-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 19/24},
    :entity/faction :good,
@@ -690,15 +690,15 @@
   :creature/species :species/demon,
   :property/id :creatures/demon-green,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/drow-wizard-1.png"}
-     {:file "creatures/animations/drow-wizard-2.png"}
-     {:file "creatures/animations/drow-wizard-3.png"}
-     {:file "creatures/animations/drow-wizard-4.png"}),
+    ({:file "images/animations/drow-wizard-1.png"}
+     {:file "images/animations/drow-wizard-2.png"}
+     {:file "images/animations/drow-wizard-3.png"}
+     {:file "images/animations/drow-wizard-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -711,15 +711,15 @@
   :creature/species :species/drow,
   :property/id :creatures/drow-wizard,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/goblin-shaman-1.png"}
-     {:file "creatures/animations/goblin-shaman-2.png"}
-     {:file "creatures/animations/goblin-shaman-3.png"}
-     {:file "creatures/animations/goblin-shaman-4.png"}),
+    ({:file "images/animations/goblin-shaman-1.png"}
+     {:file "images/animations/goblin-shaman-2.png"}
+     {:file "images/animations/goblin-shaman-3.png"}
+     {:file "images/animations/goblin-shaman-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -732,15 +732,15 @@
   :creature/species :species/goblin,
   :property/id :creatures/goblin-shaman,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/beetle-giant-1.png"}
-     {:file "creatures/animations/beetle-giant-2.png"}
-     {:file "creatures/animations/beetle-giant-3.png"}
-     {:file "creatures/animations/beetle-giant-4.png"}),
+    ({:file "images/animations/beetle-giant-1.png"}
+     {:file "images/animations/beetle-giant-2.png"}
+     {:file "images/animations/beetle-giant-3.png"}
+     {:file "images/animations/beetle-giant-4.png"}),
     :looping? true},
    :entity/body {:height 13/24, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -753,15 +753,15 @@
   :creature/species :species/beetle,
   :property/id :creatures/beetle-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/prisoner-b-1.png"}
-     {:file "creatures/animations/prisoner-b-2.png"}
-     {:file "creatures/animations/prisoner-b-3.png"}
-     {:file "creatures/animations/prisoner-b-4.png"}),
+    ({:file "images/animations/prisoner-b-1.png"}
+     {:file "images/animations/prisoner-b-2.png"}
+     {:file "images/animations/prisoner-b-3.png"}
+     {:file "images/animations/prisoner-b-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -774,15 +774,15 @@
   :creature/species :species/human,
   :property/id :creatures/prisoner-b,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dwarf-mage-1.png"}
-     {:file "creatures/animations/dwarf-mage-2.png"}
-     {:file "creatures/animations/dwarf-mage-3.png"}
-     {:file "creatures/animations/dwarf-mage-4.png"}),
+    ({:file "images/animations/dwarf-mage-1.png"}
+     {:file "images/animations/dwarf-mage-2.png"}
+     {:file "images/animations/dwarf-mage-3.png"}
+     {:file "images/animations/dwarf-mage-4.png"}),
     :looping? true},
    :entity/body {:height 7/12, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -795,15 +795,15 @@
   :creature/species :species/dwarf,
   :property/id :creatures/dwarf-mage,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/bird-hawk-1.png"}
-     {:file "creatures/animations/bird-hawk-2.png"}
-     {:file "creatures/animations/bird-hawk-3.png"}
-     {:file "creatures/animations/bird-hawk-4.png"}),
+    ({:file "images/animations/bird-hawk-1.png"}
+     {:file "images/animations/bird-hawk-2.png"}
+     {:file "images/animations/bird-hawk-3.png"}
+     {:file "images/animations/bird-hawk-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -816,15 +816,15 @@
   :creature/species :species/bird,
   :property/id :creatures/bird-hawk,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/pixie-b-1.png"}
-     {:file "creatures/animations/pixie-b-2.png"}
-     {:file "creatures/animations/pixie-b-3.png"}
-     {:file "creatures/animations/pixie-b-4.png"}),
+    ({:file "images/animations/pixie-b-1.png"}
+     {:file "images/animations/pixie-b-2.png"}
+     {:file "images/animations/pixie-b-3.png"}
+     {:file "images/animations/pixie-b-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -837,15 +837,15 @@
   :creature/species :species/pixie,
   :property/id :creatures/pixie-b,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lady-a-1.png"}
-     {:file "creatures/animations/lady-a-2.png"}
-     {:file "creatures/animations/lady-a-3.png"}
-     {:file "creatures/animations/lady-a-4.png"}),
+    ({:file "images/animations/lady-a-1.png"}
+     {:file "images/animations/lady-a-2.png"}
+     {:file "images/animations/lady-a-3.png"}
+     {:file "images/animations/lady-a-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -857,15 +857,15 @@
   :creature/species :species/human,
   :property/id :creatures/lady-a,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/drow-1.png"}
-     {:file "creatures/animations/drow-2.png"}
-     {:file "creatures/animations/drow-3.png"}
-     {:file "creatures/animations/drow-4.png"}),
+    ({:file "images/animations/drow-1.png"}
+     {:file "images/animations/drow-2.png"}
+     {:file "images/animations/drow-3.png"}
+     {:file "images/animations/drow-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -878,15 +878,15 @@
   :creature/species :species/drow,
   :property/id :creatures/drow,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/goblin-1.png"}
-     {:file "creatures/animations/goblin-2.png"}
-     {:file "creatures/animations/goblin-3.png"}
-     {:file "creatures/animations/goblin-4.png"}),
+    ({:file "images/animations/goblin-1.png"}
+     {:file "images/animations/goblin-2.png"}
+     {:file "images/animations/goblin-3.png"}
+     {:file "images/animations/goblin-4.png"}),
     :looping? true},
    :entity/body {:height 29/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -899,15 +899,15 @@
   :creature/species :species/goblin,
   :property/id :creatures/goblin,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wolf-black-1.png"}
-     {:file "creatures/animations/wolf-black-2.png"}
-     {:file "creatures/animations/wolf-black-3.png"}
-     {:file "creatures/animations/wolf-black-4.png"}),
+    ({:file "images/animations/wolf-black-1.png"}
+     {:file "images/animations/wolf-black-2.png"}
+     {:file "images/animations/wolf-black-3.png"}
+     {:file "images/animations/wolf-black-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -920,15 +920,15 @@
   :creature/species :species/wolf,
   :property/id :creatures/wolf-black,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/bird-crow-1.png"}
-     {:file "creatures/animations/bird-crow-2.png"}
-     {:file "creatures/animations/bird-crow-3.png"}
-     {:file "creatures/animations/bird-crow-4.png"}),
+    ({:file "images/animations/bird-crow-1.png"}
+     {:file "images/animations/bird-crow-2.png"}
+     {:file "images/animations/bird-crow-3.png"}
+     {:file "images/animations/bird-crow-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -941,15 +941,15 @@
   :creature/species :species/bird,
   :property/id :creatures/bird-crow,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/demon-red-1.png"}
-     {:file "creatures/animations/demon-red-2.png"}
-     {:file "creatures/animations/demon-red-3.png"}
-     {:file "creatures/animations/demon-red-4.png"}),
+    ({:file "images/animations/demon-red-1.png"}
+     {:file "images/animations/demon-red-2.png"}
+     {:file "images/animations/demon-red-3.png"}
+     {:file "images/animations/demon-red-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 19/24},
    :entity/faction :good,
@@ -962,15 +962,15 @@
   :creature/species :species/demon,
   :property/id :creatures/demon-red,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/pixie-a-1.png"}
-     {:file "creatures/animations/pixie-a-2.png"}
-     {:file "creatures/animations/pixie-a-3.png"}
-     {:file "creatures/animations/pixie-a-4.png"}),
+    ({:file "images/animations/pixie-a-1.png"}
+     {:file "images/animations/pixie-a-2.png"}
+     {:file "images/animations/pixie-a-3.png"}
+     {:file "images/animations/pixie-a-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -983,15 +983,15 @@
   :creature/species :species/pixie,
   :property/id :creatures/pixie-a,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/archer-1.png"}
-     {:file "creatures/animations/archer-2.png"}
-     {:file "creatures/animations/archer-3.png"}
-     {:file "creatures/animations/archer-4.png"}),
+    ({:file "images/animations/archer-1.png"}
+     {:file "images/animations/archer-2.png"}
+     {:file "images/animations/archer-3.png"}
+     {:file "images/animations/archer-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1004,15 +1004,15 @@
   :creature/species :species/human,
   :property/id :creatures/archer,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/rat-giant-1.png"}
-     {:file "creatures/animations/rat-giant-2.png"}
-     {:file "creatures/animations/rat-giant-3.png"}
-     {:file "creatures/animations/rat-giant-4.png"}),
+    ({:file "images/animations/rat-giant-1.png"}
+     {:file "images/animations/rat-giant-2.png"}
+     {:file "images/animations/rat-giant-3.png"}
+     {:file "images/animations/rat-giant-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 41/48},
    :entity/faction :good,
@@ -1025,15 +1025,15 @@
   :creature/species :species/rat,
   :property/id :creatures/rat-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lord-a-1.png"}
-     {:file "creatures/animations/lord-a-2.png"}
-     {:file "creatures/animations/lord-a-3.png"}
-     {:file "creatures/animations/lord-a-4.png"}),
+    ({:file "images/animations/lord-a-1.png"}
+     {:file "images/animations/lord-a-2.png"}
+     {:file "images/animations/lord-a-3.png"}
+     {:file "images/animations/lord-a-4.png"}),
     :looping? true},
    :entity/body {:height 17/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1045,15 +1045,15 @@
   :creature/species :species/human,
   :property/id :creatures/lord-a,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wraith-black-1.png"}
-     {:file "creatures/animations/wraith-black-2.png"}
-     {:file "creatures/animations/wraith-black-3.png"}
-     {:file "creatures/animations/wraith-black-4.png"}),
+    ({:file "images/animations/wraith-black-1.png"}
+     {:file "images/animations/wraith-black-2.png"}
+     {:file "images/animations/wraith-black-3.png"}
+     {:file "images/animations/wraith-black-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1066,15 +1066,15 @@
   :creature/species :species/wraith,
   :property/id :creatures/wraith-black,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wraith-red-1.png"}
-     {:file "creatures/animations/wraith-red-2.png"}
-     {:file "creatures/animations/wraith-red-3.png"}
-     {:file "creatures/animations/wraith-red-4.png"}),
+    ({:file "images/animations/wraith-red-1.png"}
+     {:file "images/animations/wraith-red-2.png"}
+     {:file "images/animations/wraith-red-3.png"}
+     {:file "images/animations/wraith-red-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1087,15 +1087,15 @@
   :creature/species :species/wraith,
   :property/id :creatures/wraith-red,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/golem-fire-1.png"}
-     {:file "creatures/animations/golem-fire-2.png"}
-     {:file "creatures/animations/golem-fire-3.png"}
-     {:file "creatures/animations/golem-fire-4.png"}),
+    ({:file "images/animations/golem-fire-1.png"}
+     {:file "images/animations/golem-fire-2.png"}
+     {:file "images/animations/golem-fire-3.png"}
+     {:file "images/animations/golem-fire-4.png"}),
     :looping? true},
    :entity/body {:height 5/6, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -1108,15 +1108,15 @@
   :creature/species :species/golem,
   :property/id :creatures/golem-fire,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wisp-ancient-1.png"}
-     {:file "creatures/animations/wisp-ancient-2.png"}
-     {:file "creatures/animations/wisp-ancient-3.png"}
-     {:file "creatures/animations/wisp-ancient-4.png"}),
+    ({:file "images/animations/wisp-ancient-1.png"}
+     {:file "images/animations/wisp-ancient-2.png"}
+     {:file "images/animations/wisp-ancient-3.png"}
+     {:file "images/animations/wisp-ancient-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 5/8},
    :entity/faction :good,
@@ -1129,15 +1129,15 @@
   :creature/species :species/wisp,
   :property/id :creatures/wisp-ancient,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/troll-1.png"}
-     {:file "creatures/animations/troll-2.png"}
-     {:file "creatures/animations/troll-3.png"}
-     {:file "creatures/animations/troll-4.png"}),
+    ({:file "images/animations/troll-1.png"}
+     {:file "images/animations/troll-2.png"}
+     {:file "images/animations/troll-3.png"}
+     {:file "images/animations/troll-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -1150,15 +1150,15 @@
   :creature/species :species/troll,
   :property/id :creatures/troll,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wraith-blue-1.png"}
-     {:file "creatures/animations/wraith-blue-2.png"}
-     {:file "creatures/animations/wraith-blue-3.png"}
-     {:file "creatures/animations/wraith-blue-4.png"}),
+    ({:file "images/animations/wraith-blue-1.png"}
+     {:file "images/animations/wraith-blue-2.png"}
+     {:file "images/animations/wraith-blue-3.png"}
+     {:file "images/animations/wraith-blue-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1171,15 +1171,15 @@
   :creature/species :species/wraith,
   :property/id :creatures/wraith-blue,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/beetle-fire-giant-1.png"}
-     {:file "creatures/animations/beetle-fire-giant-2.png"}
-     {:file "creatures/animations/beetle-fire-giant-3.png"}
-     {:file "creatures/animations/beetle-fire-giant-4.png"}),
+    ({:file "images/animations/beetle-fire-giant-1.png"}
+     {:file "images/animations/beetle-fire-giant-2.png"}
+     {:file "images/animations/beetle-fire-giant-3.png"}
+     {:file "images/animations/beetle-fire-giant-4.png"}),
     :looping? true},
    :entity/body {:height 13/24, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -1192,15 +1192,15 @@
   :creature/species :species/beetle,
   :property/id :creatures/beetle-fire-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lizardman-blue-spear-1.png"}
-     {:file "creatures/animations/lizardman-blue-spear-2.png"}
-     {:file "creatures/animations/lizardman-blue-spear-3.png"}
-     {:file "creatures/animations/lizardman-blue-spear-4.png"}),
+    ({:file "images/animations/lizardman-blue-spear-1.png"}
+     {:file "images/animations/lizardman-blue-spear-2.png"}
+     {:file "images/animations/lizardman-blue-spear-3.png"}
+     {:file "images/animations/lizardman-blue-spear-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -1213,15 +1213,15 @@
   :creature/species :species/lizardman-blue,
   :property/id :creatures/lizardman-blue-spear,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dark-knight-1.png"}
-     {:file "creatures/animations/dark-knight-2.png"}
-     {:file "creatures/animations/dark-knight-3.png"}
-     {:file "creatures/animations/dark-knight-4.png"}),
+    ({:file "images/animations/dark-knight-1.png"}
+     {:file "images/animations/dark-knight-2.png"}
+     {:file "images/animations/dark-knight-3.png"}
+     {:file "images/animations/dark-knight-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1234,15 +1234,15 @@
   :creature/species :species/human,
   :property/id :creatures/dark-knight,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wolf-brown-1.png"}
-     {:file "creatures/animations/wolf-brown-2.png"}
-     {:file "creatures/animations/wolf-brown-3.png"}
-     {:file "creatures/animations/wolf-brown-4.png"}),
+    ({:file "images/animations/wolf-brown-1.png"}
+     {:file "images/animations/wolf-brown-2.png"}
+     {:file "images/animations/wolf-brown-3.png"}
+     {:file "images/animations/wolf-brown-4.png"}),
     :looping? true},
    :entity/body {:height 7/12, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1255,15 +1255,15 @@
   :creature/species :species/wolf,
   :property/id :creatures/wolf-brown,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/demon-blue-1.png"}
-     {:file "creatures/animations/demon-blue-2.png"}
-     {:file "creatures/animations/demon-blue-3.png"}
-     {:file "creatures/animations/demon-blue-4.png"}),
+    ({:file "images/animations/demon-blue-1.png"}
+     {:file "images/animations/demon-blue-2.png"}
+     {:file "images/animations/demon-blue-3.png"}
+     {:file "images/animations/demon-blue-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 19/24},
    :entity/faction :good,
@@ -1276,15 +1276,15 @@
   :creature/species :species/demon,
   :property/id :creatures/demon-blue,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/moth-red-1.png"}
-     {:file "creatures/animations/moth-red-2.png"}
-     {:file "creatures/animations/moth-red-3.png"}
-     {:file "creatures/animations/moth-red-4.png"}),
+    ({:file "images/animations/moth-red-1.png"}
+     {:file "images/animations/moth-red-2.png"}
+     {:file "images/animations/moth-red-3.png"}
+     {:file "images/animations/moth-red-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -1297,15 +1297,15 @@
   :creature/species :species/moth,
   :property/id :creatures/moth-red,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/prisoner-c-1.png"}
-     {:file "creatures/animations/prisoner-c-2.png"}
-     {:file "creatures/animations/prisoner-c-3.png"}
-     {:file "creatures/animations/prisoner-c-4.png"}),
+    ({:file "images/animations/prisoner-c-1.png"}
+     {:file "images/animations/prisoner-c-2.png"}
+     {:file "images/animations/prisoner-c-3.png"}
+     {:file "images/animations/prisoner-c-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1318,15 +1318,15 @@
   :creature/species :species/human,
   :property/id :creatures/prisoner-c,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/mimic-1.png"}
-     {:file "creatures/animations/mimic-2.png"}
-     {:file "creatures/animations/mimic-3.png"}
-     {:file "creatures/animations/mimic-4.png"}),
+    ({:file "images/animations/mimic-1.png"}
+     {:file "images/animations/mimic-2.png"}
+     {:file "images/animations/mimic-3.png"}
+     {:file "images/animations/mimic-4.png"}),
     :looping? true},
    :entity/body {:height 9/16, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -1339,15 +1339,15 @@
   :creature/species :species/mimic,
   :property/id :creatures/mimic,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lizardman-green-1.png"}
-     {:file "creatures/animations/lizardman-green-2.png"}
-     {:file "creatures/animations/lizardman-green-3.png"}
-     {:file "creatures/animations/lizardman-green-4.png"}),
+    ({:file "images/animations/lizardman-green-1.png"}
+     {:file "images/animations/lizardman-green-2.png"}
+     {:file "images/animations/lizardman-green-3.png"}
+     {:file "images/animations/lizardman-green-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -1360,15 +1360,15 @@
   :creature/species :species/lizardman-green,
   :property/id :creatures/lizardman-green,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/paladin-1.png"}
-     {:file "creatures/animations/paladin-2.png"}
-     {:file "creatures/animations/paladin-3.png"}
-     {:file "creatures/animations/paladin-4.png"}),
+    ({:file "images/animations/paladin-1.png"}
+     {:file "images/animations/paladin-2.png"}
+     {:file "images/animations/paladin-3.png"}
+     {:file "images/animations/paladin-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -1381,15 +1381,15 @@
   :creature/species :species/human,
   :property/id :creatures/paladin,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dragon-green-1.png"}
-     {:file "creatures/animations/dragon-green-2.png"}
-     {:file "creatures/animations/dragon-green-3.png"}
-     {:file "creatures/animations/dragon-green-4.png"}),
+    ({:file "images/animations/dragon-green-1.png"}
+     {:file "images/animations/dragon-green-2.png"}
+     {:file "images/animations/dragon-green-3.png"}
+     {:file "images/animations/dragon-green-4.png"}),
     :looping? true},
    :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
@@ -1402,15 +1402,15 @@
   :creature/species :species/dragon,
   :property/id :creatures/dragon-green,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/rat-1.png"}
-     {:file "creatures/animations/rat-2.png"}
-     {:file "creatures/animations/rat-3.png"}
-     {:file "creatures/animations/rat-4.png"}),
+    ({:file "images/animations/rat-1.png"}
+     {:file "images/animations/rat-2.png"}
+     {:file "images/animations/rat-3.png"}
+     {:file "images/animations/rat-4.png"}),
     :looping? true},
    :entity/body {:height 23/48, :solid? true, :width 31/48},
    :entity/faction :good,
@@ -1423,15 +1423,15 @@
   :creature/species :species/rat,
   :property/id :creatures/rat,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elemental-vorpal-1.png"}
-     {:file "creatures/animations/elemental-vorpal-2.png"}
-     {:file "creatures/animations/elemental-vorpal-3.png"}
-     {:file "creatures/animations/elemental-vorpal-4.png"}),
+    ({:file "images/animations/elemental-vorpal-1.png"}
+     {:file "images/animations/elemental-vorpal-2.png"}
+     {:file "images/animations/elemental-vorpal-3.png"}
+     {:file "images/animations/elemental-vorpal-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -1444,15 +1444,15 @@
   :creature/species :species/elemental,
   :property/id :creatures/elemental-vorpal,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/zombie-a-1.png"}
-     {:file "creatures/animations/zombie-a-2.png"}
-     {:file "creatures/animations/zombie-a-3.png"}
-     {:file "creatures/animations/zombie-a-4.png"}),
+    ({:file "images/animations/zombie-a-1.png"}
+     {:file "images/animations/zombie-a-2.png"}
+     {:file "images/animations/zombie-a-3.png"}
+     {:file "images/animations/zombie-a-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -1465,15 +1465,15 @@
   :creature/species :species/zombie,
   :property/id :creatures/zombie-a,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dragon-blue-1.png"}
-     {:file "creatures/animations/dragon-blue-2.png"}
-     {:file "creatures/animations/dragon-blue-3.png"}
-     {:file "creatures/animations/dragon-blue-4.png"}),
+    ({:file "images/animations/dragon-blue-1.png"}
+     {:file "images/animations/dragon-blue-2.png"}
+     {:file "images/animations/dragon-blue-3.png"}
+     {:file "images/animations/dragon-blue-4.png"}),
     :looping? true},
    :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
@@ -1486,15 +1486,15 @@
   :creature/species :species/dragon,
   :property/id :creatures/dragon-blue,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/spider-black-1.png"}
-     {:file "creatures/animations/spider-black-2.png"}
-     {:file "creatures/animations/spider-black-3.png"}
-     {:file "creatures/animations/spider-black-4.png"}),
+    ({:file "images/animations/spider-black-1.png"}
+     {:file "images/animations/spider-black-2.png"}
+     {:file "images/animations/spider-black-3.png"}
+     {:file "images/animations/spider-black-4.png"}),
     :looping? true},
    :entity/body {:height 19/48, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -1507,15 +1507,15 @@
   :creature/species :species/spider,
   :property/id :creatures/spider-black,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/ogre-1.png"}
-     {:file "creatures/animations/ogre-2.png"}
-     {:file "creatures/animations/ogre-3.png"}
-     {:file "creatures/animations/ogre-4.png"}),
+    ({:file "images/animations/ogre-1.png"}
+     {:file "images/animations/ogre-2.png"}
+     {:file "images/animations/ogre-3.png"}
+     {:file "images/animations/ogre-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -1528,15 +1528,15 @@
   :creature/species :species/ogre,
   :property/id :creatures/ogre,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wizard-1.png"}
-     {:file "creatures/animations/wizard-2.png"}
-     {:file "creatures/animations/wizard-3.png"}
-     {:file "creatures/animations/wizard-4.png"}),
+    ({:file "images/animations/wizard-1.png"}
+     {:file "images/animations/wizard-2.png"}
+     {:file "images/animations/wizard-3.png"}
+     {:file "images/animations/wizard-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1549,15 +1549,15 @@
   :creature/species :species/human,
   :property/id :creatures/wizard,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elemental-earth-1.png"}
-     {:file "creatures/animations/elemental-earth-2.png"}
-     {:file "creatures/animations/elemental-earth-3.png"}
-     {:file "creatures/animations/elemental-earth-4.png"}),
+    ({:file "images/animations/elemental-earth-1.png"}
+     {:file "images/animations/elemental-earth-2.png"}
+     {:file "images/animations/elemental-earth-3.png"}
+     {:file "images/animations/elemental-earth-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -1570,15 +1570,15 @@
   :creature/species :species/elemental,
   :property/id :creatures/elemental-earth,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dragon-shadow-1.png"}
-     {:file "creatures/animations/dragon-shadow-2.png"}
-     {:file "creatures/animations/dragon-shadow-3.png"}
-     {:file "creatures/animations/dragon-shadow-4.png"}),
+    ({:file "images/animations/dragon-shadow-1.png"}
+     {:file "images/animations/dragon-shadow-2.png"}
+     {:file "images/animations/dragon-shadow-3.png"}
+     {:file "images/animations/dragon-shadow-4.png"}),
     :looping? true},
    :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
@@ -1591,15 +1591,15 @@
   :creature/species :species/dragon,
   :property/id :creatures/dragon-shadow,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/banshee-1.png"}
-     {:file "creatures/animations/banshee-2.png"}
-     {:file "creatures/animations/banshee-3.png"}
-     {:file "creatures/animations/banshee-4.png"}),
+    ({:file "images/animations/banshee-1.png"}
+     {:file "images/animations/banshee-2.png"}
+     {:file "images/animations/banshee-3.png"}
+     {:file "images/animations/banshee-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1610,15 +1610,15 @@
   :creature/species :species/banshee,
   :property/id :creatures/banshee,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/warrior-m-1.png"}
-     {:file "creatures/animations/warrior-m-2.png"}
-     {:file "creatures/animations/warrior-m-3.png"}
-     {:file "creatures/animations/warrior-m-4.png"}),
+    ({:file "images/animations/warrior-m-1.png"}
+     {:file "images/animations/warrior-m-2.png"}
+     {:file "images/animations/warrior-m-3.png"}
+     {:file "images/animations/warrior-m-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1631,15 +1631,15 @@
   :creature/species :species/human,
   :property/id :creatures/warrior-m,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/moth-white-1.png"}
-     {:file "creatures/animations/moth-white-2.png"}
-     {:file "creatures/animations/moth-white-3.png"}
-     {:file "creatures/animations/moth-white-4.png"}),
+    ({:file "images/animations/moth-white-1.png"}
+     {:file "images/animations/moth-white-2.png"}
+     {:file "images/animations/moth-white-3.png"}
+     {:file "images/animations/moth-white-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -1652,15 +1652,15 @@
   :creature/species :species/moth,
   :property/id :creatures/moth-white,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/bird-dove-1.png"}
-     {:file "creatures/animations/bird-dove-2.png"}
-     {:file "creatures/animations/bird-dove-3.png"}
-     {:file "creatures/animations/bird-dove-4.png"}),
+    ({:file "images/animations/bird-dove-1.png"}
+     {:file "images/animations/bird-dove-2.png"}
+     {:file "images/animations/bird-dove-3.png"}
+     {:file "images/animations/bird-dove-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -1673,15 +1673,15 @@
   :creature/species :species/bird,
   :property/id :creatures/bird-dove,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lizardman-blue-1.png"}
-     {:file "creatures/animations/lizardman-blue-2.png"}
-     {:file "creatures/animations/lizardman-blue-3.png"}
-     {:file "creatures/animations/lizardman-blue-4.png"}),
+    ({:file "images/animations/lizardman-blue-1.png"}
+     {:file "images/animations/lizardman-blue-2.png"}
+     {:file "images/animations/lizardman-blue-3.png"}
+     {:file "images/animations/lizardman-blue-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -1694,15 +1694,15 @@
   :creature/species :species/lizardman-blue,
   :property/id :creatures/lizardman-blue,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/dragon-red-1.png"}
-     {:file "creatures/animations/dragon-red-2.png"}
-     {:file "creatures/animations/dragon-red-3.png"}
-     {:file "creatures/animations/dragon-red-4.png"}),
+    ({:file "images/animations/dragon-red-1.png"}
+     {:file "images/animations/dragon-red-2.png"}
+     {:file "images/animations/dragon-red-3.png"}
+     {:file "images/animations/dragon-red-4.png"}),
     :looping? true},
    :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
@@ -1715,15 +1715,15 @@
   :creature/species :species/dragon,
   :property/id :creatures/dragon-red,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/spider-brown-giant-1.png"}
-     {:file "creatures/animations/spider-brown-giant-2.png"}
-     {:file "creatures/animations/spider-brown-giant-3.png"}
-     {:file "creatures/animations/spider-brown-giant-4.png"}),
+    ({:file "images/animations/spider-brown-giant-1.png"}
+     {:file "images/animations/spider-brown-giant-2.png"}
+     {:file "images/animations/spider-brown-giant-3.png"}
+     {:file "images/animations/spider-brown-giant-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -1736,15 +1736,15 @@
   :creature/species :species/spider,
   :property/id :creatures/spider-brown-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/spirit-1.png"}
-     {:file "creatures/animations/spirit-2.png"}
-     {:file "creatures/animations/spirit-3.png"}
-     {:file "creatures/animations/spirit-4.png"}),
+    ({:file "images/animations/spirit-1.png"}
+     {:file "images/animations/spirit-2.png"}
+     {:file "images/animations/spirit-3.png"}
+     {:file "images/animations/spirit-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -1757,15 +1757,15 @@
   :creature/species :species/spirit,
   :property/id :creatures/spirit,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lich-1.png"}
-     {:file "creatures/animations/lich-2.png"}
-     {:file "creatures/animations/lich-3.png"}
-     {:file "creatures/animations/lich-4.png"}),
+    ({:file "images/animations/lich-1.png"}
+     {:file "images/animations/lich-2.png"}
+     {:file "images/animations/lich-3.png"}
+     {:file "images/animations/lich-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1778,15 +1778,15 @@
   :creature/species :species/lich,
   :property/id :creatures/lich,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/skeleton-archer-1.png"}
-     {:file "creatures/animations/skeleton-archer-2.png"}
-     {:file "creatures/animations/skeleton-archer-3.png"}
-     {:file "creatures/animations/skeleton-archer-4.png"}),
+    ({:file "images/animations/skeleton-archer-1.png"}
+     {:file "images/animations/skeleton-archer-2.png"}
+     {:file "images/animations/skeleton-archer-3.png"}
+     {:file "images/animations/skeleton-archer-4.png"}),
     :looping? true},
    :entity/body {:height 37/48, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -1799,15 +1799,15 @@
   :creature/species :species/skeleton,
   :property/id :creatures/skeleton-archer,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/ogre-mystic-1.png"}
-     {:file "creatures/animations/ogre-mystic-2.png"}
-     {:file "creatures/animations/ogre-mystic-3.png"}
-     {:file "creatures/animations/ogre-mystic-4.png"}),
+    ({:file "images/animations/ogre-mystic-1.png"}
+     {:file "images/animations/ogre-mystic-2.png"}
+     {:file "images/animations/ogre-mystic-3.png"}
+     {:file "images/animations/ogre-mystic-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -1820,15 +1820,15 @@
   :creature/species :species/ogre,
   :property/id :creatures/ogre-mystic,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/bone-dragon-1.png"}
-     {:file "creatures/animations/bone-dragon-2.png"}
-     {:file "creatures/animations/bone-dragon-3.png"}
-     {:file "creatures/animations/bone-dragon-4.png"}),
+    ({:file "images/animations/bone-dragon-1.png"}
+     {:file "images/animations/bone-dragon-2.png"}
+     {:file "images/animations/bone-dragon-3.png"}
+     {:file "images/animations/bone-dragon-4.png"}),
     :looping? true},
    :entity/body {:height 1, :solid? true, :width 1},
    :entity/faction :good,
@@ -1840,15 +1840,15 @@
   :creature/level 5,
   :creature/species :species/dragon,
   :property/id :creatures/bone-dragon,
-  :property/image {:file "creatures/animations/bone-dragon-1.png"}}
+  :property/image {:file "images/animations/bone-dragon-1.png"}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/golem-metal-1.png"}
-     {:file "creatures/animations/golem-metal-2.png"}
-     {:file "creatures/animations/golem-metal-3.png"}
-     {:file "creatures/animations/golem-metal-4.png"}),
+    ({:file "images/animations/golem-metal-1.png"}
+     {:file "images/animations/golem-metal-2.png"}
+     {:file "images/animations/golem-metal-3.png"}
+     {:file "images/animations/golem-metal-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -1861,15 +1861,15 @@
   :creature/species :species/golem,
   :property/id :creatures/golem-metal,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elemental-fire-1.png"}
-     {:file "creatures/animations/elemental-fire-2.png"}
-     {:file "creatures/animations/elemental-fire-3.png"}
-     {:file "creatures/animations/elemental-fire-4.png"}),
+    ({:file "images/animations/elemental-fire-1.png"}
+     {:file "images/animations/elemental-fire-2.png"}
+     {:file "images/animations/elemental-fire-3.png"}
+     {:file "images/animations/elemental-fire-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -1882,15 +1882,15 @@
   :creature/species :species/elemental,
   :property/id :creatures/elemental-fire,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/templar-1.png"}
-     {:file "creatures/animations/templar-2.png"}
-     {:file "creatures/animations/templar-3.png"}
-     {:file "creatures/animations/templar-4.png"}),
+    ({:file "images/animations/templar-1.png"}
+     {:file "images/animations/templar-2.png"}
+     {:file "images/animations/templar-3.png"}
+     {:file "images/animations/templar-4.png"}),
     :looping? true},
    :entity/body {:height 41/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -1903,15 +1903,15 @@
   :creature/species :species/human,
   :property/id :creatures/templar,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/wisp-1.png"}
-     {:file "creatures/animations/wisp-2.png"}
-     {:file "creatures/animations/wisp-3.png"}
-     {:file "creatures/animations/wisp-4.png"}),
+    ({:file "images/animations/wisp-1.png"}
+     {:file "images/animations/wisp-2.png"}
+     {:file "images/animations/wisp-3.png"}
+     {:file "images/animations/wisp-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -1924,15 +1924,15 @@
   :creature/species :species/wisp,
   :property/id :creatures/wisp,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/snake-giant-1.png"}
-     {:file "creatures/animations/snake-giant-2.png"}
-     {:file "creatures/animations/snake-giant-3.png"}
-     {:file "creatures/animations/snake-giant-4.png"}),
+    ({:file "images/animations/snake-giant-1.png"}
+     {:file "images/animations/snake-giant-2.png"}
+     {:file "images/animations/snake-giant-3.png"}
+     {:file "images/animations/snake-giant-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -1945,15 +1945,15 @@
   :creature/species :species/snake,
   :property/id :creatures/snake-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/minotaur-1.png"}
-     {:file "creatures/animations/minotaur-2.png"}
-     {:file "creatures/animations/minotaur-3.png"}
-     {:file "creatures/animations/minotaur-4.png"}),
+    ({:file "images/animations/minotaur-1.png"}
+     {:file "images/animations/minotaur-2.png"}
+     {:file "images/animations/minotaur-3.png"}
+     {:file "images/animations/minotaur-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -1966,15 +1966,15 @@
   :creature/species :species/minotaur,
   :property/id :creatures/minotaur,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/valkyrie-a-1.png"}
-     {:file "creatures/animations/valkyrie-a-2.png"}
-     {:file "creatures/animations/valkyrie-a-3.png"}
-     {:file "creatures/animations/valkyrie-a-4.png"}),
+    ({:file "images/animations/valkyrie-a-1.png"}
+     {:file "images/animations/valkyrie-a-2.png"}
+     {:file "images/animations/valkyrie-a-3.png"}
+     {:file "images/animations/valkyrie-a-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -1987,15 +1987,15 @@
   :creature/species :species/valkyrie,
   :property/id :creatures/valkyrie-a,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/toad-green-1.png"}
-     {:file "creatures/animations/toad-green-2.png"}
-     {:file "creatures/animations/toad-green-3.png"}
-     {:file "creatures/animations/toad-green-4.png"}),
+    ({:file "images/animations/toad-green-1.png"}
+     {:file "images/animations/toad-green-2.png"}
+     {:file "images/animations/toad-green-3.png"}
+     {:file "images/animations/toad-green-4.png"}),
     :looping? true},
    :entity/body {:height 5/12, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2008,15 +2008,15 @@
   :creature/species :species/toad,
   :property/id :creatures/toad-green,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/vampire-1.png"}
-     {:file "creatures/animations/vampire-2.png"}
-     {:file "creatures/animations/vampire-3.png"}
-     {:file "creatures/animations/vampire-4.png"}),
+    ({:file "images/animations/vampire-1.png"}
+     {:file "images/animations/vampire-2.png"}
+     {:file "images/animations/vampire-3.png"}
+     {:file "images/animations/vampire-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :evil,
@@ -2050,15 +2050,15 @@
   :creature/species :species/vampire,
   :property/id :creatures/vampire,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [336 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [336 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/moth-black-1.png"}
-     {:file "creatures/animations/moth-black-2.png"}
-     {:file "creatures/animations/moth-black-3.png"}
-     {:file "creatures/animations/moth-black-4.png"}),
+    ({:file "images/animations/moth-black-1.png"}
+     {:file "images/animations/moth-black-2.png"}
+     {:file "images/animations/moth-black-3.png"}
+     {:file "images/animations/moth-black-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -2071,15 +2071,15 @@
   :creature/species :species/moth,
   :property/id :creatures/moth-black,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/monk-1.png"}
-     {:file "creatures/animations/monk-2.png"}
-     {:file "creatures/animations/monk-3.png"}
-     {:file "creatures/animations/monk-4.png"}),
+    ({:file "images/animations/monk-1.png"}
+     {:file "images/animations/monk-2.png"}
+     {:file "images/animations/monk-3.png"}
+     {:file "images/animations/monk-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 35/48},
    :entity/faction :good,
@@ -2092,15 +2092,15 @@
   :creature/species :species/human,
   :property/id :creatures/monk,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/lord-b-1.png"}
-     {:file "creatures/animations/lord-b-2.png"}
-     {:file "creatures/animations/lord-b-3.png"}
-     {:file "creatures/animations/lord-b-4.png"}),
+    ({:file "images/animations/lord-b-1.png"}
+     {:file "images/animations/lord-b-2.png"}
+     {:file "images/animations/lord-b-3.png"}
+     {:file "images/animations/lord-b-4.png"}),
     :looping? true},
    :entity/body {:height 17/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2112,15 +2112,15 @@
   :creature/species :species/human,
   :property/id :creatures/lord-b,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/warden-1.png"}
-     {:file "creatures/animations/warden-2.png"}
-     {:file "creatures/animations/warden-3.png"}
-     {:file "creatures/animations/warden-4.png"}),
+    ({:file "images/animations/warden-1.png"}
+     {:file "images/animations/warden-2.png"}
+     {:file "images/animations/warden-3.png"}
+     {:file "images/animations/warden-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -2133,15 +2133,15 @@
   :creature/species :species/human,
   :property/id :creatures/warden,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/druid-1.png"}
-     {:file "creatures/animations/druid-2.png"}
-     {:file "creatures/animations/druid-3.png"}
-     {:file "creatures/animations/druid-4.png"}),
+    ({:file "images/animations/druid-1.png"}
+     {:file "images/animations/druid-2.png"}
+     {:file "images/animations/druid-3.png"}
+     {:file "images/animations/druid-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -2154,15 +2154,15 @@
   :creature/species :species/human,
   :property/id :creatures/druid,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elf-wizard-1.png"}
-     {:file "creatures/animations/elf-wizard-2.png"}
-     {:file "creatures/animations/elf-wizard-3.png"}
-     {:file "creatures/animations/elf-wizard-4.png"}),
+    ({:file "images/animations/elf-wizard-1.png"}
+     {:file "images/animations/elf-wizard-2.png"}
+     {:file "images/animations/elf-wizard-3.png"}
+     {:file "images/animations/elf-wizard-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2175,15 +2175,15 @@
   :creature/species :species/elf,
   :property/id :creatures/elf-wizard,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/skeleton-mage-1.png"}
-     {:file "creatures/animations/skeleton-mage-2.png"}
-     {:file "creatures/animations/skeleton-mage-3.png"}
-     {:file "creatures/animations/skeleton-mage-4.png"}),
+    ({:file "images/animations/skeleton-mage-1.png"}
+     {:file "images/animations/skeleton-mage-2.png"}
+     {:file "images/animations/skeleton-mage-3.png"}
+     {:file "images/animations/skeleton-mage-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2196,15 +2196,15 @@
   :creature/species :species/skeleton,
   :property/id :creatures/skeleton-mage,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/halfling-fighter-1.png"}
-     {:file "creatures/animations/halfling-fighter-2.png"}
-     {:file "creatures/animations/halfling-fighter-3.png"}
-     {:file "creatures/animations/halfling-fighter-4.png"}),
+    ({:file "images/animations/halfling-fighter-1.png"}
+     {:file "images/animations/halfling-fighter-2.png"}
+     {:file "images/animations/halfling-fighter-3.png"}
+     {:file "images/animations/halfling-fighter-4.png"}),
     :looping? true},
    :entity/body {:height 7/12, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2217,15 +2217,15 @@
   :creature/species :species/halfling,
   :property/id :creatures/halfling-fighter,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [96 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/skeleton-warrior-1.png"}
-     {:file "creatures/animations/skeleton-warrior-2.png"}
-     {:file "creatures/animations/skeleton-warrior-3.png"}
-     {:file "creatures/animations/skeleton-warrior-4.png"}),
+    ({:file "images/animations/skeleton-warrior-1.png"}
+     {:file "images/animations/skeleton-warrior-2.png"}
+     {:file "images/animations/skeleton-warrior-3.png"}
+     {:file "images/animations/skeleton-warrior-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2238,15 +2238,15 @@
   :creature/species :species/skeleton,
   :property/id :creatures/skeleton-warrior,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/halfling-thief-1.png"}
-     {:file "creatures/animations/halfling-thief-2.png"}
-     {:file "creatures/animations/halfling-thief-3.png"}
-     {:file "creatures/animations/halfling-thief-4.png"}),
+    ({:file "images/animations/halfling-thief-1.png"}
+     {:file "images/animations/halfling-thief-2.png"}
+     {:file "images/animations/halfling-thief-3.png"}
+     {:file "images/animations/halfling-thief-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2259,15 +2259,15 @@
   :creature/species :species/halfling,
   :property/id :creatures/halfling-thief,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/barbarian-m-1.png"}
-     {:file "creatures/animations/barbarian-m-2.png"}
-     {:file "creatures/animations/barbarian-m-3.png"}
-     {:file "creatures/animations/barbarian-m-4.png"}),
+    ({:file "images/animations/barbarian-m-1.png"}
+     {:file "images/animations/barbarian-m-2.png"}
+     {:file "images/animations/barbarian-m-3.png"}
+     {:file "images/animations/barbarian-m-4.png"}),
     :looping? true},
    :entity/body {:height 17/24, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -2280,15 +2280,15 @@
   :creature/species :species/barbarian,
   :property/id :creatures/barbarian-m,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elf-bowman-1.png"}
-     {:file "creatures/animations/elf-bowman-2.png"}
-     {:file "creatures/animations/elf-bowman-3.png"}
-     {:file "creatures/animations/elf-bowman-4.png"}),
+    ({:file "images/animations/elf-bowman-1.png"}
+     {:file "images/animations/elf-bowman-2.png"}
+     {:file "images/animations/elf-bowman-3.png"}
+     {:file "images/animations/elf-bowman-4.png"}),
     :looping? true},
    :entity/body {:height 37/48, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2301,15 +2301,15 @@
   :creature/species :species/elf,
   :property/id :creatures/elf-bowman,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/beetle-1.png"}
-     {:file "creatures/animations/beetle-2.png"}
-     {:file "creatures/animations/beetle-3.png"}
-     {:file "creatures/animations/beetle-4.png"}),
+    ({:file "images/animations/beetle-1.png"}
+     {:file "images/animations/beetle-2.png"}
+     {:file "images/animations/beetle-3.png"}
+     {:file "images/animations/beetle-4.png"}),
     :looping? true},
    :entity/body {:height 5/12, :solid? true, :width 1/2},
    :entity/faction :good,
@@ -2322,15 +2322,15 @@
   :creature/species :species/beetle,
   :property/id :creatures/beetle,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 480 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/bat-giant-1.png"}
-     {:file "creatures/animations/bat-giant-2.png"}
-     {:file "creatures/animations/bat-giant-3.png"}
-     {:file "creatures/animations/bat-giant-4.png"}),
+    ({:file "images/animations/bat-giant-1.png"}
+     {:file "images/animations/bat-giant-2.png"}
+     {:file "images/animations/bat-giant-3.png"}
+     {:file "images/animations/bat-giant-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -2343,15 +2343,15 @@
   :creature/species :species/bat,
   :property/id :creatures/bat-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/toad-blue-1.png"}
-     {:file "creatures/animations/toad-blue-2.png"}
-     {:file "creatures/animations/toad-blue-3.png"}
-     {:file "creatures/animations/toad-blue-4.png"}),
+    ({:file "images/animations/toad-blue-1.png"}
+     {:file "images/animations/toad-blue-2.png"}
+     {:file "images/animations/toad-blue-3.png"}
+     {:file "images/animations/toad-blue-4.png"}),
     :looping? true},
    :entity/body {:height 5/12, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2364,15 +2364,15 @@
   :creature/species :species/toad,
   :property/id :creatures/toad-blue,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/golem-stone-1.png"}
-     {:file "creatures/animations/golem-stone-2.png"}
-     {:file "creatures/animations/golem-stone-3.png"}
-     {:file "creatures/animations/golem-stone-4.png"}),
+    ({:file "images/animations/golem-stone-1.png"}
+     {:file "images/animations/golem-stone-2.png"}
+     {:file "images/animations/golem-stone-3.png"}
+     {:file "images/animations/golem-stone-4.png"}),
     :looping? true},
    :entity/body {:height 35/48, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2388,15 +2388,15 @@
   :creature/species :species/golem,
   :property/id :creatures/golem-stone,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/necromancer-1.png"}
-     {:file "creatures/animations/necromancer-2.png"}
-     {:file "creatures/animations/necromancer-3.png"}
-     {:file "creatures/animations/necromancer-4.png"}),
+    ({:file "images/animations/necromancer-1.png"}
+     {:file "images/animations/necromancer-2.png"}
+     {:file "images/animations/necromancer-3.png"}
+     {:file "images/animations/necromancer-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2409,15 +2409,15 @@
   :creature/species :species/human,
   :property/id :creatures/necromancer,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 48 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/spider-black-giant-1.png"}
-     {:file "creatures/animations/spider-black-giant-2.png"}
-     {:file "creatures/animations/spider-black-giant-3.png"}
-     {:file "creatures/animations/spider-black-giant-4.png"}),
+    ({:file "images/animations/spider-black-giant-1.png"}
+     {:file "images/animations/spider-black-giant-2.png"}
+     {:file "images/animations/spider-black-giant-3.png"}
+     {:file "images/animations/spider-black-giant-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -2430,15 +2430,15 @@
   :creature/species :species/spider,
   :property/id :creatures/spider-black-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/valkyrie-b-1.png"}
-     {:file "creatures/animations/valkyrie-b-2.png"}
-     {:file "creatures/animations/valkyrie-b-3.png"}
-     {:file "creatures/animations/valkyrie-b-4.png"}),
+    ({:file "images/animations/valkyrie-b-1.png"}
+     {:file "images/animations/valkyrie-b-2.png"}
+     {:file "images/animations/valkyrie-b-3.png"}
+     {:file "images/animations/valkyrie-b-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2451,15 +2451,15 @@
   :creature/species :species/valkyrie,
   :property/id :creatures/valkyrie-b,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 336 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/bat-1.png"}
-     {:file "creatures/animations/bat-2.png"}
-     {:file "creatures/animations/bat-3.png"}
-     {:file "creatures/animations/bat-4.png"}),
+    ({:file "images/animations/bat-1.png"}
+     {:file "images/animations/bat-2.png"}
+     {:file "images/animations/bat-3.png"}
+     {:file "images/animations/bat-4.png"}),
     :looping? true},
    :entity/body {:height 31/48, :solid? true, :width 13/24},
    :entity/faction :good,
@@ -2472,15 +2472,15 @@
   :creature/species :species/bat,
   :property/id :creatures/bat,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 192 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/snake-1.png"}
-     {:file "creatures/animations/snake-2.png"}
-     {:file "creatures/animations/snake-3.png"}
-     {:file "creatures/animations/snake-4.png"}),
+    ({:file "images/animations/snake-1.png"}
+     {:file "images/animations/snake-2.png"}
+     {:file "images/animations/snake-3.png"}
+     {:file "images/animations/snake-4.png"}),
     :looping? true},
    :entity/body {:height 25/48, :solid? true, :width 31/48},
    :entity/faction :good,
@@ -2500,15 +2500,15 @@
   :creature/species :species/snake,
   :property/id :creatures/snake,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 240 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 240 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/flies-1.png"}
-     {:file "creatures/animations/flies-2.png"}
-     {:file "creatures/animations/flies-3.png"}
-     {:file "creatures/animations/flies-4.png"}),
+    ({:file "images/animations/flies-1.png"}
+     {:file "images/animations/flies-2.png"}
+     {:file "images/animations/flies-3.png"}
+     {:file "images/animations/flies-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 25/48},
    :entity/faction :good,
@@ -2521,15 +2521,15 @@
   :creature/species :species/flies,
   :property/id :creatures/flies,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/prisoner-a-1.png"}
-     {:file "creatures/animations/prisoner-a-2.png"}
-     {:file "creatures/animations/prisoner-a-3.png"}
-     {:file "creatures/animations/prisoner-a-4.png"}),
+    ({:file "images/animations/prisoner-a-1.png"}
+     {:file "images/animations/prisoner-a-2.png"}
+     {:file "images/animations/prisoner-a-3.png"}
+     {:file "images/animations/prisoner-a-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2542,15 +2542,15 @@
   :creature/species :species/human,
   :property/id :creatures/prisoner-a,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/beholder-deep-1.png"}
-     {:file "creatures/animations/beholder-deep-2.png"}
-     {:file "creatures/animations/beholder-deep-3.png"}
-     {:file "creatures/animations/beholder-deep-4.png"}),
+    ({:file "images/animations/beholder-deep-1.png"}
+     {:file "images/animations/beholder-deep-2.png"}
+     {:file "images/animations/beholder-deep-3.png"}
+     {:file "images/animations/beholder-deep-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -2563,15 +2563,15 @@
   :creature/species :species/beholder,
   :property/id :creatures/beholder-deep,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 288 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/skeleton-1.png"}
-     {:file "creatures/animations/skeleton-2.png"}
-     {:file "creatures/animations/skeleton-3.png"}
-     {:file "creatures/animations/skeleton-4.png"}),
+    ({:file "images/animations/skeleton-1.png"}
+     {:file "images/animations/skeleton-2.png"}
+     {:file "images/animations/skeleton-3.png"}
+     {:file "images/animations/skeleton-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2584,15 +2584,15 @@
   :creature/species :species/skeleton,
   :property/id :creatures/skeleton,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [0 144 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elemental-water-1.png"}
-     {:file "creatures/animations/elemental-water-2.png"}
-     {:file "creatures/animations/elemental-water-3.png"}
-     {:file "creatures/animations/elemental-water-4.png"}),
+    ({:file "images/animations/elemental-water-1.png"}
+     {:file "images/animations/elemental-water-2.png"}
+     {:file "images/animations/elemental-water-3.png"}
+     {:file "images/animations/elemental-water-4.png"}),
     :looping? true},
    :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -2605,15 +2605,15 @@
   :creature/species :species/elemental,
   :property/id :creatures/elemental-water,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/cultist-1.png"}
-     {:file "creatures/animations/cultist-2.png"}
-     {:file "creatures/animations/cultist-3.png"}
-     {:file "creatures/animations/cultist-4.png"}),
+    ({:file "images/animations/cultist-1.png"}
+     {:file "images/animations/cultist-2.png"}
+     {:file "images/animations/cultist-3.png"}
+     {:file "images/animations/cultist-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2626,15 +2626,15 @@
   :creature/species :species/human,
   :property/id :creatures/cultist,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 0 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/mummy-pharao-1.png"}
-     {:file "creatures/animations/mummy-pharao-2.png"}
-     {:file "creatures/animations/mummy-pharao-3.png"}
-     {:file "creatures/animations/mummy-pharao-4.png"}),
+    ({:file "images/animations/mummy-pharao-1.png"}
+     {:file "images/animations/mummy-pharao-2.png"}
+     {:file "images/animations/mummy-pharao-3.png"}
+     {:file "images/animations/mummy-pharao-4.png"}),
     :looping? true},
    :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2647,15 +2647,15 @@
   :creature/species :species/mummy,
   :property/id :creatures/mummy-pharao,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/halfling-wizard-1.png"}
-     {:file "creatures/animations/halfling-wizard-2.png"}
-     {:file "creatures/animations/halfling-wizard-3.png"}
-     {:file "creatures/animations/halfling-wizard-4.png"}),
+    ({:file "images/animations/halfling-wizard-1.png"}
+     {:file "images/animations/halfling-wizard-2.png"}
+     {:file "images/animations/halfling-wizard-3.png"}
+     {:file "images/animations/halfling-wizard-4.png"}),
     :looping? true},
    :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2668,15 +2668,15 @@
   :creature/species :species/halfling,
   :property/id :creatures/halfling-wizard,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [144 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/drow-bowman-1.png"}
-     {:file "creatures/animations/drow-bowman-2.png"}
-     {:file "creatures/animations/drow-bowman-3.png"}
-     {:file "creatures/animations/drow-bowman-4.png"}),
+    ({:file "images/animations/drow-bowman-1.png"}
+     {:file "images/animations/drow-bowman-2.png"}
+     {:file "images/animations/drow-bowman-3.png"}
+     {:file "images/animations/drow-bowman-4.png"}),
     :looping? true},
    :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2689,15 +2689,15 @@
   :creature/species :species/drow,
   :property/id :creatures/drow-bowman,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [432 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/worm-giant-1.png"}
-     {:file "creatures/animations/worm-giant-2.png"}
-     {:file "creatures/animations/worm-giant-3.png"}
-     {:file "creatures/animations/worm-giant-4.png"}),
+    ({:file "images/animations/worm-giant-1.png"}
+     {:file "images/animations/worm-giant-2.png"}
+     {:file "images/animations/worm-giant-3.png"}
+     {:file "images/animations/worm-giant-4.png"}),
     :looping? true},
    :entity/body {:height 17/24, :solid? true, :width 5/6},
    :entity/faction :good,
@@ -2710,15 +2710,15 @@
   :creature/species :species/worm,
   :property/id :creatures/worm-giant,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [288 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/merchant-m-1.png"}
-     {:file "creatures/animations/merchant-m-2.png"}
-     {:file "creatures/animations/merchant-m-3.png"}
-     {:file "creatures/animations/merchant-m-4.png"}),
+    ({:file "images/animations/merchant-m-1.png"}
+     {:file "images/animations/merchant-m-2.png"}
+     {:file "images/animations/merchant-m-3.png"}
+     {:file "images/animations/merchant-m-4.png"}),
     :looping? true},
    :entity/body {:height 5/8, :solid? true, :width 2/3},
    :entity/faction :good,
@@ -2731,15 +2731,15 @@
   :creature/species :species/human,
   :property/id :creatures/merchant-m,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 576 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/elf-1.png"}
-     {:file "creatures/animations/elf-2.png"}
-     {:file "creatures/animations/elf-3.png"}
-     {:file "creatures/animations/elf-4.png"}),
+    ({:file "images/animations/elf-1.png"}
+     {:file "images/animations/elf-2.png"}
+     {:file "images/animations/elf-3.png"}
+     {:file "images/animations/elf-4.png"}),
     :looping? true},
    :entity/body {:height 17/24, :solid? true, :width 11/16},
    :entity/faction :good,
@@ -2752,15 +2752,15 @@
   :creature/species :species/elf,
   :property/id :creatures/elf,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [192 96 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/worm-1.png"}
-     {:file "creatures/animations/worm-2.png"}
-     {:file "creatures/animations/worm-3.png"}
-     {:file "creatures/animations/worm-4.png"}),
+    ({:file "images/animations/worm-1.png"}
+     {:file "images/animations/worm-2.png"}
+     {:file "images/animations/worm-3.png"}
+     {:file "images/animations/worm-4.png"}),
     :looping? true},
    :entity/body {:height 1/2, :solid? true, :width 7/12},
    :entity/faction :good,
@@ -2773,15 +2773,15 @@
   :creature/species :species/worm,
   :property/id :creatures/worm,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [240 528 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/halfling-sling-1.png"}
-     {:file "creatures/animations/halfling-sling-2.png"}
-     {:file "creatures/animations/halfling-sling-3.png"}
-     {:file "creatures/animations/halfling-sling-4.png"}),
+    ({:file "images/animations/halfling-sling-1.png"}
+     {:file "images/animations/halfling-sling-2.png"}
+     {:file "images/animations/halfling-sling-3.png"}
+     {:file "images/animations/halfling-sling-4.png"}),
     :looping? true},
    :entity/body {:height 7/12, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2794,15 +2794,15 @@
   :creature/species :species/halfling,
   :property/id :creatures/halfling-sling,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [48 384 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]}}
  {:creature/entity
   {:entity/animation
    {:frame-duration 0.1,
     :frames
-    ({:file "creatures/animations/golem-ice-1.png"}
-     {:file "creatures/animations/golem-ice-2.png"}
-     {:file "creatures/animations/golem-ice-3.png"}
-     {:file "creatures/animations/golem-ice-4.png"}),
+    ({:file "images/animations/golem-ice-1.png"}
+     {:file "images/animations/golem-ice-2.png"}
+     {:file "images/animations/golem-ice-3.png"}
+     {:file "images/animations/golem-ice-4.png"}),
     :looping? true},
    :entity/body {:height 3/4, :solid? true, :width 17/24},
    :entity/faction :good,
@@ -2815,1332 +2815,1332 @@
   :creature/species :species/golem,
   :property/id :creatures/golem-ice,
   :property/image
-  {:file "creatures/images.png", :sub-image-bounds [384 432 48 48]}}
+  {:file "images/creatures.png", :sub-image-bounds [384 432 48 48]}}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 144 48 48]},
   :property/pretty-name "Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-small-gold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 384 48 48]},
   :property/pretty-name "Gold Small Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-cloth,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 432 48 48]},
   :property/pretty-name "Cloth Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 240 48 48]},
   :property/pretty-name "Heater Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/axe,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 96 48 48]},
   :property/pretty-name "Axe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/coin-copper,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 0 48 48]},
   :property/pretty-name "Copper Coin"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-ruby,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 384 48 48]},
   :property/pretty-name "Ruby Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-dragon,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 336 48 48]},
   :property/pretty-name "Dragon Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/mystic-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 624 48 48]},
   :property/pretty-name "Boot Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/cloth-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 432 48 48]},
   :property/pretty-name "Helm Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-blood,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 336 48 48]},
   :property/pretty-name "Blood Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/chain-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 432 48 48]},
   :property/pretty-name "Helm Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 288 48 48]},
   :property/pretty-name "Great Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/dagger,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 96 48 48]},
   :property/pretty-name "Dagger"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-large-open,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 384 48 48]},
   :property/pretty-name "Open Large Skull"}
  {:item/modifiers {:modifier/movement-speed {:op/mult 0.4}},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-royal,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 528 48 48]},
   :property/pretty-name "Royal Cloak"}
  {:item/modifiers {:modifier/movement-speed {:op/inc 0.5}},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 288 48 48]},
   :property/pretty-name "Buckler Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/gold-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 528 48 48]},
   :property/pretty-name "Leg Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/handaxe,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 96 48 48]},
   :property/pretty-name "Handaxe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/flask-red,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [816 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [816 48 48 48]},
   :property/pretty-name "Red Flask"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 288 48 48]},
   :property/pretty-name "Great Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-ruby,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 336 48 48]},
   :property/pretty-name "Ruby Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/wild-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 624 48 48]},
   :property/pretty-name "Boot Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/cloth-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 576 48 48]},
   :property/pretty-name "Glove Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/studded-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 528 48 48]},
   :property/pretty-name "Leg Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 288 48 48]},
   :property/pretty-name "Heater Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/coin-gold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 0 48 48]},
   :property/pretty-name "Gold Coin"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-cross,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 384 48 48]},
   :property/pretty-name "Cross Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-eye,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 624 48 48]},
   :property/pretty-name "Eye Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-hammer-sun,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 192 48 48]},
   :property/pretty-name "Sun Hammer Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-blue,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 0 48 48]},
   :property/pretty-name "Blue Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/club-spiked,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 96 48 48]},
   :property/pretty-name "Spiked Club"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-tourmaline,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 384 48 48]},
   :property/pretty-name "Tourmaline Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/plate-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 528 48 48]},
   :property/pretty-name "Leg Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 288 48 48]},
   :property/pretty-name "Buckler Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-azure,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 336 48 48]},
   :property/pretty-name "Azure Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/royal-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 624 48 48]},
   :property/pretty-name "Boot Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-flame,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 192 48 48]},
   :property/pretty-name "Flame Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/mystic-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 480 48 48]},
   :property/pretty-name "Chest Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/mystic-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 528 48 48]},
   :property/pretty-name "Leg Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/hammer-exotic1,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 144 48 48]},
   :property/pretty-name "Exotic1 Hammer"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/crossbow,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 144 48 48]},
   :property/pretty-name "Crossbow"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/dirk,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 96 48 48]},
   :property/pretty-name "Dirk"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 240 48 48]},
   :property/pretty-name "Buckler Mystic Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-spear-blood,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 192 48 48]},
   :property/pretty-name "Blood Spear Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-ornate,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 336 48 48]},
   :property/pretty-name "Ornate Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-diamond,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 336 48 48]},
   :property/pretty-name "Diamond Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-small-blood,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 384 48 48]},
   :property/pretty-name "Blood Small Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/royal-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 432 48 48]},
   :property/pretty-name "Helm Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-black,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 0 48 48]},
   :property/pretty-name "Black Potion"}
  {:item/modifiers {:modifier/damage-deal {:op/val-mult 3}},
   :item/slot :inventory.slot/leg,
   :property/id :items/chain-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 528 48 48]},
   :property/pretty-name "Leg Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-sapphire,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 384 48 48]},
   :property/pretty-name "Sapphire Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 288 48 48]},
   :property/pretty-name "Great Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/studded-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 576 48 48]},
   :property/pretty-name "Glove Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/cloth-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 528 48 48]},
   :property/pretty-name "Leg Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-red,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 0 48 48]},
   :property/pretty-name "Red Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-emerald,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 336 48 48]},
   :property/pretty-name "Emerald Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [864 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [864 240 48 48]},
   :property/pretty-name "Kite Mystic Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/leather-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 624 48 48]},
   :property/pretty-name "Boot Leather"}
  {:item/modifiers {:modifier/hp {:op/max-inc 2}},
   :item/slot :inventory.slot/glove,
   :property/id :items/chain-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 576 48 48]},
   :property/pretty-name "Glove Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/spear,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 144 48 48]},
   :property/pretty-name "Spear"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-flame,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 336 48 48]},
   :property/pretty-name "Flame Ring"}
  {:item/modifiers {:modifier/damage-deal {:op/max-mult 1}},
   :item/slot :inventory.slot/helm,
   :property/id :items/studded-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 432 48 48]},
   :property/pretty-name "Helm Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-silver,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 0 48 48]},
   :property/pretty-name "Silver Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-red-half,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [816 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [816 0 48 48]},
   :property/pretty-name "Half Red Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-empty,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 48 48 48]},
   :property/pretty-name "Empty Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-leather,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 480 48 48]},
   :property/pretty-name "Leather Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-gold-open,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 48 48 48]},
   :property/pretty-name "Open Gold Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-amethyst,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 384 48 48]},
   :property/pretty-name "Amethyst Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-red,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 0 48 48]},
   :property/pretty-name "Red Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-latch,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 48 48 48]},
   :property/pretty-name "Latch Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic2,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 96 48 48]},
   :property/pretty-name "Exotic2 Sword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-bone,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 0 48 48]},
   :property/pretty-name "Bone Key"}
  {:item/modifiers {:modifier/hp {:op/max-inc -200}},
   :item/slot :inventory.slot/helm,
   :property/id :items/blood-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Helm Blood"}
  {:item/modifiers {:modifier/damage-receive {:op/inc -1}},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [912 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [912 240 48 48]},
   :property/pretty-name "Great Mystic Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/plate-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 432 48 48]},
   :property/pretty-name "Helm Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/plate-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 624 48 48]},
   :property/pretty-name "Boot Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/shortbow,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 144 48 48]},
   :property/pretty-name "Shortbow"}
  {:item/modifiers {:modifier/mana {:op/max-mult -0.5}},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-copper,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 336 48 48]},
   :property/pretty-name "Copper Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/wild-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 528 48 48]},
   :property/pretty-name "Leg Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-amethyst,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 384 48 48]},
   :property/pretty-name "Amethyst Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/leather-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 480 48 48]},
   :property/pretty-name "Chest Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 240 48 48]},
   :property/pretty-name "Heater Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/torch-lit,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 48 48 48]},
   :property/pretty-name "Lit Torch"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/mace,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 96 48 48]},
   :property/pretty-name "Mace"}
  {:item/modifiers {:modifier/cast-speed {:op/inc 0.5}},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-gold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Gold Ring"}
  {:item/modifiers {:modifier/hp {:op/max-inc 10, :op/max-mult 0.05}},
   :item/slot :inventory.slot/boot,
   :property/id :items/cloth-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 624 48 48]},
   :property/pretty-name "Boot Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-brown,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 48 48 48]},
   :property/pretty-name "Brown Book"}
  {:item/modifiers {:modifier/strength {:op/inc 5}},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-eye,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 384 48 48]},
   :property/pretty-name "Eye Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-gold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 0 48 48]},
   :property/pretty-name "Gold Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/stiletto,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 96 48 48]},
   :property/pretty-name "Stiletto"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 288 48 48]},
   :property/pretty-name "Heater Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 96 48 48]},
   :property/pretty-name "Sword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-evil,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 48 48 48]},
   :property/pretty-name "Evil Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-silver-,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 48 48 48]},
   :property/pretty-name "Silver Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/leather-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 576 48 48]},
   :property/pretty-name "Glove Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-hellfire,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 192 48 48]},
   :property/pretty-name "Hellfire Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/flask-blue,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [864 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [864 48 48 48]},
   :property/pretty-name "Blue Flask"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/wild-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 432 48 48]},
   :property/pretty-name "Helm Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/wild-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 576 48 48]},
   :property/pretty-name "Glove Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-small,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 384 48 48]},
   :property/pretty-name "Small Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-cloud,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 336 48 48]},
   :property/pretty-name "Cloud Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-ornate,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 384 48 48]},
   :property/pretty-name "Ornate Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 240 48 48]},
   :property/pretty-name "Great Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 240 48 48]},
   :property/pretty-name "Buckler Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-empty,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 0 48 48]},
   :property/pretty-name "Empty Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-green,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 0 48 48]},
   :property/pretty-name "Green Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 240 48 48]},
   :property/pretty-name "Great Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-ankh,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 144 48 48]},
   :property/pretty-name "Ankh Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-silver-open,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 48 48 48]},
   :property/pretty-name "Open Silver Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-venom,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 192 48 48]},
   :property/pretty-name "Venom Staff Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greataxe,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 96 48 48]},
   :property/pretty-name "Greataxe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/blood-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 480 48 48]},
   :property/pretty-name "Chest Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-gold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 48 48 48]},
   :property/pretty-name "Gold Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-vorpal,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 192 48 48]},
   :property/pretty-name "Vorpal Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-dark,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [864 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [864 384 48 48]},
   :property/pretty-name "Dark Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-winged,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 192 48 48]},
   :property/pretty-name "Winged Staff Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-ruby,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 384 48 48]},
   :property/pretty-name "Ruby Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 240 48 48]},
   :property/pretty-name "Buckler Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-blood,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 624 48 48]},
   :property/pretty-name "Blood Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/chain-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 624 48 48]},
   :property/pretty-name "Boot Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-white,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 0 48 48]},
   :property/pretty-name "White Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 240 48 48]},
   :property/pretty-name "Buckler Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/quarterstaff,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 144 48 48]},
   :property/pretty-name "Quarterstaff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-large-closed,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 384 48 48]},
   :property/pretty-name "Closed Large Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-cold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 336 48 48]},
   :property/pretty-name "Cold Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/blood-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 624 48 48]},
   :property/pretty-name "Boot Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-ornate,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 528 48 48]},
   :property/pretty-name "Ornate Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/flask-green,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [912 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [912 48 48 48]},
   :property/pretty-name "Green Flask"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/axe-exotic1,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 144 48 48]},
   :property/pretty-name "Exotic1 Axe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/falchion,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 96 48 48]},
   :property/pretty-name "Falchion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/drumstick,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 48 48 48]},
   :property/pretty-name "Drumstick"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-lightning,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 192 48 48]},
   :property/pretty-name "Lightning Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 288 48 48]},
   :property/pretty-name "Heater Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 240 48 48]},
   :property/pretty-name "Kite Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-axe-frost,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 192 48 48]},
   :property/pretty-name "Frost Axe Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/leather-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 528 48 48]},
   :property/pretty-name "Leg Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-crimson,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [816 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [816 336 48 48]},
   :property/pretty-name "Crimson Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-gold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 432 48 48]},
   :property/pretty-name "Gold Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic1,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 96 48 48]},
   :property/pretty-name "Exotic1 Sword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 288 48 48]},
   :property/pretty-name "Heater Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sling,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 144 48 48]},
   :property/pretty-name "Sling"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-winged,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 144 48 48]},
   :property/pretty-name "Winged Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/chain-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 480 48 48]},
   :property/pretty-name "Chest Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/hammer,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 96 48 48]},
   :property/pretty-name "Hammer"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-sun,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [864 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [864 336 48 48]},
   :property/pretty-name "Sun Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-pearl,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Pearl Ring"}
  {:item/modifiers {:modifier/strength {:op/inc 3}},
   :item/slot :inventory.slot/glove,
   :property/id :items/blood-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 576 48 48]},
   :property/pretty-name "Glove Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-acid,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 192 48 48]},
   :property/pretty-name "Acid Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/gold-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 432 48 48]},
   :property/pretty-name "Helm Gold"}
  {:item/modifiers {:modifier/movement-speed {:op/inc 12}},
   :item/slot :inventory.slot/boot,
   :property/id :items/gold-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 624 48 48]},
   :property/pretty-name "Boot Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-emerald,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 384 48 48]},
   :property/pretty-name "Emerald Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/blood-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 528 48 48]},
   :property/pretty-name "Leg Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/longbow,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 144 48 48]},
   :property/pretty-name "Longbow"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/studded-boot,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 624 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 624 48 48]},
   :property/pretty-name "Boot Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 240 48 48]},
   :property/pretty-name "Kite Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 240 48 48]},
   :property/pretty-name "Great Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 288 48 48]},
   :property/pretty-name "Kite Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-glow,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 576 48 48]},
   :property/pretty-name "Glow Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-emerald,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 384 48 48]},
   :property/pretty-name "Emerald Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-chaos,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 192 48 48]},
   :property/pretty-name "Chaos Staff Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/royal-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 480 48 48]},
   :property/pretty-name "Chest Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 288 48 48]},
   :property/pretty-name "Great Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/royal-leg,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 528 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 528 48 48]},
   :property/pretty-name "Leg Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/cloth-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 480 48 48]},
   :property/pretty-name "Chest Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-bow-horned,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 192 48 48]},
   :property/pretty-name "Horned Bow Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-red,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 48 48 48]},
   :property/pretty-name "Red Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 240 48 48]},
   :property/pretty-name "Kite Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-blue,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 48 48 48]},
   :property/pretty-name "Blue Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/wild-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 480 48 48]},
   :property/pretty-name "Chest Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/coin-silver,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [672 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [672 0 48 48]},
   :property/pretty-name "Silver Coin"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-black,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 48 48 48]},
   :property/pretty-name "Black Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-branch,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 144 48 48]},
   :property/pretty-name "Branch Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/club,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 96 48 48]},
   :property/pretty-name "Club"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 288 48 48]},
   :property/pretty-name "Buckler Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-blue,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 0 48 48]},
   :property/pretty-name "Blue Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-empty,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 0 48 48]},
   :property/pretty-name "Empty Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-great,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 240 48 48]},
   :property/pretty-name "Great Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-green-half,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [912 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [912 0 48 48]},
   :property/pretty-name "Half Green Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greatmace,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 96 48 48]},
   :property/pretty-name "Greatmace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-jeweled,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 144 48 48]},
   :property/pretty-name "Jeweled Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/royal-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 576 48 48]},
   :property/pretty-name "Glove Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/trident,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 144 48 48]},
   :property/pretty-name "Trident"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/studded-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 480 48 48]},
   :property/pretty-name "Chest Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-sky,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 336 48 48]},
   :property/pretty-name "Sky Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/plate-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 576 48 48]},
   :property/pretty-name "Glove Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-silver,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 336 48 48]},
   :property/pretty-name "Silver Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/mystic-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 432 48 48]},
   :property/pretty-name "Helm Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-mystic,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [816 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [816 384 48 48]},
   :property/pretty-name "Mystic Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/plate-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 480 48 48]},
   :property/pretty-name "Chest Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/maul,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 96 48 48]},
   :property/pretty-name "Maul"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 288 48 48]},
   :property/pretty-name "Kite Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-onyx,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [768 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [768 336 48 48]},
   :property/pretty-name "Onyx Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/gold-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 576 48 48]},
   :property/pretty-name "Glove Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [384 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [384 240 48 48]},
   :property/pretty-name "Buckler Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-green-full,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [960 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [960 0 48 48]},
   :property/pretty-name "Full Green Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-tourmaline,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 384 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 384 48 48]},
   :property/pretty-name "Tourmaline Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/lance,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [144 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [144 144 48 48]},
   :property/pretty-name "Lance"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greatspear,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 144 48 48]},
   :property/pretty-name "Greatspear"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 288 48 48]},
   :property/pretty-name "Kite Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-red-full,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [864 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [864 0 48 48]},
   :property/pretty-name "Full Red Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-amethyst,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 336 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 336 48 48]},
   :property/pretty-name "Amethyst Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/leather-helm,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [48 432 48 48]},
+  {:file "images/items.png", :sub-image-bounds [48 432 48 48]},
   :property/pretty-name "Helm Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/satchel,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [720 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [720 48 48 48]},
   :property/pretty-name "Satchel"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-tattered,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [528 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [528 480 48 48]},
   :property/pretty-name "Tattered Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/broadsword,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 96 48 48]},
   :property/pretty-name "Broadsword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-green,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 48 48 48]},
   :property/pretty-name "Green Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-silver-empty,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [576 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [576 48 48 48]},
   :property/pretty-name "Empty Silver Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/torch,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [624 48 48 48]},
+  {:file "images/items.png", :sub-image-bounds [624 48 48 48]},
   :property/pretty-name "Torch"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 240 48 48]},
   :property/pretty-name "Heater Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 240 48 48]},
   :property/pretty-name "Kite Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/cross,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 144 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 144 48 48]},
   :property/pretty-name "Cross"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-ornate,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 0 48 48]},
   :property/pretty-name "Ornate Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/mystic-glove,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [432 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [432 576 48 48]},
   :property/pretty-name "Glove Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-green,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [192 0 48 48]},
+  {:file "images/items.png", :sub-image-bounds [192 0 48 48]},
   :property/pretty-name "Green Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-cold,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [336 192 48 48]},
+  {:file "images/items.png", :sub-image-bounds [336 192 48 48]},
   :property/pretty-name "Cold Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-kite,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [96 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [96 288 48 48]},
   :property/pretty-name "Kite Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [240 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [240 240 48 48]},
   :property/pretty-name "Heater Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-fur,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [480 576 48 48]},
+  {:file "images/items.png", :sub-image-bounds [480 576 48 48]},
   :property/pretty-name "Fur Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-buckler,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [0 288 48 48]},
+  {:file "images/items.png", :sub-image-bounds [0 288 48 48]},
   :property/pretty-name "Buckler Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic3,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [816 96 48 48]},
+  {:file "images/items.png", :sub-image-bounds [816 96 48 48]},
   :property/pretty-name "Exotic3 Sword"}
  {:item/modifiers
   {:modifier/armor-save {:op/inc 0.1},
@@ -4150,13 +4150,13 @@
   :item/slot :inventory.slot/chest,
   :property/id :items/gold-chest,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [288 480 48 48]},
+  {:file "images/items.png", :sub-image-bounds [288 480 48 48]},
   :property/pretty-name "Chest Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-heater,
   :property/image
-  {:file "items/images.png", :sub-image-bounds [816 240 48 48]},
+  {:file "images/items.png", :sub-image-bounds [816 240 48 48]},
   :property/pretty-name "Heater Mystic Shield"}
  {:property/id :worlds/first-level,
   :world/map-size 3,
@@ -4166,51 +4166,51 @@
  {:property/animation
   {:frame-duration 0.05,
    :frames
-   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [144 0 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [192 0 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [240 0 48 48]}),
+   ({:file "images/uf_FX_impact.png", :sub-image-bounds [144 0 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [192 0 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [240 0 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/damage,
   :property/sound "sounds/bfxr_normalhit.wav"}
  {:property/animation
   {:frame-duration 0.025,
    :frames
-   ({:file "fx/uf_FX.png", :sub-image-bounds [0 168 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [24 168 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [48 168 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [72 168 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [96 168 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [120 168 24 24]}),
+   ({:file "images/uf_FX.png", :sub-image-bounds [0 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [24 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [48 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [72 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [96 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [120 168 24 24]}),
    :looping? nil},
   :property/id :audiovisuals/hit-wall,
   :property/sound "sounds/bfxr_projectile_wallhit.wav"}
  {:property/animation
   {:frame-duration 0.05,
    :frames
-   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [384 48 48 48]}),
+   ({:file "images/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [384 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/unused,
   :property/sound "sounds/bfxr_curse.wav"}
  {:property/animation
   {:frame-duration 0.05,
    :frames
-   ({:file "fx/uf_FX.png", :sub-image-bounds [96 144 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [120 144 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [144 144 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [168 144 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [192 144 24 24]}
-    {:file "fx/uf_FX.png", :sub-image-bounds [216 144 24 24]}),
+   ({:file "images/uf_FX.png", :sub-image-bounds [96 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [120 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [144 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [168 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [192 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [216 144 24 24]}),
    :looping? nil},
   :property/id :audiovisuals/creature-die,
   :property/sound "sounds/bfxr_defaultmonsterdeath.wav"}
  {:property/animation
   {:frame-duration 0.05,
    :frames
-   ({:file "fx/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
-    {:file "fx/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
+   ({:file "images/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [96 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/hit-ground,
   :property/sound "sounds/bfxr_fisthit.wav"}
@@ -4221,12 +4221,12 @@
   :projectile/speed 10,
   :property/id :projectiles/black,
   :property/image
-  {:file "fx/uf_FX.png", :sub-image-bounds [24 288 24 24]}}
+  {:file "images/uf_FX.png", :sub-image-bounds [24 288 24 24]}}
  {:projectile/effects {:effect/kill true},
   :projectile/max-range 15,
   :projectile/piercing? true,
   :projectile/speed 10,
   :property/id :projectiles/double-fireball,
   :property/image
-  {:file "fx/oryx_16bit_scifi_FX_lg_trans.png",
+  {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
    :sub-image-bounds [32 192 32 32]}})

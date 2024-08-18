@@ -3,7 +3,7 @@
 
 (defn ->background-image [ctx]
   (ctx/->image-widget ctx
-                      (ctx/create-image ctx "ui/moon_background.png")
+                      (ctx/create-image ctx "images/moon_background.png")
                       {:fill-parent? true
                        :scaling :fill
                        :align :center}))
