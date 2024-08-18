@@ -155,15 +155,6 @@
                   operation operations]
               (info-text modifier-k operation))))
 
-; TODO 2 times (apply +)
-; => converge it ?
-; also 'bounds' would be after apply + so it shows also @ stats modifiers info text ?
-; so allow modifiers to add movement speed > 10
-; but then bound it
-; or don't allow such high modifier values to begin with to exist in the game properties ?
-
-; also sort by operation order
-; and stat text info order itself
 (defn- stats-modifiers-info-text [stats-modifiers]
   (let [text-parts (for [[modifier-k operations] stats-modifiers
                          [operation-k values] operations
@@ -185,6 +176,11 @@
 
 (comment
  (and
+  (= (->effective-value [5 10]
+                        :modifier/damage-deal
+                        {:stats/modifiers {:modifier/damage-deal {:op/val-inc [30]
+                                                                  :op/val-mult [0.5]}}})
+     [52 52])
   (= (->effective-value [5 10]
                         :modifier/damage-deal
                         {:stats/modifiers {:modifier/damage-deal {:op/val-inc [30]}
@@ -213,54 +209,19 @@
   (when-let [base-value (stat-k stats)]
     (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
 
-(comment
- (set! *print-level* nil)
- ; only lady/lord a&b dont have hp/mana/movement-speed ....
- ; => check if it can be optional
- ; => default-values move to stats ...
- (map :property/id
-      (filter #(let [{:stats/keys [hp mana movement-speed]} (:entity/stats (:creature/entity %))
-
-                     rslt (not (and hp mana movement-speed))
-                     ]
-                 (println [hp mana movement-speed])
-                 (println rslt)
-                 rslt
-                 )
-              (api.context/all-properties @app.state/current-context :properties/creature)))
- )
-
 ; default-values explicit @ stat
 ; cast-attack speed not interesting / hide ? or on dexterity ?
-
+; armor-pierce move into an hit-effect
 (def ^:private stats-info-text-order
-  ; hp/mana/movement-speed given for all entities ?
-  ; but maybe would be good to have 'required' key ....
-  ; also default values defined with the stat itself ?
-  ; armor-pierce move out of here ...
   [:stats/hp ; made optional but bug w. projectile transact damage anyway not checking usable?
    :stats/mana ; made optional @ active-skill
-   :stats/movement-speed
+   :stats/movement-speed ; optional ? default-value?
    :stats/strength  ; default value 0
    :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
    :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
    :stats/armor-save ; default-value 0
    :stats/armor-pierce ; default-value 0
    ])
-
-; TODO use data/components
-; and pass :optional or not ....
-; see where else we use data/components ....
-; or make it into the component itself if optional or not
-; but depends on usage ?
-; possible different usage component at different places?
-; e.g. audiovisual ?
-
-; or make even hp or movement-speed optional
-; for example then cannot attack the princess ... ?
-
-; then the create component here have to move into the component itself.
-
 
 ; widgets / icons ? (see WoW )
 ; * HP color based on ratio like hp bar samey (take same color definitions etc.)
