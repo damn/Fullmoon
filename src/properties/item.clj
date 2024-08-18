@@ -12,18 +12,6 @@
                                                                         (float 0.52)
                                                                         (float 1)))
 
-#_(com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
-                                        (com.badlogic.gdx.graphics.Color. (float 0.38)
-                                                                          (float 0.47)
-                                                                          (float 1)
-                                                                          (float 1)))
-
-(defn- modifier-text [modifiers]
-  (str/join "\n"
-            (for [[modifier-k operations] modifiers
-                  operation operations]
-              (entity.stats/info-text modifier-k operation))))
-
 (defcomponent :properties/item {}
   (properties/create [_]
 
@@ -55,7 +43,7 @@
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
                 (when (seq modifiers)
-                  (modifier-text modifiers))])}))
+                  (entity.stats/modifiers-text modifiers))])}))
 
 ; TODO use image w. shadows spritesheet
 (defmethod transact! :tx.entity/item  [[_ position item] _ctx]

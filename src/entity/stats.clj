@@ -44,65 +44,69 @@
 (defmethod transact! :tx/reverse-modifiers [[_ entity modifiers] _ctx]
   (txs-update-modifiers entity modifiers remove-value))
 
-(defn- ->pos-int [v]
-  (-> v int (max 0)))
-
-(defn- val-max-op-k->parts [op-k]
-  (mapv keyword (str/split (name op-k) #"-")))
-
-(comment
- (= (val-max-op-k->parts :op/val-inc) [:val :inc])
- )
-
 (defsystem operation-text [_])
 (defsystem apply-operation [_ base-value])
 (defsystem operation-order [_])
 
-(defn- apply-val-max-operation [[operation-k value] val-max]
-  {:post [(m/validate val-max-schema %)]}
-  (assert (m/validate val-max-schema val-max)
-          (str "Invalid val-max-schema: " (pr-str val-max)))
-  (let [[val-or-max inc-or-mult] (val-max-op-k->parts operation-k)
-        f #(apply-operation [(keyword "op" (name inc-or-mult)) value] %)
-        [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
-        v  (->pos-int v)
-        mx (->pos-int mx)]
-    (case val-or-max
-      :val [v (max v mx)]
-      :max [(min v mx) mx])))
-
-(defn- ->percent [v]
-  (str (int (* 100 v)) "%"))
-
-(defcomponent :op/inc {:widget :text-field :schema number?} ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
-  (operation-text [[_ value]] (str value " "))
-  (apply-operation [[_ value] base-value] (+ base-value value))
+(defcomponent :op/inc {:widget :text-field :schema number?}
+  (operation-text [[_ value]]
+    (str value))
+  (apply-operation [[_ value] base-value]
+    (+ base-value value))
   (operation-order [_] 0))
 
 (defcomponent :op/mult {:widget :text-field :schema number?}
-  (operation-text [[_ value]] (str (->percent value) " "))
-  (apply-operation [[_ value] base-value] (* base-value (inc value)))
+  (operation-text [[_ value]]
+    (str (int (* 100 value)) "%"))
+  (apply-operation [[_ value] base-value]
+    (* base-value (inc value)))
   (operation-order [_] 1))
 
-(defcomponent :op/val-inc {:widget :text-field :schema int?}
-  (operation-text [[_ value]] (str value " minimum "))
-  (apply-operation [this base-value] (apply-val-max-operation this base-value))
-  (operation-order [_] 0))
+(defn- ->pos-int [v]
+  (-> v int (max 0)))
 
-(defcomponent :op/val-mult {:widget :text-field :schema number?}
-  (operation-text [[_ value]] (str (->percent value) " minimum "))
-  (apply-operation [this base-value] (apply-val-max-operation this base-value))
-  (operation-order [_] 1))
+(defn- val-max-op-k->parts [op-k]
+  (let [[val-or-max inc-or-mult] (mapv keyword (str/split (name op-k) #"-"))]
+    [val-or-max (keyword "op" (name inc-or-mult))]))
 
-(defcomponent :op/max-inc {:widget :text-field :schema int?}
-  (operation-text [[_ value]] (str value " maximum "))
-  (apply-operation [this base-value] (apply-val-max-operation this base-value))
-  (operation-order [_] 0))
+(comment
+ (= (val-max-op-k->parts :op/val-inc) [:val :op/inc])
+ )
 
-(defcomponent :op/max-mult {:widget :text-field :schema number?}
-  (operation-text [[_ value]] (str (->percent value) " maximum "))
-  (apply-operation [this base-value] (apply-val-max-operation this base-value))
-  (operation-order [_] 1))
+(defcomponent :op/val-max {}
+  (operation-text [[op-k value]]
+    (let [[val-or-max op-k] (val-max-op-k->parts op-k)]
+      (str (operation-text [op-k value]) " " (case val-or-max
+                                               :val "Minimum"
+                                               :max "Maximum"))))
+
+  (apply-operation [[operation-k value] val-max]
+    {:post [(m/validate val-max-schema %)]}
+    (assert (m/validate val-max-schema val-max) (pr-str val-max))
+    (let [[val-or-max op-k] (val-max-op-k->parts operation-k)
+          f #(apply-operation [op-k value] %)
+          [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
+          v  (->pos-int v)
+          mx (->pos-int mx)]
+      (case val-or-max
+        :val [v (max v mx)]
+        :max [(min v mx) mx])))
+
+  (operation-order [[op-k value]]
+    (let [[_ op-k] (val-max-op-k->parts op-k)]
+      (operation-order [op-k value]))))
+
+(defcomponent :op/val-inc {:widget :text-field :schema int?})
+(derive       :op/val-inc :op/val-max)
+
+(defcomponent :op/val-mult {:widget :text-field :schema number?})
+(derive       :op/val-mult :op/val-max)
+
+(defcomponent :op/max-inc {:widget :text-field :schema int?})
+(derive       :op/max-inc :op/val-max)
+
+(defcomponent :op/max-mult {:widget :text-field :schema number?})
+(derive       :op/max-mult :op/val-max)
 
 (comment
  (and
@@ -114,24 +118,50 @@
   (= (apply-operation [:op/max-mult -0.9] [5 10]) [0 0]))
  )
 
+(com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
+                                      color/cyan
+                                      ; maybe can be used in tooltip background is darker
+                                      #_(com.badlogic.gdx.graphics.Color. (float 0.48)
+                                                                        (float 0.57)
+                                                                        (float 1)
+                                                                        (float 1)))
+
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
-(def ^:private positive-modifier-color "[CYAN]" #_"[LIME]")
-(def ^:private negative-modifier-color "[CYAN]" #_"[SCARLET]")
+; -> could give damage reduce 10% like in diablo 2
+; and then make it negative .... @ applicator
+(def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
+(def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
 
 (defn- +? [n]
   (case (math/signum n)
     (0.0 1.0) (str positive-modifier-color "+")
-    -1.0 (str negative-modifier-color "")))
+    -1.0 negative-modifier-color))
 
 (defn- k->pretty-name [k]
   (str/capitalize (name k)))
 
-(defn info-text [modifier-k [operation-k value]]
+(defn- info-text [modifier-k [operation-k value]]
   (str (+? value)
        (operation-text [operation-k value])
+       " "
        (k->pretty-name modifier-k)
        "[]"))
+
+(defn modifiers-text [item-modifiers]
+  (str/join "\n"
+            (for [[modifier-k operations] item-modifiers
+                  operation operations]
+              (info-text modifier-k operation))))
+
+(defn- stats-modifiers-info-text [stats-modifiers]
+  (let [text-parts (for [[modifier-k operations] stats-modifiers
+                         [operation-k values] operations
+                         :let [value (reduce + values)]
+                         :when (not (zero? value))]
+                     (info-text modifier-k [operation-k value]))]
+    (when (seq text-parts)
+      (str "\n" (str/join "\n" text-parts)))))
 
 ; TODO
 ; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
@@ -181,7 +211,14 @@
 
 (defstat :stats/hp             data/pos-int-attr :operations [:op/max-inc :op/max-mult])
 (defstat :stats/mana           data/nat-int-attr :operations [:op/max-inc :op/max-mult])
+
+; TODO bounds max movement speed ...
 (defstat :stats/movement-speed data/pos-attr     :operations [:op/inc :op/mult]) ; TODO only mult required  ( ? )
+
+; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
+; (op/inc allows e.g. increaese by float 1.3 or -1.2)
+; in this case add a 'bounds' fn for calling ->int
+; or do it @ melee-damage calculations ?
 (defstat :stats/strength       data/nat-int-attr :operations [:op/inc])
 
 (let [doc "action-time divided by this stat when a skill is being used.
@@ -320,13 +357,7 @@
                          :let [base-value (stat-k stats)]
                          :when base-value]
                      (str (k->pretty-name stat-k) ": " (->effective-value base-value (stat-k->modifier-k stat-k) stats))))
-         (let [text-parts (for [[modifier-k operations] modifiers
-                                [operation-k values] operations
-                                :let [value (reduce + values)]
-                                :when (not (zero? value))]
-                            (info-text modifier-k [operation-k value]))]
-           (when (seq text-parts)
-             (str "\n" (str/join "\n" text-parts))))))
+         (stats-modifiers-info-text modifiers)))
 
   #_(comment
     (let [ctx @app.state/current-context
