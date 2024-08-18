@@ -2,9 +2,11 @@
   (:require [gdx.graphics :as graphics]
             [api.context :as ctx]))
 
+; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
+(def max-delta-time 0.05)
+
 (defn ->build []
-  {:context.game/max-delta-time 0.04
-   :context.game/elapsed-time 0
+  {:context.game/elapsed-time 0
    :context.game/logic-frame 0})
 
 (defrecord Counter [duration stop-time])
@@ -12,7 +14,6 @@
 (extend-type api.context.Context
   api.context/Time
   (delta-time     [ctx] (:context.game/delta-time     ctx))
-  (max-delta-time [ctx] (:context.game/max-delta-time ctx))
   (elapsed-time   [ctx] (:context.game/elapsed-time   ctx))
   (logic-frame    [ctx] (:context.game/logic-frame    ctx))
 
@@ -34,7 +35,7 @@
       (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
 
 (defn update-time [ctx]
-  (let [delta (min (graphics/delta-time) (ctx/max-delta-time ctx))]
+  (let [delta (min (graphics/delta-time) max-delta-time)]
     (-> ctx
         (assoc :context.game/delta-time delta)
         (update :context.game/elapsed-time + delta)

@@ -155,10 +155,19 @@
                   operation operations]
               (info-text modifier-k operation))))
 
+; TODO 2 times (apply +)
+; => converge it ?
+; also 'bounds' would be after apply + so it shows also @ stats modifiers info text ?
+; so allow modifiers to add movement speed > 10
+; but then bound it
+; or don't allow such high modifier values to begin with to exist in the game properties ?
+
+; also sort by operation order
+; and stat text info order itself
 (defn- stats-modifiers-info-text [stats-modifiers]
   (let [text-parts (for [[modifier-k operations] stats-modifiers
                          [operation-k values] operations
-                         :let [value (reduce + values)]
+                         :let [value (apply + values)]
                          :when (not (zero? value))]
                      (info-text modifier-k [operation-k value]))]
     (when (seq text-parts)
@@ -197,23 +206,101 @@
      6.5))
  )
 
-(defn defmodifier [modifier-k operations]
-  (defcomponent modifier-k (data/components operations)))
-
 (defn- stat-k->modifier-k [stat-k]
   (keyword "modifier" (name stat-k)))
 
-(defn defstat [stat-k metam & {:keys [operations]}]
-  (defcomponent stat-k metam)
+(defn- stat-k->effective-value [stat-k stats]
+  (when-let [base-value (stat-k stats)]
+    (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
+
+(comment
+ (set! *print-level* nil)
+ ; only lady/lord a&b dont have hp/mana/movement-speed ....
+ ; => check if it can be optional
+ ; => default-values move to stats ...
+ (map :property/id
+      (filter #(let [{:stats/keys [hp mana movement-speed]} (:entity/stats (:creature/entity %))
+
+                     rslt (not (and hp mana movement-speed))
+                     ]
+                 (println [hp mana movement-speed])
+                 (println rslt)
+                 rslt
+                 )
+              (api.context/all-properties @app.state/current-context :properties/creature)))
+ )
+
+; default-values explicit @ stat
+; cast-attack speed not interesting / hide ? or on dexterity ?
+
+(def ^:private stats-info-text-order
+  ; hp/mana/movement-speed given for all entities ?
+  ; but maybe would be good to have 'required' key ....
+  ; also default values defined with the stat itself ?
+  ; armor-pierce move out of here ...
+  [:stats/hp ; made optional but bug w. projectile transact damage anyway not checking usable?
+   :stats/mana ; made optional @ active-skill
+   :stats/movement-speed
+   :stats/strength  ; default value 0
+   :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
+   :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
+   :stats/armor-save ; default-value 0
+   :stats/armor-pierce ; default-value 0
+   ])
+
+; TODO use data/components
+; and pass :optional or not ....
+; see where else we use data/components ....
+; or make it into the component itself if optional or not
+; but depends on usage ?
+; possible different usage component at different places?
+; e.g. audiovisual ?
+
+; or make even hp or movement-speed optional
+; for example then cannot attack the princess ... ?
+
+; then the create component here have to move into the component itself.
+
+
+; widgets / icons ? (see WoW )
+; * HP color based on ratio like hp bar samey (take same color definitions etc.)
+; * mana color same in the whole app
+; * red positive/green negative
+; * readable-number on ->effective-value but doesn't work on val-max ->pretty-value fn ?
+(defn- stats-info-texts [stats]
+  (str/join "\n"
+            (for [stat-k stats-info-text-order]
+              (str (k->pretty-name stat-k) ": " (stat-k->effective-value stat-k stats)))))
+
+
+(defn defmodifier [modifier-k operations]
+  (defcomponent modifier-k (data/components operations)))
+
+(defn defstat [stat-k attr-m & {:keys [operations]}]
+  (defcomponent stat-k attr-m)
   (defmodifier (stat-k->modifier-k stat-k) operations))
 
 (defstat :stats/hp   data/pos-int-attr :operations [:op/max-inc :op/max-mult])
 (defstat :stats/mana data/nat-int-attr :operations [:op/max-inc :op/max-mult])
 
+; Options
+; * restrict @ entity.body movement code -> not transparent to player
+; * restrict @ op add/mult -> not transparent
+; * allow modifier values to add up to > max but restrict the stat-value itself ...
+; (if maxxed show like D2 max resistances in gold ?)
+; * limit it @ item total values (brittle)
+
 ; TODO bounds max movement speed ... // min 0 ?
 ;  -> but entity.body/max-speed requrires ctx for max-delta-time
 ; or init it as a var somewhere ?
 ; only mult required ?
+(require '[entity.body :as body])
+;  TODO also stat schema itself set max-speed ....
+; body/max-speed
+
+; the >0 part comes also from data/pos-attr ....
+; the operations also come from data/pos-attr ....
+; the data itself actually defines all operations/etc.
 (defstat :stats/movement-speed data/pos-attr :operations [:op/inc :op/mult])
 
 ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
@@ -249,8 +336,7 @@
 (extend-type api.entity.Entity
   entity/Stats
   (stat [{:keys [entity/stats]} stat-k]
-    (when-let [base-value (stat-k stats)]
-      (->effective-value base-value (stat-k->modifier-k stat-k) stats))))
+    (stat-k->effective-value stat-k stats)))
 
 ; TODO remove vector shaboink -> gdx.graphics.color/->color use.
 (def ^:private hpbar-colors
@@ -270,68 +356,6 @@
 
 (def ^:private borders-px 1)
 
-(comment
-
- (set! *print-level* nil)
-
- ; only lady/lord a&b dont have hp/mana/movement-speed ....
- ; => check if it can be optional
- ; => default-values move to stats ...
-
- (map :property/id
-      (filter #(let [{:stats/keys [hp mana movement-speed]} (:entity/stats (:creature/entity %))
-
-                     rslt (not (and hp mana movement-speed))
-                     ]
-                 (println [hp mana movement-speed])
-                 (println rslt)
-                 rslt
-                 )
-              (api.context/all-properties @app.state/current-context :properties/creature)))
-
- )
-
-
-; TODO make it all required like in MTG
-; then can make effects, e.g. destroy target creature with strength < 3
-; mana needed ? idk
-; cast-speed/attack-speed also idk (maybe dexterity, intelligence)
-; armor-pierce into an effect.... like in wh40k.
-
-; TODO default-values dont make sense
-; e.g. in magic creatures have explicitly 0 power
-; here they have 0 power but implicitly
-; also the code doesnt want to know e.g. armor calculations
-; => make it explicit ...
-; only attack/cast-speed is quite uninteresting ? could hide ?
-
-(def ^:private stats-keywords
-  ; hp/mana/movement-speed given for all entities ?
-  ; but maybe would be good to have 'required' key ....
-  ; also default values defined with the stat itself ?
-  ; armor-pierce move out of here ...
-  [:stats/hp ; made optional but bug w. projectile transact damage anyway not checking usable?
-   :stats/mana ; made optional @ active-skill
-   :stats/movement-speed
-   :stats/strength  ; default value 0
-   :stats/cast-speed ; has default value 1 @ entity.stateactive-skill
-   :stats/attack-speed ; has default value 1 @ entity.stateactive-skill
-   :stats/armor-save ; default-value 0
-   :stats/armor-pierce ; default-value 0
-   ])
-
-; TODO use data/components
-; and pass :optional or not ....
-; see where else we use data/components ....
-; or make it into the component itself if optional or not
-; but depends on usage ?
-; possible different usage component at different places?
-; e.g. audiovisual ?
-
-; or make even hp or movement-speed optional
-; for example then cannot attack the princess ... ?
-
-; then the create component here have to move into the component itself.
 (defn- build-modifiers [modifiers]
   (into {} (for [[modifier-k operations] modifiers]
              [modifier-k (into {} (for [[operation-k value] operations]
@@ -349,21 +373,9 @@
         (update :stats/mana (fn [mana] (when mana [mana mana])))
         (update :stats/modifiers build-modifiers)))
 
-  ; TODO proper texts... / widgets / icons ?
-  ; HP color based on ratio like hp bar samey (take same color definitions etc.)
-  ; mana color same in the whole app
-  ; red positive/green negative
-
-  ; TODO readable-number on ->effective-value
-  ; but doesn't work on val-max
-  ; ->pretty-value fn ?
-  (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
-    (str (str/join "\n"
-                   (for [stat-k stats-keywords
-                         :let [base-value (stat-k stats)]
-                         :when base-value]
-                     (str (k->pretty-name stat-k) ": " (->effective-value base-value (stat-k->modifier-k stat-k) stats))))
-         (stats-modifiers-info-text modifiers)))
+  (entity/info-text [[_ stats] _ctx]
+    (str (stats-info-texts stats)
+         (stats-modifiers-info-text (:stats/modifiers stats))))
 
   #_(comment
     (let [ctx @app.state/current-context

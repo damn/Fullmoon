@@ -10,7 +10,8 @@
             [gdx.graphics.color :as color]
             [api.tx :refer [transact!]]
             [api.world.cell :as cell]
-            [api.world.grid :as world-grid]))
+            [api.world.grid :as world-grid]
+            [context.game.time :refer [max-delta-time]]))
 
 ; # :z-order/flying has no effect for now
 
@@ -25,11 +26,9 @@
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
 (def ^:private min-solid-body-size 0.4)
-
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
-(defn- max-speed [ctx]
-  (/ min-solid-body-size (ctx/max-delta-time ctx)))
+(def max-speed (/ min-solid-body-size max-delta-time))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
@@ -164,7 +163,7 @@
   (entity/tick [[_ body] {:keys [entity/id]} ctx]
     ; TODO speed schema, what if nil/0 ? skip ... ?
     (when-let [{:keys [direction speed] :as movement} (:movement body)]
-      (assert (<= speed (max-speed ctx)))
+      (assert (<= speed max-speed))
       (assert (or (zero? (v/length direction))
                   (v/normalised? direction)))
       (when-not (or (zero? (v/length direction))

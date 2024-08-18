@@ -5,7 +5,6 @@
 
 (defprotocol Time
   (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
-  (max-delta-time [_] "so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions")
   (elapsed-time [_] "The elapsed in-game-time (not counting when game is paused).")
   (logic-frame [_] "The game-logic frame number, starting with 1. (not counting when game is paused)")
   (->counter [_ duration])
