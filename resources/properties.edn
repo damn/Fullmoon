@@ -2003,7 +2003,9 @@
      :items/ring-gold
      :items/cloth-boot
      :items/necklace-eye
-     :items/blood-glove},
+     :items/blood-glove
+     :items/gold-boot
+     :items/gold-chest},
    :entity/reaction-time 0.02,
    :entity/skills #{},
    :entity/stats
@@ -3302,7 +3304,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Gold Ring"}
- {:item/modifiers {:modifier/hp {:op/max-inc 10, :op/max-mult 0.05}}
+ {:item/modifiers {:modifier/hp {:op/max-inc 10, :op/max-mult 0.05}},
   :item/slot :inventory.slot/boot,
   :property/id :items/cloth-boot,
   :property/image
@@ -3686,7 +3688,7 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [288 432 48 48]},
   :property/pretty-name "Helm Gold"}
- {:item/modifiers {},
+ {:item/modifiers {:modifier/movement-speed {:op/inc 12}},
   :item/slot :inventory.slot/boot,
   :property/id :items/gold-boot,
   :property/image
@@ -4112,7 +4114,11 @@
   :property/image
   {:file "items/images.png", :sub-image-bounds [816 96 48 48]},
   :property/pretty-name "Exotic3 Sword"}
- {:item/modifiers {},
+ {:item/modifiers
+  {:modifier/armor-save {:op/inc 0.1},
+   :modifier/damage-receive {:op/mult -0.1},
+   :modifier/hp {:op/max-mult 0.1},
+   :modifier/movement-speed {:op/mult 0.1}},
   :item/slot :inventory.slot/chest,
   :property/id :items/gold-chest,
   :property/image

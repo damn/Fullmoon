@@ -3,6 +3,7 @@
             [clojure.math :as math]
             [malli.core :as m]
             [gdx.graphics.color :as color]
+            [utils.core :refer [readable-number]]
             [utils.random :as random]
             [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :refer [defsystem defcomponent]]
@@ -163,9 +164,6 @@
     (when (seq text-parts)
       (str "\n" (str/join "\n" text-parts)))))
 
-; TODO
-; * bounds (action-speed not <=0 , not value '-1' e.g.)/schema/values/allowed operations
-; * take max-movement-speed into account @ :stats/movement-speed
 (defn- ->effective-value [base-value modifier-k stats]
   {:pre [(= "modifier" (namespace modifier-k))]}
   (->> stats
@@ -188,14 +186,14 @@
                         {:stats/modifiers {}})
      [5 10])
   (= (->effective-value [100 100]
-                        :stats/hp
-                        {:stats/modifiers {:stats/hp {:op/max-inc [10 1]
-                                                      :op/max-mult [0.5]}}})
+                        :modifier/hp
+                        {:stats/modifiers {:modifier/hp {:op/max-inc [10 1]
+                                                         :op/max-mult [0.5]}}})
      [100 166])
   (= (->effective-value 3
-                        :stats/movement-speed
-                        {:stats/modifiers {:stats/movement-speed {:op/inc [2]
-                                                                  :op/mult [0.1 0.2]}}})
+                        :modifier/movement-speed
+                        {:stats/modifiers {:modifier/movement-speed {:op/inc [2]
+                                                                     :op/mult [0.1 0.2]}}})
      6.5))
  )
 
@@ -209,18 +207,22 @@
   (defcomponent stat-k metam)
   (defmodifier (stat-k->modifier-k stat-k) operations))
 
-(defstat :stats/hp             data/pos-int-attr :operations [:op/max-inc :op/max-mult])
-(defstat :stats/mana           data/nat-int-attr :operations [:op/max-inc :op/max-mult])
+(defstat :stats/hp   data/pos-int-attr :operations [:op/max-inc :op/max-mult])
+(defstat :stats/mana data/nat-int-attr :operations [:op/max-inc :op/max-mult])
 
-; TODO bounds max movement speed ...
-(defstat :stats/movement-speed data/pos-attr     :operations [:op/inc :op/mult]) ; TODO only mult required  ( ? )
+; TODO bounds max movement speed ... // min 0 ?
+;  -> but entity.body/max-speed requrires ctx for max-delta-time
+; or init it as a var somewhere ?
+; only mult required ?
+(defstat :stats/movement-speed data/pos-attr :operations [:op/inc :op/mult])
 
 ; TODO for strength its only int increase, for movement-speed different .... ??? how to manage this ?
 ; (op/inc allows e.g. increaese by float 1.3 or -1.2)
 ; in this case add a 'bounds' fn for calling ->int
 ; or do it @ melee-damage calculations ?
-(defstat :stats/strength       data/nat-int-attr :operations [:op/inc])
+(defstat :stats/strength data/nat-int-attr :operations [:op/inc])
 
+; TODO here >0 ?
 (let [doc "action-time divided by this stat when a skill is being used.
           Default value 1.
 
@@ -231,6 +233,7 @@
   (defstat :stats/cast-speed   skill-speed-stat :operations operations)
   (defstat :stats/attack-speed skill-speed-stat :operations operations))
 
+; TODO bounds
 (defstat :stats/armor-save   {:widget :text-field :schema number?} :operations [:op/inc])
 (defstat :stats/armor-pierce {:widget :text-field :schema number?} :operations [:op/inc])
 
@@ -335,9 +338,8 @@
                                     [operation-k [value]]))])))
 
 (comment
- (=
-  {:modifier/damage-receive {:op/mult [-0.9]}}
-  (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
+ (= {:modifier/damage-receive {:op/mult [-0.9]}}
+    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
  )
 
 (defcomponent :entity/stats (data/components-attribute :stats)
@@ -351,6 +353,10 @@
   ; HP color based on ratio like hp bar samey (take same color definitions etc.)
   ; mana color same in the whole app
   ; red positive/green negative
+
+  ; TODO readable-number on ->effective-value
+  ; but doesn't work on val-max
+  ; ->pretty-value fn ?
   (entity/info-text [[_ {:keys [stats/modifiers] :as stats}] _ctx]
     (str (str/join "\n"
                    (for [stat-k stats-keywords

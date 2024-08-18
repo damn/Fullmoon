@@ -156,25 +156,19 @@
  ; and cells no atoms! grid! I change multiple at once ...
  ; maybe only add elements on click -> somehow glyphlayout breaks AFTER this returns successfully
  )
-(defn show-context! []
+
+
+(defn show-tree-view! [obj]
   (let [ctx @app.state/current-context
-
-        position (ctx/world-mouse-position ctx)
-        cell (get (api.context/world-grid ctx) (mapv int position))
-
-        ;tree-map @cell
-        tree-map (ctx/mouseover-entity* ctx)
-        ;tree-map ctx
-
-        ;tree-map (sort-by first core.component/attributes)
-        ;tree-map (sort-by first (methods api.tx/transact!))
-
-        ]
-    (add-to-stage! ctx (->window ctx {:title "Context Overview"
+        object (case obj
+                 :ctx ctx
+                 :entity (ctx/mouseover-entity* ctx)
+                 :tile @(get (api.context/world-grid ctx) (mapv int (ctx/world-mouse-position ctx))))]
+    (add-to-stage! ctx (->window ctx {:title "Tree View"
                                       :close-button? true
                                       :close-on-escape? true
                                       :center? true
-                                      :rows [[(->scroll-pane-cell ctx [[(->prop-tree ctx (into (sorted-map) tree-map))]])]]
+                                      :rows [[(->scroll-pane-cell ctx [[(->prop-tree ctx (into (sorted-map) object))]])]]
                                       :pack? true}))))
 
 (comment
@@ -257,7 +251,9 @@
 
  (create-item! :items/blood-glove)
 
- (show-context!)
+ (show-tree-view! :ctx)
+ (show-tree-view! :entity)
+ (show-tree-view! :tile)
 
  (let [ctx @app.state/current-context
        pl (ctx/player-entity* ctx)

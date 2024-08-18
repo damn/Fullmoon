@@ -1,3 +1,5 @@
+; this is actually editor/components ... -> and maybe make into a function
+; for components for loading dependencies doesn't matter
 (ns core.data
   (:require [malli.core :as m]
             [core.component :as component]
