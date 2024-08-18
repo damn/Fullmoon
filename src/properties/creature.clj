@@ -196,7 +196,8 @@
          target-position))
 
   (transact! [[_ creature-id] {:keys [effect/source effect/target-position]}]
-    [[:tx.entity/creature
+    [[:tx/sound "sounds/bfxr_shield_consume.wav"]
+     [:tx.entity/creature
       creature-id
       #:entity {:position target-position
                 :state [:state/npc :idle]

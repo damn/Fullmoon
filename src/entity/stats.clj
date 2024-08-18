@@ -395,7 +395,8 @@
          (lower-than-max? (~stat (:entity/stats @~'source))))
 
        (transact! ~'[_ {:keys [effect/source]}]
-         [[:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
+         [[:tx/sound "sounds/bfxr_click.wav"]
+          [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
 
 (def-set-to-max-effect :stats/hp)
 (def-set-to-max-effect :stats/mana)

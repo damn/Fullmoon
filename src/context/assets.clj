@@ -6,7 +6,6 @@
             [gdx.files :as files]
             [gdx.files.file-handle :as file-handle]
             [core.component :refer [defcomponent] :as component]
-            [core.data :as data]
             [api.context :as ctx]
             [api.tx :refer [transact!]]))
 
@@ -73,7 +72,3 @@
 (defmethod transact! :tx/sound [[_ file] ctx]
   (ctx/play-sound! ctx file)
   ctx)
-
-(defcomponent :effect/sound data/sound
-  (transact! [[_ sound] _effect-ctx]
-    [[:tx/sound sound]]))

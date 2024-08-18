@@ -29,4 +29,5 @@
             (entity/enemy-faction @source))))
 
   (transact! [_ {:keys [effect/source effect/target]}]
-    [[:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))
+    [[:tx/sound "sounds/bfxr_burrow.wav"]
+     [:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))

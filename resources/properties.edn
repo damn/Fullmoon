@@ -6,8 +6,7 @@
   :skill/cooldown 0,
   :skill/cost 0,
   :skill/effects
-  {:effect/sound "sounds/bfxr_shield_consume.wav",
-   :effect/spawn :creatures/skeleton-warrior},
+  {:effect/spawn :creatures/skeleton-warrior},
   :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
  {:property/id :skills/convert,
   :property/image
@@ -16,8 +15,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 20,
-  :skill/effects
-  {:effect/convert true, :effect/sound "sounds/bfxr_burrow.wav"},
+  :skill/effects {:effect/convert true},
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
  {:property/id :skills/bow,
   :property/image
@@ -38,9 +36,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 0,
-  :skill/effects
-  {:effect/sound "sounds/bfxr_click.wav",
-   :effect/stats-mana-set-to-max true},
+  :skill/effects {:effect/stats-mana-set-to-max true},
   :skill/start-action-sound "sounds/shoot.wav"}
  {:property/id :skills/death-ray,
   :property/image
@@ -60,9 +56,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 4,
-  :skill/effects
-  {:effect/projectile true,
-   :effect/sound "sounds/bfxr_waypointunlock.wav"},
+  :skill/effects {:effect/projectile true},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/melee-attack,
   :property/image
