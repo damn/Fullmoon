@@ -74,3 +74,21 @@
                        position
                        (copy-tile (cell->tile cell)))))))
     tiled-map))
+
+(defn wgt-grid->tiled-map [grid position->tile]
+  (let [tiled-map (->empty-tiled-map)
+        properties (tiled/properties tiled-map)]
+    (put! properties "width"  (grid/width  grid))
+    (put! properties "height" (grid/height grid))
+    (put! properties "tilewidth" 48)
+    (put! properties "tileheight" 48)
+    (let [layer (add-layer! tiled-map
+                            :name "ground"
+                            :visible true)
+          properties (tiled/properties layer)]
+      (put! properties "movement-properties" true)
+      (doseq [position (grid/posis grid)
+              :let [value (get grid position)
+                    cell (tiled/cell-at tiled-map layer position)]]
+        (set-tile! layer position (position->tile position))))
+    tiled-map))

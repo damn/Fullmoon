@@ -17,6 +17,10 @@
   {:tiled-map (ctx/->tiled-map ctx "maps/vampire.tmx")
    :start-position [32 71]})
 
+(defn- ->uf-caves [ctx]
+  (mapgen.module-gen/uf-caves ctx {:world/map-size 250
+                                   :world/spawn-rate 0.02}))
+
 (defn- ->rand-module-world [ctx]
   (let [{:keys [tiled-map
                 start-position]} (mapgen.module-gen/generate
@@ -28,6 +32,10 @@
 (defn- start-vampire! [ctx]
   (change-screen! :screens/game)
   (swap! current-context game/start-new-game (->vampire-tmx ctx)))
+
+(defn- start-uf-caves! [ctx]
+  (change-screen! :screens/game)
+  (swap! current-context game/start-new-game (->uf-caves ctx)))
 
 (defn- start-procedural! [ctx]
   (change-screen! :screens/game)
@@ -41,6 +49,7 @@
    ctx
    {:rows (remove nil?
                   [[(ctx/->text-button ctx "Start vampire.tmx" start-vampire!)]
+                   [(ctx/->text-button ctx "start-uf-caves!" start-uf-caves!)]
                    [(ctx/->text-button ctx "Start procedural" start-procedural!)]
                    (when (safe-get config :map-editor?)
                      [(ctx/->text-button ctx "Map editor" map-editor!)])

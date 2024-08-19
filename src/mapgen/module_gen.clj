@@ -274,3 +274,90 @@
     {:tiled-map tiled-map
      :start-position (get-free-position-in-area-level 0)
      :area-level-grid scaled-area-level-grid}))
+
+(require '[gdx.graphics.g2d :refer [->texture-region]])
+
+(defn uf-transition [position grid]
+  (transitions/index-value position (= :transition (get grid position))))
+
+(defn rand-0-3 []
+  (utils.random/get-rand-weighted-item
+   {0 60 1 1 2 1 3 1}))
+
+(defn rand-0-5 []
+  (utils.random/get-rand-weighted-item
+   {0 60 1 1 2 1 3 1 4 1 5 1}))
+
+(defn- place-creatures! [context spawn-rate tiled-map spawn-positions]
+  (let [layer (add-layer! tiled-map :name "creatures" :visible true)
+        creatures (all-properties context :properties/creature)]
+    (doseq [position spawn-positions
+            :when (<= (rand) spawn-rate)]
+      (set-tile! layer position (creature->tile (rand-nth creatures))))))
+
+(defn uf-caves [ctx
+                {:keys [world/map-size
+                        world/spawn-rate]}]
+  (let [{:keys [start grid]} (->cave-grid :size map-size)
+        _ (println "Start: " start)
+        _ (assert (= #{:wall :ground} (set (grid/cells grid))))
+        _ (printgrid grid)
+        _ (println)
+        scale 4
+        scaled-grid (mapgen.utils/scalegrid grid scale)
+        _ (printgrid scaled-grid)
+        _ (println)
+        start-position (mapv #(* % scale) start)
+        scaled-grid (reduce #(assoc %1 %2 :transition) scaled-grid
+                            (adjacent-wall-positions scaled-grid))
+        _ (assert (or
+                   (= #{:wall :ground :transition} (set (grid/cells scaled-grid)))
+                   (= #{:ground :transition}       (set (grid/cells scaled-grid))))
+                  (str "(set (grid/cells grid)): " (set (grid/cells scaled-grid))))
+        _ (printgrid scaled-grid)
+        _ (println)
+        texture-region (->texture-region (api.context/cached-texture ctx "maps/uf_terrain.png"))
+        grass [240 288]
+        soil [48 240]
+        desert [48 480]
+        level-type desert
+        grass-texture-region #(->texture-region texture-region [(+ (level-type 0) (* % 48)) (level-type 1) 48 48])
+        wall-texture-region #(->texture-region texture-region [(+ 48 (* % 48)) 1056 48 48])
+        transition-wall #(->texture-region texture-region [(+ 48 (* % 48)) 1104 48 48])
+        type->tile (memoize
+                    (fn [texture-region movement]
+                      (let [tile (->static-tiled-map-tile texture-region)]
+                        (put! (tiled/properties tile) "movement" movement)
+                        tile)))
+        position->tile (fn [position]
+                         (let [cell (get scaled-grid position)]
+                           (type->tile (case cell
+                                         :wall (wall-texture-region (rand-0-5))
+                                         :transition (let [[x y] position]
+                                                       (if (= :ground (get scaled-grid [x (dec y)]))
+                                                         (transition-wall (rand-0-5))
+                                                         (wall-texture-region (rand-0-5))))
+                                         :ground (grass-texture-region (rand-0-3)))
+                                       (case cell
+                                         :wall "none"
+                                         :transition "none"
+                                         :ground "all"))))
+        tiled-map (mapgen.tiled-utils/wgt-grid->tiled-map scaled-grid position->tile)
+
+        can-spawn? #(= "all" (movement-property tiled-map %))
+        _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
+        spawn-positions (flood-fill scaled-grid start-position can-spawn?)
+        ]
+    ; TODO don't spawn my faction vampire
+    ; TODO don't spawn princess with clickable
+    (place-creatures! ctx spawn-rate tiled-map spawn-positions)
+    {:tiled-map tiled-map
+     :start-position start-position}))
+
+(comment
+ (uf-caves @app.state/current-context
+           {:world/map-size 15
+            :world/spawn-rate 0.05})
+
+ (mapv * [8 2] 2)
+ )

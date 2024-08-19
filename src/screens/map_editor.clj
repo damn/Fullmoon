@@ -143,14 +143,13 @@ direction keys: move")
       (g/draw-grid g 0 0 (tiled/width  tiled-map) (tiled/height tiled-map) 1 1 [1 1 1 0.5]))))
 
 (defn- generate [context properties]
-  (let [{:keys [tiled-map
-                area-level-grid
-                start-position]} (module-gen/generate context properties)
+  (let [;{:keys [tiled-map area-level-grid start-position]} (module-gen/generate context properties)
+        {:keys [tiled-map start-position]} (module-gen/uf-caves context {:world/map-size 250 :world/spawn-rate 0.02})
         atom-data (current-data context)]
     (dispose (:tiled-map @atom-data))
     (swap! atom-data assoc
            :tiled-map tiled-map
-           :area-level-grid area-level-grid
+           ;:area-level-grid area-level-grid
            :start-position start-position)
     (show-whole-map! (ctx/world-camera context) tiled-map)))
 
