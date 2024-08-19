@@ -8,6 +8,8 @@
 
 (def warn-on-override true)
 
+(def defsystems {})
+
 (defmacro defsystem
   "Defines a component function with the given parameter vector.
   See also core.defcomponent.
@@ -22,9 +24,16 @@
   `(do
     (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
       (fn ~(symbol (str (name sys-name))) [& args#] (ffirst args#)))
+    (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
 (def attributes {})
+
+(defn- component-systems [component-k]
+  (for [[sys-name sys-var] defsystems
+        [k method] (methods @sys-var)
+        :when (= k component-k)]
+    sys-name))
 
 (comment
  (spit "components.txt"
@@ -32,13 +41,28 @@
         (clojure.pprint/pprint (group-by namespace
                                          (sort (keys attributes))))))
 
+ (ancestors :op/val-inc)
+
  (spit "components.md"
        (with-out-str
-        (doseq [[nmsp ks] (group-by namespace
-                                    (sort (keys attributes)))]
+        (doseq [[nmsp components] (sort-by first
+                                   (group-by namespace
+                                             (sort (keys attributes))))]
           (println "\n#" nmsp)
-          (doseq [k ks]
-            (println "*" k)))))
+          (doseq [k components]
+            (println "*" k
+                     (if-let [ancestrs (ancestors k)]
+                       (str "-> "(clojure.string/join "," ancestrs))
+                       "")
+                     (let [attr-map (get attributes k)]
+                       (if (seq attr-map)
+                         (pr-str attr-map)
+                         #_(binding [*print-level* nil]
+                           (with-out-str
+                            (clojure.pprint/pprint attr-map)))
+                         "")))
+            (doseq [system-name (component-systems k)]
+              (println "  * " system-name))))))
 
  ; & add all tx's ?
 
