@@ -1,0 +1,235 @@
+
+# nil
+* :height
+* :hit-effects
+* :maxrange
+* :solid?
+* :width
+
+# context
+* :context/assets
+* :context/config
+* :context/graphics
+* :context/properties
+* :context/screens
+* :context/tiled
+* :context/vis-ui
+
+# creature
+* :creature/entity
+* :creature/level
+* :creature/species
+
+# damage
+* :damage/min-max
+
+# effect
+* :effect/convert
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/damage
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/hp
+* :effect/kill
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/mana
+* :effect/melee-damage
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/movement-speed
+* :effect/projectile
+  *  useful?
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/spawn
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/stats-hp-set-to-max
+  *  useful?
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/stats-mana-set-to-max
+  *  useful?
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/stun
+  *  text
+  *  transact!
+  *  applicable?
+* :effect/target-entity
+  *  useful?
+  *  text
+  *  render-info
+  *  transact!
+  *  applicable?
+
+# entity
+* :entity/animation
+  *  tick
+* :entity/body
+  *  tick
+  *  render-debug
+  *  create-component
+  *  destroy
+* :entity/clickable
+  *  render-default
+* :entity/delete-after-animation-stopped?
+  *  tick
+* :entity/delete-after-duration
+  *  tick
+  *  info-text
+  *  create-component
+* :entity/faction
+  *  info-text
+* :entity/flying?
+* :entity/image
+  *  render-default
+* :entity/inventory
+* :entity/line-render
+  *  render-default
+* :entity/mouseover?
+  *  render-below
+* :entity/player?
+* :entity/plop
+  *  destroy
+* :entity/projectile-collision
+  *  tick
+  *  info-text
+  *  create-component
+* :entity/reaction-time
+* :entity/shout
+  *  tick
+* :entity/skills
+  *  tick
+  *  info-text
+  *  create-component
+* :entity/state
+  *  render-above
+  *  tick
+  *  info-text
+  *  create-component
+  *  render-below
+* :entity/stats
+  *  info-text
+  *  create-component
+* :entity/string-effect
+  *  render-above
+  *  tick
+* :entity/uid
+  *  destroy
+
+# entity.creature
+* :entity.creature/name
+  *  info-text
+* :entity.creature/species
+  *  info-text
+
+# entity.stats
+* :entity.stats/stat-effect
+  *  useful?
+  *  text
+  *  transact!
+  *  applicable?
+
+# item
+* :item/modifiers
+* :item/slot
+
+# modifier
+* :modifier/armor-pierce
+* :modifier/armor-save
+* :modifier/attack-speed
+* :modifier/cast-speed
+* :modifier/damage-deal
+* :modifier/damage-receive
+* :modifier/hp
+* :modifier/mana
+* :modifier/movement-speed
+* :modifier/strength
+
+# op
+* :op/inc
+  *  operation-order
+  *  apply-operation
+  *  operation-text
+* :op/max-inc
+* :op/max-mult
+* :op/mult
+  *  operation-order
+  *  apply-operation
+  *  operation-text
+* :op/val-inc
+* :op/val-max
+  *  operation-order
+  *  apply-operation
+  *  operation-text
+* :op/val-mult
+
+# projectile
+* :projectile/effects
+* :projectile/max-range
+* :projectile/piercing?
+* :projectile/speed
+
+# properties
+* :properties/audiovisual
+  *  create
+* :properties/creature
+  *  create
+* :properties/item
+  *  create
+* :properties/projectile
+  *  create
+* :properties/skill
+  *  create
+* :properties/world
+  *  create
+
+# property
+* :property/animation
+* :property/image
+* :property/pretty-name
+* :property/sound
+
+# screens
+* :screens/game
+* :screens/main-menu
+* :screens/map-editor
+* :screens/minimap
+* :screens/options-menu
+* :screens/property-editor
+
+# skill
+* :skill/action-time
+* :skill/action-time-modifier-key
+* :skill/cooldown
+* :skill/cost
+* :skill/effects
+* :skill/start-action-sound
+
+# stats
+* :stats/armor-pierce
+* :stats/armor-save
+* :stats/attack-speed
+* :stats/cast-speed
+* :stats/hp
+* :stats/mana
+* :stats/modifiers
+* :stats/movement-speed
+* :stats/strength
+
+# world
+* :world/map-size
+* :world/max-area-level
+* :world/princess
+* :world/spawn-rate
