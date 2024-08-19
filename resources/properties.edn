@@ -4231,14 +4231,14 @@
   {:effect/damage {:damage/min-max [4 8]}, :effect/stun 0.5},
   :projectile/max-range 10,
   :projectile/piercing? true,
-  :projectile/speed 10,
+  :projectile/speed 9,
   :property/id :projectiles/black,
   :property/image
   {:file "images/uf_FX.png", :sub-image-bounds [24 288 24 24]}}
  {:projectile/effects {:effect/kill true},
   :projectile/max-range 15,
   :projectile/piercing? true,
-  :projectile/speed 10,
+  :projectile/speed 9,
   :property/id :projectiles/double-fireball,
   :property/image
   {:file "images/oryx_16bit_scifi_FX_lg_trans.png",

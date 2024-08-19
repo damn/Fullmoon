@@ -26,7 +26,7 @@
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
-(def ^:private min-solid-body-size 0.4)
+(def ^:private min-solid-body-size 0.39)
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
 (def max-speed (/ min-solid-body-size max-delta-time))
