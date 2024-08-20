@@ -42,8 +42,8 @@
                 ;*assert* false
                 ;*unchecked-math* :warn-on-boxed
                 }
-  :aliases {"app"        ["run" "-m" "app.dev" "app" "-main"]
-            "gdl.simple" ["run" "-m" "app.dev" "gdl.simple" "app"]})
+  :aliases {"app"        ["run" "-m" "gdx.dev" "app" "-main"]
+            "gdl.simple" ["run" "-m" "gdx.dev" "gdl.simple" "app"]})
 
 ; * Notes
 
