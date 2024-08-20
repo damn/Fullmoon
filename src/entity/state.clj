@@ -76,5 +76,6 @@
    ; TODO why we pass entity and not entity* ?? would be simpler ???
    ))
 
-(defmethod effect/do! :tx/event [[_ entity event params] ctx]
-  (send-event! ctx entity event params))
+(defcomponent :tx/event {}
+  (effect/do! [[_ entity event params] ctx]
+    (send-event! ctx entity event params)))

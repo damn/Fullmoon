@@ -3,6 +3,7 @@
             [gdx.graphics :as graphics]
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :as utils :refer [mapvals]]
+            [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.effect :as effect]))
 
@@ -22,6 +23,7 @@
   (set-cursor! [{g :context/graphics} cursor-key]
     (graphics/set-cursor (utils/safe-get (:cursors g) cursor-key))))
 
-(defmethod effect/do! :tx.context.cursor/set [[_ cursor-key] ctx]
-  (ctx/set-cursor! ctx cursor-key)
-  ctx)
+(defcomponent :tx.context.cursor/set {}
+  (effect/do! [[_ cursor-key] ctx]
+    (ctx/set-cursor! ctx cursor-key)
+    ctx))

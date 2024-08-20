@@ -20,13 +20,14 @@
                     :scale 2
                     :up? true}))))
 
-(defmethod effect/do! :tx/add-text-effect [[_ entity text] ctx]
-  [[:tx.entity/assoc
-    entity
-    :entity/string-effect
-    (if-let [string-effect (:entity/string-effect @entity)]
-      (-> string-effect
-          (update :text str "\n" text)
-          (update :counter #(reset ctx %)))
-      {:text text
-       :counter (->counter ctx 0.4)})]])
+(defcomponent :tx/add-text-effect {}
+  (effect/do! [[_ entity text] ctx]
+    [[:tx.entity/assoc
+      entity
+      :entity/string-effect
+      (if-let [string-effect (:entity/string-effect @entity)]
+        (-> string-effect
+            (update :text str "\n" text)
+            (update :counter #(reset ctx %)))
+        {:text text
+         :counter (->counter ctx 0.4)})]]))

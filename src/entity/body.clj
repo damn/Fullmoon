@@ -196,11 +196,12 @@
   (direction [entity* other-entity*]
     (v/direction (entity/position entity*) (entity/position other-entity*))))
 
-(defmethod effect/do! :tx.entity/set-movement [[_ entity movement] ctx]
-  {:pre [(or (nil? movement)
-             (and (:direction movement) ; continue schema of that ...
-                  #_(:speed movement)))]} ; princess no stats/movement-speed, then nil and here assertion-error
-  [[:tx.entity/assoc-in entity [:entity/body :movement] movement]])
+(defcomponent :tx.entity/set-movement {}
+  (effect/do! [[_ entity movement] ctx]
+    {:pre [(or (nil? movement)
+               (and (:direction movement) ; continue schema of that ...
+                    #_(:speed movement)))]} ; princess no stats/movement-speed, then nil and here assertion-error
+    [[:tx.entity/assoc-in entity [:entity/body :movement] movement]]))
 
 ; add to api: ( don't access :entity/body keyword directly , so I can change to defrecord entity later (:body ) or watever)
 

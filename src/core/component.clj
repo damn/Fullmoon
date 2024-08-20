@@ -129,7 +129,6 @@
            (assert (keyword? ~k) (pr-str ~k))
 
            (alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
-           (println "What is k? " ~k)
 
            (when (and warn-on-override
                       (get (methods @~sys-var) ~k))

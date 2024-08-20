@@ -1,5 +1,6 @@
 (ns widgets.player-modal
-  (:require [api.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
+  (:require [core.component :refer [defcomponent]]
+            [api.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
             [api.scene2d.actor :refer [remove!]]
             [api.effect :as effect]))
 
@@ -24,6 +25,7 @@
                                                   (* (ctx/gui-viewport-height ctx) (/ 3 4))]
                                 :pack? true})))
 
-(defmethod effect/do! :tx/player-modal [[_ params] ctx]
-  (show-player-modal! ctx params)
-  ctx)
+(defcomponent :tx/player-modal {}
+  (effect/do! [[_ params] ctx]
+    (show-player-modal! ctx params)
+    ctx))

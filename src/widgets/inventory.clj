@@ -2,6 +2,7 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
+            [core.component :refer [defcomponent]]
             [app :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
                                          player-tooltip-text]]
@@ -137,20 +138,22 @@
   {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
    :slot->background (:context.game.inventory/slot->background ctx)})
 
-(defmethod effect/do! :tx/set-item-image-in-widget [[_ cell item] ctx]
-  (let [{:keys [table]} (get-inventory ctx)
-        cell-widget (get table cell)
-        ^Image image-widget (get cell-widget :image)
-        drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
-    (.setMinSize drawable (float cell-size) (float cell-size))
-    (.setDrawable image-widget drawable)
-    (add-tooltip! cell-widget #(player-tooltip-text % item))
-    ctx))
+(defcomponent :tx/set-item-image-in-widget {}
+  (effect/do! [[_ cell item] ctx]
+    (let [{:keys [table]} (get-inventory ctx)
+          cell-widget (get table cell)
+          ^Image image-widget (get cell-widget :image)
+          drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
+      (.setMinSize drawable (float cell-size) (float cell-size))
+      (.setDrawable image-widget drawable)
+      (add-tooltip! cell-widget #(player-tooltip-text % item))
+      ctx)))
 
-(defmethod effect/do! :tx/remove-item-from-widget [[_ cell] ctx]
-  (let [{:keys [table slot->background]} (get-inventory ctx)
-        cell-widget (get table cell)
-        ^Image image-widget (get cell-widget :image)]
-    (.setDrawable image-widget (slot->background (cell 0)))
-    (remove-tooltip! cell-widget)
-    ctx))
+(defcomponent :tx/remove-item-from-widget {}
+  (effect/do! [[_ cell] ctx]
+    (let [{:keys [table slot->background]} (get-inventory ctx)
+          cell-widget (get table cell)
+          ^Image image-widget (get cell-widget :image)]
+      (.setDrawable image-widget (slot->background (cell 0)))
+      (remove-tooltip! cell-widget)
+      ctx)))

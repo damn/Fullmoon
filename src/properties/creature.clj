@@ -122,26 +122,27 @@
 
 ; otherwise
 
-(defmethod effect/do! :tx.entity/creature [[_ creature-id components] ctx]
-  (assert (:entity/state components))
-  (let [props (ctx/get-property ctx creature-id)
-        creature-components (:creature/entity props)]
-    [[:tx/create
-      (-> creature-components
-          (dissoc :entity/flying?)
-          (update :entity/body
-                  (fn [body]
-                    (-> body
-                        (assoc :position (:entity/position components)) ; give position separate arg
-                        (assoc :z-order (if (:entity/flying? creature-components)
-                                          :z-order/flying
-                                          :z-order/ground)))))
-          (merge (dissoc components :entity/position)
-                 (when (= creature-id :creatures/lady-a) ; do @ ?
-                   {:entity/clickable {:type :clickable/princess}}))
-          (update :entity/state set-state)  ; do @ entity/state itself
-          (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
-                 :entity.creature/species (str/capitalize (name (:creature/species props)))))]]))
+(defcomponent :tx.entity/creature {}
+  (effect/do! [[_ creature-id components] ctx]
+    (assert (:entity/state components))
+    (let [props (ctx/get-property ctx creature-id)
+          creature-components (:creature/entity props)]
+      [[:tx/create
+        (-> creature-components
+            (dissoc :entity/flying?)
+            (update :entity/body
+                    (fn [body]
+                      (-> body
+                          (assoc :position (:entity/position components)) ; give position separate arg
+                          (assoc :z-order (if (:entity/flying? creature-components)
+                                            :z-order/flying
+                                            :z-order/ground)))))
+            (merge (dissoc components :entity/position)
+                   (when (= creature-id :creatures/lady-a) ; do @ ?
+                     {:entity/clickable {:type :clickable/princess}}))
+            (update :entity/state set-state)  ; do @ entity/state itself
+            (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
+                   :entity.creature/species (str/capitalize (name (:creature/species props)))))]])))
 
 (comment
 

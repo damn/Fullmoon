@@ -38,28 +38,29 @@
 (defn- projectile-size [projectile-property]
   (first (:world-unit-dimensions (:property/image projectile-property))))
 
-(defmethod effect/do! :tx.entity/projectile [[_ projectile-id {:keys [position direction faction]}]
-                                            ctx]
-  (let [{:keys [property/image
-                projectile/max-range
-                projectile/speed
-                projectile/effects
-                projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
-        size (projectile-size prop)]
-    [[:tx/create #:entity {:body {:position position
-                                  :width size
-                                  :height size
-                                  :solid? false
-                                  :z-order :z-order/flying
-                                  :rotation-angle (v/get-angle-from-vector direction)
-                                  :movement {:direction direction
-                                             :speed speed}}
-                           :image image
-                           :faction faction
-                           :delete-after-duration (/ max-range speed)
-                           :plop true
-                           :projectile-collision {:hit-effects effects
-                                                  :piercing? piercing?}}]]))
+(defcomponent :tx.entity/projectile {}
+  (effect/do! [[_ projectile-id {:keys [position direction faction]}]
+                ctx]
+    (let [{:keys [property/image
+                  projectile/max-range
+                  projectile/speed
+                  projectile/effects
+                  projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
+          size (projectile-size prop)]
+      [[:tx/create #:entity {:body {:position position
+                                    :width size
+                                    :height size
+                                    :solid? false
+                                    :z-order :z-order/flying
+                                    :rotation-angle (v/get-angle-from-vector direction)
+                                    :movement {:direction direction
+                                               :speed speed}}
+                             :image image
+                             :faction faction
+                             :delete-after-duration (/ max-range speed)
+                             :plop true
+                             :projectile-collision {:hit-effects effects
+                                                    :piercing? piercing?}}]])))
 
 (defn- start-point [entity* direction size]
   (v/add (entity/position entity*)

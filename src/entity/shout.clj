@@ -24,11 +24,12 @@
             (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context @entity shout-range)]
               [:tx/event entity :alert])))))
 
-(defmethod effect/do! :tx.entity/shout [[_ position faction delay-seconds] ctx]
-  [[:tx/create #:entity {:body {:position position
-                                :width 0.5
-                                :height 0.5
-                                :z-order :z-order/effect ; ?
-                                }
-                         :faction faction
-                         :shout (ctx/->counter ctx delay-seconds)}]])
+(defcomponent :tx.entity/shout {}
+  (effect/do! [[_ position faction delay-seconds] ctx]
+    [[:tx/create #:entity {:body {:position position
+                                  :width 0.5
+                                  :height 0.5
+                                  :z-order :z-order/effect ; ?
+                                  }
+                           :faction faction
+                           :shout (ctx/->counter ctx delay-seconds)}]]))

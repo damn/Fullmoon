@@ -18,14 +18,15 @@
                 :image/dimensions [96 96]} ; ??
      }))
 
-(defmethod effect/do! :tx.entity/audiovisual [[_ position id] ctx]
-  ; assert property of type audiovisual
-  (let [{:keys [property/sound
-                property/animation]} (ctx/get-property ctx id)]
-    [[:tx/sound sound]
-     [:tx/create #:entity {:body {:position position
-                                  :width 0.5
-                                  :height 0.5
-                                  :z-order :z-order/effect}
-                           :animation animation
-                           :delete-after-animation-stopped? true}]]))
+(defcomponent :tx.entity/audiovisual {}
+  (effect/do! [[_ position id] ctx]
+    ; assert property of type audiovisual
+    (let [{:keys [property/sound
+                  property/animation]} (ctx/get-property ctx id)]
+      [[:tx/sound sound]
+       [:tx/create #:entity {:body {:position position
+                                    :width 0.5
+                                    :height 0.5
+                                    :z-order :z-order/effect}
+                             :animation animation
+                             :delete-after-animation-stopped? true}]])))

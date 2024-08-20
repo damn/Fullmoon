@@ -62,11 +62,13 @@
      (when (:entity/player? entity*)
        [:tx/remove-item-from-widget cell])]))
 
-(defmethod effect/do! :tx/set-item [[_ entity cell item] _ctx]
-  (set-item @entity cell item))
+(defcomponent :tx/set-item {}
+  (effect/do! [[_ entity cell item] _ctx]
+    (set-item @entity cell item)))
 
-(defmethod effect/do! :tx/remove-item [[_ entity cell] _ctx]
-  (remove-item @entity cell))
+(defcomponent :tx/remove-item {}
+  (effect/do! [[_ entity cell] _ctx]
+    (remove-item @entity cell)))
 
 ; TODO doesnt exist, stackable, usable items with action/skillbar thingy
 #_(defn remove-one-item [entity cell]
@@ -89,8 +91,9 @@
     (concat (remove-item entity* cell)
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
-(defmethod effect/do! :tx/stack-item [[_ entity cell item] _ctx]
-  (stack-item @entity cell item))
+(defcomponent :tx/stack-item {}
+  (effect/do! [[_ entity cell item] _ctx]
+    (stack-item @entity cell item)))
 
 (defn- try-put-item-in [entity* slot item]
   (let [inventory (:entity/inventory entity*)
@@ -108,8 +111,9 @@
    (try-put-item-in entity* (:item/slot item)   item)
    (try-put-item-in entity* :inventory.slot/bag item)))
 
-(defmethod effect/do! :tx/pickup-item [[_ entity item] _ctx]
-  (pickup-item @entity item))
+(defcomponent :tx/pickup-item {}
+  (effect/do! [[_ entity item] _ctx]
+    (pickup-item @entity item)))
 
 (extend-type api.entity.Entity
   entity/Inventory

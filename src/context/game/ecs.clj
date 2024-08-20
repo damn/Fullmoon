@@ -20,31 +20,34 @@
     {:pre [(contains? (::entities ctx) uid)]}
     (update ctx ::entities dissoc uid)))
 
-(defmethod effect/do! ::setup-entity [[_ entity uid components] ctx]
-  {:pre [(not (contains? components :entity/id))
-         (not (contains? components :entity/uid))]}
-  (reset! entity (-> components
-                     (assoc :entity/id entity :entity/uid uid)
-                     (component/update-map entity/create-component components ctx)
-                     map->Entity))
-  ctx)
+(defcomponent ::setup-entity {}
+  (effect/do! [[_ entity uid components] ctx]
+    {:pre [(not (contains? components :entity/id))
+           (not (contains? components :entity/uid))]}
+    (reset! entity (-> components
+                       (assoc :entity/id entity :entity/uid uid)
+                       (component/update-map entity/create-component components ctx)
+                       map->Entity))
+    ctx))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
 
-(defmethod effect/do! :tx/create [[_ components] ctx]
-  (let [entity (atom nil)]
-    [[::setup-entity entity (unique-number!) components]
-     (fn [ctx]
-       (for [component @entity]
-         (fn [ctx]
-           ; we are assuming components dont remove other ones at entity/create
-           ; thats why we reuse component and not fetch each time again for key
-           (entity/create component entity ctx))))]))
+(defcomponent :tx/create {}
+  (effect/do! [[_ components] ctx]
+    (let [entity (atom nil)]
+      [[::setup-entity entity (unique-number!) components]
+       (fn [ctx]
+         (for [component @entity]
+           (fn [ctx]
+             ; we are assuming components dont remove other ones at entity/create
+             ; thats why we reuse component and not fetch each time again for key
+             (entity/create component entity ctx))))])))
 
-(defmethod effect/do! :tx/destroy [[_ entity] ctx]
-  [[:tx.entity/assoc entity :entity/destroyed? true]])
+(defcomponent :tx/destroy {}
+  (effect/do! [[_ entity] ctx]
+    [[:tx.entity/assoc entity :entity/destroyed? true]]))
 
 (defn- draw-body-rect [g entity*]
   (let [[x y] (entity/left-bottom entity*)]
@@ -108,25 +111,30 @@
       (fn [ctx]
         (entity/destroy component entity ctx)))))
 
-(defmethod effect/do! :tx.entity/assoc [[_ entity k v] ctx]
-  (assert (keyword? k))
-  (swap! entity assoc k v)
-  ctx)
+(defcomponent :tx.entity/assoc {}
+  (effect/do! [[_ entity k v] ctx]
+    (assert (keyword? k))
+    (swap! entity assoc k v)
+    ctx))
 
-(defmethod effect/do! :tx.entity/assoc-in [[_ entity ks v] ctx]
-  (swap! entity assoc-in ks v)
-  ctx)
+(defcomponent :tx.entity/assoc-in {}
+  (effect/do! [[_ entity ks v] ctx]
+    (swap! entity assoc-in ks v)
+    ctx))
 
-(defmethod effect/do! :tx.entity/dissoc [[_ entity k] ctx]
-  (assert (keyword? k))
-  (swap! entity dissoc k)
-  ctx)
+(defcomponent :tx.entity/dissoc {}
+  (effect/do! [[_ entity k] ctx]
+    (assert (keyword? k))
+    (swap! entity dissoc k)
+    ctx))
 
-(defmethod effect/do! :tx.entity/dissoc-in [[_ entity ks] ctx]
-  (assert (> (count ks) 1))
-  (swap! entity update-in (drop-last ks) dissoc (last ks))
-  ctx)
+(defcomponent :tx.entity/dissoc-in {}
+  (effect/do! [[_ entity ks] ctx]
+    (assert (> (count ks) 1))
+    (swap! entity update-in (drop-last ks) dissoc (last ks))
+    ctx))
 
-(defmethod effect/do! :tx.entity/update-in [[_ entity ks f] ctx]
-  (swap! entity update-in ks f)
-  ctx)
+(defcomponent :tx.entity/update-in {}
+  (effect/do! [[_ entity ks f] ctx]
+    (swap! entity update-in ks f)
+    ctx))

@@ -1,5 +1,6 @@
 (ns widgets.player-message
   (:require [gdx.graphics :as graphics]
+            [core.component :refer [defcomponent]]
             [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
             [api.effect :as effect]
@@ -8,8 +9,9 @@
 (defn- player-message [ctx]
   (:context.game/player-message ctx))
 
-(defmethod effect/do! :tx/msg-to-player [[_ message] ctx]
-  (assoc ctx :context.game/player-message {:message message :counter 0}))
+(defcomponent :tx/msg-to-player {}
+  (effect/do! [[_ message] ctx]
+    (assoc ctx :context.game/player-message {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)
 

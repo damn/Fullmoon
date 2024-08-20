@@ -69,6 +69,7 @@
   (all-sound-files   [ctx] (:sound-files   (this ctx)))
   (all-texture-files [ctx] (:texture-files (this ctx))))
 
-(defmethod effect/do! :tx/sound [[_ file] ctx]
-  (ctx/play-sound! ctx file)
-  ctx)
+(defcomponent :tx/sound {}
+  (effect/do! [[_ file] ctx]
+    (ctx/play-sound! ctx file)
+    ctx))

@@ -7,6 +7,7 @@
             [api.context :as ctx]
             [api.scene2d.actor :as actor]
             [api.scene2d.group :as group]
+            api.scene2d.ui.button-group
             [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [widgets.player-message :as player-message]
             [widgets.action-bar :as action-bar]

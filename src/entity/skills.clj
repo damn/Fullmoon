@@ -38,9 +38,10 @@
        [:tx.context.action-bar/add-skill skill])]))
 
 ; unused ?
-(defmethod effect/do! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
-                                        _ctx]
-  (assert (entity/has-skill? @entity skill))
-  [[:tx.entity/dissoc-in entity [:entity/skills id]]
-   (when (:entity/player? @entity)
-     [:tx.context.action-bar/remove-skill skill])])
+(defcomponent :tx/remove-skill {}
+  (effect/do! [[_ entity {:keys [property/id] :as skill}]
+                _ctx]
+    (assert (entity/has-skill? @entity skill))
+    [[:tx.entity/dissoc-in entity [:entity/skills id]]
+     (when (:entity/player? @entity)
+       [:tx.context.action-bar/remove-skill skill])]))

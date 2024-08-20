@@ -38,11 +38,13 @@
      [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
-(defmethod effect/do! :tx/apply-modifiers [[_ entity modifiers] _ctx]
-  (txs-update-modifiers entity modifiers conj-value))
+(defcomponent :tx/apply-modifiers {}
+  (effect/do! [[_ entity modifiers] _ctx]
+    (txs-update-modifiers entity modifiers conj-value)))
 
-(defmethod effect/do! :tx/reverse-modifiers [[_ entity modifiers] _ctx]
-  (txs-update-modifiers entity modifiers remove-value))
+(defcomponent :tx/reverse-modifiers {}
+  (effect/do! [[_ entity modifiers] _ctx]
+    (txs-update-modifiers entity modifiers remove-value)))
 
 (defsystem operation-text [_])
 (defsystem apply-operation [_ base-value])
@@ -384,10 +386,11 @@
                                      (- height (* 2 border))
                                      (hpbar-color ratio))))))))
 
-(defmethod effect/do! :tx.entity.stats/pay-mana-cost [[_ entity cost] _ctx]
-  (let [mana-val ((entity/stat @entity :stats/mana) 0)]
-    (assert (<= cost mana-val))
-    [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]]))
+(defcomponent :tx.entity.stats/pay-mana-cost {}
+  (effect/do! [[_ entity cost] _ctx]
+    (let [mana-val ((entity/stat @entity :stats/mana) 0)]
+      (assert (<= cost mana-val))
+      [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
 
 (comment
  (let [mana-val 4

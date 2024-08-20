@@ -1,5 +1,6 @@
 (ns entity-state.active-skill
   (:require [utils.core :refer [safe-merge]]
+            [core.component :refer [defcomponent]]
             [api.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [api.effect :as effect]
             [api.entity :as entity]
@@ -28,18 +29,19 @@
 ; maybe move to transaction handler & call it :tx/with-ctx
 ; and dissoc-ks (keys of extra-ctx)
 ; its a more general thing than tx/effect
-(defmethod effect/do! :tx/effect [[_ effect-ctx effects] ctx]
-  (-> ctx
-      (safe-merge effect-ctx)
-      (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
-      ; TODO
-      ; context/source ?
-      ; skill.context ?  ?
-      ; generic context ?( projectile hit is not skill context)
-      (dissoc :effect/source
-              :effect/target
-              :effect/direction
-              :effect/target-position)))
+(defcomponent :tx/effect {}
+  (effect/do! [[_ effect-ctx effects] ctx]
+    (-> ctx
+        (safe-merge effect-ctx)
+        (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
+        ; TODO
+        ; context/source ?
+        ; skill.context ?  ?
+        ; generic context ?( projectile hit is not skill context)
+        (dissoc :effect/source
+                :effect/target
+                :effect/direction
+                :effect/target-position))))
 
 ; would have to do this only if effect even needs target ... ?
 (defn- check-remove-target [{:keys [effect/source] :as ctx}]

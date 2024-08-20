@@ -1,5 +1,6 @@
 (ns widgets.action-bar
-  (:require [api.context :as ctx :refer [->image-button player-tooltip-text]]
+  (:require [core.component :refer [defcomponent]]
+            [api.context :as ctx :refer [->image-button player-tooltip-text]]
             [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [api.scene2d.group :refer [clear-children! add-actor!]]
             [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
@@ -18,23 +19,25 @@
   {:horizontal-group (::action-bar (:context.game.widgets/action-bar-table (ctx/get-stage ctx)))
    :button-group (:context.game/action-bar ctx)})
 
-(defmethod effect/do! :tx.context.action-bar/add-skill
-  [[_ {:keys [property/id property/image] :as skill}] ctx]
-  (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-        button (->image-button ctx image (fn [_]) {:dimensions [48 48]})]
-    (actor/set-id! button id)
-    (add-tooltip! button #(player-tooltip-text % skill))
-    (add-actor! horizontal-group button)
-    (add! button-group button)
-    ctx))
+(defcomponent :tx.context.action-bar/add-skill {}
+  (effect/do!
+   [[_ {:keys [property/id property/image] :as skill}] ctx]
+    (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
+          button (->image-button ctx image (fn [_]) {:dimensions [48 48]})]
+      (actor/set-id! button id)
+      (add-tooltip! button #(player-tooltip-text % skill))
+      (add-actor! horizontal-group button)
+      (add! button-group button)
+      ctx)))
 
-(defmethod effect/do! :tx.context.action-bar/remove-skill
-  [[_ {:keys [property/id]}] ctx]
-  (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-        button (get horizontal-group id)]
-    (remove! button)
-    (button-group/remove! button-group button)
-    ctx))
+(defcomponent :tx.context.action-bar/remove-skill {}
+  (effect/do!
+   [[_ {:keys [property/id]}] ctx]
+    (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
+          button (get horizontal-group id)]
+      (remove! button)
+      (button-group/remove! button-group button)
+      ctx)))
 
 (comment
 

@@ -57,7 +57,7 @@
                   (tx ctx)
                   (effect/do! tx ctx))
                 (catch Throwable t
-                  (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)}
+                  (throw (ex-info "Error with transaction:" {:tx tx #_(debug-print-tx tx)}
                                   t))))]
     (if (map? result) ; probably faster than (instance? api.context.Context result)
       (do

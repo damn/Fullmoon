@@ -4,6 +4,7 @@
             [math.raycaster :as raycaster]
             [math.vector :as v]
             [utils.core :refer [tile->middle]]
+            [core.component :refer [defcomponent]]
             [data.grid2d :as grid2d]
             [api.context :as ctx :refer [explored? ray-blocked? content-grid world-grid]]
             [api.entity :as entity]
@@ -90,20 +91,23 @@
   (world-grid [{:keys [context.game/world]}]
     (:grid world)))
 
-(defmethod effect/do! :tx/add-to-world [[_ entity] ctx]
-  (content-grid/update-entity! (content-grid ctx) entity)
-  (world-grid/add-entity! (world-grid ctx) entity)
-  ctx)
+(defcomponent :tx/add-to-world {}
+  (effect/do! [[_ entity] ctx]
+    (content-grid/update-entity! (content-grid ctx) entity)
+    (world-grid/add-entity! (world-grid ctx) entity)
+    ctx))
 
-(defmethod effect/do! :tx/remove-from-world [[_ entity] ctx]
-  (content-grid/remove-entity! (content-grid ctx) entity)
-  (world-grid/remove-entity! (world-grid ctx) entity)
-  ctx)
+(defcomponent :tx/remove-from-world {}
+  (effect/do! [[_ entity] ctx]
+    (content-grid/remove-entity! (content-grid ctx) entity)
+    (world-grid/remove-entity! (world-grid ctx) entity)
+    ctx))
 
-(defmethod effect/do! :tx/position-changed [[_ entity] ctx]
-  (content-grid/update-entity! (content-grid ctx) entity)
-  (world-grid/entity-position-changed! (world-grid ctx) entity)
-  ctx)
+(defcomponent :tx/position-changed {}
+  (effect/do! [[_ entity] ctx]
+    (content-grid/update-entity! (content-grid ctx) entity)
+    (world-grid/entity-position-changed! (world-grid ctx) entity)
+    ctx))
 
 (defn- set-cell-blocked-boolean-array [arr cell*]
   (let [[x y] (:position cell*)]

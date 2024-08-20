@@ -11,11 +11,12 @@
         (g/with-shape-line-width g 4 #(g/draw-line g position end color))
         (g/draw-line g position end color)))))
 
-(defmethod effect/do! :tx.entity/line-render
-  [[_ {:keys [start end duration color thick?]}] _ctx]
-  [[:tx/create #:entity {:body {:position start
-                                :width 0.5
-                                :height 0.5
-                                :z-order :z-order/effect}
-                         :line-render {:thick? thick? :end end :color color}
-                         :delete-after-duration duration}]])
+(defcomponent :tx.entity/line-render {}
+  (effect/do!
+   [[_ {:keys [start end duration color thick?]}] _ctx]
+    [[:tx/create #:entity {:body {:position start
+                                  :width 0.5
+                                  :height 0.5
+                                  :z-order :z-order/effect}
+                           :line-render {:thick? thick? :end end :color color}
+                           :delete-after-duration duration}]]))

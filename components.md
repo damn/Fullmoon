@@ -1,259 +1,199 @@
 
 # nil
-* :height  {:widget :label, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
-* :hit-effects  {:widget :nested-map, :schema [:map {:closed true} [:effect/damage # #] [:effect/stats-hp-set-to-max # #] [:effect/movement-speed # #] [:effect/hp # #] [:effect/convert # :boolean] [:effect/melee-damage # :some] [:effect/stats-mana-set-to-max # #] [:effect/mana # #]], :components (:effect/damage :effect/stats-hp-set-to-max :effect/movement-speed :effect/hp :effect/convert :effect/melee-damage :effect/stats-mana-set-to-max :effect/mana)}
-* :maxrange  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
-* :solid?  {:widget :label, :schema #object[clojure.core$boolean_QMARK_ 0x67205ec8 "clojure.core$boolean_QMARK_@67205ec8"]}
-* :width  {:widget :label, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
+* :height  nil
+* :hit-effects  nil
+* :maxrange  nil
+* :solid?  nil
+* :width  nil
 
 # context
-* :context/assets  
-  *  core.component/create
-* :context/config  
-  *  core.component/create
-* :context/graphics  
-  *  core.component/destroy
-  *  core.component/create
-* :context/properties  
-  *  core.component/create
-* :context/screens  
-  *  core.component/destroy
-  *  core.component/create
-* :context/tiled  
-  *  core.component/create
-* :context/vis-ui  
-  *  core.component/destroy
-  *  core.component/create
+* :context/assets  {"create" [_ {:keys [folder sound-file-extensions image-file-extensions log-load-assets?]}]}
+* :context/config  {"create" [_ {:keys [tag configs]}]}
+* :context/graphics  {"create" [_ {:keys [views default-font cursors]}], "destroy" [_ {:keys [batch shape-drawer-texture default-font cursors]}]}
+* :context/properties  {"create" [_ {:keys [file types]}]}
+* :context/screens  {"create" [_ screens], "destroy" _}
+* :context/tiled  {"create" _}
+* :context/vis-ui  {"create" [_ skin-scale], "destroy" _}
+
+# context.game.ecs
+* :context.game.ecs/setup-entity  {"do!" [_ entity uid components]}
 
 # creature
-* :creature/entity  {:widget :nested-map, :schema [:map {:closed true} [:entity/animation # :some] [:entity/body # #] [:entity/flying? # :boolean] [:entity/reaction-time # #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]] [:entity/faction # #] [:entity/stats # #] [:entity/inventory # #] [:entity/skills # #]], :components [:entity/animation :entity/body :entity/flying? :entity/reaction-time :entity/faction :entity/stats :entity/inventory :entity/skills]}
-* :creature/level  {:widget :text-field, :schema [:maybe #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]]}
-* :creature/species  {:widget :label, :schema [:qualified-keyword {:namespace :species}]}
+* :creature/entity  nil
+* :creature/level  nil
+* :creature/species  nil
 
 # damage
-* :damage/min-max  {:widget :text-field, :schema [:and [:vector # #] [:fn # #object[data.val_max$fn__16774 0x29c7e28c "data.val_max$fn__16774@29c7e28c"]]]}
+* :damage/min-max  nil
 
 # effect
-* :effect/convert  {:widget :check-box, :schema :boolean, :default-value true}
-  *  api.effect/text
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/damage  {:widget :nested-map, :schema [:map {:closed true} [:damage/min-max #]]}
-  *  api.effect/text
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/hp -> :entity.stats/stat-effect {:widget :nested-map, :schema [:map {:closed true} [:op/val-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/val-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:op/max-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/max-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]}
-* :effect/kill  {:widget :check-box, :schema :boolean, :default-value true}
-  *  api.effect/text
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/mana -> :entity.stats/stat-effect {:widget :nested-map, :schema [:map {:closed true} [:op/val-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/val-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:op/max-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/max-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]}
-* :effect/melee-damage  
-  *  api.effect/text
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/movement-speed -> :entity.stats/stat-effect {:widget :nested-map, :schema [:map {:closed true} [:op/mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/mult]}
-* :effect/projectile  {:widget :text-field, :schema [:qualified-keyword {:namespace :projectiles}]}
-  *  api.effect/text
-  *  api.effect/useful?
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/spawn  {:widget :text-field, :schema [:qualified-keyword {:namespace :creatures}]}
-  *  api.effect/text
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/stats-hp-set-to-max  {:schema [:= true], :default-value true, :widget :label}
-  *  api.effect/text
-  *  api.effect/useful?
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/stats-mana-set-to-max  {:schema [:= true], :default-value true, :widget :label}
-  *  api.effect/text
-  *  api.effect/useful?
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/stun  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
-  *  api.effect/text
-  *  api.tx/transact!
-  *  api.effect/applicable?
-* :effect/target-entity  {:widget :nested-map, :schema [:map {:closed true} [:hit-effects #] [:maxrange #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]]], :default-value {:hit-effects {}, :max-range 2.0}, :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.\nCancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
-  *  api.effect/text
-  *  api.effect/render-info
-  *  api.effect/useful?
-  *  api.tx/transact!
-  *  api.effect/applicable?
+* :effect/convert  {"text" _, "applicable?" _, "do!" _}
+* :effect/damage  {"text" [_ damage], "applicable?" _, "do!" [_ damage]}
+* :effect/hp -> :entity.stats/stat-effect nil
+* :effect/kill  {"text" _, "applicable?" _, "do!" _}
+* :effect/mana -> :entity.stats/stat-effect nil
+* :effect/melee-damage  {"text" _, "applicable?" _, "do!" _}
+* :effect/movement-speed -> :entity.stats/stat-effect nil
+* :effect/projectile  {"text" [_ projectile-id], "applicable?" _, "useful?" [_ projectile-id], "do!" [_ projectile-id]}
+* :effect/spawn  {"text" [_ creature-id], "applicable?" _, "do!" [_ creature-id]}
+* :effect/stats-hp-set-to-max  {"text" _, "applicable?" _, "useful?" _, "do!" _}
+* :effect/stats-mana-set-to-max  {"text" _, "applicable?" _, "useful?" _, "do!" _}
+* :effect/stun  {"text" [_ duration], "applicable?" _, "do!" [_ duration]}
+* :effect/target-entity  {"text" [_ {:keys [maxrange hit-effects]}], "applicable?" [_ {:keys [hit-effects]}], "useful?" [_ {:keys [maxrange]}], "do!" [_ {:keys [maxrange hit-effects]}], "render-info" [_ {:keys [maxrange]}]}
 
 # entity
-* :entity/animation  {:widget :animation, :schema :some}
-  *  api.entity/create
-  *  api.entity/tick
-* :entity/body  {:widget :nested-map, :schema [:map {:closed true} [:width #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]] [:height #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]] [:solid? #object[clojure.core$boolean_QMARK_ 0x67205ec8 "clojure.core$boolean_QMARK_@67205ec8"]]]}
-  *  api.entity/destroy
-  *  api.entity/create
-  *  api.entity/create-component
-  *  api.entity/render-debug
-  *  api.entity/tick
-* :entity/clickable  
-  *  api.entity/render-default
-* :entity/delete-after-animation-stopped?  
-  *  api.entity/create
-  *  api.entity/tick
-* :entity/delete-after-duration  
-  *  api.entity/create-component
-  *  api.entity/info-text
-  *  api.entity/tick
-* :entity/faction  {:widget :enum, :schema [:enum :good :evil], :items (:good :evil)}
-  *  api.entity/info-text
-* :entity/flying?  {:widget :check-box, :schema :boolean, :default-value true}
-* :entity/image  
-  *  api.entity/render-default
-* :entity/inventory  {:widget :one-to-many, :schema [:set :qualified-keyword], :linked-property-type :properties/item}
-  *  api.entity/create
-* :entity/line-render  
-  *  api.entity/render-default
-* :entity/mouseover?  
-  *  api.entity/render-below
-* :entity/player?  
-  *  api.entity/create
-* :entity/plop  
-  *  api.entity/destroy
-* :entity/projectile-collision  
-  *  api.entity/create-component
-  *  api.entity/info-text
-  *  api.entity/tick
-* :entity/reaction-time  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
-* :entity/shout  
-  *  api.entity/tick
-* :entity/skills  {:widget :one-to-many, :schema [:set :qualified-keyword], :linked-property-type :properties/skill}
-  *  api.entity/create-component
-  *  api.entity/info-text
-  *  api.entity/tick
-* :entity/state  
-  *  api.entity/create-component
-  *  api.entity/render-above
-  *  api.entity/render-below
-  *  api.entity/info-text
-  *  api.entity/tick
-  *  api.entity/render-info
-* :entity/stats  {:widget :nested-map, :schema [:map {:closed true} [:stats/movement-speed # #] [:stats/armor-pierce # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:stats/mana # #object[clojure.core$nat_int_QMARK_ 0x5b7f245 "clojure.core$nat_int_QMARK_@5b7f245"]] [:stats/modifiers # #] [:stats/strength # #object[clojure.core$nat_int_QMARK_ 0x5b7f245 "clojure.core$nat_int_QMARK_@5b7f245"]] [:stats/cast-speed # #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]] [:stats/hp # #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]] [:stats/armor-save # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:stats/attack-speed # #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]]], :components (:stats/movement-speed :stats/armor-pierce :stats/mana :stats/modifiers :stats/strength :stats/cast-speed :stats/hp :stats/armor-save :stats/attack-speed)}
-  *  api.entity/create-component
-  *  api.entity/info-text
-  *  api.entity/render-info
-* :entity/string-effect  
-  *  api.entity/render-above
-  *  api.entity/tick
-* :entity/uid  
-  *  api.entity/destroy
-  *  api.entity/create
+* :entity/animation  {"create" [_ animation], "tick" [k animation]}
+* :entity/body  {"create-component" [_ {[x y] :position, :keys [position width height solid? z-order rotation-angle rotate-in-movement-direction? movement]}], "create" _, "destroy" _, "render-debug" [_ body], "tick" [_ body]}
+* :entity/clickable  {"render-default" [_ {:keys [text]}]}
+* :entity/delete-after-animation-stopped?  {"create" _, "tick" _}
+* :entity/delete-after-duration  {"create-component" [_ duration], "tick" [_ counter], "info-text" [_ counter]}
+* :entity/faction  {"info-text" [_ faction]}
+* :entity/flying?  nil
+* :entity/image  {"render-default" [_ image]}
+* :entity/inventory  {"create" [_ item-ids]}
+* :entity/line-render  {"render-default" [_ {:keys [thick? end color]}]}
+* :entity/mouseover?  {"render-below" _}
+* :entity/player?  {"create" _}
+* :entity/plop  {"destroy" _}
+* :entity/projectile-collision  {"create-component" [_ v], "info-text" [_ {:keys [hit-effects piercing?]}], "tick" [k {:keys [hit-effects already-hit-bodies piercing?]}]}
+* :entity/reaction-time  nil
+* :entity/shout  {"tick" [_ counter]}
+* :entity/skills  {"create-component" [_ skill-ids], "info-text" [_ skills], "tick" [k skills]}
+* :entity/state  {"create-component" [_ {:keys [fsm initial-state state-obj-constructors]}], "info-text" [_ state], "tick" [_ {:keys [state-obj]}], "render-below" [_ {:keys [state-obj]}], "render-above" [_ {:keys [state-obj]}], "render-info" [_ {:keys [state-obj]}]}
+* :entity/stats  {"create-component" [_ stats], "info-text" [_ stats], "render-info" _}
+* :entity/string-effect  {"tick" [k {:keys [counter]}], "render-above" [_ {:keys [text]}]}
+* :entity/uid  {"create" _, "destroy" [_ uid]}
 
 # entity.creature
-* :entity.creature/name  
-  *  api.entity/info-text
-* :entity.creature/species  
-  *  api.entity/info-text
+* :entity.creature/name  {"info-text" [_ name]}
+* :entity.creature/species  {"info-text" [_ species]}
 
 # entity.stats
-* :entity.stats/stat-effect  
-  *  api.effect/text
-  *  api.effect/useful?
-  *  api.tx/transact!
-  *  api.effect/applicable?
+* :entity.stats/stat-effect  {"text" [k operations], "applicable?" [k _], "useful?" _, "do!" [effect-k operations]}
 
 # item
-* :item/modifiers  {:widget :nested-map, :schema [:map {:closed true} [:modifier/armor-save # #] [:modifier/armor-pierce # #] [:modifier/attack-speed # #] [:modifier/strength # #] [:modifier/cast-speed # #] [:modifier/movement-speed # #] [:modifier/hp # #] [:modifier/mana # #] [:modifier/damage-deal # #] [:modifier/damage-receive # #]], :components (:modifier/armor-save :modifier/armor-pierce :modifier/attack-speed :modifier/strength :modifier/cast-speed :modifier/movement-speed :modifier/hp :modifier/mana :modifier/damage-deal :modifier/damage-receive)}
-* :item/slot  {:widget :label, :schema [:qualified-keyword {:namespace :inventory.slot}]}
+* :item/modifiers  nil
+* :item/slot  nil
 
 # modifier
-* :modifier/armor-pierce  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc]}
-* :modifier/armor-save  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc]}
-* :modifier/attack-speed  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc]}
-* :modifier/cast-speed  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc]}
-* :modifier/damage-deal  {:widget :nested-map, :schema [:map {:closed true} [:op/val-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/val-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:op/max-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/max-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]}
-* :modifier/damage-receive  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:op/mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc :op/mult]}
-* :modifier/hp  {:widget :nested-map, :schema [:map {:closed true} [:op/max-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/max-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/max-inc :op/max-mult]}
-* :modifier/mana  {:widget :nested-map, :schema [:map {:closed true} [:op/max-inc # #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]] [:op/max-mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/max-inc :op/max-mult]}
-* :modifier/movement-speed  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]] [:op/mult # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc :op/mult]}
-* :modifier/strength  {:widget :nested-map, :schema [:map {:closed true} [:op/inc # #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]]], :components [:op/inc]}
+* :modifier/armor-pierce  nil
+* :modifier/armor-save  nil
+* :modifier/attack-speed  nil
+* :modifier/cast-speed  nil
+* :modifier/damage-deal  nil
+* :modifier/damage-receive  nil
+* :modifier/hp  nil
+* :modifier/mana  nil
+* :modifier/movement-speed  nil
+* :modifier/strength  nil
 
 # op
-* :op/inc  {:widget :text-field, :schema #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]}
-  *  entity.stats/operation-text
-  *  entity.stats/operation-order
-  *  entity.stats/apply-operation
-* :op/max-inc -> :op/val-max {:widget :text-field, :schema #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]}
-* :op/max-mult -> :op/val-max {:widget :text-field, :schema #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]}
-* :op/mult  {:widget :text-field, :schema #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]}
-  *  entity.stats/operation-text
-  *  entity.stats/operation-order
-  *  entity.stats/apply-operation
-* :op/val-inc -> :op/val-max {:widget :text-field, :schema #object[clojure.core$int_QMARK_ 0x2d0d357b "clojure.core$int_QMARK_@2d0d357b"]}
-* :op/val-max  
-  *  entity.stats/operation-text
-  *  entity.stats/operation-order
-  *  entity.stats/apply-operation
-* :op/val-mult -> :op/val-max {:widget :text-field, :schema #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]}
+* :op/inc  {"operation-text" [_ value], "apply-operation" [_ value], "operation-order" _}
+* :op/max-inc -> :op/val-max nil
+* :op/max-mult -> :op/val-max nil
+* :op/mult  {"operation-text" [_ value], "apply-operation" [_ value], "operation-order" _}
+* :op/val-inc -> :op/val-max nil
+* :op/val-max  {"operation-text" [op-k value], "apply-operation" [operation-k value], "operation-order" [op-k value]}
+* :op/val-mult -> :op/val-max nil
 
 # projectile
-* :projectile/effects  {:widget :nested-map, :schema [:map {:closed true} [:effect/kill # :boolean] [:effect/damage # #] [:effect/projectile # #] [:effect/stats-hp-set-to-max # #] [:effect/movement-speed # #] [:effect/hp # #] [:effect/stun # #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]] [:effect/convert # :boolean] [:effect/spawn # #] [:effect/melee-damage # :some] [:effect/stats-mana-set-to-max # #] [:effect/target-entity # #] [:effect/mana # #]], :components (:effect/kill :effect/damage :effect/projectile :effect/stats-hp-set-to-max :effect/movement-speed :effect/hp :effect/stun :effect/convert :effect/spawn :effect/melee-damage :effect/stats-mana-set-to-max :effect/target-entity :effect/mana)}
-* :projectile/max-range  {:widget :text-field, :schema #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]}
-* :projectile/piercing?  {:widget :check-box, :schema :boolean, :default-value true}
-* :projectile/speed  {:widget :text-field, :schema #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]}
+* :projectile/effects  nil
+* :projectile/max-range  nil
+* :projectile/piercing?  nil
+* :projectile/speed  nil
 
 # properties
-* :properties/audiovisual  
-  *  api.properties/create
-* :properties/creature  
-  *  api.properties/create
-* :properties/item  
-  *  api.properties/create
-* :properties/projectile  
-  *  api.properties/create
-* :properties/skill  
-  *  api.properties/create
-* :properties/world  
-  *  api.properties/create
+* :properties/audiovisual  {"create" _}
+* :properties/creature  {"create" _}
+* :properties/item  {"create" _}
+* :properties/projectile  {"create" _}
+* :properties/skill  {"create" _}
+* :properties/world  {"create" _}
 
 # property
-* :property/animation  {:widget :animation, :schema :some}
-* :property/image  {:widget :image, :schema :some}
-* :property/pretty-name  {:widget :text-field, :schema :string}
-* :property/sound  {:widget :sound, :schema :string}
+* :property/animation  nil
+* :property/image  nil
+* :property/pretty-name  nil
+* :property/sound  nil
 
 # screens
-* :screens/game  
-  *  api.screen/create
-* :screens/main-menu  
-  *  api.screen/create
-* :screens/map-editor  
-  *  api.screen/create
-* :screens/minimap  
-  *  api.screen/create
-* :screens/options-menu  
-  *  api.screen/create
-* :screens/property-editor  
-  *  api.screen/create
+* :screens/game  {"create" _}
+* :screens/main-menu  {"create" _}
+* :screens/map-editor  {"create" _}
+* :screens/minimap  {"create" _}
+* :screens/options-menu  {"create" _}
+* :screens/property-editor  {"create" _}
 
 # skill
-* :skill/action-time  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
-* :skill/action-time-modifier-key  {:widget :enum, :schema [:enum :stats/cast-speed :stats/attack-speed], :items (:stats/cast-speed :stats/attack-speed)}
-* :skill/cooldown  {:widget :text-field, :schema #object[clojure.core$nat_int_QMARK_ 0x5b7f245 "clojure.core$nat_int_QMARK_@5b7f245"]}
-* :skill/cost  {:widget :text-field, :schema #object[clojure.core$nat_int_QMARK_ 0x5b7f245 "clojure.core$nat_int_QMARK_@5b7f245"]}
-* :skill/effects  {:widget :nested-map, :schema [:map {:closed true} [:effect/kill # :boolean] [:effect/damage # #] [:effect/projectile # #] [:effect/stats-hp-set-to-max # #] [:effect/movement-speed # #] [:effect/hp # #] [:effect/stun # #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]] [:effect/convert # :boolean] [:effect/spawn # #] [:effect/melee-damage # :some] [:effect/stats-mana-set-to-max # #] [:effect/target-entity # #] [:effect/mana # #]], :components (:effect/kill :effect/damage :effect/projectile :effect/stats-hp-set-to-max :effect/movement-speed :effect/hp :effect/stun :effect/convert :effect/spawn :effect/melee-damage :effect/stats-mana-set-to-max :effect/target-entity :effect/mana)}
-* :skill/start-action-sound  {:widget :sound, :schema :string}
+* :skill/action-time  nil
+* :skill/action-time-modifier-key  nil
+* :skill/cooldown  nil
+* :skill/cost  nil
+* :skill/effects  nil
+* :skill/start-action-sound  nil
 
 # stats
-* :stats/armor-pierce  {:widget :text-field, :schema #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]}
-* :stats/armor-save  {:widget :text-field, :schema #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"]}
-* :stats/attack-speed  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"], :doc "action-time divided by this stat when a skill is being used.\n          Default value 1.\n\n          For example:\n          attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."}
-* :stats/cast-speed  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"], :doc "action-time divided by this stat when a skill is being used.\n          Default value 1.\n\n          For example:\n          attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."}
-* :stats/hp  {:widget :text-field, :schema #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]}
-* :stats/mana  {:widget :text-field, :schema #object[clojure.core$nat_int_QMARK_ 0x5b7f245 "clojure.core$nat_int_QMARK_@5b7f245"]}
-* :stats/modifiers  {:widget :nested-map, :schema [:map {:closed true} [:modifier/damage-deal # #] [:modifier/damage-receive # #]], :components [:modifier/damage-deal :modifier/damage-receive]}
-* :stats/movement-speed  {:widget :text-field, :schema [:and #object[clojure.core$number_QMARK_ 0x23bc053c "clojure.core$number_QMARK_@23bc053c"] [:>= 0] [:<= 10.0]]}
-* :stats/strength  {:widget :text-field, :schema #object[clojure.core$nat_int_QMARK_ 0x5b7f245 "clojure.core$nat_int_QMARK_@5b7f245"]}
+* :stats/armor-pierce  nil
+* :stats/armor-save  nil
+* :stats/attack-speed  nil
+* :stats/cast-speed  nil
+* :stats/hp  nil
+* :stats/mana  nil
+* :stats/modifiers  nil
+* :stats/movement-speed  nil
+* :stats/strength  nil
+
+# tx
+* :tx/add-skill  {"do!" [_ entity {:keys [property/id], :as skill}]}
+* :tx/add-text-effect  {"do!" [_ entity text]}
+* :tx/add-to-world  {"do!" [_ entity]}
+* :tx/apply-modifiers  {"do!" [_ entity modifiers]}
+* :tx/create  {"do!" [_ components]}
+* :tx/destroy  {"do!" [_ entity]}
+* :tx/effect  {"do!" [_ effect-ctx effects]}
+* :tx/event  {"do!" [_ entity event params]}
+* :tx/pickup-item  {"do!" [_ entity item]}
+
+* :tx/msg-to-player  {"do!" [_ message]}
+* :tx/player-modal  {"do!" [_ params]}
+* :tx/sound  {"do!" [_ file]}
+* :tx.context.cursor/set  {"do!" [_ cursor-key]}
+
+* :tx/position-changed  {"do!" [_ entity]}
+* :tx/remove-from-world  {"do!" [_ entity]}
+* :tx/remove-item  {"do!" [_ entity cell]}
+* :tx/remove-item-from-widget  {"do!" [_ cell]}
+* :tx/remove-skill  {"do!" [_ entity {:keys [property/id], :as skill}]}
+* :tx/reverse-modifiers  {"do!" [_ entity modifiers]}
+* :tx/set-item  {"do!" [_ entity cell item]}
+* :tx/set-item-image-in-widget  {"do!" [_ cell item]}
+* :tx/stack-item  {"do!" [_ entity cell item]}
+
+# tx.context.action-bar
+* :tx.context.action-bar/add-skill  {"do!" [_ {:keys [property/id property/image], :as skill}]}
+* :tx.context.action-bar/remove-skill  {"do!" [_ {:keys [property/id]}]}
+
+# tx.context.cursor
+
+# tx.entity
+* :tx.entity/assoc  {"do!" [_ entity k v]}
+* :tx.entity/assoc-in  {"do!" [_ entity ks v]}
+* :tx.entity/audiovisual  {"do!" [_ position id]}
+* :tx.entity/creature  {"do!" [_ creature-id components]}
+* :tx.entity/dissoc  {"do!" [_ entity k]}
+* :tx.entity/dissoc-in  {"do!" [_ entity ks]}
+* :tx.entity/item  {"do!" [_ position item]}
+* :tx.entity/line-render  {"do!" [_ {:keys [start end duration color thick?]}]}
+* :tx.entity/projectile  {"do!" [_ projectile-id {:keys [position direction faction]}]}
+* :tx.entity/set-movement  {"do!" [_ entity movement]}
+* :tx.entity/shout  {"do!" [_ position faction delay-seconds]}
+* :tx.entity/update-in  {"do!" [_ entity ks f]}
+
+# tx.entity.stats
+* :tx.entity.stats/pay-mana-cost  {"do!" [_ entity cost]}
 
 # world
-* :world/map-size  {:widget :text-field, :schema #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]}
-* :world/max-area-level  {:widget :text-field, :schema #object[clojure.core$pos_int_QMARK_ 0x3840b4e6 "clojure.core$pos_int_QMARK_@3840b4e6"]}
-* :world/princess  {:schema [:qualified-keyword {:namespace :creatures}]}
-* :world/spawn-rate  {:widget :text-field, :schema #object[clojure.core$pos_QMARK_ 0x4155a965 "clojure.core$pos_QMARK_@4155a965"]}
+* :world/map-size  nil
+* :world/max-area-level  nil
+* :world/princess  nil
+* :world/spawn-rate  nil
