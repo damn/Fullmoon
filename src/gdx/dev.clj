@@ -59,7 +59,8 @@
   (println "start-app")
   (try (start-app)
        (catch Throwable t
-         (p/pretty-pst t 12)
+         (binding [*print-level* 5]
+           (p/pretty-pst t 12))
          (reset! app-start-failed true)))
   (loop []
     (when-not @app-start-failed
