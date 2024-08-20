@@ -31,9 +31,6 @@
   {:pre [(contains? (uids-entities ctx) uid)]}
   (update ctx :context.game/uids-entities dissoc uid))
 
-(defn- apply-system-do! [ctx system entity*]
-  (reduce ctx/do! ctx (component/apply-system system entity* ctx)))
-
 (defmethod effect/do! ::setup-entity [[_ entity uid components] ctx]
   {:pre [(not (contains? components :entity/id))
          (not (contains? components :entity/uid))]}
@@ -75,6 +72,9 @@
                      :y y
                      :up? true})))))
 
+(defn- do-system! [ctx system entity*]
+  (reduce ctx/do! ctx (component/apply-system system entity* ctx)))
+
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (entity-error [ctx]
@@ -89,7 +89,7 @@
   (tick-entities! [ctx entities*]
     (reduce (fn [ctx entity*]
               (try
-               (apply-system-do! ctx entity/tick entity*)
+               (do-system! ctx entity/tick entity*)
                (catch Throwable t
                  (handle-entity-error! ctx entity* t))))
             ctx
@@ -108,7 +108,7 @@
 
   (remove-destroyed-entities! [ctx]
     (reduce (fn [ctx entity]
-              (apply-system-do! ctx entity/destroy @entity))
+              (do-system! ctx entity/destroy @entity))
             ctx
             (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx)))))
 
