@@ -73,9 +73,16 @@
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
+
+    ; handle errors gracefully in dev mode
     (stage/act! stage)
+
     (swap! current-context #(screen/render sub-screen %))
-    (stage/draw stage)))
+
+    ; handle errors gracefully in dev mode
+    (stage/draw stage)
+
+    ))
 
 (defn- find-actor-with-id [^Group group id]
   (let [actors (.getChildren group)

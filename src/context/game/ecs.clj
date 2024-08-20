@@ -15,20 +15,13 @@
   (:context.game/uids-entities ctx))
 
 (defcomponent :entity/uid {}
-  (entity/create [_ eid _ctx]
-    [[:tx/assoc-uids->entities eid]])
+  (entity/create [_ entity ctx]
+    {:pre [(number? (:entity/uid @entity))]}
+    (update ctx :context.game/uids-entities assoc (:entity/uid @entity) entity))
 
-  (entity/destroy [[_ uid] _entity _ctx]
-    ;(println "Destroying " uid)
-    [[:tx/dissoc-uids->entities uid]]))
-
-(defmethod effect/do! :tx/assoc-uids->entities [[_ entity] ctx]
-  {:pre [(number? (:entity/uid @entity))]}
-  (update ctx :context.game/uids-entities assoc (:entity/uid @entity) entity))
-
-(defmethod effect/do! :tx/dissoc-uids->entities [[_ uid] ctx]
-  {:pre [(contains? (uids-entities ctx) uid)]}
-  (update ctx :context.game/uids-entities dissoc uid))
+  (entity/destroy [[_ uid] _entity ctx]
+    {:pre [(contains? (uids-entities ctx) uid)]}
+    (update ctx :context.game/uids-entities dissoc uid)))
 
 (defmethod effect/do! ::setup-entity [[_ entity uid components] ctx]
   {:pre [(not (contains? components :entity/id))
@@ -40,14 +33,12 @@
   ctx)
 
 (defmethod effect/do! ::create-components [[_ entity] ctx]
-  (let [entity* @entity]
-    (reduce (fn [ctx component]
-              (entity/create component entity ctx))
-            ctx
-            ; we are assuming components dont remove other ones at create
-            ; so we fetch entity* for reduce once and not check if component still exists
-            ; thats why no @entity and during the reduce-fn check if k is there
-            entity*)))
+  ; we are assuming components dont remove other ones at create
+  ; so we fetch entity* for reduce once and not check if component still exists
+  ; thats why no @entity and during the reduce-fn check if k is there
+  (for [component @entity]
+    (fn [ctx]
+      (entity/create component entity ctx))))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
@@ -59,7 +50,6 @@
      [::create-components entity]]))
 
 (defmethod effect/do! :tx/destroy [[_ entity] ctx]
-  ;(println "Mark as destroy:" (:entity/uid @entity) " " (keys @entity))
   [[:tx.entity/assoc entity :entity/destroyed? true]])
 
 (defn- draw-body-rect [g entity*]
@@ -93,9 +83,6 @@
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(defn- destroy-system [ctx entity]
-  (do-components! ctx entity/destroy entity))
-
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (all-entities [ctx]
@@ -119,10 +106,10 @@
       (render-entity* entity/render-debug entity* g context)))
 
   (remove-destroyed-entities! [ctx]
-    (->> ctx
-         ctx/all-entities
-         (filter (comp :entity/destroyed? deref))
-         (reduce destroy-system ctx))))
+    (ctx/do! ctx (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
+                       component @entity]
+                   (fn [ctx]
+                     (entity/destroy component entity ctx))))))
 
 (defmethod effect/do! :tx.entity/assoc [[_ entity k v] ctx]
   (assert (keyword? k))

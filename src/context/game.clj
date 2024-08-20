@@ -11,7 +11,6 @@
             [api.world.content-grid :as content-grid]
             (context.game [ecs :as ecs]
                           [mouseover-entity :as mouseover-entity]
-                          player-entity
                           [time :as time-component]
                           [effect-handler :as tx-handler]
                           [widgets :as widgets]

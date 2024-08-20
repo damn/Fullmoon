@@ -38,8 +38,12 @@
                   :else %)
                 tx)))
 
+; TODO rename everything to effect
+
 (defn- tx-happened! [tx ctx]
-  (when (not= :tx.context.cursor/set (first tx))
+  (when (and
+         (not (fn? tx))
+         (not= :tx.context.cursor/set (first tx)))
     (let [logic-frame (ctx/logic-frame ctx)] ; TODO only if debug or record deref this...
       (when debug-print-txs?
         (println logic-frame "." (debug-print-tx tx)))
@@ -47,21 +51,27 @@
                  (not= (first tx) :tx/effect))
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
+(defn- handle-tx! [ctx tx]
+  (let [result (try
+                (if (fn? tx)
+                  (tx ctx)
+                  (effect/do! tx ctx))
+                (catch Throwable t
+                  (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)}
+                                  t))))]
+    (if (map? result) ; probably faster than (instance? api.context.Context result)
+      (do
+       (tx-happened! tx ctx)
+       result)
+      (ctx/do! ctx result))))
+
 (extend-type api.context.Context
   api.context/EffectHandler
   (do! [ctx txs]
     (reduce (fn [ctx tx]
               (if (nil? tx)
                 ctx
-                (try
-                 (let [result (effect/do! tx ctx)]
-                   (if (map? result) ; probably faster than (instance? api.context.Context result)
-                     (do
-                      (tx-happened! tx ctx)
-                      result)
-                     (ctx/do! ctx result)))
-                 (catch Throwable t
-                   (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)} t))))))
+                (handle-tx! ctx tx)))
             ctx
             txs))
 
