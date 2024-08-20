@@ -52,25 +52,26 @@
  (ancestors :op/val-inc)
 
  (spit "components.md"
-       (with-out-str
-        (doseq [[nmsp components] (sort-by first
-                                   (group-by namespace
-                                             (sort (keys attributes))))]
-          (println "\n#" nmsp)
-          (doseq [k components]
-            (println "*" k
-                     (if-let [ancestrs (ancestors k)]
-                       (str "-> "(clojure.string/join "," ancestrs))
-                       "")
-                     (let [attr-map (get attributes k)]
-                       (if (seq attr-map)
-                         (pr-str (:core.component/fn-params attr-map))
-                         #_(binding [*print-level* nil]
-                           (with-out-str
-                            (clojure.pprint/pprint attr-map)))
-                         "")))
-            #_(doseq [system-name (component-systems k)]
-              (println "  * " system-name))))))
+       (binding [*print-level* nil]
+         (with-out-str
+          (doseq [[nmsp components] (sort-by first
+                                             (group-by namespace
+                                                       (sort (keys attributes))))]
+            (println "\n#" nmsp)
+            (doseq [k components]
+              (println "*" k
+                       (if-let [ancestrs (ancestors k)]
+                         (str "-> "(clojure.string/join "," ancestrs))
+                         "")
+                       (let [attr-map (get attributes k)]
+                         (if (seq attr-map)
+                           (pr-str (:core.component/fn-params attr-map))
+                           #_(binding [*print-level* nil]
+                               (with-out-str
+                                (clojure.pprint/pprint attr-map)))
+                           "")))
+              #_(doseq [system-name (component-systems k)]
+                  (println "  * " system-name)))))))
 
  ; & add all tx's ?
 
@@ -134,9 +135,7 @@
                       (get (methods @~sys-var) ~k))
              (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
 
-           (defmethod ~sys ~k ~(let [mname (symbol (str (name (symbol sys-var)) "." (name k)))]
-                                (println "mname " mname)
-                                mname)
+           (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
              ~fn-params
              ~@(rest fn-body)))))
     ~k))

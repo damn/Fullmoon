@@ -12,9 +12,9 @@
   {::entities {}})
 
 (defcomponent :entity/uid {}
-  (entity/create [_ entity ctx]
-    {:pre [(number? (:entity/uid @entity))]}
-    (update ctx ::entities assoc (:entity/uid @entity) entity))
+  (entity/create [[_ uid] entity ctx]
+    {:pre [(number? uid)]}
+    (update ctx ::entities assoc uid entity))
 
   (entity/destroy [[_ uid] _entity ctx]
     {:pre [(contains? (::entities ctx) uid)]}

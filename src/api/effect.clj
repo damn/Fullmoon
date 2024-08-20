@@ -1,15 +1,6 @@
 (ns api.effect
   (:require [core.component :refer [defsystem]]))
 
-(defsystem text [_ ctx])
-(defsystem applicable? [_ ctx])
-
-(defsystem useful? [_ ctx])
-(defmethod useful? :default [_ ctx] true)
-
-(defsystem render-info [_ g ctx])
-(defmethod render-info :default [_ g ctx])
-
 ; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
 ; when returning a 'map?'
 
@@ -24,10 +15,12 @@
 ; we only want to record actual side effects, not transactions returning other lower level transactions
 (defsystem do! [_ ctx])
 
-(comment
- (spit "effects.txt"
-       (with-out-str
-        (clojure.pprint/pprint
-         (sort (keys (methods do!))))))
+(defsystem text [_ ctx])
+(defsystem applicable? [_ ctx])
 
- )
+(defsystem useful? [_ ctx])
+(defmethod useful? :default [_ ctx] true)
+
+(defsystem render-info [_ g ctx])
+(defmethod render-info :default [_ g ctx])
+

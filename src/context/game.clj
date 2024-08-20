@@ -55,9 +55,8 @@
                     (and pausing?
                          (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))
                          (not (player-unpaused?))))
-        ctx (-> ctx
-                (assoc :context.game/paused? paused?)
-                mouseover-entity/update!) ; this do always so can get debug info even when game not running
+        ctx (assoc ctx :context.game/paused? paused?)
+        ctx (ctx/do! ctx (mouseover-entity/update! ctx)) ; this do always so can get debug info even when game not running
         ctx (if paused?
               ctx
               (let [ctx (time-component/update-time ctx)]
@@ -66,7 +65,7 @@
                      (catch Throwable t
                        (p/pretty-pst t 12)
                        (assoc ctx ::tick-error t)))))]
-    (ctx/do! ctx ctx/remove-destroyed-entities!))) ; do not pause this as for example pickup item, should be destroyed.
+    (ctx/do! ctx (ctx/remove-destroyed-entities! ctx)))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
   (let [frame-number (:context.game/logic-frame ctx)
