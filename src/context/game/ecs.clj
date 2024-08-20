@@ -15,8 +15,8 @@
   (:context.game/uids-entities ctx))
 
 (defcomponent :entity/uid {}
-  (entity/create [_ {:keys [entity/id]} _ctx]
-    [[:tx/assoc-uids->entities id]])
+  (entity/create [_ eid _ctx]
+    [[:tx/assoc-uids->entities eid]])
 
   (entity/destroy [[_ uid] _entity _ctx]
     ;(println "Destroying " uid)
@@ -40,7 +40,14 @@
   ctx)
 
 (defmethod effect/do! ::create-components [[_ entity] ctx]
-  (apply concat (component/apply-system entity/create @entity ctx)))
+  (let [entity* @entity]
+    (reduce (fn [ctx component]
+              (entity/create component entity ctx))
+            ctx
+            ; we are assuming components dont remove other ones at create
+            ; so we fetch entity* for reduce once and not check if component still exists
+            ; thats why no @entity and during the reduce-fn check if k is there
+            entity*)))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
@@ -70,67 +77,14 @@
      #_(throw (ex-info "" (select-keys entity* [:entity/uid])))
      )))
 
-; Assumes system does not affect entity* ! !
-; order not important ??? idk
-
-; TODO also entity* is not updated inbetween ....
-; the component needs a reference ? atom ?
-; => components itself need to be entities ??? if they are maps ???
-; -> we need to pass entity not entity*
-
-; we can deref it before every do! call
-; also in tx/effect deref source/target then
 (defn- do-components! [ctx system entity]
-  (reduce (fn [ctx component-k]
-            (if-let [component-v (component-k @entity)] ; if a component gets removed/dissoc'd during another system call of the same entity
-              (let [component [component-k component-v]]
+  (reduce (fn [ctx k]
+            (if-let [v (k @entity)] ; precaution in case a component gets removed by another component
+              (let [component [k v]]
                (ctx/do! ctx (system component entity ctx)))
               ctx))
           ctx
           (keys @entity)))
-
-; how do actual entity-component systems work
-; what if a component gets destroyed? do I check each one for :destroyed? before calling a system ?
-; is order even important (parallelization)
-; do all components have to be maps ?
-; in my case not ?
-
-; 1. do we really need to pass entity to system component
-; 2. can components themself be entities
-; and each system knows which components are there and just runs through them ?
-; (like datomic every 'component' and id)
-; 3. do we need to deref?
-; only 2 shout we access other stuff
-; other components could merge together (delete-after-animation) ??
-; state ??
-
-; 3.1 if we do not deref it
-; we are maybe updating components who are no longer exist
-; because the outer @entity
-; which might add the components back again
-; so the (k @entity) was useful ! dont just remove it now
-; but exlain ..
-
-; if we just manage components and not entities
-; then we need a function get-entity
-; which creates this associative view like in datomic
-
-; then we don't need default values for systems
-
-; then we don;t pass entity but eid later?
-
-; Its anyway not :entity/* but :component/* ....
-; makes it more clear ....
-
-; do entity/create also then ... and all state exit/enter/..
-
-; and screens/states/gui-widgets/ as components
-
-; see entity/tick of body
-; all this assoc-in ....
-; we need to make components into entities
-
-; there are no 'entity' anymore only 'eid' and entity is then get-entity ctx eid
 
 (defn- tick-system [ctx entity]
   (try
@@ -138,9 +92,6 @@
    (catch Throwable t
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
-
-; apply-system reduces instead
-; with the system fns
 
 (defn- destroy-system [ctx entity]
   (do-components! ctx entity/destroy entity))

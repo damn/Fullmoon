@@ -4,7 +4,8 @@
 
 (defsystem create-component [_ components ctx])
 
-(defsystem create [_ entity* ctx])
+(defsystem create [_ entity ctx])
+(defmethod create :default [_ entity ctx])
 
 (defsystem destroy [_ entity ctx])
 (defmethod destroy :default [_ entity ctx])
@@ -12,7 +13,7 @@
 (defsystem tick [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
-(defsystem info-text          [_ ctx])
+(defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
 
 (def z-orders [:z-order/on-ground

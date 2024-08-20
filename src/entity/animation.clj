@@ -5,13 +5,13 @@
             [api.context :as ctx]
             [core.data :as data]))
 
-(defn- tx-assoc-image-current-frame [{:keys [entity/id entity/animation]}]
-  [:tx.entity/assoc id :entity/image (animation/current-frame animation)])
+(defn- tx-assoc-image-current-frame [eid animation]
+  [:tx.entity/assoc eid :entity/image (animation/current-frame animation)])
 
 (defcomponent :entity/animation data/animation ; optional
-  (entity/create [_ entity* _ctx]
-    [(tx-assoc-image-current-frame entity*)])
+  (entity/create [[_ animation] eid _ctx]
+    [(tx-assoc-image-current-frame eid animation)])
 
-  (entity/tick [[k animation] entity ctx]
-    [(tx-assoc-image-current-frame @entity)
-     [:tx.entity/assoc entity k (animation/tick animation (ctx/delta-time ctx))]]))
+  (entity/tick [[k animation] eid ctx]
+    [(tx-assoc-image-current-frame eid animation)
+     [:tx.entity/assoc eid k (animation/tick animation (ctx/delta-time ctx))]]))

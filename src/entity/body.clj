@@ -154,12 +154,12 @@
       :rotate-in-movement-direction? rotate-in-movement-direction?
       :movement movement}))
 
-  (entity/create [_ {:keys [entity/id]} ctx]
+  (entity/create [_ eid ctx]
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    [[:tx/add-to-world id]])
+    [[:tx/add-to-world eid]])
 
-  (entity/destroy [_ entity ctx]
-    [[:tx/remove-from-world entity]])
+  (entity/destroy [_ eid ctx]
+    [[:tx/remove-from-world eid]])
 
   (entity/render-debug [[_ body] _entity* g _ctx]
     (draw-bounds g body))
