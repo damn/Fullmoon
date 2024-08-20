@@ -57,20 +57,23 @@
        (.notify obj)))
     (println "\n Application still running! Cannot restart.")))
 
-(declare ^:private refresh-result)
+(declare ^:private refresh-error)
+
+(defn- handle-throwable! [t]
+  (binding [*print-level* 5]
+    (p/pretty-pst t 12))
+  (reset! thrown true))
 
 (defn dev-loop []
   (println "start-app")
   (try (start-app)
        (catch Throwable t
-         (binding [*print-level* 5]
-           (p/pretty-pst t 12))
-         (reset! thrown true)))
+         (handle-throwable! t)))
   (loop []
     (when-not @thrown
       (do
-       (.bindRoot #'refresh-result (refresh :after 'gdx.dev/dev-loop))
-       (p/pretty-pst refresh-result 12)))
+       (.bindRoot #'refresh-error (refresh :after 'gdx.dev/dev-loop))
+       (handle-throwable! refresh-error)))
     (wait!)
     (recur)))
 
