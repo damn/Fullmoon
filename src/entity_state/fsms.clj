@@ -14,8 +14,7 @@
             [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.effect :as effect]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (fsm/defsm-inc ^:private player-fsm
   [[:idle
@@ -104,7 +103,7 @@
     (and target
          (:entity/state @target)))
 
-  (transact! [[_ duration] {:keys [effect/target]}]
+  (effect/do! [[_ duration] {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect/kill data/boolean-attr
@@ -115,5 +114,5 @@
     (and target
          (:entity/state @target)))
 
-  (transact! [_ {:keys [effect/target]}]
+  (effect/do! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))

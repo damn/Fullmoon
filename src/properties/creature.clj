@@ -6,7 +6,6 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.properties :as properties]
-            [api.tx :refer [transact!]]
             [entity-state.fsms :as fsms]))
 
 (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
@@ -123,7 +122,7 @@
 
 ; otherwise
 
-(defmethod transact! :tx.entity/creature [[_ creature-id components] ctx]
+(defmethod effect/do! :tx.entity/creature [[_ creature-id components] ctx]
   (assert (:entity/state components))
   (let [props (ctx/get-property ctx creature-id)
         creature-components (:creature/entity props)]
@@ -148,7 +147,7 @@
 
  (set! *print-level* nil)
  (clojure.pprint/pprint
-  (transact! [:tx.entity/creature :creatures/vampire
+  (effect/do! [:tx.entity/creature :creatures/vampire
               {:entity/position [1 2]
                :entity/state [:state/npc :sleeping]}]
              (reify api.context/PropertyStore
@@ -195,7 +194,7 @@
     (and (:entity/faction @source)
          target-position))
 
-  (transact! [[_ creature-id] {:keys [effect/source effect/target-position]}]
+  (effect/do! [[_ creature-id] {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx.entity/creature
       creature-id

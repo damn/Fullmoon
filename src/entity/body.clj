@@ -7,9 +7,9 @@
             [core.data :as data]
             [api.context :as ctx]
             [api.entity :as entity]
+            [api.effect :as effect]
             [api.graphics :as g]
             [gdx.graphics.color :as color]
-            [api.tx :refer [transact!]]
             [api.world.cell :as cell]
             [api.world.grid :as world-grid]
             [context.game.time :refer [max-delta-time]]))
@@ -193,7 +193,7 @@
   (direction [entity* other-entity*]
     (v/direction (entity/position entity*) (entity/position other-entity*))))
 
-(defmethod transact! :tx.entity/set-movement [[_ entity movement] ctx]
+(defmethod effect/do! :tx.entity/set-movement [[_ entity movement] ctx]
   {:pre [(or (nil? movement)
              (and (:direction movement) ; continue schema of that ...
                   #_(:speed movement)))]} ; princess no stats/movement-speed, then nil and here assertion-error

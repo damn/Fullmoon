@@ -3,7 +3,7 @@
             [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [api.scene2d.group :refer [clear-children! add-actor!]]
             [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (defn ->build [ctx]
   (let [group (ctx/->horizontal-group ctx {:pad 2 :space 2})]
@@ -18,7 +18,7 @@
   {:horizontal-group (::action-bar (:context.game.widgets/action-bar-table (ctx/get-stage ctx)))
    :button-group (:context.game/action-bar ctx)})
 
-(defmethod transact! :tx.context.action-bar/add-skill
+(defmethod effect/do! :tx.context.action-bar/add-skill
   [[_ {:keys [property/id property/image] :as skill}] ctx]
   (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
         button (->image-button ctx image (fn [_]) {:dimensions [48 48]})]
@@ -28,7 +28,7 @@
     (add! button-group button)
     ctx))
 
-(defmethod transact! :tx.context.action-bar/remove-skill
+(defmethod effect/do! :tx.context.action-bar/remove-skill
   [[_ {:keys [property/id]}] ctx]
   (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
         button (get horizontal-group id)]

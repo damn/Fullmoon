@@ -5,10 +5,10 @@
             [math.vector :as v]
             [utils.core :refer [tile->middle]]
             [data.grid2d :as grid2d]
-            [api.context :as ctx :refer [explored? transact-all! ray-blocked? content-grid world-grid]]
+            [api.context :as ctx :refer [explored? ray-blocked? content-grid world-grid]]
             [api.entity :as entity]
+            [api.effect :as effect]
             [api.maps.tiled :as tiled]
-            [api.tx :refer [transact!]]
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
@@ -90,17 +90,17 @@
   (world-grid [{:keys [context.game/world]}]
     (:grid world)))
 
-(defmethod transact! :tx/add-to-world [[_ entity] ctx]
+(defmethod effect/do! :tx/add-to-world [[_ entity] ctx]
   (content-grid/update-entity! (content-grid ctx) entity)
   (world-grid/add-entity! (world-grid ctx) entity)
   ctx)
 
-(defmethod transact! :tx/remove-from-world [[_ entity] ctx]
+(defmethod effect/do! :tx/remove-from-world [[_ entity] ctx]
   (content-grid/remove-entity! (content-grid ctx) entity)
   (world-grid/remove-entity! (world-grid ctx) entity)
   ctx)
 
-(defmethod transact! :tx/position-changed [[_ entity] ctx]
+(defmethod effect/do! :tx/position-changed [[_ entity] ctx]
   (content-grid/update-entity! (content-grid ctx) entity)
   (world-grid/entity-position-changed! (world-grid ctx) entity)
   ctx)
@@ -145,22 +145,22 @@
 (defn- transact-create-entities-from-tiledmap! [{:keys [context.game/world] :as ctx}]
   (let [tiled-map (:tiled-map world)
         ctx (if spawn-enemies?
-              (transact-all! ctx
-                             (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
-                               [:tx.entity/creature
-                                (keyword creature-id)
-                                #:entity {:position (tile->middle posi)
-                                          :state [:state/npc :sleeping]}]))
+              (ctx/do! ctx
+                       (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
+                         [:tx.entity/creature
+                          (keyword creature-id)
+                          #:entity {:position (tile->middle posi)
+                                    :state [:state/npc :sleeping]}]))
               ctx)]
     (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
-    (transact-all! ctx [[:tx.entity/creature
-                         :creatures/vampire
-                         #:entity {:position (tile->middle (:start-position world))
-                                   :state [:state/player :idle]
-                                   :player? true
-                                   :free-skill-points 3
-                                   :clickable {:type :clickable/player}
-                                   :click-distance-tiles 1.5}]])))
+    (ctx/do! ctx [[:tx.entity/creature
+                   :creatures/vampire
+                   #:entity {:position (tile->middle (:start-position world))
+                             :state [:state/player :idle]
+                             :player? true
+                             :free-skill-points 3
+                             :clickable {:type :clickable/player}
+                             :click-distance-tiles 1.5}]])))
 
 (defn- add-world-context [ctx tiled-level]
   (when-let [world (:context.game/world ctx)]

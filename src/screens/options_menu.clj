@@ -7,7 +7,7 @@
             [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             context.game
-            context.game.transaction-handler
+            context.game.effect-handler
             [context.game.debug-render :as debug-render]
             context.game.world
             entity.body
@@ -42,8 +42,8 @@
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 (def ^:private debug-flags (map ->debug-flag
                                 [#'entity.body/show-body-bounds
-                                 ;#'context.game.transaction-handler/record-txs?
-                                 #'context.game.transaction-handler/debug-print-txs?
+                                 ;#'context.game.effect-handler/record-txs?
+                                 #'context.game.effect-handler/debug-print-txs?
                                  #'debug-render/tile-grid?
                                  #'debug-render/cell-occupied?
                                  #'debug-render/highlight-blocked-cell?

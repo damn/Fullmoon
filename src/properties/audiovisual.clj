@@ -3,7 +3,7 @@
             [core.data :as data]
             [api.context :as ctx]
             [api.properties :as properties]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (defcomponent :properties/audiovisual {}
   (properties/create [_]
@@ -18,7 +18,7 @@
                 :image/dimensions [96 96]} ; ??
      }))
 
-(defmethod transact! :tx.entity/audiovisual [[_ position id] ctx]
+(defmethod effect/do! :tx.entity/audiovisual [[_ position id] ctx]
   ; assert property of type audiovisual
   (let [{:keys [property/sound
                 property/animation]} (ctx/get-property ctx id)]

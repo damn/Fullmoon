@@ -4,7 +4,6 @@
             [api.entity :as entity]
             [api.entity-state :as state]
             [api.graphics :as g]
-            [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
 
 ; SCHEMA effect-ctx
@@ -20,10 +19,14 @@
 ; maybe move to transaction handler & call it :tx/with-ctx
 ; and dissoc-ks (keys of extra-ctx)
 ; its a more general thing than tx/effect
-(defmethod transact! :tx/effect [[_ effect-ctx effects] ctx]
+(defmethod effect/do! :tx/effect [[_ effect-ctx effects] ctx]
   (-> ctx
       (merge effect-ctx)
-      (ctx/transact-all! (filter #(effect/applicable? % effect-ctx) effects))
+      (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
+      ; TODO
+      ; context/source ?
+      ; skill.context ?  ?
+      ; generic context ?( projectile hit is not skill context)
       (dissoc :effect/source
               :effect/target
               :effect/direction

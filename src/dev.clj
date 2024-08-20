@@ -179,7 +179,7 @@
  )
 
 (defn- do-on-ctx! [tx-fn]
-  (swap! current-context ctx/transact-all! [(tx-fn @current-context)]))
+  (swap! current-context ctx/do! [(tx-fn @current-context)]))
 
 (defn learn-skill! [skill-id]
   (do-on-ctx!  (fn [ctx]

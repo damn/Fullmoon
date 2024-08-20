@@ -3,7 +3,7 @@
             [core.component :refer [defcomponent]]
             [api.context :refer [get-property ->counter stopped?]]
             [api.entity :as entity]
-            [api.tx :refer [transact!]]
+            [api.effect :as effect]
             [core.data :as data]))
 
 ; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
@@ -29,16 +29,16 @@
   (has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
     (contains? skills id)))
 
-(defmethod transact! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
-                                    _ctx]
+(defmethod effect/do! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
+                                     _ctx]
   (assert (not (entity/has-skill? @entity skill)))
   [[:tx.entity/assoc-in entity [:entity/skills id] skill]
    (when (:entity/player? @entity)
      [:tx.context.action-bar/add-skill skill])])
 
 ; unused ?
-(defmethod transact! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
-                                       _ctx]
+(defmethod effect/do! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]
+                                        _ctx]
   (assert (entity/has-skill? @entity skill))
   [[:tx.entity/dissoc-in entity [:entity/skills id]]
    (when (:entity/player? @entity)

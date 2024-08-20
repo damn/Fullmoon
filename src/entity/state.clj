@@ -2,8 +2,8 @@
   (:require [reduce-fsm :as fsm]
             [core.component :refer [defcomponent]]
             [api.entity :as entity]
-            [api.entity-state :as state]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]
+            [api.entity-state :as state]))
 
 (defn- state-key [state]
   (-> state :fsm :state))
@@ -38,13 +38,13 @@
   (state-obj [entity*]
     (-> entity* :entity/state :state-obj)))
 
-(defmethod transact! ::exit [[_ state-obj entity] ctx]
+(defmethod effect/do! ::exit [[_ state-obj entity] ctx]
   (state/exit state-obj @entity ctx))
 
-(defmethod transact! ::enter [[_ state-obj entity] ctx]
+(defmethod effect/do! ::enter [[_ state-obj entity] ctx]
   (state/enter state-obj @entity ctx))
 
-(defmethod transact! ::player-enter [[_ state-obj] ctx]
+(defmethod effect/do! ::player-enter [[_ state-obj] ctx]
   (state/player-enter state-obj))
 
 (defn- send-event! [ctx entity event params]
@@ -90,5 +90,5 @@
 
  )
 
-(defmethod transact! :tx/event [[_ entity event params] ctx]
+(defmethod effect/do! :tx/event [[_ entity event params] ctx]
   (send-event! ctx entity event params))

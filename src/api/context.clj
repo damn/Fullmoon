@@ -94,9 +94,9 @@
   (all-sound-files   [_])
   (all-texture-files [_]))
 
-(defprotocol TransactionHandler
+(defprotocol EffectHandler
+  (do! [_ txs])
   (summarize-txs [_ txs])
-  (transact-all! [_ txs])
   (frame->txs [_ frame-number]))
 
 (defprotocol EntityComponentSystem

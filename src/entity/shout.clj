@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [api.context :as ctx :refer [world-grid line-of-sight? stopped?]]
             [api.entity :as entity]
-            [api.tx :refer [transact!]]
+            [api.effect :as effect]
             [api.world.grid :refer [circle->entities]]))
 
 (def ^:private shout-range 3)
@@ -24,7 +24,7 @@
             (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context entity* shout-range)]
               [:tx/event id :alert])))))
 
-(defmethod transact! :tx.entity/shout [[_ position faction delay-seconds] ctx]
+(defmethod effect/do! :tx.entity/shout [[_ position faction delay-seconds] ctx]
   [[:tx/create #:entity {:body {:position position
                                 :width 0.5
                                 :height 0.5

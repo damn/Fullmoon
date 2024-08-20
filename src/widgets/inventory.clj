@@ -4,12 +4,12 @@
             [data.grid2d :as grid]
             [app :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
-                                         player-tooltip-text transact-all!]]
+                                         player-tooltip-text]]
             [api.graphics :as g]
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
+            [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.tx :refer [transact!]]
             [entity.inventory :as inventory])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)
@@ -69,7 +69,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! current-context #(transact-all! % (clicked-cell % cell))))))
+                             (swap! current-context #(ctx/do! % (clicked-cell % cell))))))
     stack))
 
 (defn- slot->background [ctx]
@@ -137,7 +137,7 @@
   {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
    :slot->background (:context.game.inventory/slot->background ctx)})
 
-(defmethod transact! :tx/set-item-image-in-widget [[_ cell item] ctx]
+(defmethod effect/do! :tx/set-item-image-in-widget [[_ cell item] ctx]
   (let [{:keys [table]} (get-inventory ctx)
         cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)
@@ -147,7 +147,7 @@
     (add-tooltip! cell-widget #(player-tooltip-text % item))
     ctx))
 
-(defmethod transact! :tx/remove-item-from-widget [[_ cell] ctx]
+(defmethod effect/do! :tx/remove-item-from-widget [[_ cell] ctx]
   (let [{:keys [table slot->background]} (get-inventory ctx)
         cell-widget (get table cell)
         ^Image image-widget (get cell-widget :image)]

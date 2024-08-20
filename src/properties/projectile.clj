@@ -7,7 +7,6 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.properties :as properties]
-            [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
@@ -40,7 +39,7 @@
 (defn- projectile-size [projectile-property]
   (first (:world-unit-dimensions (:property/image projectile-property))))
 
-(defmethod transact! :tx.entity/projectile [[_ projectile-id {:keys [position direction faction]}]
+(defmethod effect/do! :tx.entity/projectile [[_ projectile-id {:keys [position direction faction]}]
                                             ctx]
   (let [{:keys [property/image
                 projectile/max-range
@@ -96,7 +95,7 @@
                           target-p)
               (:projectile/max-range prop)))))
 
-  (transact! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
+  (effect/do! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx.entity/projectile
       projectile-id

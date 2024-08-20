@@ -1,8 +1,8 @@
-(ns context.game.transaction-handler
+(ns context.game.effect-handler
   (:require context.graphics.image
             data.animation
             [api.context :as ctx]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -47,27 +47,27 @@
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
 (extend-type api.context.Context
-  api.context/TransactionHandler
-  (summarize-txs [_ txs]
-    (clojure.pprint/pprint
-     (for [[txkey txs] (group-by first txs)]
-       [txkey (count txs)])))
-
-  (transact-all! [ctx txs]
+  api.context/EffectHandler
+  (do! [ctx txs]
     (reduce (fn [ctx tx]
               (if (nil? tx)
                 ctx
                 (try
-                 (let [result (transact! tx ctx)]
+                 (let [result (effect/do! tx ctx)]
                    (if (map? result) ; probably faster than (instance? api.context.Context result)
                      (do
                       (tx-happened! tx ctx)
                       result)
-                     (ctx/transact-all! ctx result)))
+                     (ctx/do! ctx result)))
                  (catch Throwable t
                    (throw (ex-info "Error with transaction:" {:tx (debug-print-tx tx)} t))))))
             ctx
             txs))
+
+  (summarize-txs [_ txs]
+    (clojure.pprint/pprint
+     (for [[txkey txs] (group-by first txs)]
+       [txkey (count txs)])))
 
   (frame->txs [_ frame-number]
     (@frame->txs frame-number)))

@@ -2,13 +2,13 @@
   (:require [gdx.graphics :as graphics]
             [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
-            [api.tx :refer [transact!]]
+            [api.effect :as effect]
             [app :refer [current-context]]))
 
 (defn- player-message [ctx]
   (:context.game/player-message ctx))
 
-(defmethod transact! :tx/msg-to-player [[_ message] ctx]
+(defmethod effect/do! :tx/msg-to-player [[_ message] ctx]
   (assoc ctx :context.game/player-message {:message message :counter 0}))
 
 (def ^:private duration-seconds 1.5)

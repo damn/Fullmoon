@@ -11,7 +11,6 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
-            [api.tx :refer [transact!]]
             [context.ui.config :refer (hpbar-height-px)]))
 
 (defn- conj-value [value]
@@ -39,10 +38,10 @@
      [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
-(defmethod transact! :tx/apply-modifiers [[_ entity modifiers] _ctx]
+(defmethod effect/do! :tx/apply-modifiers [[_ entity modifiers] _ctx]
   (txs-update-modifiers entity modifiers conj-value))
 
-(defmethod transact! :tx/reverse-modifiers [[_ entity modifiers] _ctx]
+(defmethod effect/do! :tx/reverse-modifiers [[_ entity modifiers] _ctx]
   (txs-update-modifiers entity modifiers remove-value))
 
 (defsystem operation-text [_])
@@ -263,7 +262,7 @@
 
   (effect/useful? [_ _effect-ctx _ctx] true)
 
-  (transact! [[effect-k operations] {:keys [effect/target]}]
+  (effect/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx.entity/assoc-in target [:entity/stats stat-k]
@@ -385,7 +384,7 @@
                                      (- height (* 2 border))
                                      (hpbar-color ratio))))))))
 
-(defmethod transact! :tx.entity.stats/pay-mana-cost [[_ entity cost] _ctx]
+(defmethod effect/do! :tx.entity.stats/pay-mana-cost [[_ entity cost] _ctx]
   (let [mana-val ((entity/stat @entity :stats/mana) 0)]
     (assert (<= cost mana-val))
     [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]]))
@@ -395,7 +394,7 @@
        entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
-   (= (transact! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+   (= (effect/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
 
@@ -412,7 +411,7 @@
        (effect/useful? ~'[_ {:keys [effect/source]} _ctx]
          (lower-than-max? (~stat (:entity/stats @~'source))))
 
-       (transact! ~'[_ {:keys [effect/source]}]
+       (effect/do! ~'[_ {:keys [effect/source]}]
          [[:tx/sound "sounds/bfxr_click.wav"]
           [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
 
@@ -439,7 +438,7 @@
   (effect/applicable? [_ effect-ctx]
     (effect/applicable? (damage-effect effect-ctx) effect-ctx))
 
-  (transact! [_ ctx]
+  (effect/do! [_ ctx]
     [(damage-effect ctx)]))
 
 (defn- effective-armor-save [source* target*]
@@ -499,7 +498,7 @@
     (and target
          (entity/stat @target :stats/hp)))
 
-  (transact! [[_ damage] {:keys [effect/source effect/target]}]
+  (effect/do! [[_ damage] {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]

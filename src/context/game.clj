@@ -12,7 +12,7 @@
                           [mouseover-entity :as mouseover-entity]
                           player-entity
                           [time :as time-component]
-                          [transaction-handler :as tx-handler]
+                          [effect-handler :as tx-handler]
                           [widgets :as widgets]
                           [world :as world]
                           [debug-render :as debug-render])))
@@ -49,7 +49,7 @@
 (defmulti game-loop :context.game/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx active-entities]
-  (let [ctx (ctx/transact-all! ctx (player-manual-state-tick ctx))
+  (let [ctx (ctx/do! ctx (player-manual-state-tick ctx))
         paused? (or (ctx/entity-error ctx)
                     (and pausing?
                          (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))
@@ -69,7 +69,7 @@
         txs (ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx
-        (ctx/transact-all! txs)
+        (ctx/do! txs)
         (update :context.game/logic-frame inc))))
 
 (def ^:private replay-speed 2)

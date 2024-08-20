@@ -1,5 +1,5 @@
 (ns widgets.skill-window
-  (:require [api.context :as ctx :refer [->window ->image-button get-property player-tooltip-text transact-all!]]
+  (:require [api.context :as ctx :refer [->window ->image-button get-property player-tooltip-text]]
             [api.scene2d.actor :refer [add-tooltip!]]
             [api.entity :as entity]
             [api.entity-state :as state]))
@@ -27,7 +27,7 @@
                                                        (:property/image (get-property context id)) ; TODO here anyway taken
                                                        ; => should probably build this window @ game start
                                                        (fn [ctx]
-                                                         (swap! @app/current-context transact-all! (clicked-skill ctx id))))]]
+                                                         (swap! @app/current-context ctx/do! (clicked-skill ctx id))))]]
                       (do
                        (add-tooltip! button #(player-tooltip-text % (get-property % id)))
                        button))]

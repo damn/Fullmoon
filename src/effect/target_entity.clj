@@ -6,7 +6,6 @@
             [api.context :refer [line-of-sight?]]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.tx :refer [transact!]]
             [effect-ctx.core :as effect-ctx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
@@ -57,8 +56,8 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
     (assert target)
     (in-range? @source @target maxrange))
 
-  (transact! [[_ {:keys [maxrange hit-effects]}]
-              {:keys [effect/source effect/target]}]
+  (effect/do! [[_ {:keys [maxrange hit-effects]}]
+               {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)

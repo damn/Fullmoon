@@ -4,7 +4,7 @@
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :as utils :refer [mapvals]]
             [api.context :as ctx]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (defn- ->cursor [file hotspot]
   (let [pixmap (graphics/->pixmap (files/internal file))
@@ -22,6 +22,6 @@
   (set-cursor! [{g :context/graphics} cursor-key]
     (graphics/set-cursor (utils/safe-get (:cursors g) cursor-key))))
 
-(defmethod transact! :tx.context.cursor/set [[_ cursor-key] ctx]
+(defmethod effect/do! :tx.context.cursor/set [[_ cursor-key] ctx]
   (ctx/set-cursor! ctx cursor-key)
   ctx)

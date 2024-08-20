@@ -5,7 +5,7 @@
             [api.context :as ctx]
             [api.graphics :as g]
             [api.entity :as entity :refer [map->Entity]]
-            [api.tx :refer [transact!]]))
+            [api.effect :as effect]))
 
 (defn ->build []
   {:context.game/uids-entities {}
@@ -14,26 +14,27 @@
 (defn- uids-entities [ctx] (:context.game/uids-entities ctx))
 (defn- entity-error  [ctx] (:context.game/entity-error  ctx))
 
+; TODO make entity fns same like a 'do!' component ... ?
+; no need for separate one-time-txs  ... ?
 (defcomponent :entity/uid {}
   (entity/create [_ {:keys [entity/id]} _ctx]
     [[:tx/assoc-uids->entities id]])
+
   (entity/destroy [[_ uid] _entity* _ctx]
     [[:tx/dissoc-uids->entities uid]]))
 
-(defmethod transact! :tx/assoc-uids->entities [[_ entity] ctx]
+(defmethod effect/do! :tx/assoc-uids->entities [[_ entity] ctx]
   {:pre [(number? (:entity/uid @entity))]}
   (update ctx :context.game/uids-entities assoc (:entity/uid @entity) entity))
 
-(defmethod transact! :tx/dissoc-uids->entities [[_ uid] ctx]
+(defmethod effect/do! :tx/dissoc-uids->entities [[_ uid] ctx]
   {:pre [(contains? (uids-entities ctx) uid)]}
   (update ctx :context.game/uids-entities dissoc uid))
 
-(defn- apply-system-transact-all! [ctx system entity*]
-  (reduce ctx/transact-all!
-          ctx
-          (component/apply-system system entity* ctx)))
+(defn- apply-system-do! [ctx system entity*]
+  (reduce ctx/do! ctx (component/apply-system system entity* ctx)))
 
-(defmethod transact! ::setup-entity [[_ entity uid components] ctx]
+(defmethod effect/do! ::setup-entity [[_ entity uid components] ctx]
   {:pre [(not (contains? components :entity/id))
          (not (contains? components :entity/uid))]}
   (reset! entity (-> components
@@ -42,19 +43,19 @@
                      map->Entity))
   ctx)
 
-(defmethod transact! ::create-components [[_ entity] ctx]
+(defmethod effect/do! ::create-components [[_ entity] ctx]
   (apply concat (component/apply-system entity/create @entity ctx)))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
 
-(defmethod transact! :tx/create [[_ components] ctx]
+(defmethod effect/do! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
     [[::setup-entity entity (unique-number!) components]
      [::create-components entity]]))
 
-(defmethod transact! :tx/destroy [[_ entity] ctx]
+(defmethod effect/do! :tx/destroy [[_ entity] ctx]
   [[:tx.entity/assoc entity :entity/destroyed? true]])
 
 (defn- handle-entity-error! [ctx entity* throwable]
@@ -88,7 +89,7 @@
   (tick-entities! [ctx entities*]
     (reduce (fn [ctx entity*]
               (try
-               (apply-system-transact-all! ctx entity/tick entity*)
+               (apply-system-do! ctx entity/tick entity*)
                (catch Throwable t
                  (handle-entity-error! ctx entity* t))))
             ctx
@@ -107,29 +108,29 @@
 
   (remove-destroyed-entities! [ctx]
     (reduce (fn [ctx entity]
-              (apply-system-transact-all! ctx entity/destroy @entity))
+              (apply-system-do! ctx entity/destroy @entity))
             ctx
             (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx)))))
 
-(defmethod transact! :tx.entity/assoc [[_ entity k v] ctx]
+(defmethod effect/do! :tx.entity/assoc [[_ entity k v] ctx]
   (assert (keyword? k))
   (swap! entity assoc k v)
   ctx)
 
-(defmethod transact! :tx.entity/assoc-in [[_ entity ks v] ctx]
+(defmethod effect/do! :tx.entity/assoc-in [[_ entity ks v] ctx]
   (swap! entity assoc-in ks v)
   ctx)
 
-(defmethod transact! :tx.entity/dissoc [[_ entity k] ctx]
+(defmethod effect/do! :tx.entity/dissoc [[_ entity k] ctx]
   (assert (keyword? k))
   (swap! entity dissoc k)
   ctx)
 
-(defmethod transact! :tx.entity/dissoc-in [[_ entity ks] ctx]
+(defmethod effect/do! :tx.entity/dissoc-in [[_ entity ks] ctx]
   (assert (> (count ks) 1))
   (swap! entity update-in (drop-last ks) dissoc (last ks))
   ctx)
 
-(defmethod transact! :tx.entity/update-in [[_ entity ks f] ctx]
+(defmethod effect/do! :tx.entity/update-in [[_ entity ks f] ctx]
   (swap! entity update-in ks f)
   ctx)

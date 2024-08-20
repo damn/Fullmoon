@@ -2,8 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
-            [api.entity :as entity]
-            [api.tx :refer [transact!]]))
+            [api.entity :as entity]))
 
 (defcomponent :entity/faction (data/enum :good :evil)
   (entity/info-text [[_ faction] _ctx]
@@ -28,6 +27,6 @@
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))
 
-  (transact! [_ {:keys [effect/source effect/target]}]
+  (effect/do! [_ {:keys [effect/source effect/target]}]
     [[:tx.entity/audiovisual (entity/position @target) :audiovisuals/convert]
      [:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))
