@@ -26,7 +26,7 @@
            (not (contains? components :entity/uid))]}
     (reset! entity (-> components
                        (assoc :entity/id entity :entity/uid uid)
-                       (component/update-map entity/create-component components ctx)
+                       (component/update-map component/create ctx)
                        map->Entity))
     ctx))
 

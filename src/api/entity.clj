@@ -2,8 +2,6 @@
   (:require [core.component :refer [defsystem]]
             [utils.core :as utils]))
 
-(defsystem create-component [_ components ctx])
-
 (defsystem create [_ entity ctx])
 (defmethod create :default [_ entity ctx])
 

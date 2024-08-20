@@ -1,5 +1,5 @@
 (ns entity.projectile-collision
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [math.geom :as geom]
             [utils.core :refer [find-first]]
             [api.context :as ctx :refer [world-grid]]
@@ -8,7 +8,7 @@
             [api.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision {}
-  (entity/create-component [[_ v] _components _ctx]
+  (component/create [[_ v] _ctx]
     (assoc v :already-hit-bodies #{}))
 
   ; TODO add proper effect-ctx here for effect-ctx/text

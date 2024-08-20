@@ -1,6 +1,6 @@
 (ns entity.state
   (:require [reduce-fsm :as fsm]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [api.entity :as entity]
             [api.effect :as effect]
             [api.entity-state :as state]))
@@ -9,9 +9,7 @@
   (-> state :fsm :state))
 
 (defcomponent :entity/state {}
-  (entity/create-component [[_ {:keys [fsm initial-state state-obj-constructors]}]
-                            _components
-                            ctx]
+  (component/create [[_ {:keys [fsm initial-state state-obj-constructors]}] ctx]
     ; initial state is nil, so associng it.
     ; make bug report TODO
     {:fsm (assoc (fsm initial-state nil)  ; throws when initial-state is not part of states

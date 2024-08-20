@@ -3,7 +3,7 @@
             [math.vector :as v]
             [math.geom :as geom]
             [utils.core :refer [->tile]]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
             [api.entity :as entity]
@@ -114,18 +114,17 @@
 ; nothing to do with the schema of this component ....
 ; :z-order (apply data/enum entity/z-orders)
 (defcomponent :entity/body (data/map-attribute :width :height :solid?)
-  (entity/create-component [[_
-                             {[x y] :position
-                              :keys [position
-                                     width
-                                     height
-                                     solid?
-                                     z-order
-                                     rotation-angle
-                                     rotate-in-movement-direction?
-                                     movement]}]
-                            _entity*
-                            _ctx]
+  (component/create [[_
+                      {[x y] :position
+                       :keys [position
+                              width
+                              height
+                              solid?
+                              z-order
+                              rotation-angle
+                              rotate-in-movement-direction?
+                              movement]}]
+                     _ctx]
     (assert position)
     (assert width)
     (assert height)

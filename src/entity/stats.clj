@@ -6,7 +6,7 @@
             [utils.core :refer [readable-number]]
             [utils.random :as random]
             [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
-            [core.component :refer [defsystem defcomponent]]
+            [core.component :as component :refer [defsystem defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
             [api.entity :as entity]
@@ -355,7 +355,7 @@
  )
 
 (defcomponent :entity/stats (data/components-attribute :stats)
-  (entity/create-component [[_ stats] _components _ctx]
+  (component/create [[_ stats] _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))

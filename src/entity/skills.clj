@@ -1,6 +1,6 @@
 (ns entity.skills
   (:require [clojure.string :as str]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [api.context :refer [get-property ->counter stopped?]]
             [api.entity :as entity]
             [api.effect :as effect]
@@ -11,7 +11,7 @@
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
 (defcomponent :entity/skills (data/one-to-many-ids :properties/skill)
-  (entity/create-component [[_ skill-ids] _components ctx]
+  (component/create [[_ skill-ids] ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 
   (entity/info-text [[_ skills] _ctx]
