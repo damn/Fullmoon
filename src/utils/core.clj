@@ -107,4 +107,5 @@
   (mapv (partial + 0.5) position))
 
 (defn safe-merge [m1 m2]
+  {:pre [(not-any? #(contains? m1 %) (keys m2))]}
   (merge m1 m2))
