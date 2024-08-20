@@ -115,7 +115,7 @@
              ~@(rest fn-body))))
      ~k)))
 
-(clojure.core/defn update-map
+(defn update-map
   "Recursively calls (assoc m k (apply component/fn [k v] args)) for every k of (keys (methods component/fn)),
   which is non-nil/false in m."
   [m multimethod & args]
@@ -137,13 +137,19 @@
  (= (update-map {:baz 2 :bar 0} foo) {:baz 2, :bar 2})
  )
 
-(clojure.core/defn run-system! [system obj & args]
+; TODO can be removed and used with dorun ...
+; do that inside here
+; used at render entities also
+(defn run-system! [system obj & args]
   (doseq [k (keys (methods system))
           :let [v (k obj)]
           :when v]
     (apply system [k v] obj args)))
 
-(clojure.core/defn apply-system [system m & args]
+; TODO why keys methods?
+; is when v important ? we dissoc non used keys right
+; => then always need default values
+(defn apply-system [system m & args]
   (for [k (keys (methods system))
         :let [v (k m)]
         :when v]
@@ -162,7 +168,7 @@
         (keys (methods system))))
 
 ; TODO also asserts component exists ! do this maybe first w. schema or sth.
-(clojure.core/defn load! [components & {:keys [log?]}]
+(defn load! [components & {:keys [log?]}]
   (assert (apply distinct? (map first components)))
   (doseq [[k _] components
           :let [component-ns (k->component-ns k)]]
@@ -185,7 +191,7 @@
 ; TODO similar to update-map
 ; TODO :context/assets false does still load
 ; also [:context/assets] w/o args possible
-(clojure.core/defn build [obj create-fn components & {:keys [log?]}]
+(defn build [obj create-fn components & {:keys [log?]}]
   (reduce (fn [obj {k 0 :as component}]
             (when log? (println k))
             (if ((set (keys (methods create-fn))) k)
