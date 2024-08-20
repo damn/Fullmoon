@@ -39,6 +39,7 @@
 
 (defn- wait! []
   (locking obj
+    (Thread/sleep 10)
     (println "\n\n>>> WAITING FOR RESTART <<<")
     (.wait obj)))
 
