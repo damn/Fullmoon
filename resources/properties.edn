@@ -102,7 +102,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 5,
+  :creature/level 1,
   :creature/species :species/toad,
   :property/id :creatures/toad-horned,
   :property/image
@@ -129,7 +129,7 @@
     :stats/mana 11,
     :stats/movement-speed 2.4,
     :stats/strength 1}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/goblin,
   :property/id :creatures/goblin-warrior,
   :property/image
@@ -150,7 +150,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 4,
   :creature/species :species/lizardman-blue,
   :property/id :creatures/lizardman-blue-shaman,
   :property/image
@@ -171,7 +171,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 4,
+  :creature/level 3,
   :creature/species :species/barbarian,
   :property/id :creatures/barbarian-f,
   :property/image
@@ -217,7 +217,7 @@
     :stats/mana 0,
     :stats/movement-speed 2.0,
     :stats/strength 10}},
-  :creature/level 12,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/helion,
   :property/image
@@ -238,7 +238,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/priest,
   :property/image
@@ -259,7 +259,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 4,
   :creature/species :species/lizardman-green,
   :property/id :creatures/lizardman-green-spear,
   :property/image
@@ -280,7 +280,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 10,
+  :creature/level 5,
   :creature/species :species/dwarf,
   :property/id :creatures/dwarf-cleric,
   :property/image
@@ -322,7 +322,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 4,
   :creature/species :species/lizardman-green,
   :property/id :creatures/lizardman-green-shaman,
   :property/image
@@ -343,7 +343,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 35, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 8,
+  :creature/level 5,
   :creature/species :species/beholder,
   :property/id :creatures/beholder,
   :property/image
@@ -364,7 +364,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level nil,
+  :creature/level 1,
   :creature/species :species/spider,
   :property/id :creatures/spider-brown,
   :property/image
@@ -386,7 +386,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 6}},
-  :creature/level 13,
+  :creature/level 6,
   :creature/species :species/vampire,
   :property/id :creatures/vampire-lord,
   :property/image
@@ -407,7 +407,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/witch,
   :property/image
@@ -428,7 +428,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 6,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/minstrel-f,
   :property/image
@@ -448,7 +448,7 @@
    :entity/reaction-time 0.2,
    :entity/skills #{},
    :entity/stats {:stats/hp 10, :stats/mana 11}},
-  :creature/level nil,
+  :creature/level 6,
   :creature/species :species/human,
   :property/id :creatures/lady-b,
   :property/image
@@ -469,7 +469,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 10,
+  :creature/level 5,
   :creature/species :species/dwarf,
   :property/id :creatures/dwarf,
   :property/image
@@ -490,7 +490,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 5,
   :creature/species :species/elemental,
   :property/id :creatures/elemental-air,
   :property/image
@@ -511,7 +511,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/beetle,
   :property/id :creatures/beetle-fire,
   :property/image
@@ -532,7 +532,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 6,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/warrior-f,
   :property/image
@@ -553,7 +553,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
-  :creature/level 12,
+  :creature/level 4,
   :creature/species :species/golem,
   :property/id :creatures/golem-mud,
   :property/image
@@ -574,7 +574,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 1,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/merchant-f,
   :property/image
@@ -595,7 +595,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 6,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/minstrel-m,
   :property/image
@@ -616,7 +616,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 12,
+  :creature/level 4,
   :creature/species :species/spirit,
   :property/id :creatures/spirit-greater,
   :property/image
@@ -644,7 +644,7 @@
     :stats/mana 11,
     :stats/movement-speed 2.0,
     :stats/strength 2}},
-  :creature/level 6,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/knight,
   :property/image
@@ -665,7 +665,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 1,
+  :creature/level 8,
   :creature/species :species/zombie,
   :property/id :creatures/zombie-b,
   :property/image
@@ -686,7 +686,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 32, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 14,
+  :creature/level 6,
   :creature/species :species/demon,
   :property/id :creatures/demon-green,
   :property/image
@@ -707,7 +707,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 5,
   :creature/species :species/drow,
   :property/id :creatures/drow-wizard,
   :property/image
@@ -728,7 +728,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/goblin,
   :property/id :creatures/goblin-shaman,
   :property/image
@@ -749,7 +749,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/beetle,
   :property/id :creatures/beetle-giant,
   :property/image
@@ -770,7 +770,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/human,
   :property/id :creatures/prisoner-b,
   :property/image
@@ -791,7 +791,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 10,
+  :creature/level 5,
   :creature/species :species/dwarf,
   :property/id :creatures/dwarf-mage,
   :property/image
@@ -809,9 +809,8 @@
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
-   :entity/skills #{},
-   :entity/stats
-   {:stats/hp 8, :stats/mana 11, :stats/movement-speed 1}},
+   :entity/skills #{:skills/melee-attack},
+   :entity/stats {:stats/hp 8, :stats/movement-speed 1}},
   :creature/level 1,
   :creature/species :species/bird,
   :property/id :creatures/bird-hawk,
@@ -833,7 +832,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 11,
+  :creature/level 4,
   :creature/species :species/pixie,
   :property/id :creatures/pixie-b,
   :property/image
@@ -853,7 +852,7 @@
    :entity/reaction-time 0.2,
    :entity/skills #{},
    :entity/stats {:stats/movement-speed 1}},
-  :creature/level nil,
+  :creature/level 6,
   :creature/species :species/human,
   :property/id :creatures/lady-a,
   :property/image
@@ -874,7 +873,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 5,
   :creature/species :species/drow,
   :property/id :creatures/drow,
   :property/image
@@ -916,7 +915,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 3,
+  :creature/level 1,
   :creature/species :species/wolf,
   :property/id :creatures/wolf-black,
   :property/image
@@ -935,9 +934,8 @@
    :entity/flying? true,
    :entity/reaction-time 0.2,
    :entity/skills #{},
-   :entity/stats
-   {:stats/hp 8, :stats/mana 11, :stats/movement-speed 4}},
-  :creature/level 5,
+   :entity/stats {:stats/hp 8, :stats/movement-speed 4}},
+  :creature/level 1,
   :creature/species :species/bird,
   :property/id :creatures/bird-crow,
   :property/image
@@ -958,7 +956,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 32, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 14,
+  :creature/level 6,
   :creature/species :species/demon,
   :property/id :creatures/demon-red,
   :property/image
@@ -979,7 +977,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 11,
+  :creature/level 4,
   :creature/species :species/pixie,
   :property/id :creatures/pixie-a,
   :property/image
@@ -1000,7 +998,7 @@
    :entity/skills #{:skills/bow},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 6,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/archer,
   :property/image
@@ -1021,7 +1019,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/rat,
   :property/id :creatures/rat-giant,
   :property/image
@@ -1041,7 +1039,7 @@
    :entity/reaction-time 0.2,
    :entity/skills #{},
    :entity/stats {:stats/hp 10, :stats/mana 11}},
-  :creature/level nil,
+  :creature/level 6,
   :creature/species :species/human,
   :property/id :creatures/lord-a,
   :property/image
@@ -1062,7 +1060,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 13,
+  :creature/level 6,
   :creature/species :species/wraith,
   :property/id :creatures/wraith-black,
   :property/image
@@ -1083,7 +1081,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 13,
+  :creature/level 6,
   :creature/species :species/wraith,
   :property/id :creatures/wraith-red,
   :property/image
@@ -1104,7 +1102,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
-  :creature/level 5,
+  :creature/level 4,
   :creature/species :species/golem,
   :property/id :creatures/golem-fire,
   :property/image
@@ -1125,7 +1123,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 5,
+  :creature/level 4,
   :creature/species :species/wisp,
   :property/id :creatures/wisp-ancient,
   :property/image
@@ -1146,7 +1144,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 35, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 12,
+  :creature/level 2,
   :creature/species :species/troll,
   :property/id :creatures/troll,
   :property/image
@@ -1167,7 +1165,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 13,
+  :creature/level 6,
   :creature/species :species/wraith,
   :property/id :creatures/wraith-blue,
   :property/image
@@ -1188,7 +1186,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/beetle,
   :property/id :creatures/beetle-fire-giant,
   :property/image
@@ -1209,7 +1207,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 4,
   :creature/species :species/lizardman-blue,
   :property/id :creatures/lizardman-blue-spear,
   :property/image
@@ -1230,7 +1228,7 @@
    :entity/skills #{:skills/spawn},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 12,
+  :creature/level 5,
   :creature/species :species/human,
   :property/id :creatures/dark-knight,
   :property/image
@@ -1251,7 +1249,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 2,
+  :creature/level 1,
   :creature/species :species/wolf,
   :property/id :creatures/wolf-brown,
   :property/image
@@ -1272,7 +1270,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 32, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 14,
+  :creature/level 6,
   :creature/species :species/demon,
   :property/id :creatures/demon-blue,
   :property/image
@@ -1293,7 +1291,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 2,
+  :creature/level 1,
   :creature/species :species/moth,
   :property/id :creatures/moth-red,
   :property/image
@@ -1314,7 +1312,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/human,
   :property/id :creatures/prisoner-c,
   :property/image
@@ -1335,7 +1333,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 2,
+  :creature/level 17,
   :creature/species :species/mimic,
   :property/id :creatures/mimic,
   :property/image
@@ -1356,7 +1354,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 4,
   :creature/species :species/lizardman-green,
   :property/id :creatures/lizardman-green,
   :property/image
@@ -1377,7 +1375,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 11,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/paladin,
   :property/image
@@ -1398,7 +1396,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 15,
+  :creature/level 6,
   :creature/species :species/dragon,
   :property/id :creatures/dragon-green,
   :property/image
@@ -1419,7 +1417,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 2,
+  :creature/level 1,
   :creature/species :species/rat,
   :property/id :creatures/rat,
   :property/image
@@ -1440,7 +1438,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 15,
+  :creature/level 5,
   :creature/species :species/elemental,
   :property/id :creatures/elemental-vorpal,
   :property/image
@@ -1461,7 +1459,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 2,
+  :creature/level 8,
   :creature/species :species/zombie,
   :property/id :creatures/zombie-a,
   :property/image
@@ -1482,7 +1480,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 15,
+  :creature/level 6,
   :creature/species :species/dragon,
   :property/id :creatures/dragon-blue,
   :property/image
@@ -1503,7 +1501,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level nil,
+  :creature/level 2,
   :creature/species :species/spider,
   :property/id :creatures/spider-black,
   :property/image
@@ -1524,7 +1522,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 28, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 11,
+  :creature/level 4,
   :creature/species :species/ogre,
   :property/id :creatures/ogre,
   :property/image
@@ -1545,7 +1543,7 @@
    :entity/skills #{:skills/meditation :skills/projectile},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 8,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/wizard,
   :property/image
@@ -1566,7 +1564,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 10,
+  :creature/level 4,
   :creature/species :species/elemental,
   :property/id :creatures/elemental-earth,
   :property/image
@@ -1587,7 +1585,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 15,
+  :creature/level 6,
   :creature/species :species/dragon,
   :property/id :creatures/dragon-shadow,
   :property/image
@@ -1606,7 +1604,7 @@
    :entity/flying? true,
    :entity/reaction-time 0.2,
    :entity/stats {:stats/mana 11}},
-  :creature/level 10,
+  :creature/level 5,
   :creature/species :species/banshee,
   :property/id :creatures/banshee,
   :property/image
@@ -1627,7 +1625,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 6,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/warrior-m,
   :property/image
@@ -1648,7 +1646,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 14,
+  :creature/level 1,
   :creature/species :species/moth,
   :property/id :creatures/moth-white,
   :property/image
@@ -1666,10 +1664,9 @@
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
-   :entity/skills #{:skills/projectile},
-   :entity/stats
-   {:stats/hp 8, :stats/mana 11, :stats/movement-speed 4}},
-  :creature/level 6,
+   :entity/skills #{:skills/melee-attack},
+   :entity/stats {:stats/hp 8, :stats/movement-speed 4}},
+  :creature/level 1,
   :creature/species :species/bird,
   :property/id :creatures/bird-dove,
   :property/image
@@ -1690,7 +1687,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 4,
   :creature/species :species/lizardman-blue,
   :property/id :creatures/lizardman-blue,
   :property/image
@@ -1711,7 +1708,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
-  :creature/level 15,
+  :creature/level 6,
   :creature/species :species/dragon,
   :property/id :creatures/dragon-red,
   :property/image
@@ -1732,7 +1729,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/spider,
   :property/id :creatures/spider-brown-giant,
   :property/image
@@ -1753,7 +1750,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 10,
+  :creature/level 4,
   :creature/species :species/spirit,
   :property/id :creatures/spirit,
   :property/image
@@ -1774,7 +1771,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 18, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 10,
+  :creature/level 6,
   :creature/species :species/lich,
   :property/id :creatures/lich,
   :property/image
@@ -1816,7 +1813,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 28, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 11,
+  :creature/level 4,
   :creature/species :species/ogre,
   :property/id :creatures/ogre-mystic,
   :property/image
@@ -1837,7 +1834,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 5,
+  :creature/level 6,
   :creature/species :species/dragon,
   :property/id :creatures/bone-dragon,
   :property/image {:file "images/animations/bone-dragon-1.png"}}
@@ -1857,7 +1854,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
-  :creature/level 10,
+  :creature/level 4,
   :creature/species :species/golem,
   :property/id :creatures/golem-metal,
   :property/image
@@ -1878,7 +1875,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 4,
+  :creature/level 5,
   :creature/species :species/elemental,
   :property/id :creatures/elemental-fire,
   :property/image
@@ -1899,7 +1896,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 7,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/templar,
   :property/image
@@ -1920,7 +1917,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 1,
+  :creature/level 4,
   :creature/species :species/wisp,
   :property/id :creatures/wisp,
   :property/image
@@ -1941,7 +1938,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/snake,
   :property/id :creatures/snake-giant,
   :property/image
@@ -1962,7 +1959,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 28, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 12,
+  :creature/level 5,
   :creature/species :species/minotaur,
   :property/id :creatures/minotaur,
   :property/image
@@ -1983,7 +1980,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 13,
+  :creature/level 5,
   :creature/species :species/valkyrie,
   :property/id :creatures/valkyrie-a,
   :property/image
@@ -2046,7 +2043,7 @@
     :stats/mana 100,
     :stats/movement-speed 6,
     :stats/strength 1}},
-  :creature/level nil,
+  :creature/level 17,
   :creature/species :species/vampire,
   :property/id :creatures/vampire,
   :property/image
@@ -2067,7 +2064,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 2,
+  :creature/level 1,
   :creature/species :species/moth,
   :property/id :creatures/moth-black,
   :property/image
@@ -2088,7 +2085,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 4,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/monk,
   :property/image
@@ -2108,7 +2105,7 @@
    :entity/reaction-time 0.2,
    :entity/skills #{},
    :entity/stats {:stats/hp 10, :stats/mana 11}},
-  :creature/level nil,
+  :creature/level 6,
   :creature/species :species/human,
   :property/id :creatures/lord-b,
   :property/image
@@ -2129,7 +2126,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/human,
   :property/id :creatures/warden,
   :property/image
@@ -2150,7 +2147,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 12,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/druid,
   :property/image
@@ -2171,7 +2168,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 8,
+  :creature/level 5,
   :creature/species :species/elf,
   :property/id :creatures/elf-wizard,
   :property/image
@@ -2213,7 +2210,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 3,
+  :creature/level 1,
   :creature/species :species/halfling,
   :property/id :creatures/halfling-fighter,
   :property/image
@@ -2255,7 +2252,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 3,
+  :creature/level 1,
   :creature/species :species/halfling,
   :property/id :creatures/halfling-thief,
   :property/image
@@ -2276,7 +2273,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 4,
+  :creature/level 3,
   :creature/species :species/barbarian,
   :property/id :creatures/barbarian-m,
   :property/image
@@ -2297,7 +2294,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 8,
+  :creature/level 5,
   :creature/species :species/elf,
   :property/id :creatures/elf-bowman,
   :property/image
@@ -2318,7 +2315,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
-  :creature/level 4,
+  :creature/level 2,
   :creature/species :species/beetle,
   :property/id :creatures/beetle,
   :property/image
@@ -2339,7 +2336,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 3,
+  :creature/level 2,
   :creature/species :species/bat,
   :property/id :creatures/bat-giant,
   :property/image
@@ -2384,7 +2381,7 @@
     :stats/modifiers {:modifier/damage-receive {:op/mult -0.9}},
     :stats/movement-speed 2,
     :stats/strength 10}},
-  :creature/level 10,
+  :creature/level 4,
   :creature/species :species/golem,
   :property/id :creatures/golem-stone,
   :property/image
@@ -2405,7 +2402,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 11,
+  :creature/level 6,
   :creature/species :species/human,
   :property/id :creatures/necromancer,
   :property/image
@@ -2426,7 +2423,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/spider,
   :property/id :creatures/spider-black-giant,
   :property/image
@@ -2447,7 +2444,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 13,
+  :creature/level 5,
   :creature/species :species/valkyrie,
   :property/id :creatures/valkyrie-b,
   :property/image
@@ -2468,7 +2465,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 1}},
-  :creature/level 1,
+  :creature/level 2,
   :creature/species :species/bat,
   :property/id :creatures/bat,
   :property/image
@@ -2496,7 +2493,7 @@
     :stats/mana 0,
     :stats/movement-speed 3.1,
     :stats/strength 3}},
-  :creature/level 2,
+  :creature/level 1,
   :creature/species :species/snake,
   :property/id :creatures/snake,
   :property/image
@@ -2538,7 +2535,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 6,
+  :creature/level 2,
   :creature/species :species/human,
   :property/id :creatures/prisoner-a,
   :property/image
@@ -2559,7 +2556,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 35, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 14,
+  :creature/level 5,
   :creature/species :species/beholder,
   :property/id :creatures/beholder-deep,
   :property/image
@@ -2601,7 +2598,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 5,
   :creature/species :species/elemental,
   :property/id :creatures/elemental-water,
   :property/image
@@ -2622,7 +2619,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 11,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/cultist,
   :property/image
@@ -2664,7 +2661,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 3,
+  :creature/level 1,
   :creature/species :species/halfling,
   :property/id :creatures/halfling-wizard,
   :property/image
@@ -2685,7 +2682,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 9,
+  :creature/level 5,
   :creature/species :species/drow,
   :property/id :creatures/drow-bowman,
   :property/image
@@ -2706,7 +2703,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 2.4}},
-  :creature/level 5,
+  :creature/level 2,
   :creature/species :species/worm,
   :property/id :creatures/worm-giant,
   :property/image
@@ -2727,7 +2724,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 1,
+  :creature/level 3,
   :creature/species :species/human,
   :property/id :creatures/merchant-m,
   :property/image
@@ -2748,7 +2745,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 3.0}},
-  :creature/level 8,
+  :creature/level 5,
   :creature/species :species/elf,
   :property/id :creatures/elf,
   :property/image
@@ -2790,7 +2787,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
-  :creature/level 3,
+  :creature/level 1,
   :creature/species :species/halfling,
   :property/id :creatures/halfling-sling,
   :property/image
@@ -2811,7 +2808,7 @@
    :entity/skills #{},
    :entity/stats
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
-  :creature/level 10,
+  :creature/level 4,
   :creature/species :species/golem,
   :property/id :creatures/golem-ice,
   :property/image
