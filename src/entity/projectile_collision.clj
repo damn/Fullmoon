@@ -13,7 +13,7 @@
 
   ; TODO add proper effect-ctx here for effect-ctx/text
   ; TODO DRY! LIME color for effects ...
-  (entity/info-text [[_ {:keys [hit-effects piercing?]}] _ctx]
+  (entity/info-text [[_ {:keys [hit-effects piercing?]}] ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
          "[LIME]" (ctx/effect-text ctx hit-effects) "[]"))
 
@@ -21,13 +21,14 @@
   (entity/tick [[k {:keys [hit-effects
                            already-hit-bodies
                            piercing?]}]
-                entity*
+                entity
                 ctx]
     ; TODO this could be called from body on collision
     ; for non-solid
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
-    (let [cells* (map deref (rectangle->cells (world-grid ctx) (:entity/body entity*))) ; just use cached-touched -cells
+    (let [entity* @entity
+          cells* (map deref (rectangle->cells (world-grid ctx) (:entity/body entity*))) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))

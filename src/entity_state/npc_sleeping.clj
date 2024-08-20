@@ -19,8 +19,9 @@
     [[:tx/add-text-effect id "[WHITE]!"]
      [:tx.entity/shout (entity/position entity*) faction 0.2]])
 
-  (tick [_ entity* context]
-    (let [cell ((world-grid context) (entity/tile entity*))]
+  (tick [_ entity context]
+    (let [entity* @entity
+          cell ((world-grid context) (entity/tile entity*))]
       (when-let [distance (cell/nearest-entity-distance @cell (entity/enemy-faction entity*))]
         (when (<= distance aggro-range)
           [[:tx/event (:entity/id entity*) :alert]]))))

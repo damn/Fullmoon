@@ -55,12 +55,13 @@
   state/State
   (enter [_ entity* _ctx])
   (exit  [_ entity* _ctx])
-  (tick [_ {:keys [entity/id] :as entity*} context]
-    (let [effect-ctx (->effect-context context entity*)]
+  (tick [_ entity context]
+    (let [entity* @entity
+          effect-ctx (->effect-context context entity*)]
       (if-let [skill (npc-choose-skill (safe-merge context effect-ctx) entity*)]
-        [[:tx/event id :start-action [skill effect-ctx]]]
-        [[:tx/event id :movement-direction (or (potential-field-follow-to-enemy context id)
-                                               [0 0])]]))) ; nil param not accepted @ entity.state
+        [[:tx/event entity :start-action [skill effect-ctx]]]
+        [[:tx/event entity :movement-direction (or (potential-field-follow-to-enemy context entity)
+                                                   [0 0])]]))) ; nil param not accepted @ entity.state
 
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])

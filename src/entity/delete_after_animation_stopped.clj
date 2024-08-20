@@ -7,6 +7,6 @@
   (entity/create [_ entity* _ctx]
     (-> entity* :entity/animation :looping? not assert))
 
-  (entity/tick [_ {:keys [entity/id entity/animation]} _ctx]
-    (when (animation/stopped? animation)
-      [[:tx/destroy id]])))
+  (entity/tick [_ entity _ctx]
+    (when (animation/stopped? (:entity/animation @entity))
+      [[:tx/destroy entity]])))

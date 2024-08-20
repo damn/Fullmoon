@@ -61,7 +61,7 @@
               ctx
               (let [ctx (time-component/update-time ctx)]
                 (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
-                (ctx/tick-entities! ctx (map deref active-entities))))]
+                (ctx/tick-entities! ctx active-entities)))]
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]

@@ -7,9 +7,9 @@
             [api.effect :as effect]))
 
 (defcomponent :entity/string-effect {}
-  (entity/tick [[k {:keys [counter]}] {:keys [entity/id]} context]
+  (entity/tick [[k {:keys [counter]}] eid context]
     (when (stopped? context counter)
-      [[:tx.entity/dissoc id k]]))
+      [[:tx.entity/dissoc eid k]]))
 
   (entity/render-above [[_ {:keys [text]}] {:keys [entity/body] :as entity*} g _ctx]
     (let [[x y] (entity/position entity*)]

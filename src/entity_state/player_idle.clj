@@ -160,7 +160,7 @@
   state/State
   (enter [_ entity* _ctx])
   (exit  [_ entity* context])
-  (tick [_ entity* _context])
+  (tick [_ entity _context])
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))

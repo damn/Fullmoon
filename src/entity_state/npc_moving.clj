@@ -15,9 +15,9 @@
   (exit [_ {:keys [entity/id]} _ctx]
     [[:tx.entity/set-movement id nil]])
 
-  (tick [_ {:keys [entity/id]} ctx]
+  (tick [_ eid ctx]
     (when (stopped? ctx counter)
-      [[:tx/event id :timer-finished]]))
+      [[:tx/event eid :timer-finished]]))
 
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])

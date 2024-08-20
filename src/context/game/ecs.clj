@@ -20,7 +20,8 @@
   (entity/create [_ {:keys [entity/id]} _ctx]
     [[:tx/assoc-uids->entities id]])
 
-  (entity/destroy [[_ uid] _entity* _ctx]
+  (entity/destroy [[_ uid] _entity _ctx]
+    ;(println "Destroying " uid)
     [[:tx/dissoc-uids->entities uid]]))
 
 (defmethod effect/do! :tx/assoc-uids->entities [[_ entity] ctx]
@@ -64,16 +65,89 @@
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
      (when-not (entity-error ctx)
-       (handle-entity-error! ctx entity* t)) ; TODO doesnt work assoc tx lost
+       (handle-entity-error! ctx t)) ; TODO doesnt work assoc tx lost
      (let [[x y] (entity/position entity*)]
+       ; TODO draw a red box with body bounds .....
        (g/draw-text g
                     {:text (str "Error / entity uid: " (:entity/uid entity*))
                      :x x
                      :y y
                      :up? true})))))
 
-(defn- do-system! [ctx system entity*]
-  (reduce ctx/do! ctx (component/apply-system system entity* ctx)))
+; Assumes system does not affect entity* ! !
+; order not important ??? idk
+
+; TODO also entity* is not updated inbetween ....
+; the component needs a reference ? atom ?
+; => components itself need to be entities ??? if they are maps ???
+; -> we need to pass entity not entity*
+
+; we can deref it before every do! call
+; also in tx/effect deref source/target then
+(defn- do-components! [ctx system entity]
+  (reduce (fn [ctx component-k]
+            (if-let [component-v (component-k @entity)] ; if a component gets removed/dissoc'd during another system call of the same entity
+              (let [component [component-k component-v]]
+               (ctx/do! ctx (system component entity ctx)))
+              ctx))
+          ctx
+          (keys @entity)))
+
+; how do actual entity-component systems work
+; what if a component gets destroyed? do I check each one for :destroyed? before calling a system ?
+; is order even important (parallelization)
+; do all components have to be maps ?
+; in my case not ?
+
+; 1. do we really need to pass entity to system component
+; 2. can components themself be entities
+; and each system knows which components are there and just runs through them ?
+; (like datomic every 'component' and id)
+; 3. do we need to deref?
+; only 2 shout we access other stuff
+; other components could merge together (delete-after-animation) ??
+; state ??
+
+; 3.1 if we do not deref it
+; we are maybe updating components who are no longer exist
+; because the outer @entity
+; which might add the components back again
+; so the (k @entity) was useful ! dont just remove it now
+; but exlain ..
+
+; if we just manage components and not entities
+; then we need a function get-entity
+; which creates this associative view like in datomic
+
+; then we don't need default values for systems
+
+; then we don;t pass entity but eid later?
+
+; Its anyway not :entity/* but :component/* ....
+; makes it more clear ....
+
+; do entity/create also then ... and all state exit/enter/..
+
+; and screens/states/gui-widgets/ as components
+
+; see entity/tick of body
+; all this assoc-in ....
+; we need to make components into entities
+
+; there are no 'entity' anymore only 'eid' and entity is then get-entity ctx eid
+
+(defn- tick-system [ctx entity]
+  (try
+   (do-components! ctx entity/tick entity)
+   (catch Throwable t
+     (p/pretty-pst (ex-info "" (select-keys @entity [:entity/uid]) t) 12)
+     (handle-entity-error! ctx t))))
+
+; apply-system reduces instead
+; with the system fns
+
+(defn- destroy-system [ctx entity]
+  (do-components! ctx entity/destroy entity))
 
 (extend-type api.context.Context
   api.context/EntityComponentSystem
@@ -86,14 +160,8 @@
   (get-entity [ctx uid]
     (get (uids-entities ctx) uid))
 
-  (tick-entities! [ctx entities*]
-    (reduce (fn [ctx entity*]
-              (try
-               (do-system! ctx entity/tick entity*)
-               (catch Throwable t
-                 (handle-entity-error! ctx entity* t))))
-            ctx
-            entities*))
+  (tick-entities! [ctx entities]
+    (reduce tick-system ctx entities))
 
   (render-entities! [context g entities*]
     (doseq [entities* (map second
@@ -107,10 +175,10 @@
       (render-entity* entity/render-debug entity* g context)))
 
   (remove-destroyed-entities! [ctx]
-    (reduce (fn [ctx entity]
-              (do-system! ctx entity/destroy @entity))
-            ctx
-            (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx)))))
+    (->> ctx
+         ctx/all-entities
+         (filter (comp :entity/destroyed? deref))
+         (reduce destroy-system ctx))))
 
 (defmethod effect/do! :tx.entity/assoc [[_ entity k v] ctx]
   (assert (keyword? k))

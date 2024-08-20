@@ -1,5 +1,7 @@
 (ns core.component)
 
+; TODO line number for overwrite warnings or ns at least....
+
 ; TODO (keys (methods create-fn)) is weird - what if there are hundreds of fn but only 1 component?
 ; => we could cache this directly @ core.component/attributes (rename to core.component/components)
 ; => the intersection of systems for each component

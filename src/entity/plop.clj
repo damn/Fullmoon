@@ -3,8 +3,8 @@
             [api.entity :as entity]))
 
 (defcomponent :entity/plop {}
-  (entity/destroy [_ entity* ctx]
-    [[:tx.entity/audiovisual (entity/position entity*) :audiovisuals/hit-wall]]))
+  (entity/destroy [_ entity ctx]
+    [[:tx.entity/audiovisual (entity/position @entity) :audiovisuals/hit-wall]]))
 
 
 ; Projectile dies ways:

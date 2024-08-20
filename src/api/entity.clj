@@ -3,9 +3,14 @@
             [utils.core :as utils]))
 
 (defsystem create-component [_ components ctx])
-(defsystem create           [_ entity* ctx])
-(defsystem destroy          [_ entity* ctx])
-(defsystem tick             [_ entity* ctx])
+
+(defsystem create [_ entity* ctx])
+
+(defsystem destroy [_ entity ctx])
+(defmethod destroy :default [_ entity ctx])
+
+(defsystem tick [_ entity ctx])
+(defmethod tick :default [_ entity ctx])
 
 (defsystem info-text          [_ ctx])
 (defmethod info-text :default [_ ctx])

@@ -158,13 +158,13 @@
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     [[:tx/add-to-world id]])
 
-  (entity/destroy [_ {:keys [entity/id]} ctx]
-    [[:tx/remove-from-world id]])
+  (entity/destroy [_ entity ctx]
+    [[:tx/remove-from-world entity]])
 
   (entity/render-debug [[_ body] _entity* g _ctx]
     (draw-bounds g body))
 
-  (entity/tick [[_ body] {:keys [entity/id]} ctx]
+  (entity/tick [[_ body] eid ctx]
     (when-let [{:keys [direction speed] :as movement} (:movement body)]
       (assert (m/validate movement-speed-schema* speed))
       (assert (or (zero? (v/length direction))
@@ -174,13 +174,13 @@
                     (zero? speed))
         (let [movement (assoc movement :delta-time (ctx/delta-time ctx))]
           (when-let [body (if (:solid? body)
-                            (try-move-solid-body (ctx/world-grid ctx) body id movement)
+                            (try-move-solid-body (ctx/world-grid ctx) body eid movement)
                             (move-body body movement))]
-            [[:tx.entity/assoc-in id [:entity/body :position   ] (:position    body)]
-             [:tx.entity/assoc-in id [:entity/body :left-bottom] (:left-bottom body)]
+            [[:tx.entity/assoc-in eid [:entity/body :position   ] (:position    body)]
+             [:tx.entity/assoc-in eid [:entity/body :left-bottom] (:left-bottom body)]
              (when (:rotate-in-movement-direction? body)
-               [:tx.entity/assoc-in id [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
-             [:tx/position-changed id]]))))))
+               [:tx.entity/assoc-in eid [:entity/body :rotation-angle] (v/get-angle-from-vector direction)])
+             [:tx/position-changed eid]]))))))
 
 (extend-type api.entity.Entity
   entity/Body

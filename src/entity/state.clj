@@ -25,7 +25,7 @@
   ; not just 'active-skill'
   ; => again a component ... ?
 
-  (entity/tick         [[_ {:keys [state-obj]}] entity* ctx]   (state/tick         state-obj entity*   ctx))
+  (entity/tick         [[_ {:keys [state-obj]}] entity    ctx] (state/tick         state-obj entity    ctx))
   (entity/render-below [[_ {:keys [state-obj]}] entity* g ctx] (state/render-below state-obj entity* g ctx))
   (entity/render-above [[_ {:keys [state-obj]}] entity* g ctx] (state/render-above state-obj entity* g ctx))
   (entity/render-info  [[_ {:keys [state-obj]}] entity* g ctx] (state/render-info  state-obj entity* g ctx)))

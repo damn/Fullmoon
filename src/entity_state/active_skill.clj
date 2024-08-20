@@ -109,15 +109,15 @@
 
   (exit [_ entity* _ctx])
 
-  (tick [_ {:keys [entity/id]} context]
+  (tick [_ eid context]
     (cond
      (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
-     [[:tx/event id :action-done]
+     [[:tx/event eid :action-done]
       ; TODO some sound ?
       ]
 
      (stopped? context counter)
-     [[:tx/event id :action-done]
+     [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
   (render-below [_ entity* g _ctx])

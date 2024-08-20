@@ -18,11 +18,11 @@
                      (line-of-sight? context entity* %)))))
 
 (defcomponent :entity/shout {}
-  (entity/tick [[_ counter] {:keys [entity/id] :as entity*} context]
+  (entity/tick [[_ counter] entity context]
     (when (stopped? context counter)
-      (cons [:tx/destroy id]
-            (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context entity* shout-range)]
-              [:tx/event id :alert])))))
+      (cons [:tx/destroy entity]
+            (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context @entity shout-range)]
+              [:tx/event entity :alert])))))
 
 (defmethod effect/do! :tx.entity/shout [[_ position faction delay-seconds] ctx]
   [[:tx/create #:entity {:body {:position position

@@ -12,6 +12,6 @@
   (entity/create [_ entity* _ctx]
     [(tx-assoc-image-current-frame entity*)])
 
-  (entity/tick [[k animation] {:keys [entity/id] :as entity*} ctx]
-    [(tx-assoc-image-current-frame entity*)
-     [:tx.entity/assoc id k (animation/tick animation (ctx/delta-time ctx))]]))
+  (entity/tick [[k animation] entity ctx]
+    [(tx-assoc-image-current-frame @entity)
+     [:tx.entity/assoc entity k (animation/tick animation (ctx/delta-time ctx))]]))

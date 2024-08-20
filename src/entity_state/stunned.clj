@@ -15,9 +15,9 @@
   state/State
   (enter [_ _entity* _ctx])
   (exit  [_ _entity* _ctx])
-  (tick [_ entity* ctx]
+  (tick [_ eid ctx]
     (when (stopped? ctx counter)
-      [[:tx/event (:entity/id entity*) :effect-wears-off]]))
+      [[:tx/event eid :effect-wears-off]]))
 
   (render-below [_ entity* g _ctx]
     (g/draw-circle g (entity/position entity*) 0.5 [1 1 1 0.6]))

@@ -7,9 +7,9 @@
   (entity/create-component [[_ duration] _components ctx]
     (->counter ctx duration))
 
-  (entity/tick [[_ counter] {:keys [entity/id]} ctx]
+  (entity/tick [[_ counter] eid ctx]
     (when (stopped? ctx counter)
-      [[:tx/destroy id]]))
+      [[:tx/destroy eid]]))
 
   ; TODO bar like in wc3 blue (water-elemental)
   (entity/info-text [[_ counter] ctx]

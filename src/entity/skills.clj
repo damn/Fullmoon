@@ -18,23 +18,24 @@
     (when (seq skills)
       (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
 
-  (entity/tick [[k skills] entity* ctx]
-    (for [{:keys [property/id skill/cooling-down?]} (vals skills)
+  (entity/tick [[k skills] eid ctx]
+    (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
                      (stopped? ctx cooling-down?))]
-      [:tx.entity/assoc-in (:entity/id entity*) [k id :skill/cooling-down?] false])))
+      [:tx.entity/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
 (extend-type api.entity.Entity
   entity/Skills
   (has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
     (contains? skills id)))
 
-(defmethod effect/do! :tx/add-skill [[_ entity {:keys [property/id] :as skill}]
-                                     _ctx]
-  (assert (not (entity/has-skill? @entity skill)))
-  [[:tx.entity/assoc-in entity [:entity/skills id] skill]
-   (when (:entity/player? @entity)
-     [:tx.context.action-bar/add-skill skill])])
+(defcomponent :tx/add-skill {}
+  (effect/do! [[_ entity {:keys [property/id] :as skill}]
+               _ctx]
+    (assert (not (entity/has-skill? @entity skill)))
+    [[:tx.entity/assoc-in entity [:entity/skills id] skill]
+     (when (:entity/player? @entity)
+       [:tx.context.action-bar/add-skill skill])]))
 
 ; unused ?
 (defmethod effect/do! :tx/remove-skill [[_ entity {:keys [property/id] :as skill}]

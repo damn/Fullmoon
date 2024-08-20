@@ -19,11 +19,12 @@
   (exit [_ {:keys [entity/id]} _ctx]
     [[:tx.entity/set-movement id nil]])
 
-  (tick [_ {:keys [entity/id] :as entity*} context]
-    (if-let [movement-vector (WASD-movement-vector context)]
-      [[:tx.entity/set-movement id {:direction movement-vector
-                                    :speed (entity/stat entity* :stats/movement-speed)}]]
-      [[:tx/event id :no-movement-input]]))
+  (tick [_ entity context]
+    (let [{:keys [entity/id] :as entity*} @entity]
+      (if-let [movement-vector (WASD-movement-vector context)]
+        [[:tx.entity/set-movement id {:direction movement-vector
+                                      :speed (entity/stat entity* :stats/movement-speed)}]]
+        [[:tx/event id :no-movement-input]])))
 
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])
