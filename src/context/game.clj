@@ -148,6 +148,6 @@
  (require 'app.state)
  (app/post-runnable
   (fn []
-    (swap! app.state/current-context start-replay-mode!)))
+    (swap! app/current-context start-replay-mode!)))
 
  )

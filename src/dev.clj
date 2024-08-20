@@ -84,7 +84,7 @@
      #_(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
 
 (comment
- (let [ctx @app.state/current-context
+ (let [ctx @app/current-context
        entity (api.context/get-entity ctx 2)
        ]
 
@@ -141,7 +141,7 @@
 
 
  (require '[api.context :refer [get-entity]])
- (let [entity* @(get-entity @app.state/current-context 49)]
+ (let [entity* @(get-entity @app/current-context 49)]
    (:mana entity*)
    )
 
@@ -159,7 +159,7 @@
 
 
 (defn show-tree-view! [obj]
-  (let [ctx @app.state/current-context
+  (let [ctx @app/current-context
         object (case obj
                  :ctx ctx
                  :entity (ctx/mouseover-entity* ctx)
@@ -179,7 +179,7 @@
  )
 
 (defn- do-on-ctx! [tx-fn]
-  (swap! app.state/current-context ctx/transact-all! [(tx-fn @app.state/current-context)]))
+  (swap! app/current-context ctx/transact-all! [(tx-fn @app/current-context)]))
 
 (defn learn-skill! [skill-id]
   (do-on-ctx!  (fn [ctx]
@@ -258,7 +258,7 @@
  (show-tree-view! :entity)
  (show-tree-view! :tile)
 
- (let [ctx @app.state/current-context
+ (let [ctx @app/current-context
        pl (ctx/player-entity* ctx)
        ]
    (-> pl

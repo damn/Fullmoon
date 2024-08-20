@@ -4,7 +4,7 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
             [utils.core :refer [safe-get]]
-            [app.state :refer [current-context change-screen!]]
+            [app :refer [current-context change-screen!]]
             [api.context :as ctx]
             [api.screen :as screen :refer [Screen]]
             ; just load here not @ resources because we don't build it yet.

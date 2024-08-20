@@ -8,7 +8,7 @@
             [api.scene2d.group :as group]
             [api.scene2d.ui.table :as table]
             [api.scene2d.ui.widget-group :refer [pack!]]
-            [app.state :refer [current-context]]
+            [app :refer [current-context]]
             context.graphics.image)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)

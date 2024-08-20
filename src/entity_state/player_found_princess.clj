@@ -1,5 +1,5 @@
 (ns entity-state.player-found-princess
-  (:require [app.state :refer [change-screen!]]
+  (:require [app :refer [change-screen!]]
             [api.entity-state :as state]))
 
 (defrecord PlayerFoundPrincess []

@@ -2,7 +2,7 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
-            [app.state :refer [current-context]]
+            [app :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
                                          player-tooltip-text transact-all!]]
             [api.graphics :as g]

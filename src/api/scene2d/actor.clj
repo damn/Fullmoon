@@ -1,7 +1,7 @@
 (ns api.scene2d.actor
   (:refer-clojure :exclude [name])
   (:require [api.scene2d.ui.widget-group :refer [pack!]]
-            [app.state :refer [current-context]])
+            [app :refer [current-context]])
   (:import com.badlogic.gdx.utils.Align
            (com.badlogic.gdx.scenes.scene2d Actor Touchable)
            com.badlogic.gdx.scenes.scene2d.ui.Window

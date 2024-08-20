@@ -66,7 +66,7 @@
           (@#'g/draw-string x y (str (:id @(:monster @cell))) 1)))))
 
 (comment
- (let [ctx @app.state/current-context
+ (let [ctx @app/current-context
        [x y] (->tile (ctx/world-mouse-position ctx))
        cell* @((world-grid ctx) [x y])]
    (clojure.pprint/pprint

@@ -6,7 +6,7 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             ; api
-            [app.state :as app :refer [change-screen!]]
+            [app :refer [current-context change-screen!]]
             [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
             [api.screen :as screen]
             [api.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
@@ -332,7 +332,7 @@
 (defn- apply-context-fn [window f]
   (fn [ctx]
     (try
-     (swap! app/current-context f)
+     (swap! current-context f)
      (remove! window)
      (catch Throwable t
        (error-window! ctx t)))))

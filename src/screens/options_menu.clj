@@ -1,7 +1,7 @@
 (ns screens.options-menu
   (:require [gdx.input :as input]
             [core.component :refer [defcomponent]]
-            [app.state :refer [change-screen!]]
+            [app :refer [change-screen!]]
             [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box ->table]]
             [gdx.input.keys :as input.keys]

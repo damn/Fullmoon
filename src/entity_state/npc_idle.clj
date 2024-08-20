@@ -38,7 +38,7 @@
 
 (comment
  (let [uid 76
-       ctx @app.state/current-context
+       ctx @app/current-context
        entity* @(api.context/get-entity ctx uid)
        effect-ctx (->effect-context ctx entity*)]
    (npc-choose-skill effect-ctx entity* ctx))

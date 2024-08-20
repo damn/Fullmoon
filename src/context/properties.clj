@@ -181,14 +181,14 @@
  ; then activate & reload app.
 
  (defn- migrate [property-type prop-fn]
-   (let [ctx @app.state/current-context]
+   (let [ctx @app/current-context]
      (def write-to-file? false)
      (time
       (doseq [prop (map prop-fn (api.context/all-properties ctx property-type))]
         (print (:property/id prop) ", ")
-        (swap! app.state/current-context ctx/update! prop)))
+        (swap! app/current-context ctx/update! prop)))
      (def write-to-file? true)
-     (write-properties-to-file! @app.state/current-context)
+     (write-properties-to-file! @app/current-context)
      nil))
 
  (migrate :properties/creature

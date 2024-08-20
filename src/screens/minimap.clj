@@ -5,7 +5,7 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
-            [app.state :refer [current-context]]
+            [app :refer [current-context]]
             [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
             api.graphics.camera

@@ -1,5 +1,5 @@
 (ns entity-state.player-dead
-  (:require [app.state :refer [change-screen!]]
+  (:require [app :refer [change-screen!]]
             [api.entity-state :as state]))
 
 (defrecord PlayerDead []
