@@ -128,7 +128,6 @@
   (when-let [[x y] position]        (actor/set-position! actor x y))
   actor)
 
-
 (comment
  ; fill parent & pack is from Widget TODO ( not widget-group ?)
  com.badlogic.gdx.scenes.scene2d.ui.Widget

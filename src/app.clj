@@ -17,7 +17,7 @@
   and then the screen render might continue with another outdated context.
   So do it always at end of a frame."
   [new-screen-key]
-  (swap! current-context change-screen new-screen-key))
+  (swap! current-context ctx/change-screen new-screen-key))
 
 (defn- ->context [context]
   (component/load! context)
