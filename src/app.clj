@@ -51,6 +51,7 @@
 
 (defn- start [config]
   (assert (:context config))
+  (component/load! (:components config))
   (lwjgl3/->application (->application (:context config))
                         (lwjgl3/->configuration (:app config))))
 

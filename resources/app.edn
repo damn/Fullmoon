@@ -3,6 +3,35 @@
        :height 900
        :full-screen? false
        :fps 60}
+ ; :components is here so we dont't call component/create on those (e.g. entity/body without args)
+ :components [[:entity/body]
+
+              [:entity/image]
+              [:entity/animation]
+              [:entity/delete-after-animation-stopped]
+              [:entity/line-render]
+
+              [:entity/clickable]
+              [:entity/delete-after-duration]
+              [:entity/mouseover]
+
+              [:entity/player]
+
+              [:entity/plop]
+              [:entity/projectile-collision]
+
+              [:entity/state]
+
+              [:entity/shout]
+              [:entity/faction]
+
+              [:entity/stats]
+              [:entity/string-effect]
+
+              [:entity/skills]
+              [:entity/inventory]
+
+              [:effect/target-entity]]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
@@ -42,36 +71,6 @@
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
            [:context/tiled]
            [:context/vis-ui :skin-scale/x1]
-
-           [:entity/body]
-
-           [:entity/image]
-           [:entity/animation]
-           [:entity/delete-after-animation-stopped]
-           [:entity/line-render]
-
-           [:entity/clickable]
-           [:entity/delete-after-duration]
-           [:entity/mouseover]
-
-           [:entity/player]
-
-           [:entity/plop]
-           [:entity/projectile-collision]
-
-           [:entity/state]
-
-           [:entity/shout]
-           [:entity/faction]
-
-           [:entity/stats]
-           [:entity/string-effect]
-
-           [:entity/skills]
-           [:entity/inventory]
-
-           [:effect/target-entity]
-
            [:context/properties {:types [:properties/audiovisual
                                          :properties/creature
                                          :properties/item
