@@ -15,8 +15,9 @@
   ; TODO DRY! LIME color for effects ...
   (entity/info-text [[_ {:keys [hit-effects piercing?]}] _ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
-         "[LIME]" (ctx/effect-text {} hit-effects) "[]")) ; TODO no ctx?
+         "[LIME]" (ctx/effect-text ctx hit-effects) "[]"))
 
+  ; TODO probably belongs to body
   (entity/tick [[k {:keys [hit-effects
                            already-hit-bodies
                            piercing?]}]

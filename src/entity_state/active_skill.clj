@@ -16,6 +16,15 @@
 ;  * target-position  = always available
 ;  * direction  = always available
 
+; TODO safe-merge DRY ?
+; filter applicable dry?
+; ...?
+; => deref source/target always (or check if still valid)
+; before each do! ....
+; like in tick-system
+
+; TODO can even do ctx/source* and ctx/target* functions or something
+
 ; maybe move to transaction handler & call it :tx/with-ctx
 ; and dissoc-ks (keys of extra-ctx)
 ; its a more general thing than tx/effect

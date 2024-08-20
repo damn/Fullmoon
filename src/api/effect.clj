@@ -24,6 +24,9 @@
 (defsystem do! [_ ctx])
 
 (comment
- (clojure.pprint/pprint
-  (sort (keys (methods do!))))
+ (spit "effects.txt"
+       (with-out-str
+        (clojure.pprint/pprint
+         (sort (keys (methods do!))))))
+
  )

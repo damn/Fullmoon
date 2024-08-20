@@ -20,6 +20,7 @@
       :effect/target target
       :effect/direction (when target (entity/direction entity* @target))})))
 
+; TODO
 ; split it into 3 parts
 ; applicable
 ; useful
