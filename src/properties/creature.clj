@@ -52,13 +52,13 @@
                :creature/entity])
      :edn-file-sort-order 1
      :overview {:title "Creatures"
-                :columns 20
-                :image/dimensions [48 48]
+                :columns 15
+                :image/dimensions [60 60]
                 :sort-by-fn #(vector (:creature/level %)
                                      (name (:creature/species %))
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %)
-                                       (case (:entity/faction (:creature/entity %))
+                                       #_(case (:entity/faction (:creature/entity %))
                                          :good "g"
                                          :evil "e"))}
      :->text (fn [_ctx

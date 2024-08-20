@@ -21,5 +21,7 @@
     (if full-screen?
       (.setFullscreenMode config (display-mode))
       (.setWindowedMode config width height))
+    ; See https://libgdx.com/wiki/graphics/querying-and-configuring-graphics
+    ; but makes no difference
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))

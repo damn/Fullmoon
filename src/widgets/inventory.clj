@@ -17,7 +17,11 @@
            com.badlogic.gdx.scenes.scene2d.utils.ClickListener
            com.badlogic.gdx.math.Vector2))
 
-(def ^:private cell-size 60)
+; Items are also smaller than 48x48 all of them
+; so wasting space ...
+; can maybe make a smaller textureatlas or something...
+
+(def ^:private cell-size 96)
 (def ^:private droppable-color    [0   0.6 0 0.8])
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
@@ -109,6 +113,7 @@
       (.add ^Actor (cell :inventory.slot/rings :position [0 0]))
       (.add ^Actor (cell :inventory.slot/rings :position [1 0]))
       (.add ^Actor (cell :inventory.slot/boot)) .row)
+    ; TODO add separator
     (doseq [y (range (grid/height (:inventory.slot/bag inventory/empty-inventory)))]
       (doseq [x (range (grid/width (:inventory.slot/bag inventory/empty-inventory)))]
         (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
@@ -123,7 +128,7 @@
                    :pack? true
                    :position [(ctx/gui-viewport-width ctx)
                               (ctx/gui-viewport-height ctx)]
-                   :rows [[{:actor table :pad 2}]]})))
+                   :rows [[{:actor table :pad 4}]]})))
 
 (defn ->data [ctx]
   (slot->background ctx))
