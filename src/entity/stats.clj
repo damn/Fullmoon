@@ -399,21 +399,21 @@
  )
 
 (defmacro def-set-to-max-effect [stat]
-  `(let [component# ~(keyword "effect" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))]
-     (defcomponent component# {:widget :label
-                               :schema [:= true]
-                               :default-value true}
-       (effect/text ~'[_ _effect-ctx]
-         ~(str "Sets " (name stat) " to max."))
+  `(defcomponent ~(keyword "effect" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))
+     {:widget :label
+      :schema [:= true]
+      :default-value true}
+     (effect/text ~'[_ _effect-ctx]
+       ~(str "Sets " (name stat) " to max."))
 
-       (effect/applicable? ~'[_ _effect-ctx] true)
+     (effect/applicable? ~'[_ _effect-ctx] true)
 
-       (effect/useful? ~'[_ {:keys [effect/source]}]
-         (lower-than-max? (~stat (:entity/stats @~'source))))
+     (effect/useful? ~'[_ {:keys [effect/source]}]
+       (lower-than-max? (~stat (:entity/stats @~'source))))
 
-       (effect/do! ~'[_ {:keys [effect/source]}]
-         [[:tx/sound "sounds/bfxr_click.wav"]
-          [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))))
+     (effect/do! ~'[_ {:keys [effect/source]}]
+       [[:tx/sound "sounds/bfxr_click.wav"]
+        [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]])))
 
 ; TODO sound will be played twice !
 ; => or re-add effect/sound & make it useful? false ....

@@ -67,7 +67,10 @@
 (defn- tick-system [ctx entity]
   (try
    (reduce (fn [ctx k]
-             (if-let [v (k @entity)] ; precaution in case a component gets removed by another component
+             ; precaution in case a component gets removed by another component
+             ; the question is do we still want to update nil components ?
+             ; should be contains? check ?
+             (if-let [v (k @entity)]
                (let [component [k v]]
                  (ctx/do! ctx (entity/tick component entity ctx)))
                ctx))

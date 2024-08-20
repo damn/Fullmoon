@@ -17,15 +17,22 @@
   Obligatory first parameter: component, a vector of [key/attribute value].
   Dispatching on component attribute."
   [sys-name params]
+
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
+
   (when warn-on-override
     (when-let [avar (resolve sys-name)]
       (println "WARNING: Overwriting defsystem:" avar)))
+
   `(do
+
     (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
-      (fn ~(symbol (str (name sys-name))) [& args#] (ffirst args#)))
+      (fn ~(symbol (str (name sys-name))) [& args#]
+        (ffirst args#)))
+
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
+
     (var ~sys-name)))
 
 (def attributes {})
@@ -57,12 +64,12 @@
                        "")
                      (let [attr-map (get attributes k)]
                        (if (seq attr-map)
-                         (pr-str attr-map)
+                         (pr-str (:core.component/fn-params attr-map))
                          #_(binding [*print-level* nil]
                            (with-out-str
                             (clojure.pprint/pprint attr-map)))
                          "")))
-            (doseq [system-name (component-systems k)]
+            #_(doseq [system-name (component-systems k)]
               (println "  * " system-name))))))
 
  ; & add all tx's ?
@@ -84,41 +91,56 @@
 
 (def warn-name-ns-mismatch? false)
 
-(defmacro defcomponent
-  ([k attr-map]
-   `(do
-     (when (and warn-on-override (get attributes ~k))
-       (println "WARNING: Overwriting defcomponent" ~k))
-     (when (and warn-name-ns-mismatch?
-                (not= (#'k->component-ns ~k) (ns-name *ns*)))
-       (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
-     (alter-var-root #'attributes assoc ~k ~attr-map)
-     ~k))
-  ([k attr-map & sys-impls]
-   `(do
-     (defcomponent ~k ~attr-map)
-     ~@(for [[sys & fn-body] sys-impls
-             :let [sys-var (resolve sys)
-                   sys-params (:params (meta sys-var))
-                   fn-params (first fn-body)
-                   method-name (symbol (str (name (symbol sys-var)) "." (name k)))]]
-         (do
 
-          ; if (seq then only rest)
-          ;(println (rest (first fn-params)))
+(defmacro defcomponent [k attr-map & sys-impls]
+  `(do
+    (assert (keyword? ~k) (pr-str ~k))
 
-          (when-not sys-var
-            (throw (IllegalArgumentException. (str sys " does not exist."))))
-          (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
-            (throw (IllegalArgumentException.
-                    (str sys-var " requires " (count sys-params) " args: " sys-params "."
-                         " Given " (count fn-params)  " args: " fn-params))))
-          (when (and warn-on-override
-                     (get (methods @sys-var) k))
-            (println "WARNING: Overwriting defcomponent" k "on" sys-var))
-          `(defmethod ~sys ~k ~method-name ~fn-params
-             ~@(rest fn-body))))
-     ~k)))
+    (when (and warn-name-ns-mismatch?
+               (not= (#'k->component-ns ~k) (ns-name *ns*)))
+      (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
+
+    (when (and warn-on-override (get attributes ~k))
+      (println "WARNING: Overwriting defcomponent" ~k))
+
+    (alter-var-root #'attributes assoc ~k ~attr-map)
+
+    ~@(for [[sys & fn-body] sys-impls
+            :let [sys-var (resolve sys)
+                  sys-params (:params (meta sys-var))
+                  fn-params (first fn-body)]]
+        (do
+
+         ; TODO throw stuff in separate functions
+
+         (when-not sys-var
+           (throw (IllegalArgumentException. (str sys " does not exist."))))
+
+         (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
+           (throw (IllegalArgumentException.
+                   (str sys-var " requires " (count sys-params) " args: " sys-params "."
+                        " Given " (count fn-params)  " args: " fn-params))))
+
+         `(do
+           ; TODO k down there doesn't work if its a let binding
+           ; assumes its a keyword ....
+           ; but anyway remove other defmacro
+           ; defmacro def-set-to-max-effect
+           (assert (keyword? ~k) (pr-str ~k))
+
+           (alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
+           (println "What is k? " ~k)
+
+           (when (and warn-on-override
+                      (get (methods @~sys-var) ~k))
+             (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
+
+           (defmethod ~sys ~k ~(let [mname (symbol (str (name (symbol sys-var)) "." (name k)))]
+                                (println "mname " mname)
+                                mname)
+             ~fn-params
+             ~@(rest fn-body)))))
+    ~k))
 
 (defn update-map
   "Recursively calls (assoc m k (apply component/fn [k v] args)) for every k of (keys (methods component/fn)),
