@@ -8,7 +8,6 @@
 (defn- display-mode []
   (Lwjgl3ApplicationConfiguration/getDisplayMode))
 
-; TODO fullscreen bug .
 (defn ->configuration [{:keys [title width height full-screen? fps]}]
   {:pre [title
          width
@@ -21,10 +20,4 @@
     (if full-screen?
       (.setFullscreenMode config (display-mode))
       (.setWindowedMode config width height))
-    ;(.setHdpiMode config)
     config))
-
-(comment
- (clojure.pprint/pprint (seq (Lwjgl3ApplicationConfiguration/getDisplayModes)))
- (Lwjgl3ApplicationConfiguration/getDisplayMode)
- )
