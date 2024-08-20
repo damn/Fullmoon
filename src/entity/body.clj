@@ -184,8 +184,11 @@
 
 (extend-type api.entity.Entity
   entity/Body
-  (position [entity*] (:position (:entity/body entity*)))
-  (z-order  [entity*] (:z-order  (:entity/body entity*)))
+  (position    [entity*] (:position    (:entity/body entity*)))
+  (left-bottom [entity*] (:left-bottom (:entity/body entity*)))
+  (width       [entity*] (:width       (:entity/body entity*)))
+  (height      [entity*] (:height      (:entity/body entity*)))
+  (z-order     [entity*] (:z-order     (:entity/body entity*)))
 
   (tile [entity*]
     (->tile (entity/position entity*)))

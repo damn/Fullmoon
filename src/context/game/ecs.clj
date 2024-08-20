@@ -1,6 +1,7 @@
 (ns context.game.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [sort-by-order]]
+            [gdx.graphics.color :as color]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.graphics :as g]
@@ -8,14 +9,11 @@
             [api.effect :as effect]))
 
 (defn ->build []
-  {:context.game/uids-entities {}
-   :context.game/entity-error nil})
+  {:context.game/uids-entities {}})
 
-(defn- uids-entities [ctx] (:context.game/uids-entities ctx))
-(defn- entity-error  [ctx] (:context.game/entity-error  ctx))
+(defn- uids-entities [ctx]
+  (:context.game/uids-entities ctx))
 
-; TODO make entity fns same like a 'do!' component ... ?
-; no need for separate one-time-txs  ... ?
 (defcomponent :entity/uid {}
   (entity/create [_ {:keys [entity/id]} _ctx]
     [[:tx/assoc-uids->entities id]])
@@ -54,25 +52,23 @@
      [::create-components entity]]))
 
 (defmethod effect/do! :tx/destroy [[_ entity] ctx]
+  ;(println "Mark as destroy:" (:entity/uid @entity) " " (keys @entity))
   [[:tx.entity/assoc entity :entity/destroyed? true]])
 
-(defn- handle-entity-error! [ctx entity* throwable]
-  (p/pretty-pst (ex-info "" (select-keys entity* [:entity/uid]) throwable))
-  (assoc ctx :context.game/entity-error throwable))
+(defn- draw-body-rect [g entity*]
+  (let [[x y] (entity/left-bottom entity*)]
+    (g/draw-rectangle g x y (entity/width entity*) (entity/height entity*) color/red)))
 
 (defn- render-entity* [system entity* g ctx]
   (try
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
-     (when-not (entity-error ctx)
-       (handle-entity-error! ctx t)) ; TODO doesnt work assoc tx lost
-     (let [[x y] (entity/position entity*)]
-       ; TODO draw a red box with body bounds .....
-       (g/draw-text g
-                    {:text (str "Error / entity uid: " (:entity/uid entity*))
-                     :x x
-                     :y y
-                     :up? true})))))
+     (draw-body-rect g entity*)
+     (p/pretty-pst t 12)
+     ; cannot pass it to main game context
+     ; as render loop is not reducing over ctx
+     #_(throw (ex-info "" (select-keys entity* [:entity/uid])))
+     )))
 
 ; Assumes system does not affect entity* ! !
 ; order not important ??? idk
@@ -140,8 +136,8 @@
   (try
    (do-components! ctx entity/tick entity)
    (catch Throwable t
-     (p/pretty-pst (ex-info "" (select-keys @entity [:entity/uid]) t) 12)
-     (handle-entity-error! ctx t))))
+     (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
+     ctx)))
 
 ; apply-system reduces instead
 ; with the system fns
@@ -151,9 +147,6 @@
 
 (extend-type api.context.Context
   api.context/EntityComponentSystem
-  (entity-error [ctx]
-    (entity-error ctx))
-
   (all-entities [ctx]
     (vals (uids-entities ctx)))
 

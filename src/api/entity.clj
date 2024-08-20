@@ -37,6 +37,9 @@
 
 (defprotocol Body
   (position [_] "Center float coordinates.")
+  (left-bottom [_])
+  (width [_])
+  (height [_])
   (tile [_] "Center integer coordinates")
   (direction [_ other-entity*] "Returns direction vector from this entity to the other entity.")
   (z-order [_]))

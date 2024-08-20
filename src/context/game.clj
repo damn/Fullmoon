@@ -1,5 +1,6 @@
 (ns context.game
-  (:require [gdx.app :as app]
+  (:require [clj-commons.pretty.repl :as p]
+            [gdx.app :as app]
             [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.input :as input]
@@ -19,7 +20,8 @@
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (-> ctx
-      (merge {:context.game/game-loop-mode mode}
+      (merge {::tick-error nil
+              :context.game/game-loop-mode mode}
              (ecs/->build)
              (time-component/->build)
              (widgets/->state! ctx)
@@ -50,7 +52,7 @@
 
 (defmethod game-loop :game-loop/normal [ctx active-entities]
   (let [ctx (ctx/do! ctx (player-manual-state-tick ctx))
-        paused? (or (ctx/entity-error ctx)
+        paused? (or (::tick-error ctx)
                     (and pausing?
                          (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))
                          (not (player-unpaused?))))
@@ -60,8 +62,11 @@
         ctx (if paused?
               ctx
               (let [ctx (time-component/update-time ctx)]
-                (ctx/update-potential-fields! ctx active-entities) ; TODO here pass entity*'s then I can deref @ render-game main fn ....
-                (ctx/tick-entities! ctx active-entities)))]
+                (ctx/update-potential-fields! ctx active-entities)
+                (try (ctx/tick-entities! ctx active-entities)
+                     (catch Throwable t
+                       (p/pretty-pst t 12)
+                       (assoc ctx ::tick-error t)))))]
     (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]

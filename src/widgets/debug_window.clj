@@ -24,8 +24,6 @@
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (ctx/gui-mouse-position ctx) "\n"
-     (when (ctx/entity-error ctx)
-       (str "\nERROR!\n " (ctx/entity-error ctx) "\n\n"))
      "paused? " (:context.game/paused? ctx) "\n"
      "elapsed-time " (utils.core/readable-number (ctx/elapsed-time ctx)) " seconds \n"
      (skill-info (ctx/player-entity* ctx))
