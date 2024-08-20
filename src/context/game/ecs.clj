@@ -9,19 +9,16 @@
             [api.effect :as effect]))
 
 (defn ->build []
-  {:context.game/uids-entities {}})
-
-(defn- uids-entities [ctx]
-  (:context.game/uids-entities ctx))
+  {::entities {}})
 
 (defcomponent :entity/uid {}
   (entity/create [_ entity ctx]
     {:pre [(number? (:entity/uid @entity))]}
-    (update ctx :context.game/uids-entities assoc (:entity/uid @entity) entity))
+    (update ctx ::entities assoc (:entity/uid @entity) entity))
 
   (entity/destroy [[_ uid] _entity ctx]
-    {:pre [(contains? (uids-entities ctx) uid)]}
-    (update ctx :context.game/uids-entities dissoc uid)))
+    {:pre [(contains? (::entities ctx) uid)]}
+    (update ctx ::entities dissoc uid)))
 
 (defmethod effect/do! ::setup-entity [[_ entity uid components] ctx]
   {:pre [(not (contains? components :entity/id))
@@ -86,10 +83,10 @@
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (all-entities [ctx]
-    (vals (uids-entities ctx)))
+    (vals (::entities ctx)))
 
   (get-entity [ctx uid]
-    (get (uids-entities ctx) uid))
+    (get (::entities ctx) uid))
 
   (tick-entities! [ctx entities]
     (reduce tick-system ctx entities))
