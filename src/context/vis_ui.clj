@@ -41,9 +41,11 @@
 
 
 (defcomponent :context/vis-ui {}
-  (component/create [_ _ctx]
+  (component/create [[_ skin-scale] _ctx]
     (check-cleanup-visui!)
-    (VisUI/load #_VisUI$SkinScale/X2)
+    (VisUI/load (case skin-scale
+                  :skin-scale/x1 VisUI$SkinScale/X1
+                  :skin-scale/x2 VisUI$SkinScale/X2))
     (font-enable-markup!)
     (set-tooltip-config!)
     true)

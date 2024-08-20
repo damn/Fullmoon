@@ -1,8 +1,5 @@
 (ns context.graphics.views
   (:require [gdx.graphics :as graphics]
-            [gdx.graphics.color :as color]
-            [gdx.graphics.camera :as camera]
-            [gdx.graphics.g2d.batch :as batch]
             [gdx.input :as input]
             [gdx.utils.viewport :refer [->fit-viewport]]
             [gdx.utils.viewport.viewport :as viewport]
@@ -10,20 +7,17 @@
             [api.graphics :as g])
   (:import [com.badlogic.gdx.math MathUtils Vector2]))
 
-; TODO use screen-world-width/screen-world-height (pass ..., is separate from window width/height which is not app w/h in case of fullscreen)
-; mode {:fullscreen or ... window [w h] }
-; otherwise on fullscreen using display-mode
-(defn- ->gui-view []
+(defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
-   :viewport (->fit-viewport (graphics/width)
-                             (graphics/height)
+   :viewport (->fit-viewport world-width
+                             world-height
                              (graphics/->orthographic-camera))})
 
-(defn- ->world-view [{:keys [tile-size]}]
+(defn- ->world-view [{:keys [world-width world-height tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
-     :viewport (let [world-width  (* (graphics/width)  unit-scale)
-                     world-height (* (graphics/height) unit-scale)
+     :viewport (let [world-width  (* world-width  unit-scale)
+                     world-height (* world-height unit-scale)
                      camera (graphics/->orthographic-camera)
                      y-down? false]
                  (.setToOrtho camera y-down? world-width world-height)
@@ -31,8 +25,8 @@
                                  world-height
                                  camera))}))
 
-(defn ->build [world-view]
-  {:gui-view (->gui-view)
+(defn ->build [{:keys [gui-view world-view]}]
+  {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
 (extend-type api.graphics.Graphics
@@ -90,8 +84,8 @@
 
 (extend-type api.context.Context
   api.context/Views
-  (gui-mouse-position    [ctx] (gui-mouse-position              (gr ctx)))
-  (world-mouse-position  [ctx] (world-mouse-position            (gr ctx)))
+  (gui-mouse-position    [ctx] (gui-mouse-position   (gr ctx)))
+  (world-mouse-position  [ctx] (world-mouse-position (gr ctx)))
   (gui-viewport-width    [ctx] (viewport/world-width  (gui-viewport   (gr ctx))))
   (gui-viewport-height   [ctx] (viewport/world-height (gui-viewport   (gr ctx))))
   (world-camera          [ctx] (viewport/camera       (world-viewport (gr ctx))))

@@ -6,7 +6,7 @@
             [gdx.utils.disposable :refer [dispose]]
             [gdx.utils.viewport.viewport :as viewport]
             [core.component :refer [defcomponent] :as component]
-            api.graphics
+            [api.graphics :as g]
             (context.graphics cursors
                               image
                               shape-drawer
@@ -18,13 +18,13 @@
 ; but then we need separate namespaces gui-view & world-view, batch, shape-drawer-texture not disposed.
 ; but as batch, shape-drawer & gui-view is required for everything to work we can hide them as well.
 (defcomponent :context/graphics {}
-  (component/create [[_ {:keys [world-view default-font cursors]}] _ctx]
+  (component/create [[_ {:keys [views default-font cursors]}] _ctx]
     (api.graphics/map->Graphics
      (let [batch (g2d/->sprite-batch)]
        (merge {:batch batch}
               (context.graphics.shape-drawer/->build batch)
               (context.graphics.text/->build default-font)
-              (context.graphics.views/->build world-view)
+              (context.graphics.views/->build views)
               (context.graphics.cursors/->build cursors)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}] _ctx]
