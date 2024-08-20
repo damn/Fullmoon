@@ -1,6 +1,6 @@
 (ns app
   (:require [clojure.edn :as edn]
-            [gdx :as gdx]
+            [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
@@ -35,7 +35,7 @@
   (views/update-viewports @current-context w h))
 
 (defn- ->application [context]
-  (gdx/->application-listener
+  (->application-listener
    :create #(create-context context)
    :dispose destroy-context
    :render render-context
