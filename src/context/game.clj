@@ -66,7 +66,7 @@
                      (catch Throwable t
                        (p/pretty-pst t 12)
                        (assoc ctx ::tick-error t)))))]
-    (ctx/remove-destroyed-entities! ctx))) ; do not pause this as for example pickup item, should be destroyed.
+    (ctx/do! ctx ctx/remove-destroyed-entities!))) ; do not pause this as for example pickup item, should be destroyed.
 
 (defn- replay-frame! [ctx]
   (let [frame-number (:context.game/logic-frame ctx)

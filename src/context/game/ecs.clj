@@ -50,6 +50,9 @@
   (let [[x y] (entity/left-bottom entity*)]
     (g/draw-rectangle g x y (entity/width entity*) (entity/height entity*) color/red)))
 
+; TODO for creates lazy seqs
+; how else to do it ?
+
 (defn- render-entity* [system entity* g ctx]
   (try
    (dorun (component/apply-system system entity* g ctx))
@@ -61,18 +64,15 @@
      #_(throw (ex-info "" (select-keys entity* [:entity/uid])))
      )))
 
-(defn- do-components! [ctx system entity]
-  (reduce (fn [ctx k]
-            (if-let [v (k @entity)] ; precaution in case a component gets removed by another component
-              (let [component [k v]]
-               (ctx/do! ctx (system component entity ctx)))
-              ctx))
-          ctx
-          (keys @entity)))
-
 (defn- tick-system [ctx entity]
   (try
-   (do-components! ctx entity/tick entity)
+   (reduce (fn [ctx k]
+             (if-let [v (k @entity)] ; precaution in case a component gets removed by another component
+               (let [component [k v]]
+                 (ctx/do! ctx (entity/tick component entity ctx)))
+               ctx))
+           ctx
+           (keys @entity))
    (catch Throwable t
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
@@ -100,10 +100,10 @@
       (render-entity* entity/render-debug entity* g context)))
 
   (remove-destroyed-entities! [ctx]
-    (ctx/do! ctx (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
-                       component @entity]
-                   (fn [ctx]
-                     (entity/destroy component entity ctx))))))
+    (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
+          component @entity]
+      (fn [ctx]
+        (entity/destroy component entity ctx)))))
 
 (defmethod effect/do! :tx.entity/assoc [[_ entity k v] ctx]
   (assert (keyword? k))

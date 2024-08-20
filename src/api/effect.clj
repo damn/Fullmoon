@@ -14,6 +14,7 @@
 ; when returning a 'map?'
 
 ; 2. return seq of txs -> those txs will be done recursively
+; 2.1 also seq of fns wih [ctx] param can be passed.
 
 ; 3. return nil in case of doing nothing -> will just continue with existing ctx.
 
