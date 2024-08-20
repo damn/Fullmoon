@@ -29,14 +29,6 @@
                      map->Entity))
   ctx)
 
-(defmethod effect/do! ::create-components [[_ entity] ctx]
-  ; we are assuming components dont remove other ones at create
-  ; so we fetch entity* for reduce once and not check if component still exists
-  ; thats why no @entity and during the reduce-fn check if k is there
-  (for [component @entity]
-    (fn [ctx]
-      (entity/create component entity ctx))))
-
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
@@ -44,7 +36,12 @@
 (defmethod effect/do! :tx/create [[_ components] ctx]
   (let [entity (atom nil)]
     [[::setup-entity entity (unique-number!) components]
-     [::create-components entity]]))
+     (fn [ctx]
+       (for [component @entity]
+         (fn [ctx]
+           ; we are assuming components dont remove other ones at entity/create
+           ; thats why we reuse component and not fetch each time again for key
+           (entity/create component entity ctx))))]))
 
 (defmethod effect/do! :tx/destroy [[_ entity] ctx]
   [[:tx.entity/assoc entity :entity/destroyed? true]])
