@@ -145,9 +145,9 @@
  ; set nil for non idle/item in hand states .
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
- (require 'app.state)
+ (require '[app :refer [current-context]])
  (app/post-runnable
   (fn []
-    (swap! app/current-context start-replay-mode!)))
+    (swap! current-context start-replay-mode!)))
 
  )
