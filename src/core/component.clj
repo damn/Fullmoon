@@ -1,5 +1,4 @@
-(ns core.component
-  (:refer-clojure :exclude [defn]))
+(ns core.component)
 
 ; TODO (keys (methods create-fn)) is weird - what if there are hundreds of fn but only 1 component?
 ; => we could cache this directly @ core.component/attributes (rename to core.component/components)
@@ -102,6 +101,10 @@
                    fn-params (first fn-body)
                    method-name (symbol (str (name (symbol sys-var)) "." (name k)))]]
          (do
+
+          ; if (seq then only rest)
+          ;(println (rest (first fn-params)))
+
           (when-not sys-var
             (throw (IllegalArgumentException. (str sys " does not exist."))))
           (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
