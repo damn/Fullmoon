@@ -405,6 +405,7 @@
     ; TODO don't spawn my faction vampire w. items ...
     ; TODO don't spawn princess with clickable
     ; TODO don't spawn creatures on start position
+    ; (all check have HP/movement..../?? ?) (breaks potential field, targeting, ...)
     (place-creatures! ctx spawn-rate tiled-map spawn-positions)
     {:tiled-map tiled-map
      :start-position start-position}))

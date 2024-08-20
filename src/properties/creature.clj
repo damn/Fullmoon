@@ -35,12 +35,12 @@
 
     (defcomponent :creature/entity (data/components ; TODO no required/optional settings ! just cannot remove & already there !
                                      [:entity/animation
-                                      :entity/body
-                                      :entity/flying?
-                                      :entity/reaction-time
-                                      :entity/faction
+                                      :entity/body ; remove solid
+                                      :entity/flying? ; remove
+                                      :entity/reaction-time ; in frames 0.016x
+                                      :entity/faction ; remove
                                       :entity/stats
-                                      :entity/inventory
+                                      :entity/inventory  ; remove
                                       :entity/skills]))
 
     {:id-namespace "creatures"
@@ -52,8 +52,8 @@
                :creature/entity])
      :edn-file-sort-order 1
      :overview {:title "Creatures"
-                :columns 15
-                :image/dimensions [72 72]
+                :columns 20
+                :image/dimensions [48 48]
                 :sort-by-fn #(vector (:creature/level %)
                                      (name (:creature/species %))
                                      (name (:property/id %)))
@@ -66,7 +66,7 @@
                           creature/species
                           creature/level
                           creature/entity]}]
-               [(str/capitalize (name id)) ; == pretty name
+               #_[(str/capitalize (name id)) ; == pretty name
                 (str "Species: " (str/capitalize (name species)))
                 (when level (str "Level: " level))
                 (binding [*print-level* nil]
