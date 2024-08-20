@@ -25,6 +25,10 @@
                  Calls screen/show on the new screen and
                  returns the context with current-screen set to new-screen."))
 
+(defprotocol Graphics
+  (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
+  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context."))
+
 (defprotocol Images
   (create-image [_ file])
   (get-sub-image [_ image [x y w h]])
@@ -35,8 +39,6 @@
   (set-cursor! [_ cursor-key]))
 
 (defprotocol Views
-  (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
-  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context.")
   (gui-mouse-position   [_])
   (gui-viewport-width   [_])
   (gui-viewport-height  [_])

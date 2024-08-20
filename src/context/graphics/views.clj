@@ -10,6 +10,9 @@
             [api.graphics :as g])
   (:import [com.badlogic.gdx.math MathUtils Vector2]))
 
+; TODO use screen-world-width/screen-world-height (pass ..., is separate from window width/height which is not app w/h in case of fullscreen)
+; mode {:fullscreen or ... window [w h] }
+; otherwise on fullscreen using display-mode
 (defn- ->gui-view []
   {:unit-scale 1
    :viewport (->fit-viewport (graphics/width)
@@ -59,18 +62,6 @@
   (when (viewport-fix-required? context)
     (update-viewports context (graphics/width) (graphics/height))))
 
-(defn- render-view [{{:keys [batch shape-drawer] :as g} :context/graphics}
-                    view-key
-                    draw-fn]
-  (let [{:keys [viewport unit-scale]} (view-key g)]
-    (batch/set-color batch color/white) ; fix scene2d.ui.tooltip flickering
-    (batch/set-projection-matrix batch (camera/combined (viewport/camera viewport)))
-    (batch/begin batch)
-    (g/with-shape-line-width g
-                             unit-scale
-                             #(draw-fn (assoc g :unit-scale unit-scale)))
-    (batch/end batch)))
-
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
 
@@ -99,8 +90,6 @@
 
 (extend-type api.context.Context
   api.context/Views
-  (render-gui-view   [ctx render-fn] (render-view ctx :gui-view   render-fn))
-  (render-world-view [ctx render-fn] (render-view ctx :world-view render-fn))
   (gui-mouse-position    [ctx] (gui-mouse-position              (gr ctx)))
   (world-mouse-position  [ctx] (world-mouse-position            (gr ctx)))
   (gui-viewport-width    [ctx] (viewport/world-width  (gui-viewport   (gr ctx))))
