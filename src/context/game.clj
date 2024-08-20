@@ -19,8 +19,8 @@
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (-> ctx
-      (merge {::tick-error nil
-              :context.game/game-loop-mode mode}
+      (dissoc ::tick-error)
+      (merge {:context.game/game-loop-mode mode}
              (ecs/->build)
              (time-component/->build)
              (widgets/->state! ctx)
