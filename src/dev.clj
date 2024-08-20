@@ -36,21 +36,50 @@
 
 (defn ->labelstr [k v]
   (str "[LIGHT_GRAY]:"
-       (when-let [ns (namespace k)] (str ns "/")) "[WHITE]" (name k)
+       (if (keyword? k)
+         (str
+          (when-let [ns (namespace k)] (str ns "/")) "[WHITE]" (name k))
+         k) ; TODO truncate ...
        ": [GOLD]" (str (->v-str v))))
 
 ; TODO expand only on click ... save bandwidth ....
 ; crash only on expanding big one ...
 
+(defn- add-elements! [ctx node elements]
+  (doseq [element elements
+          :let [el-node (->node (->label ctx (str (->v-str element))))]]
+    (.add node el-node)))
+
+(require '[api.scene2d.group :as group])
+(require '[gdx.scene2d.stage :as stage])
+
 (declare add-map-nodes!)
+
+(defn- children->str-map [children]
+  (zipmap (map str children)
+          children
+          ))
 
 (defn- ->nested-nodes [ctx node level v]
   (when (map? v)
     (add-map-nodes! ctx node v (inc level)))
+
   (when (and (vector? v) (>= (count v) 3))
-    (doseq [element v
-            :let [el-node (->node (->label ctx (str (->v-str element))))]]
-      (.add node el-node))))
+    (add-elements! ctx node v))
+
+  (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
+    (add-map-nodes! ctx node (children->str-map (group/children (stage/root v))) level))
+
+  (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
+    (add-map-nodes! ctx node (children->str-map (group/children v)) level))
+  )
+
+(comment
+ (let [vis-image (first (group/children (stage/root (ctx/get-stage @app/current-context))))]
+   (supers (class vis-image))
+   (str vis-image)
+   )
+ )
 
 (defn add-map-nodes! [ctx parent-node m level]
   ;(println "Level: " level " - go deeper? " (< level 4))
@@ -64,8 +93,10 @@
            (->nested-nodes ctx node level @v))
          (->nested-nodes ctx node level v))
        (catch Throwable t
-         (println "Error for" k)
-         (.add parent-node (->node (->label ctx (str "[RED] "k " - " t)))))))))
+         (throw (ex-info "" {:k k :v v} t))
+         #_(.add parent-node (->node (->label ctx (str "[RED] "k " - " t))))
+
+         )))))
 
 (defn- ->prop-tree [ctx prop]
   (let [tree (->tree)]
@@ -254,7 +285,7 @@
 
  (create-item! :items/blood-glove)
 
- (show-tree-view! :ctx)
+ (gdx.app/post-runnable (fn [] (show-tree-view! :ctx)))
  (show-tree-view! :entity)
  (show-tree-view! :tile)
 
