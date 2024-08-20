@@ -59,14 +59,14 @@
   (println "start-app")
   (try (start-app)
        (catch Throwable t
-         (p/pretty-pst t)
+         (p/pretty-pst t 12)
          (reset! app-start-failed true)))
   (loop []
     (when-not @app-start-failed
       (do
        (println "refresh")
        (.bindRoot #'refresh-result (refresh :after 'gdx.dev/dev-loop))
-       (p/pretty-pst refresh-result)
+       (p/pretty-pst refresh-result 12)
        (println "error on refresh")))
     (wait!)
     (recur)))
