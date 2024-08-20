@@ -180,7 +180,7 @@
       (draw [_batch _parent-alpha]
         (when draw
           (let [ctx @current-context]
-            (draw (:context/graphics ctx) ctx))))
+            (draw (assoc (:context/graphics ctx) :unit-scale 1) ctx))))
       (act [_delta]
         (when act
           (act @current-context)))))

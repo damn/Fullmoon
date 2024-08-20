@@ -10,10 +10,8 @@
             [api.graphics :as g])
   (:import [com.badlogic.gdx.math MathUtils Vector2]))
 
-(def ^:private gui-unit-scale 1)
-
 (defn- ->gui-view []
-  {:unit-scale gui-unit-scale
+  {:unit-scale 1
    :viewport (->fit-viewport (graphics/width)
                              (graphics/height)
                              (graphics/->orthographic-camera))})
@@ -31,8 +29,7 @@
                                  camera))}))
 
 (defn ->build [world-view]
-  {:unit-scale gui-unit-scale ; only here because actors want to use drawing without using render-gui-view -> @ context.ui I could pass the gui-unit-scale .....
-   :gui-view (->gui-view)
+  {:gui-view (->gui-view)
    :world-view (->world-view world-view)})
 
 (extend-type api.graphics.Graphics

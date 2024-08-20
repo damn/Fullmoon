@@ -42,6 +42,7 @@
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
       (let [{g :context/graphics :as ctx} @current-context
+            g (assoc g :unit-scale 1)
             player-entity* (ctx/player-entity* ctx)
             ^Widget this this]
         (draw-cell-rect g
