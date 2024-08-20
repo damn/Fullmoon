@@ -1,5 +1,6 @@
 (ns entity-state.active-skill
-  (:require [api.context :as ctx :refer [stopped? finished-ratio ->counter]]
+  (:require [utils.core :refer [safe-merge]]
+            [api.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
@@ -20,7 +21,7 @@
 ; its a more general thing than tx/effect
 (defmethod effect/do! :tx/effect [[_ effect-ctx effects] ctx]
   (-> ctx
-      (merge effect-ctx)
+      (safe-merge effect-ctx)
       (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
       ; TODO
       ; context/source ?
@@ -32,19 +33,16 @@
               :effect/target-position)))
 
 ; would have to do this only if effect even needs target ... ?
-(defn- check-remove-target [{:keys [effect/source] :as effect-ctx} ctx]
-  (update effect-ctx :effect/target
-          (fn [target]
-            (when (and target
-                       (not (:entity/destroyed? @target))
-                       (ctx/line-of-sight? ctx @source @target))
-              target))))
+(defn- check-remove-target [{:keys [effect/source] :as ctx}]
+  (update ctx :effect/target (fn [target]
+                               (when (and target
+                                          (not (:entity/destroyed? @target))
+                                          (ctx/line-of-sight? ctx @source @target))
+                                 target))))
 
-(defn- applicable? [{:keys [effect/source effect/target] :as effect-ctx}
-                    effects
-                    ctx]
-  (-> effect-ctx
-      (check-remove-target ctx)
+(defn- applicable? [{:keys [effect/source effect/target] :as ctx} effects]
+  (-> ctx
+      check-remove-target
       (ctx/effect-applicable? effects)))
 
 (defn- mana-value [entity*]
@@ -55,10 +53,9 @@
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
   (> cost (mana-value entity*)))
 
-(defn skill-usable-state [effect-ctx
+(defn skill-usable-state [ctx
                           entity*
-                          {:keys [skill/cooling-down? skill/effects] :as skill}
-                          ctx]
+                          {:keys [skill/cooling-down? skill/effects] :as skill}]
   (cond
    cooling-down?
    :cooldown
@@ -66,7 +63,7 @@
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (applicable? effect-ctx effects ctx))
+   (not (applicable? ctx effects))
    :invalid-params
 
    :else
@@ -105,7 +102,7 @@
 
   (tick [_ {:keys [entity/id]} context]
     (cond
-     (not (applicable? effect-ctx (:skill/effects skill) context))
+     (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event id :action-done]
       ; TODO some sound ?
       ]
@@ -119,7 +116,7 @@
   (render-info [_ entity* g ctx]
     (let [{:keys [property/image skill/effects]} skill]
       (draw-skill-icon g image entity* (entity/position entity*) (finished-ratio ctx counter))
-      (run! #(effect/render-info % effect-ctx g) effects))))
+      (run! #(effect/render-info % g effect-ctx) effects))))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time

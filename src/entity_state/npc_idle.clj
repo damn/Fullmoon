@@ -1,5 +1,6 @@
 (ns entity-state.npc-idle
-  (:require [api.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
+  (:require [utils.core :refer [safe-merge]]
+            [api.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
             [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
@@ -19,22 +20,26 @@
       :effect/target target
       :effect/direction (when target (entity/direction entity* @target))})))
 
-(defn- useful? [effect-ctx effects ctx]
+; split it into 3 parts
+; applicable
+; useful
+; usable?
+(defn- useful? [ctx effects]
   ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter #(effect/applicable? % effect-ctx) effects)
+  (let [applicable-effects (filter #(effect/applicable? % ctx) effects)
         ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some #(effect/useful? % effect-ctx ctx) applicable-effects)]
+        useful-effect (some #(effect/useful? % ctx) applicable-effects)]
     ;(println "Useful: " useful-effect)
     useful-effect))
 
-(defn- npc-choose-skill [effect-ctx entity* ctx]
+(defn- npc-choose-skill [ctx entity*]
   (->> entity*
        :entity/skills
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable (skill-usable-state effect-ctx entity* % ctx))
-                     (useful? effect-ctx (:skill/effects %) ctx)))
+       (filter #(and (= :usable (skill-usable-state ctx entity* %))
+                     (useful? ctx (:skill/effects %))))
        first))
 
 (comment
@@ -42,7 +47,7 @@
        ctx @app/current-context
        entity* @(api.context/get-entity ctx uid)
        effect-ctx (->effect-context ctx entity*)]
-   (npc-choose-skill effect-ctx entity* ctx))
+   (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )
 
 (defrecord NpcIdle []
@@ -51,7 +56,7 @@
   (exit  [_ entity* _ctx])
   (tick [_ {:keys [entity/id] :as entity*} context]
     (let [effect-ctx (->effect-context context entity*)]
-      (if-let [skill (npc-choose-skill effect-ctx entity* context)]
+      (if-let [skill (npc-choose-skill (safe-merge context effect-ctx) entity*)]
         [[:tx/event id :start-action [skill effect-ctx]]]
         [[:tx/event id :movement-direction (or (potential-field-follow-to-enemy context id)
                                                [0 0])]]))) ; nil param not accepted @ entity.state

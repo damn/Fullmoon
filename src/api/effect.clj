@@ -1,14 +1,14 @@
 (ns api.effect
   (:require [core.component :refer [defsystem]]))
 
-(defsystem text [_ effect-ctx])
-(defsystem applicable? [_ effect-ctx])
+(defsystem text [_ ctx])
+(defsystem applicable? [_ ctx])
 
-(defsystem useful?          [_ effect-ctx ctx]) ; used for NPCs
-(defmethod useful? :default [_ effect-ctx ctx] true)
+(defsystem useful? [_ ctx])
+(defmethod useful? :default [_ ctx] true)
 
-(defsystem render-info          [_ effect-ctx g])
-(defmethod render-info :default [_ effect-ctx g])
+(defsystem render-info [_ g ctx])
+(defmethod render-info :default [_ g ctx])
 
 ; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
 ; when returning a 'map?'

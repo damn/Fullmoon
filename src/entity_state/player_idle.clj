@@ -1,5 +1,6 @@
 (ns entity-state.player-idle
-  (:require [gdx.input :as input]
+  (:require [utils.core :refer [safe-merge]]
+            [gdx.input :as input]
             [gdx.input.buttons :as buttons]
             [api.graphics :as g]
             [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
@@ -106,7 +107,9 @@
      (if-let [skill-id (selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->effect-context context entity*)
-             state (skill-usable-state effect-ctx entity* skill context)]
+             state (skill-usable-state (safe-merge context effect-ctx)
+                                       entity*
+                                       skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight

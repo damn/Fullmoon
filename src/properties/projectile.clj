@@ -79,9 +79,7 @@
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (effect/useful? [[_ projectile-id]
-                   {:keys [effect/source effect/target]}
-                   ctx]
+  (effect/useful? [[_ projectile-id] {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (entity/position @source)
           target-p (entity/position @target)
           prop (ctx/get-property ctx projectile-id)]

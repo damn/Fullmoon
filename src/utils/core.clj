@@ -105,3 +105,6 @@
 
 (defn tile->middle [position]
   (mapv (partial + 0.5) position))
+
+(defn safe-merge [m1 m2]
+  (merge m1 m2))

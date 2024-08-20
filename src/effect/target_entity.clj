@@ -47,9 +47,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
     (and target
          (ctx/effect-applicable? ctx hit-effects)))
 
-  (effect/useful? [[_ {:keys [maxrange]}]
-                   {:keys [effect/source effect/target]}
-                   _ctx]
+  (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]}]
     (assert source)
     (assert target)
     (in-range? @source @target maxrange))
@@ -76,7 +74,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx.entity/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (effect/render-info [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]} g]
+  (effect/render-info [[_ {:keys [maxrange]}] g {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (g/draw-line g

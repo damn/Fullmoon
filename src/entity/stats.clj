@@ -260,7 +260,7 @@
     (and target
          (entity/stat @target (effect-k->stat-k k))))
 
-  (effect/useful? [_ _effect-ctx _ctx] true)
+  (effect/useful? [_ _effect-ctx] true)
 
   (effect/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
@@ -408,7 +408,7 @@
 
        (effect/applicable? ~'[_ _effect-ctx] true)
 
-       (effect/useful? ~'[_ {:keys [effect/source]} _ctx]
+       (effect/useful? ~'[_ {:keys [effect/source]}]
          (lower-than-max? (~stat (:entity/stats @~'source))))
 
        (effect/do! ~'[_ {:keys [effect/source]}]
