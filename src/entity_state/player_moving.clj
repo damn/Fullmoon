@@ -12,12 +12,12 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ {:keys [entity/id] :as entity*} _ctx]
-    [[:tx.entity/set-movement id {:direction movement-vector
-                                  :speed (entity/stat entity* :stats/movement-speed)}]])
+  (enter [_ entity _ctx]
+    [[:tx.entity/set-movement entity {:direction movement-vector
+                                      :speed (entity/stat @entity :stats/movement-speed)}]])
 
-  (exit [_ {:keys [entity/id]} _ctx]
-    [[:tx.entity/set-movement id nil]])
+  (exit [_ eid _ctx]
+    [[:tx.entity/set-movement eid nil]])
 
   (tick [_ entity context]
     (let [{:keys [entity/id] :as entity*} @entity]

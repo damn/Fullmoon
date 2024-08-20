@@ -158,8 +158,8 @@
   ; TODO no else case, no visible fsp..
 
   state/State
-  (enter [_ entity* _ctx])
-  (exit  [_ entity* context])
+  (enter [_ entity _ctx])
+  (exit  [_ entity context])
   (tick [_ entity _context])
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])

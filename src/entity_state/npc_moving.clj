@@ -8,12 +8,12 @@
 ; also prevents fast twitching around changing directions every frame
 (defrecord NpcMoving [movement-vector counter]
   state/State
-  (enter [_ {:keys [entity/id] :as entity*} _ctx]
-    [[:tx.entity/set-movement id {:direction movement-vector
-                                  :speed (or (entity/stat entity* :stats/movement-speed) 0)}]])
+  (enter [_ entity _ctx]
+    [[:tx.entity/set-movement entity {:direction movement-vector
+                                      :speed (or (entity/stat @entity :stats/movement-speed) 0)}]])
 
-  (exit [_ {:keys [entity/id]} _ctx]
-    [[:tx.entity/set-movement id nil]])
+  (exit [_ eid _ctx]
+    [[:tx.entity/set-movement eid nil]])
 
   (tick [_ eid ctx]
     (when (stopped? ctx counter)

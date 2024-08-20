@@ -53,8 +53,8 @@
 
 (defrecord NpcIdle []
   state/State
-  (enter [_ entity* _ctx])
-  (exit  [_ entity* _ctx])
+  (enter [_ entity _ctx])
+  (exit  [_ entity _ctx])
   (tick [_ entity context]
     (let [entity* @entity
           effect-ctx (->effect-context context entity*)]

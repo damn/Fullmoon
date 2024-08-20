@@ -13,8 +13,8 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ _entity* _ctx])
-  (exit  [_ _entity* _ctx])
+  (enter [_ _entity _ctx])
+  (exit  [_ _entity _ctx])
   (tick [_ eid ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))

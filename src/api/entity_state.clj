@@ -1,8 +1,8 @@
 (ns api.entity-state)
 
 (defprotocol State
-  (enter [_ entity* ctx])
-  (exit  [_ entity* ctx])
+  (enter [_ entity ctx])
+  (exit  [_ entity ctx])
   (tick  [_ entity ctx])
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])

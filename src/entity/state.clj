@@ -38,15 +38,6 @@
   (state-obj [entity*]
     (-> entity* :entity/state :state-obj)))
 
-(defmethod effect/do! ::exit [[_ state-obj entity] ctx]
-  (state/exit state-obj @entity ctx))
-
-(defmethod effect/do! ::enter [[_ state-obj entity] ctx]
-  (state/enter state-obj @entity ctx))
-
-(defmethod effect/do! ::player-enter [[_ state-obj] ctx]
-  (state/player-enter state-obj))
-
 (defn- send-event! [ctx entity event params]
   (if-let [{:keys [fsm
                    state-obj
@@ -59,15 +50,14 @@
               new-state-obj (if params
                               (constructor ctx @entity params)
                               (constructor ctx @entity))]
-          [[::exit state-obj entity]
-           [::enter new-state-obj entity]
-           (if (:entity/player? @entity)
-             [::player-enter new-state-obj])
+          [#(state/exit state-obj entity %)
+           #(state/enter new-state-obj entity %)
+           (if (:entity/player? @entity) (fn [_ctx] (state/player-enter new-state-obj)))
            [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
            [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj]])))))
 
 (comment
- (require '[entity-state.npc :as npc-state])
+ (require '[entity-state.fsms :as npc-state])
  ; choose a initial state constructor w/o needing ctx
  ; and new state also no ctx
  (let [initial-state :sleeping
@@ -76,19 +66,15 @@
        ctx nil
        entity (atom {:entity/player? true
                      :entity/state (entity/create-component [:entity/state (npc-state/->state initial-state)]
-                                                             components
-                                                             ctx)})
+                                                            components
+                                                            ctx)})
        event :alert
        params nil
        ]
    (send-event! ctx entity event params)
-
    ; TODO create fsm picture
-
    ; TODO why we pass entity and not entity* ?? would be simpler ???
-   )
-
- )
+   ))
 
 (defmethod effect/do! :tx/event [[_ entity event params] ctx]
   (send-event! ctx entity event params))

@@ -11,14 +11,14 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ _entity* _ctx]
+  (enter [_ _eid _ctx]
     [[:tx/sound "sounds/bfxr_playerdeath.wav"]
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
                         :button-text ":("
                         :on-click (fn [_ctx]
                                     (change-screen! :screens/main-menu))}]])
-  (exit [_ entity* _ctx])
+  (exit [_ eid _ctx])
   (tick [_ entity _ctx])
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])

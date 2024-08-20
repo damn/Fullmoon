@@ -72,21 +72,20 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ {:keys [entity/id]} _ctx]
+  (enter [_ eid _ctx]
     [[:tx.context.cursor/set :cursors/hand-grab]
-     [:tx.entity/assoc id :entity/item-on-cursor item]])
+     [:tx.entity/assoc eid :entity/item-on-cursor item]])
 
-  (exit [_ {:keys [entity/id] :as entity*} ctx]
+  (exit [_ entity ctx]
     ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
     ; on the ground
-    (when (:entity/item-on-cursor entity*)
-      [[:tx/sound "sounds/bfxr_itemputground.wav"]
-       [:tx.entity/item
-        (item-place-position ctx entity*)
-        (:entity/item-on-cursor entity*)]
-       [:tx.entity/dissoc id :entity/item-on-cursor]]))
+    (let [entity* @entity]
+      (when (:entity/item-on-cursor entity*)
+        [[:tx/sound "sounds/bfxr_itemputground.wav"]
+         [:tx.entity/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
+         [:tx.entity/dissoc entity :entity/item-on-cursor]])))
 
   (tick [_ entity _ctx])
   (render-below [_ entity* g ctx]

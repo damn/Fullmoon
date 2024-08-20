@@ -11,13 +11,13 @@
 
 (defrecord NpcSleeping []
   state/State
-  (enter [_ entity* _ctx])
+  (enter [_ entity _ctx])
 
-  (exit [_ {:keys [entity/id entity/faction] :as entity*} ctx]
+  (exit [_ entity ctx]
     ; TODO make state = alerted, and shout at the end of that !
     ; then nice alert '!' and different entities different alert time
-    [[:tx/add-text-effect id "[WHITE]!"]
-     [:tx.entity/shout (entity/position entity*) faction 0.2]])
+    [[:tx/add-text-effect entity "[WHITE]!"]
+     [:tx.entity/shout (entity/position @entity) (:entity/faction @entity) 0.2]])
 
   (tick [_ entity context]
     (let [entity* @entity

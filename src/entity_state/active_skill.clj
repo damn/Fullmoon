@@ -100,14 +100,14 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ {:keys [entity/id]} ctx]
+  (enter [_ eid ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
-       [:tx.entity/assoc-in id [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
+       [:tx.entity/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
-       [:tx.entity.stats/pay-mana-cost id (:skill/cost skill)])])
+       [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (exit [_ entity* _ctx])
+  (exit [_ _eid _ctx])
 
   (tick [_ eid context]
     (cond
