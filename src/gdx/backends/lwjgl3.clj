@@ -1,6 +1,7 @@
 (ns gdx.backends.lwjgl3
   (:import (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application
-                                             Lwjgl3ApplicationConfiguration)))
+                                             Lwjgl3ApplicationConfiguration)
+           #_com.badlogic.gdx.graphics.glutils.HdpiMode))
 
 (defn ->application [application-listener lwjgl3-configuration]
   (Lwjgl3Application. application-listener lwjgl3-configuration))
@@ -20,4 +21,5 @@
     (if full-screen?
       (.setFullscreenMode config (display-mode))
       (.setWindowedMode config width height))
+    #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
