@@ -43,16 +43,19 @@
     (println "\n\n>>> WAITING FOR RESTART <<<")
     (.wait obj)))
 
-(def ^:private app-start-failed (atom false))
+(def ^:private thrown (atom false))
 
 (defn restart!
   "Calls refresh on all namespaces with file changes and restarts the application.
   (has to be started with `lein run -m dev`)"
   []
-  (reset! app-start-failed false)
-  (locking obj
-    (println "\n\n>>> RESTARTING <<<")
-    (.notify obj)))
+  (if @thrown
+    (do
+     (reset! thrown false)
+     (locking obj
+       (println "\n\n>>> RESTARTING <<<")
+       (.notify obj)))
+    (println "\n Application still running! Cannot restart.")))
 
 (declare ^:private refresh-result)
 
@@ -62,14 +65,12 @@
        (catch Throwable t
          (binding [*print-level* 5]
            (p/pretty-pst t 12))
-         (reset! app-start-failed true)))
+         (reset! thrown true)))
   (loop []
-    (when-not @app-start-failed
+    (when-not @thrown
       (do
-       (println "refresh")
        (.bindRoot #'refresh-result (refresh :after 'gdx.dev/dev-loop))
-       (p/pretty-pst refresh-result 12)
-       (println "error on refresh")))
+       (p/pretty-pst refresh-result 12)))
     (wait!)
     (recur)))
 
