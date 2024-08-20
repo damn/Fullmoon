@@ -14,9 +14,10 @@
   (let [target (nearest-enemy ctx entity*)
         target (when (and target (ctx/line-of-sight? ctx entity* @target))
                  target)]
-    {:effect/source (:entity/id entity*)
-     :effect/target target
-     :effect/direction (when target (entity/direction entity* @target))}))
+    (ctx/map->Context
+     {:effect/source (:entity/id entity*)
+      :effect/target target
+      :effect/direction (when target (entity/direction entity* @target))})))
 
 (defn- useful? [effect-ctx effects ctx]
   ;(println "Check useful? for effects: " (map first effects))

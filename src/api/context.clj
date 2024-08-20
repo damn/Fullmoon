@@ -96,6 +96,8 @@
 
 (defprotocol EffectHandler
   (do! [_ txs])
+  (effect-text [_ effects])
+  (effect-applicable? [_ effects])
   (summarize-txs [_ txs])
   (frame->txs [_ frame-number]))
 

@@ -3,8 +3,7 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.graphics :as g]
-            [effect-ctx.core :as effect-ctx]))
+            [api.graphics :as g]))
 
 ; SCHEMA effect-ctx
 ; * source = always available
@@ -46,7 +45,7 @@
                     ctx]
   (-> effect-ctx
       (check-remove-target ctx)
-      (effect-ctx/applicable? effects)))
+      (ctx/effect-applicable? effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]

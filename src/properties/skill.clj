@@ -4,8 +4,7 @@
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
-            [api.properties :as properties]
-            [effect-ctx.core :as effect-ctx]))
+            [api.properties :as properties]))
 
 (def ^:private skill-cost-color "[CYAN]")
 (def ^:private action-time-color "[GOLD]")
@@ -50,5 +49,7 @@
                      (readable-number action-time) " seconds" "[]")
                 (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
                 ; don't used player-entity* as it may be nil when just created, could use the current property creature @ editor
-                (str effect-color (effect-ctx/text (assoc ctx :effect/source (ctx/player-entity ctx))
-                                                   effects) "[]")])}))
+                (str effect-color
+                     (ctx/effect-text (assoc ctx :effect/source (ctx/player-entity ctx))
+                                      effects)
+                     "[]")])}))

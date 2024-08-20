@@ -84,10 +84,11 @@
   (let [target* (ctx/mouseover-entity* ctx)
         target-position (or (and target* (entity/position target*))
                             (ctx/world-mouse-position ctx))]
-    {:effect/source (:entity/id entity*)
-     :effect/target (:entity/id target*)
-     :effect/target-position target-position
-     :effect/direction (v/direction (entity/position entity*) target-position)}))
+    (ctx/map->Context
+     {:effect/source (:entity/id entity*)
+      :effect/target (:entity/id target*)
+      :effect/target-position target-position
+      :effect/direction (v/direction (entity/position entity*) target-position)})))
 
 (defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (ctx/mouseover-entity* context)]

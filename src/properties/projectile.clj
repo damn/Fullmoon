@@ -6,8 +6,7 @@
             [api.context :as ctx]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.properties :as properties]
-            [effect-ctx.core :as effect-ctx]))
+            [api.properties :as properties]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 
@@ -73,7 +72,7 @@
 (defcomponent :effect/projectile {:widget :text-field
                                   :schema [:qualified-keyword {:namespace :projectiles}]}
   (effect/text [[_ projectile-id] ctx]
-    (effect-ctx/text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
+    (ctx/effect-text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
 
   ; TODO for npcs need target -- anyway only with direction
   (effect/applicable? [_ {:keys [effect/direction]}]

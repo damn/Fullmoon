@@ -1,5 +1,6 @@
 (ns context.game.effect-handler
-  (:require context.graphics.image
+  (:require [clojure.string :as str]
+            context.graphics.image
             data.animation
             [api.context :as ctx]
             [api.effect :as effect]))
@@ -70,7 +71,15 @@
        [txkey (count txs)])))
 
   (frame->txs [_ frame-number]
-    (@frame->txs frame-number)))
+    (@frame->txs frame-number))
+
+  (effect-text [ctx effects]
+    (->> effects
+         (keep #(effect/text % ctx))
+         (str/join "\n")))
+
+  (effect-applicable? [ctx effects]
+    (some #(effect/applicable? % ctx) effects)))
 
 (defn initialize! [game-loop-mode record-transactions?]
   (case game-loop-mode

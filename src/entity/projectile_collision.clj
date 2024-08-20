@@ -2,11 +2,10 @@
   (:require [core.component :refer [defcomponent]]
             [math.geom :as geom]
             [utils.core :refer [find-first]]
-            [api.context :refer [world-grid]]
+            [api.context :as ctx :refer [world-grid]]
             [api.entity :as entity]
             [api.world.grid :refer [rectangle->cells]]
-            [api.world.cell :as cell :refer [cells->entities]]
-            [effect-ctx.core :as effect-ctx]))
+            [api.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision {}
   (entity/create-component [[_ v] _components _ctx]
@@ -16,7 +15,7 @@
   ; TODO DRY! LIME color for effects ...
   (entity/info-text [[_ {:keys [hit-effects piercing?]}] _ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
-         "[LIME]" (effect-ctx/text {} hit-effects) "[]"))
+         "[LIME]" (ctx/effect-text {} hit-effects) "[]")) ; TODO no ctx?
 
   (entity/tick [[k {:keys [hit-effects
                            already-hit-bodies
