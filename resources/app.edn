@@ -16,8 +16,8 @@
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
                              :log-load-assets? false}]
-           [:context/graphics {:views {:gui-view {:world-width 1680
-                                                  :world-height 1050}
+           [:context/graphics {:views {:gui-view {:world-width 1440
+                                                  :world-height 900}
                                        :world-view {:world-width 1440
                                                     :world-height 900
                                                     :tile-size 48}}
@@ -41,7 +41,7 @@
                                          :cursors/princess ["exclamation001" [0 0]]
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
            [:context/tiled]
-           [:context/vis-ui :skin-scale/x2]
+           [:context/vis-ui :skin-scale/x1]
 
            [:entity/body]
 
