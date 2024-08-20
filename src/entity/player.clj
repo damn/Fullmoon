@@ -4,7 +4,7 @@
             [api.entity :as entity]))
 
 (defcomponent :entity/player? {}
-  (entity/create [_ eid _ctx]
+  (entity/create [_ eid ctx]
     (assoc ctx ::eid eid)))
 
 (extend-type api.context.Context
