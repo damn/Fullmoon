@@ -5,5 +5,3 @@
 (defcomponent :entity/player? {}
   (entity/create [_ eid _ctx]
     [[:tx.context.game/set-player-entity eid]]))
-
-
