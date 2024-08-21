@@ -120,11 +120,13 @@
                                  (clojure.pprint/pprint
                                   explained)))))))))))
 
+(def ^:private validate? true)
+
 (defn- load-edn [context types file]
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
-         (map #(validate types %))
+         (map #(if validate? (validate types %) %))
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
@@ -175,31 +177,6 @@
              (map sort-map)
              (pprint-spit file)))))))
 
-(comment
-
- ; TODO disable validation @ load-edn & update!
- ; then activate & reload app.
-
- (defn- migrate [property-type prop-fn]
-   (let [ctx @app/current-context]
-     (def write-to-file? false)
-     (time
-      (doseq [prop (map prop-fn (api.context/all-properties ctx property-type))]
-        (print (:property/id prop) ", ")
-        (swap! app/current-context ctx/update! prop)))
-     (def write-to-file? true)
-     (write-properties-to-file! @app/current-context)
-     nil))
-
- (migrate :properties/creature
-          #(update % :creature/entity
-                   (fn [{:keys [entity/hp entity/mana] :as entity}]
-                     (-> entity
-                         (dissoc :entity/hp :entity/mana)
-                         (update :entity/stats assoc :stats/hp hp)
-                         (update :entity/stats assoc :stats/mana mana)))))
- )
-
 (extend-type api.context.Context
   api.context/PropertyStore
   (get-property [{{:keys [db]} :context/properties} id]
@@ -218,7 +195,7 @@
             {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
            (contains? db id)]}
-    (validate types property :humanize? true)
+    (when validate? (validate types property :humanize? true))
     ;(binding [*print-level* nil] (clojure.pprint/pprint property))
     (let [new-ctx (update-in ctx [:context/properties :db] assoc id property)]
       (write-properties-to-file! new-ctx)
@@ -270,3 +247,25 @@
        ; or we create the tooltips on demand
        ctx ;(assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx))) ; TODO !!
        property))))
+
+(defn- migrate [property-type prop-fn]
+   (def validate? false)
+   (let [ctx @app/current-context]
+     (def write-to-file? false)
+     (time
+      (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
+        (print (:property/id prop) ", ")
+        (swap! app/current-context ctx/update! prop)))
+     (def write-to-file? true)
+     (write-properties-to-file! @app/current-context)
+     (def validate? true)
+     nil))
+
+(comment
+
+ (migrate :properties/creature
+          #(let [{:keys [entity/body]} (:creature/entity %)]
+             (-> %
+                 (assoc :property/bounds (select-keys body [:width :height]))
+                 (update :creature/entity dissoc :entity/body))))
+ )
