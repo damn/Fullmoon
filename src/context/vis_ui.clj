@@ -130,7 +130,10 @@
 (defn- ->change-listener [on-clicked]
   (proxy [ChangeListener] []
     (changed [event actor]
-      (on-clicked (assoc @current-context :actor actor)))))
+      (swap! current-context #(-> %
+                                  (assoc :context/actor actor)
+                                  on-clicked
+                                  (dissoc :context/actor))))))
 
 ; candidate for opts: :tooltip
 (defn- set-actor-opts [actor {:keys [id name visible? touchable center-position position] :as opts}]

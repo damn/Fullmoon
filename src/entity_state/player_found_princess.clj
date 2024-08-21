@@ -1,5 +1,5 @@
 (ns entity-state.player-found-princess
-  (:require [app :refer [change-screen!]]
+  (:require [api.context :as ctx]
             [api.entity-state :as state]))
 
 (defrecord PlayerFoundPrincess [eid]
@@ -16,8 +16,7 @@
      [:tx/player-modal {:title "YOU WON!"
                         :text "\nYou found the princess!"
                         :button-text ":)"
-                        :on-click (fn [_ctx]
-                                    (change-screen! :screens/main-menu))}]])
+                        :on-click #(ctx/change-screen % :screens/main-menu)}]])
   (exit [_ _ctx])
   (tick [_ _ctx])
 

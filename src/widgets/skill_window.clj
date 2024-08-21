@@ -19,8 +19,7 @@
                                                        (:property/image (get-property context id)) ; TODO here anyway taken
                                                        ; => should probably build this window @ game start
                                                        (fn [ctx]
-                                                         (swap! @app/current-context ctx/do!
-                                                                (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]
+                                                         (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]
                       (do
                        (add-tooltip! button #(player-tooltip-text % (get-property % id)))
                        button))]

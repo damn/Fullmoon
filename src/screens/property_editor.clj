@@ -5,8 +5,6 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
-            ; api
-            [app :refer [current-context change-screen!]]
             [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
             [api.screen :as screen]
             [api.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
@@ -97,17 +95,13 @@
 ; TODO make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
   (for [file (sort (api.context/all-texture-files ctx))]
-    [(->image-button ctx
-                      (api.context/create-image ctx file)
-                      (fn [_ctx]))]
-    #_[(->text-button ctx
-                    file
-                    (fn [_ctx]))]))
+    [(->image-button ctx (api.context/create-image ctx file) identity)]
+    #_[(->text-button ctx file identity)]))
 
 (defmethod ->value-widget :image [[_ image] ctx]
   (->image-widget ctx image {})
   #_(->image-button ctx image
-                  #(add-to-stage! % (->scrollable-choose-window % (texture-rows %)))
+                  #(do (add-to-stage! % (->scrollable-choose-window % (texture-rows %))) %)
                   {:dimensions [96 96]})) ; x2  , not hardcoded here TODO
 
 ;;
@@ -126,7 +120,8 @@
 (declare ->property-editor-window)
 
 (defn open-property-editor-window! [context property-id]
-  (add-to-stage! context (->property-editor-window context property-id)))
+  (add-to-stage! context (->property-editor-window context property-id))
+  context)
 
 (defmethod ->value-widget :link-button [[_ prop-id] context]
   (->text-button context (name prop-id) #(open-property-editor-window! % prop-id)))
@@ -155,9 +150,11 @@
                                                                                    [nested-k (:default-value (component/attributes nested-k))]
                                                                                    :horizontal-sep?
                                                                                    (pos? (count (children attribute-widget-group)))))
-                                             (pack-ancestor-window! attribute-widget-group)))]))
+                                             (pack-ancestor-window! attribute-widget-group)
+                                             ctx))]))
        (pack! window)
-       (add-to-stage! ctx window)))))
+       (add-to-stage! ctx window))
+     ctx)))
 
 (declare ->attribute-widget-group)
 
@@ -179,21 +176,23 @@
 ;;
 
 (defn- ->play-sound-button [ctx sound-file]
-  (->text-button ctx ">>>" #(play-sound! % sound-file)))
+  (->text-button ctx ">>>" #(do (play-sound! % sound-file) %)))
 
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [ctx table]
   (let [rows (for [sound-file (all-sound-files ctx)]
                [(->text-button ctx (str/replace-first sound-file "sounds/" "")
-                               (fn [{:keys [actor] :as ctx}]
+                               (fn [{:keys [context/actor] :as ctx}]
                                  (clear-children! table)
                                  (add-rows! table [(->sound-columns ctx table sound-file)])
                                  (remove! (find-ancestor-window actor))
                                  (pack-ancestor-window! table)
-                                 (actor/set-id! table sound-file)))
+                                 (actor/set-id! table sound-file)
+                                 ctx))
                 (->play-sound-button ctx sound-file)])]
-    (add-to-stage! ctx (->scrollable-choose-window ctx rows))))
+    (add-to-stage! ctx (->scrollable-choose-window ctx rows)))
+  ctx)
 
 (defn- ->sound-columns [ctx table sound-file]
   [(->text-button ctx (name sound-file) #(open-sounds-window! % table))
@@ -225,10 +224,12 @@
                                                               :close-on-escape? true})
                                         clicked-id-fn (fn [ctx id]
                                                         (remove! window)
-                                                        (redo-rows ctx (conj (set property-ids) id)))]
+                                                        (redo-rows ctx (conj (set property-ids) id))
+                                                        ctx)]
                                     (add! window (->overview-table ctx property-type clicked-id-fn))
                                     (pack! window)
-                                    (add-to-stage! ctx window))))]
+                                    (add-to-stage! ctx window))
+                                  ctx))]
                 (for [prop-id property-ids]
                   (let [props (get-property ctx prop-id)
                         ; TODO also x2 dimensions
@@ -239,7 +240,7 @@
                     image-widget))
                 (for [prop-id property-ids]
                   (->text-button ctx "-"
-                                 #(redo-rows % (disj (set property-ids) prop-id))))])))
+                                 #(do (redo-rows % (disj (set property-ids) prop-id)) %)))])))
 
 (defmethod ->value-widget :one-to-many [[attribute property-ids] context]
   (let [table (->table context {:cell-defaults {:pad 5}})]
@@ -298,10 +299,11 @@
                             :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (removable-component? k)
-                          (->text-button ctx "-" (fn [_ctx]
+                          (->text-button ctx "-" (fn [ctx]
                                                    (let [window (find-ancestor-window table)]
                                                      (remove! table)
-                                                     (pack! window)))))
+                                                     (pack! window))
+                                                   ctx)))
                         label
                         (->vertical-separator-cell)
                         value-widget])
@@ -335,10 +337,11 @@
 (defn- apply-context-fn [window f]
   (fn [ctx]
     (try
-     (swap! current-context f)
      (remove! window)
+     (f ctx)
      (catch Throwable t
-       (error-window! ctx t)))))
+       (error-window! ctx t)
+       ctx))))
 
 (defn ->property-editor-window [context id]
   (let [props (get-property context id)
@@ -407,9 +410,9 @@
                            (for [property-type (ctx/property-types context)]
                              [(->text-button context
                                              (:title (api.context/overview context property-type))
-                                             #(set-second-widget! % (->overview-table % property-type open-property-editor-window!)))])
-                           [[(->text-button context "Back to Main Menu" (fn [_context]
-                                                                          (change-screen! :screens/main-menu)))]])}))
+                                             #(do (set-second-widget! % (->overview-table % property-type open-property-editor-window!))
+                                                  %))])
+                           [[(->text-button context "Back to Main Menu" #(ctx/change-screen % :screens/main-menu))]])}))
 
 (defcomponent :screens/property-editor {}
   (screen/create [_ ctx]

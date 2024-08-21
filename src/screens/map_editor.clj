@@ -151,7 +151,8 @@ direction keys: move")
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
            :start-position start-position)
-    (show-whole-map! (ctx/world-camera context) tiled-map)))
+    (show-whole-map! (ctx/world-camera context) tiled-map)
+    context))
 
 (defrecord SubScreen [current-data]
   ; TODO ?
@@ -189,7 +190,8 @@ direction keys: move")
                         [(->text-button ctx "Generate" #(try (generate % (get-property % level-id))
                                                              (catch Throwable t
                                                                (error-window! % t)
-                                                               (println t))))]]
+                                                               (println t)
+                                                               %)))]]
                  :pack? true}))
 
 (defn- ->screen [context]

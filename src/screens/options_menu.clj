@@ -1,7 +1,6 @@
 (ns screens.options-menu
   (:require [gdx.input :as input]
             [core.component :refer [defcomponent]]
-            [app :refer [change-screen!]]
             [api.screen :as screen]
             [api.context :as ctx :refer [->text-button ->check-box ->table]]
             [gdx.input.keys :as input.keys]
@@ -74,8 +73,8 @@
                                      (get-text check-box)
                                      (partial set-state check-box)
                                      (boolean (get-state check-box)))]))
-                   [[(->text-button ctx "Resume" (fn [_ctx] (change-screen! :screens/game)))]
-                    [(->text-button ctx "Exit" (fn [_ctx] (change-screen! :screens/main-menu)))]])
+                   [[(->text-button ctx "Resume" #(ctx/change-screen % :screens/game))]
+                    [(->text-button ctx "Exit" #(ctx/change-screen % :screens/main-menu))]])
             :fill-parent? true
             :cell-defaults {:pad-bottom 10}}))
 

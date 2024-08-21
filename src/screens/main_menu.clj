@@ -4,7 +4,6 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
             [utils.core :refer [safe-get]]
-            [app :refer [current-context change-screen!]]
             [api.context :as ctx]
             [api.screen :as screen :refer [Screen]]
             ; just load here not @ resources because we don't build it yet.
@@ -29,34 +28,24 @@
     {:tiled-map tiled-map
      :start-position start-position}))
 
-(defn- start-vampire! [ctx]
-  (change-screen! :screens/game)
-  (swap! current-context game/start-new-game (->vampire-tmx ctx)))
-
-(defn- start-uf-caves! [ctx]
-  (change-screen! :screens/game)
-  (swap! current-context game/start-new-game (->uf-caves ctx)))
-
-(defn- start-procedural! [ctx]
-  (change-screen! :screens/game)
-  (swap! current-context game/start-new-game (->rand-module-world ctx)))
-
-(defn- map-editor!      [_ctx] (change-screen! :screens/map-editor))
-(defn- property-editor! [_ctx] (change-screen! :screens/property-editor))
+(defn- start-game! [lvl-fn]
+  (fn [ctx]
+    (-> ctx
+        (ctx/change-screen :screens/game)
+        (game/start-new-game (lvl-fn ctx)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ctx/->table
    ctx
    {:rows (remove nil?
-                  [[(ctx/->text-button ctx "Start vampire.tmx" start-vampire!)]
-                   [(ctx/->text-button ctx "start-uf-caves!" start-uf-caves!)]
-                   [(ctx/->text-button ctx "Start procedural" start-procedural!)]
+                  [[(ctx/->text-button ctx "Start vampire.tmx" (start-game! ->vampire-tmx))]
+                   [(ctx/->text-button ctx "start-uf-caves!"   (start-game! ->uf-caves))]
+                   [(ctx/->text-button ctx "Start procedural"  (start-game! ->rand-module-world))]
                    (when (safe-get config :map-editor?)
-                     [(ctx/->text-button ctx "Map editor" map-editor!)])
+                     [(ctx/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])
                    (when (safe-get config :property-editor?)
-                     [(ctx/->text-button ctx "Property editor" property-editor!)])
-                   [(ctx/->text-button ctx "Exit" (fn [_ctx]
-                                                    (app/exit)))]])
+                     [(ctx/->text-button ctx "Property editor" #(ctx/change-screen % :screens/property-editor))])
+                   [(ctx/->text-button ctx "Exit" (fn [ctx] (app/exit) ctx))]])
     :cell-defaults {:pad-bottom 25}
     :fill-parent? true}))
 
