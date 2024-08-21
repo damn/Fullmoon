@@ -66,7 +66,7 @@
             (swap! explored-tile-corners assoc (->tile position) true))
           color/white))))
 
-(defn render-map [{:keys [context.game/world] :as ctx}
+(defn render-map [{:keys [context/world] :as ctx}
                   light-position]
   (set-map-render-data! world light-position)
   (ctx/render-tiled-map ctx (:tiled-map world) tile-color-setter)
