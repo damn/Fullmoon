@@ -97,19 +97,16 @@
                           "air"  :air
                           "all"  :all))))
 
-; TODO this directly at world/ context
-; not context\/world?
-
-; TODO make defrecord
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
   (let [grid (tiled-map->world-grid tiled-map)
         w (grid2d/width  grid)
         h (grid2d/height grid)]
-    (merge world-map
-           {:grid grid
-            :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
-            :content-grid (world.content-grid/->build w h 16 16)
-            :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))}))
+    {:tiled-map tiled-map
+     :start-position start-position
+     :grid grid
+     :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
+     :content-grid (world.content-grid/->build w h 16 16)
+     :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))})
   ; TODO
   ; (check-not-allowed-diagonals grid)
   )
