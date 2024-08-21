@@ -10,6 +10,7 @@
             context.world
             world.ecs
             world.line-of-sight
+            world.render
             [widgets.background-image :refer [->background-image]]))
 
 (defprotocol StatusCheckBox
