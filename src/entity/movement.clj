@@ -7,8 +7,7 @@
             [api.entity :as entity]
             [api.effect :as effect]
             [api.world.cell :as cell]
-            [api.world.grid :as world-grid]
-            [world.time :refer [max-delta-time]]))
+            [api.world.grid :as world-grid]))
 
 ; # :z-order/flying has no effect for now
 
@@ -23,7 +22,7 @@
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
 (def max-speed (/ entity/min-solid-body-size
-                  max-delta-time))
+                  ctx/max-delta-time))
 
 (def movement-speed-schema [:and number? [:>= 0] [:<= max-speed]])
 (def ^:private movement-speed-schema* (m/schema movement-speed-schema))
