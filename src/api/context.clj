@@ -118,11 +118,13 @@
 (defprotocol MouseOverEntity
   (mouseover-entity* [_]))
 
+(defprotocol WorldRaycaster
+  (ray-blocked?  [_ start target])
+  (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays."))
+
 (defprotocol World
   (line-of-sight? [_ source* target*])
-  (ray-blocked?  [_ start target])
-  (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays.")
-  (explored?     [_ position])
+  (explored? [_ position])
   (content-grid [_])
   (world-grid [_])
   (update-potential-fields! [_ entities])

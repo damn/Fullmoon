@@ -7,9 +7,6 @@
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
 
-            [math.raycaster :as raycaster]
-            [math.vector :as v]
-
             [utils.core :refer [tile->middle]]
 
             [core.component :refer [defcomponent]]
@@ -28,6 +25,7 @@
                    content-grid
                    [potential-fields :as potential-fields]
                    render
+                   [raycaster :as raycaster]
                    [ecs :as ecs]
                    [mouseover-entity :as mouseover-entity]
                    [time :as time-component]
@@ -49,23 +47,6 @@
      (<= xdist (inc (/ (float (ctx/world-viewport-width ctx))  2)))
      (<= ydist (inc (/ (float (ctx/world-viewport-height ctx)) 2))))))
 
-; TO math.... // not tested
-(defn- create-double-ray-endpositions
-  "path-w in tiles."
-  [[start-x start-y] [target-x target-y] path-w]
-  {:pre [(< path-w 0.98)]} ; wieso 0.98??
-  (let [path-w (+ path-w 0.02) ;etwas gr�sser damit z.b. projektil nicht an ecken anst�sst
-        v (v/direction [start-x start-y]
-                       [target-y target-y])
-        [normal1 normal2] (v/get-normal-vectors v)
-        normal1 (v/scale normal1 (/ path-w 2))
-        normal2 (v/scale normal2 (/ path-w 2))
-        start1  (v/add [start-x  start-y]  normal1)
-        start2  (v/add [start-x  start-y]  normal2)
-        target1 (v/add [target-x target-y] normal1)
-        target2 (v/add [target-x target-y] normal2)]
-    [start1,target1,start2,target2]))
-
 (def ^:private los-checks? true)
 
 (extend-type api.context.Context
@@ -85,19 +66,6 @@
          (not (and los-checks?
                    (ctx/ray-blocked? context (:position source*) (:position target*))))))
 
-  ; TODO world width/height part of raycaster world ctx
-  ; only used there
-  ; also clojure.core alength reflection warning ??? can be fixed ??
-  (ray-blocked? [{:keys [context/world]} start target]
-    (let [{:keys [cell-blocked-boolean-array width height]} world]
-      (raycaster/ray-blocked? cell-blocked-boolean-array width height start target)))
-
-  (path-blocked? [context start target path-w]
-    (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
-      (or
-       (ctx/ray-blocked? context start1 target1)
-       (ctx/ray-blocked? context start2 target2))))
-
   ; TODO put tile param
   (explored? [{:keys [context/world] :as context} position]
     (get @(:explored-tile-corners world) position))
@@ -110,7 +78,7 @@
 
 (defcomponent :tx/add-to-world {}
   (effect/do! [[_ entity] ctx]
-    (content-grid/update-entity! (tx/content-grid ctx) entity)
+    (content-grid/update-entity! (ctx/content-grid ctx) entity)
     ; hmm
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (world-grid/add-entity! (ctx/world-grid ctx) entity)
@@ -127,16 +95,6 @@
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))
-
-(defn- set-cell-blocked-boolean-array [arr cell*]
-  (let [[x y] (:position cell*)]
-    (aset arr x y (boolean (cell/blocked? cell* :z-order/flying)))))
-
-(defn- ->cell-blocked-boolean-array [grid]
-  (let [arr (make-array Boolean/TYPE (grid2d/width grid) (grid2d/height grid))]
-    (doseq [cell (grid2d/cells grid)]
-      (set-cell-blocked-boolean-array arr @cell))
-    arr))
 
 (defn- tiled-map->world-grid [tiled-map]
   (world.grid/->build (tiled/width  tiled-map)
@@ -156,10 +114,8 @@
         w (grid2d/width  grid)
         h (grid2d/height grid)]
     (merge world-map
-           {:width w
-            :height h
-            :grid grid
-            :cell-blocked-boolean-array (->cell-blocked-boolean-array grid)
+           {:grid grid
+            :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
             :content-grid (world.content-grid/->build w h 16 16)
             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))}))
   ; TODO

@@ -1,9 +1,9 @@
 (ns world.render
   (:require [gdx.graphics :as graphics]
-            [api.context :as ctx]
             [gdx.graphics.color :as color]
-            [math.raycaster :as raycaster]
-            [utils.core :refer [->tile]]))
+            [utils.core :refer [->tile]]
+            [api.context :as ctx]
+            [world.raycaster :as raycaster]))
 
 (def ^:private explored-tile-color
   (graphics/->color 0.5 0.5 0.5 1))
@@ -11,16 +11,12 @@
 (def ^:private light-cache (atom nil))
 (declare ^:private map-render-data)
 
-(defn- set-map-render-data! [{:keys [cell-blocked-boolean-array
-                                     width
-                                     height
+(defn- set-map-render-data! [{:keys [raycaster
                                      explored-tile-corners]}
                              light-position]
   (reset! light-cache {})
   (.bindRoot #'map-render-data [light-position
-                                cell-blocked-boolean-array
-                                width
-                                height
+                                raycaster
                                 explored-tile-corners]))
 
 (def ^:private see-all-tiles? false)
@@ -41,20 +37,14 @@
 
 (defn- tile-color-setter [_ x y]
   (let [[light-position
-         cell-blocked-boolean-array
-         width
-         height
+         raycaster
          explored-tile-corners] map-render-data
         position [(int x) (int y)]
         explored? (get @explored-tile-corners position) ; TODO needs int call ?
         base-color (if explored? explored-tile-color color/black)
         cache-entry (get @light-cache position :not-found)
         blocked? (if (= cache-entry :not-found)
-                   (let [blocked? (raycaster/ray-blocked? cell-blocked-boolean-array
-                                                          width
-                                                          height
-                                                          light-position
-                                                          position)]
+                   (let [blocked? (raycaster/ray-blocked? raycaster light-position position)]
                      (swap! light-cache assoc position blocked?)
                      blocked?)
                    cache-entry)]
