@@ -60,7 +60,7 @@
 (defn- render-entity* [system entity* g ctx]
   (try
    (when show-body-bounds
-     (draw-body-rect g entity* (if (:solid? entity*) color/white color/gray)))
+     (draw-body-rect g entity* (if (:collides? entity*) color/white color/gray)))
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
      (draw-body-rect g entity* color/red)

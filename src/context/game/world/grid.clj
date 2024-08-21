@@ -85,18 +85,18 @@
 
   (add-entity! [grid entity]
     (set-cells! grid entity)
-    (when (:solid? @entity)
+    (when (:collides? @entity)
       (set-occupied-cells! grid entity)))
 
   (remove-entity! [_ entity]
     (remove-from-cells! entity)
-    (when (:solid? @entity)
+    (when (:collides? @entity)
       (remove-from-occupied-cells! entity)))
 
   (entity-position-changed! [grid entity]
     (remove-from-cells! entity)
     (set-cells! grid entity)
-    (when (:solid? @entity)
+    (when (:collides? @entity)
       (remove-from-occupied-cells! entity)
       (set-occupied-cells! grid entity))))
 

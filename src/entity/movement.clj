@@ -37,12 +37,12 @@
       (update :left-bottom move-position movement)))
 
 (defn- valid-position? [grid body]
-  (let [{:keys [entity/id z-order solid?]} body
+  (let [{:keys [entity/id z-order collides?]} body
         ; similar =code to set-cells! body->calculate-touched-cells.
         ; some places maybe use cached-touched-cells ....
         cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
     (and (not-any? #(cell/blocked? % z-order) cells*)
-         (or (not solid?) ; this not needed as we call this only for valid-position foo
+         (or (not collides?) ; this not needed as we call this only for valid-position foo
              (->> cells*
                   cell/cells->entities ; could add new field to Cell solid-entities, here checking all entities
                   ; also effects, items, .... etc.
@@ -50,8 +50,8 @@
                               ; TODO move out fn - entity/same-id?
                               (let [other-entity* @other-entity]
                                 (and (not= (:entity/id other-entity*) id)
-                                     ; fn entity/colliding? which checks solid?
-                                     (:solid? other-entity*)
+                                     ; fn entity/colliding? which checks collides?
+                                     (:collides? other-entity*)
                                      (geom/collides? other-entity* body))))))))))
 
 (defn- try-move [grid body movement]
@@ -80,7 +80,7 @@
                   (zero? speed))
       (let [movement (assoc movement :delta-time (ctx/delta-time ctx))
             body @eid]
-        (when-let [body (if (:solid? body)
+        (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
                           (try-move-solid-body (ctx/world-grid ctx) body movement)
                           (move-body body movement))]
           [[:tx.entity/assoc eid :position    (:position    body)]

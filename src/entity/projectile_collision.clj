@@ -32,7 +32,7 @@
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
-                                       (:solid? @%) ; solid means -- collides? -> can call it collides? then ?
+                                       (:collides? @%)
                                        (geom/collides? entity* @%))
                                  (cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))

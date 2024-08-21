@@ -29,7 +29,7 @@
 
     ; TODO how 2 do default values,its not default-values , its non-optional attributes !
     ; similar to components nested-map
-    ;:default-value {:width 0.5 :height 0.5 :solid? true}
+    ;:default-value {:width 0.5 :height 0.5 :collides? true}
     ; TODO label == not editable
     ; TODO just defattribute ? warn on overwrite add there !
     ; TODO body assert >+ min body size @ properties !
@@ -137,7 +137,7 @@
         {:position (:entity/position components)
          :width  (:width  (:property/bounds props))
          :height (:height (:property/bounds props))
-         :solid? true
+         :collides? true
          :z-order (if (:entity/flying? creature-components)
                     :z-order/flying
                     :z-order/ground)}

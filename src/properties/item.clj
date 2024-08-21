@@ -53,7 +53,6 @@
       {:position position
        :width 0.5 ; TODO use item-body-dimensions
        :height 0.5
-       :solid? false
        :z-order :z-order/on-ground}
       #:entity {:image (:property/image item)
                 :item item

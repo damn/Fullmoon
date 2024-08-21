@@ -51,7 +51,6 @@
         {:position position
          :width size
          :height size
-         :solid? false
          :z-order :z-order/flying
          :rotation-angle (v/get-angle-from-vector direction)}
         #:entity {:movement {:direction direction

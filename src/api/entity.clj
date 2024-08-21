@@ -10,7 +10,7 @@
                    half-width
                    half-height
                    radius
-                   solid?
+                   collides?
                    z-order
                    rotation-angle])
 
@@ -29,17 +29,16 @@
                :keys [position
                       width
                       height
-                      solid?
+                      collides?
                       z-order
                       rotation-angle]}]
   (assert position)
   (assert width)
   (assert height)
-  (assert (>= width  (if solid? min-solid-body-size 0)))
-  (assert (>= height (if solid? min-solid-body-size 0)))
-  (assert (or (nil? solid?) (boolean? solid?)))
+  (assert (>= width  (if collides? min-solid-body-size 0)))
+  (assert (>= height (if collides? min-solid-body-size 0)))
+  (assert (or (boolean? collides?) (nil? collides?)))
   (assert ((set z-orders) z-order))
-  (assert (not (and (#{:z-order/effect :z-order/on-ground} z-order) solid?)))
   (assert (or (nil? rotation-angle)
               (<= 0 rotation-angle 360)))
   (map->Entity
@@ -52,7 +51,7 @@
     :half-height (float (/ height 2))
     :radius (float (max (/ width  2)
                         (/ height 2)))
-    :solid? solid?
+    :collides? collides?
     :z-order z-order
     :rotation-angle (or rotation-angle 0)}))
 
