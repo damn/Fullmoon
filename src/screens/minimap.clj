@@ -63,7 +63,7 @@
                                                    color/green)))
     (if (or (input/key-just-pressed? input.keys/tab)
             (input/key-just-pressed? input.keys/escape))
-      (ctx/change-screen context :screens/game)
+      (ctx/change-screen context :screens/world)
       context)))
 
 (defcomponent :screens/minimap {}

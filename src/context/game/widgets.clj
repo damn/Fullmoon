@@ -53,7 +53,7 @@
    (player-message/->build ctx)])
 
 (defn- reset-stage-actors! [ctx widget-data]
-  (assert (= :screens/game (ctx/current-screen-key ctx)))
+  (assert (= :screens/world (ctx/current-screen-key ctx)))
   (doto (ctx/get-stage ctx)
     stage/clear!
     (stage/add-actors! (->ui-actors ctx widget-data))))

@@ -1,8 +1,8 @@
-(ns screens.game
+(ns screens.world
   (:require [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.screen :as screen :refer [Screen]]
-            [context.game :as game]))
+            [context.world :as world]))
 
 (defrecord SubScreen []
   Screen
@@ -10,9 +10,9 @@
   (hide [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
   (render [_ ctx]
-    (game/render ctx)))
+    (world/render ctx)))
 
-(defcomponent :screens/game {}
+(defcomponent :screens/world {}
   (screen/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors []

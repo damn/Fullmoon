@@ -5,10 +5,9 @@
             [api.context :as ctx :refer [->text-button ->check-box ->table]]
             [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
-            context.game
             context.game.effect-handler
             [context.game.debug-render :as debug-render]
-            context.game.world
+            context.world
             context.game.ecs
             [widgets.background-image :refer [->background-image]]))
 
@@ -48,9 +47,9 @@
                                  #'debug-render/highlight-blocked-cell?
                                  #'debug-render/cell-entities?
                                  #'debug-render/potential-field-colors?
-                                 #'context.game/pausing?
-                                 #'context.game.world/los-checks?
-                                 #'context.game.world/spawn-enemies?
+                                 #'context.world/pausing?
+                                 #'context.world/los-checks?
+                                 #'context.world/spawn-enemies?
                                  #'context.game.world.render/see-all-tiles?]))
 
 (def ^:private key-help-text
@@ -73,7 +72,7 @@
                                      (get-text check-box)
                                      (partial set-state check-box)
                                      (boolean (get-state check-box)))]))
-                   [[(->text-button ctx "Resume" #(ctx/change-screen % :screens/game))]
+                   [[(->text-button ctx "Resume" #(ctx/change-screen % :screens/world))]
                     [(->text-button ctx "Exit" #(ctx/change-screen % :screens/main-menu))]])
             :fill-parent? true
             :cell-defaults {:pad-bottom 10}}))
@@ -84,7 +83,7 @@
   (hide [_ _ctx])
   (render [_ ctx]
     (if (input/key-just-pressed? input.keys/escape)
-      (ctx/change-screen ctx :screens/game)
+      (ctx/change-screen ctx :screens/world)
       ctx)))
 
 (defn- ->screen [ctx background-image]

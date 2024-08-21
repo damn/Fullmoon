@@ -8,7 +8,7 @@
             [api.screen :as screen :refer [Screen]]
             ; just load here not @ resources because we don't build it yet.
             ; because ui widgets can only be created @ game screen is current screen
-            [context.game :as game]
+            [context.world :as world]
             [widgets.background-image :refer [->background-image]]
             mapgen.module-gen))
 
@@ -31,8 +31,8 @@
 (defn- start-game! [lvl-fn]
   (fn [ctx]
     (-> ctx
-        (ctx/change-screen :screens/game)
-        (game/start-new-game (lvl-fn ctx)))))
+        (ctx/change-screen :screens/world)
+        (world/start-new-game (lvl-fn ctx)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ctx/->table
