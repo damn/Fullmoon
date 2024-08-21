@@ -207,7 +207,7 @@
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (-> ctx
       (dissoc ::tick-error)
-      (merge {:context.game/game-loop-mode mode}
+      (merge {::game-loop-mode mode}
              (ecs/->build)
              (time-component/->build)
              (widgets/->state! ctx)
@@ -254,7 +254,7 @@
            (p/pretty-pst t 12)
            (assoc ctx ::tick-error t)))))
 
-(defmulti game-loop :context.game/game-loop-mode)
+(defmulti game-loop ::game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
   (ctx/do! ctx [ctx/player-update-state
@@ -267,12 +267,12 @@
                 ]))
 
 (defn- replay-frame! [ctx]
-  (let [frame-number (:context.game/logic-frame ctx)
+  (let [frame-number (ctx/logic-frame ctx)
         txs (ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx
         (ctx/do! txs)
-        (update :context.game/logic-frame inc))))
+        #_(update :world.time/logic-frame inc))))  ; this is probably broken now (also frame->txs contains already time, so no need to inc ?)
 
 (def ^:private replay-speed 2)
 
