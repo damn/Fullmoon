@@ -1,4 +1,4 @@
-(ns context.game.ecs
+(ns world.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [safe-merge sort-by-order]]
             [gdx.graphics.color :as color]

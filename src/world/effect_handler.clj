@@ -1,4 +1,4 @@
-(ns context.game.effect-handler
+(ns world.effect-handler
   (:require [clojure.string :as str]
             context.graphics.image
             data.animation

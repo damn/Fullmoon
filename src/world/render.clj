@@ -1,4 +1,4 @@
-(ns context.game.world.render
+(ns world.render
   (:require [gdx.graphics :as graphics]
             [api.context :as ctx]
             [gdx.graphics.color :as color]

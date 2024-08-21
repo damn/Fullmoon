@@ -5,10 +5,10 @@
             [api.context :as ctx :refer [->text-button ->check-box ->table]]
             [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
-            context.game.effect-handler
-            [context.game.debug-render :as debug-render]
+            world.effect-handler
+            [world.debug-render :as debug-render]
             context.world
-            context.game.ecs
+            world.ecs
             [widgets.background-image :refer [->background-image]]))
 
 (defprotocol StatusCheckBox
@@ -39,9 +39,9 @@
 ; TODO add line of sight activate, shadows on/off, see through walls etc.
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 (def ^:private debug-flags (map ->debug-flag
-                                [#'context.game.ecs/show-body-bounds
-                                 ;#'context.game.effect-handler/record-txs?
-                                 #'context.game.effect-handler/debug-print-txs?
+                                [#'world.ecs/show-body-bounds
+                                 ;#'world.effect-handler/record-txs?
+                                 #'world.effect-handler/debug-print-txs?
                                  #'debug-render/tile-grid?
                                  #'debug-render/cell-occupied?
                                  #'debug-render/highlight-blocked-cell?
@@ -50,7 +50,7 @@
                                  #'context.world/pausing?
                                  #'context.world/los-checks?
                                  #'context.world/spawn-enemies?
-                                 #'context.game.world.render/see-all-tiles?]))
+                                 #'world.render/see-all-tiles?]))
 
 (def ^:private key-help-text
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")

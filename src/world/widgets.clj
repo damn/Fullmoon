@@ -1,4 +1,4 @@
-(ns context.game.widgets
+(ns world.widgets
   (:require [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.scene2d.stage :as stage]

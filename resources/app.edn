@@ -76,8 +76,8 @@
                                          :properties/world]
                                  :file "resources/properties.edn"}]
            [:context/screens [:screens/main-menu
-                              :screens/game
                               :screens/map-editor
                               :screens/minimap
                               :screens/options-menu
-                              :screens/property-editor]]]}
+                              :screens/property-editor
+                              :screens/world]]]}

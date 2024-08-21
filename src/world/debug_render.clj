@@ -1,4 +1,4 @@
-(ns context.game.debug-render
+(ns world.debug-render
   (:require math.geom
             [utils.core :refer [->tile]]
             [api.context :as ctx :refer [world-grid]]
@@ -24,7 +24,7 @@
 (def ^:private cell-entities? false)
 (def ^:private cell-occupied? false)
 
-(require '[context.game.world.potential-fields :as potential-field])
+(require '[world.potential-fields :as potential-field])
 
 (defn- tile-debug [g ctx]
   (let [grid (world-grid ctx)

@@ -1,16 +1,22 @@
 (ns context.world
   (:require [clj-commons.pretty.repl :as p]
+
             [gdx.app :as app]
             [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
+
             [math.raycaster :as raycaster]
             [math.vector :as v]
+
             [utils.core :refer [tile->middle]]
+
             [core.component :refer [defcomponent]]
+
             [data.grid2d :as grid2d]
+
             [api.context :as ctx :refer [explored? ray-blocked? content-grid world-grid]]
             [api.entity :as entity]
             [api.effect :as effect]
@@ -18,16 +24,18 @@
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
-            (context.game [ecs :as ecs]
-                          [mouseover-entity :as mouseover-entity]
-                          [time :as time-component]
-                          [effect-handler :as tx-handler]
-                          [widgets :as widgets]
-                          [debug-render :as debug-render])
-            (context.game.world grid
-                                content-grid
-                                [potential-fields :as potential-fields]
-                                render)
+
+            (world grid
+                   content-grid
+                   [potential-fields :as potential-fields]
+                   render
+                   [ecs :as ecs]
+                   [mouseover-entity :as mouseover-entity]
+                   [time :as time-component]
+                   [effect-handler :as tx-handler]
+                   [widgets :as widgets]
+                   [debug-render :as debug-render])
+
             [mapgen.movement-property :refer (movement-property)]))
 
 (defn- on-screen? [entity* ctx]
@@ -73,7 +81,7 @@
                                                       entity))
 
   (render-map [ctx]
-    (context.game.world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
+    (world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
 
   (line-of-sight? [context source* target*]
     (and (:z-order target*)  ; is even an entity which renders something
@@ -133,13 +141,13 @@
     arr))
 
 (defn- tiled-map->grid [tiled-map]
-  (context.game.world.grid/->build (tiled/width  tiled-map)
-                                   (tiled/height tiled-map)
-                                   (fn [position]
-                                     (case (movement-property tiled-map position)
-                                       "none" :none
-                                       "air"  :air
-                                       "all"  :all))))
+  (world.grid/->build (tiled/width  tiled-map)
+                      (tiled/height tiled-map)
+                      (fn [position]
+                        (case (movement-property tiled-map position)
+                          "none" :none
+                          "air"  :air
+                          "all"  :all))))
 
 ; TODO make defrecord
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
@@ -151,7 +159,7 @@
             :height h
             :grid grid
             :cell-blocked-boolean-array (->cell-blocked-boolean-array grid)
-            :content-grid (context.game.world.content-grid/->build w h 16 16)
+            :content-grid (world.content-grid/->build w h 16 16)
             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))}))
   ; TODO
   ; (check-not-allowed-diagonals grid)

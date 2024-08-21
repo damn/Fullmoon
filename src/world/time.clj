@@ -1,4 +1,4 @@
-(ns context.game.time
+(ns world.time
   (:require [gdx.graphics :as graphics]
             [api.context :as ctx]))
 

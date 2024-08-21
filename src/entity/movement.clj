@@ -8,7 +8,7 @@
             [api.effect :as effect]
             [api.world.cell :as cell]
             [api.world.grid :as world-grid]
-            [context.game.time :refer [max-delta-time]]))
+            [world.time :refer [max-delta-time]]))
 
 ; # :z-order/flying has no effect for now
 
