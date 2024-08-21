@@ -14,7 +14,7 @@
   (component/create [[_ skill-ids] ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 
-  (entity/info-text [[_ skills] _ctx]
+  (component/info-text [[_ skills] _ctx]
     (when (seq skills)
       (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
 

@@ -1,5 +1,6 @@
 (ns widgets.entity-info-window
   (:require [clojure.string :as str]
+            [core.component :as component]
             [api.context :as ctx :refer [->actor ->window ->label]]
             [api.scene2d.ui.label :refer [set-text!]]
             [api.scene2d.group :refer [add-actor!]]
@@ -30,7 +31,7 @@
             (for [k info-text-key-order
                   :let [component (k entity*)
                         text (when component
-                               (entity/info-text [k component] ctx))]
+                               (component/info-text [k component] ctx))]
                   :when text]
               text)))
 

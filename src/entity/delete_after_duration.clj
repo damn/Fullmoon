@@ -1,18 +1,16 @@
 (ns entity.delete-after-duration
-  (:require [core.component :as component :refer [defcomponent]]
-            [api.context :as ctx :refer [->counter stopped?]]
+  (:require [utils.core :refer [readable-number]]
+            [core.component :as component :refer [defcomponent]]
+            [api.context :as ctx]
             [api.entity :as entity]))
 
 (defcomponent :entity/delete-after-duration {}
   (component/create [[_ duration] ctx]
-    (->counter ctx duration))
+    (ctx/->counter ctx duration))
+
+  (component/info-text [[_ counter] ctx]
+    (str "[LIGHT_GRAY]Remaining: " (readable-number (ctx/finished-ratio ctx counter)) "/1[]"))
 
   (entity/tick [[_ counter] eid ctx]
-    (when (stopped? ctx counter)
-      [[:tx/destroy eid]]))
-
-  ; TODO bar like in wc3 blue (water-elemental)
-  (entity/info-text [[_ counter] ctx]
-    (str "[LIGHT_GRAY]Remaining: "
-         (utils.core/readable-number (ctx/finished-ratio ctx counter))
-         "/1[]")))
+    (when (ctx/stopped? ctx counter)
+      [[:tx/destroy eid]])))

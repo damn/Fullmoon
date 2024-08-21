@@ -362,7 +362,7 @@
         (update :stats/mana (fn [mana] (when mana [mana mana])))
         (update :stats/modifiers build-modifiers)))
 
-  (entity/info-text [[_ stats] _ctx]
+  (component/info-text [[_ stats] _ctx]
     (str (stats-info-texts stats)
          (stats-modifiers-info-text (:stats/modifiers stats))))
 

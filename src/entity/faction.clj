@@ -1,11 +1,11 @@
 (ns entity.faction
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
             [api.entity :as entity]))
 
 (defcomponent :entity/faction (data/enum :good :evil)
-  (entity/info-text [[_ faction] _ctx]
+  (component/info-text [[_ faction] _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
 (extend-type api.entity.Entity

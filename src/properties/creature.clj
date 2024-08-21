@@ -17,11 +17,11 @@
    ))
 
 (defcomponent :entity.creature/name {}
-  (entity/info-text [[_ name] _ctx]
+  (component/info-text [[_ name] _ctx]
     name))
 
 (defcomponent :entity.creature/species {}
-  (entity/info-text [[_ species] _ctx]
+  (component/info-text [[_ species] _ctx]
     (str "[LIGHT_GRAY]Species: " species "[]")))
 
 (defcomponent :properties/creature {}

@@ -17,7 +17,7 @@
      :state-obj ((initial-state state-obj-constructors) ctx nil)
      :state-obj-constructors state-obj-constructors})
 
-  (entity/info-text [[_ state] _ctx]
+  (component/info-text [[_ state] _ctx]
     (str "[YELLOW]State: " (name (state-key state)) "[]"))
   ; TODO also info, e.g. active-skill -> which skill ....
   ; not just 'active-skill'

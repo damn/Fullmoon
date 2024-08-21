@@ -65,9 +65,6 @@
 (defsystem tick [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
-(defsystem info-text [_ ctx])
-(defmethod info-text :default [_ ctx])
-
 (defsystem render-below   [_ entity* g ctx])
 (defsystem render-default [_ entity* g ctx])
 (defsystem render-above   [_ entity* g ctx])

@@ -227,3 +227,6 @@
 
 (defsystem create  [_ ctx])
 (defsystem destroy [_ ctx])
+
+(defsystem info-text [_ ctx])
+(defmethod info-text :default [_ ctx])

@@ -13,7 +13,7 @@
 
   ; TODO add proper effect-ctx here for effect-ctx/text
   ; TODO DRY! LIME color for effects ...
-  (entity/info-text [[_ {:keys [hit-effects piercing?]}] ctx]
+  (component/info-text [[_ {:keys [hit-effects piercing?]}] ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
          "[LIME]" (ctx/effect-text ctx hit-effects) "[]"))
 
