@@ -24,7 +24,6 @@
                    line-of-sight
                    content-grid
                    [potential-fields :as potential-fields]
-                   render
                    [raycaster :as raycaster]
                    [ecs :as ecs]
                    [mouseover-entity :as mouseover-entity]
