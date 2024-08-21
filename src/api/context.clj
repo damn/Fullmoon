@@ -127,7 +127,6 @@
   (explored? [_ position])
   (content-grid [_])
   (world-grid [_])
-  (update-potential-fields! [_ entities])
   (potential-field-follow-to-enemy [_ entity]))
 
 (defprotocol PropertyStore

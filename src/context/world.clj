@@ -51,10 +51,6 @@
 
 (extend-type api.context.Context
   api.context/World
-  (update-potential-fields! [ctx entities]
-    (potential-fields/update-potential-fields! (ctx/world-grid ctx)
-                                               entities))
-
   (potential-field-follow-to-enemy [ctx entity]
     (potential-fields/potential-field-follow-to-enemy (ctx/world-grid ctx)
                                                       entity))
@@ -205,7 +201,7 @@
 (defn- update-world [ctx]
   (let [ctx (time-component/update-time ctx)
         active-entities (active-entities ctx)]
-    (ctx/update-potential-fields! ctx active-entities)
+    (potential-fields/update! (ctx/world-grid ctx) active-entities)
     (try (ctx/tick-entities! ctx active-entities)
          (catch Throwable t
            (p/pretty-pst t 12)

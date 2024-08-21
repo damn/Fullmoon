@@ -150,7 +150,7 @@
 (def ^:private factions-iterations {:good 5
                                     :evil 15})
 
-(defn update-potential-fields! [world-grid entities]
+(defn update! [world-grid entities]
   (doseq [[faction max-iterations] factions-iterations]
     (update-faction-potential-field world-grid faction entities max-iterations)))
 
