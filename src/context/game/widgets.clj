@@ -60,8 +60,7 @@
 
 (defn ->state! [ctx]
   (let [widget-data {:context.game/action-bar (action-bar/->button-group ctx)
-                     :context.game.inventory/slot->background (inventory/->data ctx)
-                     :context.game/player-message nil}]
+                     :context.game.inventory/slot->background (inventory/->data ctx)}]
     (reset-stage-actors! ctx widget-data)
     widget-data))
 
