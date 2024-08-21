@@ -79,9 +79,6 @@
     (potential-fields/potential-field-follow-to-enemy (ctx/world-grid ctx)
                                                       entity))
 
-  (render-map [ctx]
-    (world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
-
   (line-of-sight? [context source* target*]
     (and (:z-order target*)  ; is even an entity which renders something
          (or (not (:entity/player? source*))
@@ -283,7 +280,7 @@
 (defn render! [ctx]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
-    (ctx/render-map ctx)
+    (world.render/render-map ctx (camera/position (ctx/world-camera ctx)))
     (ctx/render-world-view ctx
                            (fn [g]
                              (debug-render/before-entities ctx g)
