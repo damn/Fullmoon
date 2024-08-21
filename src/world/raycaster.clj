@@ -45,12 +45,11 @@
 
 (extend-type api.context.Context
   api.context/WorldRaycaster
-  (ray-blocked? [{:keys [context/world]} start target]
-    (ray-blocked? (:raycaster world) start target))
+  (ray-blocked? [{:keys [world/raycaster]} start target]
+    (ray-blocked? raycaster start target))
 
-  (path-blocked? [context start target path-w]
-    (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)
-          raycaster (:raycaster (:context/world context))]
+  (path-blocked? [{:keys [world/raycaster]} start target path-w]
+    (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
       (or
        (ray-blocked? raycaster start1 target1)
        (ray-blocked? raycaster start2 target2)))))

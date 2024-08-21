@@ -11,8 +11,7 @@
 (def ^:private light-cache (atom nil))
 (declare ^:private map-render-data)
 
-(defn- set-map-render-data! [{:keys [raycaster
-                                     explored-tile-corners]}
+(defn- set-map-render-data! [{:keys [world/raycaster world/explored-tile-corners]}
                              light-position]
   (reset! light-cache {})
   (.bindRoot #'map-render-data [light-position
@@ -56,8 +55,7 @@
             (swap! explored-tile-corners assoc (->tile position) true))
           color/white))))
 
-(defn render-map [{:keys [context/world] :as ctx}
-                  light-position]
-  (set-map-render-data! world light-position)
-  (ctx/render-tiled-map ctx (:tiled-map world) tile-color-setter)
+(defn render-map [{:keys [world/tiled-map] :as ctx} light-position]
+  (set-map-render-data! ctx light-position)
+  (ctx/render-tiled-map ctx tiled-map tile-color-setter)
   #_(reset! do-once false))

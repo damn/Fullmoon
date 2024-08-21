@@ -59,14 +59,11 @@
                    (ctx/ray-blocked? context (:position source*) (:position target*))))))
 
   ; TODO put tile param
-  (explored? [{:keys [context/world] :as context} position]
-    (get @(:explored-tile-corners world) position))
+  (explored? [ctx position]
+    (get @(:world/explored-tile-corners ctx) position))
 
-  (content-grid [{:keys [context/world]}]
-    (:content-grid world))
-
-  (world-grid [{:keys [context/world]}]
-    (:grid world)))
+  (content-grid [ctx] (:world/content-grid ctx))
+  (world-grid  [ctx]  (:world/grid         ctx)))
 
 (defcomponent :tx/add-to-world {}
   (effect/do! [[_ entity] ctx]
@@ -101,21 +98,20 @@
   (let [grid (tiled-map->world-grid tiled-map)
         w (grid2d/width  grid)
         h (grid2d/height grid)]
-    {:tiled-map tiled-map
-     :start-position start-position
-     :grid grid
-     :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
-     :content-grid (world.content-grid/->build w h 16 16)
-     :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))})
+    #:world {:tiled-map tiled-map
+             :start-position start-position
+             :grid grid
+             :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
+             :content-grid (world.content-grid/->build w h 16 16)
+             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))})
   ; TODO
   ; (check-not-allowed-diagonals grid)
   )
 
 (def ^:private spawn-enemies? true)
 
-(defn- transact-create-entities-from-tiledmap! [{:keys [context/world] :as ctx}]
-  (let [tiled-map (:tiled-map world)
-        ctx (if spawn-enemies?
+(defn- transact-create-entities-from-tiledmap! [{:keys [world/tiled-map world/start-position] :as ctx}]
+  (let [ctx (if spawn-enemies?
               (ctx/do! ctx
                        (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
                          [:tx.entity/creature
@@ -126,7 +122,7 @@
     (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
     (ctx/do! ctx [[:tx.entity/creature
                    :creatures/vampire
-                   #:entity {:position (tile->middle (:start-position world))
+                   #:entity {:position (tile->middle start-position)
                              :state [:state/player :idle]
                              :player? true
                              :free-skill-points 3
@@ -134,16 +130,14 @@
                              :click-distance-tiles 1.5}]])))
 
 (defn- add-world-context [ctx tiled-level]
-  (when-let [world (:context/world ctx)]
-    (dispose (:tiled-map world)))
+  (when-let [tiled-map (:world/tiled-map ctx)]
+    (dispose tiled-map))
   (-> ctx
-      (assoc :context/world (->world-map tiled-level))
+      (merge (->world-map tiled-level))
       transact-create-entities-from-tiledmap!))
 
 (defn- reset-world-context [ctx]
-  (assoc ctx :context/world (->world-map (select-keys (:context/world ctx)
-                                                      [:tiled-map
-                                                       :start-position]))))
+  (merge ctx (->world-map (select-keys ctx [:world/tiled-map :world/start-position]))))
 
 (defn- setup-context [ctx mode tiled-level]
   (case mode
