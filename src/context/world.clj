@@ -3,7 +3,6 @@
 
             [gdx.app :as app]
             [gdx.graphics.camera :as camera]
-            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
@@ -281,32 +280,7 @@
           ctx
           (range replay-speed)))
 
-(defn- adjust-zoom [camera by] ; DRY map editor
-  (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
-
-(def ^:private zoom-speed 0.05)
-
-(defn- check-zoom-keys [context]
-  (let [camera (ctx/world-camera context)]
-    (when (input/key-pressed? input.keys/minus)  (adjust-zoom camera    zoom-speed))
-    (when (input/key-pressed? input.keys/equals) (adjust-zoom camera (- zoom-speed)))))
-
-; TODO move to actor/stage listeners ? then input processor used ....
-(defn- check-key-input [context]
-  (check-zoom-keys context)
-  (widgets/check-window-hotkeys context)
-  (cond (and (input/key-just-pressed? input.keys/escape)
-             (not (widgets/close-windows? context)))
-        (ctx/change-screen context :screens/options-menu)
-
-        ; TODO not implementing StageSubScreen so NPE no screen/render!
-        #_(input/key-just-pressed? input.keys/tab)
-        #_(ctx/change-screen context :screens/minimap)
-
-        :else
-        context))
-
-(defn- render-game! [ctx]
+(defn render! [ctx]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
     (ctx/render-map ctx)
@@ -321,15 +295,10 @@
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))
                              (debug-render/after-entities ctx g)))))
 
-(defn render [ctx]
-  (render-game! ctx)
-  (-> ctx
-      game-loop
-      check-key-input)) ; not sure I need this @ replay mode ??
-
 (comment
 
  ; TODO @replay-mode
+ ; * do I need check-key-input from screens/world?
  ; adjust sound speed also equally ? pitch ?
  ; player message, player modals, etc. all game related state handle ....
  ; game timer is not reset  - continues as if
