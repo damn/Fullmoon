@@ -2,7 +2,6 @@
   (:require [core.component :refer [defcomponent]]
             [api.graphics :as g]
             [api.context :refer [->counter stopped? reset]]
-            [context.ui.config :refer [hpbar-height-px]]
             [api.entity :as entity]
             [api.effect :as effect]))
 
@@ -16,7 +15,7 @@
       (g/draw-text g
                    {:text text
                     :x x
-                    :y (+ y (:half-height entity*) (g/pixels->world-units g hpbar-height-px))
+                    :y (+ y (:half-height entity*) (g/pixels->world-units g entity/hpbar-height-px))
                     :scale 2
                     :up? true}))))
 

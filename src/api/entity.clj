@@ -3,6 +3,8 @@
             [core.component :refer [defsystem]]
             [utils.core :as utils]))
 
+(def hpbar-height-px 5)
+
 (defrecord Entity [position
                    left-bottom
                    width

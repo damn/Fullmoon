@@ -11,7 +11,6 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
-            [context.ui.config :refer (hpbar-height-px)]
             entity.movement))
 
 (defn- conj-value [value]
@@ -376,7 +375,7 @@
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
-                height (g/pixels->world-units g hpbar-height-px)
+                height (g/pixels->world-units g entity/hpbar-height-px)
                 border (g/pixels->world-units g borders-px)]
             (g/draw-filled-rectangle g x y width height color/black)
             (g/draw-filled-rectangle g
