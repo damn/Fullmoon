@@ -265,7 +265,8 @@
         :property/id 0
         :property/image 1
         :entity/animation 2
-        :entity/body 3
+        :property/width 3
+        :property/height 4
         :property/pretty-name 2
         :creature/level 3
         :item/slot 3

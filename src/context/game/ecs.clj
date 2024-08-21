@@ -1,6 +1,6 @@
 (ns context.game.ecs
   (:require [clj-commons.pretty.repl :as p]
-            [utils.core :refer [sort-by-order]]
+            [utils.core :refer [safe-merge sort-by-order]]
             [gdx.graphics.color :as color]
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
@@ -20,25 +20,30 @@
     {:pre [(contains? (::entities ctx) uid)]}
     (update ctx ::entities dissoc uid)))
 
-(defcomponent ::setup-entity {}
-  (effect/do! [[_ entity uid components] ctx]
-    {:pre [(not (contains? components :entity/id))
-           (not (contains? components :entity/uid))]}
-    (reset! entity (-> components
-                       (assoc :entity/id entity :entity/uid uid)
-                       (component/update-map component/create ctx)
-                       map->Entity))
-    ctx))
-
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
 
+(defcomponent :entity/id {}
+  (entity/create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
+  (entity/destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
+
 (defcomponent :tx/create {}
-  (effect/do! [[_ components] ctx]
-    (let [entity (atom nil)]
-      [[::setup-entity entity (unique-number!) components]
-       (fn [ctx]
+  (effect/do! [[_ body components] ctx]
+    {:pre [(not (contains? components :entity/id))
+           (not (contains? components :entity/uid))]}
+    (let [entity (atom nil)
+          body (entity/->Body body)
+          components (-> components
+                         (assoc :entity/id entity
+                                :entity/uid (unique-number!))
+                         (component/update-map component/create ctx))
+          entity* (safe-merge body components)]
+      ;(clojure.pprint/pprint body)
+      ;(clojure.pprint/pprint components)
+      ;(clojure.pprint/pprint entity*)
+      (reset! entity entity*)
+      [(fn [ctx]
          (for [component @entity]
            (fn [ctx]
              ; we are assuming components dont remove other ones at entity/create

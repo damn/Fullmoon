@@ -4,30 +4,27 @@
        :full-screen? false
        :fps 60}
  ; :components is here so we dont't call component/create on those (e.g. entity/body without args)
- :components [[:entity/body]
+ :components [[:entity/delete-after-duration]
+
+              [:entity/movement]
+              [:entity/projectile-collision]
+              [:entity/plop]
 
               [:entity/image]
               [:entity/animation]
               [:entity/delete-after-animation-stopped]
               [:entity/line-render]
 
-              [:entity/clickable]
-              [:entity/delete-after-duration]
               [:entity/mouseover]
-
-              [:entity/player]
-
-              [:entity/plop]
-              [:entity/projectile-collision]
+              [:entity/clickable]
 
               [:entity/state]
+              [:entity/player]
 
               [:entity/shout]
               [:entity/faction]
-
               [:entity/stats]
               [:entity/string-effect]
-
               [:entity/skills]
               [:entity/inventory]
 

@@ -285,7 +285,7 @@
 
 ; TODO clamp between 0 and max-speed ( same as entity.body/movement-speed-schema )
 (defstat :stats/movement-speed {:widget :text-field
-                                :schema entity.body/movement-speed-schema}
+                                :schema entity.movement/movement-speed-schema}
   :operations [:op/inc :op/mult])
 
 ; TODO show the stat in different color red/green if it was permanently modified ?
@@ -366,8 +366,7 @@
          (stats-modifiers-info-text (:stats/modifiers stats))))
 
   (entity/render-info [_
-                       {{:keys [width half-width half-height]} :entity/body
-                        :keys [entity/mouseover?] :as entity*}
+                       {:keys [width half-width half-height entity/mouseover?] :as entity*}
                        g
                        _ctx]
     (when-let [hp (entity/stat entity* :stats/hp)]

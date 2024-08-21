@@ -3,22 +3,22 @@
             [core.component :refer [defcomponent]]
             [core.data :as data]
             [api.graphics :as g]
-            [api.context :as ctx :refer [line-of-sight?]]
+            [api.context :as ctx]
             [api.effect :as effect]
             [api.entity :as entity]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (entity/position entity*)
                            (entity/position target*)))
-        (float (:radius (:entity/body entity*)))
-        (float (:radius (:entity/body target*))))
+        (float (:radius entity*))
+        (float (:radius target*)))
      (float maxrange)))
 
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
   (v/add (entity/position entity*)
          (v/scale (entity/direction entity* target*)
-                  (:radius (:entity/body entity*)))))
+                  (:radius entity*))))
 
 (defn- end-point [entity* target* maxrange]
   (v/add (start-point entity* target*)

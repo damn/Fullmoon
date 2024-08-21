@@ -27,6 +27,13 @@
 (defcomponent :properties/creature {}
   (properties/create [_]
 
+    ; TODO how 2 do default values,its not default-values , its non-optional attributes !
+    ; similar to components nested-map
+    ;:default-value {:width 0.5 :height 0.5 :solid? true}
+    ; TODO label == not editable
+    ; TODO just defattribute ? warn on overwrite add there !
+    ; TODO body assert >+ min body size @ properties !
+    (defcomponent :property/bounds {:widget :label :schema :some}) ; TODO make px
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
     (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
     (defcomponent :entity/flying? data/boolean-attr)
@@ -34,7 +41,6 @@
 
     (defcomponent :creature/entity (data/components ; TODO no required/optional settings ! just cannot remove & already there !
                                      [:entity/animation
-                                      :entity/body ; remove solid
                                       :entity/flying? ; remove
                                       :entity/reaction-time ; in frames 0.016x
                                       :entity/faction ; remove
@@ -46,6 +52,7 @@
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :creatures}]]
               [:property/image
+               :property/bounds
                :creature/species
                :creature/level
                :creature/entity])
@@ -73,7 +80,6 @@
                    (clojure.pprint/pprint
                     (select-keys entity
                                  [;:entity/animation
-                                  ;:entity/body
                                   :entity/faction
                                   :entity/flying?
                                   :entity/reaction-time
@@ -128,17 +134,17 @@
     (let [props (ctx/get-property ctx creature-id)
           creature-components (:creature/entity props)]
       [[:tx/create
+        {:position (:entity/position components)
+         :width  (:width  (:property/bounds props))
+         :height (:height (:property/bounds props))
+         :solid? true
+         :z-order (if (:entity/flying? creature-components)
+                    :z-order/flying
+                    :z-order/ground)}
         (-> creature-components
             (dissoc :entity/flying?)
-            (update :entity/body
-                    (fn [body]
-                      (-> body
-                          (assoc :position (:entity/position components)) ; give position separate arg
-                          (assoc :z-order (if (:entity/flying? creature-components)
-                                            :z-order/flying
-                                            :z-order/ground)))))
             (merge (dissoc components :entity/position)
-                   (when (= creature-id :creatures/lady-a) ; do @ ?
+                   (when (= creature-id :creatures/lady-a) ; do @ ? ; TODO delete princess
                      {:entity/clickable {:type :clickable/princess}}))
             (update :entity/state set-state)  ; do @ entity/state itself
             (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
@@ -153,9 +159,9 @@
                :entity/state [:state/npc :sleeping]}]
              (reify api.context/PropertyStore
                (get-property [_ id]
-                 {:creature/entity {:entity/flying? true
-                                    :entity/body {:width 5
-                                                  :height 5}}}))))
+                 {:property/width 5
+                  :property/height 5
+                  :creature/entity {:entity/flying? true}}))))
 
  )
 

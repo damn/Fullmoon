@@ -95,7 +95,6 @@
      {:file "images/animations/toad-horned-3.png"}
      {:file "images/animations/toad-horned-4.png"}),
     :looping? true},
-   :entity/body {:height 11/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -104,6 +103,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 1,
   :creature/species :species/toad,
+  :property/bounds {:height 11/24, :width 2/3},
   :property/id :creatures/toad-horned,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]}}
@@ -116,7 +116,6 @@
      {:file "images/animations/goblin-warrior-3.png"}
      {:file "images/animations/goblin-warrior-4.png"}),
     :looping? true},
-   :entity/body {:height 29/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/reaction-time 0.5,
    :entity/skills #{:skills/melee-attack},
@@ -131,6 +130,7 @@
     :stats/strength 1}},
   :creature/level 2,
   :creature/species :species/goblin,
+  :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/goblin-warrior,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 144 48 48]}}
@@ -143,7 +143,6 @@
      {:file "images/animations/lizardman-blue-shaman-3.png"}
      {:file "images/animations/lizardman-blue-shaman-4.png"}),
     :looping? true},
-   :entity/body {:height 37/48, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -152,6 +151,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/lizardman-blue,
+  :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/lizardman-blue-shaman,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]}}
@@ -164,7 +164,6 @@
      {:file "images/animations/barbarian-f-3.png"}
      {:file "images/animations/barbarian-f-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -173,6 +172,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/barbarian,
+  :property/bounds {:height 2/3, :width 11/16},
   :property/id :creatures/barbarian-f,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]}}
@@ -185,7 +185,6 @@
      {:file "images/animations/mummy-3.png"}
      {:file "images/animations/mummy-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -194,6 +193,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 14,
   :creature/species :species/mummy,
+  :property/bounds {:height 31/48, :width 2/3},
   :property/id :creatures/mummy,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]}}
@@ -206,7 +206,6 @@
      {:file "images/animations/helion-3.png"}
      {:file "images/animations/helion-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.05,
@@ -219,6 +218,7 @@
     :stats/strength 10}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/helion,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 0 48 48]}}
@@ -231,7 +231,6 @@
      {:file "images/animations/priest-3.png"}
      {:file "images/animations/priest-4.png"}),
     :looping? true},
-   :entity/body {:height 17/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -240,6 +239,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/priest,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]}}
@@ -252,7 +252,6 @@
      {:file "images/animations/lizardman-green-spear-3.png"}
      {:file "images/animations/lizardman-green-spear-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -261,6 +260,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/lizardman-green,
+  :property/bounds {:height 13/16, :width 11/16},
   :property/id :creatures/lizardman-green-spear,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]}}
@@ -273,7 +273,6 @@
      {:file "images/animations/dwarf-cleric-3.png"}
      {:file "images/animations/dwarf-cleric-4.png"}),
     :looping? true},
-   :entity/body {:height 9/16, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -282,6 +281,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 5,
   :creature/species :species/dwarf,
+  :property/bounds {:height 9/16, :width 35/48},
   :property/id :creatures/dwarf-cleric,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]}}
@@ -294,7 +294,6 @@
      {:file "images/animations/thief-3.png"}
      {:file "images/animations/thief-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -303,6 +302,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/thief,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]}}
@@ -315,7 +315,6 @@
      {:file "images/animations/lizardman-green-shaman-3.png"}
      {:file "images/animations/lizardman-green-shaman-4.png"}),
     :looping? true},
-   :entity/body {:height 37/48, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -324,6 +323,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/lizardman-green,
+  :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/lizardman-green-shaman,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]}}
@@ -336,7 +336,6 @@
      {:file "images/animations/beholder-3.png"}
      {:file "images/animations/beholder-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -345,6 +344,7 @@
    {:stats/hp 35, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 5,
   :creature/species :species/beholder,
+  :property/bounds {:height 19/24, :width 5/6},
   :property/id :creatures/beholder,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]}}
@@ -357,7 +357,6 @@
      {:file "images/animations/spider-brown-3.png"}
      {:file "images/animations/spider-brown-4.png"}),
     :looping? true},
-   :entity/body {:height 19/48, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -366,6 +365,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 1,
   :creature/species :species/spider,
+  :property/bounds {:height 19/48, :width 13/24},
   :property/id :creatures/spider-brown,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]}}
@@ -378,7 +378,6 @@
      {:file "images/animations/vampire-lord-3.png"}
      {:file "images/animations/vampire-lord-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/inventory #{},
@@ -388,6 +387,7 @@
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 6}},
   :creature/level 6,
   :creature/species :species/vampire,
+  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/vampire-lord,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 240 48 48]}}
@@ -400,7 +400,6 @@
      {:file "images/animations/witch-3.png"}
      {:file "images/animations/witch-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -409,6 +408,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/witch,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]}}
@@ -421,7 +421,6 @@
      {:file "images/animations/minstrel-f-3.png"}
      {:file "images/animations/minstrel-f-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -430,6 +429,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/minstrel-f,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]}}
@@ -442,7 +442,6 @@
      {:file "images/animations/lady-b-3.png"}
      {:file "images/animations/lady-b-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -450,6 +449,7 @@
    :entity/stats {:stats/hp 10, :stats/mana 11}},
   :creature/level 6,
   :creature/species :species/human,
+  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-b,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]}}
@@ -462,7 +462,6 @@
      {:file "images/animations/dwarf-3.png"}
      {:file "images/animations/dwarf-4.png"}),
     :looping? true},
-   :entity/body {:height 9/16, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -471,6 +470,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 5,
   :creature/species :species/dwarf,
+  :property/bounds {:height 9/16, :width 35/48},
   :property/id :creatures/dwarf,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]}}
@@ -483,7 +483,6 @@
      {:file "images/animations/elemental-air-3.png"}
      {:file "images/animations/elemental-air-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -492,6 +491,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/elemental,
+  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-air,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]}}
@@ -504,7 +504,6 @@
      {:file "images/animations/beetle-fire-3.png"}
      {:file "images/animations/beetle-fire-4.png"}),
     :looping? true},
-   :entity/body {:height 5/12, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -513,6 +512,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 2,
   :creature/species :species/beetle,
+  :property/bounds {:height 5/12, :width 1/2},
   :property/id :creatures/beetle-fire,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]}}
@@ -525,7 +525,6 @@
      {:file "images/animations/warrior-f-3.png"}
      {:file "images/animations/warrior-f-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -534,6 +533,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/warrior-f,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]}}
@@ -546,7 +546,6 @@
      {:file "images/animations/golem-mud-3.png"}
      {:file "images/animations/golem-mud-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -555,6 +554,7 @@
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
   :creature/level 4,
   :creature/species :species/golem,
+  :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-mud,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]}}
@@ -567,7 +567,6 @@
      {:file "images/animations/merchant-f-3.png"}
      {:file "images/animations/merchant-f-4.png"}),
     :looping? true},
-   :entity/body {:height 29/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -576,6 +575,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/merchant-f,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]}}
@@ -588,7 +588,6 @@
      {:file "images/animations/minstrel-m-3.png"}
      {:file "images/animations/minstrel-m-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -597,6 +596,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/minstrel-m,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]}}
@@ -609,7 +609,6 @@
      {:file "images/animations/spirit-greater-3.png"}
      {:file "images/animations/spirit-greater-4.png"}),
     :looping? true},
-   :entity/body {:height 5/6, :solid? true, :width 3/4},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -618,6 +617,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/spirit,
+  :property/bounds {:height 5/6, :width 3/4},
   :property/id :creatures/spirit-greater,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]}}
@@ -630,7 +630,6 @@
      {:file "images/animations/knight-3.png"}
      {:file "images/animations/knight-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -646,6 +645,7 @@
     :stats/strength 2}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/knight,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 0 48 48]}}
@@ -658,7 +658,6 @@
      {:file "images/animations/zombie-b-3.png"}
      {:file "images/animations/zombie-b-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -667,6 +666,7 @@
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 8,
   :creature/species :species/zombie,
+  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/zombie-b,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]}}
@@ -679,7 +679,6 @@
      {:file "images/animations/demon-green-3.png"}
      {:file "images/animations/demon-green-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 19/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -688,6 +687,7 @@
    {:stats/hp 32, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 6,
   :creature/species :species/demon,
+  :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-green,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]}}
@@ -700,7 +700,6 @@
      {:file "images/animations/drow-wizard-3.png"}
      {:file "images/animations/drow-wizard-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -709,6 +708,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/drow,
+  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/drow-wizard,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]}}
@@ -721,7 +721,6 @@
      {:file "images/animations/goblin-shaman-3.png"}
      {:file "images/animations/goblin-shaman-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -730,6 +729,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 2,
   :creature/species :species/goblin,
+  :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/goblin-shaman,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]}}
@@ -742,7 +742,6 @@
      {:file "images/animations/beetle-giant-3.png"}
      {:file "images/animations/beetle-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 13/24, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -751,6 +750,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 2,
   :creature/species :species/beetle,
+  :property/bounds {:height 13/24, :width 7/12},
   :property/id :creatures/beetle-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]}}
@@ -763,7 +763,6 @@
      {:file "images/animations/prisoner-b-3.png"}
      {:file "images/animations/prisoner-b-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -772,6 +771,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 2,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/prisoner-b,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]}}
@@ -784,7 +784,6 @@
      {:file "images/animations/dwarf-mage-3.png"}
      {:file "images/animations/dwarf-mage-4.png"}),
     :looping? true},
-   :entity/body {:height 7/12, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -793,6 +792,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 5,
   :creature/species :species/dwarf,
+  :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/dwarf-mage,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]}}
@@ -805,7 +805,6 @@
      {:file "images/animations/bird-hawk-3.png"}
      {:file "images/animations/bird-hawk-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -813,6 +812,7 @@
    :entity/stats {:stats/hp 8, :stats/movement-speed 1}},
   :creature/level 1,
   :creature/species :species/bird,
+  :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-hawk,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 432 48 48]}}
@@ -825,7 +825,6 @@
      {:file "images/animations/pixie-b-3.png"}
      {:file "images/animations/pixie-b-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -834,6 +833,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 4,
   :creature/species :species/pixie,
+  :property/bounds {:height 3/4, :width 13/24},
   :property/id :creatures/pixie-b,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]}}
@@ -846,7 +846,6 @@
      {:file "images/animations/lady-a-3.png"}
      {:file "images/animations/lady-a-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -854,6 +853,7 @@
    :entity/stats {:stats/movement-speed 1}},
   :creature/level 6,
   :creature/species :species/human,
+  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-a,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]}}
@@ -866,7 +866,6 @@
      {:file "images/animations/drow-3.png"}
      {:file "images/animations/drow-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -875,6 +874,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/drow,
+  :property/bounds {:height 35/48, :width 11/16},
   :property/id :creatures/drow,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]}}
@@ -887,7 +887,6 @@
      {:file "images/animations/goblin-3.png"}
      {:file "images/animations/goblin-4.png"}),
     :looping? true},
-   :entity/body {:height 29/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -896,6 +895,7 @@
    {:stats/hp 8, :stats/movement-speed 2.4, :stats/strength 2}},
   :creature/level 2,
   :creature/species :species/goblin,
+  :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/goblin,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 144 48 48]}}
@@ -908,7 +908,6 @@
      {:file "images/animations/wolf-black-3.png"}
      {:file "images/animations/wolf-black-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -917,6 +916,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 1,
   :creature/species :species/wolf,
+  :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/wolf-black,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]}}
@@ -929,7 +929,6 @@
      {:file "images/animations/bird-crow-3.png"}
      {:file "images/animations/bird-crow-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -937,6 +936,7 @@
    :entity/stats {:stats/hp 8, :stats/movement-speed 4}},
   :creature/level 1,
   :creature/species :species/bird,
+  :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-crow,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]}}
@@ -949,7 +949,6 @@
      {:file "images/animations/demon-red-3.png"}
      {:file "images/animations/demon-red-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 19/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -958,6 +957,7 @@
    {:stats/hp 32, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 6,
   :creature/species :species/demon,
+  :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-red,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]}}
@@ -970,7 +970,6 @@
      {:file "images/animations/pixie-a-3.png"}
      {:file "images/animations/pixie-a-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -979,6 +978,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 4,
   :creature/species :species/pixie,
+  :property/bounds {:height 3/4, :width 13/24},
   :property/id :creatures/pixie-a,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]}}
@@ -991,7 +991,6 @@
      {:file "images/animations/archer-3.png"}
      {:file "images/animations/archer-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1000,6 +999,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/archer,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]}}
@@ -1012,7 +1012,6 @@
      {:file "images/animations/rat-giant-3.png"}
      {:file "images/animations/rat-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 41/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1021,6 +1020,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 2,
   :creature/species :species/rat,
+  :property/bounds {:height 11/16, :width 41/48},
   :property/id :creatures/rat-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]}}
@@ -1033,7 +1033,6 @@
      {:file "images/animations/lord-a-3.png"}
      {:file "images/animations/lord-a-4.png"}),
     :looping? true},
-   :entity/body {:height 17/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1041,6 +1040,7 @@
    :entity/stats {:stats/hp 10, :stats/mana 11}},
   :creature/level 6,
   :creature/species :species/human,
+  :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-a,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]}}
@@ -1053,7 +1053,6 @@
      {:file "images/animations/wraith-black-3.png"}
      {:file "images/animations/wraith-black-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1062,6 +1061,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 6,
   :creature/species :species/wraith,
+  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-black,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]}}
@@ -1074,7 +1074,6 @@
      {:file "images/animations/wraith-red-3.png"}
      {:file "images/animations/wraith-red-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1083,6 +1082,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 6,
   :creature/species :species/wraith,
+  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-red,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]}}
@@ -1095,7 +1095,6 @@
      {:file "images/animations/golem-fire-3.png"}
      {:file "images/animations/golem-fire-4.png"}),
     :looping? true},
-   :entity/body {:height 5/6, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1104,6 +1103,7 @@
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
   :creature/level 4,
   :creature/species :species/golem,
+  :property/bounds {:height 5/6, :width 17/24},
   :property/id :creatures/golem-fire,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]}}
@@ -1116,7 +1116,6 @@
      {:file "images/animations/wisp-ancient-3.png"}
      {:file "images/animations/wisp-ancient-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 5/8},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1125,6 +1124,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/wisp,
+  :property/bounds {:height 3/4, :width 5/8},
   :property/id :creatures/wisp-ancient,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]}}
@@ -1137,7 +1137,6 @@
      {:file "images/animations/troll-3.png"}
      {:file "images/animations/troll-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1146,6 +1145,7 @@
    {:stats/hp 35, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 2,
   :creature/species :species/troll,
+  :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/troll,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]}}
@@ -1158,7 +1158,6 @@
      {:file "images/animations/wraith-blue-3.png"}
      {:file "images/animations/wraith-blue-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1167,6 +1166,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 6,
   :creature/species :species/wraith,
+  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-blue,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]}}
@@ -1179,7 +1179,6 @@
      {:file "images/animations/beetle-fire-giant-3.png"}
      {:file "images/animations/beetle-fire-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 13/24, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1188,6 +1187,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 2,
   :creature/species :species/beetle,
+  :property/bounds {:height 13/24, :width 7/12},
   :property/id :creatures/beetle-fire-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]}}
@@ -1200,7 +1200,6 @@
      {:file "images/animations/lizardman-blue-spear-3.png"}
      {:file "images/animations/lizardman-blue-spear-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1209,6 +1208,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/lizardman-blue,
+  :property/bounds {:height 13/16, :width 11/16},
   :property/id :creatures/lizardman-blue-spear,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]}}
@@ -1221,7 +1221,6 @@
      {:file "images/animations/dark-knight-3.png"}
      {:file "images/animations/dark-knight-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1230,6 +1229,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/human,
+  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/dark-knight,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]}}
@@ -1242,7 +1242,6 @@
      {:file "images/animations/wolf-brown-3.png"}
      {:file "images/animations/wolf-brown-4.png"}),
     :looping? true},
-   :entity/body {:height 7/12, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1251,6 +1250,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 1,
   :creature/species :species/wolf,
+  :property/bounds {:height 7/12, :width 2/3},
   :property/id :creatures/wolf-brown,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]}}
@@ -1263,7 +1263,6 @@
      {:file "images/animations/demon-blue-3.png"}
      {:file "images/animations/demon-blue-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 19/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1272,6 +1271,7 @@
    {:stats/hp 32, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 6,
   :creature/species :species/demon,
+  :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-blue,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]}}
@@ -1284,7 +1284,6 @@
      {:file "images/animations/moth-red-3.png"}
      {:file "images/animations/moth-red-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1293,6 +1292,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 1,
   :creature/species :species/moth,
+  :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-red,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]}}
@@ -1305,7 +1305,6 @@
      {:file "images/animations/prisoner-c-3.png"}
      {:file "images/animations/prisoner-c-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1314,6 +1313,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 2,
   :creature/species :species/human,
+  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/prisoner-c,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]}}
@@ -1326,7 +1326,6 @@
      {:file "images/animations/mimic-3.png"}
      {:file "images/animations/mimic-4.png"}),
     :looping? true},
-   :entity/body {:height 9/16, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1335,6 +1334,7 @@
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 17,
   :creature/species :species/mimic,
+  :property/bounds {:height 9/16, :width 1/2},
   :property/id :creatures/mimic,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]}}
@@ -1347,7 +1347,6 @@
      {:file "images/animations/lizardman-green-3.png"}
      {:file "images/animations/lizardman-green-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1356,6 +1355,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/lizardman-green,
+  :property/bounds {:height 3/4, :width 11/16},
   :property/id :creatures/lizardman-green,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]}}
@@ -1368,7 +1368,6 @@
      {:file "images/animations/paladin-3.png"}
      {:file "images/animations/paladin-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1377,6 +1376,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 11/16},
   :property/id :creatures/paladin,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]}}
@@ -1389,7 +1389,6 @@
      {:file "images/animations/dragon-green-3.png"}
      {:file "images/animations/dragon-green-4.png"}),
     :looping? true},
-   :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1398,6 +1397,7 @@
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 6,
   :creature/species :species/dragon,
+  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-green,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]}}
@@ -1410,7 +1410,6 @@
      {:file "images/animations/rat-3.png"}
      {:file "images/animations/rat-4.png"}),
     :looping? true},
-   :entity/body {:height 23/48, :solid? true, :width 31/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1419,6 +1418,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 1,
   :creature/species :species/rat,
+  :property/bounds {:height 23/48, :width 31/48},
   :property/id :creatures/rat,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]}}
@@ -1431,7 +1431,6 @@
      {:file "images/animations/elemental-vorpal-3.png"}
      {:file "images/animations/elemental-vorpal-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1440,6 +1439,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/elemental,
+  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-vorpal,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]}}
@@ -1452,7 +1452,6 @@
      {:file "images/animations/zombie-a-3.png"}
      {:file "images/animations/zombie-a-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1461,6 +1460,7 @@
    {:stats/hp 25, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 8,
   :creature/species :species/zombie,
+  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/zombie-a,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]}}
@@ -1473,7 +1473,6 @@
      {:file "images/animations/dragon-blue-3.png"}
      {:file "images/animations/dragon-blue-4.png"}),
     :looping? true},
-   :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1482,6 +1481,7 @@
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 6,
   :creature/species :species/dragon,
+  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-blue,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]}}
@@ -1494,7 +1494,6 @@
      {:file "images/animations/spider-black-3.png"}
      {:file "images/animations/spider-black-4.png"}),
     :looping? true},
-   :entity/body {:height 19/48, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1503,6 +1502,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 2,
   :creature/species :species/spider,
+  :property/bounds {:height 19/48, :width 13/24},
   :property/id :creatures/spider-black,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]}}
@@ -1515,7 +1515,6 @@
      {:file "images/animations/ogre-3.png"}
      {:file "images/animations/ogre-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1524,6 +1523,7 @@
    {:stats/hp 28, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 4,
   :creature/species :species/ogre,
+  :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/ogre,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]}}
@@ -1536,7 +1536,6 @@
      {:file "images/animations/wizard-3.png"}
      {:file "images/animations/wizard-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1545,6 +1544,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/wizard,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]}}
@@ -1557,7 +1557,6 @@
      {:file "images/animations/elemental-earth-3.png"}
      {:file "images/animations/elemental-earth-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1566,6 +1565,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/elemental,
+  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-earth,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]}}
@@ -1578,7 +1578,6 @@
      {:file "images/animations/dragon-shadow-3.png"}
      {:file "images/animations/dragon-shadow-4.png"}),
     :looping? true},
-   :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1587,6 +1586,7 @@
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 6,
   :creature/species :species/dragon,
+  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-shadow,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 384 48 48]}}
@@ -1599,13 +1599,13 @@
      {:file "images/animations/banshee-3.png"}
      {:file "images/animations/banshee-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
    :entity/stats {:stats/mana 11}},
   :creature/level 5,
   :creature/species :species/banshee,
+  :property/bounds {:height 13/16, :width 2/3},
   :property/id :creatures/banshee,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]}}
@@ -1618,7 +1618,6 @@
      {:file "images/animations/warrior-m-3.png"}
      {:file "images/animations/warrior-m-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1627,6 +1626,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/warrior-m,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]}}
@@ -1639,7 +1639,6 @@
      {:file "images/animations/moth-white-3.png"}
      {:file "images/animations/moth-white-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1648,6 +1647,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 1,
   :creature/species :species/moth,
+  :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-white,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]}}
@@ -1660,7 +1660,6 @@
      {:file "images/animations/bird-dove-3.png"}
      {:file "images/animations/bird-dove-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1668,6 +1667,7 @@
    :entity/stats {:stats/hp 8, :stats/movement-speed 4}},
   :creature/level 1,
   :creature/species :species/bird,
+  :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-dove,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 432 48 48]}}
@@ -1680,7 +1680,6 @@
      {:file "images/animations/lizardman-blue-3.png"}
      {:file "images/animations/lizardman-blue-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1689,6 +1688,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/lizardman-blue,
+  :property/bounds {:height 3/4, :width 11/16},
   :property/id :creatures/lizardman-blue,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]}}
@@ -1701,7 +1701,6 @@
      {:file "images/animations/dragon-red-3.png"}
      {:file "images/animations/dragon-red-4.png"}),
     :looping? true},
-   :entity/body {:height 5/6, :solid? true, :width 23/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1710,6 +1709,7 @@
    {:stats/hp 45, :stats/mana 11, :stats/movement-speed 1.0}},
   :creature/level 6,
   :creature/species :species/dragon,
+  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-red,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]}}
@@ -1722,7 +1722,6 @@
      {:file "images/animations/spider-brown-giant-3.png"}
      {:file "images/animations/spider-brown-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1731,6 +1730,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 2,
   :creature/species :species/spider,
+  :property/bounds {:height 31/48, :width 5/6},
   :property/id :creatures/spider-brown-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]}}
@@ -1743,7 +1743,6 @@
      {:file "images/animations/spirit-3.png"}
      {:file "images/animations/spirit-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1752,6 +1751,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/spirit,
+  :property/bounds {:height 3/4, :width 1/2},
   :property/id :creatures/spirit,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]}}
@@ -1764,7 +1764,6 @@
      {:file "images/animations/lich-3.png"}
      {:file "images/animations/lich-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1773,6 +1772,7 @@
    {:stats/hp 18, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 6,
   :creature/species :species/lich,
+  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/lich,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]}}
@@ -1785,7 +1785,6 @@
      {:file "images/animations/skeleton-archer-3.png"}
      {:file "images/animations/skeleton-archer-4.png"}),
     :looping? true},
-   :entity/body {:height 37/48, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1794,6 +1793,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 11,
   :creature/species :species/skeleton,
+  :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/skeleton-archer,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]}}
@@ -1806,7 +1806,6 @@
      {:file "images/animations/ogre-mystic-3.png"}
      {:file "images/animations/ogre-mystic-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1815,6 +1814,7 @@
    {:stats/hp 28, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 4,
   :creature/species :species/ogre,
+  :property/bounds {:height 35/48, :width 35/48},
   :property/id :creatures/ogre-mystic,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]}}
@@ -1827,7 +1827,6 @@
      {:file "images/animations/bone-dragon-3.png"}
      {:file "images/animations/bone-dragon-4.png"}),
     :looping? true},
-   :entity/body {:height 1, :solid? true, :width 1},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1836,6 +1835,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 6,
   :creature/species :species/dragon,
+  :property/bounds {:height 1, :width 1},
   :property/id :creatures/bone-dragon,
   :property/image {:file "images/animations/bone-dragon-1.png"}}
  {:creature/entity
@@ -1847,7 +1847,6 @@
      {:file "images/animations/golem-metal-3.png"}
      {:file "images/animations/golem-metal-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1856,6 +1855,7 @@
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
   :creature/level 4,
   :creature/species :species/golem,
+  :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-metal,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]}}
@@ -1868,7 +1868,6 @@
      {:file "images/animations/elemental-fire-3.png"}
      {:file "images/animations/elemental-fire-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1877,6 +1876,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/elemental,
+  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-fire,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]}}
@@ -1889,7 +1889,6 @@
      {:file "images/animations/templar-3.png"}
      {:file "images/animations/templar-4.png"}),
     :looping? true},
-   :entity/body {:height 41/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1898,6 +1897,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 41/48, :width 2/3},
   :property/id :creatures/templar,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]}}
@@ -1910,7 +1910,6 @@
      {:file "images/animations/wisp-3.png"}
      {:file "images/animations/wisp-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1919,6 +1918,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 4,
   :creature/species :species/wisp,
+  :property/bounds {:height 5/8, :width 1/2},
   :property/id :creatures/wisp,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]}}
@@ -1931,7 +1931,6 @@
      {:file "images/animations/snake-giant-3.png"}
      {:file "images/animations/snake-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1940,6 +1939,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 2,
   :creature/species :species/snake,
+  :property/bounds {:height 11/16, :width 5/6},
   :property/id :creatures/snake-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]}}
@@ -1952,7 +1952,6 @@
      {:file "images/animations/minotaur-3.png"}
      {:file "images/animations/minotaur-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -1961,6 +1960,7 @@
    {:stats/hp 28, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 5,
   :creature/species :species/minotaur,
+  :property/bounds {:height 35/48, :width 35/48},
   :property/id :creatures/minotaur,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]}}
@@ -1973,7 +1973,6 @@
      {:file "images/animations/valkyrie-a-3.png"}
      {:file "images/animations/valkyrie-a-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -1982,6 +1981,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/valkyrie,
+  :property/bounds {:height 13/16, :width 17/24},
   :property/id :creatures/valkyrie-a,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]}}
@@ -1994,7 +1994,6 @@
      {:file "images/animations/toad-green-3.png"}
      {:file "images/animations/toad-green-4.png"}),
     :looping? true},
-   :entity/body {:height 5/12, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2003,6 +2002,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 1,
   :creature/species :species/toad,
+  :property/bounds {:height 5/12, :width 2/3},
   :property/id :creatures/toad-green,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]}}
@@ -2015,7 +2015,6 @@
      {:file "images/animations/vampire-3.png"}
      {:file "images/animations/vampire-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :evil,
    :entity/flying? false,
    :entity/inventory
@@ -2045,6 +2044,7 @@
     :stats/strength 1}},
   :creature/level 17,
   :creature/species :species/vampire,
+  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/vampire,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [336 240 48 48]}}
@@ -2057,7 +2057,6 @@
      {:file "images/animations/moth-black-3.png"}
      {:file "images/animations/moth-black-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2066,6 +2065,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 1,
   :creature/species :species/moth,
+  :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-black,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]}}
@@ -2078,7 +2078,6 @@
      {:file "images/animations/monk-3.png"}
      {:file "images/animations/monk-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 35/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2087,6 +2086,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 2/3, :width 35/48},
   :property/id :creatures/monk,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]}}
@@ -2099,7 +2099,6 @@
      {:file "images/animations/lord-b-3.png"}
      {:file "images/animations/lord-b-4.png"}),
     :looping? true},
-   :entity/body {:height 17/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2107,6 +2106,7 @@
    :entity/stats {:stats/hp 10, :stats/mana 11}},
   :creature/level 6,
   :creature/species :species/human,
+  :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-b,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]}}
@@ -2119,7 +2119,6 @@
      {:file "images/animations/warden-3.png"}
      {:file "images/animations/warden-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2128,6 +2127,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 2,
   :creature/species :species/human,
+  :property/bounds {:height 2/3, :width 11/16},
   :property/id :creatures/warden,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]}}
@@ -2140,7 +2140,6 @@
      {:file "images/animations/druid-3.png"}
      {:file "images/animations/druid-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2149,6 +2148,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 11/16},
   :property/id :creatures/druid,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]}}
@@ -2161,7 +2161,6 @@
      {:file "images/animations/elf-wizard-3.png"}
      {:file "images/animations/elf-wizard-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2170,6 +2169,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 5,
   :creature/species :species/elf,
+  :property/bounds {:height 31/48, :width 2/3},
   :property/id :creatures/elf-wizard,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]}}
@@ -2182,7 +2182,6 @@
      {:file "images/animations/skeleton-mage-3.png"}
      {:file "images/animations/skeleton-mage-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2191,6 +2190,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 11,
   :creature/species :species/skeleton,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/skeleton-mage,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]}}
@@ -2203,7 +2203,6 @@
      {:file "images/animations/halfling-fighter-3.png"}
      {:file "images/animations/halfling-fighter-4.png"}),
     :looping? true},
-   :entity/body {:height 7/12, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2212,6 +2211,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 1,
   :creature/species :species/halfling,
+  :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/halfling-fighter,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]}}
@@ -2224,7 +2224,6 @@
      {:file "images/animations/skeleton-warrior-3.png"}
      {:file "images/animations/skeleton-warrior-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2233,6 +2232,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 11,
   :creature/species :species/skeleton,
+  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/skeleton-warrior,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]}}
@@ -2245,7 +2245,6 @@
      {:file "images/animations/halfling-thief-3.png"}
      {:file "images/animations/halfling-thief-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2254,6 +2253,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 1,
   :creature/species :species/halfling,
+  :property/bounds {:height 5/8, :width 17/24},
   :property/id :creatures/halfling-thief,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]}}
@@ -2266,7 +2266,6 @@
      {:file "images/animations/barbarian-m-3.png"}
      {:file "images/animations/barbarian-m-4.png"}),
     :looping? true},
-   :entity/body {:height 17/24, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2275,6 +2274,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/barbarian,
+  :property/bounds {:height 17/24, :width 11/16},
   :property/id :creatures/barbarian-m,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]}}
@@ -2287,7 +2287,6 @@
      {:file "images/animations/elf-bowman-3.png"}
      {:file "images/animations/elf-bowman-4.png"}),
     :looping? true},
-   :entity/body {:height 37/48, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2296,6 +2295,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 5,
   :creature/species :species/elf,
+  :property/bounds {:height 37/48, :width 2/3},
   :property/id :creatures/elf-bowman,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]}}
@@ -2308,7 +2308,6 @@
      {:file "images/animations/beetle-3.png"}
      {:file "images/animations/beetle-4.png"}),
     :looping? true},
-   :entity/body {:height 5/12, :solid? true, :width 1/2},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2317,6 +2316,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 2,
   :creature/species :species/beetle,
+  :property/bounds {:height 5/12, :width 1/2},
   :property/id :creatures/beetle,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]}}
@@ -2329,7 +2329,6 @@
      {:file "images/animations/bat-giant-3.png"}
      {:file "images/animations/bat-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2338,6 +2337,7 @@
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 2,
   :creature/species :species/bat,
+  :property/bounds {:height 3/4, :width 5/6},
   :property/id :creatures/bat-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]}}
@@ -2350,7 +2350,6 @@
      {:file "images/animations/toad-blue-3.png"}
      {:file "images/animations/toad-blue-4.png"}),
     :looping? true},
-   :entity/body {:height 5/12, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2359,6 +2358,7 @@
    {:stats/hp 12, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 1,
   :creature/species :species/toad,
+  :property/bounds {:height 5/12, :width 2/3},
   :property/id :creatures/toad-blue,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]}}
@@ -2371,7 +2371,6 @@
      {:file "images/animations/golem-stone-3.png"}
      {:file "images/animations/golem-stone-4.png"}),
     :looping? true},
-   :entity/body {:height 35/48, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2383,6 +2382,7 @@
     :stats/strength 10}},
   :creature/level 4,
   :creature/species :species/golem,
+  :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-stone,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]}}
@@ -2395,7 +2395,6 @@
      {:file "images/animations/necromancer-3.png"}
      {:file "images/animations/necromancer-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2404,6 +2403,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 6,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/necromancer,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]}}
@@ -2416,7 +2416,6 @@
      {:file "images/animations/spider-black-giant-3.png"}
      {:file "images/animations/spider-black-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2425,6 +2424,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 2,
   :creature/species :species/spider,
+  :property/bounds {:height 5/8, :width 5/6},
   :property/id :creatures/spider-black-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]}}
@@ -2437,7 +2437,6 @@
      {:file "images/animations/valkyrie-b-3.png"}
      {:file "images/animations/valkyrie-b-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2446,6 +2445,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/valkyrie,
+  :property/bounds {:height 3/4, :width 17/24},
   :property/id :creatures/valkyrie-b,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]}}
@@ -2458,7 +2458,6 @@
      {:file "images/animations/bat-3.png"}
      {:file "images/animations/bat-4.png"}),
     :looping? true},
-   :entity/body {:height 31/48, :solid? true, :width 13/24},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2467,6 +2466,7 @@
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 1}},
   :creature/level 2,
   :creature/species :species/bat,
+  :property/bounds {:height 31/48, :width 13/24},
   :property/id :creatures/bat,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]}}
@@ -2479,7 +2479,6 @@
      {:file "images/animations/snake-3.png"}
      {:file "images/animations/snake-4.png"}),
     :looping? true},
-   :entity/body {:height 25/48, :solid? true, :width 31/48},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.1,
@@ -2495,6 +2494,7 @@
     :stats/strength 3}},
   :creature/level 1,
   :creature/species :species/snake,
+  :property/bounds {:height 25/48, :width 31/48},
   :property/id :creatures/snake,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 240 48 48]}}
@@ -2507,7 +2507,6 @@
      {:file "images/animations/flies-3.png"}
      {:file "images/animations/flies-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 25/48},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2516,6 +2515,7 @@
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 1,
   :creature/species :species/flies,
+  :property/bounds {:height 5/8, :width 25/48},
   :property/id :creatures/flies,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]}}
@@ -2528,7 +2528,6 @@
      {:file "images/animations/prisoner-a-3.png"}
      {:file "images/animations/prisoner-a-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2537,6 +2536,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 2,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/prisoner-a,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]}}
@@ -2549,7 +2549,6 @@
      {:file "images/animations/beholder-deep-3.png"}
      {:file "images/animations/beholder-deep-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2558,6 +2557,7 @@
    {:stats/hp 35, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 5,
   :creature/species :species/beholder,
+  :property/bounds {:height 19/24, :width 5/6},
   :property/id :creatures/beholder-deep,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]}}
@@ -2570,7 +2570,6 @@
      {:file "images/animations/skeleton-3.png"}
      {:file "images/animations/skeleton-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2579,6 +2578,7 @@
    {:stats/hp 15, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 11,
   :creature/species :species/skeleton,
+  :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/skeleton,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]}}
@@ -2591,7 +2591,6 @@
      {:file "images/animations/elemental-water-3.png"}
      {:file "images/animations/elemental-water-4.png"}),
     :looping? true},
-   :entity/body {:height 13/16, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? true,
    :entity/reaction-time 0.2,
@@ -2600,6 +2599,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/elemental,
+  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-water,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]}}
@@ -2612,7 +2612,6 @@
      {:file "images/animations/cultist-3.png"}
      {:file "images/animations/cultist-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2621,6 +2620,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/cultist,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]}}
@@ -2633,7 +2633,6 @@
      {:file "images/animations/mummy-pharao-3.png"}
      {:file "images/animations/mummy-pharao-4.png"}),
     :looping? true},
-   :entity/body {:height 11/16, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2642,6 +2641,7 @@
    {:stats/hp 22, :stats/mana 11, :stats/movement-speed 1.6}},
   :creature/level 14,
   :creature/species :species/mummy,
+  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/mummy-pharao,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]}}
@@ -2654,7 +2654,6 @@
      {:file "images/animations/halfling-wizard-3.png"}
      {:file "images/animations/halfling-wizard-4.png"}),
     :looping? true},
-   :entity/body {:height 2/3, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2663,6 +2662,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 1,
   :creature/species :species/halfling,
+  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/halfling-wizard,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]}}
@@ -2675,7 +2675,6 @@
      {:file "images/animations/drow-bowman-3.png"}
      {:file "images/animations/drow-bowman-4.png"}),
     :looping? true},
-   :entity/body {:height 19/24, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2684,6 +2683,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 5,
   :creature/species :species/drow,
+  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/drow-bowman,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]}}
@@ -2696,7 +2696,6 @@
      {:file "images/animations/worm-giant-3.png"}
      {:file "images/animations/worm-giant-4.png"}),
     :looping? true},
-   :entity/body {:height 17/24, :solid? true, :width 5/6},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2705,6 +2704,7 @@
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 2,
   :creature/species :species/worm,
+  :property/bounds {:height 17/24, :width 5/6},
   :property/id :creatures/worm-giant,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]}}
@@ -2717,7 +2717,6 @@
      {:file "images/animations/merchant-m-3.png"}
      {:file "images/animations/merchant-m-4.png"}),
     :looping? true},
-   :entity/body {:height 5/8, :solid? true, :width 2/3},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2726,6 +2725,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 3,
   :creature/species :species/human,
+  :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/merchant-m,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]}}
@@ -2738,7 +2738,6 @@
      {:file "images/animations/elf-3.png"}
      {:file "images/animations/elf-4.png"}),
     :looping? true},
-   :entity/body {:height 17/24, :solid? true, :width 11/16},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2747,6 +2746,7 @@
    {:stats/hp 10, :stats/mana 11, :stats/movement-speed 3.0}},
   :creature/level 5,
   :creature/species :species/elf,
+  :property/bounds {:height 17/24, :width 11/16},
   :property/id :creatures/elf,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]}}
@@ -2759,7 +2759,6 @@
      {:file "images/animations/worm-3.png"}
      {:file "images/animations/worm-4.png"}),
     :looping? true},
-   :entity/body {:height 1/2, :solid? true, :width 7/12},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2768,6 +2767,7 @@
    {:stats/hp 5, :stats/mana 11, :stats/movement-speed 2.4}},
   :creature/level 1,
   :creature/species :species/worm,
+  :property/bounds {:height 1/2, :width 7/12},
   :property/id :creatures/worm,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]}}
@@ -2780,7 +2780,6 @@
      {:file "images/animations/halfling-sling-3.png"}
      {:file "images/animations/halfling-sling-4.png"}),
     :looping? true},
-   :entity/body {:height 7/12, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2789,6 +2788,7 @@
    {:stats/hp 8, :stats/mana 11, :stats/movement-speed 2.0}},
   :creature/level 1,
   :creature/species :species/halfling,
+  :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/halfling-sling,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]}}
@@ -2801,7 +2801,6 @@
      {:file "images/animations/golem-ice-3.png"}
      {:file "images/animations/golem-ice-4.png"}),
     :looping? true},
-   :entity/body {:height 3/4, :solid? true, :width 17/24},
    :entity/faction :good,
    :entity/flying? false,
    :entity/reaction-time 0.2,
@@ -2810,6 +2809,7 @@
    {:stats/hp 350, :stats/mana 11, :stats/movement-speed 2}},
   :creature/level 4,
   :creature/species :species/golem,
+  :property/bounds {:height 3/4, :width 17/24},
   :property/id :creatures/golem-ice,
   :property/image
   {:file "images/creatures.png", :sub-image-bounds [384 432 48 48]}}

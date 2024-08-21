@@ -234,7 +234,7 @@
                           own-cell)))}))))
 
 (defn- inside-cell? [grid entity* cell]
-  (let [cells (rectangle->cells grid (:entity/body entity*))]
+  (let [cells (rectangle->cells grid entity*)]
     (and (= 1 (count cells))
          (= cell (first cells)))))
 

@@ -18,25 +18,21 @@
         t (int (+ y height))]
     (set
      (if (or (> width 1) (> height 1))
-       (for [x (range l (inc r))
+       (for [x (range l (inc r)) ; TODO lazy seq?!
              y (range b (inc t))]
          [x y])
        [[l b] [l t] [r b] [r t]]))))
 
-(defn- set-cells! [grid entity] ; set touched cells
-  (let [cells (rectangle->cells grid (:entity/body @entity))] ; entity/rectangle-bounds ?
+(defn- set-cells! [grid entity]
+  (let [cells (rectangle->cells grid @entity)]
     (assert (not-any? nil? cells))
-    (swap! entity assoc-in [:entity/body :touched-cells] cells) ; (swap! entity assoc ::touched-cells cells)
+    (swap! entity assoc ::touched-cells cells)
     (doseq [cell cells]
       (swap! cell cell/add-entity entity))))
 
 (defn- remove-from-cells! [entity]
-  (doseq [cell (:touched-cells (:entity/body @entity))] ; ::touched-cells
+  (doseq [cell (::touched-cells @entity)]
     (swap! cell cell/remove-entity entity)))
-
-(defn- update-cells! [grid entity]
-  (remove-from-cells! entity)
-  (set-cells! grid entity))
 
 ; could use inside tiles only for >1 tile bodies (for example size 4.5 use 4x4 tiles for occupied)
 ; => only now there are no >1 tile entities anyway
@@ -48,18 +44,14 @@
            (int (+ (float (left-bottom 1)) (/ (float height) 2)))])]))
 
 (defn- set-occupied-cells! [grid entity]
-  (let [cells (rectangle->occupied-cells grid (:entity/body @entity))]
+  (let [cells (rectangle->occupied-cells grid @entity)]
     (doseq [cell cells]
       (swap! cell cell/add-occupying-entity entity))
-    (swap! entity assoc-in [:entity/body :occupied-cells] cells)))
+    (swap! entity assoc ::occupied-cells cells)))
 
 (defn- remove-from-occupied-cells! [entity]
-  (doseq [cell (:occupied-cells (:entity/body @entity))] ; ::occupied-cells ....
+  (doseq [cell (::occupied-cells @entity)]
     (swap! cell cell/remove-occupying-entity entity)))
-
-(defn- update-occupied-cells! [grid entity]
-  (remove-from-occupied-cells! entity)
-  (set-occupied-cells! grid entity))
 
 ; TODO LAZY SEQ @ grid2d/get-8-neighbour-positions !!
 ; https://github.com/damn/grid2d/blob/master/src/data/grid2d.clj#L126
@@ -84,27 +76,29 @@
     (->> (circle->cells grid circle)
          (map deref)
          cells->entities
-         (filter #(geom/collides? circle (:entity/body @%)))))
+         (filter #(geom/collides? circle @%))))
 
   (point->entities [grid position]
     (when-let [cell (get grid (->tile position))]
-      (filter #(geom/point-in-rect? position (:entity/body @%))
+      (filter #(geom/point-in-rect? position @%)
               (:entities @cell))))
 
   (add-entity! [grid entity]
     (set-cells! grid entity)
-    (when (:solid? (:entity/body @entity)) ;FIXME meaning of solid --- occupies cells ?!?!?!
+    (when (:solid? @entity)
       (set-occupied-cells! grid entity)))
 
   (remove-entity! [_ entity]
     (remove-from-cells! entity)
-    (when (:solid? (:entity/body @entity))
+    (when (:solid? @entity)
       (remove-from-occupied-cells! entity)))
 
   (entity-position-changed! [grid entity]
-    (update-cells! grid entity)
-    (when (:solid? (:entity/body @entity))
-      (update-occupied-cells! grid entity))))
+    (remove-from-cells! entity)
+    (set-cells! grid entity)
+    (when (:solid? @entity)
+      (remove-from-occupied-cells! entity)
+      (set-occupied-cells! grid entity))))
 
 ; TODO separate ns?
 

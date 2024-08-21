@@ -28,13 +28,12 @@
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
     (let [entity* @entity
-          cells* (map deref (rectangle->cells (world-grid ctx) (:entity/body entity*))) ; just use cached-touched -cells
+          cells* (map deref (rectangle->cells (world-grid ctx) entity*)) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
-                                       (:solid? (:entity/body @%)) ; solid means -- collides? -> can call it collides? then ?
-                                       (geom/collides? (:entity/body entity*)
-                                                       (:entity/body @%)))
+                                       (:solid? @%) ; solid means -- collides? -> can call it collides? then ?
+                                       (geom/collides? entity* @%))
                                  (cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
                        (some #(cell/blocked? % (entity/z-order entity*)) cells*))

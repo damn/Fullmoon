@@ -94,6 +94,7 @@
 (defcomponent :tx/add-to-world {}
   (effect/do! [[_ entity] ctx]
     (content-grid/update-entity! (content-grid ctx) entity)
+    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (world-grid/add-entity! (world-grid ctx) entity)
     ctx))
 

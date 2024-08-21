@@ -24,9 +24,10 @@
     (let [{:keys [property/sound
                   property/animation]} (ctx/get-property ctx id)]
       [[:tx/sound sound]
-       [:tx/create #:entity {:body {:position position
-                                    :width 0.5
-                                    :height 0.5
-                                    :z-order :z-order/effect}
-                             :animation animation
-                             :delete-after-animation-stopped? true}]])))
+       [:tx/create
+        {:position position
+         :width 0.5
+         :height 0.5
+         :z-order :z-order/effect}
+        #:entity {:animation animation
+                  :delete-after-animation-stopped? true}]])))

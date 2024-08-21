@@ -11,12 +11,12 @@
     (when (stopped? context counter)
       [[:tx.entity/dissoc eid k]]))
 
-  (entity/render-above [[_ {:keys [text]}] {:keys [entity/body] :as entity*} g _ctx]
+  (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
     (let [[x y] (entity/position entity*)]
       (g/draw-text g
                    {:text text
                     :x x
-                    :y (+ y (:half-height body) (g/pixels->world-units g hpbar-height-px))
+                    :y (+ y (:half-height entity*) (g/pixels->world-units g hpbar-height-px))
                     :scale 2
                     :up? true}))))
 

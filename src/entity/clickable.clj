@@ -5,7 +5,7 @@
 
 (defcomponent :entity/clickable {}
   (entity/render-default [[_ {:keys [text]}]
-                          {:keys [entity/mouseover? entity/body] :as entity*}
+                          {:keys [entity/mouseover?] :as entity*}
                           g
                           _ctx]
     (when (and mouseover? text)
@@ -13,5 +13,5 @@
         (g/draw-text g
                      {:text text
                       :x x
-                      :y (+ y (:half-height body))
+                      :y (+ y (:half-height entity*))
                       :up? true})))))

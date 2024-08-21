@@ -47,25 +47,26 @@
                   projectile/effects
                   projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
           size (projectile-size prop)]
-      [[:tx/create #:entity {:body {:position position
-                                    :width size
-                                    :height size
-                                    :solid? false
-                                    :z-order :z-order/flying
-                                    :rotation-angle (v/get-angle-from-vector direction)
-                                    :movement {:direction direction
-                                               :speed speed}}
-                             :image image
-                             :faction faction
-                             :delete-after-duration (/ max-range speed)
-                             :plop true
-                             :projectile-collision {:hit-effects effects
-                                                    :piercing? piercing?}}]])))
+      [[:tx/create
+        {:position position
+         :width size
+         :height size
+         :solid? false
+         :z-order :z-order/flying
+         :rotation-angle (v/get-angle-from-vector direction)}
+        #:entity {:movement {:direction direction
+                             :speed speed}
+                  :image image
+                  :faction faction
+                  :delete-after-duration (/ max-range speed)
+                  :plop true
+                  :projectile-collision {:hit-effects effects
+                                         :piercing? piercing?}}]])))
 
 (defn- start-point [entity* direction size]
   (v/add (entity/position entity*)
          (v/scale direction
-                  (+ (:radius (:entity/body entity*)) size 0.1))))
+                  (+ (:radius entity*) size 0.1))))
 
 ; TODO effect/text ... shouldn't have source/target dmg stuff ....
 ; as it is just sent .....

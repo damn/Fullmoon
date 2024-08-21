@@ -10,13 +10,13 @@
 (def ^:private neutral-color  [1 1 1 outline-alpha])
 
 (defcomponent :entity/mouseover? {}
-  (entity/render-below [_ {:keys [entity/body entity/faction] :as entity*} g ctx]
+  (entity/render-below [_ {:keys [entity/faction] :as entity*} g ctx]
     (let [player-entity* (ctx/player-entity* ctx)]
       (g/with-shape-line-width g 3
         #(g/draw-ellipse g
                          (entity/position entity*)
-                         (:half-width body)
-                         (:half-height body)
+                         (:half-width entity*)
+                         (:half-height entity*)
                          (cond (= faction (entity/enemy-faction player-entity*))
                                enemy-color
                                (= faction (entity/friendly-faction player-entity*))

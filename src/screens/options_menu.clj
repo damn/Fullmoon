@@ -10,7 +10,7 @@
             context.game.effect-handler
             [context.game.debug-render :as debug-render]
             context.game.world
-            entity.body
+            entity.movement
             [widgets.background-image :refer [->background-image]]))
 
 (defprotocol StatusCheckBox
@@ -41,7 +41,7 @@
 ; TODO add line of sight activate, shadows on/off, see through walls etc.
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 (def ^:private debug-flags (map ->debug-flag
-                                [#'entity.body/show-body-bounds
+                                [#'entity.movement/show-body-bounds
                                  ;#'context.game.effect-handler/record-txs?
                                  #'context.game.effect-handler/debug-print-txs?
                                  #'debug-render/tile-grid?
