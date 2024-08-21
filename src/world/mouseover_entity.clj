@@ -19,21 +19,19 @@
          first
          :entity/id)))
 
-(defn- mouseover-entity [ctx] (:context.game/mouseover-entity ctx))
-
 (extend-type api.context.Context
   api.context/MouseOverEntity
   (mouseover-entity* [ctx]
-    (when-let [entity (mouseover-entity ctx)]
+    (when-let [entity (::mouseover-entity ctx)]
       @entity)))
 
 (defn update! [ctx]
   (let [entity (if (mouse-on-stage-actor? ctx)
                  nil
                  (calculate-mouseover-entity ctx))]
-    [(when-let [old-entity (mouseover-entity ctx)]
+    [(when-let [old-entity (::mouseover-entity ctx)]
        [:tx.entity/dissoc old-entity :entity/mouseover?])
      (when entity
        [:tx.entity/assoc entity :entity/mouseover? true])
      (fn [ctx]
-       (assoc ctx :context.game/mouseover-entity entity))]))
+       (assoc ctx ::mouseover-entity entity))]))
