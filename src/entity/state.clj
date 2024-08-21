@@ -9,21 +9,22 @@
   (-> state :fsm :state))
 
 (defcomponent :entity/state {}
-  (component/create [[_ {:keys [fsm initial-state state-obj-constructors]}] ctx]
-    ; initial state is nil, so associng it.
-    ; make bug report TODO
-    {:fsm (assoc (fsm initial-state nil)  ; throws when initial-state is not part of states
-                 :state initial-state)
-     :state-obj ((initial-state state-obj-constructors) ctx nil)
-     :state-obj-constructors state-obj-constructors})
+  (entity/create [[k {:keys [fsm initial-state state-obj-constructors]}] eid ctx]
+    ; fsm throws when initial-state is not part of states, so no need to assert initial-state
+    [[:tx.entity/assoc eid k {:fsm (assoc (fsm initial-state nil)
+                                          :state initial-state) ; initial state is nil, so associng it. make bug report TODO
+                              :state-obj ((initial-state state-obj-constructors) ctx eid nil)
+                              :state-obj-constructors state-obj-constructors}]])
 
   (component/info-text [[_ state] _ctx]
+    ; TODO also info, e.g. active-skill -> which skill ....
+    ; not just 'active-skill'
+    ; => again a component ... ?
     (str "[YELLOW]State: " (name (state-key state)) "[]"))
-  ; TODO also info, e.g. active-skill -> which skill ....
-  ; not just 'active-skill'
-  ; => again a component ... ?
 
-  (entity/tick         [[_ {:keys [state-obj]}] entity    ctx] (state/tick         state-obj entity    ctx))
+  (entity/tick [[_ {:keys [state-obj]}] _eid ctx]
+    (state/tick state-obj ctx))
+
   (entity/render-below [[_ {:keys [state-obj]}] entity* g ctx] (state/render-below state-obj entity* g ctx))
   (entity/render-above [[_ {:keys [state-obj]}] entity* g ctx] (state/render-above state-obj entity* g ctx))
   (entity/render-info  [[_ {:keys [state-obj]}] entity* g ctx] (state/render-info  state-obj entity* g ctx)))
@@ -36,23 +37,21 @@
   (state-obj [entity*]
     (-> entity* :entity/state :state-obj)))
 
-(defn- send-event! [ctx entity event params]
+(defn- send-event! [ctx eid event params]
   (if-let [{:keys [fsm
                    state-obj
-                   state-obj-constructors]} (:entity/state @entity)]
+                   state-obj-constructors]} (:entity/state @eid)]
     (let [old-state (:state fsm)
           new-fsm (fsm/fsm-event fsm event)
           new-state (:state new-fsm)]
       (if-not (= old-state new-state)
         (let [constructor (new-state state-obj-constructors)
-              new-state-obj (if params
-                              (constructor ctx @entity params)
-                              (constructor ctx @entity))]
-          [#(state/exit state-obj entity %)
-           #(state/enter new-state-obj entity %)
-           (if (:entity/player? @entity) (fn [_ctx] (state/player-enter new-state-obj)))
-           [:tx.entity/assoc-in entity [:entity/state :fsm] new-fsm]
-           [:tx.entity/assoc-in entity [:entity/state :state-obj] new-state-obj]])))))
+              new-state-obj (constructor ctx eid params)]
+          [#(state/exit state-obj %)
+           #(state/enter new-state-obj %)
+           (if (:entity/player? @eid) (fn [_ctx] (state/player-enter new-state-obj)))
+           [:tx.entity/assoc-in eid [:entity/state :fsm] new-fsm]
+           [:tx.entity/assoc-in eid [:entity/state :state-obj] new-state-obj]])))))
 
 (comment
  (require '[entity-state.fsms :as npc-state])
@@ -75,5 +74,5 @@
    ))
 
 (defcomponent :tx/event {}
-  (effect/do! [[_ entity event params] ctx]
-    (send-event! ctx entity event params)))
+  (effect/do! [[_ eid event params] ctx]
+    (send-event! ctx eid event params)))

@@ -3,7 +3,7 @@
             [api.entity :as entity]
             [api.entity-state :as state]))
 
-(defrecord PlayerMoving [movement-vector]
+(defrecord PlayerMoving [eid movement-vector]
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/walking]])
   (pause-game? [_] false)
@@ -12,20 +12,23 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ entity _ctx]
-    [[:tx.entity/set-movement entity {:direction movement-vector
-                                      :speed (entity/stat @entity :stats/movement-speed)}]])
+  (enter [_ _ctx]
+    [[:tx.entity/set-movement eid {:direction movement-vector
+                                   :speed (entity/stat @eid :stats/movement-speed)}]])
 
-  (exit [_ eid _ctx]
+  (exit [_ _ctx]
     [[:tx.entity/set-movement eid nil]])
 
-  (tick [_ entity context]
-    (let [{:keys [entity/id] :as entity*} @entity]
+  (tick [_ context]
+    (let [entity* @eid]
       (if-let [movement-vector (WASD-movement-vector context)]
-        [[:tx.entity/set-movement id {:direction movement-vector
-                                      :speed (entity/stat entity* :stats/movement-speed)}]]
-        [[:tx/event id :no-movement-input]])))
+        [[:tx.entity/set-movement eid {:direction movement-vector
+                                       :speed (entity/stat entity* :stats/movement-speed)}]]
+        [[:tx/event eid :no-movement-input]])))
 
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))
+
+(defn ->build [ctx eid movement-vector]
+  (->PlayerMoving eid movement-vector))

@@ -44,13 +44,13 @@
    [:dead]])
 
 (def ^:private player-state-obj-constructors
-  {:item-on-cursor (fn [_ctx _entity* item] (item-on-cursor/->PlayerItemOnCursor item))
-   :idle           (constantly (player-idle/->PlayerIdle))
-   :moving         (fn [_ctx _entity* v] (player-moving/->PlayerMoving v))
-   :active-skill   active-skill/->CreateWithCounter
-   :stunned        stunned/->CreateWithCounter
-   :dead           (constantly (player-dead/->PlayerDead))
-   :princess-saved (constantly (found-princess/->PlayerFoundPrincess))})
+  {:item-on-cursor item-on-cursor/->build
+   :idle           player-idle/->build
+   :moving         player-moving/->build
+   :active-skill   active-skill/->build
+   :stunned        stunned/->build
+   :dead           player-dead/->build
+   :princess-saved found-princess/->build})
 
 (defn ->player-state [initial-state]
   {:initial-state initial-state
@@ -81,12 +81,12 @@
    [:dead]])
 
 (def ^:private npc-state-obj-constructors
-  {:sleeping     (constantly (npc-sleeping/->NpcSleeping))
-   :idle         (constantly (npc-idle/->NpcIdle))
-   :moving       npc-moving/->npc-moving
-   :active-skill active-skill/->CreateWithCounter
-   :stunned      stunned/->CreateWithCounter
-   :dead         (constantly (npc-dead/->NpcDead))})
+  {:sleeping     npc-sleeping/->build
+   :idle         npc-idle/->build
+   :moving       npc-moving/->build
+   :active-skill active-skill/->build
+   :stunned      stunned/->build
+   :dead         npc-dead/->build})
 
 (defn ->npc-state [initial-state]
   {:initial-state initial-state

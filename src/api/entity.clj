@@ -65,6 +65,7 @@
 (defsystem tick [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
+; => simply body/render ???
 (defsystem render-below   [_ entity* g ctx])
 (defsystem render-default [_ entity* g ctx])
 (defsystem render-above   [_ entity* g ctx])

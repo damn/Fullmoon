@@ -132,7 +132,7 @@
        [:cursors/no-skill-selected
         (fn [] (denied "No selected skill"))]))))
 
-(defrecord PlayerIdle []
+(defrecord PlayerIdle [eid]
   state/PlayerState
   (player-enter [_])
   (pause-game? [_] true)
@@ -144,23 +144,28 @@
               (when (input/button-just-pressed? buttons/left)
                 (on-click))))))
 
-  (clicked-inventory-cell [_ {:keys [entity/id entity/inventory]} cell]
+  (clicked-inventory-cell [_ {:keys [entity/inventory]} cell]
     (when-let [item (get-in inventory cell)]
       [[:tx/sound "sounds/bfxr_takeit.wav"]
-       [:tx/event id :pickup-item item]
-       [:tx/remove-item id cell]]))
+       [:tx/event eid :pickup-item item]
+       [:tx/remove-item eid cell]]))
 
-  (clicked-skillmenu-skill [_ {:keys [entity/id entity/free-skill-points] :as entity*} skill]
+  (clicked-skillmenu-skill [_ {:keys [entity/free-skill-points] :as entity*} skill]
     (when (and (pos? free-skill-points)
                (not (entity/has-skill? entity* skill)))
-      [[:tx.entity/assoc id :entity/free-skill-points (dec free-skill-points)]
-       [:tx/add-skill id skill]]))
+      [[:tx.entity/assoc eid :entity/free-skill-points (dec free-skill-points)]
+       [:tx/add-skill eid skill]]))
   ; TODO no else case, no visible fsp..
 
   state/State
-  (enter [_ entity _ctx])
-  (exit  [_ entity context])
-  (tick [_ entity _context])
+  (enter [_ _ctx])
+  (exit  [_ context])
+  (tick [_ _context])
+
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))
+
+
+(defn ->build [ctx eid _params]
+  (->PlayerIdle eid))

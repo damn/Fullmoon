@@ -52,13 +52,9 @@
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
 (defn- handle-tx! [ctx tx]
-  (let [result (try
-                (if (fn? tx)
-                  (tx ctx)
-                  (effect/do! tx ctx))
-                (catch Throwable t
-                  (throw (ex-info "Error with transaction:" {:tx tx #_(debug-print-tx tx)}
-                                  t))))]
+  (let [result (if (fn? tx)
+                 (tx ctx)
+                 (effect/do! tx ctx))]
     (if (map? result) ; probably faster than (instance? api.context.Context result)
       (do
        (tx-happened! tx ctx)
@@ -71,7 +67,12 @@
     (reduce (fn [ctx tx]
               (if (nil? tx)
                 ctx
-                (handle-tx! ctx tx)))
+                (try
+                 (handle-tx! ctx tx)
+                 (catch Throwable t
+                   (throw (ex-info "Error with transaction"
+                                   {:tx tx #_(debug-print-tx tx)}
+                                   t))))))
             ctx
             txs))
 

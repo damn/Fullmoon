@@ -59,7 +59,7 @@
 (defn- world-item? [ctx]
   (not (mouse-on-stage-actor? ctx)))
 
-(defrecord PlayerItemOnCursor [item]
+(defrecord PlayerItemOnCursor [eid item]
   state/PlayerState
   (player-enter [_])
   (pause-game? [_] true)
@@ -72,22 +72,23 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ eid _ctx]
+  (enter [_ _ctx]
     [[:tx.context.cursor/set :cursors/hand-grab]
      [:tx.entity/assoc eid :entity/item-on-cursor item]])
 
-  (exit [_ entity ctx]
+  (exit [_ ctx]
     ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
     ; on the ground
-    (let [entity* @entity]
+    (let [entity* @eid]
       (when (:entity/item-on-cursor entity*)
         [[:tx/sound "sounds/bfxr_itemputground.wav"]
          [:tx.entity/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
-         [:tx.entity/dissoc entity :entity/item-on-cursor]])))
+         [:tx.entity/dissoc eid :entity/item-on-cursor]])))
 
-  (tick [_ entity _ctx])
+  (tick [_ _ctx])
+
   (render-below [_ entity* g ctx]
     (when (world-item? ctx)
       (g/draw-centered-image g (:property/image item) (item-place-position ctx entity*))))
@@ -101,3 +102,6 @@
       (g/draw-centered-image g
                              (:property/image (:entity/item-on-cursor player-entity*))
                              (ctx/gui-mouse-position context)))))
+
+(defn ->build [ctx eid item]
+  (->PlayerItemOnCursor eid item))

@@ -93,7 +93,7 @@
                    [1 1 1 0.5])
     (g/draw-image g icon [(- (float x) radius) y])))
 
-(defrecord ActiveSkill [skill effect-ctx counter]
+(defrecord ActiveSkill [eid skill effect-ctx counter]
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/sandclock]])
   (pause-game? [_] false)
@@ -102,16 +102,16 @@
   (clicked-skillmenu-skill [_ entity* skill])
 
   state/State
-  (enter [_ eid ctx]
+  (enter [_ ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
        [:tx.entity/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (exit [_ _eid _ctx])
+  (exit [_ _ctx])
 
-  (tick [_ eid context]
+  (tick [_ context]
     (cond
      (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
@@ -134,10 +134,11 @@
      (or (entity/stat entity* (:skill/action-time-modifier-key skill))
          1)))
 
-(defn ->CreateWithCounter [context entity* [skill effect-ctx]]
-  (->ActiveSkill skill
+(defn ->build [context eid [skill effect-ctx]]
+  (->ActiveSkill eid
+                 skill
                  effect-ctx
                  (->> skill
                       :skill/action-time
-                      (apply-action-speed-modifier entity* skill)
+                      (apply-action-speed-modifier @eid skill)
                       (->counter context))))
