@@ -352,15 +352,14 @@
                                   :close-on-escape? true
                                   :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group context props)
-        save!   (apply-context-fn window
-                                  #(api.context/update! % (attribute-widget-group->data widgets)))
-        delete! (apply-context-fn window
-                                  #(api.context/delete! % id))]
+        save!   (apply-context-fn window #(api.context/update! % (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window #(api.context/delete! % id))]
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(->text-button context "Save" save!)
                                                       (->text-button context "Delete" delete!)]])]])
-    (add-actor! window (->actor context {:act #(when (input/key-just-pressed? input.keys/enter)
-                                                 (save! %))}))
+    (add-actor! window (->actor context {:act (fn [_ctx]
+                                                (when (input/key-just-pressed? input.keys/enter)
+                                                  (swap! app/state save!)))}))
     (pack! window)
     window))
 
