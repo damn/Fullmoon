@@ -16,7 +16,7 @@
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
-(def min-solid-body-size 0.39)
+(def min-solid-body-size 0.39) ; == spider smallest creature size.
 
 (def z-orders [:z-order/on-ground
                :z-order/ground
@@ -70,7 +70,6 @@
 (defsystem render-default [_ entity* g ctx])
 (defsystem render-above   [_ entity* g ctx])
 (defsystem render-info    [_ entity* g ctx])
-(defsystem render-debug   [_ entity* g ctx])
 
 (def render-systems [render-below
                      render-default

@@ -104,9 +104,7 @@
                                           entity/render-order))
             system entity/render-systems
             entity* entities*]
-      (render-entity* system entity* g context))
-    (doseq [entity* entities*]
-      (render-entity* entity/render-debug entity* g context)))
+      (render-entity* system entity* g context)))
 
   (remove-destroyed-entities! [ctx]
     (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
