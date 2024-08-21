@@ -29,7 +29,7 @@
                :projectile/effects
                :projectile/piercing?])
      :edn-file-sort-order 8
-     :overview {:title "Projectile"
+     :overview {:title "Projectiles"
                 :columns 16
                 :image/dimensions [48 48]}
      :->text (fn [ctx {:keys [property/id]}]
