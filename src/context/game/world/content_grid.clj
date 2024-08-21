@@ -9,24 +9,24 @@
 (defrecord ContentGrid [grid cell-w cell-h]
   api.world.content-grid/ContentGrid
   (update-entity! [_ entity]
-    (let [{:keys [entity/content-cell] :as entity*} @entity
+    (let [{::keys [content-cell] :as entity*} @entity
           [x y] (entity/position entity*)
           new-cell (get grid [(int (/ x cell-w))
                               (int (/ y cell-h))])]
       (when-not (= content-cell new-cell)
         (swap! new-cell update :entities conj entity)
-        (swap! entity assoc :entity/content-cell new-cell)
+        (swap! entity assoc ::content-cell new-cell)
         (when content-cell
           (swap! content-cell update :entities disj entity)))))
 
   (remove-entity! [_ entity]
     (-> @entity
-        :entity/content-cell
+        ::content-cell
         (swap! update :entities disj entity)))
 
   (active-entities [_ center-entity*]
     (->> (let [idx (-> center-entity*
-                       :entity/content-cell
+                       ::content-cell
                        deref
                        :idx)]
            (cons idx (grid2d/get-8-neighbour-positions idx)))
