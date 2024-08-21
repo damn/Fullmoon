@@ -28,7 +28,8 @@
               [:entity/skills]
               [:entity/inventory]
 
-              [:effect/target-entity]]
+              [:effect/target-entity]
+              [:effect/target-all]]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
