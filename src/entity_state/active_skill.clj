@@ -32,7 +32,7 @@
 (defcomponent :tx/effect {}
   (effect/do! [[_ effect-ctx effects] ctx]
     (-> ctx
-        (safe-merge effect-ctx)
+        (merge effect-ctx)
         (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
@@ -127,7 +127,7 @@
   (render-info [_ entity* g ctx]
     (let [{:keys [property/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
-      (run! #(effect/render-info % g effect-ctx) effects))))
+      (run! #(effect/render-info % g (merge ctx effect-ctx)) effects))))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
