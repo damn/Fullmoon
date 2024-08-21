@@ -51,10 +51,6 @@
 
 (extend-type api.context.Context
   api.context/World
-  (potential-field-follow-to-enemy [ctx entity]
-    (potential-fields/potential-field-follow-to-enemy (ctx/world-grid ctx)
-                                                      entity))
-
   (line-of-sight? [context source* target*]
     (and (:z-order target*)  ; is even an entity which renders something
          (or (not (:entity/player? source*))

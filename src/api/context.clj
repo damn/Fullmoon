@@ -122,12 +122,14 @@
   (ray-blocked?  [_ start target])
   (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays."))
 
+(defprotocol PotentialField
+  (potential-field-follow-to-enemy [_ entity]))
+
 (defprotocol World
   (line-of-sight? [_ source* target*])
   (explored? [_ position])
   (content-grid [_])
-  (world-grid [_])
-  (potential-field-follow-to-enemy [_ entity]))
+  (world-grid [_]))
 
 (defprotocol PropertyStore
   (get-property [_ id])

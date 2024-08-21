@@ -10,7 +10,7 @@
   (:require [data.grid2d :as grid2d]
             [math.vector :as v]
             [utils.core :refer :all]
-            [api.context :refer (world-grid)]
+            [api.context :as ctx]
             [api.entity :as entity]
             [api.world.grid :refer [cached-adjacent-cells rectangle->cells]]
             [api.world.cell :as cell]))
@@ -239,7 +239,7 @@
          (= cell (first cells)))))
 
   ; TODO work with entity* !? occupied-by-other? works with entity not entity* ... not with ids ... hmmm
-(defn potential-field-follow-to-enemy [world-grid entity] ; TODO pass faction here, one less dependency.
+(defn- potential-field-follow-to-enemy [world-grid entity] ; TODO pass faction here, one less dependency.
   (let [grid world-grid
         position (:position @entity)
         own-cell (get grid (->tile position))
@@ -256,6 +256,11 @@
                     (cell/occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
        (when-not (inside-cell? grid @entity target-cell)
          (v/direction position (:middle @target-cell)))))))
+
+(extend-type api.context.Context
+  api.context/PotentialField
+  (potential-field-follow-to-enemy [ctx entity]
+    (potential-field-follow-to-enemy (ctx/world-grid ctx) entity)))
 
 ;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
 
