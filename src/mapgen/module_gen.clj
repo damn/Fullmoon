@@ -310,8 +310,8 @@
         creatures (all-properties context :properties/creature)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
-    (println "Level: " level)
-    (println "Creatures with level: " (count creatures))
+    ;(println "Level: " level)
+    ;(println "Creatures with level: " (count creatures))
     (doseq [position spawn-positions
             :when (<= (rand) spawn-rate)]
       (set-tile! layer position (creature->tile (rand-nth creatures))))))
