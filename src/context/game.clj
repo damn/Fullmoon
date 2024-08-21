@@ -30,7 +30,7 @@
 (defn start-new-game [ctx tiled-level]
   (init-game-context ctx
                      :mode :game-loop/normal
-                     :record-transactions? true
+                     :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
 (defn- start-replay-mode! [ctx]

@@ -37,7 +37,7 @@
              ]
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
-  :global-vars {*warn-on-reflection* true
+  :global-vars {;*warn-on-reflection* true
                 *print-level* 3
                 ;*assert* false
                 ;*unchecked-math* :warn-on-boxed
