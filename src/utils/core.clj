@@ -109,3 +109,7 @@
 (defn safe-merge [m1 m2]
   {:pre [(not-any? #(contains? m1 %) (keys m2))]}
   (merge m1 m2))
+
+(defn remove-one [coll item]
+  (let [[n m] (split-with (partial not= item) coll)]
+    (concat n (rest m))))

@@ -3,7 +3,7 @@
             [clojure.math :as math]
             [malli.core :as m]
             [gdx.graphics.color :as color]
-            [utils.core :refer [readable-number]]
+            [utils.core :as utils :refer [readable-number]]
             [utils.random :as random]
             [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :as component :refer [defsystem defcomponent]]
@@ -18,14 +18,10 @@
   (fn [values]
     (conj values value)))
 
-(defn- remove-one [coll item]
-  (let [[n m] (split-with (partial not= item) coll)]
-    (concat n (rest m))))
-
 (defn- remove-value [value]
   (fn [values]
     {:post [(= (count %) (dec (count values)))]}
-    (remove-one values value)))
+    (utils/remove-one values value)))
 
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers
