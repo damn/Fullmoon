@@ -21,7 +21,7 @@
   (ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)
                              :expand? true
                              :bottom? true}]]
-                    :id ::action-bar-table
+                    :id :action-bar-table
                     :cell-defaults {:pad 2}
                     :fill-parent? true}))
 
