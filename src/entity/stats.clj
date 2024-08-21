@@ -11,7 +11,8 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
-            [context.ui.config :refer (hpbar-height-px)]))
+            [context.ui.config :refer (hpbar-height-px)]
+            entity.movement))
 
 (defn- conj-value [value]
   (fn [values]
