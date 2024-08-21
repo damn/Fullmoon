@@ -1,4 +1,5 @@
 (ns gdx.files.file-handle
+  (:refer-clojure :exclude [list])
   (:import com.badlogic.gdx.files.FileHandle))
 
 (defn list       [^FileHandle file] (.list        file))
