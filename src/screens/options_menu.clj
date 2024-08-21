@@ -9,6 +9,7 @@
             [world.debug-render :as debug-render]
             context.world
             world.ecs
+            world.line-of-sight
             [widgets.background-image :refer [->background-image]]))
 
 (defprotocol StatusCheckBox
@@ -48,7 +49,7 @@
                                  #'debug-render/cell-entities?
                                  #'debug-render/potential-field-colors?
                                  #'context.world/pausing?
-                                 #'context.world/los-checks?
+                                 #'world.line-of-sight/los-checks?
                                  #'context.world/spawn-enemies?
                                  #'world.render/see-all-tiles?]))
 

@@ -18,10 +18,14 @@
   (fn [values]
     (conj values value)))
 
+(defn- remove-one [coll item]
+  (let [[n m] (split-with (partial not= item) coll)]
+    (concat n (rest m))))
+
 (defn- remove-value [value]
   (fn [values]
     {:post [(= (count %) (dec (count values)))]}
-    (vec (remove #{value} values)))) ; vec so can inspect and not 'lazy-seq'
+    (remove-one values value)))
 
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers

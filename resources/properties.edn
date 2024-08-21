@@ -2030,6 +2030,7 @@
      :items/necklace-eye
      :items/blood-glove
      :items/gold-boot
+     :items/cloth-chest
      :items/gold-chest},
    :entity/reaction-time 0.02,
    :entity/skills #{},
@@ -3797,7 +3798,9 @@
   :property/image
   {:file "images/items.png", :sub-image-bounds [240 528 48 48]},
   :property/pretty-name "Leg Royal"}
- {:item/modifiers {},
+ {:item/modifiers
+  {:modifier/hp {:op/max-inc 10},
+   :modifier/movement-speed {:op/mult 0.1}},
   :item/slot :inventory.slot/chest,
   :property/id :items/cloth-chest,
   :property/image
