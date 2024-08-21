@@ -61,7 +61,7 @@
 
 (defn- handle-throwable! [t]
   (binding [*print-level* 5]
-    (p/pretty-pst t 12))
+    (p/pretty-pst t 24))
   (reset! thrown true))
 
 (defn dev-loop []
