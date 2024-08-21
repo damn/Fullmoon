@@ -3,14 +3,14 @@
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
             [core.component :refer [defcomponent]]
-            [app :refer [current-context]]
             [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
                                          player-tooltip-text]]
             [api.graphics :as g]
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [api.effect :as effect]
             [api.entity :as entity]
-            [entity.inventory :as inventory])
+            [entity.inventory :as inventory]
+            app)
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -45,7 +45,7 @@
 (defn- draw-rect-actor ^Widget []
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{g :context/graphics :as ctx} @current-context
+      (let [{g :context/graphics :as ctx} @app/state
             g (assoc g :unit-scale 1)
             player-entity* (ctx/player-entity* ctx)
             ^Widget this this]
@@ -65,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! current-context #(ctx/do! % (ctx/player-clicked-inventory % cell))))))
+                             (swap! app/state #(ctx/do! % (ctx/player-clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

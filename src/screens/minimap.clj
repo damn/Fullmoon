@@ -5,11 +5,11 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
-            [app :refer [current-context]]
             [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
             api.graphics.camera
-            [api.screen :as screen]))
+            [api.screen :as screen]
+            app))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -35,12 +35,12 @@
                                         :right right
                                         :bottom bottom)))
 
-; TODO FIXME deref'fing current-context at each tile corner
+; TODO FIXME deref'fing app/state at each tile corner
 ; massive performance issue - probably
 ; => pass context through java tilemap render class
 ; or prepare colors before
 (defn- tile-corner-color-setter [color x y]
-  (if (explored? @current-context [x y])
+  (if (explored? @app/state [x y])
     color/white
     color/black))
 

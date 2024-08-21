@@ -45,7 +45,7 @@
 
 (comment
  (let [uid 76
-       ctx @app/current-context
+       ctx @app/state
        entity* @(api.context/get-entity ctx uid)
        effect-ctx (->effect-context ctx entity*)]
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))

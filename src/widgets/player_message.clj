@@ -4,7 +4,7 @@
             [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
             [api.effect :as effect]
-            [app :refer [current-context]]))
+            app))
 
 (defn- player-message [ctx]
   (:context.game/player-message ctx))
@@ -25,9 +25,9 @@
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (player-message ctx)]
-    (swap! current-context update :context.game/player-message update :counter + (graphics/delta-time))
+    (swap! app/state update :context.game/player-message update :counter + (graphics/delta-time))
     (when (>= counter duration-seconds)
-      (swap! current-context assoc :context.game/player-message nil))))
+      (swap! app/state assoc :context.game/player-message nil))))
 
 (defn ->build [ctx]
   (->actor ctx {:draw draw-player-message

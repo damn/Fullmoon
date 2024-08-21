@@ -250,14 +250,14 @@
 
 (defn- migrate [property-type prop-fn]
    (def validate? false)
-   (let [ctx @app/current-context]
+   (let [ctx @app/state]
      (def write-to-file? false)
      (time
       (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
         (print (:property/id prop) ", ")
-        (swap! app/current-context ctx/update! prop)))
+        (swap! app/state ctx/update! prop)))
      (def write-to-file? true)
-     (write-properties-to-file! @app/current-context)
+     (write-properties-to-file! @app/state)
      (def validate? true)
      nil))
 

@@ -10,7 +10,7 @@
             [context.screens :as screens]
             [context.graphics.views :as views]))
 
-(def current-context (atom nil))
+(def state (atom nil))
 
 (defn- ->context [context]
   (component/load! context)
@@ -20,20 +20,20 @@
   (->> context
        ->context
        screens/init-first-screen
-       (reset! current-context)))
+       (reset! state)))
 
 (defn- destroy-context []
-  (component/run-system! component/destroy @current-context))
+  (component/run-system! component/destroy @state))
 
 (defn- render-context []
-  (views/fix-viewport-update @current-context)
+  (views/fix-viewport-update @state)
   (screen-utils/clear color/black)
-  (-> @current-context
+  (-> @state
       ctx/current-screen
       screen/render!))
 
 (defn- update-viewports [w h]
-  (views/update-viewports @current-context w h))
+  (views/update-viewports @state w h))
 
 (defn- ->application [context]
   (->application-listener

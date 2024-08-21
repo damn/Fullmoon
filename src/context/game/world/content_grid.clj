@@ -46,6 +46,6 @@
            (grid2d/cells (api.context/content-grid context))))
 
  (count
-  (get-all-entities-of-current-map @app/current-context))
+  (get-all-entities-of-current-map @app/state))
 
  )

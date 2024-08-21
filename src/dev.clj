@@ -4,7 +4,7 @@
             [api.context :as ctx :refer :all]
             [api.entity :as entity]
             [api.scene2d.actor :as actor]
-            [app :refer [current-context]]))
+            app))
 
 (comment
  (defn- all-text-colors []
@@ -75,7 +75,7 @@
   )
 
 (comment
- (let [vis-image (first (group/children (stage/root (ctx/get-stage @app/current-context))))]
+ (let [vis-image (first (group/children (stage/root (ctx/get-stage @app/state))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -115,7 +115,7 @@
      #_(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
 
 (comment
- (let [ctx @current-context
+ (let [ctx @app/state
        entity (api.context/get-entity ctx 2)
        ]
 
@@ -172,7 +172,7 @@
 
 
  (require '[api.context :refer [get-entity]])
- (let [entity* @(get-entity @current-context 49)]
+ (let [entity* @(get-entity @app/state 49)]
    (:mana entity*)
    )
 
@@ -190,7 +190,7 @@
 
 
 (defn show-tree-view! [obj]
-  (let [ctx @current-context
+  (let [ctx @app/state
         object (case obj
                  :ctx ctx
                  :entity (ctx/mouseover-entity* ctx)
@@ -210,7 +210,7 @@
  )
 
 (defn- do-on-ctx! [tx-fn]
-  (swap! current-context ctx/do! [(tx-fn @current-context)]))
+  (swap! app/state ctx/do! [(tx-fn @app/state)]))
 
 (defn learn-skill! [skill-id]
   (do-on-ctx!  (fn [ctx]
@@ -289,7 +289,7 @@
  (show-tree-view! :entity)
  (show-tree-view! :tile)
 
- (let [ctx @current-context
+ (let [ctx @app/state
        pl (ctx/player-entity* ctx)
        ]
    (-> pl

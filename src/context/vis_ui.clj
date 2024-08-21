@@ -8,8 +8,8 @@
             [api.scene2d.group :as group]
             [api.scene2d.ui.table :as table]
             [api.scene2d.ui.widget-group :refer [pack!]]
-            [app :refer [current-context]]
-            context.graphics.image)
+            context.graphics.image
+            app)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
@@ -77,7 +77,7 @@
     ; handle errors gracefully in dev mode
     (stage/act! stage)
 
-    (swap! current-context #(screen/render sub-screen %))
+    (swap! app/state #(screen/render sub-screen %))
 
     ; handle errors gracefully in dev mode
     (stage/draw stage)
@@ -130,10 +130,10 @@
 (defn- ->change-listener [on-clicked]
   (proxy [ChangeListener] []
     (changed [event actor]
-      (swap! current-context #(-> %
-                                  (assoc :context/actor actor)
-                                  on-clicked
-                                  (dissoc :context/actor))))))
+      (swap! app/state #(-> %
+                            (assoc :context/actor actor)
+                            on-clicked
+                            (dissoc :context/actor))))))
 
 ; candidate for opts: :tooltip
 (defn- set-actor-opts [actor {:keys [id name visible? touchable center-position position] :as opts}]
@@ -196,11 +196,12 @@
     (proxy [Actor] []
       (draw [_batch _parent-alpha]
         (when draw
-          (let [ctx @current-context]
-            (draw (assoc (:context/graphics ctx) :unit-scale 1) ctx))))
+          (let [ctx @app/state
+                g (assoc (:context/graphics ctx) :unit-scale 1)]
+            (draw g ctx))))
       (act [_delta]
         (when act
-          (act @current-context)))))
+          (act @app/state)))))
 
   (->group [_ {:keys [actors] :as opts}]
     (let [group (proxy-ILookup Group [])]
