@@ -21,7 +21,7 @@
 
   (tick [_ context]
     (let [entity* @eid]
-      (if-let [movement-vector (WASD-movement-vector context)]
+      (if-let [movement-vector (WASD-movement-vector)]
         [[:tx.entity/set-movement eid {:direction movement-vector
                                        :speed (entity/stat entity* :stats/movement-speed)}]]
         [[:tx/event eid :no-movement-input]])))

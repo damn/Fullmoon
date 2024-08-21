@@ -137,7 +137,7 @@
   (player-enter [_])
   (pause-game? [_] true)
   (manual-tick [_ context]
-    (if-let [movement-vector (WASD-movement-vector context)]
+    (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state context @eid)]
         (cons [:tx.context.cursor/set cursor]

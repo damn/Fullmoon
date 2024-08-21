@@ -6,7 +6,7 @@
 (defn- add-vs [vs]
   (v/normalise (reduce v/add [0 0] vs)))
 
-(defn WASD-movement-vector [_ctx]
+(defn WASD-movement-vector []
   (let [r (if (input/key-pressed? input.keys/d) [1  0])
         l (if (input/key-pressed? input.keys/a) [-1 0])
         u (if (input/key-pressed? input.keys/w) [0  1])
