@@ -1,14 +1,6 @@
 (ns widgets.skill-window
   (:require [api.context :as ctx :refer [->window ->image-button get-property player-tooltip-text]]
-            [api.scene2d.actor :refer [add-tooltip!]]
-            [api.entity :as entity]
-            [api.entity-state :as state]))
-
-(defn- clicked-skill [ctx id]
-  (let [entity* (ctx/player-entity* ctx)]
-    (state/clicked-skillmenu-skill (entity/state-obj entity*)
-                                   entity*
-                                   (get-property ctx id))))
+            [api.scene2d.actor :refer [add-tooltip!]]))
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))
@@ -27,7 +19,8 @@
                                                        (:property/image (get-property context id)) ; TODO here anyway taken
                                                        ; => should probably build this window @ game start
                                                        (fn [ctx]
-                                                         (swap! @app/current-context ctx/do! (clicked-skill ctx id))))]]
+                                                         (swap! @app/current-context ctx/do!
+                                                                (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]
                       (do
                        (add-tooltip! button #(player-tooltip-text % (get-property % id)))
                        button))]

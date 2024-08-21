@@ -6,8 +6,6 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [api.context :as ctx]
-            [api.entity :as entity]
-            [api.entity-state :as state]
             [api.world.content-grid :as content-grid]
             (context.game [ecs :as ecs]
                           [mouseover-entity :as mouseover-entity]
@@ -37,24 +35,23 @@
   (input/set-processor! nil)
   (init-game-context ctx :mode :game-loop/replay))
 
+(defmulti game-loop :context.game/game-loop-mode)
+
 (def ^:private pausing? true)
 
 (defn- player-unpaused? []
   (or (input/key-just-pressed? input.keys/p)
       (input/key-pressed?      input.keys/space)))
 
-(defn- player-manual-state-tick [ctx]
-  (let [entity* (ctx/player-entity* ctx)]
-    (state/manual-tick (entity/state-obj entity*) entity* ctx)))
-
-(defmulti game-loop :context.game/game-loop-mode)
+(defn- game-paused? [ctx]
+  (or (::tick-error ctx)
+      (and pausing?
+           (ctx/player-state-pause-game? ctx)
+           (not (player-unpaused?)))))
 
 (defmethod game-loop :game-loop/normal [ctx active-entities]
-  (let [ctx (ctx/do! ctx (player-manual-state-tick ctx))
-        paused? (or (::tick-error ctx)
-                    (and pausing?
-                         (state/pause-game? (entity/state-obj (ctx/player-entity* ctx)))
-                         (not (player-unpaused?))))
+  (let [ctx (ctx/do! ctx (ctx/player-update-state ctx))
+        paused? (game-paused? ctx)
         ctx (assoc ctx :context.game/paused? paused?)
         ctx (ctx/do! ctx (mouseover-entity/update! ctx)) ; this do always so can get debug info even when game not running
         ctx (if paused?

@@ -14,7 +14,11 @@
 
 (defprotocol PlayerEntity
   (player-entity [_])
-  (player-entity* [_]))
+  (player-entity* [_])
+  (player-update-state [_])
+  (player-state-pause-game? [_])
+  (player-clicked-inventory [_ cell])
+  (player-clicked-skillmenu [_ skill]))
 
 (defprotocol ApplicationScreens
   (current-screen-key [_])

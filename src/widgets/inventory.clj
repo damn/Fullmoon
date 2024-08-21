@@ -10,7 +10,6 @@
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.entity-state :as state]
             [entity.inventory :as inventory])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)
@@ -57,10 +56,6 @@
                         (mouseover? this (ctx/gui-mouse-position ctx))
                         (actor/id (actor/parent this)))))))
 
-(defn- clicked-cell [ctx cell]
-  (let [entity* (ctx/player-entity* ctx)]
-    (state/clicked-inventory-cell (entity/state-obj entity*) entity* cell)))
-
 (defn- ->cell [ctx slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
         image-widget (->image-widget ctx (slot->background slot) {:id :image})
@@ -70,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! current-context #(ctx/do! % (clicked-cell % cell))))))
+                             (swap! current-context #(ctx/do! % (ctx/player-clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

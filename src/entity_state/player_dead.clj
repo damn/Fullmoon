@@ -6,9 +6,9 @@
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/black-x]])
   (pause-game? [_] true)
-  (manual-tick [_ entity* context])
-  (clicked-inventory-cell [_ entity* cell])
-  (clicked-skillmenu-skill [_ entity* skill])
+  (manual-tick [_ context])
+  (clicked-inventory-cell [_ cell])
+  (clicked-skillmenu-skill [_ skill])
 
   state/State
   (enter [_ _ctx]

@@ -8,9 +8,9 @@
   state/PlayerState
   (player-enter [_] [[:tx.context.cursor/set :cursors/denied]])
   (pause-game? [_] false)
-  (manual-tick [_ _entity* context])
-  (clicked-inventory-cell [_ entity* cell])
-  (clicked-skillmenu-skill [_ entity* skill])
+  (manual-tick [_ context])
+  (clicked-inventory-cell [_ cell])
+  (clicked-skillmenu-skill [_ skill])
 
   state/State
   (enter [_ _ctx])

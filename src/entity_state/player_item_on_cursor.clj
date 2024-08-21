@@ -63,13 +63,16 @@
   state/PlayerState
   (player-enter [_])
   (pause-game? [_] true)
-  (manual-tick [_ entity* context]
+
+  (manual-tick [_ context]
     (when (and (input/button-just-pressed? buttons/left)
                (world-item? context))
-      [[:tx/event (:entity/id entity*) :drop-item]]))
-  (clicked-inventory-cell [_ entity* cell]
-    (clicked-cell entity* cell))
-  (clicked-skillmenu-skill [_ entity* skill])
+      [[:tx/event eid :drop-item]]))
+
+  (clicked-inventory-cell [_ cell]
+    (clicked-cell @eid cell))
+
+  (clicked-skillmenu-skill [_ skill])
 
   state/State
   (enter [_ _ctx]

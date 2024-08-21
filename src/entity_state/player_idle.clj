@@ -136,26 +136,28 @@
   state/PlayerState
   (player-enter [_])
   (pause-game? [_] true)
-  (manual-tick [_ entity* context]
+  (manual-tick [_ context]
     (if-let [movement-vector (WASD-movement-vector context)]
-      [[:tx/event (:entity/id entity*) :movement-input movement-vector]]
-      (let [[cursor on-click] (->interaction-state context entity*)]
+      [[:tx/event eid :movement-input movement-vector]]
+      (let [[cursor on-click] (->interaction-state context @eid)]
         (cons [:tx.context.cursor/set cursor]
               (when (input/button-just-pressed? buttons/left)
                 (on-click))))))
 
-  (clicked-inventory-cell [_ {:keys [entity/inventory]} cell]
-    (when-let [item (get-in inventory cell)]
+  (clicked-inventory-cell [_ cell]
+    ; TODO no else case
+    (when-let [item (get-in (:entity/inventory @eid) cell)]
       [[:tx/sound "sounds/bfxr_takeit.wav"]
        [:tx/event eid :pickup-item item]
        [:tx/remove-item eid cell]]))
 
-  (clicked-skillmenu-skill [_ {:keys [entity/free-skill-points] :as entity*} skill]
-    (when (and (pos? free-skill-points)
-               (not (entity/has-skill? entity* skill)))
-      [[:tx.entity/assoc eid :entity/free-skill-points (dec free-skill-points)]
-       [:tx/add-skill eid skill]]))
-  ; TODO no else case, no visible fsp..
+  (clicked-skillmenu-skill [_ skill]
+    (let [free-skill-points (:entity/free-skill-points @eid)]
+      ; TODO no else case, no visible free-skill-points
+      (when (and (pos? free-skill-points)
+                 (not (entity/has-skill? @eid skill)))
+        [[:tx.entity/assoc eid :entity/free-skill-points (dec free-skill-points)]
+         [:tx/add-skill eid skill]])))
 
   state/State
   (enter [_ _ctx])
