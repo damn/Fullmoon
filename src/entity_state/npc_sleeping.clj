@@ -17,7 +17,7 @@
     ; TODO make state = alerted, and shout at the end of that !
     ; then nice alert '!' and different entities different alert time
     [[:tx/add-text-effect entity "[WHITE]!"]
-     [:tx.entity/shout (entity/position @entity) (:entity/faction @entity) 0.2]])
+     [:tx.entity/shout (:position @entity) (:entity/faction @entity) 0.2]])
 
   (tick [_ entity context]
     (let [entity* @entity
@@ -28,7 +28,7 @@
 
   (render-below [_ entity* g ctx])
   (render-above [_ entity* g _ctx]
-    (let [[x y] (entity/position entity*)]
+    (let [[x y] (:position entity*)]
       (g/draw-text g
                    {:text "zzz"
                     :x x

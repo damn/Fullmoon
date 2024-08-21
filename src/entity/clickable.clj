@@ -9,7 +9,7 @@
                           g
                           _ctx]
     (when (and mouseover? text)
-      (let [[x y] (entity/position entity*)]
+      (let [[x y] (:position entity*)]
         (g/draw-text g
                      {:text text
                       :x x

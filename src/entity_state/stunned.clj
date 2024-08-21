@@ -20,7 +20,7 @@
       [[:tx/event eid :effect-wears-off]]))
 
   (render-below [_ entity* g _ctx]
-    (g/draw-circle g (entity/position entity*) 0.5 [1 1 1 0.6]))
+    (g/draw-circle g (:position entity*) 0.5 [1 1 1 0.6]))
 
   (render-above [_ entity* g ctx])
   (render-info  [_ entity* g ctx]))

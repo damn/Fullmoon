@@ -371,7 +371,7 @@
                        _ctx]
     (when-let [hp (entity/stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
-            [x y] (entity/position entity*)]
+            [x y] (:position entity*)]
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
@@ -519,7 +519,7 @@
              dmg-amount (->pos-int (->effective-value dmg-amount :modifier/damage-receive (:entity/stats target*)))
              ;_ (println "effective dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
-         [[:tx.entity/audiovisual (entity/position target*) :audiovisuals/damage]
+         [[:tx.entity/audiovisual (:position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
           [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
           [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))

@@ -8,4 +8,4 @@
     (g/draw-rotated-centered-image g
                                    image
                                    (or (:rotation-angle entity*) 0)
-                                   (entity/position entity*))))
+                                   (:position entity*))))

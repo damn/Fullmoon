@@ -10,7 +10,7 @@
   api.world.content-grid/ContentGrid
   (update-entity! [_ entity]
     (let [{::keys [content-cell] :as entity*} @entity
-          [x y] (entity/position entity*)
+          [x y] (:position entity*)
           new-cell (get grid [(int (/ x cell-w))
                               (int (/ y cell-h))])]
       (when-not (= content-cell new-cell)

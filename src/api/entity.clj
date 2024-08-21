@@ -79,17 +79,13 @@
                      render-above
                      render-info])
 
-(defn position    [entity*] (:position    entity*))
-(defn left-bottom [entity*] (:left-bottom entity*))
-(defn width       [entity*] (:width       entity*))
-(defn height      [entity*] (:height      entity*))
-(defn z-order     [entity*] (:z-order     entity*))
-
 (defn tile [entity*]
   (utils/->tile (:position entity*)))
 
 (defn direction [entity* other-entity*]
   (v/direction (:position entity*) (:position other-entity*)))
+
+; TODO add v/distance ...
 
 (defprotocol State
   (state [_])

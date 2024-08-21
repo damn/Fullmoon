@@ -51,18 +51,19 @@
   (effect/do! [[_ entity] ctx]
     [[:tx.entity/assoc entity :entity/destroyed? true]]))
 
-(defn- draw-body-rect [g entity*]
-  (let [[x y] (entity/left-bottom entity*)]
-    (g/draw-rectangle g x y (entity/width entity*) (entity/height entity*) color/red)))
+(def ^:private show-body-bounds false)
 
-; TODO for creates lazy seqs
-; how else to do it ?
+(defn- draw-body-rect [g entity* color]
+  (let [[x y] (:left-bottom entity*)]
+    (g/draw-rectangle g x y (:width entity*) (:height entity*) color)))
 
 (defn- render-entity* [system entity* g ctx]
   (try
+   (when show-body-bounds
+     (draw-body-rect g entity* (if (:solid? entity*) color/white color/gray)))
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
-     (draw-body-rect g entity*)
+     (draw-body-rect g entity* color/red)
      (p/pretty-pst t 12)
      ; cannot pass it to main game context
      ; as render loop is not reducing over ctx
@@ -98,7 +99,7 @@
 
   (render-entities! [context g entities*]
     (doseq [entities* (map second
-                           (sort-by-order (group-by entity/z-order entities*)
+                           (sort-by-order (group-by :z-order entities*)
                                           first
                                           entity/render-order))
             system entity/render-systems

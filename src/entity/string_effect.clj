@@ -12,7 +12,7 @@
       [[:tx.entity/dissoc eid k]]))
 
   (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
-    (let [[x y] (entity/position entity*)]
+    (let [[x y] (:position entity*)]
       (g/draw-text g
                    {:text text
                     :x x

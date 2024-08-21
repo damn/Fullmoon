@@ -36,7 +36,7 @@
                                        (geom/collides? entity* @%))
                                  (cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(cell/blocked? % (entity/z-order entity*)) cells*))
+                       (some #(cell/blocked? % (:z-order entity*)) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
          [:tx.entity/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...

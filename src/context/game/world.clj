@@ -20,7 +20,7 @@
             [mapgen.movement-property :refer (movement-property)]))
 
 (defn- on-screen? [entity* ctx]
-  (let [[x y] (entity/position entity*)
+  (let [[x y] (:position entity*)
         x (float x)
         y (float y)
         [cx cy] (camera/position (ctx/world-camera ctx))
@@ -65,11 +65,11 @@
     (context.game.world.render/render-map ctx (camera/position (ctx/world-camera ctx))))
 
   (line-of-sight? [context source* target*]
-    (and (entity/z-order target*)  ; is even an entity which renders something
+    (and (:z-order target*)  ; is even an entity which renders something
          (or (not (:entity/player? source*))
              (on-screen? target* context))
          (not (and los-checks?
-                   (ray-blocked? context (entity/position source*) (entity/position target*))))))
+                   (ray-blocked? context (:position source*) (:position target*))))))
 
   (ray-blocked? [{:keys [context.game/world]} start target]
     (let [{:keys [cell-blocked-boolean-array width height]} world]
@@ -94,6 +94,7 @@
 (defcomponent :tx/add-to-world {}
   (effect/do! [[_ entity] ctx]
     (content-grid/update-entity! (content-grid ctx) entity)
+    ; hmm
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (world-grid/add-entity! (world-grid ctx) entity)
     ctx))

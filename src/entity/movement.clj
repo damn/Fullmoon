@@ -2,13 +2,10 @@
   (:require [malli.core :as m]
             [math.vector :as v]
             [math.geom :as geom]
-            [core.component :as component :refer [defcomponent]]
-            [core.data :as data]
+            [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.entity :as entity]
             [api.effect :as effect]
-            [api.graphics :as g]
-            [gdx.graphics.color :as color]
             [api.world.cell :as cell]
             [api.world.grid :as world-grid]
             [context.game.time :refer [max-delta-time]]))
@@ -73,22 +70,7 @@
         (try-move grid body (assoc movement :direction [xdir 0]))
         (try-move grid body (assoc movement :direction [0 ydir])))))
 
-(def ^:private show-body-bounds false)
-
-(defn- draw-bounds [g {[x y] :left-bottom :keys [width height solid?]}]
-  (when show-body-bounds
-    (g/draw-rectangle g x y width height (if solid? color/white color/gray))))
-
 (defcomponent :entity/movement {}
-
-  ;TODO validate at component create?
-  ; call component create on assoc ...
-  ; check if we still need assoc-in/dissoc-in
-
-  ; TODO where to put this?
-  #_(entity/render-debug [_ entity* g _ctx]
-    (draw-bounds g entity*))
-
   (entity/tick [[_ {:keys [direction speed rotate-in-movement-direction?] :as movement}] eid ctx]
     (assert (m/validate movement-speed-schema* speed))
     (assert (or (zero? (v/length direction))

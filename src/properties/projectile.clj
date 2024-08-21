@@ -64,7 +64,7 @@
                                          :piercing? piercing?}}]])))
 
 (defn- start-point [entity* direction size]
-  (v/add (entity/position entity*)
+  (v/add (:position entity*)
          (v/scale direction
                   (+ (:radius entity*) size 0.1))))
 
@@ -82,8 +82,8 @@
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
   (effect/useful? [[_ projectile-id] {:keys [effect/source effect/target] :as ctx}]
-    (let [source-p (entity/position @source)
-          target-p (entity/position @target)
+    (let [source-p (:position @source)
+          target-p (:position @target)
           prop (ctx/get-property ctx projectile-id)]
       (and (not (ctx/path-blocked? ctx ; TODO test
                                    source-p

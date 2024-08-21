@@ -8,15 +8,15 @@
             [api.entity :as entity]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
-  (< (- (float (v/distance (entity/position entity*)
-                           (entity/position target*)))
+  (< (- (float (v/distance (:position entity*)
+                           (:position target*)))
         (float (:radius entity*))
         (float (:radius target*)))
      (float maxrange)))
 
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
-  (v/add (entity/position entity*)
+  (v/add (:position entity*)
          (v/scale (entity/direction entity* target*)
                   (:radius entity*))))
 
@@ -59,7 +59,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
       (if (in-range? source* target* maxrange)
         (cons
          [:tx.entity/line-render {:start (start-point source* target*)
-                                  :end (entity/position target*)
+                                  :end (:position target*)
                                   :duration 0.05
                                   :color [1 0 0 0.75]
                                   :thick? true}]

@@ -60,8 +60,8 @@
                           :cursors/princess)))
 
 (defn- ->clickable-mouseover-entity-interaction [ctx player-entity* mouseover-entity*]
-  (if (and (< (v/distance (entity/position player-entity*)
-                          (entity/position mouseover-entity*))
+  (if (and (< (v/distance (:position player-entity*)
+                          (:position mouseover-entity*))
               (:entity/click-distance-tiles player-entity*)))
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
@@ -83,13 +83,13 @@
 
 (defn- ->effect-context [ctx entity*]
   (let [target* (ctx/mouseover-entity* ctx)
-        target-position (or (and target* (entity/position target*))
+        target-position (or (and target* (:position target*))
                             (ctx/world-mouse-position ctx))]
     (ctx/map->Context
      {:effect/source (:entity/id entity*)
       :effect/target (:entity/id target*)
       :effect/target-position target-position
-      :effect/direction (v/direction (entity/position entity*) target-position)})))
+      :effect/direction (v/direction (:position entity*) target-position)})))
 
 (defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (ctx/mouseover-entity* context)]

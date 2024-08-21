@@ -221,7 +221,7 @@
 (defn create-item! [item-id]
   (do-on-ctx!  (fn [ctx]
                  [:tx.entity/item
-                  (entity/position (ctx/player-entity* ctx))
+                  (:position (ctx/player-entity* ctx))
                   (ctx/get-property ctx item-id)])))
 
 

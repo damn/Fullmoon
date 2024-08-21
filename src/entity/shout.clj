@@ -10,7 +10,7 @@
 ; TODO gets itself also
   ; == faction/friendly? e1 e2 ( entity*/friendly? e*1 e*2) ?
 (defn- get-friendly-entities-in-line-of-sight [context entity* radius]
-  (->> {:position (entity/position entity*)
+  (->> {:position (:position entity*)
         :radius radius}
        (circle->entities (world-grid context))
        (map deref)

@@ -14,7 +14,7 @@
     (let [player-entity* (ctx/player-entity* ctx)]
       (g/with-shape-line-width g 3
         #(g/draw-ellipse g
-                         (entity/position entity*)
+                         (:position entity*)
                          (:half-width entity*)
                          (:half-height entity*)
                          (cond (= faction (entity/enemy-faction player-entity*))
