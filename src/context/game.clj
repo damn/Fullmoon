@@ -48,25 +48,34 @@
                                 (not (player-unpaused?))))))
 
 (extend-type api.context.Context
-  Game
+  api.context/Game
   (game-paused? [ctx]
     (::paused? ctx)))
 
+(defn- active-entities [ctx]
+  (content-grid/active-entities (ctx/content-grid ctx)
+                                (ctx/player-entity* ctx)))
+
+(defn- update-world [ctx]
+  (let [ctx (time-component/update-time ctx)
+        active-entities (active-entities ctx)]
+    (ctx/update-potential-fields! ctx active-entities)
+    (try (ctx/tick-entities! ctx active-entities)
+         (catch Throwable t
+           (p/pretty-pst t 12)
+           (assoc ctx ::tick-error t)))))
+
 (defmulti game-loop :context.game/game-loop-mode)
 
-(defmethod game-loop :game-loop/normal [ctx active-entities]
-  (let [ctx (ctx/do! ctx (ctx/player-update-state ctx))
-        ctx (update-game-paused ctx)
-        ctx (ctx/do! ctx (mouseover-entity/update! ctx)) ; this do always so can get debug info even when game not running
-        ctx (if (ctx/game-paused? ctx)
-              ctx
-              (let [ctx (time-component/update-time ctx)]
-                (ctx/update-potential-fields! ctx active-entities)
-                (try (ctx/tick-entities! ctx active-entities)
-                     (catch Throwable t
-                       (p/pretty-pst t 12)
-                       (assoc ctx ::tick-error t)))))]
-    (ctx/do! ctx (ctx/remove-destroyed-entities! ctx)))) ; do not pause this as for example pickup item, should be destroyed.
+(defmethod game-loop :game-loop/normal [ctx]
+  (ctx/do! ctx [ctx/player-update-state
+                mouseover-entity/update! ; this do always so can get debug info even when game not running
+                update-game-paused
+                #(if (ctx/game-paused? %)
+                   %
+                   (update-world %))
+                ctx/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                ]))
 
 (defn- replay-frame! [ctx]
   (let [frame-number (:context.game/logic-frame ctx)
@@ -78,7 +87,7 @@
 
 (def ^:private replay-speed 2)
 
-(defmethod game-loop :game-loop/replay [ctx _active-entities]
+(defmethod game-loop :game-loop/replay [ctx]
   (reduce (fn [ctx _] (replay-frame! ctx))
           ctx
           (range replay-speed)))
@@ -108,7 +117,7 @@
         :else
         context))
 
-(defn- render-game! [ctx active-entities*]
+(defn- render-game! [ctx]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
     (ctx/render-map ctx)
@@ -117,19 +126,17 @@
                              (debug-render/before-entities ctx g)
                              (ctx/render-entities! ctx
                                                    g
-                                                   (->> active-entities*
+                                                   (->> (active-entities ctx)
+                                                        (map deref)
                                                         (filter :z-order)
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))
                              (debug-render/after-entities ctx g)))))
 
-
 (defn render [ctx]
-  (let [active-entities (content-grid/active-entities (ctx/content-grid ctx)
-                                                      (ctx/player-entity* ctx))]
-    (render-game! ctx (map deref active-entities))
-    (-> ctx
-        (game-loop active-entities)
-        check-key-input))) ; not sure I need this @ replay mode ??
+  (render-game! ctx)
+  (-> ctx
+      game-loop
+      check-key-input)) ; not sure I need this @ replay mode ??
 
 (comment
 
