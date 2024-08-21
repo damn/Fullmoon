@@ -69,20 +69,13 @@
     (input/set-processor! nil)
     (screen/hide sub-screen context))
 
-  (render! [_]
+  (render! [_ app-state]
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
-
-    ; handle errors gracefully in dev mode
     (stage/act! stage)
-
-    (swap! app/state #(screen/render sub-screen %))
-
-    ; handle errors gracefully in dev mode
-    (stage/draw stage)
-
-    ))
+    (swap! app-state #(screen/render sub-screen %))
+    (stage/draw stage)))
 
 (defn- find-actor-with-id [^Group group id]
   (let [actors (.getChildren group)

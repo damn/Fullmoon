@@ -30,7 +30,7 @@
   (screen-utils/clear color/black)
   (-> @state
       ctx/current-screen
-      screen/render!))
+      (screen/render! state)))
 
 (defn- update-viewports [w h]
   (views/update-viewports @state w h))
