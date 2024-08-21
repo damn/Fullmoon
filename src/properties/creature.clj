@@ -1,6 +1,6 @@
 (ns properties.creature
   (:require [clojure.string :as str]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
             [api.effect :as effect]
