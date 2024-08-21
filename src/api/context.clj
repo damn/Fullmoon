@@ -125,8 +125,10 @@
 (defprotocol PotentialField
   (potential-field-follow-to-enemy [_ entity]))
 
+(defprotocol WorldLineOfSight
+  (line-of-sight? [_ source* target*]))
+
 (defprotocol World
-  (line-of-sight? [_ source* target*])
   (explored? [_ position])
   (content-grid [_])
   (world-grid [_]))

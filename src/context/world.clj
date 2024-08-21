@@ -2,7 +2,6 @@
   (:require [clj-commons.pretty.repl :as p]
 
             [gdx.app :as app]
-            [gdx.graphics.camera :as camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
@@ -22,6 +21,7 @@
             [api.world.cell :as cell]
 
             (world grid
+                   line-of-sight
                    content-grid
                    [potential-fields :as potential-fields]
                    render
@@ -34,30 +34,8 @@
 
             [mapgen.movement-property :refer (movement-property)]))
 
-(defn- on-screen? [entity* ctx]
-  (let [[x y] (:position entity*)
-        x (float x)
-        y (float y)
-        [cx cy] (camera/position (ctx/world-camera ctx))
-        px (float cx)
-        py (float cy)
-        xdist (Math/abs (- x px))
-        ydist (Math/abs (- y py))]
-    (and
-     (<= xdist (inc (/ (float (ctx/world-viewport-width ctx))  2)))
-     (<= ydist (inc (/ (float (ctx/world-viewport-height ctx)) 2))))))
-
-(def ^:private los-checks? true)
-
 (extend-type api.context.Context
   api.context/World
-  (line-of-sight? [context source* target*]
-    (and (:z-order target*)  ; is even an entity which renders something
-         (or (not (:entity/player? source*))
-             (on-screen? target* context))
-         (not (and los-checks?
-                   (ctx/ray-blocked? context (:position source*) (:position target*))))))
-
   ; TODO put tile param
   (explored? [ctx position]
     (get @(:world/explored-tile-corners ctx) position))
