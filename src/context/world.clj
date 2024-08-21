@@ -33,7 +33,7 @@
                    [time :as time-component]
                    [effect-handler :as tx-handler]
                    [widgets :as widgets]
-                   [debug-render :as debug-render])
+                   )
 
             [mapgen.movement-property :refer (movement-property)]))
 
@@ -237,7 +237,7 @@
   (game-paused? [ctx]
     (::paused? ctx)))
 
-(defn- active-entities [ctx]
+(defn active-entities [ctx]
   (content-grid/active-entities (ctx/content-grid ctx)
                                 (ctx/player-entity* ctx)))
 
@@ -276,21 +276,6 @@
   (reduce (fn [ctx _] (replay-frame! ctx))
           ctx
           (range replay-speed)))
-
-(defn render! [ctx]
-  (let [player-entity* (ctx/player-entity* ctx)]
-    (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
-    (world.render/render-map ctx (camera/position (ctx/world-camera ctx)))
-    (ctx/render-world-view ctx
-                           (fn [g]
-                             (debug-render/before-entities ctx g)
-                             (ctx/render-entities! ctx
-                                                   g
-                                                   (->> (active-entities ctx)
-                                                        (map deref)
-                                                        (filter :z-order)
-                                                        (filter #(ctx/line-of-sight? ctx player-entity* %))))
-                             (debug-render/after-entities ctx g)))))
 
 (comment
 

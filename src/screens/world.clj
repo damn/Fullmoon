@@ -1,12 +1,30 @@
 (ns screens.world
-  (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
+  (:require [gdx.graphics.camera :as camera]
+            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.screen :as screen :refer [Screen]]
             [context.world :as world]
-            [world.widgets :as widgets]))
+            (world [debug-render :as debug-render]
+                   render
+                   [widgets :as widgets])))
+
+(defn- render-world! [ctx]
+  (let [player-entity* (ctx/player-entity* ctx)]
+    (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
+    (world.render/render-map ctx (camera/position (ctx/world-camera ctx)))
+    (ctx/render-world-view ctx
+                           (fn [g]
+                             (debug-render/before-entities ctx g)
+                             (ctx/render-entities! ctx
+                                                   g
+                                                   (->> (world/active-entities ctx)
+                                                        (map deref)
+                                                        (filter :z-order)
+                                                        (filter #(ctx/line-of-sight? ctx player-entity* %))))
+                             (debug-render/after-entities ctx g)))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
@@ -39,7 +57,7 @@
   (hide [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
   (render [_ ctx]
-    (world/render! ctx)
+    (render-world! ctx)
     (-> ctx
         world/game-loop
         check-key-input)))
