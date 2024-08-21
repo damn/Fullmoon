@@ -64,7 +64,6 @@
 (defsystem tick [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
-; => simply body/render ???
 (defsystem render-below   [_ entity* g ctx])
 (defsystem render-default [_ entity* g ctx])
 (defsystem render-above   [_ entity* g ctx])
@@ -80,8 +79,6 @@
 
 (defn direction [entity* other-entity*]
   (v/direction (:position entity*) (:position other-entity*)))
-
-; TODO add v/distance ...
 
 (defprotocol State
   (state [_])

@@ -5,7 +5,7 @@
             [api.world.grid :refer [rectangle->cells circle->cells]]
             [api.world.cell :as cell :refer [cells->entities]]))
 
-(defn- rectangle->tiles ; to math geom
+(defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]
   {:pre [left-bottom width height]}
   (let [x       (float x)
@@ -18,7 +18,7 @@
         t (int (+ y height))]
     (set
      (if (or (> width 1) (> height 1))
-       (for [x (range l (inc r)) ; TODO lazy seq?!
+       (for [x (range l (inc r))
              y (range b (inc t))]
          [x y])
        [[l b] [l t] [r b] [r t]]))))
@@ -100,15 +100,12 @@
       (remove-from-occupied-cells! entity)
       (set-occupied-cells! grid entity))))
 
-; TODO separate ns?
-
 (defrecord Cell [position
-                 middle ; TODO needed ? only used @ potential-field-follow-to-enemy -> can remove it.
+                 middle ; only used @ potential-field-follow-to-enemy -> can remove it.
                  adjacent-cells
                  movement
                  entities
                  occupied
-                 ; TODO potential-field ? PotentialFieldCell ?
                  good
                  evil]
   api.world.cell/Cell
@@ -128,10 +125,6 @@
     (assert (get occupied entity))
     (update this :occupied disj entity))
 
-  ; * add z-order/on-ground here / z-order/effect
-  ; * check valid positions @ add-entity
-  ; * use namespaced keyword allowed-movement/none / allowed-movement/air -- flying
-  ; allowed-movement/all
   (blocked? [_ z-order]
     (case movement
       :none true
@@ -141,8 +134,7 @@
       :all false))
 
   (occupied-by-other? [_ entity]
-    ; contains?
-    (some #(not= % entity) occupied))
+    (some #(not= % entity) occupied)) ; contains? faster?
 
   (nearest-entity [this faction]
     (-> this faction :entity))
@@ -150,7 +142,6 @@
   (nearest-entity-distance [this faction]
     (-> this faction :distance)))
 
-; TODO I dont understand why black nil cells are working and not throwing excp.
 (defn- create-cell [position movement]
   {:pre [(#{:none :air :all} movement)]}
   (map->Cell

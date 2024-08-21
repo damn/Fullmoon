@@ -13,7 +13,7 @@
         right-x  (apply max (map first  frustum-points))
         bottom-y (apply min (map second frustum-points))
         top-y    (apply max (map second frustum-points))]
-    [left-x right-x bottom-y top-y])) ; TODO need only x,y , w/h is viewport-width/height ?
+    [left-x right-x bottom-y top-y]))
 
 (defn visible-tiles [camera]
   (let [[left-x right-x bottom-y top-y] (frustum camera)]
@@ -21,7 +21,6 @@
            y (range (int bottom-y) (+ 2 (int top-y)))]
       [x y])))
 
-; could do only with left-bottom and top-right points
 (defn calculate-zoom
   "Calculates the zoom value for camera to see all the 4 points."
   [camera & {:keys [left top right bottom]}]

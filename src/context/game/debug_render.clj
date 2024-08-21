@@ -7,8 +7,6 @@
             [api.graphics.camera :as camera]
             [api.world.grid :refer [circle->cells]]))
 
-; TODO make check-buttons with debug-window or MENU top screen is good for debug I think
-
 (defn- geom-test [g ctx]
   (let [position (ctx/world-mouse-position g)
         grid (world-grid ctx)
@@ -50,30 +48,12 @@
       (when (and cell-occupied? (seq (:occupied cell*)))
         (g/draw-filled-rectangle g x y 1 1 [0 0 1 0.6]))
 
-      #_(g/draw-rectangle g (+ x 0.1) (+ y 0.1) 0.8 0.8
-                          (if blocked?
-                            color/red
-                            color/green))
-
       (when potential-field-colors?
         (let [faction :good
               {:keys [distance entity]} (faction cell*)]
           (when distance
             (let [ratio (/ distance (@#'potential-field/factions-iterations faction))]
-              (g/draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6])))))
-      #_(@#'g/draw-string x y (str distance) 1)
-      #_(when (:monster @cell)
-          (@#'g/draw-string x y (str (:id @(:monster @cell))) 1)))))
-
-(comment
- (let [ctx @app/current-context
-       [x y] (->tile (ctx/world-mouse-position ctx))
-       cell* @((world-grid ctx) [x y])]
-   (clojure.pprint/pprint
-    cell*)
-
-   ; TODO occupied nil !
-   ))
+              (g/draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
 (def ^:private highlight-blocked-cell? true)
 

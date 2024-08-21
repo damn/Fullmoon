@@ -38,13 +38,11 @@
                   :else %)
                 tx)))
 
-; TODO rename everything to effect
-
 (defn- tx-happened! [tx ctx]
   (when (and
          (not (fn? tx))
          (not= :tx.context.cursor/set (first tx)))
-    (let [logic-frame (ctx/logic-frame ctx)] ; TODO only if debug or record deref this...
+    (let [logic-frame (ctx/logic-frame ctx)] ; only if debug or record deref this?
       (when debug-print-txs?
         (println logic-frame "." (debug-print-tx tx)))
       (when (and record-txs?

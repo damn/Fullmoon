@@ -75,8 +75,8 @@
 (defn- add-field-data! [cell faction distance entity]
   (swap! cell assoc faction (->FieldData distance entity)))
 
-(defn- remove-field-data! [cell faction]  ; don't dissoc - will lose the Cell record type
-  (swap! cell assoc faction nil))
+(defn- remove-field-data! [cell faction]
+  (swap! cell assoc faction nil)) ; don't dissoc - will lose the Cell record type
 
 (defn- cell-blocked? [cell*]
   (cell/blocked? cell* :z-order/ground))

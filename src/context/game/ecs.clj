@@ -64,11 +64,7 @@
    (dorun (component/apply-system system entity* g ctx))
    (catch Throwable t
      (draw-body-rect g entity* color/red)
-     (p/pretty-pst t 12)
-     ; cannot pass it to main game context
-     ; as render loop is not reducing over ctx
-     #_(throw (ex-info "" (select-keys entity* [:entity/uid])))
-     )))
+     (p/pretty-pst t 12))))
 
 (defn- tick-system [ctx entity]
   (try

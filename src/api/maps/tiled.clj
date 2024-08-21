@@ -1,25 +1,22 @@
 (ns api.maps.tiled
   (:import com.badlogic.gdx.maps.MapLayer))
 
-; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer -> protocol docstring.
+; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer
 (defprotocol HasProperties
   (properties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
-  ; just 'property' ?
   (get-property [_ key] "Pass keyword key, looks up in properties."))
 
 (defprotocol TiledMap
   (width [_])
   (height [_])
   (layers [_] "Returns instance of com.badlogic.gdx.maps.MapLayers of the tiledmap")
-  ; these 3 are actually MapLayers object, separate.=> wrong abstraction ?
   (layer-index [_ layer]
                "Returns nil or the integer index of the layer.
                Layer can be keyword or an instance of TiledMapTileLayer.")
   (get-layer [_ layer-name]
-             "Returns the layer with name (string).") ; keyword ?
+             "Returns the layer with name (string).")
   (remove-layer! [_ layer]
                  "Removes the layer, layer can be keyword or an actual layer object.")
-  ; cell is called on layer .. ? => wrong abstraction ?
   (cell-at [_ layer position] "Layer can be keyword or layer object.
                               Position vector [x y].
                               If the layer is part of tiledmap, returns the TiledMapTileLayer$Cell at position.")

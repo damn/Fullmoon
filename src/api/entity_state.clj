@@ -11,7 +11,6 @@
 (defprotocol PlayerState
   (player-enter [_])
   (pause-game? [_])
-  ; TODO entity* ...
   (manual-tick [_ entity* ctx])
   (clicked-inventory-cell [_ entity* cell])
   (clicked-skillmenu-skill [_ entity* skill]))

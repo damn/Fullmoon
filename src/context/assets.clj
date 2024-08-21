@@ -32,8 +32,6 @@
 
 (defn- load-all-assets! [& {:keys [log-load-assets? sound-files texture-files]}]
   (let [manager (assets/->manager)]
-    ; TODO Sound/Texture pass as kw ?
-    ; separate sound/texture loading on demand....
     (load-assets! manager sound-files   com.badlogic.gdx.audio.Sound      log-load-assets?)
     (load-assets! manager texture-files com.badlogic.gdx.graphics.Texture log-load-assets?)
     (manager/finish-loading manager)

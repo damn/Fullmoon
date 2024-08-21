@@ -3,9 +3,6 @@
             [api.entity :as entity]
             api.world.content-grid))
 
-; why needs entity a reference to the cell
-; just calculate it easily
-
 (defrecord ContentGrid [grid cell-w cell-h]
   api.world.content-grid/ContentGrid
   (update-entity! [_ entity]
