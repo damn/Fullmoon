@@ -3,8 +3,6 @@
             [core.component :refer [defsystem]]
             [utils.core :as utils]))
 
-; TODO I cannot dissoc any key then I lose the record!
-; check somehow that we get a proper body class always and dont destroy it into a plain map?
 (defrecord Entity [position
                    left-bottom
                    width
@@ -14,12 +12,7 @@
                    radius
                    solid?
                    z-order
-                   rotation-angle
-                   ;content-cell
-                   ;touched-cells
-                   ;occupied-cells
-
-                   ])
+                   rotation-angle])
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
@@ -49,13 +42,10 @@
   (assert (not (and (#{:z-order/effect :z-order/on-ground} z-order) solid?)))
   (assert (or (nil? rotation-angle)
               (<= 0 rotation-angle 360)))
-
-  ; TODO position/left-bottom call to float & at movement too ?
-  ; I am sure we have float conversions happening there .... at collision etc.
   (map->Entity
-   {:position position
-    :left-bottom [(- x (/ width  2))
-                  (- y (/ height 2))]
+   {:position (mapv float position)
+    :left-bottom [(float (- x (/ width  2)))
+                  (float (- y (/ height 2)))]
     :width  (float width)
     :height (float height)
     :half-width  (float (/ width  2))

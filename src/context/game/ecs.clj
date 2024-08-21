@@ -39,9 +39,6 @@
                                 :entity/uid (unique-number!))
                          (component/update-map component/create ctx))
           entity* (safe-merge body components)]
-      ;(clojure.pprint/pprint body)
-      ;(clojure.pprint/pprint components)
-      ;(clojure.pprint/pprint entity*)
       (reset! entity entity*)
       [(fn [ctx]
          (for [component @entity]

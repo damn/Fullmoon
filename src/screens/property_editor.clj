@@ -264,16 +264,18 @@
      [(case k
         :property/id 0
         :property/image 1
-        :entity/animation 2
-        :property/width 3
-        :property/height 4
         :property/pretty-name 2
-        :creature/level 3
+        :property/bounds 3
+
+        :entity/animation 2
         :item/slot 3
-        :creature/species 4
         :entity/faction 5
         :entity/flying? 6
         :entity/reaction-time 8
+
+        :creature/level 3
+        :creature/species 4
+
         :skill/start-action-sound 3
         :skill/action-time-modifier-key 4
         11)
