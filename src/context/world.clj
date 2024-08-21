@@ -16,7 +16,7 @@
 
             [data.grid2d :as grid2d]
 
-            [api.context :as ctx :refer [explored? ray-blocked? content-grid world-grid]]
+            [api.context :as ctx]
             [api.entity :as entity]
             [api.effect :as effect]
             [api.maps.tiled :as tiled]
@@ -32,8 +32,7 @@
                    [mouseover-entity :as mouseover-entity]
                    [time :as time-component]
                    [effect-handler :as tx-handler]
-                   [widgets :as widgets]
-                   )
+                   [widgets :as widgets])
 
             [mapgen.movement-property :refer (movement-property)]))
 
@@ -84,8 +83,11 @@
          (or (not (:entity/player? source*))
              (on-screen? target* context))
          (not (and los-checks?
-                   (ray-blocked? context (:position source*) (:position target*))))))
+                   (ctx/ray-blocked? context (:position source*) (:position target*))))))
 
+  ; TODO world width/height part of raycaster world ctx
+  ; only used there
+  ; also clojure.core alength reflection warning ??? can be fixed ??
   (ray-blocked? [{:keys [context/world]} start target]
     (let [{:keys [cell-blocked-boolean-array width height]} world]
       (raycaster/ray-blocked? cell-blocked-boolean-array width height start target)))
@@ -93,8 +95,8 @@
   (path-blocked? [context start target path-w]
     (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
       (or
-       (ray-blocked? context start1 target1)
-       (ray-blocked? context start2 target2))))
+       (ctx/ray-blocked? context start1 target1)
+       (ctx/ray-blocked? context start2 target2))))
 
   ; TODO put tile param
   (explored? [{:keys [context/world] :as context} position]
@@ -108,22 +110,22 @@
 
 (defcomponent :tx/add-to-world {}
   (effect/do! [[_ entity] ctx]
-    (content-grid/update-entity! (content-grid ctx) entity)
+    (content-grid/update-entity! (tx/content-grid ctx) entity)
     ; hmm
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (world-grid/add-entity! (world-grid ctx) entity)
+    (world-grid/add-entity! (ctx/world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/remove-from-world {}
   (effect/do! [[_ entity] ctx]
-    (content-grid/remove-entity! (content-grid ctx) entity)
-    (world-grid/remove-entity! (world-grid ctx) entity)
+    (content-grid/remove-entity! (ctx/content-grid ctx) entity)
+    (world-grid/remove-entity! (ctx/world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/position-changed {}
   (effect/do! [[_ entity] ctx]
-    (content-grid/update-entity! (content-grid ctx) entity)
-    (world-grid/entity-position-changed! (world-grid ctx) entity)
+    (content-grid/update-entity! (ctx/content-grid ctx) entity)
+    (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))
 
 (defn- set-cell-blocked-boolean-array [arr cell*]
@@ -144,6 +146,9 @@
                           "none" :none
                           "air"  :air
                           "all"  :all))))
+
+; TODO this directly at world/ context
+; not context\/world?
 
 ; TODO make defrecord
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
