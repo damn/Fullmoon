@@ -1,4 +1,4 @@
-{:app {:title "Cyber Dungeon Quest"
+{:app {:title "Core"
        :width  1440
        :height 900
        :full-screen? false
