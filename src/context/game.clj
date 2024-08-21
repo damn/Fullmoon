@@ -35,26 +35,30 @@
   (input/set-processor! nil)
   (init-game-context ctx :mode :game-loop/replay))
 
-(defmulti game-loop :context.game/game-loop-mode)
-
 (def ^:private pausing? true)
 
 (defn- player-unpaused? []
   (or (input/key-just-pressed? input.keys/p)
       (input/key-pressed?      input.keys/space)))
 
-(defn- game-paused? [ctx]
-  (or (::tick-error ctx)
-      (and pausing?
-           (ctx/player-state-pause-game? ctx)
-           (not (player-unpaused?)))))
+(defn- update-game-paused [ctx]
+  (assoc ctx ::paused? (or (::tick-error ctx)
+                           (and pausing?
+                                (ctx/player-state-pause-game? ctx)
+                                (not (player-unpaused?))))))
+
+(extend-type api.context.Context
+  Game
+  (game-paused? [ctx]
+    (::paused? ctx)))
+
+(defmulti game-loop :context.game/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx active-entities]
   (let [ctx (ctx/do! ctx (ctx/player-update-state ctx))
-        paused? (game-paused? ctx)
-        ctx (assoc ctx :context.game/paused? paused?)
+        ctx (update-game-paused ctx)
         ctx (ctx/do! ctx (mouseover-entity/update! ctx)) ; this do always so can get debug info even when game not running
-        ctx (if paused?
+        ctx (if (ctx/game-paused? ctx)
               ctx
               (let [ctx (time-component/update-time ctx)]
                 (ctx/update-potential-fields! ctx active-entities)
