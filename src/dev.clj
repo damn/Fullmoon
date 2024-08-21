@@ -270,17 +270,17 @@
 
  ; TODO I want to maintain the test-map with test-items & test-skills
  ; - maybe put in the map-properties player items/skills ....
- (app/post-runnable (fn []
-                      (do
-                       (learn-skill! :skills/projectile)
-                       (learn-skill! :skills/spawn)
-                       (learn-skill! :skills/meditation)
-                       (learn-skill! :skills/melee-attack)
-                       (learn-skill! :skills/death-ray)
-                       (learn-skill! :skills/convert)
-                       (learn-skill! :skills/blood-curse)
-                       (learn-skill! :skills/slow)
-                       )))
+ (gdx.app/post-runnable (fn []
+                          (do
+                           (learn-skill! :skills/projectile)
+                           (learn-skill! :skills/spawn)
+                           (learn-skill! :skills/meditation)
+                           (learn-skill! :skills/melee-attack)
+                           (learn-skill! :skills/death-ray)
+                           (learn-skill! :skills/convert)
+                           (learn-skill! :skills/blood-curse)
+                           (learn-skill! :skills/slow)
+                           )))
 
 
  (create-item! :items/blood-glove)
