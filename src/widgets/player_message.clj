@@ -3,8 +3,7 @@
             [core.component :refer [defcomponent]]
             [api.context :as ctx :refer [->actor]]
             [api.graphics :as g]
-            [api.effect :as effect]
-            app))
+            [api.effect :as effect]))
 
 (defcomponent :tx/msg-to-player {}
   (effect/do! [[_ message] ctx]
@@ -20,11 +19,11 @@
                     :scale 2.5
                     :up? true})))
 
-(defn- check-remove-message [ctx]
+(defn- check-remove-message [{:keys [context/state] :as ctx}]
   (when-let [{:keys [counter]} (::msg ctx)]
-    (swap! app/state update ::msg update :counter + (graphics/delta-time))
+    (swap! state update ::msg update :counter + (graphics/delta-time))
     (when (>= counter duration-seconds)
-      (swap! app/state assoc ::msg nil))))
+      (swap! state assoc ::msg nil))))
 
 (defn ->build [ctx]
   (->actor ctx {:draw draw-player-message

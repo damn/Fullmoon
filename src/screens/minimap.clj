@@ -8,8 +8,7 @@
             [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
             api.graphics.camera
-            [api.screen :as screen]
-            app))
+            [api.screen :as screen]))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight

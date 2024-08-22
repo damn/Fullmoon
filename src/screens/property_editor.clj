@@ -357,9 +357,9 @@
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(->text-button context "Save" save!)
                                                       (->text-button context "Delete" delete!)]])]])
-    (add-actor! window (->actor context {:act (fn [_ctx]
+    (add-actor! window (->actor context {:act (fn [{:keys [context/state]}]
                                                 (when (input/key-just-pressed? input.keys/enter)
-                                                  (swap! app/state save!)))}))
+                                                  (swap! state save!)))}))
     (pack! window)
     window))
 

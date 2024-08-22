@@ -56,7 +56,7 @@
                         (mouseover? this (ctx/gui-mouse-position ctx))
                         (actor/id (actor/parent this)))))))
 
-(defn- ->cell [ctx slot->background slot & {:keys [position]}]
+(defn- ->cell [{:keys [context/state] :as ctx} slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
         image-widget (->image-widget ctx (slot->background slot) {:id :image})
         stack (->stack ctx [(draw-rect-actor)
@@ -65,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! app/state #(ctx/do! % (ctx/player-clicked-inventory % cell))))))
+                             (swap! state #(ctx/do! % (ctx/player-clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

@@ -14,7 +14,11 @@
 
 (defn- ->context [context]
   (component/load! context)
-  (component/build (ctx/->Context) component/create context :log? false))
+  (component/build (assoc (ctx/->Context) :context/state state)
+                   component/create
+                   context
+                   :log?
+                   false))
 
 (defn- create-context [context]
   (->> context

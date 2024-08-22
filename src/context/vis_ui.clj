@@ -8,8 +8,7 @@
             [api.scene2d.group :as group]
             [api.scene2d.ui.table :as table]
             [api.scene2d.ui.widget-group :refer [pack!]]
-            context.graphics.image
-            app)
+            context.graphics.image)
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
@@ -120,13 +119,13 @@
         ctx/get-stage
         (stage/add-actor! actor))))
 
-(defn- ->change-listener [on-clicked]
+(defn- ->change-listener [{:keys [context/state]} on-clicked]
   (proxy [ChangeListener] []
     (changed [event actor]
-      (swap! app/state #(-> %
-                            (assoc :context/actor actor)
-                            on-clicked
-                            (dissoc :context/actor))))))
+      (swap! state #(-> %
+                        (assoc :context/actor actor)
+                        on-clicked
+                        (dissoc :context/actor))))))
 
 ; candidate for opts: :tooltip
 (defn- set-actor-opts [actor {:keys [id name visible? touchable center-position position] :as opts}]
@@ -185,16 +184,16 @@
 
 (extend-type api.context.Context
   api.context/Widgets
-  (->actor [_ {:keys [draw act]}]
+  (->actor [{:keys [context/state]} {:keys [draw act]}]
     (proxy [Actor] []
       (draw [_batch _parent-alpha]
         (when draw
-          (let [ctx @app/state
+          (let [ctx @state
                 g (assoc (:context/graphics ctx) :unit-scale 1)]
             (draw g ctx))))
       (act [_delta]
         (when act
-          (act @app/state)))))
+          (act @state)))))
 
   (->group [_ {:keys [actors] :as opts}]
     (let [group (proxy-ILookup Group [])]
@@ -220,7 +219,7 @@
 
   (->text-button [context text on-clicked]
     (let [button (VisTextButton. ^String text)]
-      (.addListener button (->change-listener on-clicked))
+      (.addListener button (->change-listener context on-clicked))
       button))
 
   (->check-box [context text on-clicked checked?]
@@ -247,7 +246,7 @@
            button (VisImageButton. drawable)]
        (when-let [[w h] dimensions]
          (.setMinSize drawable (float w) (float h)))
-       (.addListener button (->change-listener on-clicked))
+       (.addListener button (->change-listener context on-clicked))
        button)))
 
   (->table ^Table [_ opts]
