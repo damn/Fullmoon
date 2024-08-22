@@ -22,6 +22,27 @@
                    [effect-handler :as tx-handler] ; just create
                    [widgets :as widgets]))) ; just create
 
+(def ^:private spawn-enemies? true)
+
+(defn- transact-create-entities-from-tiledmap! [{:keys [world/tiled-map world/start-position] :as ctx}]
+  (let [ctx (if spawn-enemies?
+              (ctx/do! ctx
+                       (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
+                         [:tx.entity/creature
+                          (keyword creature-id)
+                          #:entity {:position (tile->middle posi)
+                                    :state [:state/npc :sleeping]}]))
+              ctx)]
+    (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
+    (ctx/do! ctx [[:tx.entity/creature
+                   :creatures/vampire
+                   #:entity {:position (tile->middle start-position)
+                             :state [:state/player :idle]
+                             :player? true
+                             :free-skill-points 3
+                             :clickable {:type :clickable/player}
+                             :click-distance-tiles 1.5}]])))
+
 (defn- tiled-map->world-grid [tiled-map]
   (world.grid/->build (tiled/width  tiled-map)
                       (tiled/height tiled-map)
@@ -46,51 +67,33 @@
   ; (check-not-allowed-diagonals grid)
   )
 
-(def ^:private spawn-enemies? true)
-
-(defn- transact-create-entities-from-tiledmap! [{:keys [world/tiled-map world/start-position] :as ctx}]
-  (let [ctx (if spawn-enemies?
-              (ctx/do! ctx
-                       (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
-                         [:tx.entity/creature
-                          (keyword creature-id)
-                          #:entity {:position (tile->middle posi)
-                                    :state [:state/npc :sleeping]}]))
-              ctx)]
-    (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
-    (ctx/do! ctx [[:tx.entity/creature
-                   :creatures/vampire
-                   #:entity {:position (tile->middle start-position)
-                             :state [:state/player :idle]
-                             :player? true
-                             :free-skill-points 3
-                             :clickable {:type :clickable/player}
-                             :click-distance-tiles 1.5}]])))
-
-(defn- add-world-context [ctx tiled-level]
-  (when-let [tiled-map (:world/tiled-map ctx)]
-    (dispose tiled-map))
-  (-> ctx
-      (merge (->world-map tiled-level))
-      transact-create-entities-from-tiledmap!))
-
-(defn- reset-world-context [ctx]
-  (merge ctx (->world-map (select-keys ctx [:world/tiled-map :world/start-position]))))
-
-(defn- setup-context [ctx mode tiled-level]
-  (case mode
-    :game-loop/normal (add-world-context ctx tiled-level)
-    :game-loop/replay (reset-world-context ctx)))
-
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
-  (-> ctx
-      (dissoc ::tick-error)
-      (merge {::game-loop-mode mode}
-             (ecs/->build)
-             (time-component/->build)
-             (widgets/->state! ctx)
-             (tx-handler/initialize! mode record-transactions?))
-      (setup-context mode tiled-level)))
+  (let [ctx (-> ctx
+                (dissoc ::tick-error)
+                (merge {::game-loop-mode mode}
+                       (ecs/->build)
+                       (time-component/->build)
+                       (widgets/->state! ctx)
+                       (tx-handler/initialize! mode record-transactions?)))]
+    (case mode
+      :game-loop/normal (do
+                         (when-let [tiled-map (:world/tiled-map ctx)]
+                           (dispose tiled-map))
+                         (-> ctx
+                             (merge (->world-map tiled-level))
+                             transact-create-entities-from-tiledmap!))
+      :game-loop/replay (merge ctx (->world-map (select-keys ctx [:world/tiled-map :world/start-position]))))))
+
+(defn- start-replay-mode! [ctx]
+  (input/set-processor! nil)
+  (init-game-context ctx :mode :game-loop/replay))
+
+(comment
+ (let [components {:world/ecs true
+                   :world/time true
+                   :world/widgets true
+                   :world/effect-handler true}])
+ )
 
 (extend-type api.context.Context
   api.context/World
@@ -126,10 +129,6 @@
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))
-
-(defn- start-replay-mode! [ctx]
-  (input/set-processor! nil)
-  (init-game-context ctx :mode :game-loop/replay))
 
 (def ^:private pausing? true)
 

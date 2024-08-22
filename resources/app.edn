@@ -4,6 +4,7 @@
        :full-screen? false
        :fps 60}
  ; :components is here so we dont't call component/create on those (e.g. entity/body without args)
+ ; just the namespaces will be loaded, that's it
  :components [[:entity/delete-after-duration]
 
               [:entity/movement]
