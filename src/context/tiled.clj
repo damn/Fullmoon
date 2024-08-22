@@ -15,15 +15,10 @@
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
 ; and when a batch is passed to the constructor
 ; we do not need to dispose the renderer
-(defn- map-renderer-for [{:keys [batch] :as g}
-                         tiled-map
-                         color-setter]
+(defn- map-renderer-for [{:keys [batch] :as g} tiled-map]
   (OrthogonalTiledMapRendererWithColorSetter. tiled-map
                                               (float (g/world-unit-scale g))
-                                              batch
-                                              (reify ColorSetter
-                                                (apply [_ color x y]
-                                                  (color-setter color x y)))))
+                                              batch))
 
 (defcomponent :context/tiled {}
   (component/create [_ _ctx]
@@ -39,8 +34,13 @@
                       :as ctx}
                      tiled-map
                      color-setter]
-    (let [map-renderer (cached-map-renderer g tiled-map color-setter)
+    (let [map-renderer (cached-map-renderer g tiled-map)
           world-camera (ctx/world-camera ctx)]
+      (.setColorSetter ^OrthogonalTiledMapRendererWithColorSetter
+                       map-renderer
+                       (reify ColorSetter
+                         (apply [_ color x y]
+                           (color-setter color x y))))
       (map-renderer/set-view! map-renderer world-camera)
       (->> tiled-map
            tiled/layers

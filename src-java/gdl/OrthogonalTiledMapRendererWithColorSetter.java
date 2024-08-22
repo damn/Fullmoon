@@ -37,10 +37,13 @@ public class OrthogonalTiledMapRendererWithColorSetter extends BatchTiledMapRend
 
   private ColorSetter colorSetter;
 
-	public OrthogonalTiledMapRendererWithColorSetter (TiledMap map, float unitScale, Batch batch, ColorSetter colorSetter) {
+	public OrthogonalTiledMapRendererWithColorSetter (TiledMap map, float unitScale, Batch batch) {
 		super(map, unitScale, batch);
-    this.colorSetter = colorSetter;
 	}
+
+  public void setColorSetter(ColorSetter colorSetter) {
+    this.colorSetter = colorSetter;
+  }
 
 	@Override
 	public void renderTileLayer (TiledMapTileLayer layer) {

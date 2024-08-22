@@ -35,14 +35,11 @@
                                         :right right
                                         :bottom bottom)))
 
-; TODO FIXME deref'fing app/state at each tile corner
-; massive performance issue - probably
-; => pass context through java tilemap render class
-; or prepare colors before
-(defn- tile-corner-color-setter [color x y]
-  (if (explored? @app/state [x y])
-    color/white
-    color/black))
+(defn- ->tile-corner-color-setter [explored?]
+  (fn tile-corner-color-setter [color x y]
+    (if (get explored? [x y])
+      color/white
+      color/black)))
 
 (deftype Screen []
   api.screen/Screen
@@ -53,8 +50,10 @@
     (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
 
   ; TODO fixme not subscreen
-  (render [_ {:keys [world/tiled-map] :as context}]
-    (ctx/render-tiled-map context tiled-map tile-corner-color-setter)
+  (render [_ {:keys [world/tiled-map world/explored-tile-corners] :as context}]
+    (ctx/render-tiled-map context
+                          tiled-map
+                          (->tile-corner-color-setter @explored-tile-corners))
     (ctx/render-world-view context
                            (fn [g]
                              (g/draw-filled-circle g
