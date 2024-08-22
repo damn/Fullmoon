@@ -220,7 +220,10 @@
   (reduce (fn [obj {k 0 :as component}]
             (when log? (println k))
             (if ((set (keys (methods create-fn))) k)
-              (assoc obj k (create-fn component obj))
+              (let [v (create-fn component obj)]
+                (if v ; just side effects @ create-fn, no need to add nil
+                  (assoc obj k v)
+                  obj))
               obj))
           obj
           components))

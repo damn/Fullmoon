@@ -4,7 +4,8 @@
 
 (defcomponent :widgets/background-image {}
   (component/create [[_ file] _ctx]
-    (def ^:private image-file file)))
+    (def ^:private image-file file)
+    nil))
 
 (extend-type api.context.Context
   api.context/BackgroundImage
