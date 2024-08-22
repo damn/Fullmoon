@@ -33,7 +33,8 @@
                  "Calls screen/hide on the current-screen (if there is one).
                  Throws AssertionError when the context does not have a new-screen.
                  Calls screen/show on the new screen and
-                 returns the context with current-screen set to new-screen."))
+                 returns the context with current-screen set to new-screen.")
+  (init-first-screen [_]))
 
 (defprotocol Graphics
   (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
@@ -55,7 +56,9 @@
   (world-mouse-position  [_])
   (world-camera          [_])
   (world-viewport-width  [_])
-  (world-viewport-height [_]))
+  (world-viewport-height [_])
+  (fix-viewport-update [_])
+  (update-viewports [_ w h]))
 
 (defprotocol Stage
   (->stage-screen [_ {:keys [stage sub-screen]}]

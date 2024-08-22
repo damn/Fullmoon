@@ -3,7 +3,7 @@
             [gdx.input :as input]
             [gdx.utils.viewport :refer [->fit-viewport]]
             [gdx.utils.viewport.viewport :as viewport]
-            api.context
+            [api.context :as ctx]
             [api.graphics :as g])
   (:import [com.badlogic.gdx.math MathUtils Vector2]))
 
@@ -40,21 +40,9 @@
 (defn- gui-viewport   [g] (-> g :gui-view   :viewport))
 (defn- world-viewport [g] (-> g :world-view :viewport))
 
-(defn update-viewports [{g :context/graphics} w h]
-  (viewport/update (gui-viewport g) w h true)
-  ; Do not center the camera on world-viewport. We set the position there manually.
-  (viewport/update (world-viewport g) w h false))
-
 (defn- viewport-fix-required? [{g :context/graphics}]
   (or (not= (viewport/screen-width  (gui-viewport g)) (graphics/width))
       (not= (viewport/screen-height (gui-viewport g)) (graphics/height))))
-
-; on mac osx, when resizing window, make bug report /  fix it in libgdx
-(defn fix-viewport-update
-  "Sometimes the viewport update is not triggered."
-  [context]
-  (when (viewport-fix-required? context)
-    (update-viewports context (graphics/width) (graphics/height))))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
@@ -90,4 +78,14 @@
   (gui-viewport-height   [ctx] (viewport/world-height (gui-viewport   (gr ctx))))
   (world-camera          [ctx] (viewport/camera       (world-viewport (gr ctx))))
   (world-viewport-width  [ctx] (viewport/world-width  (world-viewport (gr ctx))))
-  (world-viewport-height [ctx] (viewport/world-height (world-viewport (gr ctx)))))
+  (world-viewport-height [ctx] (viewport/world-height (world-viewport (gr ctx))))
+
+  (update-viewports [{g :context/graphics} w h]
+    (viewport/update (gui-viewport g) w h true)
+    ; Do not center the camera on world-viewport. We set the position there manually.
+    (viewport/update (world-viewport g) w h false))
+
+  ; on mac osx, when resizing window, make bug report /  fix it in libgdx
+  (fix-viewport-update [context]
+    (when (viewport-fix-required? context)
+      (ctx/update-viewports context (graphics/width) (graphics/height)))))

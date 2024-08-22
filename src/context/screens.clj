@@ -43,11 +43,11 @@
           _ (assert screen (str "Cannot find screen with key: " new-screen-key))
           new-context (assoc-in context [:context/screens :current-screen] new-screen-key)]
       (screen/show screen new-context)
-      new-context)))
+      new-context))
 
-(defn init-first-screen [context]
-  (assert (:first-screen (:context/screens context)))
-  (->> context
-       :context/screens
-       :first-screen
-       (ctx/change-screen context)))
+  (init-first-screen [context]
+    (assert (:first-screen (:context/screens context)))
+    (->> context
+         :context/screens
+         :first-screen
+         (ctx/change-screen context))))

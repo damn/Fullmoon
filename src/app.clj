@@ -6,9 +6,7 @@
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
             [api.context :as ctx]
-            [api.screen :as screen]
-            [context.screens :as screens]
-            [context.graphics.views :as views]))
+            [api.screen :as screen]))
 
 (def state (atom nil))
 
@@ -23,21 +21,21 @@
 (defn- create-context [context]
   (->> context
        ->context
-       screens/init-first-screen
+       ctx/init-first-screen
        (reset! state)))
 
 (defn- destroy-context []
   (component/run-system! component/destroy @state))
 
 (defn- render-context []
-  (views/fix-viewport-update @state)
+  (ctx/fix-viewport-update @state)
   (screen-utils/clear color/black)
   (-> @state
       ctx/current-screen
       (screen/render! state)))
 
 (defn- update-viewports [w h]
-  (views/update-viewports @state w h))
+  (ctx/update-viewports @state w h))
 
 (defn- ->application [context]
   (->application-listener
