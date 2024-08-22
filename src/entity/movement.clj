@@ -1,7 +1,6 @@
 (ns entity.movement
   (:require [malli.core :as m]
             [math.vector :as v]
-            [math.geom :as geom]
             [core.component :refer [defcomponent]]
             [api.context :as ctx]
             [api.entity :as entity]
@@ -46,7 +45,7 @@
                           (let [other-entity* @other-entity]
                             (and (not= (:entity/id other-entity*) id)
                                  (:collides? other-entity*)
-                                 (geom/collides? other-entity* body)))))))))
+                                 (entity/collides? other-entity* body)))))))))
 
 (defn- try-move [grid body movement]
   (let [new-body (move-body body movement)]

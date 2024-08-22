@@ -1,20 +1,10 @@
 (ns api.entity
-  (:require [math.vector :as v]
+  (:require [math.geom :as geom]
+            [math.vector :as v]
             [core.component :refer [defsystem]]
             [utils.core :as utils]))
 
 (def hpbar-height-px 5)
-
-(defrecord Entity [position
-                   left-bottom
-                   width
-                   height
-                   half-width
-                   half-height
-                   radius
-                   collides?
-                   z-order
-                   rotation-angle])
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
@@ -26,6 +16,17 @@
                :z-order/effect])
 
 (def render-order (utils/define-order z-orders))
+
+(defrecord Entity [position
+                   left-bottom
+                   width
+                   height
+                   half-width
+                   half-height
+                   radius
+                   collides?
+                   z-order
+                   rotation-angle])
 
 (defn ->Body [{[x y] :position
                :keys [position
@@ -57,6 +58,15 @@
     :z-order z-order
     :rotation-angle (or rotation-angle 0)}))
 
+(defn tile [entity*]
+  (utils/->tile (:position entity*)))
+
+(defn direction [entity* other-entity*]
+  (v/direction (:position entity*) (:position other-entity*)))
+
+(defn collides? [entity* other-entity*]
+  (math/collides? entity* other-entity*))
+
 (defsystem create [_ entity ctx])
 (defmethod create :default [_ entity ctx])
 
@@ -75,12 +85,6 @@
                      render-default
                      render-above
                      render-info])
-
-(defn tile [entity*]
-  (utils/->tile (:position entity*)))
-
-(defn direction [entity* other-entity*]
-  (v/direction (:position entity*) (:position other-entity*)))
 
 (defprotocol State
   (state [_])

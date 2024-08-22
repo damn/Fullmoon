@@ -1,6 +1,5 @@
 (ns entity.projectile-collision
   (:require [core.component :as component :refer [defcomponent]]
-            [math.geom :as geom]
             [utils.core :refer [find-first]]
             [api.context :as ctx :refer [world-grid]]
             [api.entity :as entity]
@@ -33,7 +32,7 @@
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
-                                       (geom/collides? entity* @%))
+                                       (entity/collides? entity* @%))
                                  (cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
                        (some #(cell/blocked? % (:z-order entity*)) cells*))

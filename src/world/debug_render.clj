@@ -1,5 +1,5 @@
 (ns world.debug-render
-  (:require math.geom
+  (:require [math.geom :as geom]
             [utils.core :refer [->tile]]
             [api.context :as ctx :refer [world-grid]]
             [api.graphics :as g]
@@ -16,7 +16,7 @@
     (doseq [[x y] (map #(:position @%)
                        (circle->cells grid circle))]
       (g/draw-rectangle g x y 1 1 [1 0 0 0.5]))
-    (let [{[x y] :left-bottom :keys [width height]} (math.geom/circle->outer-rectangle circle)]
+    (let [{[x y] :left-bottom :keys [width height]} (geom/circle->outer-rectangle circle)]
       (g/draw-rectangle g x y width height [0 0 1 1]))))
 
 (def ^:private tile-grid? false)
