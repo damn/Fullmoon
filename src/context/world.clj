@@ -15,7 +15,7 @@
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]))
 
-(def ^:private spawn-enemies? true)
+(def ^:private ^:dbg-flag spawn-enemies? true)
 
 (defn- transact-create-entities-from-tiledmap! [{:keys [world/tiled-map world/start-position] :as ctx}]
   (let [ctx (if spawn-enemies?
@@ -109,7 +109,7 @@
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))
 
-(def ^:private pausing? true)
+(def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
   (or (input/key-just-pressed? input.keys/p)

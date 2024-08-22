@@ -8,7 +8,7 @@
 (def ^:private explored-tile-color
   (graphics/->color 0.5 0.5 0.5 1))
 
-(def ^:private see-all-tiles? false)
+(def ^:private ^:dbg-flag see-all-tiles? false)
 
 (comment
  (def ^:private count-rays? false)

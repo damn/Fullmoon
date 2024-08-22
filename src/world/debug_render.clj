@@ -19,10 +19,10 @@
     (let [{[x y] :left-bottom :keys [width height]} (geom/circle->outer-rectangle circle)]
       (g/draw-rectangle g x y width height [0 0 1 1]))))
 
-(def ^:private tile-grid? false)
-(def ^:private potential-field-colors? false)
-(def ^:private cell-entities? false)
-(def ^:private cell-occupied? false)
+(def ^:private ^:dbg-flag tile-grid? false)
+(def ^:private ^:dbg-flag potential-field-colors? false)
+(def ^:private ^:dbg-flag cell-entities? false)
+(def ^:private ^:dbg-flag cell-occupied? false)
 
 (require '[world.potential-fields :as potential-field])
 
@@ -55,7 +55,7 @@
             (let [ratio (/ distance (@#'potential-field/factions-iterations faction))]
               (g/draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
-(def ^:private highlight-blocked-cell? true)
+(def ^:private ^:dbg-flag highlight-blocked-cell? true)
 
 (defn- highlight-mouseover-tile [g ctx]
   (when highlight-blocked-cell?

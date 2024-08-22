@@ -1,6 +1,7 @@
 (ns dev
   (:require [clojure.pprint :refer :all]
             [clojure.string :as str]
+            utils.ns
             [api.context :as ctx :refer :all]
             [api.entity :as entity]
             [api.scene2d.actor :as actor]
@@ -125,39 +126,24 @@
 
    ))
 
-(defn- get-namespaces []
-  (filter #(#{"api"
-              "app"
-              "context"
-              "core"
-              "data"
-              "effect"
-              "entity"
-              "mapgen"
-              "math"
-              "modifier"
-              "properties"
-              "property"
-              "screens"
-              "tx"
-              "utils"
-              "world"
-              "dev"
-              }
-            (first (str/split (name (ns-name %)) #"\.")))
-          (all-ns)))
+
+(comment
+ (clojure.pprint/pprint (get-namespaces-by-exclude)))
+
+(defn- protocol? [value]
+  (and (instance? clojure.lang.PersistentArrayMap value)
+       (:on value)))
 
 (defn- get-non-fn-vars [nmspace]
-  (for [[sym avar] (ns-interns nmspace)
-        :let [value @avar]
-        :when
-        ;(:debug (meta avar))
-
-        (not (or (fn? value)
-                 (instance? clojure.lang.MultiFn value)
-                 #_(:method-map value) ; breaks for stage Ilookup
-                 ))]
-    avar))
+  (utils.ns/get-vars nmspace
+                     (fn [avar]
+                       (let [value @avar]
+                         (not (or (fn? value)
+                                  (instance? clojure.lang.MultiFn value)
+                                  #_(:method-map value) ; breaks for stage Ilookup
+                                  (protocol? value)
+                                  (instance? java.lang.Class value) ;anonymous class (proxy)
+                                  ))))))
 
 (comment
 
@@ -165,7 +151,17 @@
        (with-out-str
         (pprint
          (for [nmspace (sort-by (comp name ns-name)
-                                (get-namespaces))
+                                (utils.ns/get-namespaces
+                                 (fn [first-ns-part-str]
+                                   (not (#{"clojure"
+                                           "nrepl"
+                                           "malli"
+                                           "user"
+                                           "borkdude"
+                                           "clj-commons"
+                                           "dorothy"
+                                           "reduce-fsm"}
+                                         first-ns-part-str)))))
                :let [value-vars (get-non-fn-vars nmspace)]
                :when (seq value-vars)]
            [(ns-name nmspace) (map (comp symbol name symbol) value-vars)]))))

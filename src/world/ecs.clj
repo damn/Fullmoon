@@ -56,7 +56,7 @@
   (effect/do! [[_ entity] ctx]
     [[:tx.entity/assoc entity :entity/destroyed? true]]))
 
-(def ^:private show-body-bounds false)
+(def ^:private ^:dbg-flag show-body-bounds false)
 
 (defn- draw-body-rect [g entity* color]
   (let [[x y] (:left-bottom entity*)]

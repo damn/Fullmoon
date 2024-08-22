@@ -9,9 +9,6 @@
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
 
-(defn- set-record-txs! [bool]
-  (.bindRoot #'record-txs? bool))
-
 (defn- clear-recorded-txs! []
   (reset! frame->txs {}))
 
@@ -20,10 +17,10 @@
     (case game-loop-mode
       :game-loop/normal (when record-transactions?
                           (clear-recorded-txs!)
-                          (set-record-txs! true))
+                          (.bindRoot #'record-txs? true))
       :game-loop/replay (do
                          (assert record-txs?)
-                         (set-record-txs! false)
+                         (.bindRoot #'record-txs? false)
                          ;(println "Initial entity txs:")
                          ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
                          ))
@@ -42,7 +39,7 @@
     {1 [[:foo1 :bar1] [:foo2 :bar2]]})
  )
 
-(def debug-print-txs? false)
+(def ^:private ^:dbg-flag debug-print-txs? false)
 
 (defn- debug-print-tx [tx]
   (pr-str (mapv #(cond

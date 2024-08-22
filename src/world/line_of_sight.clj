@@ -15,7 +15,7 @@
      (<= xdist (inc (/ (float (ctx/world-viewport-width ctx))  2)))
      (<= ydist (inc (/ (float (ctx/world-viewport-height ctx)) 2))))))
 
-(def ^:private los-checks? true)
+(def ^:private ^:dbg-flag los-checks? true)
 
 (extend-type api.context.Context
   api.context/WorldLineOfSight
