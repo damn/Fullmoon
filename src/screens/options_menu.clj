@@ -10,8 +10,7 @@
             context.world
             world.ecs
             world.line-of-sight
-            world.render
-            [widgets.background-image :refer [->background-image]]))
+            world.render))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -94,4 +93,4 @@
    :sub-screen (->SubScreen)})
 
 (defcomponent :screens/options-menu {}
-  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (->background-image ctx)))))
+  (screen/create [_ ctx] (ctx/->stage-screen ctx (->screen ctx (ctx/->background-image ctx)))))

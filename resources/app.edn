@@ -76,6 +76,7 @@
                                          :properties/skill
                                          :properties/world]
                                  :file "resources/properties.edn"}]
+           [:widgets/background-image "images/moon_background.png"]
            [:context/screens [:screens/main-menu
                               :screens/map-editor
                               :screens/minimap

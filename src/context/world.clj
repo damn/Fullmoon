@@ -33,35 +33,6 @@
 
             [mapgen.movement-property :refer (movement-property)]))
 
-(extend-type api.context.Context
-  api.context/World
-  ; TODO put tile param
-  (explored? [ctx position]
-    (get @(:world/explored-tile-corners ctx) position))
-
-  (content-grid [ctx] (:world/content-grid ctx))
-  (world-grid  [ctx]  (:world/grid         ctx)))
-
-(defcomponent :tx/add-to-world {}
-  (effect/do! [[_ entity] ctx]
-    (content-grid/update-entity! (ctx/content-grid ctx) entity)
-    ; hmm
-    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (world-grid/add-entity! (ctx/world-grid ctx) entity)
-    ctx))
-
-(defcomponent :tx/remove-from-world {}
-  (effect/do! [[_ entity] ctx]
-    (content-grid/remove-entity! (ctx/content-grid ctx) entity)
-    (world-grid/remove-entity! (ctx/world-grid ctx) entity)
-    ctx))
-
-(defcomponent :tx/position-changed {}
-  (effect/do! [[_ entity] ctx]
-    (content-grid/update-entity! (ctx/content-grid ctx) entity)
-    (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
-    ctx))
-
 (defn- tiled-map->world-grid [tiled-map]
   (world.grid/->build (tiled/width  tiled-map)
                       (tiled/height tiled-map)
@@ -131,11 +102,40 @@
              (tx-handler/initialize! mode record-transactions?))
       (setup-context mode tiled-level)))
 
-(defn start-new-game [ctx tiled-level]
-  (init-game-context ctx
-                     :mode :game-loop/normal
-                     :record-transactions? false ; TODO top level flag ?
-                     :tiled-level tiled-level))
+(extend-type api.context.Context
+  api.context/World
+  (start-new-game [ctx tiled-level]
+    (init-game-context ctx
+                       :mode :game-loop/normal
+                       :record-transactions? false ; TODO top level flag ?
+                       :tiled-level tiled-level))
+
+  ; TODO put tile param
+  (explored? [ctx position]
+    (get @(:world/explored-tile-corners ctx) position))
+
+  (content-grid [ctx] (:world/content-grid ctx))
+  (world-grid  [ctx]  (:world/grid         ctx)))
+
+(defcomponent :tx/add-to-world {}
+  (effect/do! [[_ entity] ctx]
+    (content-grid/update-entity! (ctx/content-grid ctx) entity)
+    ; hmm
+    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
+    (world-grid/add-entity! (ctx/world-grid ctx) entity)
+    ctx))
+
+(defcomponent :tx/remove-from-world {}
+  (effect/do! [[_ entity] ctx]
+    (content-grid/remove-entity! (ctx/content-grid ctx) entity)
+    (world-grid/remove-entity! (ctx/world-grid ctx) entity)
+    ctx))
+
+(defcomponent :tx/position-changed {}
+  (effect/do! [[_ entity] ctx]
+    (content-grid/update-entity! (ctx/content-grid ctx) entity)
+    (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
+    ctx))
 
 (defn- start-replay-mode! [ctx]
   (input/set-processor! nil)

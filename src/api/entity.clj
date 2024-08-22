@@ -65,7 +65,7 @@
   (v/direction (:position entity*) (:position other-entity*)))
 
 (defn collides? [entity* other-entity*]
-  (math/collides? entity* other-entity*))
+  (geom/collides? entity* other-entity*))
 
 (defsystem create [_ entity ctx])
 (defmethod create :default [_ entity ctx])

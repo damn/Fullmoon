@@ -6,10 +6,6 @@
             [utils.core :refer [safe-get]]
             [api.context :as ctx]
             [api.screen :as screen :refer [Screen]]
-            ; just load here not @ resources because we don't build it yet.
-            ; because ui widgets can only be created @ game screen is current screen
-            [context.world :as world]
-            [widgets.background-image :refer [->background-image]]
             mapgen.module-gen))
 
 (defn- ->vampire-tmx [ctx]
@@ -32,7 +28,7 @@
   (fn [ctx]
     (-> ctx
         (ctx/change-screen :screens/world)
-        (world/start-new-game (lvl-fn ctx)))))
+        (ctx/start-new-game (lvl-fn ctx)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ctx/->table
@@ -58,7 +54,7 @@
 
 (defcomponent :screens/main-menu {}
   (screen/create [_ ctx]
-    (ctx/->stage-screen ctx {:actors [(->background-image ctx)
+    (ctx/->stage-screen ctx {:actors [(ctx/->background-image ctx)
                                       (->buttons ctx)
                                       (ctx/->actor ctx {:act (fn [_ctx]
                                                                (when (input/key-just-pressed? input.keys/escape)

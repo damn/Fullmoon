@@ -132,6 +132,7 @@
   (line-of-sight? [_ source* target*]))
 
 (defprotocol World
+  (start-new-game [_ lvl])
   (explored? [_ position])
   (content-grid [_])
   (world-grid [_]))
@@ -152,4 +153,7 @@
   (inventory-window [_]))
 
 (defprotocol Actionbar
-  (selected-skill  [_]))
+  (selected-skill [_]))
+
+(defprotocol BackgroundImage
+  (->background-image [_]))
