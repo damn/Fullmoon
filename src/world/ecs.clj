@@ -8,20 +8,22 @@
             [api.entity :as entity :refer [map->Entity]]
             [api.effect :as effect]))
 
-(defcomponent :world/ecs {}
+(def ^:private this :world/ecs)
+
+(defcomponent this {}
   (component/create [_ _ctx]
     {}))
 
-(defn- entities [ctx] (:world/ecs ctx))
+(defn- entities [ctx] (this ctx))
 
 (defcomponent :entity/uid {}
   (entity/create [[_ uid] entity ctx]
     {:pre [(number? uid)]}
-    (update ctx :world/ecs assoc uid entity))
+    (update ctx this assoc uid entity))
 
   (entity/destroy [[_ uid] _entity ctx]
     {:pre [(contains? (entities ctx) uid)]}
-    (update ctx :world/ecs dissoc uid)))
+    (update ctx this dissoc uid)))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
