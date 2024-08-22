@@ -10,8 +10,7 @@
             [core.data :as data]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.graphics :as g]
-            entity.movement))
+            [api.graphics :as g]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -283,9 +282,9 @@
 ; * dont remove strength <0 or floating point modifiers  (op/int-inc ?)
 ; * cast/attack speed dont decrease below 0 ??
 
-; TODO clamp between 0 and max-speed ( same as entity.body/movement-speed-schema )
+; TODO clamp between 0 and max-speed ( same as movement-speed-schema )
 (defstat :stats/movement-speed {:widget :text-field
-                                :schema entity.movement/movement-speed-schema}
+                                :schema entity/movement-speed-schema}
   :operations [:op/inc :op/mult])
 
 ; TODO show the stat in different color red/green if it was permanently modified ?

@@ -4,8 +4,7 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [api.world.cell :as cell]
-            [entity-state.active-skill :refer [skill-usable-state]]))
+            [api.world.cell :as cell]))
 
 (defn- nearest-enemy [ctx entity*]
   (cell/nearest-entity @((world-grid ctx) (entity/tile entity*))
@@ -39,7 +38,7 @@
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable (skill-usable-state ctx entity* %))
+       (filter #(and (= :usable (ctx/skill-usable-state ctx entity* %))
                      (useful? ctx (:skill/effects %))))
        first))
 

@@ -1,6 +1,7 @@
 (ns world.time
   (:require [gdx.graphics :as graphics]
-            [api.context :as ctx]))
+            [api.context :as ctx]
+            [api.entity :as entity]))
 
 (defn ->build []
   {::elapsed-time 0
@@ -32,7 +33,7 @@
       (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
 
 (defn update-time [ctx]
-  (let [delta (min (graphics/delta-time) ctx/max-delta-time)]
+  (let [delta (min (graphics/delta-time) entity/max-delta-time)]
     (-> ctx
         (assoc ::delta-time delta)
         (update ::elapsed-time + delta)

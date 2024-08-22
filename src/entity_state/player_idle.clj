@@ -10,8 +10,7 @@
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [api.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
             [api.entity :as entity]
-            [api.entity-state :as state]
-            [entity-state.active-skill :refer [skill-usable-state]]))
+            [api.entity-state :as state]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -107,9 +106,9 @@
      (if-let [skill-id (selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->effect-context context entity*)
-             state (skill-usable-state (safe-merge context effect-ctx)
-                                       entity*
-                                       skill)]
+             state (ctx/skill-usable-state (safe-merge context effect-ctx)
+                                           entity*
+                                           skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight

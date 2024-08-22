@@ -8,24 +8,6 @@
             [api.world.cell :as cell]
             [api.world.grid :as world-grid]))
 
-; # :z-order/flying has no effect for now
-
-; * entities with :z-order/flying are not flying over water,etc. (movement/air)
-; because using potential-field for z-order/ground
-; -> would have to add one more potential-field for each faction for z-order/flying
-; * they would also (maybe) need a separate occupied-cells if they don't collide with other
-; * they could also go over ground units and not collide with them
-; ( a test showed then flying OVER player entity )
-; -> so no flying units for now
-
-; set max speed so small entities are not skipped by projectiles
-; could set faster than max-speed if I just do multiple smaller movement steps in one frame
-(def max-speed (/ entity/min-solid-body-size
-                  ctx/max-delta-time))
-
-(def movement-speed-schema [:and number? [:>= 0] [:<= max-speed]])
-(def ^:private movement-speed-schema* (m/schema movement-speed-schema))
-
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
 
@@ -62,6 +44,8 @@
     (or (try-move grid body movement)
         (try-move grid body (assoc movement :direction [xdir 0]))
         (try-move grid body (assoc movement :direction [0 ydir])))))
+
+(def ^:private movement-speed-schema* (m/schema movement-speed-schema))
 
 (defcomponent :entity/movement {}
   (entity/tick [[_ {:keys [direction speed rotate-in-movement-direction?] :as movement}] eid ctx]

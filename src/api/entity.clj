@@ -4,11 +4,29 @@
             [core.component :refer [defsystem]]
             [utils.core :as utils]))
 
-(def hpbar-height-px 5)
+; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
+(def max-delta-time 0.04)
 
 ; setting a min-size for colliding bodies so movement can set a max-speed for not
 ; skipping bodies at too fast movement
-(def min-solid-body-size 0.39) ; == spider smallest creature size.
+; TODO assert at properties load
+(def ^:private min-solid-body-size 0.39) ; == spider smallest creature size.
+
+; # :z-order/flying has no effect for now
+
+; * entities with :z-order/flying are not flying over water,etc. (movement/air)
+; because using potential-field for z-order/ground
+; -> would have to add one more potential-field for each faction for z-order/flying
+; * they would also (maybe) need a separate occupied-cells if they don't collide with other
+; * they could also go over ground units and not collide with them
+; ( a test showed then flying OVER player entity )
+; -> so no flying units for now
+
+; set max speed so small entities are not skipped by projectiles
+; could set faster than max-speed if I just do multiple smaller movement steps in one frame
+(def movement-speed-schema [:and number? [:>= 0] [:<= (/ min-solid-body-size
+                                                         max-delta-time)]])
+(def hpbar-height-px 5)
 
 (def z-orders [:z-order/on-ground
                :z-order/ground
