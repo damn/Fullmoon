@@ -33,11 +33,11 @@ import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 
 import gdl.ColorSetter;
 
-public class OrthogonalTiledMapRendererWithColorSetter extends BatchTiledMapRenderer {
+public class OrthogonalTiledMapRenderer extends BatchTiledMapRenderer {
 
   private ColorSetter colorSetter;
 
-	public OrthogonalTiledMapRendererWithColorSetter (TiledMap map, float unitScale, Batch batch) {
+	public OrthogonalTiledMapRenderer (TiledMap map, float unitScale, Batch batch) {
 		super(map, unitScale, batch);
 	}
 
