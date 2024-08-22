@@ -45,11 +45,9 @@
         (try-move grid body (assoc movement :direction [xdir 0]))
         (try-move grid body (assoc movement :direction [0 ydir])))))
 
-(def ^:private movement-speed-schema* (m/schema entity/movement-speed-schema))
-
 (defcomponent :entity/movement {}
   (entity/tick [[_ {:keys [direction speed rotate-in-movement-direction?] :as movement}] eid ctx]
-    (assert (m/validate movement-speed-schema* speed))
+    (assert (m/validate entity/movement-speed-schema speed))
     (assert (or (zero? (v/length direction))
                 (v/normalised? direction)))
     (when-not (or (zero? (v/length direction))

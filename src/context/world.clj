@@ -13,11 +13,7 @@
             [api.maps.tiled :as tiled]
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
-            [api.world.cell :as cell]
-            (world grid ; build ...
-                   content-grid ; build ...
-                   [raycaster :as raycaster] ; build w. world-grid
-                   )))
+            [api.world.cell :as cell]))
 
 (def ^:private spawn-enemies? true)
 
@@ -40,44 +36,34 @@
                              :clickable {:type :clickable/player}
                              :click-distance-tiles 1.5}]])))
 
-(defn- tiled-map->world-grid [tiled-map]
-  (world.grid/->build (tiled/width  tiled-map)
-                      (tiled/height tiled-map)
-                      (fn [position]
-                        (case (tiled/movement-property tiled-map position)
-                          "none" :none
-                          "air"  :air
-                          "all"  :all))))
+(defn- create-components [ctx components]
+  (component/strict-update components component/create ctx))
 
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
-  (let [grid (tiled-map->world-grid tiled-map)
-        w (grid2d/width  grid)
-        h (grid2d/height grid)]
-    #:world {:tiled-map tiled-map
-             :start-position start-position
-
-             :grid grid
-             :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
-             :content-grid (world.content-grid/->build w h 16 16)
-             :explored-tile-corners (atom (grid2d/create-grid w h (constantly false)))})
-  ; TODO
-  ; (check-not-allowed-diagonals grid)
+  (create-components
+   #:world {:tiled-map tiled-map
+            :start-position start-position}
+   #:world {:grid [(tiled/width tiled-map)
+                   (tiled/height tiled-map)
+                   #(case (tiled/movement-property tiled-map %)
+                      "none" :none
+                      "air"  :air
+                      "all"  :all)]
+            :raycaster #(cell/blocked? % :z-order/flying)
+            :content-grid [16 16]
+            :explored-tile-corners true})
+  ; TODO (check-not-allowed-diagonals grid)
   )
-
-(defn- load-and-create-components [ctx components]
-  (component/load! components)
-  (component/strict-update components component/create ctx))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (let [ctx (-> ctx
                 (dissoc ::tick-error)
                 (merge {::game-loop-mode mode}
-                       (load-and-create-components
-                        ctx
-                        {:world/ecs true
-                         :world/time true
-                         :world/widgets true
-                         :world/effect-handler [mode record-transactions?]})))]
+                       (create-components ctx
+                                          #:world {:ecs true
+                                                   :time true
+                                                   :widgets true
+                                                   :effect-handler [mode record-transactions?]})))]
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:world/tiled-map ctx)]
@@ -99,10 +85,7 @@
                        :record-transactions? false ; TODO top level flag ?
                        :tiled-level tiled-level))
 
-  ; TODO put tile param
-  (explored? [ctx position]
-    (get @(:world/explored-tile-corners ctx) position))
-
+  ; TODO these two what to do ?
   (content-grid [ctx] (:world/content-grid ctx))
   (world-grid  [ctx]  (:world/grid         ctx)))
 

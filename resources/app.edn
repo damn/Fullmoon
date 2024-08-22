@@ -35,7 +35,15 @@
               [:world/line-of-sight]
               [:world/mouseover-entity]
               [:world/potential-fields]
-              ]
+              [:world/ecs]
+              [:world/time]
+              [:world/widgets]
+              [:world/effect-handler]
+
+              [:world/grid]
+              [:world/raycaster]
+              [:world/content-grid]
+              [:world/explored-tile-corners]]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false

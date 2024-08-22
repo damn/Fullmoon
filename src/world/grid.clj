@@ -2,6 +2,7 @@
   (:require [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
+            [core.component :as component :refer [defcomponent]]
             [api.world.grid :refer [rectangle->cells circle->cells]]
             [api.world.cell :as cell :refer [cells->entities]]))
 
@@ -151,9 +152,8 @@
     :entities #{}
     :occupied #{}}))
 
-(defn ->build [width height position->value]
-  (grid2d/create-grid width height
-                      #(->> %
-                            position->value
-                            (create-cell %)
-                            atom)))
+(defcomponent :world/grid {}
+  (component/create [[_ [width height position->value]] _world]
+    (grid2d/create-grid width
+                        height
+                        #(atom (create-cell % (position->value %))))))

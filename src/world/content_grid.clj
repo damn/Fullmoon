@@ -1,5 +1,6 @@
 (ns world.content-grid
   (:require [data.grid2d :as grid2d]
+            [core.component :as component :refer [defcomponent]]
             [api.entity :as entity]
             api.world.content-grid))
 
@@ -30,14 +31,17 @@
          (keep grid)
          (mapcat (comp :entities deref)))))
 
-(defn ->build [w h cell-w cell-h]
-  (->ContentGrid (grid2d/create-grid (inc (int (/ w cell-w))) ; inc because corners
-                                     (inc (int (/ h cell-h)))
-                                     (fn [idx]
-                                       (atom {:idx idx,
-                                              :entities #{}})))
-                 cell-w
-                 cell-h))
+(defcomponent :world/content-grid {}
+  (component/create [[_ [cell-w cell-h]] {:keys [world/grid]}]
+    (->ContentGrid
+     (grid2d/create-grid
+      (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
+      (inc (int (/ (grid2d/height grid) cell-h)))
+      (fn [idx]
+        (atom {:idx idx,
+               :entities #{}})))
+     cell-w
+     cell-h)))
 
 (comment
 

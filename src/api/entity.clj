@@ -1,5 +1,6 @@
 (ns api.entity
-  (:require [math.geom :as geom]
+  (:require [malli.core :as m]
+            [math.geom :as geom]
             [math.vector :as v]
             [core.component :refer [defsystem]]
             [utils.core :as utils]))
@@ -24,8 +25,9 @@
 
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
-(def movement-speed-schema [:and number? [:>= 0] [:<= (/ min-solid-body-size
-                                                         max-delta-time)]])
+(def ^:private max-speed (/ min-solid-body-size max-delta-time)) ; need to make var because m/schema would fail later if divide / is inside the schema-form
+(def movement-speed-schema (m/schema [:and number? [:>= 0] [:<= max-speed]]))
+
 (def hpbar-height-px 5)
 
 (def z-orders [:z-order/on-ground

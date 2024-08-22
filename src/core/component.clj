@@ -140,12 +140,12 @@
              ~@(rest fn-body)))))
     ~k))
 
-(defn strict-update [m multimethod & args]
-  (reduce (fn [m [k v]]
-            (if-let [v (apply multimethod [k v] args)]
-              (assoc m k v)
-              m))
-   {}
+(defn strict-update [m system ctx]
+  (reduce (fn [ctx [k v]]
+            (if-let [v (system [k v] ctx)]
+              (assoc ctx k v)
+              ctx))
+   ctx
    m))
 
 (defn update-map

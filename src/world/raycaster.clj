@@ -2,6 +2,7 @@
   (:require [math.raycaster :as raycaster]
             [math.vector :as v]
             [data.grid2d :as grid2d]
+            [core.component :as component :refer [defcomponent]]
             [api.context :as ctx]))
 
 (defprotocol RayCaster
@@ -16,15 +17,16 @@
   (let [[x y] (:position cell*)]
     (aset arr x y (boolean (cell*->blocked? cell*)))))
 
-(defn ->build [grid position->blocked?]
-  (let [width (grid2d/width grid)
-        height (grid2d/height grid)
-        arr (make-array Boolean/TYPE width height)]
-    (doseq [cell (grid2d/cells grid)]
-      (set-arr arr @cell position->blocked?))
-    (map->RayCasterArray {:arr arr
-                          :width width
-                          :height height})))
+(defcomponent :world/raycaster {}
+  (component/create [[_ position->blocked?] {:keys [world/grid]}]
+    (let [width (grid2d/width grid)
+          height (grid2d/height grid)
+          arr (make-array Boolean/TYPE width height)]
+      (doseq [cell (grid2d/cells grid)]
+        (set-arr arr @cell position->blocked?))
+      (map->RayCasterArray {:arr arr
+                            :width width
+                            :height height}))))
 
 ; TO math.... // not tested
 (defn- create-double-ray-endpositions

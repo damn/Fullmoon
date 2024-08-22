@@ -19,19 +19,21 @@
          first
          :entity/id)))
 
+(def ^:private this-k :world/mouseover-entity)
+
 (extend-type api.context.Context
   api.context/MouseOverEntity
   (mouseover-entity* [ctx]
-    (when-let [entity (::mouseover-entity ctx)]
+    (when-let [entity (this-k ctx)]
       @entity))
 
   (update-mouseover-entity [ctx]
     (let [entity (if (mouse-on-stage-actor? ctx)
                    nil
                    (calculate-mouseover-entity ctx))]
-      [(when-let [old-entity (::mouseover-entity ctx)]
+      [(when-let [old-entity (this-k ctx)]
          [:tx.entity/dissoc old-entity :entity/mouseover?])
        (when entity
          [:tx.entity/assoc entity :entity/mouseover? true])
        (fn [ctx]
-         (assoc ctx ::mouseover-entity entity))])))
+         (assoc ctx this-k entity))])))
