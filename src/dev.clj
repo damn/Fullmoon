@@ -83,13 +83,13 @@
 
 (defn add-map-nodes! [ctx parent-node m level]
   ;(println "Level: " level " - go deeper? " (< level 4))
-  (when (< level 4)
+  (when (< level 2)
     (doseq [[k v] (into (sorted-map) m)]
       ;(println "add-map-nodes! k " k)
       (try
        (let [node (->node (->label ctx (->labelstr k v)))]
          (.add parent-node node)
-         (when (instance? clojure.lang.Atom v)
+         #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
            (->nested-nodes ctx node level @v))
          (->nested-nodes ctx node level v))
        (catch Throwable t

@@ -115,7 +115,7 @@
         (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
       (.row table))))
 
-(defn ->build [ctx {:keys [context.game.inventory/slot->background]}]
+(defn ->build [ctx {:keys [slot->background]}]
   (let [table (->table ctx {:id ::table})]
     (redo-table! ctx table slot->background)
     (->window ctx {:title "Inventory"
@@ -131,7 +131,7 @@
 
 (defn- get-inventory [ctx]
   {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
-   :slot->background (:context.game.inventory/slot->background ctx)})
+   :slot->background (:slot->background (:world/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget {}
   (effect/do! [[_ cell item] ctx]

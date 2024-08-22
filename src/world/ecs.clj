@@ -8,17 +8,20 @@
             [api.entity :as entity :refer [map->Entity]]
             [api.effect :as effect]))
 
-(defn ->build []
-  {::entities {}})
+(defcomponent :world/ecs {}
+  (component/create [_ _ctx]
+    {}))
+
+(defn- entities [ctx] (:world/ecs ctx))
 
 (defcomponent :entity/uid {}
   (entity/create [[_ uid] entity ctx]
     {:pre [(number? uid)]}
-    (update ctx ::entities assoc uid entity))
+    (update ctx :world/ecs assoc uid entity))
 
   (entity/destroy [[_ uid] _entity ctx]
-    {:pre [(contains? (::entities ctx) uid)]}
-    (update ctx ::entities dissoc uid)))
+    {:pre [(contains? (entities ctx) uid)]}
+    (update ctx :world/ecs dissoc uid)))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
@@ -85,10 +88,10 @@
 (extend-type api.context.Context
   api.context/EntityComponentSystem
   (all-entities [ctx]
-    (vals (::entities ctx)))
+    (vals (entities ctx)))
 
   (get-entity [ctx uid]
-    (get (::entities ctx) uid))
+    (get (entities ctx) uid))
 
   (tick-entities! [ctx entities]
     (reduce tick-system ctx entities))

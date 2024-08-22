@@ -1,11 +1,13 @@
 (ns world.time
   (:require [gdx.graphics :as graphics]
+            [core.component :as component :refer [defcomponent]]
             [api.context :as ctx]
             [api.entity :as entity]))
 
-(defn ->build []
-  {::elapsed-time 0
-   ::logic-frame 0})
+(defcomponent :world/time {}
+  (component/create [_ _ctx]
+    {:elapsed 0
+     :logic-frame 0}))
 
 (defrecord Counter [duration stop-time])
 
@@ -13,14 +15,14 @@
   api.context/Time
   (update-time [ctx]
     (let [delta (min (graphics/delta-time) entity/max-delta-time)]
-      (-> ctx
-          (assoc ::delta-time delta)
-          (update ::elapsed-time + delta)
-          (update ::logic-frame inc))))
+      (update ctx :world/time #(-> %
+                                   (assoc :delta-time delta)
+                                   (update :elapsed + delta)
+                                   (update :logic-frame inc)))))
 
-  (delta-time   [ctx] (::delta-time   ctx))
-  (elapsed-time [ctx] (::elapsed-time ctx))
-  (logic-frame  [ctx] (::logic-frame  ctx))
+  (delta-time   [ctx] (:delta-time  (:world/time ctx)))
+  (elapsed-time [ctx] (:elapsed     (:world/time ctx)))
+  (logic-frame  [ctx] (:logic-frame (:world/time ctx)))
 
   (->counter [ctx duration]
     {:pre [(>= duration 0)]}

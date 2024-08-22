@@ -28,7 +28,7 @@
 (extend-type api.context.Context
   api.context/Actionbar
   (selected-skill [ctx]
-    (let [button-group (:context.game/action-bar ctx)]
+    (let [button-group (:action-bar (:world/widgets ctx))]
       (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
         (actor/id skill-button))))
 
@@ -58,11 +58,12 @@
     stage/clear!
     (stage/add-actors! (->ui-actors ctx widget-data))))
 
-(defn ->state! [ctx]
-  (let [widget-data {:context.game/action-bar (action-bar/->button-group ctx)
-                     :context.game.inventory/slot->background (inventory/->data ctx)}]
-    (reset-stage-actors! ctx widget-data)
-    widget-data))
+(defcomponent :world/widgets {}
+  (component/create [_ ctx]
+    (let [widget-data {:action-bar (action-bar/->button-group ctx)
+                       :slot->background (inventory/->data ctx)}]
+      (reset-stage-actors! ctx widget-data)
+      widget-data)))
 
 (defn- hotkey->window-id [{:keys [context/config] :as ctx}]
   (merge

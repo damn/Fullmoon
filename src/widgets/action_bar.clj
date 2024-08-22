@@ -17,7 +17,7 @@
 
 (defn- get-action-bar [ctx]
   {:horizontal-group (::action-bar (:action-bar-table (ctx/get-stage ctx)))
-   :button-group (:context.game/action-bar ctx)})
+   :button-group (:action-bar (:world/widgets ctx))})
 
 (defcomponent :tx.context.action-bar/add-skill {}
   (effect/do!

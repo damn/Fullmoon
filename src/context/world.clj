@@ -5,7 +5,7 @@
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :refer [tile->middle]]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [data.grid2d :as grid2d]
             [api.context :as ctx]
             [api.entity :as entity]
@@ -17,10 +17,7 @@
             (world grid ; build ...
                    content-grid ; build ...
                    [raycaster :as raycaster] ; build w. world-grid
-                   [ecs :as ecs] ; just create
-                   [time :as time-component] ; just create
-                   [effect-handler :as tx-handler] ; just create
-                   [widgets :as widgets]))) ; just create
+                   )))
 
 (def ^:private spawn-enemies? true)
 
@@ -67,14 +64,20 @@
   ; (check-not-allowed-diagonals grid)
   )
 
+(defn- load-and-create-components [ctx components]
+  (component/load! components)
+  (component/strict-update components component/create ctx))
+
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (let [ctx (-> ctx
                 (dissoc ::tick-error)
                 (merge {::game-loop-mode mode}
-                       (ecs/->build)
-                       (time-component/->build)
-                       (widgets/->state! ctx)
-                       (tx-handler/initialize! mode record-transactions?)))]
+                       (load-and-create-components
+                        ctx
+                        {:world/ecs true
+                         :world/time true
+                         :world/widgets true
+                         :world/effect-handler [mode record-transactions?]})))]
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:world/tiled-map ctx)]
@@ -87,13 +90,6 @@
 (defn- start-replay-mode! [ctx]
   (input/set-processor! nil)
   (init-game-context ctx :mode :game-loop/replay))
-
-(comment
- (let [components {:world/ecs true
-                   :world/time true
-                   :world/widgets true
-                   :world/effect-handler true}])
- )
 
 (extend-type api.context.Context
   api.context/World

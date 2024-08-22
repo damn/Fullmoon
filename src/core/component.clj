@@ -140,6 +140,14 @@
              ~@(rest fn-body)))))
     ~k))
 
+(defn strict-update [m multimethod & args]
+  (reduce (fn [m [k v]]
+            (if-let [v (apply multimethod [k v] args)]
+              (assoc m k v)
+              m))
+   {}
+   m))
+
 (defn update-map
   "Recursively calls (assoc m k (apply component/fn [k v] args)) for every k of (keys (methods component/fn)),
   which is non-nil/false in m."

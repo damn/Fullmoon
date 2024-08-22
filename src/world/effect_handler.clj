@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             context.graphics.image
             data.animation
+            [core.component :as component :refer [defcomponent]]
             [api.context :as ctx]
             [api.effect :as effect]))
 
@@ -13,6 +14,20 @@
 
 (defn- clear-recorded-txs! []
   (reset! frame->txs {}))
+
+(defcomponent :world/effect-handler {}
+  (component/create [[_ [game-loop-mode record-transactions?]] _ctx]
+    (case game-loop-mode
+      :game-loop/normal (when record-transactions?
+                          (clear-recorded-txs!)
+                          (set-record-txs! true))
+      :game-loop/replay (do
+                         (assert record-txs?)
+                         (set-record-txs! false)
+                         ;(println "Initial entity txs:")
+                         ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
+                         ))
+    nil))
 
 (defn- add-tx-to-frame [frame->txs frame-num tx]
   (update frame->txs frame-num (fn [txs-at-frame]
@@ -89,15 +104,3 @@
 
   (effect-applicable? [ctx effects]
     (some #(effect/applicable? % ctx) effects)))
-
-(defn initialize! [game-loop-mode record-transactions?]
-  (case game-loop-mode
-    :game-loop/normal (when record-transactions?
-                       (clear-recorded-txs!)
-                       (set-record-txs! true))
-    :game-loop/replay (do
-                       (assert record-txs?)
-                       (set-record-txs! false)
-                       ;(println "Initial entity txs:")
-                       ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
-                       )))
