@@ -7,7 +7,6 @@
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer! grid->tiled-map]]
             [mapgen.transitions :as transitions]
-            [mapgen.movement-property :refer (movement-property)]
             [mapgen.cave-gen :as cave-gen]
             [mapgen.nad :as nad])
   (:import java.util.Random))
@@ -244,7 +243,7 @@
                                  (filter #(= :ground     (get grid %)) (grid/posis grid))
                                  (filter #(= :transition (get grid %)) (grid/posis grid)))
         start-position (mapv * start scale)
-        can-spawn? #(= "all" (movement-property tiled-map %))
+        can-spawn? #(= "all" (tiled/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
         spawn-positions (flood-fill scaled-grid start-position can-spawn?)
         ;_ (println "scaled grid with filled nil: '?' \n")

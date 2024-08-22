@@ -7,6 +7,7 @@
   (game-paused? [_]))
 
 (defprotocol Time
+  (update-time [_])
   (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
   (elapsed-time [_] "The elapsed in-game-time (not counting when game is paused).")
   (logic-frame [_] "The game-logic frame number, starting with 1. (not counting when game is paused)")
@@ -119,6 +120,7 @@
   (remove-destroyed-entities! [_] "Calls destroy on all entities which are marked with ':tx/destroy'"))
 
 (defprotocol MouseOverEntity
+  (update-mouseover-entity [_])
   (mouseover-entity* [_]))
 
 (defprotocol WorldRaycaster
@@ -126,6 +128,7 @@
   (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays."))
 
 (defprotocol PotentialField
+  (update-potential-fields [ctx entities])
   (potential-field-follow-to-enemy [_ entity]))
 
 (defprotocol WorldLineOfSight

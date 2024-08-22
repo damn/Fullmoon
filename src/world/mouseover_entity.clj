@@ -23,15 +23,15 @@
   api.context/MouseOverEntity
   (mouseover-entity* [ctx]
     (when-let [entity (::mouseover-entity ctx)]
-      @entity)))
+      @entity))
 
-(defn update! [ctx]
-  (let [entity (if (mouse-on-stage-actor? ctx)
-                 nil
-                 (calculate-mouseover-entity ctx))]
-    [(when-let [old-entity (::mouseover-entity ctx)]
-       [:tx.entity/dissoc old-entity :entity/mouseover?])
-     (when entity
-       [:tx.entity/assoc entity :entity/mouseover? true])
-     (fn [ctx]
-       (assoc ctx ::mouseover-entity entity))]))
+  (update-mouseover-entity [ctx]
+    (let [entity (if (mouse-on-stage-actor? ctx)
+                   nil
+                   (calculate-mouseover-entity ctx))]
+      [(when-let [old-entity (::mouseover-entity ctx)]
+         [:tx.entity/dissoc old-entity :entity/mouseover?])
+       (when entity
+         [:tx.entity/assoc entity :entity/mouseover? true])
+       (fn [ctx]
+         (assoc ctx ::mouseover-entity entity))])))

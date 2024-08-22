@@ -17,7 +17,6 @@
             [api.scene2d.group :refer [add-actor!]]
             [api.scene2d.ui.widget-group :refer [pack!]]
             [api.scene2d.ui.label :refer [set-text!]]
-            [mapgen.movement-property :refer (movement-property movement-properties)]
             [mapgen.module-gen :as module-gen]
             [widgets.error-modal :refer [error-window!]]))
 
@@ -72,8 +71,8 @@ direction keys: move")
             (let [level (get area-level-grid tile)]
               (when (number? level)
                 (str "Area level:" level))))
-          (str "Movement properties " (movement-property tiled-map tile) "\n"
-               (apply vector (movement-properties tiled-map tile)))]
+          (str "Movement properties " (tiled/movement-property tiled-map tile) "\n"
+               (apply vector (tiled/movement-properties tiled-map tile)))]
          (remove nil?)
          (str/join "\n"))))
 
@@ -129,7 +128,7 @@ direction keys: move")
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
-              :let [movement-property (movement-property tiled-map [x y])]]
+              :let [movement-property (tiled/movement-property tiled-map [x y])]]
         (g/draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
                               0.08
                               color/black)

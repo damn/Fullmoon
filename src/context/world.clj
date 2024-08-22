@@ -1,17 +1,12 @@
 (ns context.world
   (:require [clj-commons.pretty.repl :as p]
-
             [gdx.app :as app]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
-
             [utils.core :refer [tile->middle]]
-
             [core.component :refer [defcomponent]]
-
             [data.grid2d :as grid2d]
-
             [api.context :as ctx]
             [api.entity :as entity]
             [api.effect :as effect]
@@ -19,25 +14,19 @@
             [api.world.grid :as world-grid]
             [api.world.content-grid :as content-grid]
             [api.world.cell :as cell]
-
-            (world grid
-                   line-of-sight
-                   content-grid
-                   [potential-fields :as potential-fields]
-                   [raycaster :as raycaster]
-                   [ecs :as ecs]
-                   [mouseover-entity :as mouseover-entity]
-                   [time :as time-component]
-                   [effect-handler :as tx-handler]
-                   [widgets :as widgets])
-
-            [mapgen.movement-property :refer (movement-property)]))
+            (world grid ; build ...
+                   content-grid ; build ...
+                   [raycaster :as raycaster] ; build w. world-grid
+                   [ecs :as ecs] ; just create
+                   [time :as time-component] ; just create
+                   [effect-handler :as tx-handler] ; just create
+                   [widgets :as widgets]))) ; just create
 
 (defn- tiled-map->world-grid [tiled-map]
   (world.grid/->build (tiled/width  tiled-map)
                       (tiled/height tiled-map)
                       (fn [position]
-                        (case (movement-property tiled-map position)
+                        (case (tiled/movement-property tiled-map position)
                           "none" :none
                           "air"  :air
                           "all"  :all))))
@@ -48,6 +37,7 @@
         h (grid2d/height grid)]
     #:world {:tiled-map tiled-map
              :start-position start-position
+
              :grid grid
              :raycaster (raycaster/->build grid #(cell/blocked? % :z-order/flying))
              :content-grid (world.content-grid/->build w h 16 16)
@@ -163,9 +153,9 @@
                                 (ctx/player-entity* ctx)))
 
 (defn- update-world [ctx]
-  (let [ctx (time-component/update-time ctx)
+  (let [ctx (ctx/update-time ctx)
         active-entities (active-entities ctx)]
-    (potential-fields/update! (ctx/world-grid ctx) active-entities)
+    (ctx/update-potential-fields ctx active-entities)
     (try (ctx/tick-entities! ctx active-entities)
          (catch Throwable t
            (p/pretty-pst t 12)
@@ -175,7 +165,7 @@
 
 (defmethod game-loop :game-loop/normal [ctx]
   (ctx/do! ctx [ctx/player-update-state
-                mouseover-entity/update! ; this do always so can get debug info even when game not running
+                ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (ctx/game-paused? %)
                    %

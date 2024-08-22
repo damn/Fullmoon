@@ -150,10 +150,6 @@
 (def ^:private factions-iterations {:good 5
                                     :evil 15})
 
-(defn update! [world-grid entities]
-  (doseq [[faction max-iterations] factions-iterations]
-    (update-faction-potential-field world-grid faction entities max-iterations)))
-
 ;; MOVEMENT AI
 
 (let [order (grid2d/get-8-neighbour-positions [0 0])]
@@ -259,6 +255,11 @@
 
 (extend-type api.context.Context
   api.context/PotentialField
+  (update-potential-fields [ctx entities]
+    (let [world-grid (ctx/world-grid ctx)]
+      (doseq [[faction max-iterations] factions-iterations]
+        (update-faction-potential-field world-grid faction entities max-iterations))))
+
   (potential-field-follow-to-enemy [ctx entity]
     (potential-field-follow-to-enemy (ctx/world-grid ctx) entity)))
 

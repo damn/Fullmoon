@@ -11,9 +11,16 @@
 
 (extend-type api.context.Context
   api.context/Time
-  (delta-time     [ctx] (::delta-time   ctx))
-  (elapsed-time   [ctx] (::elapsed-time ctx))
-  (logic-frame    [ctx] (::logic-frame  ctx))
+  (update-time [ctx]
+    (let [delta (min (graphics/delta-time) entity/max-delta-time)]
+      (-> ctx
+          (assoc ::delta-time delta)
+          (update ::elapsed-time + delta)
+          (update ::logic-frame inc))))
+
+  (delta-time   [ctx] (::delta-time   ctx))
+  (elapsed-time [ctx] (::elapsed-time ctx))
+  (logic-frame  [ctx] (::logic-frame  ctx))
 
   (->counter [ctx duration]
     {:pre [(>= duration 0)]}
@@ -31,10 +38,3 @@
       0
       ; min 1 because floating point math inaccuracies
       (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
-
-(defn update-time [ctx]
-  (let [delta (min (graphics/delta-time) entity/max-delta-time)]
-    (-> ctx
-        (assoc ::delta-time delta)
-        (update ::elapsed-time + delta)
-        (update ::logic-frame inc))))

@@ -29,7 +29,12 @@
               [:entity/inventory]
 
               [:effect/target-entity]
-              [:effect/target-all]]
+              [:effect/target-all]
+
+              [:world/line-of-sight]
+              [:world/mouseover-entity]
+              [:world/potential-fields]
+              ]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
