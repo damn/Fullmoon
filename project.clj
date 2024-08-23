@@ -66,14 +66,18 @@
    {:sources #{"src"}
     :output "target/hiera"
     :layout :horizontal
-    :cluster-depth 1
     :external false
-    :ignore #{"gdx" ; no deps ...
-              "math"
-              "utils"
-              "data"
-              "core"
-              "api"
-              "mapgen"
-              "effect-ctx"}}))
+    :ignore #{"dev" ; ignore
+              "app"
+
+              "gdx"   ; 1. layer
+              "math"  ; 2. layer
+              "utils" ; 3. layer
+              "core"  ; 4. layer
+
+              ; is ok
+              "components.entity"
+              "components.properties"
+              }}))
+
  )
