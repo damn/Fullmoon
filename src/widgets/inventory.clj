@@ -9,7 +9,7 @@
             [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [api.effect :as effect]
             [api.entity :as entity]
-            [entity.inventory :as inventory]
+            [api.inventory :as inventory]
             app)
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)

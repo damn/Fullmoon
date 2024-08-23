@@ -6,7 +6,7 @@
             [gdx.input.buttons :as buttons]
             [api.entity :as entity]
             [api.entity-state :as state]
-            [entity.inventory :as inventory]))
+            [api.inventory :as inventory]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)
