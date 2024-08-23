@@ -48,16 +48,17 @@
 
 
   (op/apply [[operation-k value] val-max]
-    {:post [(m/validate val-max-schema %)]}
     (assert (m/validate val-max-schema val-max) (pr-str val-max))
     (let [[val-or-max op-k] (val-max-op-k->parts operation-k)
           f #(op/apply [op-k value] %)
           [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
           v  (->pos-int v)
-          mx (->pos-int mx)]
-      (case val-or-max
-        :val [v (max v mx)]
-        :max [(min v mx) mx])))
+          mx (->pos-int mx)
+          vmx (case val-or-max
+                :val [v (max v mx)]
+                :max [(min v mx) mx])]
+      (assert (m/validate val-max-schema vmx))
+      vmx))
 
   (op/order [[op-k value]]
     (let [[_ op-k] (val-max-op-k->parts op-k)]

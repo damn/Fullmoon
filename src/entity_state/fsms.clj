@@ -103,14 +103,15 @@
 ; TODO these two actually go to :entity.creature/state as they are related to that fsm
 
 (defcomponent :effect/stun data/pos-attr
-  (effect/text [[_ duration] _effect-ctx]
+  duration
+  (effect/text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
   (effect/applicable? [_ {:keys [effect/target]}]
     (and target
          (:entity/state @target)))
 
-  (effect/do! [[_ duration] {:keys [effect/target]}]
+  (effect/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect/kill data/boolean-attr

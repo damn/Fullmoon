@@ -9,6 +9,7 @@
   (-> state :fsm :state))
 
 (defcomponent :entity/state {}
+  {:keys [state-obj]}
   (entity/create [[k {:keys [fsm initial-state state-obj-constructors]}] eid ctx]
     ; fsm throws when initial-state is not part of states, so no need to assert initial-state
     [[:tx.entity/assoc eid k {:fsm (assoc (fsm initial-state nil)
@@ -22,12 +23,12 @@
     ; => again a component ... ?
     (str "[YELLOW]State: " (name (state-key state)) "[]"))
 
-  (entity/tick [[_ {:keys [state-obj]}] _eid ctx]
+  (entity/tick [_ _eid ctx]
     (state/tick state-obj ctx))
 
-  (entity/render-below [[_ {:keys [state-obj]}] entity* g ctx] (state/render-below state-obj entity* g ctx))
-  (entity/render-above [[_ {:keys [state-obj]}] entity* g ctx] (state/render-above state-obj entity* g ctx))
-  (entity/render-info  [[_ {:keys [state-obj]}] entity* g ctx] (state/render-info  state-obj entity* g ctx)))
+  (entity/render-below [_ entity* g ctx] (state/render-below state-obj entity* g ctx))
+  (entity/render-above [_ entity* g ctx] (state/render-above state-obj entity* g ctx))
+  (entity/render-info  [_ entity* g ctx] (state/render-info  state-obj entity* g ctx)))
 
 (extend-type api.entity.Entity
   entity/State

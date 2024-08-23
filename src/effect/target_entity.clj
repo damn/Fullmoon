@@ -30,30 +30,30 @@
 ; can not contain the other effects properly o.o
 (defcomponent :hit-effects (data/components-attribute :effect))
 
-(defcomponent :effect/target-entity {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
-                                     :schema [:map {:closed true}
-                                              [:hit-effects [:map]]
-                                              [:maxrange pos?]]
-                                     :default-value {:hit-effects {}
-                                                     :max-range 2.0}
-                                     :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
-Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
-  (effect/text [[_ {:keys [maxrange hit-effects]}] ctx]
+(defcomponent :effect/target-entity
+  {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
+   :schema [:map {:closed true}
+            [:hit-effects [:map]]
+            [:maxrange pos?]]
+   :default-value {:hit-effects {}
+                   :max-range 2.0}
+   :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
+        Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
+  {:keys [maxrange hit-effects]}
+  (effect/text [_ ctx]
     (str "Range " maxrange " meters\n"
          (ctx/effect-text ctx hit-effects)))
 
-  (effect/applicable? [[_ {:keys [hit-effects]}]
-                       {:keys [effect/target] :as ctx}]
+  (effect/applicable? [_ {:keys [effect/target] :as ctx}]
     (and target
          (ctx/effect-applicable? ctx hit-effects)))
 
-  (effect/useful? [[_ {:keys [maxrange]}] {:keys [effect/source effect/target]}]
+  (effect/useful? [_ {:keys [effect/source effect/target]}]
     (assert source)
     (assert target)
     (in-range? @source @target maxrange))
 
-  (effect/do! [[_ {:keys [maxrange hit-effects]}]
-               {:keys [effect/source effect/target]}]
+  (effect/do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -74,7 +74,7 @@ Cancels if line of sight is lost. Draws a red/yellow line wheter the target is i
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx.entity/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (effect/render-info [[_ {:keys [maxrange]}] g {:keys [effect/source effect/target]}]
+  (effect/render-info [_ g {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (g/draw-line g

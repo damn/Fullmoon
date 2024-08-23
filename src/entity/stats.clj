@@ -254,13 +254,14 @@
  )
 
 (defcomponent :entity/stats (data/components-attribute :stats)
-  (component/create [[_ stats] _ctx]
+  stats
+  (component/create [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))
         (update :stats/modifiers build-modifiers)))
 
-  (component/info-text [[_ stats] _ctx]
+  (component/info-text [_ _ctx]
     (str (stats-info-texts stats)
          "\n"
          (stats-modifiers-info-text (:stats/modifiers stats))))
@@ -300,28 +301,27 @@
       [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
 
-(defmacro def-set-to-max-effect [stat]
-  `(defcomponent ~(keyword "effect" (str (name (namespace stat)) "-" (name stat) "-set-to-max"))
-     {:widget :label
-      :schema [:= true]
-      :default-value true}
-     (effect/text ~'[_ _effect-ctx]
-       ~(str "Sets " (name stat) " to max."))
+; breaks with defcomponent because the sys-impls are not a list but a 'cons'
+#_(defcomponent ::effect/stats-mana-set-to-max {:widget :label
+                                              :schema [:= true]
+                                              :default-value true}
+  (effect/text [_ _effect-ctx]
+    (str "Sets " (name stat) " to max."))
 
-     (effect/applicable? ~'[_ _effect-ctx] true)
+  (effect/applicable? ~'[_ _effect-ctx] true)
 
-     (effect/useful? ~'[_ {:keys [effect/source]}]
-       (lower-than-max? (~stat (:entity/stats @~'source))))
+  (effect/useful? ~'[_ {:keys [effect/source]}]
+    (lower-than-max? (~stat (:entity/stats @~'source))))
 
-     (effect/do! ~'[_ {:keys [effect/source]}]
-       [[:tx/sound "sounds/bfxr_click.wav"]
-        [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]])))
+  (effect/do! ~'[_ {:keys [effect/source]}]
+    [[:tx/sound "sounds/bfxr_click.wav"]
+     [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))
 
 ; TODO sound will be played twice !
 ; => or re-add effect/sound & make it useful? false ....
 ; also this is target-self
-(def-set-to-max-effect :stats/hp)
-(def-set-to-max-effect :stats/mana)
+#_(def-set-to-max-effect :stats/hp)
+#_(def-set-to-max-effect :stats/mana)
 
 (defn- entity*->melee-damage [entity*]
   (let [strength (or (entity/stat entity* :stats/strength) 0)]
@@ -388,7 +388,8 @@
 (defcomponent :damage/min-max data/val-max-attr)
 
 (defcomponent :effect/damage (data/map-attribute :damage/min-max)
-  (effect/text [[_ damage] {:keys [effect/source]}]
+  damage
+  (effect/text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
@@ -400,7 +401,7 @@
     (and target
          (entity/stat @target :stats/hp)))
 
-  (effect/do! [[_ damage] {:keys [effect/source effect/target]}]
+  (effect/do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]

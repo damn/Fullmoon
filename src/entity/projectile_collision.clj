@@ -7,21 +7,18 @@
             [api.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision {}
+  {:keys [hit-effects already-hit-bodies piercing?]}
   (component/create [[_ v] _ctx]
     (assoc v :already-hit-bodies #{}))
 
   ; TODO add proper effect-ctx here for effect-ctx/text
   ; TODO DRY! LIME color for effects ...
-  (component/info-text [[_ {:keys [hit-effects piercing?]}] ctx]
+  (component/info-text [_ ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
          "[LIME]" (ctx/effect-text ctx hit-effects) "[]"))
 
   ; TODO probably belongs to body
-  (entity/tick [[k {:keys [hit-effects
-                           already-hit-bodies
-                           piercing?]}]
-                entity
-                ctx]
+  (entity/tick [[k _] entity ctx]
     ; TODO this could be called from body on collision
     ; for non-solid
     ; means non colliding with other entities

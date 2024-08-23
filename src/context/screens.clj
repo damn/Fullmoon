@@ -4,7 +4,8 @@
             [api.screen :as screen]))
 
 (defcomponent :context/screens {}
-  (component/create [[_ screens] ctx]
+  screens
+  (component/create [_ ctx]
     (let [first-screen (first screens)
           screens (zipmap screens (repeat true))]
       (component/load! screens)

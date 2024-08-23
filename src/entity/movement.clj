@@ -46,7 +46,8 @@
         (try-move grid body (assoc movement :direction [0 ydir])))))
 
 (defcomponent :entity/movement {}
-  (entity/tick [[_ {:keys [direction speed rotate-in-movement-direction?] :as movement}] eid ctx]
+  {:keys [direction speed rotate-in-movement-direction?] :as movement}
+  (entity/tick [_ eid ctx]
     (assert (m/validate entity/movement-speed-schema speed))
     (assert (or (zero? (v/length direction))
                 (v/normalised? direction)))
@@ -66,9 +67,9 @@
 
 (defcomponent :tx.entity/set-movement {}
   (effect/do! [[_ entity movement] ctx]
-    {:pre [(or (nil? movement)
-               (and (:direction movement) ; continue schema of that ...
-                    #_(:speed movement)))]} ; princess no stats/movement-speed, then nil and here assertion-error
+    (assert (or (nil? movement)
+                (and (:direction movement) ; continue schema of that ...
+                     #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
     [[:tx.entity/assoc entity :entity/movement movement]]))
 
 ; TODO add teleport effect ~ or tx

@@ -92,53 +92,63 @@
 
 (def warn-name-ns-mismatch? false)
 
-
 (defmacro defcomponent [k attr-map & sys-impls]
-  `(do
-    (assert (keyword? ~k) (pr-str ~k))
+  (let [let-bindings? (not (list? (first sys-impls)))
+        let-bindings (if let-bindings?
+                       (first sys-impls)
+                       nil)
+        sys-impls (if let-bindings?
+                    (rest sys-impls)
+                    sys-impls)]
+    `(do
 
-    (when (and warn-name-ns-mismatch?
-               (not= (#'k->component-ns ~k) (ns-name *ns*)))
-      (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
+      (assert (keyword? ~k) (pr-str ~k))
 
-    (when (and warn-on-override (get attributes ~k))
-      (println "WARNING: Overwriting defcomponent" ~k))
+      (when (and warn-name-ns-mismatch?
+                 (not= (#'k->component-ns ~k) (ns-name *ns*)))
+        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
 
-    (alter-var-root #'attributes assoc ~k ~attr-map)
+      (when (and warn-on-override (get attributes ~k))
+        (println "WARNING: Overwriting defcomponent" ~k))
 
-    ~@(for [[sys & fn-body] sys-impls
-            :let [sys-var (resolve sys)
-                  sys-params (:params (meta sys-var))
-                  fn-params (first fn-body)]]
-        (do
+      (alter-var-root #'attributes assoc ~k ~attr-map)
 
-         ; TODO throw stuff in separate functions
+      ~@(for [[sys & fn-body] sys-impls
+              :let [sys-var (resolve sys)
+                    sys-params (:params (meta sys-var))
+                    fn-params (first fn-body)
+                    fn-exprs (rest fn-body)]]
+          (do
 
-         (when-not sys-var
-           (throw (IllegalArgumentException. (str sys " does not exist."))))
+           ; TODO throw stuff in separate functions
 
-         (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
-           (throw (IllegalArgumentException.
-                   (str sys-var " requires " (count sys-params) " args: " sys-params "."
-                        " Given " (count fn-params)  " args: " fn-params))))
+           (when-not sys-var
+             (throw (IllegalArgumentException. (str sys " does not exist."))))
 
-         `(do
-           ; TODO k down there doesn't work if its a let binding
-           ; assumes its a keyword ....
-           ; but anyway remove other defmacro
-           ; defmacro def-set-to-max-effect
-           (assert (keyword? ~k) (pr-str ~k))
+           (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
+             (throw (IllegalArgumentException.
+                     (str sys-var " requires " (count sys-params) " args: " sys-params "."
+                          " Given " (count fn-params)  " args: " fn-params))))
 
-           (alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
+           `(do
+             ; TODO k down there doesn't work if its a let binding
+             ; assumes its a keyword ....
+             ; but anyway remove other defmacro
+             ; defmacro def-set-to-max-effect
+             (assert (keyword? ~k) (pr-str ~k))
 
-           (when (and warn-on-override
-                      (get (methods @~sys-var) ~k))
-             (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
+             (alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
 
-           (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
-             ~fn-params
-             ~@(rest fn-body)))))
-    ~k))
+             (when (and warn-on-override
+                        (get (methods @~sys-var) ~k))
+               (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
+
+             (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
+               [& params#]
+               (let [~(if let-bindings? let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
+                     ~fn-params params#]
+                 ~@fn-exprs)))))
+      ~k)))
 
 (defn strict-update [m system ctx]
   (reduce (fn [ctx [k v]]

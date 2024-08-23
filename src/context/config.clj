@@ -2,5 +2,6 @@
   (:require [core.component :refer [defcomponent] :as component]))
 
 (defcomponent :context/config {}
-  (component/create [[_ {:keys [tag configs]}] _ctx]
+  {:keys [tag configs]}
+  (component/create [_ _ctx]
     (get configs tag)))

@@ -3,5 +3,6 @@
             [api.entity :as entity]))
 
 (defcomponent :entity/destroy-audiovisual {}
-  (entity/destroy [[_ audiovisuals-id] entity ctx]
+  audiovisuals-id
+  (entity/destroy [_ entity ctx]
     [[:tx.entity/audiovisual (:position @entity) audiovisuals-id]]))

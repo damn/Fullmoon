@@ -53,7 +53,7 @@
   :skill/action-time-modifier-key :stats/cast-speed,
   :skill/cooldown 0,
   :skill/cost 0,
-  :skill/effects {:effect/stats-mana-set-to-max true},
+  :skill/effects {},
   :skill/start-action-sound "sounds/shoot.wav"}
  {:property/id :skills/death-ray,
   :property/image

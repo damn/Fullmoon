@@ -130,7 +130,8 @@
          (#(zipmap (map :property/id %) %)))))
 
 (defcomponent :context/properties {}
-  (component/create [[_ {:keys [file types]}] ctx]
+  {:keys [file types]}
+  (component/create [_ ctx]
     (defcomponent :property/pretty-name data/string-attr)
     (defcomponent :property/image       data/image)
     (defcomponent :property/animation   data/animation)

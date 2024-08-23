@@ -35,7 +35,8 @@
                                   :schema [:map {:closed true}
                                            [:hit-effects [:map]] ]
                                   :default-value {:hit-effects {}}}
-  (effect/text [[_ {:keys [hit-effects]}] ctx]
+  {:keys [hit-effects]}
+  (effect/text [_ ctx]
     (str "All visible targets:" (ctx/effect-text ctx hit-effects)))
 
   (effect/applicable? [_ _ctx] true)
@@ -45,7 +46,7 @@
     false
     )
 
-  (effect/do! [[_ {:keys [hit-effects]}] {:keys [effect/source effect/target] :as ctx}]
+  (effect/do! [_ {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source]
       (apply concat
              (for [target (all-targets ctx)]

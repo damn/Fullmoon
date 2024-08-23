@@ -38,11 +38,11 @@
     manager))
 
 (defcomponent :context/assets {}
-  (component/create [[_ {:keys [folder
-                                sound-file-extensions
-                                image-file-extensions
-                                log-load-assets?]}]
-                     _ctx]
+  {:keys [folder
+          sound-file-extensions
+          image-file-extensions
+          log-load-assets?]}
+  (component/create [_ _ctx]
     (let [sound-files   (recursively-search-files folder sound-file-extensions)
           texture-files (recursively-search-files folder image-file-extensions)]
       {:manager (load-all-assets! :log-load-assets? log-load-assets?
@@ -68,6 +68,7 @@
   (all-texture-files [ctx] (:texture-files (this ctx))))
 
 (defcomponent :tx/sound {}
-  (effect/do! [[_ file] ctx]
+  file
+  (effect/do! [_ ctx]
     (ctx/play-sound! ctx file)
     ctx))

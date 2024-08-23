@@ -192,7 +192,8 @@
 ; => one to one attr!?
 (defcomponent :effect/spawn {:widget :text-field
                              :schema [:qualified-keyword {:namespace :creatures}]}
-  (effect/text [[_ creature-id] _effect-ctx]
+  creature-id
+  (effect/text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))
 
   (effect/applicable? [_ {:keys [effect/source effect/target-position]}]
@@ -201,7 +202,7 @@
     (and (:entity/faction @source)
          target-position))
 
-  (effect/do! [[_ creature-id] {:keys [effect/source effect/target-position]}]
+  (effect/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx.entity/creature
       creature-id

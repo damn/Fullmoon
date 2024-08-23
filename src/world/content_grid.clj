@@ -32,16 +32,15 @@
          (mapcat (comp :entities deref)))))
 
 (defcomponent :world/content-grid {}
-  (component/create [[_ [cell-w cell-h]] {:keys [world/grid]}]
-    (->ContentGrid
-     (grid2d/create-grid
-      (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
-      (inc (int (/ (grid2d/height grid) cell-h)))
-      (fn [idx]
-        (atom {:idx idx,
-               :entities #{}})))
-     cell-w
-     cell-h)))
+  [cell-w cell-h]
+  (component/create [_ {:keys [world/grid]}]
+    (->ContentGrid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
+                                       (inc (int (/ (grid2d/height grid) cell-h)))
+                                       (fn [idx]
+                                         (atom {:idx idx,
+                                                :entities #{}})))
+                   cell-w
+                   cell-h)))
 
 (comment
 

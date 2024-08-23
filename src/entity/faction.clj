@@ -5,7 +5,8 @@
             [api.entity :as entity]))
 
 (defcomponent :entity/faction (data/enum :good :evil)
-  (component/info-text [[_ faction] _ctx]
+  faction
+  (component/info-text [_ _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
 (extend-type api.entity.Entity

@@ -4,7 +4,8 @@
             [api.entity :as entity]))
 
 (defcomponent :entity/image {}
-  (entity/render-default [[_ image] entity* g _ctx]
+  image
+  (entity/render-default [_ entity* g _ctx]
     (g/draw-rotated-centered-image g
                                    image
                                    (or (:rotation-angle entity*) 0)

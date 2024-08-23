@@ -17,20 +17,22 @@
   (str (+? value) (value-text operation)))
 
 (defcomponent :op/inc {:widget :text-field :schema number?}
-  (value-text [[_ value]]
+  value
+  (value-text [_]
     (str value))
 
-  (apply [[_ value] base-value]
+  (apply [_ base-value]
     (+ base-value value))
 
   (order [_]
     0))
 
 (defcomponent :op/mult {:widget :text-field :schema number?}
-  (value-text [[_ value]]
+  value
+  (value-text [_]
     (str (int (* 100 value)) "%"))
 
-  (apply [[_ value] base-value]
+  (apply [_ base-value]
     (* base-value (inc value)))
 
   (order [_]

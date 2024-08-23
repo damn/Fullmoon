@@ -17,12 +17,13 @@
 (defn- entities [ctx] (this ctx))
 
 (defcomponent :entity/uid {}
-  (entity/create [[_ uid] entity ctx]
-    {:pre [(number? uid)]}
+  uid
+  (entity/create [_ entity ctx]
+    (assert (number? uid))
     (update ctx this assoc uid entity))
 
-  (entity/destroy [[_ uid] _entity ctx]
-    {:pre [(contains? (entities ctx) uid)]}
+  (entity/destroy [_ _entity ctx]
+    (assert (contains? (entities ctx) uid))
     (update ctx this dissoc uid)))
 
 (let [cnt (atom 0)]
@@ -35,8 +36,8 @@
 
 (defcomponent :tx/create {}
   (effect/do! [[_ body components] ctx]
-    {:pre [(not (contains? components :entity/id))
-           (not (contains? components :entity/uid))]}
+    (assert (and (not (contains? components :entity/id))
+                 (not (contains? components :entity/uid))))
     (let [entity (atom nil)
           body (entity/->Body body)
           components (-> components
