@@ -1,5 +1,4 @@
-(ns api.context
-  (:require [core.component :refer [defsystem]]))
+(ns api.context)
 
 (defrecord Context [])
 
