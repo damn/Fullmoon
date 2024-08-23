@@ -57,7 +57,7 @@
                   :image image
                   :faction faction
                   :delete-after-duration (/ max-range speed)
-                  :plop true
+                  :destroy-audiovisual :audiovisuals/hit-wall
                   :projectile-collision {:hit-effects effects
                                          :piercing? piercing?}}]])))
 

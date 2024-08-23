@@ -147,7 +147,8 @@
                      {:entity/clickable {:type :clickable/princess}}))
             (update :entity/state set-state)  ; do @ entity/state itself
             (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
-                   :entity.creature/species (str/capitalize (name (:creature/species props)))))]])))
+                   :entity.creature/species (str/capitalize (name (:creature/species props)))
+                   :entity/destroy-audiovisual :audiovisuals/creature-die))]])))
 
 (comment
 

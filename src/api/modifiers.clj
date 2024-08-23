@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [gdx.graphics.color :as color]
             [utils.core :refer [k->pretty-name]]
-            [api.op :as op]))
+            [api.operation :as op]))
 
 (com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
                                       color/cyan

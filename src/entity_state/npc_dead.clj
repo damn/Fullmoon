@@ -5,8 +5,7 @@
 (defrecord NpcDead [eid]
   state/State
   (enter [_ _ctx]
-    [[:tx/destroy eid]
-     [:tx.entity/audiovisual (:position @eid) :audiovisuals/creature-die]])
+    [[:tx/destroy eid]])
 
   (exit [_ _ctx])
   (tick [_ _ctx])

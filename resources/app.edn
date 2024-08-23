@@ -9,7 +9,7 @@
 
               [:entity/movement]
               [:entity/projectile-collision]
-              [:entity/plop]
+              [:entity/destroy-audiovisual]
 
               [:entity/image]
               [:entity/animation]
