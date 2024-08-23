@@ -1,0 +1,105 @@
+
+; 1. step -  z-order means movement-type & line of sight & render... too many things ...
+
+; component themself would render themself and have render-order?
+
+; like this ??
+
+:z-order/items
+:z-order/creatures
+; :z-order/flying-creatures
+:z-order/projectiles
+:z-order/effects
+; no flying creatures then ??
+
+[:z-order/on-ground
+ ; only item entity
+
+ :z-order/ground
+ ; creatures
+ :z-order/flying
+ ; creatures (they could fly over others if movement AI would allow)
+ ; projectile is flying too
+ ; valid-position wouldn't allow , doesn't recognise z-order.
+
+ ; so projectiles would go over
+
+ :z-order/effect
+ ; audiovisual
+ ; line-render
+ ; shout (doesnt render at all)
+
+ ]
+
+; => render is render/body ....
+:entity/mouseover?
+
+; Maybe everything render at one specific z-order
+; so I know whats going on
+
+; TODO = just decide for the order of things (including z-orders ) and do it that way straightforward -
+
+(defsystem render-below   [_ entity* g ctx])
+; * OK mouseover-outline
+; * ? state - stunned-circle
+; * world-item-in-hand => can just drop around player and remove this
+
+(defsystem render-default [_ entity* g ctx])
+; * TOP_LVL over effects even - mouseover text (shouldn't be at z-order, as in item text is below other stuffs)
+; (how does diablo deal with items below creatures where does the text go ?)
+; * image (animation)
+; * line-render
+
+(defsystem render-above   [_ entity* g ctx])
+; * damage effect (shouldn't be at z-order of entities ....)
+; * state - sleeping zzzz
+
+(defsystem render-info    [_ entity* g ctx])
+; * => move to above stats - hp bar (move out of stats ? ?) (FLYING ENTITIES ARE FLYING OVER YOUR HPBAR HOW DOES WC3 DOES IT ? )
+; * => move to above state - skill icon & target entity info render
+
+
+; z-order itself is confusing also ... and mixed up with solid and cell/blocked...
+* context.game.world.grid usees blocked?...
+* potential field cell-blocked? uses z-order/ground
+
+* entity.projectile-collision
+  cell/blocked? for the projectile -> wall-collisions? true, and collides =>  body-collisions? true
+  or even more flags
+  => collides when moving, can be hit by projectiles, ...
+  projectiles could hit each other when not friendly ...
+
+* entity.movement
+  valid-position? -> cell/blocked?
+
+  ;;
+
+* render-game! => only render those with z-order
+
+;;
+
+* set-cell-blocked-boolean-array
+  => cell blocked flying??? (light rays ? )
+
+*  line-of-sight?
+  => only with z-order ....
+
+;;
+
+
+* mouseover-entity sort by z-order (== render order ... )
+  don't mouseover effects ... o.o
+  only z-order
+    => we actually mean we only mouseover items,creatures&projectiles entity/type ....
+    => our actual meaning?
+    => can be targeted , can be collided ...
+ * only creatures are solid
+    => because - clickable - faction - collides - hpbar
+    clickable or info (selected circle&show faction ) or targetable or entity-info-text interesting ...
+    so should all with render info text show ?!
+      => maybe go by entity/type instead ?
+
+      clickable ( clickable ) or creature (stats, etc. targetable ) or projectile (info text proj. collision, want to make targetable )
+      => wherever we use ctx/mousever-entity* we want the outline, otherwise not ....
+
+* ecs render-entities by z-order (== render order ... )
