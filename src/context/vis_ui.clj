@@ -1,14 +1,14 @@
 (ns context.vis-ui
   (:require [gdx.input :as input]
             [gdx.scene2d.stage :as stage]
+            data.image
             [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.screen :as screen]
             [api.scene2d.actor :as actor]
             [api.scene2d.group :as group]
             [api.scene2d.ui.table :as table]
-            [api.scene2d.ui.widget-group :refer [pack!]]
-            context.graphics.image)
+            [api.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
@@ -168,7 +168,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image context.graphics.image.Image
+(defmethod ->vis-image data.image.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
