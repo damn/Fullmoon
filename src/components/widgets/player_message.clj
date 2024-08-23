@@ -1,4 +1,4 @@
-(ns widgets.player-message
+(ns components.widgets.player-message
   (:require [gdx.graphics :as graphics]
             [core.component :refer [defcomponent]]
             [core.context :as ctx :refer [->actor]]

@@ -1,4 +1,4 @@
-(ns widgets.error-modal
+(ns components.widgets.error-modal
   (:require [core.context :as ctx]))
 
 (defn error-window! [ctx throwable]

@@ -13,7 +13,7 @@
             [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [core.scene2d.ui.cell :refer [set-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]
-            [widgets.error-modal :refer [error-window!]]))
+            [components.widgets.error-modal :refer [error-window!]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows

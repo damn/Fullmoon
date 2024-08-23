@@ -9,13 +9,13 @@
             [core.scene2d.group :as group]
             core.scene2d.ui.button-group
             [components.entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
-            [widgets.player-message :as player-message]
-            [widgets.action-bar :as action-bar]
-            [widgets.debug-window :as debug-window]
-            [widgets.entity-info-window :as entity-info-window]
-            [widgets.inventory :as inventory]
-            [widgets.hp-mana-bars :refer [->hp-mana-bars]]
-            widgets.player-modal))
+            [components.widgets.player-message :as player-message]
+            [components.widgets.action-bar :as action-bar]
+            [components.widgets.debug-window :as debug-window]
+            [components.widgets.entity-info-window :as entity-info-window]
+            [components.widgets.inventory :as inventory]
+            [components.widgets.hp-mana-bars :refer [->hp-mana-bars]]
+            components.widgets.player-modal))
 
 (defn- ->action-bar-table [ctx]
   (ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)

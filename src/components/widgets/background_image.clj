@@ -1,4 +1,4 @@
-(ns widgets.background-image
+(ns components.widgets.background-image
   (:require [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]))
 

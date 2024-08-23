@@ -1,4 +1,4 @@
-(ns widgets.player-modal
+(ns components.widgets.player-modal
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
             [core.scene2d.actor :refer [remove!]]

@@ -1,4 +1,4 @@
-(ns widgets.inventory
+(ns components.widgets.inventory
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]

@@ -1,4 +1,4 @@
-(ns widgets.entity-info-window
+(ns components.widgets.entity-info-window
   (:require [clojure.string :as str]
             [core.component :as component]
             [core.context :as ctx :refer [->actor ->window ->label]]

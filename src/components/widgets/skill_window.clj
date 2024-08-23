@@ -1,4 +1,4 @@
-(ns widgets.skill-window
+(ns components.widgets.skill-window
   (:require [core.context :as ctx :refer [->window ->image-button get-property player-tooltip-text]]
             [core.scene2d.actor :refer [add-tooltip!]]))
 

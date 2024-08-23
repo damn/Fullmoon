@@ -1,4 +1,4 @@
-(ns widgets.action-bar
+(ns components.widgets.action-bar
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx :refer [->image-button player-tooltip-text]]
             [core.scene2d.actor :as actor :refer [remove! add-tooltip!]]

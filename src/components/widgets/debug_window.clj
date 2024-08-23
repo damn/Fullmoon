@@ -1,4 +1,4 @@
-(ns widgets.debug-window
+(ns components.widgets.debug-window
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             utils.core
