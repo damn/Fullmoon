@@ -1,0 +1,18 @@
+Could even use a state machine for connecting screens
+instead of checking key pressed its like events
+and visualize it from the code ...
+
+
+Make entities as outer-radius-circle or ellipses
+but same as mouseover-entity-shown should be the collision
+or show rect for now
+
+=> but can items be placed on water??
+or on walls???
+-> unclarity with collides?/valid-position/z-order/etc.
+
+* item in hand is drawn at 48x48 and in inventory cells at different size (suddenly smaller )
+; but needs to be smaller because of dropping
+or make dropping itself simpler
+
+* If player colliding with a cell, highlight the cell for a second in red/orange
