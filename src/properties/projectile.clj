@@ -1,17 +1,16 @@
 (ns properties.projectile
   (:require [clojure.string :as str]
             [math.vector :as v]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [core.data :as data]
             [api.context :as ctx]
             [api.effect :as effect]
-            [api.entity :as entity]
-            [api.properties :as properties]))
+            [api.entity :as entity]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 
 (defcomponent :properties/projectile {}
-  (properties/create [_]
+  (component/create [_ _ctx]
 
     ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
     ; -> first range check then ray ! otherwise somewhere in contentfield out of sight

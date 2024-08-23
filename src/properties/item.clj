@@ -1,9 +1,8 @@
 (ns properties.item
   (:require [clojure.string :as str]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
-            [api.properties :as properties]
             [api.modifiers :as modifiers]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
@@ -13,7 +12,7 @@
                                                                         (float 1)))
 
 (defcomponent :properties/item {}
-  (properties/create [_]
+  (component/create [_ _ctx]
 
     ; could make optional - shorter properties.edn ...
     ; and some items could just be fluff

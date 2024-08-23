@@ -3,8 +3,7 @@
             [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.context :as ctx]
-            [api.properties :as properties]))
+            [api.context :as ctx]))
 
 (def ^:private skill-cost-color "[CYAN]")
 (def ^:private action-time-color "[GOLD]")
@@ -12,7 +11,7 @@
 (def ^:private effect-color "[CHARTREUSE]")
 
 (defcomponent :properties/skill {}
-  (properties/create [_]
+  (component/create [_ _ctx]
     (defcomponent :skill/action-time data/pos-attr)
     (defcomponent :skill/cooldown data/nat-int-attr)
     (defcomponent :skill/cost data/nat-int-attr)

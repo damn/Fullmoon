@@ -5,7 +5,6 @@
             [api.context :as ctx]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.properties :as properties]
             [entity-state.fsms :as fsms]))
 
 (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
@@ -25,7 +24,7 @@
     (str "[LIGHT_GRAY]Species: " species "[]")))
 
 (defcomponent :properties/creature {}
-  (properties/create [_]
+  (component/create [_ _ctx]
 
     ; TODO how 2 do default values,its not default-values , its non-optional attributes !
     ; similar to components nested-map

@@ -1,12 +1,11 @@
 (ns properties.audiovisual
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [api.context :as ctx]
-            [api.properties :as properties]
             [api.effect :as effect]))
 
 (defcomponent :properties/audiovisual {}
-  (properties/create [_]
+  (component/create [_ _ctx]
     {:id-namespace "audiovisuals"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :audiovisuals}]]

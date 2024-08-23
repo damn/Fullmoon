@@ -6,7 +6,6 @@
             [core.component :refer [defcomponent] :as component]
             [core.data :as data]
             [api.context :as ctx]
-            api.properties
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
@@ -138,7 +137,7 @@
     (defcomponent :property/sound       data/sound)
     (let [types (zipmap types (repeat true))
           _ (component/load! types)
-          types (component/update-map types api.properties/create)]
+          types (component/update-map types component/create nil)]
       {:file file
        :types types
        :db (load-edn ctx types file)})))

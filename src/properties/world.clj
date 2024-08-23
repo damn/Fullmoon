@@ -1,10 +1,9 @@
 (ns properties.world
   (:require [core.component :refer [defcomponent]]
-            [core.data :as data]
-            [api.properties :as properties]))
+            [core.data :as data]))
 
 (defcomponent :properties/world {}
-  (properties/create [_]
+  (component/create [_ _ctx]
     (defcomponent :world/map-size data/pos-int-attr)
     (defcomponent :world/max-area-level data/pos-int-attr) ; TODO <= map-size !?
     (defcomponent :world/princess {:schema [:qualified-keyword {:namespace :creatures}]})
