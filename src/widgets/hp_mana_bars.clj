@@ -1,6 +1,6 @@
 (ns widgets.hp-mana-bars
   (:require [utils.core :as utils]
-            [data.val-max :refer [val-max-ratio]]
+            [core.val-max :refer [val-max-ratio]]
             [core.context :as ctx]
             [core.entity :as entity]
             [core.graphics :as g]))

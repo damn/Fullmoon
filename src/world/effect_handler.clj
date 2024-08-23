@@ -1,7 +1,7 @@
 (ns world.effect-handler
   (:require [clojure.string :as str]
-            data.image
-            data.animation
+            core.image
+            core.animation
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.effect :as effect]))
@@ -44,8 +44,8 @@
 (defn- debug-print-tx [tx]
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
-                  (instance? data.image.Image %) "<Image>"
-                  (instance? data.animation.ImmutableAnimation %) "<Animation>"
+                  (instance? core.image.Image %) "<Image>"
+                  (instance? core.animation.ImmutableAnimation %) "<Animation>"
                   (instance? core.context.Context %) "<Context>"
                   :else %)
                 tx)))

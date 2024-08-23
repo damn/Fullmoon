@@ -1,7 +1,7 @@
 (ns context.vis-ui
   (:require [gdx.input :as input]
             [gdx.scene2d.stage :as stage]
-            data.image
+            core.image
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.screen :as screen]
@@ -169,7 +169,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image data.image.Image
+(defmethod ->vis-image core.image.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 

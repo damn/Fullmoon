@@ -4,7 +4,7 @@
             [gdx.graphics.color :as color]
             [utils.core :as utils :refer [k->pretty-name readable-number]]
             [utils.random :as random]
-            [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
+            [core.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [core.effect :as effect]

@@ -1,7 +1,7 @@
 (ns graphics.image
   (:require [gdx.graphics.g2d :as g2d]
             [gdx.graphics.g2d.batch :as batch]
-            [data.image :as image]
+            [core.image :as image]
             [core.context :as ctx]
             [core.graphics :as g]))
 

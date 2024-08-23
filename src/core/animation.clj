@@ -1,4 +1,4 @@
-(ns data.animation)
+(ns core.animation)
 
 (defprotocol Animation
   (tick [_ delta])

@@ -1,4 +1,4 @@
-(ns data.image
+(ns core.image
   (:require [gdx.graphics.g2d.texture-region :as texture-region]
             [core.graphics :as g]))
 

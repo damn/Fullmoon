@@ -4,7 +4,7 @@
   (:require [malli.core :as m]
             [core.component :as component]
             [utils.core :as utils]
-            [data.val-max :refer [val-max-schema]]))
+            [core.val-max :refer [val-max-schema]]))
 
 ; this is 'value-types'
 ; and each value-type can actually define modifiers&effects for it

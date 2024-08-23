@@ -1,6 +1,6 @@
 (ns entity.animation
   (:require [core.component :refer [defcomponent]]
-            [data.animation :as animation]
+            [core.animation :as animation]
             [core.entity :as entity]
             [core.context :as ctx]
             [core.data :as data]))

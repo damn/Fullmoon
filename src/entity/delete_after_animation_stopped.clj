@@ -1,6 +1,6 @@
 (ns entity.delete-after-animation-stopped
   (:require [core.component :refer [defcomponent]]
-            [data.animation :as animation]
+            [core.animation :as animation]
             [core.entity :as entity]))
 
 (defcomponent :entity/delete-after-animation-stopped? {}

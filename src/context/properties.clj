@@ -6,7 +6,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.data :as data]
             [core.context :as ctx]
-            [data.animation :as animation]
+            [core.animation :as animation]
             [utils.core :refer [safe-get]]))
 
 (comment
