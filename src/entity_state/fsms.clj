@@ -16,6 +16,13 @@
             [core.data :as data]
             [api.effect :as effect]))
 
+(comment
+ ; graphviz required in path
+ (fsm/show-fsm player-fsm)
+
+ )
+
+
 (fsm/defsm-inc ^:private player-fsm
   [[:idle
     :kill -> :dead
