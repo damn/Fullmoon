@@ -1,11 +1,12 @@
 (ns components.entity-state.player-item-on-cursor
   (:require [gdx.input :as input]
-            [math.vector :as v]
-            [core.context :as ctx :refer [mouse-on-stage-actor?]]
-            [core.graphics :as g]
             [gdx.input.buttons :as buttons]
+            [math.vector :as v]
+            [core.component :as component :refer [defcomponent]]
+            [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
             [core.entity-state :as state]
+            [core.graphics :as g]
             [core.inventory :as inventory]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
@@ -59,27 +60,28 @@
 (defn- world-item? [ctx]
   (not (mouse-on-stage-actor? ctx)))
 
-(defrecord PlayerItemOnCursor [eid item]
-  state/PlayerState
-  (player-enter [_])
-  (pause-game? [_] true)
+(defcomponent :player-item-on-cursor {}
+  {:keys [eid item]}
+  (component/create [[_ eid item] _ctx]
+    {:eid eid
+     :item item})
 
-  (manual-tick [_ context]
+  (state/pause-game? [_]
+    true)
+
+  (state/manual-tick [_ ctx]
     (when (and (input/button-just-pressed? buttons/left)
-               (world-item? context))
+               (world-item? ctx))
       [[:tx/event eid :drop-item]]))
 
-  (clicked-inventory-cell [_ cell]
+  (state/clicked-inventory-cell [_ cell]
     (clicked-cell @eid cell))
 
-  (clicked-skillmenu-skill [_ skill])
-
-  state/State
-  (enter [_ _ctx]
+  (state/enter [_ _ctx]
     [[:tx.context.cursor/set :cursors/hand-grab]
      [:tx.entity/assoc eid :entity/item-on-cursor item]])
 
-  (exit [_ ctx]
+  (state/exit [_ ctx]
     ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
@@ -90,21 +92,14 @@
          [:tx.entity/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
          [:tx.entity/dissoc eid :entity/item-on-cursor]])))
 
-  (tick [_ _ctx])
-
-  (render-below [_ entity* g ctx]
+  (state/render-below [_ entity* g ctx]
     (when (world-item? ctx)
-      (g/draw-centered-image g (:property/image item) (item-place-position ctx entity*))))
-  (render-above [_ entity* g ctx])
-  (render-info  [_ entity* g ctx]))
+      (g/draw-centered-image g (:property/image item) (item-place-position ctx entity*)))))
 
-(defn draw-item-on-cursor [g context]
-  (let [player-entity* (ctx/player-entity* context)]
-    (when (and (= :item-on-cursor (entity/state player-entity*))
-               (not (world-item? context)))
+(defn draw-item-on-cursor [g ctx]
+  (let [player-entity* (ctx/player-entity* ctx)]
+    (when (and (= :player-item-on-cursor (entity/state player-entity*))
+               (not (world-item? ctx)))
       (g/draw-centered-image g
                              (:property/image (:entity/item-on-cursor player-entity*))
-                             (ctx/gui-mouse-position context)))))
-
-(defn ->build [ctx eid item]
-  (->PlayerItemOnCursor eid item))
+                             (ctx/gui-mouse-position ctx)))))

@@ -1,16 +1,36 @@
-(ns core.entity-state)
+(ns core.entity-state
+  (:require [core.component :refer [defsystem]]))
 
-(defprotocol State
-  (enter [_ ctx])
-  (exit  [_ ctx])
-  (tick  [_ ctx])
-  (render-below [_ entity* g ctx])
-  (render-above [_ entity* g ctx])
-  (render-info  [_ entity* g ctx]))
+(defsystem enter [_ ctx])
+(defmethod enter :default [_ ctx])
 
-(defprotocol PlayerState
-  (player-enter [_])
-  (pause-game? [_])
-  (manual-tick [_ ctx])
-  (clicked-inventory-cell [_ cell])
-  (clicked-skillmenu-skill [_ skill]))
+(defsystem exit  [_ ctx])
+(defmethod exit :default  [_ ctx])
+
+(defsystem tick  [_ ctx])
+(defmethod tick :default  [_ ctx])
+
+(defsystem render-below [_ entity* g ctx])
+(defmethod render-below :default [_ entity* g ctx])
+
+(defsystem render-above [_ entity* g ctx])
+(defmethod render-above :default [_ entity* g ctx])
+
+(defsystem render-info  [_ entity* g ctx])
+(defmethod render-info :default  [_ entity* g ctx])
+
+; Player
+(defsystem player-enter [_])
+(defmethod player-enter :default [_])
+
+(defsystem pause-game? [_])
+(defmethod pause-game? :default [_])
+
+(defsystem manual-tick [_ ctx])
+(defmethod manual-tick :default [_ ctx])
+
+(defsystem clicked-inventory-cell [_ cell])
+(defmethod clicked-inventory-cell :default [_ cell])
+
+(defsystem clicked-skillmenu-skill [_ skill])
+(defmethod clicked-skillmenu-skill :default [_ skill])

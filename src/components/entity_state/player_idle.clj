@@ -1,16 +1,17 @@
 (ns components.entity-state.player-idle
   (:require [utils.core :refer [safe-merge]]
+            [utils.wasd-movement :refer [WASD-movement-vector]]
+            [math.vector :as v]
             [gdx.input :as input]
             [gdx.input.buttons :as buttons]
+            [core.component :as component :refer [defcomponent]]
+            [core.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
+            [core.entity :as entity]
+            [core.entity-state :as state]
             [core.graphics :as g]
             [core.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.scene2d.ui.button :refer [button?]]
-            [core.scene2d.ui.window :refer [window-title-bar?]]
-            [math.vector :as v]
-            [utils.wasd-movement :refer [WASD-movement-vector]]
-            [core.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
-            [core.entity :as entity]
-            [core.entity-state :as state]))
+            [core.scene2d.ui.window :refer [window-title-bar?]]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -131,42 +132,33 @@
        [:cursors/no-skill-selected
         (fn [] (denied "No selected skill"))]))))
 
-(defrecord PlayerIdle [eid]
-  state/PlayerState
-  (player-enter [_])
-  (pause-game? [_] true)
-  (manual-tick [_ context]
+(defcomponent :player-idle {}
+  {:keys [eid]}
+  (component/create [[_ eid] _ctx]
+    {:eid eid})
+
+  (state/pause-game? [_]
+    true)
+
+  (state/manual-tick [_ ctx]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
-      (let [[cursor on-click] (->interaction-state context @eid)]
+      (let [[cursor on-click] (->interaction-state ctx @eid)]
         (cons [:tx.context.cursor/set cursor]
               (when (input/button-just-pressed? buttons/left)
                 (on-click))))))
 
-  (clicked-inventory-cell [_ cell]
+  (state/clicked-inventory-cell [_ cell]
     ; TODO no else case
     (when-let [item (get-in (:entity/inventory @eid) cell)]
       [[:tx/sound "sounds/bfxr_takeit.wav"]
        [:tx/event eid :pickup-item item]
        [:tx/remove-item eid cell]]))
 
-  (clicked-skillmenu-skill [_ skill]
+  (state/clicked-skillmenu-skill [_ skill]
     (let [free-skill-points (:entity/free-skill-points @eid)]
       ; TODO no else case, no visible free-skill-points
       (when (and (pos? free-skill-points)
                  (not (entity/has-skill? @eid skill)))
         [[:tx.entity/assoc eid :entity/free-skill-points (dec free-skill-points)]
-         [:tx/add-skill eid skill]])))
-
-  state/State
-  (enter [_ _ctx])
-  (exit  [_ context])
-  (tick [_ _context])
-
-  (render-below [_ entity* g ctx])
-  (render-above [_ entity* g ctx])
-  (render-info  [_ entity* g ctx]))
-
-
-(defn ->build [ctx eid _params]
-  (->PlayerIdle eid))
+         [:tx/add-skill eid skill]]))))

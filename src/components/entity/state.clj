@@ -10,17 +10,13 @@
 
 (defcomponent :entity/state {}
   {:keys [state-obj]}
-  (entity/create [[k {:keys [fsm initial-state state-obj-constructors]}] eid ctx]
+  (entity/create [[k {:keys [fsm initial-state]}] eid ctx]
     ; fsm throws when initial-state is not part of states, so no need to assert initial-state
     [[:tx.entity/assoc eid k {:fsm (assoc (fsm initial-state nil)
                                           :state initial-state) ; initial state is nil, so associng it. make bug report TODO
-                              :state-obj ((initial-state state-obj-constructors) ctx eid nil)
-                              :state-obj-constructors state-obj-constructors}]])
+                              :state-obj [initial-state (component/create [initial-state eid] ctx)]}]])
 
   (component/info-text [[_ state] _ctx]
-    ; TODO also info, e.g. active-skill -> which skill ....
-    ; not just 'active-skill'
-    ; => again a component ... ?
     (str "[YELLOW]State: " (name (state-key state)) "[]"))
 
   (entity/tick [_ _eid ctx]
@@ -39,15 +35,12 @@
     (-> entity* :entity/state :state-obj)))
 
 (defn- send-event! [ctx eid event params]
-  (if-let [{:keys [fsm
-                   state-obj
-                   state-obj-constructors]} (:entity/state @eid)]
+  (if-let [{:keys [fsm state-obj]} (:entity/state @eid)]
     (let [old-state (:state fsm)
           new-fsm (fsm/fsm-event fsm event)
           new-state (:state new-fsm)]
       (if-not (= old-state new-state)
-        (let [constructor (new-state state-obj-constructors)
-              new-state-obj (constructor ctx eid params)]
+        (let [new-state-obj [new-state (component/create [new-state eid params] ctx)]]
           [#(state/exit state-obj %)
            #(state/enter new-state-obj %)
            (if (:entity/player? @eid) (fn [_ctx] (state/player-enter new-state-obj)))
@@ -58,7 +51,7 @@
  (require '[entity-state.fsms :as npc-state])
  ; choose a initial state constructor w/o needing ctx
  ; and new state also no ctx
- (let [initial-state :sleeping
+ (let [initial-state :npc-sleeping
        state (npc-state/->state initial-state)
        components nil
        ctx nil

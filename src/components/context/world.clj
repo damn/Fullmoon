@@ -24,13 +24,13 @@
                          [:tx.entity/creature
                           (keyword creature-id)
                           #:entity {:position (tile->middle posi)
-                                    :state [:state/npc :sleeping]}]))
+                                    :state [:state/npc :npc-sleeping]}]))
               ctx)]
     (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
     (ctx/do! ctx [[:tx.entity/creature
                    :creatures/vampire
                    #:entity {:position (tile->middle start-position)
-                             :state [:state/player :idle]
+                             :state [:state/player :player-idle]
                              :player? true
                              :free-skill-points 3
                              :clickable {:type :clickable/player}

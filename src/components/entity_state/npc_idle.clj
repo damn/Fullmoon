@@ -1,5 +1,6 @@
 (ns components.entity-state.npc-idle
   (:require [utils.core :refer [safe-merge]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
             [core.effect :as effect]
             [core.entity :as entity]
@@ -10,7 +11,7 @@
   (cell/nearest-entity @((world-grid ctx) (entity/tile entity*))
                        (entity/enemy-faction entity*)))
 
-(defn- ->effect-context [ctx entity*]
+(defn- ->effect-ctx [ctx entity*]
   (let [target (nearest-enemy ctx entity*)
         target (when (and target (ctx/line-of-sight? ctx entity* @target))
                  target)]
@@ -50,21 +51,14 @@
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )
 
-(defrecord NpcIdle [eid]
-  state/State
-  (enter [_ _ctx])
-  (exit  [_ _ctx])
-  (tick [_ context]
+(defcomponent :npc-idle {}
+  {:keys [eid]}
+  (component/create [[_ eid] _ctx]
+    {:eid eid})
+
+  (state/tick [_ ctx]
     (let [entity* @eid
-          effect-ctx (->effect-context context entity*)]
-      (if-let [skill (npc-choose-skill (safe-merge context effect-ctx) entity*)]
+          effect-ctx (->effect-ctx ctx entity*)]
+      (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (or (potential-field-follow-to-enemy context eid)
-                                                [0 0])]]))) ; nil param not accepted @ entity.state
-
-  (render-below [_ entity* g ctx])
-  (render-above [_ entity* g ctx])
-  (render-info  [_ entity* g ctx]))
-
-(defn ->build [ctx eid _params]
-  (->NpcIdle eid))
+        [[:tx/event eid :movement-direction (potential-field-follow-to-enemy ctx eid)]]))))

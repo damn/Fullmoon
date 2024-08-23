@@ -1,6 +1,6 @@
 (ns components.entity-state.active-skill
   (:require [utils.core :refer [safe-merge]]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [core.effect :as effect]
             [core.entity :as entity]
@@ -95,25 +95,37 @@
                    [1 1 1 0.5])
     (g/draw-image g icon [(- (float x) radius) y])))
 
-(defrecord ActiveSkill [eid skill effect-ctx counter]
-  state/PlayerState
-  (player-enter [_] [[:tx.context.cursor/set :cursors/sandclock]])
-  (pause-game? [_] false)
-  (manual-tick [_ context])
-  (clicked-inventory-cell [_ cell])
-  (clicked-skillmenu-skill [_ skill])
 
-  state/State
-  (enter [_ ctx]
+(defn- apply-action-speed-modifier [entity* skill action-time]
+  (/ action-time
+     (or (entity/stat entity* (:skill/action-time-modifier-key skill))
+         1)))
+
+(defcomponent :active-skill {}
+  {:keys [eid skill effect-ctx counter]}
+  (component/create [[_ eid [skill effect-ctx]] ctx]
+    {:eid eid
+     :skill skill
+     :effect-ctx effect-ctx
+     :counter (->> skill
+                   :skill/action-time
+                   (apply-action-speed-modifier @eid skill)
+                   (->counter ctx))})
+
+  (state/player-enter [_]
+    [[:tx.context.cursor/set :cursors/sandclock]])
+
+  (state/pause-game? [_]
+    false)
+
+  (state/enter [_ ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
        [:tx.entity/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (exit [_ _ctx])
-
-  (tick [_ context]
+  (state/tick [[_ {:keys [skill effect-ctx counter]}] context]
     (cond
      (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
@@ -124,23 +136,7 @@
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (render-below [_ entity* g _ctx])
-  (render-above [_ entity* g _ctx])
-  (render-info [_ entity* g ctx]
+  (state/render-info [_ entity* g ctx]
     (let [{:keys [property/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
       (run! #(effect/render-info % g (merge ctx effect-ctx)) effects))))
-
-(defn- apply-action-speed-modifier [entity* skill action-time]
-  (/ action-time
-     (or (entity/stat entity* (:skill/action-time-modifier-key skill))
-         1)))
-
-(defn ->build [context eid [skill effect-ctx]]
-  (->ActiveSkill eid
-                 skill
-                 effect-ctx
-                 (->> skill
-                      :skill/action-time
-                      (apply-action-speed-modifier @eid skill)
-                      (->counter context))))

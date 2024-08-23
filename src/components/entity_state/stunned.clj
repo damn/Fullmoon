@@ -1,28 +1,25 @@
 (ns components.entity-state.stunned
-  (:require [core.graphics :as g]
+  (:require [core.component :as component :refer [defcomponent]]
+            [core.graphics :as g]
             [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]
             [core.entity-state :as state]))
 
-(defrecord Stunned [eid counter]
-  state/PlayerState
-  (player-enter [_] [[:tx.context.cursor/set :cursors/denied]])
-  (pause-game? [_] false)
-  (manual-tick [_ context])
-  (clicked-inventory-cell [_ cell])
-  (clicked-skillmenu-skill [_ skill])
+(defcomponent :stunned {}
+  {:keys [eid counter]}
+  (component/create [[_ eid duration] ctx]
+    {:eid eid
+     :counter (->counter ctx duration)})
 
-  state/State
-  (enter [_ _ctx])
-  (exit  [_ _ctx])
-  (tick [_ ctx]
+  (state/player-enter [_]
+    [[:tx.context.cursor/set :cursors/denied]])
+
+  (state/pause-game? [_]
+    false)
+
+  (state/tick [_ ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (render-below [_ entity* g _ctx]
-    (g/draw-circle g (:position entity*) 0.5 [1 1 1 0.6]))
-  (render-above [_ entity* g ctx])
-  (render-info  [_ entity* g ctx]))
-
-(defn ->build [ctx eid duration]
-  (->Stunned eid (->counter ctx duration)))
+  (state/render-below [_ entity* g _ctx]
+    (g/draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))

@@ -68,8 +68,10 @@
 (defcomponent :tx.entity/set-movement {}
   (effect/do! [[_ entity movement] ctx]
     (assert (or (nil? movement)
+                (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...
                      #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
-    [[:tx.entity/assoc entity :entity/movement movement]]))
+    (when-not (nil? (:direction movement))
+      [[:tx.entity/assoc entity :entity/movement movement]])))
 
 ; TODO add teleport effect ~ or tx

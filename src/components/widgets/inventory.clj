@@ -28,7 +28,7 @@
 (defn- draw-cell-rect [g player-entity* x y mouseover? cell]
   (g/draw-rectangle g x y cell-size cell-size color/gray)
   (when (and mouseover?
-             (= :item-on-cursor (entity/state player-entity*)))
+             (= :player-item-on-cursor (entity/state player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)
           color (if (inventory/valid-slot? cell item)
                  droppable-color

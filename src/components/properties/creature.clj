@@ -154,14 +154,13 @@
 
  (set! *print-level* nil)
  (clojure.pprint/pprint
-  (effect/do! [:tx.entity/creature :creatures/vampire
-              {:entity/position [1 2]
-               :entity/state [:state/npc :sleeping]}]
-             (reify core.context/PropertyStore
-               (get-property [_ id]
-                 {:property/width 5
-                  :property/height 5
-                  :creature/entity {:entity/flying? true}}))))
+  (effect/do! [:tx.entity/creature :creatures/vampire {:entity/position [1 2]
+                                                       :entity/state [:state/npc :npc-sleeping]}]
+              (reify core.context/PropertyStore
+                (get-property [_ id]
+                  {:property/width 5
+                   :property/height 5
+                   :creature/entity {:entity/flying? true}}))))
 
  )
 
@@ -207,5 +206,5 @@
      [:tx.entity/creature
       creature-id
       #:entity {:position target-position
-                :state [:state/npc :idle]
+                :state [:state/npc :npc-idle]
                 :faction (:entity/faction @source)}]]))
