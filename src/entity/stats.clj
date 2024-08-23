@@ -158,7 +158,7 @@
                    (str (operation->text operation) " " (k->pretty-name modifier-k))))
        "[]"))
 
-(defn- stats-modifiers->value-modifiers [stats-modifiers]
+(defn- sum-operation-values [stats-modifiers]
   (for [[modifier-k operations] stats-modifiers
         :let [operations (for [[operation-k values] operations
                                :let [value (apply + values)]
@@ -168,7 +168,7 @@
     [modifier-k operations]))
 
 (defn- stats-modifiers-info-text [stats-modifiers]
-  (let [modifiers (stats-modifiers->value-modifiers stats-modifiers)]
+  (let [modifiers (sum-operation-values stats-modifiers)]
     (when (seq modifiers)
       (modifier-info-text modifiers))))
 
@@ -263,7 +263,9 @@
 ; for :skill/effects
 (defcomponent ::stat-effect {}
   (effect/text [[k operations] _effect-ctx]
-    (str/join "\n" (map #(operation->text k %) operations)))
+    (str/join "\n"
+              (for [operation operations]
+                (str (operation->text operation) " " (k->pretty-name k)))))
 
   (effect/applicable? [[k _] {:keys [effect/target]}]
     (and target
