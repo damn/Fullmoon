@@ -29,6 +29,8 @@
               [:entity/skills]
               [:entity/inventory]
 
+              [:entity-state/load]
+
               [:effect/target-entity]
               [:effect/target-all]
 
