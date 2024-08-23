@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [malli.core :as m]
             [core.component :refer [defcomponent]]
-            [api.op :as op]))
+            [api.operation :as op]))
 
 (def val-max-schema
   (m/schema [:and

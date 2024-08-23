@@ -1,4 +1,4 @@
-(ns api.op
+(ns api.operation
   (:refer-clojure :exclude [apply])
   (:require [clojure.math :as math]
             [core.component :refer [defsystem defcomponent]]))

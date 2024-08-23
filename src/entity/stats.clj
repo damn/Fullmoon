@@ -11,7 +11,7 @@
             [api.entity :as entity]
             [api.graphics :as g]
             [api.modifiers :as modifiers]
-            [api.op :as op]))
+            [api.operation :as op]))
 
 (defn- conj-value [value]
   (fn [values]
