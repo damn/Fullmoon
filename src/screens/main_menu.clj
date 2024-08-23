@@ -4,8 +4,8 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [safe-get]]
-            [api.context :as ctx]
-            [api.screen :refer [Screen]]
+            [core.context :as ctx]
+            [core.screen :refer [Screen]]
             mapgen.module-gen))
 
 (defn- ->vampire-tmx [ctx]

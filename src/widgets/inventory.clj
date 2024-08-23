@@ -3,13 +3,13 @@
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
             [core.component :refer [defcomponent]]
-            [api.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
+            [core.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
                                          player-tooltip-text]]
-            [api.graphics :as g]
-            [api.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [api.effect :as effect]
-            [api.entity :as entity]
-            [api.inventory :as inventory]
+            [core.graphics :as g]
+            [core.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
+            [core.effect :as effect]
+            [core.entity :as entity]
+            [core.inventory :as inventory]
             app)
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Window Table)

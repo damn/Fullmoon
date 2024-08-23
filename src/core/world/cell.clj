@@ -1,4 +1,4 @@
-(ns api.world.cell)
+(ns core.world.cell)
 
 (defprotocol Cell
   (add-entity [_ entity])

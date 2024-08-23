@@ -14,7 +14,7 @@
             [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.effect :as effect]))
+            [core.effect :as effect]))
 
 (comment
  ; graphviz required in path

@@ -1,8 +1,8 @@
 (ns widgets.player-modal
   (:require [core.component :refer [defcomponent]]
-            [api.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
-            [api.scene2d.actor :refer [remove!]]
-            [api.effect :as effect]))
+            [core.context :as ctx :refer [get-stage ->window ->label ->text-button add-to-stage!]]
+            [core.scene2d.actor :refer [remove!]]
+            [core.effect :as effect]))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?

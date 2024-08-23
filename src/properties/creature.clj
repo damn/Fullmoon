@@ -2,9 +2,9 @@
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.data :as data]
-            [api.context :as ctx]
-            [api.effect :as effect]
-            [api.entity :as entity]
+            [core.context :as ctx]
+            [core.effect :as effect]
+            [core.entity :as entity]
             [entity-state.fsms :as fsms]))
 
 (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
@@ -157,7 +157,7 @@
   (effect/do! [:tx.entity/creature :creatures/vampire
               {:entity/position [1 2]
                :entity/state [:state/npc :sleeping]}]
-             (reify api.context/PropertyStore
+             (reify core.context/PropertyStore
                (get-property [_ id]
                  {:property/width 5
                   :property/height 5

@@ -5,8 +5,8 @@
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
-            [api.context :as ctx]
-            [api.screen :as screen]))
+            [core.context :as ctx]
+            [core.screen :as screen]))
 
 (def state (atom nil))
 

@@ -2,11 +2,11 @@
   (:require [malli.core :as m]
             [math.vector :as v]
             [core.component :refer [defcomponent]]
-            [api.context :as ctx]
-            [api.entity :as entity]
-            [api.effect :as effect]
-            [api.world.cell :as cell]
-            [api.world.grid :as world-grid]))
+            [core.context :as ctx]
+            [core.entity :as entity]
+            [core.effect :as effect]
+            [core.world.cell :as cell]
+            [core.world.grid :as world-grid]))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))

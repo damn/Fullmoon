@@ -5,14 +5,14 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
-            api.screen
-            [api.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
-            [api.scene2d.group :refer [add-actor! clear-children! children]]
-            [api.scene2d.ui.text-field :as text-field]
-            [api.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
-            [api.scene2d.ui.cell :refer [set-actor!]]
-            [api.scene2d.ui.widget-group :refer [pack!]]
+            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
+            core.screen
+            [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
+            [core.scene2d.group :refer [add-actor! clear-children! children]]
+            [core.scene2d.ui.text-field :as text-field]
+            [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
+            [core.scene2d.ui.cell :refer [set-actor!]]
+            [core.scene2d.ui.widget-group :refer [pack!]]
             [widgets.error-modal :refer [error-window!]]))
 
 (defn- ->scroll-pane-cell [ctx rows]
@@ -93,8 +93,8 @@
 ; TODO too many ! too big ! scroll ... only show files first & preview?
 ; TODO make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
-  (for [file (sort (api.context/all-texture-files ctx))]
-    [(->image-button ctx (api.context/create-image ctx file) identity)]
+  (for [file (sort (core.context/all-texture-files ctx))]
+    [(->image-button ctx (core.context/create-image ctx file) identity)]
     #_[(->text-button ctx file identity)]))
 
 (defmethod ->value-widget :image [[_ image] ctx]
@@ -351,8 +351,8 @@
                                   :close-on-escape? true
                                   :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group context props)
-        save!   (apply-context-fn window #(api.context/update! % (attribute-widget-group->data widgets)))
-        delete! (apply-context-fn window #(api.context/delete! % id))]
+        save!   (apply-context-fn window #(core.context/update! % (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window #(core.context/delete! % id))]
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(->text-button context "Save" save!)
                                                       (->text-button context "Delete" delete!)]])]])
@@ -372,7 +372,7 @@
                 sort-by-fn
                 extra-info-text
                 columns
-                image/dimensions]} (api.context/overview ctx property-type)
+                image/dimensions]} (core.context/overview ctx property-type)
         entities (all-properties ctx property-type)
         entities (if sort-by-fn
                    (sort-by sort-by-fn entities)
@@ -407,7 +407,7 @@
                     :rows (concat
                            (for [property-type (ctx/property-types context)]
                              [(->text-button context
-                                             (:title (api.context/overview context property-type))
+                                             (:title (core.context/overview context property-type))
                                              #(do (set-second-widget! % (->overview-table % property-type open-property-editor-window!))
                                                   %))])
                            [[(->text-button context "Back to Main Menu" #(ctx/change-screen % :screens/main-menu))]])}))

@@ -3,12 +3,12 @@
             [gdx.scene2d.stage :as stage]
             data.image
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.screen :as screen]
-            [api.scene2d.actor :as actor]
-            [api.scene2d.group :as group]
-            [api.scene2d.ui.table :as table]
-            [api.scene2d.ui.widget-group :refer [pack!]])
+            [core.context :as ctx]
+            [core.screen :as screen]
+            [core.scene2d.actor :as actor]
+            [core.scene2d.group :as group]
+            [core.scene2d.ui.table :as table]
+            [core.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
@@ -60,7 +60,7 @@
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defrecord StageScreen [stage sub-screen]
-  api.screen/Screen
+  core.screen/Screen
   (show [_ context]
     (input/set-processor! stage)
     (screen/show sub-screen context))
@@ -92,8 +92,8 @@
   (hide [_ _ctx])
   (render [_ ctx] ctx))
 
-(extend-type api.context.Context
-  api.context/Stage
+(extend-type core.context.Context
+  core.context/Stage
   (->stage-screen [{{:keys [gui-view batch]} :context/graphics}
                    {:keys [actors sub-screen]}]
     (let [gui-viewport (:viewport gui-view)
@@ -183,8 +183,8 @@
        ([id# not-found#]
         (or (find-actor-with-id ~'this id#) not-found#)))))
 
-(extend-type api.context.Context
-  api.context/Widgets
+(extend-type core.context.Context
+  core.context/Widgets
   (->actor [{:keys [context/state]} {:keys [draw act]}]
     (proxy [Actor] []
       (draw [_batch _parent-alpha]
@@ -241,7 +241,7 @@
   ; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
   (->image-button
     ([context image on-clicked]
-     (api.context/->image-button context image on-clicked {}))
+     (core.context/->image-button context image on-clicked {}))
     ([context image on-clicked {:keys [dimensions]}]
      (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture-region image))
            button (VisImageButton. drawable)]

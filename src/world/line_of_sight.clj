@@ -1,6 +1,6 @@
 (ns world.line-of-sight
   (:require [gdx.graphics.camera :as camera]
-            [api.context :as ctx]))
+            [core.context :as ctx]))
 
 (defn- on-screen? [entity* ctx]
   (let [[x y] (:position entity*)
@@ -17,8 +17,8 @@
 
 (def ^:private ^:dbg-flag los-checks? true)
 
-(extend-type api.context.Context
-  api.context/WorldLineOfSight
+(extend-type core.context.Context
+  core.context/WorldLineOfSight
   (line-of-sight? [context source* target*]
     (and (:z-order target*)  ; is even an entity which renders something
          (or (not (:entity/player? source*))

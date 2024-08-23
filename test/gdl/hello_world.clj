@@ -1,8 +1,8 @@
 #_(ns gdl.hello-world
   (:require [app.start :as app]
-            [api.context :as ctx]
-            [api.graphics :as g]
-            [api.screen :refer [Screen]]))
+            [core.context :as ctx]
+            [core.graphics :as g]
+            [core.screen :refer [Screen]]))
 
 #_(defrecord MyScreen []
   Screen

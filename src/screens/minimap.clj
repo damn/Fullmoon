@@ -5,10 +5,10 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [explored?]]
-            [api.graphics :as g]
-            api.graphics.camera
-            api.screen))
+            [core.context :as ctx :refer [explored?]]
+            [core.graphics :as g]
+            core.graphics.camera
+            core.screen))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -28,7 +28,7 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (api.graphics.camera/calculate-zoom (ctx/world-camera ctx)
+    (core.graphics.camera/calculate-zoom (ctx/world-camera ctx)
                                         :left left
                                         :top top
                                         :right right
@@ -41,7 +41,7 @@
       color/black)))
 
 (deftype Screen []
-  api.screen/Screen
+  core.screen/Screen
   (show [_ ctx]
     (orthographic-camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
 

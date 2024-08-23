@@ -1,5 +1,5 @@
 (ns widgets.error-modal
-  (:require [api.context :as ctx]))
+  (:require [core.context :as ctx]))
 
 (defn error-window! [ctx throwable]
   (ctx/add-to-stage!

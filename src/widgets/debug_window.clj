@@ -2,11 +2,11 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             utils.core
-            [api.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
-            [api.graphics :as g]
-            [api.scene2d.group :refer [add-actor!]]
-            [api.scene2d.ui.label :refer [set-text!]]
-            [api.scene2d.ui.widget-group :refer [pack!]]))
+            [core.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
+            [core.graphics :as g]
+            [core.scene2d.group :refer [add-actor!]]
+            [core.scene2d.ui.label :refer [set-text!]]
+            [core.scene2d.ui.widget-group :refer [pack!]]))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -33,7 +33,7 @@
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (api.scene2d.actor/id actor)
+              "id: " (core.scene2d.actor/id actor)
               )))))
 
 (defn create [context]

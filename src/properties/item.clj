@@ -2,8 +2,8 @@
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.data :as data]
-            [api.effect :as effect]
-            [api.modifiers :as modifiers]))
+            [core.effect :as effect]
+            [core.modifiers :as modifiers]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
                                       (com.badlogic.gdx.graphics.Color. (float 0.84)

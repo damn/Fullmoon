@@ -2,10 +2,10 @@
   (:require [utils.core :refer [find-first]]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.context :refer [get-property]]
-            [api.entity :as entity]
-            [api.effect :as effect]
-            [api.inventory :as inventory]))
+            [core.context :refer [get-property]]
+            [core.entity :as entity]
+            [core.effect :as effect]
+            [core.inventory :as inventory]))
 
 (defn- set-item [{:keys [entity/id] :as entity*} cell item]
   (let [inventory (:entity/inventory entity*)]
@@ -79,7 +79,7 @@
   (effect/do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
-(extend-type api.entity.Entity
+(extend-type core.entity.Entity
   entity/Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))

@@ -2,15 +2,15 @@
   (:require [utils.core :refer [safe-merge]]
             [gdx.input :as input]
             [gdx.input.buttons :as buttons]
-            [api.graphics :as g]
-            [api.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
-            [api.scene2d.ui.button :refer [button?]]
-            [api.scene2d.ui.window :refer [window-title-bar?]]
+            [core.graphics :as g]
+            [core.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
+            [core.scene2d.ui.button :refer [button?]]
+            [core.scene2d.ui.window :refer [window-title-bar?]]
             [math.vector :as v]
             [utils.wasd-movement :refer [WASD-movement-vector]]
-            [api.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
-            [api.entity :as entity]
-            [api.entity-state :as state]))
+            [core.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
+            [core.entity :as entity]
+            [core.entity-state :as state]))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]

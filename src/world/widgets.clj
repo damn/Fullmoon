@@ -4,10 +4,10 @@
             [gdx.scene2d.stage :as stage]
             [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.scene2d.actor :as actor]
-            [api.scene2d.group :as group]
-            api.scene2d.ui.button-group
+            [core.context :as ctx]
+            [core.scene2d.actor :as actor]
+            [core.scene2d.group :as group]
+            core.scene2d.ui.button-group
             [entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [widgets.player-message :as player-message]
             [widgets.action-bar :as action-bar]
@@ -25,14 +25,14 @@
                     :cell-defaults {:pad 2}
                     :fill-parent? true}))
 
-(extend-type api.context.Context
-  api.context/Actionbar
+(extend-type core.context.Context
+  core.context/Actionbar
   (selected-skill [ctx]
     (let [button-group (:action-bar (:world/widgets ctx))]
-      (when-let [skill-button (api.scene2d.ui.button-group/checked button-group)]
+      (when-let [skill-button (core.scene2d.ui.button-group/checked button-group)]
         (actor/id skill-button))))
 
-  api.context/InventoryWindow
+  core.context/InventoryWindow
   (inventory-window [ctx]
     (get (:windows (ctx/get-stage ctx)) :inventory-window)))
 

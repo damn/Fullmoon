@@ -1,4 +1,4 @@
-(ns api.context)
+(ns core.context)
 
 (defrecord Context [])
 

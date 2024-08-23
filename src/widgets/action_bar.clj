@@ -1,10 +1,10 @@
 (ns widgets.action-bar
   (:require [core.component :refer [defcomponent]]
-            [api.context :as ctx :refer [->image-button player-tooltip-text]]
-            [api.scene2d.actor :as actor :refer [remove! add-tooltip!]]
-            [api.scene2d.group :refer [clear-children! add-actor!]]
-            [api.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
-            [api.effect :as effect]))
+            [core.context :as ctx :refer [->image-button player-tooltip-text]]
+            [core.scene2d.actor :as actor :refer [remove! add-tooltip!]]
+            [core.scene2d.group :refer [clear-children! add-actor!]]
+            [core.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
+            [core.effect :as effect]))
 
 (defn ->build [ctx]
   (let [group (ctx/->horizontal-group ctx {:pad 2 :space 2})]

@@ -1,8 +1,8 @@
 (ns world.time
   (:require [gdx.graphics :as graphics]
             [core.component :as component :refer [defcomponent]]
-            [api.context :as ctx]
-            [api.entity :as entity]))
+            [core.context :as ctx]
+            [core.entity :as entity]))
 
 (defcomponent :world/time {}
   (component/create [_ _ctx]
@@ -11,8 +11,8 @@
 
 (defrecord Counter [duration stop-time])
 
-(extend-type api.context.Context
-  api.context/Time
+(extend-type core.context.Context
+  core.context/Time
   (update-time [ctx]
     (let [delta (min (graphics/delta-time) entity/max-delta-time)]
       (update ctx :world/time #(-> %

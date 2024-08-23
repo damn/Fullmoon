@@ -1,4 +1,4 @@
-(ns api.scene2d.ui.cell
+(ns core.scene2d.ui.cell
   (:import com.badlogic.gdx.scenes.scene2d.ui.Cell))
 
 (defn set-actor! [^Cell cell actor]

@@ -1,4 +1,4 @@
-(ns api.inventory
+(ns core.inventory
   (:require [data.grid2d :as grid2d]))
 
 (def empty-inventory

@@ -2,10 +2,10 @@
   (:require [math.vector :as v]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.graphics :as g]
-            [api.context :as ctx]
-            [api.effect :as effect]
-            [api.entity :as entity]))
+            [core.graphics :as g]
+            [core.context :as ctx]
+            [core.effect :as effect]
+            [core.entity :as entity]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:position entity*)

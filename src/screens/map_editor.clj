@@ -8,15 +8,15 @@
             [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
-            [api.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
-            [api.graphics :as g]
-            api.screen
-            api.graphics.camera
-            [api.maps.tiled :as tiled]
-            [api.scene2d.actor :refer [set-position!]]
-            [api.scene2d.group :refer [add-actor!]]
-            [api.scene2d.ui.widget-group :refer [pack!]]
-            [api.scene2d.ui.label :refer [set-text!]]
+            [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
+            [core.graphics :as g]
+            core.screen
+            core.graphics.camera
+            [core.maps.tiled :as tiled]
+            [core.scene2d.actor :refer [set-position!]]
+            [core.scene2d.group :refer [add-actor!]]
+            [core.scene2d.ui.widget-group :refer [pack!]]
+            [core.scene2d.ui.label :refer [set-text!]]
             [mapgen.module-gen :as module-gen]
             [widgets.error-modal :refer [error-window!]]))
 
@@ -34,7 +34,7 @@
                         [(/ (tiled/width  tiled-map) 2)
                          (/ (tiled/height tiled-map) 2)])
   (orthographic-camera/set-zoom! camera
-                                 (api.graphics.camera/calculate-zoom
+                                 (core.graphics.camera/calculate-zoom
                                   camera
                                   :left [0 0]
                                   :top [0 (tiled/height tiled-map)]
@@ -120,7 +120,7 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (api.graphics.camera/visible-tiles (ctx/world-camera ctx))
+        visible-tiles (core.graphics.camera/visible-tiles (ctx/world-camera ctx))
         [x y] (->tile (ctx/world-mouse-position ctx))]
     (g/draw-rectangle g x y 1 1 color/white)
     (when start-position
@@ -159,7 +159,7 @@ direction keys: move")
   #_(dispose [_]
     (dispose (:tiled-map @current-data)))
 
-  api.screen/Screen
+  core.screen/Screen
   (show [_ ctx]
     (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
 

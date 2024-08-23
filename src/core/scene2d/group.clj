@@ -1,4 +1,4 @@
-(ns api.scene2d.group
+(ns core.scene2d.group
   (:import com.badlogic.gdx.scenes.scene2d.Group))
 
 (defn children

@@ -2,11 +2,11 @@
   (:require [gdx.graphics.g2d :as g2d]
             [gdx.graphics.g2d.batch :as batch]
             [data.image :as image]
-            [api.context :as ctx]
-            [api.graphics :as g]))
+            [core.context :as ctx]
+            [core.graphics :as g]))
 
-(extend-type api.graphics.Graphics
-  api.graphics/Image
+(extend-type core.graphics.Graphics
+  core.graphics/Image
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]
@@ -33,8 +33,8 @@
   (draw-centered-image [this image position]
     (g/draw-rotated-centered-image this image 0 position)))
 
-(extend-type api.context.Context
-  api.context/Images
+(extend-type core.context.Context
+  core.context/Images
   (create-image [{g :context/graphics :as ctx} file]
     (image/->image g (g2d/->texture-region (ctx/cached-texture ctx file))))
 

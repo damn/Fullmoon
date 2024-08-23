@@ -7,13 +7,13 @@
             [utils.core :refer [tile->middle]]
             [core.component :as component :refer [defcomponent]]
             [data.grid2d :as grid2d]
-            [api.context :as ctx]
-            [api.entity :as entity]
-            [api.effect :as effect]
-            [api.maps.tiled :as tiled]
-            [api.world.grid :as world-grid]
-            [api.world.content-grid :as content-grid]
-            [api.world.cell :as cell]))
+            [core.context :as ctx]
+            [core.entity :as entity]
+            [core.effect :as effect]
+            [core.maps.tiled :as tiled]
+            [core.world.grid :as world-grid]
+            [core.world.content-grid :as content-grid]
+            [core.world.cell :as cell]))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -77,8 +77,8 @@
   (input/set-processor! nil)
   (init-game-context ctx :mode :game-loop/replay))
 
-(extend-type api.context.Context
-  api.context/World
+(extend-type core.context.Context
+  core.context/World
   (start-new-game [ctx tiled-level]
     (init-game-context ctx
                        :mode :game-loop/normal
@@ -121,8 +121,8 @@
                                 (ctx/player-state-pause-game? ctx)
                                 (not (player-unpaused?))))))
 
-(extend-type api.context.Context
-  api.context/Game
+(extend-type core.context.Context
+  core.context/Game
   (game-paused? [ctx]
     (::paused? ctx)))
 

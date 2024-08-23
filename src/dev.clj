@@ -2,9 +2,9 @@
   (:require [clojure.pprint :refer :all]
             [clojure.string :as str]
             utils.ns
-            [api.context :as ctx :refer :all]
-            [api.entity :as entity]
-            [api.scene2d.actor :as actor]
+            [core.context :as ctx :refer :all]
+            [core.entity :as entity]
+            [core.scene2d.actor :as actor]
             app))
 
 (comment
@@ -51,7 +51,7 @@
           :let [el-node (->node (->label ctx (str (->v-str element))))]]
     (.add node el-node)))
 
-(require '[api.scene2d.group :as group])
+(require '[core.scene2d.group :as group])
 (require '[gdx.scene2d.stage :as stage])
 
 (declare add-map-nodes!)
@@ -117,7 +117,7 @@
 
 (comment
  (let [ctx @app/state
-       entity (api.context/get-entity ctx 2)
+       entity (core.context/get-entity ctx 2)
        ]
 
    (clojure.pprint/pprint
@@ -167,7 +167,7 @@
            [(ns-name nmspace) (map (comp symbol name symbol) value-vars)]))))
 
 
- (require '[api.context :refer [get-entity]])
+ (require '[core.context :refer [get-entity]])
  (let [entity* @(get-entity @app/state 49)]
    (:mana entity*)
    )
@@ -190,7 +190,7 @@
         object (case obj
                  :ctx ctx
                  :entity (ctx/mouseover-entity* ctx)
-                 :tile @(get (api.context/world-grid ctx) (mapv int (ctx/world-mouse-position ctx))))]
+                 :tile @(get (core.context/world-grid ctx) (mapv int (ctx/world-mouse-position ctx))))]
     (add-to-stage! ctx (->window ctx {:title "Tree View"
                                       :close-button? true
                                       :close-on-escape? true

@@ -1,6 +1,6 @@
 (ns data.image
   (:require [gdx.graphics.g2d.texture-region :as texture-region]
-            [api.graphics :as g]))
+            [core.graphics :as g]))
 
 (defrecord Image [texture-region
                   pixel-dimensions

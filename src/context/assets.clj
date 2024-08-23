@@ -6,8 +6,8 @@
             [gdx.files :as files]
             [gdx.files.file-handle :as file-handle]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.effect :as effect]))
+            [core.context :as ctx]
+            [core.effect :as effect]))
 
 (defn- recursively-search-files [folder extensions]
   (loop [[file & remaining] (file-handle/list (files/internal folder))
@@ -56,8 +56,8 @@
 (defn- get-file [ctx file]
   (get (:manager (this ctx)) file))
 
-(extend-type api.context.Context
-  api.context/Assets
+(extend-type core.context.Context
+  core.context/Assets
   (play-sound! [ctx file]
     (sound/play (get-file ctx file)))
 

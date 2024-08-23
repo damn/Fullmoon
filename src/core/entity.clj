@@ -1,4 +1,4 @@
-(ns api.entity
+(ns core.entity
   (:require [malli.core :as m]
             [math.geom :as geom]
             [math.vector :as v]

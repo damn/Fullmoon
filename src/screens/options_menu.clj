@@ -4,8 +4,8 @@
             [utils.core :refer [safe-get]]
             utils.ns
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx :refer [->text-button ->check-box ->table]]
-            api.screen))
+            [core.context :as ctx :refer [->text-button ->check-box ->table]]
+            core.screen))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -59,7 +59,7 @@
             :cell-defaults {:pad-bottom 10}}))
 
 (deftype SubScreen []
-  api.screen/Screen
+  core.screen/Screen
   (show [_ _ctx])
   (hide [_ _ctx])
   (render [_ ctx]

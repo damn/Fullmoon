@@ -1,8 +1,8 @@
 (ns entity.delete-after-duration
   (:require [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
-            [api.context :as ctx]
-            [api.entity :as entity]))
+            [core.context :as ctx]
+            [core.entity :as entity]))
 
 (defcomponent :entity/delete-after-duration {}
   counter

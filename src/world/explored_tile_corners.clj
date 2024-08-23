@@ -1,7 +1,7 @@
 (ns world.explored-tile-corners
   (:require [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]
-            api.context))
+            core.context))
 
 (defcomponent :world/explored-tile-corners {}
   (component/create [_ {:keys [world/grid]}]
@@ -9,8 +9,8 @@
                               (grid2d/height grid)
                               (constantly false)))))
 
-(extend-type api.context.Context
-  api.context/ExploredTileCorners
+(extend-type core.context.Context
+  core.context/ExploredTileCorners
   ; TODO put tile param
   (explored? [ctx position]
     (get @(:world/explored-tile-corners ctx) position)))

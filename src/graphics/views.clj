@@ -3,8 +3,8 @@
             [gdx.input :as input]
             [gdx.utils.viewport :refer [->fit-viewport]]
             [gdx.utils.viewport.viewport :as viewport]
-            [api.context :as ctx]
-            [api.graphics :as g])
+            [core.context :as ctx]
+            [core.graphics :as g])
   (:import [com.badlogic.gdx.math MathUtils Vector2]))
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
@@ -29,8 +29,8 @@
   {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
-(extend-type api.graphics.Graphics
-  api.graphics/WorldView
+(extend-type core.graphics.Graphics
+  core.graphics/WorldView
   (world-unit-scale [{:keys [world-view]}]
     (:unit-scale world-view))
 
@@ -70,8 +70,8 @@
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(extend-type api.context.Context
-  api.context/Views
+(extend-type core.context.Context
+  core.context/Views
   (gui-mouse-position    [ctx] (gui-mouse-position   (gr ctx)))
   (world-mouse-position  [ctx] (world-mouse-position (gr ctx)))
   (gui-viewport-width    [ctx] (viewport/world-width  (gui-viewport   (gr ctx))))

@@ -1,11 +1,11 @@
 (ns entity-state.active-skill
   (:require [utils.core :refer [safe-merge]]
             [core.component :refer [defcomponent]]
-            [api.context :as ctx :refer [stopped? finished-ratio ->counter]]
-            [api.effect :as effect]
-            [api.entity :as entity]
-            [api.entity-state :as state]
-            [api.graphics :as g]))
+            [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
+            [core.effect :as effect]
+            [core.entity :as entity]
+            [core.entity-state :as state]
+            [core.graphics :as g]))
 
 ; SCHEMA effect-ctx
 ; * source = always available
@@ -64,8 +64,8 @@
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
   (> cost (mana-value entity*)))
 
-(extend-type api.context.Context
-  api.context/ActiveSkill
+(extend-type core.context.Context
+  core.context/ActiveSkill
   (skill-usable-state [ctx
                        entity*
                        {:keys [skill/cooling-down? skill/effects] :as skill}]

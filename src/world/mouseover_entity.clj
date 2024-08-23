@@ -1,8 +1,8 @@
 (ns world.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
-            [api.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
-            [api.entity :as entity]
-            [api.world.grid :refer [point->entities]]))
+            [core.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
+            [core.entity :as entity]
+            [core.world.grid :refer [point->entities]]))
 
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (ctx/player-entity* context)
@@ -21,8 +21,8 @@
 
 (def ^:private this-k :world/mouseover-entity)
 
-(extend-type api.context.Context
-  api.context/MouseOverEntity
+(extend-type core.context.Context
+  core.context/MouseOverEntity
   (mouseover-entity* [ctx]
     (when-let [entity (this-k ctx)]
       @entity))

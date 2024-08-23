@@ -1,10 +1,10 @@
 (ns entity-state.npc-sleeping
-  (:require [api.graphics :as g]
+  (:require [core.graphics :as g]
             [gdx.graphics.color :as color]
-            [api.context :refer [world-grid]]
-            [api.entity :as entity]
-            [api.entity-state :as state]
-            [api.world.cell :as cell]))
+            [core.context :refer [world-grid]]
+            [core.entity :as entity]
+            [core.entity-state :as state]
+            [core.world.cell :as cell]))
 
 ; TODO pass to creature data, also @ shout
 (def ^:private aggro-range 6)

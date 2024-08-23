@@ -1,4 +1,4 @@
-(ns api.world.content-grid)
+(ns core.world.content-grid)
 
 (defprotocol ContentGrid
   (update-entity! [_ entity])

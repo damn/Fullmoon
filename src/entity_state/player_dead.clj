@@ -1,6 +1,6 @@
 (ns entity-state.player-dead
-  (:require [api.context :as ctx]
-            [api.entity-state :as state]))
+  (:require [core.context :as ctx]
+            [core.entity-state :as state]))
 
 (defrecord PlayerDead [eid]
   state/PlayerState

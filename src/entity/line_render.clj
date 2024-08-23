@@ -1,8 +1,8 @@
 (ns entity.line-render
   (:require [core.component :refer [defcomponent]]
-            [api.graphics :as g]
-            [api.entity :as entity]
-            [api.effect :as effect]))
+            [core.graphics :as g]
+            [core.entity :as entity]
+            [core.effect :as effect]))
 
 (defcomponent :entity/line-render {}
   {:keys [thick? end color]}

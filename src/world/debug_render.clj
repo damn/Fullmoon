@@ -1,11 +1,11 @@
 (ns world.debug-render
   (:require [math.geom :as geom]
             [utils.core :refer [->tile]]
-            [api.context :as ctx :refer [world-grid]]
-            [api.graphics :as g]
+            [core.context :as ctx :refer [world-grid]]
+            [core.graphics :as g]
             [gdx.graphics.color :as color]
-            [api.graphics.camera :as camera]
-            [api.world.grid :refer [circle->cells]]))
+            [core.graphics.camera :as camera]
+            [core.world.grid :refer [circle->cells]]))
 
 (defn- geom-test [g ctx]
   (let [position (ctx/world-mouse-position g)

@@ -7,11 +7,11 @@
             [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :as component :refer [defcomponent]]
             [core.data :as data]
-            [api.effect :as effect]
-            [api.entity :as entity]
-            [api.graphics :as g]
-            [api.modifiers :as modifiers]
-            [api.operation :as op]))
+            [core.effect :as effect]
+            [core.entity :as entity]
+            [core.graphics :as g]
+            [core.modifiers :as modifiers]
+            [core.operation :as op]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -220,7 +220,7 @@
 (defcomponent :stats/modifiers (data/components [:modifier/damage-deal
                                                  :modifier/damage-receive]))
 
-(extend-type api.entity.Entity
+(extend-type core.entity.Entity
   entity/Stats
   (stat [{:keys [entity/stats]} stat-k]
     (stat-k->effective-value stat-k stats)))

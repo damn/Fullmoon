@@ -1,9 +1,9 @@
 (ns widgets.player-message
   (:require [gdx.graphics :as graphics]
             [core.component :refer [defcomponent]]
-            [api.context :as ctx :refer [->actor]]
-            [api.graphics :as g]
-            [api.effect :as effect]))
+            [core.context :as ctx :refer [->actor]]
+            [core.graphics :as g]
+            [core.effect :as effect]))
 
 (defcomponent :tx/msg-to-player {}
   (effect/do! [[_ message] ctx]

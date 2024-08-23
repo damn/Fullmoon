@@ -1,8 +1,8 @@
 (ns entity.player
   (:require [core.component :refer [defcomponent]]
-            [api.context :as ctx]
-            [api.entity :as entity]
-            [api.entity-state :as state]))
+            [core.context :as ctx]
+            [core.entity :as entity]
+            [core.entity-state :as state]))
 
 (defcomponent :entity/player? {}
   (entity/create [_ eid ctx]
@@ -13,8 +13,8 @@
       ctx/player-entity*
       entity/state-obj))
 
-(extend-type api.context.Context
-  api.context/PlayerEntity
+(extend-type core.context.Context
+  core.context/PlayerEntity
   (player-entity [ctx]
     (::eid ctx))
 

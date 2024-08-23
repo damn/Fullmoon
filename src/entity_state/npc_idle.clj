@@ -1,10 +1,10 @@
 (ns entity-state.npc-idle
   (:require [utils.core :refer [safe-merge]]
-            [api.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
-            [api.effect :as effect]
-            [api.entity :as entity]
-            [api.entity-state :as state]
-            [api.world.cell :as cell]))
+            [core.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
+            [core.effect :as effect]
+            [core.entity :as entity]
+            [core.entity-state :as state]
+            [core.world.cell :as cell]))
 
 (defn- nearest-enemy [ctx entity*]
   (cell/nearest-entity @((world-grid ctx) (entity/tile entity*))
@@ -45,7 +45,7 @@
 (comment
  (let [uid 76
        ctx @app/state
-       entity* @(api.context/get-entity ctx uid)
+       entity* @(core.context/get-entity ctx uid)
        effect-ctx (->effect-context ctx entity*)]
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )

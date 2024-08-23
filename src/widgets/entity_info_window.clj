@@ -1,11 +1,11 @@
 (ns widgets.entity-info-window
   (:require [clojure.string :as str]
             [core.component :as component]
-            [api.context :as ctx :refer [->actor ->window ->label]]
-            [api.scene2d.ui.label :refer [set-text!]]
-            [api.scene2d.group :refer [add-actor!]]
-            [api.scene2d.ui.widget-group :refer [pack!]]
-            [api.entity :as entity]))
+            [core.context :as ctx :refer [->actor ->window ->label]]
+            [core.scene2d.ui.label :refer [set-text!]]
+            [core.scene2d.group :refer [add-actor!]]
+            [core.scene2d.ui.widget-group :refer [pack!]]
+            [core.entity :as entity]))
 
 ; TODO each component & sub-component has info-text and colors again
 ; e.g. hit-effect @ projectile-collision is similar somewhere else ....

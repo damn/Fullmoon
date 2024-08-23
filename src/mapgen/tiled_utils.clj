@@ -1,6 +1,6 @@
 (ns mapgen.tiled-utils
   (:require [data.grid2d :as grid]
-            [api.maps.tiled :as tiled])
+            [core.maps.tiled :as tiled])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            [com.badlogic.gdx.maps MapProperties MapLayers]
            [com.badlogic.gdx.maps.tiled TiledMap TiledMapTileLayer TiledMapTileLayer$Cell]

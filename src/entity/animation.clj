@@ -1,8 +1,8 @@
 (ns entity.animation
   (:require [core.component :refer [defcomponent]]
             [data.animation :as animation]
-            [api.entity :as entity]
-            [api.context :as ctx]
+            [core.entity :as entity]
+            [core.context :as ctx]
             [core.data :as data]))
 
 (defn- tx-assoc-image-current-frame [eid animation]

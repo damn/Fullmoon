@@ -2,7 +2,7 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [utils.core :refer [->tile]]
-            [api.context :as ctx]
+            [core.context :as ctx]
             [world.raycaster :as raycaster]))
 
 (def ^:private explored-tile-color

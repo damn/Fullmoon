@@ -1,9 +1,9 @@
 (ns entity.string-effect
   (:require [core.component :refer [defcomponent]]
-            [api.graphics :as g]
-            [api.context :refer [->counter stopped? reset]]
-            [api.entity :as entity]
-            [api.effect :as effect]))
+            [core.graphics :as g]
+            [core.context :refer [->counter stopped? reset]]
+            [core.entity :as entity]
+            [core.effect :as effect]))
 
 (defcomponent :entity/string-effect {}
   (entity/tick [[k {:keys [counter]}] eid context]

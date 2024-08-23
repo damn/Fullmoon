@@ -1,4 +1,4 @@
-(ns api.maps.tiled
+(ns core.maps.tiled
   (:require [gdx.maps.map-properties :as properties]
             [gdx.maps.map-layers :as map-layers])
   (:import com.badlogic.gdx.maps.MapLayer

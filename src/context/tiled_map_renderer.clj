@@ -3,9 +3,9 @@
             [gdx.maps.map-layer :as map-layer]
             [gdx.maps.tiled.tmx-map-loader :refer [->tmx-map-loader] :as tmx-map-loader]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.graphics :as g]
-            [api.maps.tiled :as tiled])
+            [core.context :as ctx]
+            [core.graphics :as g]
+            [core.maps.tiled :as tiled])
   (:import [gdl OrthogonalTiledMapRenderer ColorSetter]))
 
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
@@ -25,8 +25,8 @@
   (component/create [_ _ctx]
     (memoize map-renderer-for)))
 
-(extend-type api.context.Context
-  api.context/TiledMapLoader
+(extend-type core.context.Context
+  core.context/TiledMapLoader
   (->tiled-map [_ file]
     (tmx-map-loader/load (->tmx-map-loader) file))
 

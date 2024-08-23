@@ -1,8 +1,8 @@
 (ns entity.mouseover
   (:require [core.component :refer [defcomponent]]
-            [api.context :as ctx]
-            [api.graphics :as g]
-            [api.entity :as entity]))
+            [core.context :as ctx]
+            [core.graphics :as g]
+            [core.entity :as entity]))
 
 (def ^:private outline-alpha 0.4)
 (def ^:private enemy-color    [1 0 0 outline-alpha])

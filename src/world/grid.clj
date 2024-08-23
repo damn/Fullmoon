@@ -3,8 +3,8 @@
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]
-            [api.world.grid :refer [rectangle->cells circle->cells]]
-            [api.world.cell :as cell :refer [cells->entities]]))
+            [core.world.grid :refer [rectangle->cells circle->cells]]
+            [core.world.cell :as cell :refer [cells->entities]]))
 
 (defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]
@@ -57,7 +57,7 @@
 ; TODO LAZY SEQ @ grid2d/get-8-neighbour-positions !!
 ; https://github.com/damn/grid2d/blob/master/src/data/grid2d.clj#L126
 (extend-type data.grid2d.Grid2D
-  api.world.grid/Grid
+  core.world.grid/Grid
   (cached-adjacent-cells [grid cell]
     (if-let [result (:adjacent-cells @cell)]
       result
@@ -109,7 +109,7 @@
                  occupied
                  good
                  evil]
-  api.world.cell/Cell
+  core.world.cell/Cell
   (add-entity [this entity]
     (assert (not (get entities entity)))
     (update this :entities conj entity))

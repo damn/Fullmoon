@@ -3,10 +3,10 @@
             [utils.core :refer [safe-merge sort-by-order]]
             [gdx.graphics.color :as color]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.graphics :as g]
-            [api.entity :as entity :refer [map->Entity]]
-            [api.effect :as effect]))
+            [core.context :as ctx]
+            [core.graphics :as g]
+            [core.entity :as entity :refer [map->Entity]]
+            [core.effect :as effect]))
 
 (def ^:private this :world/ecs)
 
@@ -88,8 +88,8 @@
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(extend-type api.context.Context
-  api.context/EntityComponentSystem
+(extend-type core.context.Context
+  core.context/EntityComponentSystem
   (all-entities [ctx]
     (vals (entities ctx)))
 

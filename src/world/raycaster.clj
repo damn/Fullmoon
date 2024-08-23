@@ -3,7 +3,7 @@
             [math.vector :as v]
             [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]
-            [api.context :as ctx]))
+            [core.context :as ctx]))
 
 (defprotocol RayCaster
   (ray-blocked? [_ start target]))
@@ -45,8 +45,8 @@
         target2 (v/add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
-(extend-type api.context.Context
-  api.context/WorldRaycaster
+(extend-type core.context.Context
+  core.context/WorldRaycaster
   (ray-blocked? [{:keys [world/raycaster]} start target]
     (ray-blocked? raycaster start target))
 

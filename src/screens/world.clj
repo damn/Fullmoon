@@ -4,8 +4,8 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.screen :refer [Screen]]
+            [core.context :as ctx]
+            [core.screen :refer [Screen]]
             [context.world :as world]
             (world [debug-render :as debug-render]
                    render

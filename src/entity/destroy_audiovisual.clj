@@ -1,6 +1,6 @@
 (ns entity.destroy-audiovisual
   (:require [core.component :refer [defcomponent]]
-            [api.entity :as entity]))
+            [core.entity :as entity]))
 
 (defcomponent :entity/destroy-audiovisual {}
   audiovisuals-id

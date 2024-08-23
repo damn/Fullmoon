@@ -1,9 +1,9 @@
 (ns widgets.hp-mana-bars
   (:require [utils.core :as utils]
             [data.val-max :refer [val-max-ratio]]
-            [api.context :as ctx]
-            [api.entity :as entity]
-            [api.graphics :as g]))
+            [core.context :as ctx]
+            [core.entity :as entity]
+            [core.graphics :as g]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
   (g/draw-text g {:text infostr

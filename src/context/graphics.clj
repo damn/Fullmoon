@@ -6,7 +6,7 @@
             [gdx.utils.disposable :refer [dispose]]
             [gdx.utils.viewport.viewport :as viewport]
             [core.component :refer [defcomponent] :as component]
-            [api.graphics :as g]
+            [core.graphics :as g]
             (graphics cursors
                       image
                       shape-drawer
@@ -20,7 +20,7 @@
 (defcomponent :context/graphics {}
   {:keys [views default-font cursors]}
   (component/create [_ _ctx]
-    (api.graphics/map->Graphics
+    (core.graphics/map->Graphics
      (let [batch (g2d/->sprite-batch)]
        (merge {:batch batch}
               (graphics.shape-drawer/->build batch)
@@ -46,7 +46,7 @@
                              #(draw-fn (assoc g :unit-scale unit-scale)))
     (batch/end batch)))
 
-(extend-type api.context.Context
-  api.context/Graphics
+(extend-type core.context.Context
+  core.context/Graphics
   (render-gui-view   [ctx render-fn] (render-view ctx :gui-view   render-fn))
   (render-world-view [ctx render-fn] (render-view ctx :world-view render-fn)))

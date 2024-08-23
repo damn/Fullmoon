@@ -1,11 +1,11 @@
 (ns world.content-grid
   (:require [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]
-            [api.entity :as entity]
-            api.world.content-grid))
+            [core.entity :as entity]
+            core.world.content-grid))
 
 (defrecord ContentGrid [grid cell-w cell-h]
-  api.world.content-grid/ContentGrid
+  core.world.content-grid/ContentGrid
   (update-entity! [_ entity]
     (let [{::keys [content-cell] :as entity*} @entity
           [x y] (:position entity*)
@@ -46,7 +46,7 @@
 
  (defn get-all-entities-of-current-map [context]
    (mapcat (comp :entities deref)
-           (grid2d/cells (api.context/content-grid context))))
+           (grid2d/cells (core.context/content-grid context))))
 
  (count
   (get-all-entities-of-current-map @app/state))

@@ -3,9 +3,9 @@
             [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.data :as data]
-            [api.context :as ctx]
-            [api.effect :as effect]
-            [api.entity :as entity]))
+            [core.context :as ctx]
+            [core.effect :as effect]
+            [core.entity :as entity]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 

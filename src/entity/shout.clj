@@ -1,9 +1,9 @@
 (ns entity.shout
   (:require [core.component :refer [defcomponent]]
-            [api.context :as ctx :refer [world-grid line-of-sight? stopped?]]
-            [api.entity :as entity]
-            [api.effect :as effect]
-            [api.world.grid :refer [circle->entities]]))
+            [core.context :as ctx :refer [world-grid line-of-sight? stopped?]]
+            [core.entity :as entity]
+            [core.effect :as effect]
+            [core.world.grid :refer [circle->entities]]))
 
 (def ^:private shout-range 3)
 

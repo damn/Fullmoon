@@ -1,8 +1,8 @@
 (ns properties.audiovisual
   (:require [core.component :as component :refer [defcomponent]]
             [core.data :as data]
-            [api.context :as ctx]
-            [api.effect :as effect]))
+            [core.context :as ctx]
+            [core.effect :as effect]))
 
 (defcomponent :properties/audiovisual {}
   (component/create [_ _ctx]

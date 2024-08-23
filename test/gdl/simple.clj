@@ -1,7 +1,7 @@
 #_(ns gdl.simple
   (:require [core.component :refer [defcomponent] :as component]
             [app.start :as app]
-            [api.context :as ctx]))
+            [core.context :as ctx]))
 
 #_(defcomponent :gdl/simple {}
   (component/create [[_ {:keys [font logo]}] ctx]

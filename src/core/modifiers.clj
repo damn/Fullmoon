@@ -1,8 +1,8 @@
-(ns api.modifiers
+(ns core.modifiers
   (:require [clojure.string :as str]
             [gdx.graphics.color :as color]
             [utils.core :refer [k->pretty-name]]
-            [api.operation :as op]))
+            [core.operation :as op]))
 
 (com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
                                       color/cyan

@@ -1,7 +1,7 @@
 (ns context.screens
   (:require [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.screen :as screen]))
+            [core.context :as ctx]
+            [core.screen :as screen]))
 
 (defcomponent :context/screens {}
   screens
@@ -27,8 +27,8 @@
     ))
 
 ; TODO make some of these fns private ?
-(extend-type api.context.Context
-  api.context/ApplicationScreens
+(extend-type core.context.Context
+  core.context/ApplicationScreens
   (current-screen-key [{{:keys [current-screen]} :context/screens}]
     current-screen)
 

@@ -1,4 +1,4 @@
-(ns api.effect
+(ns core.effect
   (:require [core.component :refer [defsystem]]))
 
 ; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded

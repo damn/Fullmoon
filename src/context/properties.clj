@@ -5,7 +5,7 @@
             [malli.error :as me]
             [core.component :refer [defcomponent] :as component]
             [core.data :as data]
-            [api.context :as ctx]
+            [core.context :as ctx]
             [data.animation :as animation]
             [utils.core :refer [safe-get]]))
 
@@ -177,8 +177,8 @@
              (map sort-map)
              (pprint-spit file)))))))
 
-(extend-type api.context.Context
-  api.context/PropertyStore
+(extend-type core.context.Context
+  core.context/PropertyStore
   (get-property [{{:keys [db]} :context/properties} id]
     (safe-get db id))
 
@@ -218,8 +218,8 @@
 ; its basically ';component - join newlines & to text ... '
 ; generic thing for that ...
 
-(extend-type api.context.Context
-  api.context/TooltipText
+(extend-type core.context.Context
+  core.context/TooltipText
   (tooltip-text [ctx property]
     (try (->> property
               (property->text ctx)

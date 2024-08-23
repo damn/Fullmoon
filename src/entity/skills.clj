@@ -1,9 +1,9 @@
 (ns entity.skills
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
-            [api.context :refer [get-property ->counter stopped?]]
-            [api.entity :as entity]
-            [api.effect :as effect]
+            [core.context :refer [get-property ->counter stopped?]]
+            [core.entity :as entity]
+            [core.effect :as effect]
             [core.data :as data]))
 
 ; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
@@ -24,7 +24,7 @@
                      (stopped? ctx cooling-down?))]
       [:tx.entity/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
-(extend-type api.entity.Entity
+(extend-type core.entity.Entity
   entity/Skills
   (has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
     (contains? skills id)))

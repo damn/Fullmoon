@@ -1,4 +1,4 @@
-(ns api.world.grid)
+(ns core.world.grid)
 
 (defprotocol Grid
   (cached-adjacent-cells [_ cell])

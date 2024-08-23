@@ -1,9 +1,9 @@
 (ns entity.state
   (:require [reduce-fsm :as fsm]
             [core.component :as component :refer [defcomponent]]
-            [api.entity :as entity]
-            [api.effect :as effect]
-            [api.entity-state :as state]))
+            [core.entity :as entity]
+            [core.effect :as effect]
+            [core.entity-state :as state]))
 
 (defn- state-key [state]
   (-> state :fsm :state))
@@ -30,7 +30,7 @@
   (entity/render-above [_ entity* g ctx] (state/render-above state-obj entity* g ctx))
   (entity/render-info  [_ entity* g ctx] (state/render-info  state-obj entity* g ctx)))
 
-(extend-type api.entity.Entity
+(extend-type core.entity.Entity
   entity/State
   (state [entity*]
     (-> entity* :entity/state state-key))

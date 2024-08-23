@@ -1,4 +1,4 @@
-(ns api.screen)
+(ns core.screen)
 
 (defprotocol Screen
   (show   [_ context])

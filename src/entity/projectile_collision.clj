@@ -1,10 +1,10 @@
 (ns entity.projectile-collision
   (:require [core.component :as component :refer [defcomponent]]
             [utils.core :refer [find-first]]
-            [api.context :as ctx :refer [world-grid]]
-            [api.entity :as entity]
-            [api.world.grid :refer [rectangle->cells]]
-            [api.world.cell :as cell :refer [cells->entities]]))
+            [core.context :as ctx :refer [world-grid]]
+            [core.entity :as entity]
+            [core.world.grid :refer [rectangle->cells]]
+            [core.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision {}
   {:keys [hit-effects already-hit-bodies piercing?]}

@@ -10,10 +10,10 @@
   (:require [data.grid2d :as grid2d]
             [math.vector :as v]
             [utils.core :refer :all]
-            [api.context :as ctx]
-            [api.entity :as entity]
-            [api.world.grid :refer [cached-adjacent-cells rectangle->cells]]
-            [api.world.cell :as cell]))
+            [core.context :as ctx]
+            [core.entity :as entity]
+            [core.world.grid :refer [cached-adjacent-cells rectangle->cells]]
+            [core.world.cell :as cell]))
 
 ; FIXME assert @ mapload no NAD's and @ potential field init & remove from
 ; potential-field-following the removal of NAD's.
@@ -253,8 +253,8 @@
        (when-not (inside-cell? grid @entity target-cell)
          (v/direction position (:middle @target-cell)))))))
 
-(extend-type api.context.Context
-  api.context/PotentialField
+(extend-type core.context.Context
+  core.context/PotentialField
   (update-potential-fields [ctx entities]
     (let [world-grid (ctx/world-grid ctx)]
       (doseq [[faction max-iterations] factions-iterations]

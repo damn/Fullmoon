@@ -1,8 +1,8 @@
 (ns mapgen.module-gen
   (:require [data.grid2d :as grid]
-            [api.maps.tiled :as tiled]
-            [api.context :as ctx :refer [->tiled-map]]
-            [api.context :refer [all-properties]]
+            [core.maps.tiled :as tiled]
+            [core.context :as ctx :refer [->tiled-map]]
+            [core.context :refer [all-properties]]
             [utils.core :refer [assoc-ks]]
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer! grid->tiled-map]]
@@ -217,7 +217,7 @@
 (defn- place-princess! [context tiled-map position princess]
   (set-tile! (tiled/get-layer tiled-map "creatures")
              position
-             (creature->tile (api.context/get-property context princess))))
+             (creature->tile (core.context/get-property context princess))))
 
 (defn generate
   "The generated tiled-map needs to be disposed."

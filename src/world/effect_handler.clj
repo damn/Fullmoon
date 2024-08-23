@@ -3,8 +3,8 @@
             data.image
             data.animation
             [core.component :as component :refer [defcomponent]]
-            [api.context :as ctx]
-            [api.effect :as effect]))
+            [core.context :as ctx]
+            [core.effect :as effect]))
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -46,7 +46,7 @@
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
                   (instance? data.image.Image %) "<Image>"
                   (instance? data.animation.ImmutableAnimation %) "<Animation>"
-                  (instance? api.context.Context %) "<Context>"
+                  (instance? core.context.Context %) "<Context>"
                   :else %)
                 tx)))
 
@@ -65,14 +65,14 @@
   (let [result (if (fn? tx)
                  (tx ctx)
                  (effect/do! tx ctx))]
-    (if (map? result) ; probably faster than (instance? api.context.Context result)
+    (if (map? result) ; probably faster than (instance? core.context.Context result)
       (do
        (tx-happened! tx ctx)
        result)
       (ctx/do! ctx result))))
 
-(extend-type api.context.Context
-  api.context/EffectHandler
+(extend-type core.context.Context
+  core.context/EffectHandler
   (do! [ctx txs]
     (reduce (fn [ctx tx]
               (if (nil? tx)

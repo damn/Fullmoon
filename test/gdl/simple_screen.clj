@@ -1,8 +1,8 @@
 #_(ns gdl.simple-screen
   (:require [core.component :refer [defcomponent] :as component]
-            [api.context :as ctx]
-            [api.graphics :as g]
-            api.screen
+            [core.context :as ctx]
+            [core.graphics :as g]
+            core.screen
             [gdx.graphics.color :as color]))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]

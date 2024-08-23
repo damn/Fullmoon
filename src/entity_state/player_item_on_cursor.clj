@@ -1,12 +1,12 @@
 (ns entity-state.player-item-on-cursor
   (:require [gdx.input :as input]
             [math.vector :as v]
-            [api.context :as ctx :refer [mouse-on-stage-actor?]]
-            [api.graphics :as g]
+            [core.context :as ctx :refer [mouse-on-stage-actor?]]
+            [core.graphics :as g]
             [gdx.input.buttons :as buttons]
-            [api.entity :as entity]
-            [api.entity-state :as state]
-            [api.inventory :as inventory]))
+            [core.entity :as entity]
+            [core.entity-state :as state]
+            [core.inventory :as inventory]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)
