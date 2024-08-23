@@ -10,7 +10,7 @@
             [api.effect :as effect]
             [api.entity :as entity]
             [api.graphics :as g]
-            [api.modifier :as modifier]
+            [api.modifiers :as modifiers]
             [api.op :as op]))
 
 (defn- conj-value [value]
@@ -60,7 +60,7 @@
 (defn- stats-modifiers-info-text [stats-modifiers]
   (let [modifiers (sum-operation-values stats-modifiers)]
     (when (seq modifiers)
-      (modifier/info-text modifiers))))
+      (modifiers/info-text modifiers))))
 
 (defn- ->effective-value [base-value modifier-k stats]
   {:pre [(= "modifier" (namespace modifier-k))]}

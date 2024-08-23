@@ -4,7 +4,7 @@
             [core.data :as data]
             [api.effect :as effect]
             [api.properties :as properties]
-            [api.modifier :as modifier]))
+            [api.modifiers :as modifiers]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
                                       (com.badlogic.gdx.graphics.Color. (float 0.84)
@@ -43,7 +43,7 @@
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
                 (when (seq modifiers)
-                  (modifier/info-text modifiers))])}))
+                  (modifiers/info-text modifiers))])}))
 
 ; TODO use image w. shadows spritesheet
 (defcomponent :tx.entity/item {}

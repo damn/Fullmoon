@@ -1,4 +1,4 @@
-(ns api.modifier
+(ns api.modifiers
   (:require [clojure.string :as str]
             [gdx.graphics.color :as color]
             [utils.core :refer [k->pretty-name]]
