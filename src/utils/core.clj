@@ -1,5 +1,6 @@
 (ns utils.core
   (:require (clojure [pprint :refer (pprint)]
+                     [string :as str]
                      set)))
 
 (defn- indexed ; from clojure.contrib.seq-utils (discontinued in 1.3)
@@ -113,3 +114,6 @@
 (defn remove-one [coll item]
   (let [[n m] (split-with (partial not= item) coll)]
     (concat n (rest m))))
+
+(defn k->pretty-name [k]
+  (str/capitalize (name k)))

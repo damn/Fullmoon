@@ -1,16 +1,17 @@
 (ns entity.stats
   (:require [clojure.string :as str]
-            [clojure.math :as math]
             [malli.core :as m]
             [gdx.graphics.color :as color]
-            [utils.core :as utils :refer [readable-number]]
+            [utils.core :as utils :refer [k->pretty-name readable-number]]
             [utils.random :as random]
             [data.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
-            [core.component :as component :refer [defsystem defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [api.effect :as effect]
             [api.entity :as entity]
-            [api.graphics :as g]))
+            [api.graphics :as g]
+            [api.modifier :as modifier]
+            [api.op :as op]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -45,119 +46,8 @@
   (effect/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
-(defsystem op-info-txt [_])
-(defsystem apply-operation [_ base-value])
-(defsystem operation-order [_])
-
-(defn- +? [n]
-  (case (math/signum n)
-    0.0 ""
-    1.0 "+"
-    -1.0 ""))
-
-(defn operation->text [{value 1 :as operation}]
-  (str (+? value) (op-info-txt operation)))
-
-(defcomponent :op/inc {:widget :text-field :schema number?}
-  (op-info-txt [[_ value]]
-    (str value))
-  (apply-operation [[_ value] base-value]
-    (+ base-value value))
-  (operation-order [_] 0))
-
-(defcomponent :op/mult {:widget :text-field :schema number?}
-  (op-info-txt [[_ value]]
-    (str (int (* 100 value)) "%"))
-  (apply-operation [[_ value] base-value]
-    (* base-value (inc value)))
-  (operation-order [_] 1))
-
-(defn- ->pos-int [v]
-  (-> v int (max 0)))
-
-(defn- val-max-op-k->parts [op-k]
-  (let [[val-or-max inc-or-mult] (mapv keyword (str/split (name op-k) #"-"))]
-    [val-or-max (keyword "op" (name inc-or-mult))]))
-
-(comment
- (= (val-max-op-k->parts :op/val-inc) [:val :op/inc])
- )
-
-(defcomponent :op/val-max {}
-  (op-info-txt [[op-k value]]
-    (let [[val-or-max op-k] (val-max-op-k->parts op-k)]
-      (str (op-info-txt [op-k value]) " " (case val-or-max
-                                            :val "Minimum"
-                                            :max "Maximum"))))
-
-  (apply-operation [[operation-k value] val-max]
-    {:post [(m/validate val-max-schema %)]}
-    (assert (m/validate val-max-schema val-max) (pr-str val-max))
-    (let [[val-or-max op-k] (val-max-op-k->parts operation-k)
-          f #(apply-operation [op-k value] %)
-          [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
-          v  (->pos-int v)
-          mx (->pos-int mx)]
-      (case val-or-max
-        :val [v (max v mx)]
-        :max [(min v mx) mx])))
-
-  (operation-order [[op-k value]]
-    (let [[_ op-k] (val-max-op-k->parts op-k)]
-      (operation-order [op-k value]))))
-
-(defcomponent :op/val-inc {:widget :text-field :schema int?})
-(derive       :op/val-inc :op/val-max)
-
-(defcomponent :op/val-mult {:widget :text-field :schema number?})
-(derive       :op/val-mult :op/val-max)
-
-(defcomponent :op/max-inc {:widget :text-field :schema int?})
-(derive       :op/max-inc :op/val-max)
-
-(defcomponent :op/max-mult {:widget :text-field :schema number?})
-(derive       :op/max-mult :op/val-max)
-
-(comment
- (and
-  (= (apply-operation [:op/val-inc 30]    [5 10]) [35 35])
-  (= (apply-operation [:op/max-mult -0.5] [5 10]) [5 5])
-  (= (apply-operation [:op/val-mult 2]    [5 10]) [15 15])
-  (= (apply-operation [:op/val-mult 1.3]  [5 10]) [11 11])
-  (= (apply-operation [:op/max-mult -0.8] [5 10]) [1 1])
-  (= (apply-operation [:op/max-mult -0.9] [5 10]) [0 0]))
- )
-
-(com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
-                                      color/cyan
-                                      ; maybe can be used in tooltip background is darker
-                                      #_(com.badlogic.gdx.graphics.Color. (float 0.48)
-                                                                        (float 0.57)
-                                                                        (float 1)
-                                                                        (float 1)))
-
-; TODO color don't set at info-text
-; of operation
-; effect which do operations have modifier_blue instead of effect color ...
-
-; For now no green/red color for positive/negative numbers
-; as :stats/damage-receive negative value would be red but actually a useful buff
-; -> could give damage reduce 10% like in diablo 2
-; and then make it negative .... @ applicator
-(def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
-(def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
-
-(defn- k->pretty-name [k]
-  (str/capitalize (name k)))
-
-(defn modifier-info-text [modifiers]
-  (str "[MODIFIER_BLUE]"
-       (str/join "\n"
-                 (for [[modifier-k operations] modifiers
-                       operation operations]
-                   (str (operation->text operation) " " (k->pretty-name modifier-k))))
-       "[]"))
-
+; DRY ->effective-value (summing)
+; also: sort-by op/order @ modifier/info-text itself (so player will see applied order)
 (defn- sum-operation-values [stats-modifiers]
   (for [[modifier-k operations] stats-modifiers
         :let [operations (for [[operation-k values] operations
@@ -170,16 +60,16 @@
 (defn- stats-modifiers-info-text [stats-modifiers]
   (let [modifiers (sum-operation-values stats-modifiers)]
     (when (seq modifiers)
-      (modifier-info-text modifiers))))
+      (modifier/info-text modifiers))))
 
 (defn- ->effective-value [base-value modifier-k stats]
   {:pre [(= "modifier" (namespace modifier-k))]}
   (->> stats
        :stats/modifiers
        modifier-k
-       (sort-by operation-order)
+       (sort-by op/order)
        (reduce (fn [base-value [operation-k values]]
-                 (apply-operation [operation-k (apply + values)] base-value))
+                 (op/apply [operation-k (apply + values)] base-value))
                base-value)))
 
 (comment
@@ -265,7 +155,7 @@
   (effect/text [[k operations] _effect-ctx]
     (str/join "\n"
               (for [operation operations]
-                (str (operation->text operation) " " (k->pretty-name k)))))
+                (str (op/info-text operation) " " (k->pretty-name k)))))
 
   (effect/applicable? [[k _] {:keys [effect/target]}]
     (and target
@@ -277,7 +167,7 @@
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx.entity/assoc-in target [:entity/stats stat-k]
-          (reduce (fn [value operation] (apply-operation operation value))
+          (reduce (fn [value operation] (op/apply operation value))
                   effective-value
                   operations)]]))))
 
@@ -526,7 +416,7 @@
              ;_ (println "\nmin-max:" min-max)
              dmg-amount (random/rand-int-between min-max)
              ;_ (println "dmg-amount: " dmg-amount)
-             dmg-amount (->pos-int (->effective-value dmg-amount :modifier/damage-receive (:entity/stats target*)))
+             dmg-amount (->effective-value dmg-amount :modifier/damage-receive (:entity/stats target*))
              ;_ (println "effective dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx.entity/audiovisual (:position target*) :audiovisuals/damage]

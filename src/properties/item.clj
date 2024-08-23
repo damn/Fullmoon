@@ -2,9 +2,9 @@
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [core.data :as data]
-            [api.properties :as properties]
             [api.effect :as effect]
-            entity.stats))
+            [api.properties :as properties]
+            [api.modifier :as modifier]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
                                       (com.badlogic.gdx.graphics.Color. (float 0.84)
@@ -43,7 +43,7 @@
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
                 (when (seq modifiers)
-                  (entity.stats/modifier-info-text modifiers))])}))
+                  (modifier/info-text modifiers))])}))
 
 ; TODO use image w. shadows spritesheet
 (defcomponent :tx.entity/item {}
