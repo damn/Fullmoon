@@ -81,7 +81,7 @@
                                          :cursors/move-window ["move002" [16 16]]
                                          :cursors/princess ["exclamation001" [0 0]]
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
-           [:context/tiled]
+           [:context/tiled-map-renderer]
            [:context/vis-ui :skin-scale/x1]
            [:context/properties {:types [:properties/audiovisual
                                          :properties/creature
