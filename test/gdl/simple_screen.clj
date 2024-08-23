@@ -1,8 +1,8 @@
 #_(ns gdl.simple-screen
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
             [api.graphics :as g]
-            [api.screen :as screen]
+            api.screen
             [gdx.graphics.color :as color]))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
@@ -31,4 +31,5 @@
     (ctx/render-gui-view ctx #(draw-test % ctx))))
 
 #_(defcomponent :gdl/simple-screen {}
-  (screen/create [_ _ctx] (->Screen)))
+  (component/create [_ _ctx]
+    (->Screen)))

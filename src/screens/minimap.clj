@@ -4,11 +4,11 @@
             [gdx.graphics.camera :as camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [explored?]]
             [api.graphics :as g]
             api.graphics.camera
-            [api.screen :as screen]))
+            api.screen))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -65,5 +65,5 @@
       context)))
 
 (defcomponent :screens/minimap {}
-  (screen/create [_ _ctx]
+  (component/create [_ _ctx]
     (->Screen)))

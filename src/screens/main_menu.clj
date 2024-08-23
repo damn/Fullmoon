@@ -2,10 +2,10 @@
   (:require [gdx.app :as app]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [utils.core :refer [safe-get]]
             [api.context :as ctx]
-            [api.screen :as screen :refer [Screen]]
+            [api.screen :refer [Screen]]
             mapgen.module-gen))
 
 (defn- ->vampire-tmx [ctx]
@@ -53,7 +53,7 @@
   (render [_ ctx] ctx))
 
 (defcomponent :screens/main-menu {}
-  (screen/create [_ ctx]
+  (component/create [_ ctx]
     (ctx/->stage-screen ctx {:actors [(ctx/->background-image ctx)
                                       (->buttons ctx)
                                       (ctx/->actor ctx {:act (fn [_ctx]

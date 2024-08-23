@@ -6,11 +6,11 @@
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.utils.disposable :refer [dispose]]
             [clojure.string :as str]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
             [api.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [api.graphics :as g]
-            [api.screen :as screen]
+            api.screen
             api.graphics.camera
             [api.maps.tiled :as tiled]
             [api.scene2d.actor :refer [set-position!]]
@@ -201,5 +201,5 @@ direction keys: move")
                                    :show-grid-lines false}))})
 
 (defcomponent :screens/map-editor {}
-  (screen/create [_ ctx]
+  (component/create [_ ctx]
     (ctx/->stage-screen ctx (->screen ctx))))

@@ -1,7 +1,4 @@
-(ns api.screen
-  (:require [core.component :refer [defsystem]]))
-
-(defsystem create [_ ctx])
+(ns api.screen)
 
 (defprotocol Screen
   (show   [_ context])

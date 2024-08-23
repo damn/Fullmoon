@@ -8,7 +8,7 @@
     (let [first-screen (first screens)
           screens (zipmap screens (repeat true))]
       (component/load! screens)
-      {:screens (component/update-map screens screen/create ctx)
+      {:screens (component/update-map screens component/create ctx)
        :first-screen first-screen}))
 
   (component/destroy [_ ctx]

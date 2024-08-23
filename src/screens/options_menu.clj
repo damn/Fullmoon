@@ -3,9 +3,9 @@
             [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             utils.ns
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx :refer [->text-button ->check-box ->table]]
-            [api.screen :as screen]))
+            api.screen))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -68,7 +68,7 @@
       ctx)))
 
 (defcomponent :screens/options-menu {}
-  (screen/create [_ ctx]
+  (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors [(ctx/->background-image ctx)
                                   (create-table ctx)]

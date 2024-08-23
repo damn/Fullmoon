@@ -3,9 +3,9 @@
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [api.context :as ctx]
-            [api.screen :as screen :refer [Screen]]
+            [api.screen :refer [Screen]]
             [context.world :as world]
             (world [debug-render :as debug-render]
                    render
@@ -63,7 +63,7 @@
         check-key-input)))
 
 (defcomponent :screens/world {}
-  (screen/create [_ ctx]
+  (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors []
                          :sub-screen (->SubScreen)})))
