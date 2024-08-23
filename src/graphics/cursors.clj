@@ -1,4 +1,4 @@
-(ns context.graphics.cursors
+(ns graphics.cursors
   (:require [gdx.files :as files]
             [gdx.graphics :as graphics]
             [gdx.utils.disposable :refer [dispose]]

@@ -1,4 +1,4 @@
-(ns context.graphics.views
+(ns graphics.views
   (:require [gdx.graphics :as graphics]
             [gdx.input :as input]
             [gdx.utils.viewport :refer [->fit-viewport]]

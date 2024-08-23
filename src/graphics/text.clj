@@ -1,4 +1,4 @@
-(ns context.graphics.text
+(ns graphics.text
   (:require [clojure.string :as str]
             [gdx.files :as files]
             api.graphics)

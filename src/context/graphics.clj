@@ -7,11 +7,11 @@
             [gdx.utils.viewport.viewport :as viewport]
             [core.component :refer [defcomponent] :as component]
             [api.graphics :as g]
-            (context.graphics cursors
-                              image
-                              shape-drawer
-                              text
-                              views)))
+            (graphics cursors
+                      image
+                      shape-drawer
+                      text
+                      views)))
 
 ; cannot load batch, shape-drawer, gui/world-view via component/load! because no namespaced keys
 ; could add the namespace 'graphics' manually
@@ -22,10 +22,10 @@
     (api.graphics/map->Graphics
      (let [batch (g2d/->sprite-batch)]
        (merge {:batch batch}
-              (context.graphics.shape-drawer/->build batch)
-              (context.graphics.text/->build default-font)
-              (context.graphics.views/->build views)
-              (context.graphics.cursors/->build cursors)))))
+              (graphics.shape-drawer/->build batch)
+              (graphics.text/->build default-font)
+              (graphics.views/->build views)
+              (graphics.cursors/->build cursors)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}] _ctx]
     (dispose batch)

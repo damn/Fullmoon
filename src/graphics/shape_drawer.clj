@@ -1,4 +1,4 @@
-(ns context.graphics.shape-drawer
+(ns graphics.shape-drawer
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [api.graphics :as g])
