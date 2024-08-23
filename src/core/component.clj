@@ -88,7 +88,7 @@
  )
 
 (defn- k->component-ns [k]
-  (symbol (str (namespace k) "." (name k))))
+  (symbol (str "components." (name (namespace k)) "." (name k))))
 
 (def warn-name-ns-mismatch? false)
 
