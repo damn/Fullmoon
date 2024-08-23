@@ -43,7 +43,7 @@
                    :as item}]
                [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
                 (when (seq modifiers)
-                  (entity.stats/modifiers-text modifiers))])}))
+                  (entity.stats/modifier-info-text modifiers))])}))
 
 ; TODO use image w. shadows spritesheet
 (defcomponent :tx.entity/item {}

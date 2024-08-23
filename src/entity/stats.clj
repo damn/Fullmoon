@@ -45,19 +45,28 @@
   (effect/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
-(defsystem operation-text [_])
+(defsystem op-info-txt [_])
 (defsystem apply-operation [_ base-value])
 (defsystem operation-order [_])
 
+(defn- +? [n]
+  (case (math/signum n)
+    0.0 ""
+    1.0 "+"
+    -1.0 ""))
+
+(defn operation->text [{value 1 :as operation}]
+  (str (+? value) (op-info-txt operation)))
+
 (defcomponent :op/inc {:widget :text-field :schema number?}
-  (operation-text [[_ value]]
+  (op-info-txt [[_ value]]
     (str value))
   (apply-operation [[_ value] base-value]
     (+ base-value value))
   (operation-order [_] 0))
 
 (defcomponent :op/mult {:widget :text-field :schema number?}
-  (operation-text [[_ value]]
+  (op-info-txt [[_ value]]
     (str (int (* 100 value)) "%"))
   (apply-operation [[_ value] base-value]
     (* base-value (inc value)))
@@ -75,11 +84,11 @@
  )
 
 (defcomponent :op/val-max {}
-  (operation-text [[op-k value]]
+  (op-info-txt [[op-k value]]
     (let [[val-or-max op-k] (val-max-op-k->parts op-k)]
-      (str (operation-text [op-k value]) " " (case val-or-max
-                                               :val "Minimum"
-                                               :max "Maximum"))))
+      (str (op-info-txt [op-k value]) " " (case val-or-max
+                                            :val "Minimum"
+                                            :max "Maximum"))))
 
   (apply-operation [[operation-k value] val-max]
     {:post [(m/validate val-max-schema %)]}
@@ -127,6 +136,10 @@
                                                                         (float 1)
                                                                         (float 1)))
 
+; TODO color don't set at info-text
+; of operation
+; effect which do operations have modifier_blue instead of effect color ...
+
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
 ; -> could give damage reduce 10% like in diablo 2
@@ -134,35 +147,30 @@
 (def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
 (def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
 
-(defn- +? [n]
-  (case (math/signum n)
-    (0.0 1.0) (str positive-modifier-color "+")
-    -1.0 negative-modifier-color))
-
 (defn- k->pretty-name [k]
   (str/capitalize (name k)))
 
-(defn- info-text [effect-or-modifier-k [operation-k value]]
-  (str (+? value)
-       (operation-text [operation-k value])
-       " "
-       (k->pretty-name effect-or-modifier-k)
+(defn modifier-info-text [modifiers]
+  (str "[MODIFIER_BLUE]"
+       (str/join "\n"
+                 (for [[modifier-k operations] modifiers
+                       operation operations]
+                   (str (operation->text operation) " " (k->pretty-name modifier-k))))
        "[]"))
 
-(defn modifiers-text [item-modifiers]
-  (str/join "\n"
-            (for [[modifier-k operations] item-modifiers
-                  operation operations]
-              (info-text modifier-k operation))))
+(defn- stats-modifiers->value-modifiers [stats-modifiers]
+  (for [[modifier-k operations] stats-modifiers
+        :let [operations (for [[operation-k values] operations
+                               :let [value (apply + values)]
+                               :when (not (zero? value))]
+                           [operation-k value])]
+        :when (seq operations)]
+    [modifier-k operations]))
 
 (defn- stats-modifiers-info-text [stats-modifiers]
-  (let [text-parts (for [[modifier-k operations] stats-modifiers
-                         [operation-k values] operations
-                         :let [value (apply + values)]
-                         :when (not (zero? value))]
-                     (info-text modifier-k [operation-k value]))]
-    (when (seq text-parts)
-      (str "\n" (str/join "\n" text-parts)))))
+  (let [modifiers (stats-modifiers->value-modifiers stats-modifiers)]
+    (when (seq modifiers)
+      (modifier-info-text modifiers))))
 
 (defn- ->effective-value [base-value modifier-k stats]
   {:pre [(= "modifier" (namespace modifier-k))]}
@@ -255,7 +263,7 @@
 ; for :skill/effects
 (defcomponent ::stat-effect {}
   (effect/text [[k operations] _effect-ctx]
-    (str/join "\n" (map #(info-text k %) operations)))
+    (str/join "\n" (map #(operation->text k %) operations)))
 
   (effect/applicable? [[k _] {:keys [effect/target]}]
     (and target
@@ -362,6 +370,7 @@
 
   (component/info-text [[_ stats] _ctx]
     (str (stats-info-texts stats)
+         "\n"
          (stats-modifiers-info-text (:stats/modifiers stats))))
 
   (entity/render-info [_
