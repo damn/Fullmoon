@@ -2,7 +2,8 @@
   (:require [gdx.graphics.g2d :as g2d]
             [gdx.graphics.g2d.batch :as batch]
             [data.image :as image]
-            [api.context :as ctx]))
+            [api.context :as ctx]
+            [api.graphics :as g]))
 
 (extend-type api.graphics.Graphics
   api.graphics/Image

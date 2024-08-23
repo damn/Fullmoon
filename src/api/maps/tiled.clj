@@ -9,7 +9,7 @@
   (properties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
   (get-property [_ key] "Pass keyword key, looks up in properties."))
 
-(defprotocol TiledMap
+(defprotocol TMap
   (width [_])
   (height [_])
   (layers [_] "Returns instance of com.badlogic.gdx.maps.MapLayers of the tiledmap")
@@ -62,8 +62,8 @@
   (properties [tile] (.getProperties tile))
   (get-property [tile key] (lookup tile key)))
 
-(extend-type TiledMap
-  com.badlogic.gdx.maps.tiled.TiledMap
+(extend-type com.badlogic.gdx.maps.tiled.TiledMap
+  TMap
   (width  [tiled-map] (get-property tiled-map :width))
   (height [tiled-map] (get-property tiled-map :height))
 

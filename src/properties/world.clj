@@ -1,5 +1,5 @@
 (ns properties.world
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent] :as component]
             [core.data :as data]))
 
 (defcomponent :properties/world {}

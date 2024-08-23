@@ -1,7 +1,7 @@
 (ns properties.skill
   (:require [clojure.string :as str]
             [utils.core :refer [readable-number]]
-            [core.component :refer [defcomponent]]
+            [core.component :refer [defcomponent] :as component]
             [core.data :as data]
             [api.context :as ctx]))
 

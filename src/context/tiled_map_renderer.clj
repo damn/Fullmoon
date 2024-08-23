@@ -31,7 +31,7 @@
     (tmx-map-loader/load (->tmx-map-loader) file))
 
   (render-tiled-map [{g :context/graphics
-                      cached-map-renderer :context/tiled
+                      cached-map-renderer :context/tiled-map-renderer
                       :as ctx}
                      tiled-map
                      color-setter]
