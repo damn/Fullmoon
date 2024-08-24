@@ -21,6 +21,6 @@
   (state/exit [_ _ctx]
     [[:tx.entity/set-movement eid nil]])
 
-  (state/tick [_ ctx]
+  (entity/tick [_ eid ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :timer-finished]])))

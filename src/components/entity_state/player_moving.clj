@@ -23,7 +23,7 @@
   (state/exit [_ _ctx]
     [[:tx.entity/set-movement eid nil]])
 
-  (state/tick [_ context]
+  (entity/tick [_ eid context]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx.entity/set-movement eid {:direction movement-vector
                                      :speed (entity/stat @eid :stats/movement-speed)}]]

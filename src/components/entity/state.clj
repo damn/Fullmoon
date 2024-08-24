@@ -5,67 +5,43 @@
             [core.effect :as effect]
             [core.entity-state :as state]))
 
-(defn- state-key [state]
-  (-> state :fsm :state))
+; fsm throws when initial-state is not part of states, so no need to assert initial-state
+; initial state is nil, so associng it. make bug report at reduce-fsm?
+(defn- ->init-fsm [fsm initial-state]
+  (assoc (fsm initial-state nil) :state initial-state))
 
 (defcomponent :entity/state {}
-  {:keys [state-obj]}
   (entity/create [[k {:keys [fsm initial-state]}] eid ctx]
-    ; fsm throws when initial-state is not part of states, so no need to assert initial-state
-    [[:tx.entity/assoc eid k {:fsm (assoc (fsm initial-state nil)
-                                          :state initial-state) ; initial state is nil, so associng it. make bug report TODO
-                              :state-obj [initial-state (component/create [initial-state eid] ctx)]}]])
+    [[:tx.entity/assoc eid k (->init-fsm fsm initial-state)]
+     [:tx.entity/assoc eid initial-state (component/create [initial-state eid] ctx)]])
 
-  (component/info-text [[_ state] _ctx]
-    (str "[YELLOW]State: " (name (state-key state)) "[]"))
-
-  (entity/tick [_ _eid ctx]
-    (state/tick state-obj ctx))
-
-  (entity/render-below [_ entity* g ctx] (state/render-below state-obj entity* g ctx))
-  (entity/render-above [_ entity* g ctx] (state/render-above state-obj entity* g ctx))
-  (entity/render-info  [_ entity* g ctx] (state/render-info  state-obj entity* g ctx)))
+  (component/info-text [[_ fsm] _ctx]
+    (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
 (extend-type core.entity.Entity
   entity/State
   (state [entity*]
-    (-> entity* :entity/state state-key))
+    (-> entity* :entity/state :state))
 
   (state-obj [entity*]
-    (-> entity* :entity/state :state-obj)))
+    (let [state-k (entity/state entity*)]
+      [state-k (state-k entity*)])))
 
 (defn- send-event! [ctx eid event params]
-  (if-let [{:keys [fsm state-obj]} (:entity/state @eid)]
-    (let [old-state (:state fsm)
+  (when-let [fsm (:entity/state @eid)]
+    (let [old-state-k (:state fsm)
           new-fsm (fsm/fsm-event fsm event)
-          new-state (:state new-fsm)]
-      (if-not (= old-state new-state)
-        (let [new-state-obj [new-state (component/create [new-state eid params] ctx)]]
-          [#(state/exit state-obj %)
+          new-state-k (:state new-fsm)]
+      (when-not (= old-state-k new-state-k)
+        (let [old-state-obj (entity/state-obj @eid)
+              new-state-obj [new-state-k (component/create [new-state-k eid params] ctx)]]
+          [#(state/exit old-state-obj %)
            #(state/enter new-state-obj %)
-           (if (:entity/player? @eid) (fn [_ctx] (state/player-enter new-state-obj)))
-           [:tx.entity/assoc-in eid [:entity/state :fsm] new-fsm]
-           [:tx.entity/assoc-in eid [:entity/state :state-obj] new-state-obj]])))))
-
-(comment
- (require '[entity-state.fsms :as npc-state])
- ; choose a initial state constructor w/o needing ctx
- ; and new state also no ctx
- (let [initial-state :npc-sleeping
-       state (npc-state/->state initial-state)
-       components nil
-       ctx nil
-       entity (atom {:entity/player? true
-                     :entity/state (entity/create-component [:entity/state (npc-state/->state initial-state)]
-                                                            components
-                                                            ctx)})
-       event :alert
-       params nil
-       ]
-   (send-event! ctx entity event params)
-   ; TODO create fsm picture
-   ; TODO why we pass entity and not entity* ?? would be simpler ???
-   ))
+           (if (:entity/player? @eid)
+             (fn [_ctx] (state/player-enter new-state-obj)))
+           [:tx.entity/assoc eid :entity/state new-fsm]
+           [:tx.entity/dissoc eid old-state-k]
+           [:tx.entity/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defcomponent :tx/event {}
   (effect/do! [[_ eid event params] ctx]

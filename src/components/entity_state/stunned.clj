@@ -17,9 +17,9 @@
   (state/pause-game? [_]
     false)
 
-  (state/tick [_ ctx]
+  (entity/tick [_ eid ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (state/render-below [_ entity* g _ctx]
+  (entity/render-below [_ entity* g _ctx]
     (g/draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))

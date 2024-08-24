@@ -92,7 +92,7 @@
          [:tx.entity/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
          [:tx.entity/dissoc eid :entity/item-on-cursor]])))
 
-  (state/render-below [_ entity* g ctx]
+  (entity/render-below [_ entity* g ctx]
     (when (world-item? ctx)
       (g/draw-centered-image g (:property/image item) (item-place-position ctx entity*)))))
 

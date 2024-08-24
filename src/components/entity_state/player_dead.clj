@@ -1,9 +1,11 @@
 (ns components.entity-state.player-dead
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity-state :as state]))
 
 (defcomponent :player-dead {}
+  (component/create [[_ v] _ctx] v)
+
   (state/player-enter [_]
     [[:tx.context.cursor/set :cursors/black-x]])
 
