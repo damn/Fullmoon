@@ -1,9 +1,9 @@
 (ns mapgen.module-gen
-  (:require [data.grid2d :as grid]
+  (:require [utils.core :refer [assoc-ks]]
+            [data.grid2d :as grid]
             [core.maps.tiled :as tiled]
             [core.context :as ctx :refer [->tiled-map]]
             [core.context :refer [all-properties]]
-            [utils.core :refer [assoc-ks]]
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer! grid->tiled-map]]
             [mapgen.transitions :as transitions]
@@ -363,9 +363,7 @@
 
 (def ^:private uf-caves-scale 4)
 
-(defn uf-caves [ctx
-                {:keys [world/map-size
-                        world/spawn-rate]}]
+(defn uf-caves [ctx {:keys [world/map-size world/spawn-rate]}]
   (let [map-size 30
         spawn-rate 0.02
         {:keys [start grid]} (->cave-grid :size map-size)
