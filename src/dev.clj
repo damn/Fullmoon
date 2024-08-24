@@ -8,6 +8,21 @@
             app))
 
 (comment
+
+ (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
+ (gdx.app/post-runnable
+  (fn []
+    (let [atlas (TextureAtlas. "images/creature_animations.atlas")
+          region (.findRegion atlas "barbarian-f-2")]
+      (println region))
+
+    ; but commenting out render-entities / render-tiled-map
+    ; didnt change FPS at all (120)
+    ; thats strange I thought texture swaps take the most time
+
+    )))
+
+(comment
  (defn- all-text-colors []
    (let [colors (seq (.keys (com.badlogic.gdx.graphics.Colors/getColors)))]
      (str/join "\n"

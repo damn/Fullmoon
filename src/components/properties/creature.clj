@@ -8,14 +8,6 @@
             [core.effect :as effect]
             [core.entity :as entity]))
 
-(import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
-
-(comment
- (let [atlas (TextureAtlas. "creatures/creatures.atlas")
-       region (.findRegion atlas "foo")
-       ]
-   ))
-
 (defcomponent :entity.creature/name {}
   (component/info-text [[_ name] _ctx]
     name))
