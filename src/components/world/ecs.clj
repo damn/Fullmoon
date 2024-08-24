@@ -78,6 +78,8 @@
              ; precaution in case a component gets removed by another component
              ; the question is do we still want to update nil components ?
              ; should be contains? check ?
+             ; but then the 'order' is important? in such case dependent components
+             ; should be moved together?
              (if-let [v (k @entity)]
                (let [component [k v]]
                  (ctx/do! ctx (entity/tick component entity ctx)))

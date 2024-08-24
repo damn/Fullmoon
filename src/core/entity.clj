@@ -14,16 +14,26 @@
 (defsystem tick [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
-(defsystem render-below   [_ entity* g ctx])
+; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
+; actually we dont want this to be called over that
+; it should be :components? then ?
+; => shouldn't need default fns for render -> don't call it if its not there
+
+; every component has parent-entity-id (peid)
+; fetch active entity-ids
+; then fetch all components which implement render-below
+; and have parent-id in entity-ids, etc.
+
+(defsystem render-below [_ entity* g ctx])
 (defmethod render-below :default [_ entity* g ctx])
 
 (defsystem render-default [_ entity* g ctx])
 (defmethod render-default :default [_ entity* g ctx])
 
-(defsystem render-above   [_ entity* g ctx])
+(defsystem render-above [_ entity* g ctx])
 (defmethod render-above :default [_ entity* g ctx])
 
-(defsystem render-info    [_ entity* g ctx])
+(defsystem render-info [_ entity* g ctx])
 (defmethod render-info :default [_ entity* g ctx])
 
 (def render-systems [render-below
