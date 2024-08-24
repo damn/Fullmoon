@@ -263,8 +263,7 @@
 (comment
 
  (migrate :properties/creature
-          #(let [{:keys [entity/body]} (:creature/entity %)]
-             (-> %
-                 (assoc :property/bounds (select-keys body [:width :height]))
-                 (update :creature/entity dissoc :entity/body))))
+          #(-> %
+               (update-in [:creature/entity :entity/stats]
+                       assoc :stats/aggro-range 6)))
  )

@@ -135,7 +135,8 @@
 
 (defn defstat [stat-k attr-m & {:keys [operations]}]
   (defcomponent stat-k attr-m)
-  (defmodifier (stat-k->modifier-k stat-k) operations))
+  (when (seq operations)
+    (defmodifier (stat-k->modifier-k stat-k) operations)))
 
 (defstat :stats/hp   data/pos-int-attr :operations [:op/max-inc :op/max-mult])
 (defstat :stats/mana data/nat-int-attr :operations [:op/max-inc :op/max-mult])
@@ -210,6 +211,8 @@
 ; TODO bounds
 (defstat :stats/armor-save   {:widget :text-field :schema number?} :operations [:op/inc])
 (defstat :stats/armor-pierce {:widget :text-field :schema number?} :operations [:op/inc])
+
+(defstat :stats/aggro-range data/nat-int-attr)
 
 ; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
 ; just inc/mult ?
