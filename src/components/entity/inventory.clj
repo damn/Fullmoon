@@ -1,7 +1,6 @@
 (ns components.entity.inventory
   (:require [utils.core :refer [find-first]]
             [core.component :refer [defcomponent]]
-            [core.data :as data]
             [core.context :refer [get-property]]
             [core.entity :as entity]
             [core.effect :as effect]
@@ -85,7 +84,7 @@
     (boolean (pickup-item entity* item))))
 
 (defcomponent :entity/inventory
-  {:data (data/one-to-many-ids :properties/item)
+  {:schema [:one-to-many-ids :properties/item]
    :let item-ids}
   (entity/create [_ eid context]
     (cons [:tx.entity/assoc eid :entity/inventory inventory/empty-inventory]

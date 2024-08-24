@@ -4,7 +4,6 @@
             [malli.core :as m]
             [malli.error :as me]
             [core.component :refer [defcomponent] :as component]
-            [core.data :as data]
             [core.context :as ctx]
             [core.animation :as animation]
             [utils.core :refer [safe-get]]))
@@ -118,10 +117,10 @@
 (defcomponent :context/properties
   {:let {:keys [file types]}}
   (component/create [_ ctx]
-    (defcomponent :property/pretty-name {:data data/string-attr})
-    (defcomponent :property/image       {:data data/image})
-    (defcomponent :property/animation   {:data data/animation})
-    (defcomponent :property/sound       {:data data/sound})
+    (defcomponent :property/pretty-name {:schema :string})
+    (defcomponent :property/image       {:schema :image})
+    (defcomponent :property/animation   {:schema :animation})
+    (defcomponent :property/sound       {:schema :sound})
     (component/load-ks! types)
     (let [types (component/ks->create-all types {})]
       {:file file

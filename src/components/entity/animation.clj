@@ -2,15 +2,14 @@
   (:require [core.component :refer [defcomponent]]
             [core.animation :as animation]
             [core.entity :as entity]
-            [core.context :as ctx]
-            [core.data :as data]))
+            [core.context :as ctx]))
 
 (defn- tx-assoc-image-current-frame [eid animation]
   [:tx.entity/assoc eid :entity/image (animation/current-frame animation)])
 
 (defcomponent :entity/animation
   {:let animation
-   :data data/animation}
+   :schema :animation}
   (entity/create [_ eid _ctx]
     [(tx-assoc-image-current-frame eid animation)])
 

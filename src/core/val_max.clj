@@ -64,16 +64,16 @@
     (let [[_ op-k] (val-max-op-k->parts op-k)]
       (op/order [op-k value]))))
 
-(defcomponent :op/val-inc {:data {:widget :text-field :schema int?}})
+(defcomponent :op/val-inc {:schema :int?})
 (derive       :op/val-inc :op/val-max)
 
-(defcomponent :op/val-mult {:data {:widget :text-field :schema number?}})
+(defcomponent :op/val-mult {:schema :number?})
 (derive       :op/val-mult :op/val-max)
 
-(defcomponent :op/max-inc {:data {:widget :text-field :schema int?}})
+(defcomponent :op/max-inc {:schema :int?})
 (derive       :op/max-inc :op/val-max)
 
-(defcomponent :op/max-mult {:data {:widget :text-field :schema number?}})
+(defcomponent :op/max-mult {:schema :number?})
 (derive       :op/max-mult :op/val-max)
 
 (comment

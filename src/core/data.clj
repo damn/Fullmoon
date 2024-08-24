@@ -4,7 +4,75 @@
             [core.component :as component]
             [core.val-max :refer [val-max-schema]]))
 
-; * which data is there? (for properties)
+; data itself because a component (miltimethod widget,schema, ...)
+; it snot schema but :data :data/foo
+
+; :grep component/attributes
+; because is not correct anymore its not a malli schema .....
+; but a core schema ???
+
+
+; we need
+; :widget
+; :schema (malli)
+; items/components/default-value
+
+(defdata :boolean   {:widget :check-box  :schema :boolean :default-value true})
+
+(defdata :some      {:widget :label      :schema :some})
+
+(defdata :string    {:widget :text-field :schema :string})
+
+(defdata :sound     {:widget :sound      :schema :string})
+
+(defdata :image     {:widget :image      :schema :some})
+
+(defdata :animation {:widget :animation  :schema :some})
+
+(defdata :val-max   {:widget :text-field :schema (m/form val-max-schema)})
+
+(defdata :number?  {:widget :text-field :schema number?})
+(defdata :nat-int? {:widget :text-field :schema nat-int?})
+(defdata :int?     {:widget :text-field :schema int?})
+(defdata :pos?     {:widget :text-field :schema pos?})
+(defdata :pos-int? {:widget :text-field :schema pos-int?})
+
+
+; [:enum :good :evil]
+(defdata :enum  {:widget :enum :schema (apply vector :enum items)})
+(defn enum [& items]
+  {:widget :enum
+   :schema (apply vector :enum items)
+   :items items})
+
+; :effect/target-all mess
+; :effect/target-entity mess
+
+; [:components :effect] ; gives ns
+
+; [:components operations] ; gives keys
+
+; [:one-to-many-ids :properties/item]
+; [:one-to-many-ids :properties/skill]
+
+; (m/form entity/movement-speed-schema)
+
+; [:map :damage/min-max]
+
+; [:qualified-keyword {:namespace :species}]
+
+; [:maybe :pos-int?]
+
+
+; TODO :derive add to defcomponent map ? (used at val-max)
+
+; Next, see :context/properties
+; can move defcomponents into app.edn itself
+
+; also defstats -> effects & operations should be deducted from :schema
+; and stats itself can be passed @ created in resources/app.edn
+
+; * which data is there? (for properties - or in general)
 ; * do they all have proper widget/schema/optional?
 ; * define not at entity/foo but at components/properties ? (creature state different than entity/state ..)
 
@@ -19,20 +87,8 @@
 ;(assert (:widget attr-map) k)
 ; optional: :doc ! (maybe not optional make ...)
 
-(def sound        {:widget :sound      :schema :string})
-(def image        {:widget :image      :schema :some})
-(def animation    {:widget :animation  :schema :some})
-(def string-attr  {:widget :text-field :schema :string})
-(def boolean-attr {:widget :check-box  :schema :boolean :default-value true})
-(def val-max-attr {:widget :text-field :schema (m/form val-max-schema)})
-(def nat-int-attr {:widget :text-field :schema nat-int?})
-(def pos-attr     {:widget :text-field :schema pos?})
-(def pos-int-attr {:widget :text-field :schema pos-int?})
 
-(defn enum [& items]
-  {:widget :enum
-   :schema (apply vector :enum items)
-   :items items})
+
 
 ; TODO not checking if one of existing ids used
 ; widget requires property/image.

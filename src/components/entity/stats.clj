@@ -6,7 +6,6 @@
             [utils.random :as random]
             [core.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :as component :refer [defcomponent]]
-            [core.data :as data]
             [core.effect :as effect]
             [core.entity :as entity]
             [core.graphics :as g]
@@ -131,15 +130,20 @@
               (str (k->pretty-name stat-k) ": " value))))
 
 (defn defmodifier [modifier-k operations]
-  (defcomponent modifier-k {:data (data/components operations)}))
+  (defcomponent modifier-k {:schema [:components operations]}))
 
-(defn defstat [stat-k attr-m & {:keys [operations]}]
-  (defcomponent stat-k {:data attr-m})
-  (when (seq operations)
+(defn defstat [stat-k {:keys [schema operations]}]
+  (defcomponent stat-k {:schema schema})
+  (when operations
     (defmodifier (stat-k->modifier-k stat-k) operations)))
 
-(defstat :stats/hp   data/pos-int-attr :operations [:op/max-inc :op/max-mult])
-(defstat :stats/mana data/nat-int-attr :operations [:op/max-inc :op/max-mult])
+(defstat :stats/hp
+  {:schema :pos-int?
+   :operations [:op/max-inc :op/max-mult]})
+
+(defstat :stats/mana
+  {:schema :nat-int?
+   :operations [:op/max-inc :op/max-mult]})
 
 (defn- effect-k->stat-k [effect-k]
   (keyword "stats" (name effect-k)))
@@ -172,10 +176,12 @@
                   effective-value
                   operations)]]))))
 
-(defcomponent :effect/hp {:data (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])})
+(defcomponent :effect/hp
+  {:schema [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
 (derive :effect/hp ::stat-effect)
 
-(defcomponent :effect/mana {:data (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])})
+(defcomponent :effect/mana
+  {:schema [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
 (derive :effect/mana ::stat-effect)
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
@@ -184,18 +190,21 @@
 ; * cast/attack speed dont decrease below 0 ??
 
 ; TODO clamp between 0 and max-speed ( same as movement-speed-schema )
-(defstat :stats/movement-speed {:widget :text-field
-                                :schema (m/form entity/movement-speed-schema)}
-  :operations [:op/inc :op/mult])
+(defstat :stats/movement-speed
+  {:schema (m/form entity/movement-speed-schema)
+   :operations [:op/inc :op/mult]})
 
 ; TODO show the stat in different color red/green if it was permanently modified ?
 ; or an icon even on the creature
 ; also we want audiovisuals always ...
-(defcomponent :effect/movement-speed {:data (data/components [:op/mult])})
+(defcomponent :effect/movement-speed
+  {:schema [:components [:op/mult]]})
 (derive :effect/movement-speed ::stat-effect)
 
 ; TODO clamp into ->pos-int
-(defstat :stats/strength data/nat-int-attr :operations [:op/inc])
+(defstat :stats/strength
+  {:schema :nat-int?
+   :operations [:op/inc]})
 
 ; TODO here >0
 (let [doc "action-time divided by this stat when a skill is being used.
@@ -203,17 +212,31 @@
 
           For example:
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
-      skill-speed-stat (assoc data/pos-attr :doc doc)
+      schema :pos?
       operations [:op/inc]]
-  (defstat :stats/cast-speed   skill-speed-stat :operations operations)
-  (defstat :stats/attack-speed skill-speed-stat :operations operations))
+  (defstat :stats/cast-speed
+    {:schema schema
+     :doc doc
+     :operations operations})
+
+  (defstat :stats/attack-speed
+    {:schema schema
+     :doc doc
+     :operations operations}))
 
 ; TODO bounds
-(defstat :stats/armor-save   {:widget :text-field :schema number?} :operations [:op/inc])
-(defstat :stats/armor-pierce {:widget :text-field :schema number?} :operations [:op/inc])
+(defstat :stats/armor-save
+  {:schema :number?
+   :operations [:op/inc]})
+
+(defstat :stats/armor-pierce
+  {:schema :number?
+   :operations [:op/inc]})
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
-(defstat :stats/aggro-range (assoc data/nat-int-attr :optional? false))
+(defstat :stats/aggro-range
+  {:schema :nat-int?
+   :optional? false})
 
 ; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
 ; just inc/mult ?
@@ -221,8 +244,9 @@
 (defmodifier :modifier/damage-deal    [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-receive [:op/inc :op/mult])
 
-(defcomponent :stats/modifiers {:data (data/components [:modifier/damage-deal
-                                                        :modifier/damage-receive])})
+(defcomponent :stats/modifiers
+  {:schema [:components [:modifier/damage-deal
+                         :modifier/damage-receive]]})
 
 (extend-type core.entity.Entity
   entity/Stats
@@ -259,7 +283,7 @@
 
 (defcomponent :entity/stats
   {:let stats
-   :data (data/components-attribute :stats)}
+   :schema [:components :stats]}
   (component/create [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
@@ -390,11 +414,11 @@
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
-(defcomponent :damage/min-max {:data data/val-max-attr})
+(defcomponent :damage/min-max {:schema :val-max})
 
 (defcomponent :effect/damage
   {:let damage
-   :data (data/map-attribute :damage/min-max)}
+   :schema [:map :damage/min-max]}
   (effect/text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]

@@ -1,7 +1,6 @@
 (ns components.effect.target-all
   (:require [math.vector :as v]
             [core.component :refer [defcomponent]]
-            [core.data :as data]
             [core.graphics :as g]
             [core.context :as ctx]
             [core.effect :as effect]
@@ -28,7 +27,7 @@
 
  )
 
-(defcomponent :hit-effects {:data (data/components-attribute :effect)})
+(defcomponent :hit-effects {:schema [:components :effect]})
 
 (defcomponent :effect/target-all
   {:data {:widget :nested-map

@@ -12,12 +12,12 @@
 
 (defcomponent :properties/skill
   (component/create [_ _ctx]
-    (defcomponent :skill/action-time {:data data/pos-attr})
-    (defcomponent :skill/cooldown {:data data/nat-int-attr})
-    (defcomponent :skill/cost {:data data/nat-int-attr})
-    (defcomponent :skill/effects {:data (data/components-attribute :effect)})
-    (defcomponent :skill/start-action-sound {:data data/sound})
-    (defcomponent :skill/action-time-modifier-key {:data (data/enum :stats/cast-speed :stats/attack-speed)})
+    (defcomponent :skill/action-time              {:schema :pos?})
+    (defcomponent :skill/cooldown                 {:schema :nat-int?})
+    (defcomponent :skill/cost                     {:schema :nat-int?})
+    (defcomponent :skill/effects                  {:schema [:components :effect]})
+    (defcomponent :skill/start-action-sound       {:schema :sound})
+    (defcomponent :skill/action-time-modifier-key {:schema [:enum :stats/cast-speed :stats/attack-speed]})
     {:id-namespace "skills"
      :schema (data/map-attribute-schema
               [:property/id [:qualified-keyword {:namespace :skills}]]

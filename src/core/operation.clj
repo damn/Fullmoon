@@ -17,14 +17,14 @@
   (str (+? value) (value-text operation)))
 
 (defcomponent :op/inc
-  {:data {:widget :text-field :schema number?}
+  {:schema :number?
    :let value}
   (value-text [_] (str value))
   (apply [_ base-value] (+ base-value value))
   (order [_] 0))
 
 (defcomponent :op/mult
-  {:data {:widget :text-field :schema number?}
+  {:schema :number?
    :let value}
   (value-text [_] (str (int (* 100 value)) "%"))
   (apply [_ base-value] (* base-value (inc value)))

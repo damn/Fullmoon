@@ -3,8 +3,8 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
-            [core.data :as data]
             [core.context :as ctx]
+            [core.data :as data]
             [core.effect :as effect]
             [core.entity :as entity]))
 
@@ -21,24 +21,20 @@
 
     ; TODO assert min body size from core.entity
     ; TODO make px
-    (defcomponent :property/bounds {:data {:widget :label :schema :some}})
+    (defcomponent :property/bounds {:schema :some})
+    (defcomponent :creature/species {:schema [:qualified-keyword {:namespace :species}]})
+    (defcomponent :creature/level {:schema [:maybe :pos-int?]})
+    (defcomponent :entity/flying? {:schema :boolean})
+    (defcomponent :entity/reaction-time {:schema :pos?})
 
-    (defcomponent :creature/species {:data {:widget :label :schema [:qualified-keyword {:namespace :species}]}})
-
-    (defcomponent :creature/level {:data {:widget :text-field :schema [:maybe pos-int?]}})
-
-    (defcomponent :entity/flying? {:data data/boolean-attr})
-
-    (defcomponent :entity/reaction-time {:data data/pos-attr})
-
-    (defcomponent :creature/entity {:data (data/components ; TODO no required/optional settings ! just cannot remove & already there !
-                                            [:entity/animation
-                                             :entity/flying? ; remove
-                                             :entity/reaction-time ; in frames 0.016x
-                                             :entity/faction ; remove
-                                             :entity/stats
-                                             :entity/inventory  ; remove
-                                             :entity/skills])})
+    (defcomponent :creature/entity {:schema [:components ; TODO no required/optional settings ! just cannot remove & already there !
+                                             [:entity/animation
+                                              :entity/flying? ; remove
+                                              :entity/reaction-time ; in frames 0.016x
+                                              :entity/faction ; remove
+                                              :entity/stats
+                                              :entity/inventory  ; remove
+                                              :entity/skills]]})
 
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
@@ -144,7 +140,7 @@
    :fsm npc-fsm})
 
 (defcomponent :effect/stun
-  {:data data/pos-attr
+  {:schema :pos?
    :let duration}
   (effect/text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
@@ -156,7 +152,8 @@
   (effect/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
-(defcomponent :effect/kill {:data data/boolean-attr}
+(defcomponent :effect/kill
+  {:schema :some}
   (effect/text [_ _effect-ctx]
     "Kills target")
 
@@ -271,8 +268,7 @@
 
 ; => one to one attr!?
 (defcomponent :effect/spawn
-  {:data {:widget :text-field
-          :schema [:qualified-keyword {:namespace :creatures}]}
+  {:schema [:qualified-keyword {:namespace :creatures}]
    :let creature-id}
   (effect/text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))

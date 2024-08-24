@@ -1,7 +1,6 @@
 (ns components.effect.target-entity
   (:require [math.vector :as v]
             [core.component :refer [defcomponent]]
-            [core.data :as data]
             [core.graphics :as g]
             [core.context :as ctx]
             [core.effect :as effect]
@@ -25,10 +24,10 @@
          (v/scale (entity/direction entity* target*)
                   maxrange)))
 
-(defcomponent :maxrange {:data data/pos-attr})
+(defcomponent :maxrange {:schema :pos?})
 ; TODO how should this work ???
 ; can not contain the other effects properly o.o
-(defcomponent :hit-effects {:data (data/components-attribute :effect)})
+(defcomponent :hit-effects {:schema [:components :effect]})
 
 (defcomponent :effect/target-entity
   {:let {:keys [maxrange hit-effects]}

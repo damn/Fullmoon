@@ -3,14 +3,14 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :refer [get-property ->counter stopped?]]
             [core.entity :as entity]
-            [core.effect :as effect]
-            [core.data :as data]))
+            [core.effect :as effect]))
 
 ; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
-(defcomponent :entity/skills {:data (data/one-to-many-ids :properties/skill)}
+(defcomponent :entity/skills
+  {:schema [:one-to-many-ids :properties/skill]}
   (component/create [[_ skill-ids] ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 
