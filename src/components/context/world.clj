@@ -86,7 +86,7 @@
   (content-grid [ctx] (:world/content-grid ctx))
   (world-grid  [ctx]  (:world/grid         ctx)))
 
-(defcomponent :tx/add-to-world {}
+(defcomponent :tx/add-to-world
   (effect/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     ; hmm
@@ -94,13 +94,13 @@
     (world-grid/add-entity! (ctx/world-grid ctx) entity)
     ctx))
 
-(defcomponent :tx/remove-from-world {}
+(defcomponent :tx/remove-from-world
   (effect/do! [[_ entity] ctx]
     (content-grid/remove-entity! (ctx/content-grid ctx) entity)
     (world-grid/remove-entity! (ctx/world-grid ctx) entity)
     ctx))
 
-(defcomponent :tx/position-changed {}
+(defcomponent :tx/position-changed
   (effect/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)

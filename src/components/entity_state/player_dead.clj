@@ -3,7 +3,7 @@
             [core.context :as ctx]
             [core.entity-state :as state]))
 
-(defcomponent :player-dead {}
+(defcomponent :player-dead
   (state/player-enter [_]
     [[:tx.context.cursor/set :cursors/black-x]])
 

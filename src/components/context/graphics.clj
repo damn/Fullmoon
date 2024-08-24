@@ -17,8 +17,8 @@
 ; could add the namespace 'graphics' manually
 ; but then we need separate namespaces gui-view & world-view, batch, shape-drawer-texture not disposed.
 ; but as batch, shape-drawer & gui-view is required for everything to work we can hide them as well.
-(defcomponent :context/graphics {}
-  {:keys [views default-font cursors]}
+(defcomponent :context/graphics
+  {:let {:keys [views default-font cursors]}}
   (component/create [_ _ctx]
     (core.graphics/map->Graphics
      (let [batch (g2d/->sprite-batch)]

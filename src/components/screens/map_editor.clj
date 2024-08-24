@@ -199,6 +199,6 @@ direction keys: move")
                                    :show-movement-properties false
                                    :show-grid-lines false}))})
 
-(defcomponent :screens/map-editor {}
+(defcomponent :screens/map-editor
   (component/create [_ ctx]
     (ctx/->stage-screen ctx (->screen ctx))))

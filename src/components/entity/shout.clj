@@ -17,14 +17,14 @@
        (filter #(and (= (:entity/faction %) (:entity/faction entity*))
                      (line-of-sight? context entity* %)))))
 
-(defcomponent :entity/shout {}
+(defcomponent :entity/shout
   (entity/tick [[_ counter] entity context]
     (when (stopped? context counter)
       (cons [:tx/destroy entity]
             (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context @entity shout-range)]
               [:tx/event entity :alert])))))
 
-(defcomponent :tx.entity/shout {}
+(defcomponent :tx.entity/shout
   (effect/do! [[_ position faction delay-seconds] ctx]
     [[:tx/create
       {:position position

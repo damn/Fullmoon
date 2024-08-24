@@ -16,8 +16,8 @@
 (defn info-text [{value 1 :as operation}]
   (str (+? value) (value-text operation)))
 
-(defcomponent :op/inc {:widget :text-field :schema number?}
-  value
+(defcomponent :op/inc {:data {:widget :text-field :schema number?}}
+  {:let value}
   (value-text [_]
     (str value))
 
@@ -27,8 +27,8 @@
   (order [_]
     0))
 
-(defcomponent :op/mult {:widget :text-field :schema number?}
-  value
+(defcomponent :op/mult {:data {:widget :text-field :schema number?}}
+  {:let value}
   (value-text [_]
     (str (int (* 100 value)) "%"))
 

@@ -67,7 +67,7 @@
       (ctx/change-screen ctx :screens/world)
       ctx)))
 
-(defcomponent :screens/options-menu {}
+(defcomponent :screens/options-menu
   (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors [(ctx/->background-image ctx)

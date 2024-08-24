@@ -60,8 +60,8 @@
 (defn- world-item? [ctx]
   (not (mouse-on-stage-actor? ctx)))
 
-(defcomponent :player-item-on-cursor {}
-  {:keys [eid item]}
+(defcomponent :player-item-on-cursor
+  {:let {:keys [eid item]}}
   (component/create [[_ eid item] _ctx]
     {:eid eid
      :item item})

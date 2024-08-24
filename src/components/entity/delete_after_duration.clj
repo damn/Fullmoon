@@ -4,8 +4,8 @@
             [core.context :as ctx]
             [core.entity :as entity]))
 
-(defcomponent :entity/delete-after-duration {}
-  counter
+(defcomponent :entity/delete-after-duration
+  {:let counter}
   (component/create [[_ duration] ctx]
     (ctx/->counter ctx duration))
 

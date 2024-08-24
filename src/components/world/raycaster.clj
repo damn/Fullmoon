@@ -17,7 +17,7 @@
   (let [[x y] (:position cell*)]
     (aset arr x y (boolean (cell*->blocked? cell*)))))
 
-(defcomponent :world/raycaster {}
+(defcomponent :world/raycaster
   (component/create [[_ position->blocked?] {:keys [world/grid]}]
     (let [width (grid2d/width grid)
           height (grid2d/height grid)

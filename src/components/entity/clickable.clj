@@ -3,7 +3,7 @@
             [core.graphics :as g]
             [core.entity :as entity]))
 
-(defcomponent :entity/clickable {}
+(defcomponent :entity/clickable
   (entity/render-default [[_ {:keys [text]}]
                           {:keys [entity/mouseover?] :as entity*}
                           g

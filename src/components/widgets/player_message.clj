@@ -5,7 +5,7 @@
             [core.graphics :as g]
             [core.effect :as effect]))
 
-(defcomponent :tx/msg-to-player {}
+(defcomponent :tx/msg-to-player
   (effect/do! [[_ message] ctx]
     (assoc ctx ::msg {:message message :counter 0})))
 

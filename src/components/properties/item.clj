@@ -11,15 +11,15 @@
                                                                         (float 0.52)
                                                                         (float 1)))
 
-(defcomponent :properties/item {}
+(defcomponent :properties/item
   (component/create [_ _ctx]
 
     ; could make optional - shorter properties.edn ...
     ; and some items could just be fluff
-    (defcomponent :item/modifiers (data/components-attribute :modifier))
+    (defcomponent :item/modifiers {:data (data/components-attribute :modifier)})
 
-    (defcomponent :item/slot {:widget :label
-                              :schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+    (defcomponent :item/slot {:data {:widget :label
+                                     :schema [:qualified-keyword {:namespace :inventory.slot}]}}) ; TODO one of ... == 'enum' !!
 
     {:id-namespace "items"
      :schema (data/map-attribute-schema
@@ -45,7 +45,7 @@
                   (modifiers/info-text modifiers))])}))
 
 ; TODO use image w. shadows spritesheet
-(defcomponent :tx.entity/item {}
+(defcomponent :tx.entity/item
   (effect/do! [[_ position item] _ctx]
     (assert (:property/image item))
     [[:tx/create

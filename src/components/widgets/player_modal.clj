@@ -25,7 +25,7 @@
                                                   (* (ctx/gui-viewport-height ctx) (/ 3 4))]
                                 :pack? true})))
 
-(defcomponent :tx/player-modal {}
+(defcomponent :tx/player-modal
   (effect/do! [[_ params] ctx]
     (show-player-modal! ctx params)
     ctx))

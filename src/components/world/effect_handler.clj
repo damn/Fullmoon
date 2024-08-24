@@ -12,7 +12,7 @@
 (defn- clear-recorded-txs! []
   (reset! frame->txs {}))
 
-(defcomponent :world/effect-handler {}
+(defcomponent :world/effect-handler
   (component/create [[_ [game-loop-mode record-transactions?]] _ctx]
     (case game-loop-mode
       :game-loop/normal (when record-transactions?

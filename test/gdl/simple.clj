@@ -3,7 +3,7 @@
             [app.start :as app]
             [core.context :as ctx]))
 
-#_(defcomponent :gdl/simple {}
+#_(defcomponent :gdl/simple
   (component/create [[_ {:keys [font logo]}] ctx]
     {:special-font (ctx/generate-ttf ctx font)
      :logo (ctx/create-image ctx logo)}))

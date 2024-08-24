@@ -5,8 +5,8 @@
             [core.entity :as entity]
             [core.entity-state :as state]))
 
-(defcomponent :stunned {}
-  {:keys [eid counter]}
+(defcomponent :stunned
+  {:let {:keys [eid counter]}}
   (component/create [[_ eid duration] ctx]
     {:eid eid
      :counter (->counter ctx duration)})

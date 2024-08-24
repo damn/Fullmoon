@@ -6,8 +6,8 @@
             [core.world.grid :refer [rectangle->cells]]
             [core.world.cell :as cell :refer [cells->entities]]))
 
-(defcomponent :entity/projectile-collision {}
-  {:keys [hit-effects already-hit-bodies piercing?]}
+(defcomponent :entity/projectile-collision
+  {:let {:keys [hit-effects already-hit-bodies piercing?]}}
   (component/create [[_ v] _ctx]
     (assoc v :already-hit-bodies #{}))
 

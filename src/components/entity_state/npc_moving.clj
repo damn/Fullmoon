@@ -7,8 +7,8 @@
 ; npc moving is basically a performance optimization so npcs do not have to check
 ; pathfinding/usable skills every frame
 ; also prevents fast twitching around changing directions every frame
-(defcomponent :npc-moving {}
-  {:keys [eid movement-vector counter]}
+(defcomponent :npc-moving
+  {:let {:keys [eid movement-vector counter]}}
   (component/create [[_ eid movement-vector] ctx]
     {:eid eid
      :movement-vector movement-vector

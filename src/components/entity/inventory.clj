@@ -26,11 +26,11 @@
      (when (:entity/player? entity*)
        [:tx/remove-item-from-widget cell])]))
 
-(defcomponent :tx/set-item {}
+(defcomponent :tx/set-item
   (effect/do! [[_ entity cell item] _ctx]
     (set-item @entity cell item)))
 
-(defcomponent :tx/remove-item {}
+(defcomponent :tx/remove-item
   (effect/do! [[_ entity cell] _ctx]
     (remove-item @entity cell)))
 
@@ -55,7 +55,7 @@
     (concat (remove-item entity* cell)
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
-(defcomponent :tx/stack-item {}
+(defcomponent :tx/stack-item
   (effect/do! [[_ entity cell item] _ctx]
     (stack-item @entity cell item)))
 
@@ -75,7 +75,7 @@
    (try-put-item-in entity* (:item/slot item)   item)
    (try-put-item-in entity* :inventory.slot/bag item)))
 
-(defcomponent :tx/pickup-item {}
+(defcomponent :tx/pickup-item
   (effect/do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
@@ -84,7 +84,7 @@
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
-(defcomponent :entity/inventory (data/one-to-many-ids :properties/item)
+(defcomponent :entity/inventory {:data (data/one-to-many-ids :properties/item)}
   item-ids
   (entity/create [_ eid context]
     (cons [:tx.entity/assoc eid :entity/inventory inventory/empty-inventory]

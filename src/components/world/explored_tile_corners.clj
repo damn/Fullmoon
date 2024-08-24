@@ -3,7 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             core.context))
 
-(defcomponent :world/explored-tile-corners {}
+(defcomponent :world/explored-tile-corners
   (component/create [_ {:keys [world/grid]}]
     (atom (grid2d/create-grid (grid2d/width grid)
                               (grid2d/height grid)

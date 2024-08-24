@@ -3,7 +3,7 @@
             [core.animation :as animation]
             [core.entity :as entity]))
 
-(defcomponent :entity/delete-after-animation-stopped? {}
+(defcomponent :entity/delete-after-animation-stopped?
   (entity/create [_ entity _ctx]
     (-> @entity :entity/animation :looping? not assert))
 

@@ -10,14 +10,14 @@
 
 (def ^:private this :world/ecs)
 
-(defcomponent this {}
+(defcomponent this
   (component/create [_ _ctx]
     {}))
 
 (defn- entities [ctx] (this ctx))
 
-(defcomponent :entity/uid {}
-  uid
+(defcomponent :entity/uid
+  {:let uid}
   (entity/create [_ entity ctx]
     (assert (number? uid))
     (update ctx this assoc uid entity))
@@ -30,11 +30,11 @@
   (defn- unique-number! []
     (swap! cnt inc)))
 
-(defcomponent :entity/id {}
+(defcomponent :entity/id
   (entity/create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
   (entity/destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
 
-(defcomponent :tx/create {}
+(defcomponent :tx/create
   (effect/do! [[_ body components] ctx]
     (assert (and (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
@@ -53,7 +53,7 @@
              ; thats why we reuse component and not fetch each time again for key
              (entity/create component entity ctx))))])))
 
-(defcomponent :tx/destroy {}
+(defcomponent :tx/destroy
   (effect/do! [[_ entity] ctx]
     [[:tx.entity/assoc entity :entity/destroyed? true]]))
 
@@ -116,30 +116,30 @@
       (fn [ctx]
         (entity/destroy component entity ctx)))))
 
-(defcomponent :tx.entity/assoc {}
+(defcomponent :tx.entity/assoc
   (effect/do! [[_ entity k v] ctx]
     (assert (keyword? k))
     (swap! entity assoc k v)
     ctx))
 
-(defcomponent :tx.entity/assoc-in {}
+(defcomponent :tx.entity/assoc-in
   (effect/do! [[_ entity ks v] ctx]
     (swap! entity assoc-in ks v)
     ctx))
 
-(defcomponent :tx.entity/dissoc {}
+(defcomponent :tx.entity/dissoc
   (effect/do! [[_ entity k] ctx]
     (assert (keyword? k))
     (swap! entity dissoc k)
     ctx))
 
-(defcomponent :tx.entity/dissoc-in {}
+(defcomponent :tx.entity/dissoc-in
   (effect/do! [[_ entity ks] ctx]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     ctx))
 
-(defcomponent :tx.entity/update-in {}
+(defcomponent :tx.entity/update-in
   (effect/do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))

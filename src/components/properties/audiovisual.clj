@@ -4,7 +4,7 @@
             [core.context :as ctx]
             [core.effect :as effect]))
 
-(defcomponent :properties/audiovisual {}
+(defcomponent :properties/audiovisual
   (component/create [_ _ctx]
     {:id-namespace "audiovisuals"
      :schema (data/map-attribute-schema
@@ -17,7 +17,7 @@
                 :image/dimensions [96 96]} ; ??
      }))
 
-(defcomponent :tx.entity/audiovisual {}
+(defcomponent :tx.entity/audiovisual
   (effect/do! [[_ position id] ctx]
     ; assert property of type audiovisual
     (let [{:keys [property/sound

@@ -8,8 +8,9 @@
 (defn- tx-assoc-image-current-frame [eid animation]
   [:tx.entity/assoc eid :entity/image (animation/current-frame animation)])
 
-(defcomponent :entity/animation data/animation
-  animation
+(defcomponent :entity/animation
+  {:let animation
+   :data data/animation}
   (entity/create [_ eid _ctx]
     [(tx-assoc-image-current-frame eid animation)])
 

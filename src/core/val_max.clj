@@ -39,7 +39,7 @@
  (= (val-max-op-k->parts :op/val-inc) [:val :op/inc])
  )
 
-(defcomponent :op/val-max {}
+(defcomponent :op/val-max
   (op/value-text [[op-k value]]
     (let [[val-or-max op-k] (val-max-op-k->parts op-k)]
       (str (op/value-text [op-k value]) " " (case val-or-max
@@ -64,16 +64,16 @@
     (let [[_ op-k] (val-max-op-k->parts op-k)]
       (op/order [op-k value]))))
 
-(defcomponent :op/val-inc {:widget :text-field :schema int?})
+(defcomponent :op/val-inc {:data {:widget :text-field :schema int?}})
 (derive       :op/val-inc :op/val-max)
 
-(defcomponent :op/val-mult {:widget :text-field :schema number?})
+(defcomponent :op/val-mult {:data {:widget :text-field :schema number?}})
 (derive       :op/val-mult :op/val-max)
 
-(defcomponent :op/max-inc {:widget :text-field :schema int?})
+(defcomponent :op/max-inc {:data {:widget :text-field :schema int?}})
 (derive       :op/max-inc :op/val-max)
 
-(defcomponent :op/max-mult {:widget :text-field :schema number?})
+(defcomponent :op/max-mult {:data {:widget :text-field :schema number?}})
 (derive       :op/max-mult :op/val-max)
 
 (comment

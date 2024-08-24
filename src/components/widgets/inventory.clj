@@ -133,7 +133,7 @@
   {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
    :slot->background (:slot->background (:world/widgets ctx))})
 
-(defcomponent :tx/set-item-image-in-widget {}
+(defcomponent :tx/set-item-image-in-widget
   (effect/do! [[_ cell item] ctx]
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
@@ -144,7 +144,7 @@
       (add-tooltip! cell-widget #(player-tooltip-text % item))
       ctx)))
 
-(defcomponent :tx/remove-item-from-widget {}
+(defcomponent :tx/remove-item-from-widget
   (effect/do! [[_ cell] ctx]
     (let [{:keys [table slot->background]} (get-inventory ctx)
           cell-widget (get table cell)

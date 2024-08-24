@@ -58,7 +58,7 @@
     stage/clear!
     (stage/add-actors! (->ui-actors ctx widget-data))))
 
-(defcomponent :world/widgets {}
+(defcomponent :world/widgets
   (component/create [_ ctx]
     (let [widget-data {:action-bar (action-bar/->button-group ctx)
                        :slot->background (inventory/->data ctx)}]

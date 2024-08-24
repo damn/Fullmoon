@@ -25,10 +25,10 @@
          (v/scale (entity/direction entity* target*)
                   maxrange)))
 
-(defcomponent :maxrange data/pos-attr)
+(defcomponent :maxrange {:data data/pos-attr})
 ; TODO how should this work ???
 ; can not contain the other effects properly o.o
-(defcomponent :hit-effects (data/components-attribute :effect))
+(defcomponent :hit-effects {:data (data/components-attribute :effect)})
 
 (defcomponent :effect/target-entity
   {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..

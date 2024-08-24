@@ -4,8 +4,10 @@
             [core.effect :as effect]
             [core.entity :as entity]))
 
-(defcomponent :entity/faction (data/enum :good :evil)
-  faction
+(defcomponent :entity/faction
+  {:let faction}
+  (component/schema [_] [:enum :good :evil])
+
   (component/info-text [_ _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
@@ -19,7 +21,7 @@
   (friendly-faction [{:keys [entity/faction]}]
     faction))
 
-(defcomponent :effect/convert data/boolean-attr
+(defcomponent :effect/convert {:data data/boolean-attr}
   (effect/text [_ _effect-ctx]
     "Converts target to your side.")
 

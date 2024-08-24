@@ -30,6 +30,6 @@
   (render [_]
     (ctx/render-gui-view ctx #(draw-test % ctx))))
 
-#_(defcomponent :gdl/simple-screen {}
+#_(defcomponent :gdl/simple-screen
   (component/create [_ _ctx]
     (->Screen)))

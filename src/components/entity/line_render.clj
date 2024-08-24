@@ -4,15 +4,15 @@
             [core.entity :as entity]
             [core.effect :as effect]))
 
-(defcomponent :entity/line-render {}
-  {:keys [thick? end color]}
+(defcomponent :entity/line-render
+  {:let {:keys [thick? end color]}}
   (entity/render-default [_ entity* g _ctx]
     (let [position (:position entity*)]
       (if thick?
         (g/with-shape-line-width g 4 #(g/draw-line g position end color))
         (g/draw-line g position end color)))))
 
-(defcomponent :tx.entity/line-render {}
+(defcomponent :tx.entity/line-render
   (effect/do! [[_ {:keys [start end duration color thick?]}] _ctx]
     [[:tx/create
       {:position start

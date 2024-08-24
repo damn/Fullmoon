@@ -6,8 +6,8 @@
             [core.graphics :as g]
             [core.world.cell :as cell]))
 
-(defcomponent :npc-sleeping {}
-  {:keys [eid]}
+(defcomponent :npc-sleeping
+  {:let {:keys [eid]}}
   (component/create [[_ eid] _ctx]
     {:eid eid})
 

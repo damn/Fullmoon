@@ -5,7 +5,7 @@
             [core.entity :as entity]
             [core.effect :as effect]))
 
-(defcomponent :entity/string-effect {}
+(defcomponent :entity/string-effect
   (entity/tick [[k {:keys [counter]}] eid context]
     (when (stopped? context counter)
       [[:tx.entity/dissoc eid k]]))
@@ -19,7 +19,7 @@
                     :scale 2
                     :up? true}))))
 
-(defcomponent :tx/add-text-effect {}
+(defcomponent :tx/add-text-effect
   (effect/do! [[_ entity text] ctx]
     [[:tx.entity/assoc
       entity

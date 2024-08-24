@@ -4,7 +4,7 @@
             [core.entity :as entity]
             [core.entity-state :as state]))
 
-(defcomponent :entity/player? {}
+(defcomponent :entity/player?
   (entity/create [_ eid ctx]
     (assoc ctx ::eid eid)))
 

@@ -9,20 +9,6 @@
             [core.animation :as animation]
             [utils.core :refer [safe-get]]))
 
-(comment
- (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
- (let [atlas (TextureAtlas. "creatures/creatures.atlas")
-       region (.findRegion atlas "foo")]
-
-   ; change image->edn if it has :atlas
-   ; then just call .findRegion
-   ; bugt how to do edn->image ?? in this case ??
-   ; do I need that even ?
-
-   )
-
- )
-
 (defn- edn->image [ctx {:keys [file sub-image-bounds]}]
   {:pre [file]}
   (if sub-image-bounds
@@ -129,13 +115,13 @@
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
-(defcomponent :context/properties {}
-  {:keys [file types]}
+(defcomponent :context/properties
+  {:let {:keys [file types]}}
   (component/create [_ ctx]
-    (defcomponent :property/pretty-name data/string-attr)
-    (defcomponent :property/image       data/image)
-    (defcomponent :property/animation   data/animation)
-    (defcomponent :property/sound       data/sound)
+    (defcomponent :property/pretty-name {:data data/string-attr})
+    (defcomponent :property/image       {:data data/image})
+    (defcomponent :property/animation   {:data data/animation})
+    (defcomponent :property/sound       {:data data/sound})
     (component/load-ks! types)
     (let [types (component/ks->create-all types {})]
       {:file file

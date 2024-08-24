@@ -407,7 +407,7 @@
                                                   %))])
                            [[(->text-button context "Back to Main Menu" #(ctx/change-screen % :screens/main-menu))]])}))
 
-(defcomponent :screens/property-editor {}
+(defcomponent :screens/property-editor
   (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors [(ctx/->background-image ctx)

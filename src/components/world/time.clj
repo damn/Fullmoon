@@ -4,7 +4,7 @@
             [core.context :as ctx]
             [core.entity :as entity]))
 
-(defcomponent :world/time {}
+(defcomponent :world/time
   (component/create [_ _ctx]
     {:elapsed 0
      :logic-frame 0}))

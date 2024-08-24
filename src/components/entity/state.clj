@@ -10,7 +10,7 @@
 (defn- ->init-fsm [fsm initial-state]
   (assoc (fsm initial-state nil) :state initial-state))
 
-(defcomponent :entity/state {}
+(defcomponent :entity/state
   (entity/create [[k {:keys [fsm initial-state]}] eid ctx]
     [[:tx.entity/assoc eid k (->init-fsm fsm initial-state)]
      [:tx.entity/assoc eid initial-state (component/create [initial-state eid] ctx)]])
@@ -43,6 +43,6 @@
            [:tx.entity/dissoc eid old-state-k]
            [:tx.entity/assoc eid new-state-k (new-state-obj 1)]])))))
 
-(defcomponent :tx/event {}
+(defcomponent :tx/event
   (effect/do! [[_ eid event params] ctx]
     (send-event! ctx eid event params)))

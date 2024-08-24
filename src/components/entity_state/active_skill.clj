@@ -29,7 +29,7 @@
 ; maybe move to transaction handler & call it :tx/with-ctx
 ; and dissoc-ks (keys of extra-ctx)
 ; its a more general thing than tx/effect
-(defcomponent :tx/effect {}
+(defcomponent :tx/effect
   (effect/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
@@ -101,8 +101,8 @@
      (or (entity/stat entity* (:skill/action-time-modifier-key skill))
          1)))
 
-(defcomponent :active-skill {}
-  {:keys [eid skill effect-ctx counter]}
+(defcomponent :active-skill
+  {:let {:keys [eid skill effect-ctx counter]}}
   (component/create [[_ eid [skill effect-ctx]] ctx]
     {:eid eid
      :skill skill

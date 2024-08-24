@@ -19,7 +19,7 @@
   {:horizontal-group (::action-bar (:action-bar-table (ctx/get-stage ctx)))
    :button-group (:action-bar (:world/widgets ctx))})
 
-(defcomponent :tx.context.action-bar/add-skill {}
+(defcomponent :tx.context.action-bar/add-skill
   (effect/do! [[_ {:keys [property/id property/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (->image-button ctx image identity {:dimensions [48 48]})]
@@ -29,7 +29,7 @@
       (add! button-group button)
       ctx)))
 
-(defcomponent :tx.context.action-bar/remove-skill {}
+(defcomponent :tx.context.action-bar/remove-skill
   (effect/do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]

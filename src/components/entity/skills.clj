@@ -10,7 +10,7 @@
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
-(defcomponent :entity/skills (data/one-to-many-ids :properties/skill)
+(defcomponent :entity/skills {:data (data/one-to-many-ids :properties/skill)}
   (component/create [[_ skill-ids] ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 
@@ -29,7 +29,7 @@
   (has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
     (contains? skills id)))
 
-(defcomponent :tx/add-skill {}
+(defcomponent :tx/add-skill
   (effect/do! [[_ entity {:keys [property/id] :as skill}]
                _ctx]
     (assert (not (entity/has-skill? @entity skill)))
@@ -37,8 +37,8 @@
      (when (:entity/player? @entity)
        [:tx.context.action-bar/add-skill skill])]))
 
-; unused ?
-(defcomponent :tx/remove-skill {}
+; unused.
+(defcomponent :tx/remove-skill
   (effect/do! [[_ entity {:keys [property/id] :as skill}]
                 _ctx]
     (assert (entity/has-skill? @entity skill))

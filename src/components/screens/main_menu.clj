@@ -40,7 +40,7 @@
   (hide [_ ctx])
   (render [_ ctx] ctx))
 
-(defcomponent :screens/main-menu {}
+(defcomponent :screens/main-menu
   (component/create [_ ctx]
     (ctx/->stage-screen ctx {:actors [(ctx/->background-image ctx)
                                       (->buttons ctx)

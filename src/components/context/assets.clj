@@ -37,11 +37,11 @@
     (manager/finish-loading manager)
     manager))
 
-(defcomponent :context/assets {}
-  {:keys [folder
-          sound-file-extensions
-          image-file-extensions
-          log-load-assets?]}
+(defcomponent :context/assets
+  {:let {:keys [folder
+                sound-file-extensions
+                image-file-extensions
+                log-load-assets?]}}
   (component/create [_ _ctx]
     (let [sound-files   (recursively-search-files folder sound-file-extensions)
           texture-files (recursively-search-files folder image-file-extensions)]
@@ -67,8 +67,8 @@
   (all-sound-files   [ctx] (:sound-files   (this ctx)))
   (all-texture-files [ctx] (:texture-files (this ctx))))
 
-(defcomponent :tx/sound {}
-  file
+(defcomponent :tx/sound
+  {:let file}
   (effect/do! [_ ctx]
     (ctx/play-sound! ctx file)
     ctx))

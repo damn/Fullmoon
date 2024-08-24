@@ -8,29 +8,37 @@
             [core.effect :as effect]
             [core.entity :as entity]))
 
-(defcomponent :properties/creature {}
+(defcomponent :entity.creature/name
+  (component/info-text [[_ name] _ctx]
+    name))
+
+(defcomponent :entity.creature/species
+  (component/info-text [[_ species] _ctx]
+    (str "[LIGHT_GRAY]Species: " species "[]")))
+
+(defcomponent :properties/creature
   (component/create [_ _ctx]
 
     ; TODO assert min body size from core.entity
     ; TODO make px
-    (defcomponent :property/bounds {:widget :label :schema :some})
+    (defcomponent :property/bounds {:data {:widget :label :schema :some}})
 
-    (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
+    (defcomponent :creature/species {:data {:widget :label :schema [:qualified-keyword {:namespace :species}]}})
 
-    (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
+    (defcomponent :creature/level {:data {:widget :text-field :schema [:maybe pos-int?]}})
 
-    (defcomponent :entity/flying? data/boolean-attr)
+    (defcomponent :entity/flying? {:data data/boolean-attr})
 
-    (defcomponent :entity/reaction-time data/pos-attr)
+    (defcomponent :entity/reaction-time {:data data/pos-attr})
 
-    (defcomponent :creature/entity (data/components ; TODO no required/optional settings ! just cannot remove & already there !
-                                     [:entity/animation
-                                      :entity/flying? ; remove
-                                      :entity/reaction-time ; in frames 0.016x
-                                      :entity/faction ; remove
-                                      :entity/stats
-                                      :entity/inventory  ; remove
-                                      :entity/skills]))
+    (defcomponent :creature/entity {:data (data/components ; TODO no required/optional settings ! just cannot remove & already there !
+                                            [:entity/animation
+                                             :entity/flying? ; remove
+                                             :entity/reaction-time ; in frames 0.016x
+                                             :entity/faction ; remove
+                                             :entity/stats
+                                             :entity/inventory  ; remove
+                                             :entity/skills])})
 
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
@@ -135,8 +143,8 @@
   {:initial-state initial-state
    :fsm npc-fsm})
 
-(defcomponent :effect/stun data/pos-attr
-  duration
+(defcomponent :effect/stun {:data data/pos-attr}
+  {:let duration}
   (effect/text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
@@ -147,7 +155,7 @@
   (effect/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
-(defcomponent :effect/kill data/boolean-attr
+(defcomponent :effect/kill {:data data/boolean-attr}
   (effect/text [_ _effect-ctx]
     "Kills target")
 
@@ -199,15 +207,7 @@
 
 ; otherwise
 
-(defcomponent :entity.creature/name {}
-  (component/info-text [[_ name] _ctx]
-    name))
-
-(defcomponent :entity.creature/species {}
-  (component/info-text [[_ species] _ctx]
-    (str "[LIGHT_GRAY]Species: " species "[]")))
-
-(defcomponent :tx.entity/creature {}
+(defcomponent :tx.entity/creature
   (effect/do! [[_ creature-id components] ctx]
     (assert (:entity/state components))
     (let [props (ctx/get-property ctx creature-id)
@@ -269,9 +269,9 @@
  )
 
 ; => one to one attr!?
-(defcomponent :effect/spawn {:widget :text-field
-                             :schema [:qualified-keyword {:namespace :creatures}]}
-  creature-id
+(defcomponent :effect/spawn {:data {:widget :text-field
+                                    :schema [:qualified-keyword {:namespace :creatures}]}}
+  {:let creature-id}
   (effect/text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))
 

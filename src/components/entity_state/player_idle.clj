@@ -132,8 +132,8 @@
        [:cursors/no-skill-selected
         (fn [] (denied "No selected skill"))]))))
 
-(defcomponent :player-idle {}
-  {:keys [eid]}
+(defcomponent :player-idle
+  {:let {:keys [eid]}}
   (component/create [[_ eid] _ctx]
     {:eid eid})
 

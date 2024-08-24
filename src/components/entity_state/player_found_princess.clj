@@ -3,7 +3,7 @@
             [core.context :as ctx]
             [core.entity-state :as state]))
 
-(defcomponent :player-found-princess {}
+(defcomponent :player-found-princess
   (state/player-enter [_]
     [[:tx.context.cursor/set :cursors/black-x]])
 

@@ -4,8 +4,8 @@
             [core.entity :as entity]
             [core.entity-state :as state]))
 
-(defcomponent :player-moving {}
-  {:keys [eid movement-vector]}
+(defcomponent :player-moving
+  {:let {:keys [eid movement-vector]}}
   (component/create [[_ eid movement-vector] _ctx]
     {:eid eid
      :movement-vector movement-vector})

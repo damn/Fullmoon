@@ -62,7 +62,7 @@
         world/game-loop
         check-key-input)))
 
-(defcomponent :screens/world {}
+(defcomponent :screens/world
   (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors []

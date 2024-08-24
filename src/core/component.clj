@@ -87,25 +87,22 @@
 
 (def warn-name-ns-mismatch? false)
 
-(defmacro defcomponent [k attr-map & sys-impls]
-  (let [let-bindings? (not (list? (first sys-impls)))
-        let-bindings (if let-bindings?
-                       (first sys-impls)
-                       nil)
-        sys-impls (if let-bindings?
-                    (rest sys-impls)
-                    sys-impls)]
+(defmacro defcomponent [k & sys-impls]
+
+  (when (and warn-name-ns-mismatch?
+             (not= (k->component-ns k) (ns-name *ns*)))
+    (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*)))
+
+  (let [attr-map? (not (list? (first sys-impls)))
+        attr-map  (if attr-map? (first sys-impls) {})
+        sys-impls (if attr-map? (rest sys-impls) sys-impls)
+        let-bindings (:let attr-map)
+        attr-map (dissoc attr-map :let)]
+
+    (when (and warn-on-override (get attributes k))
+      (println "WARNING: Overwriting defcomponent" k))
+
     `(do
-
-      (assert (keyword? ~k) (pr-str ~k))
-
-      (when (and warn-name-ns-mismatch?
-                 (not= (#'k->component-ns ~k) (ns-name *ns*)))
-        (println "WARNING: defcomponent " ~k " is not matching with namespace name " (ns-name *ns*)))
-
-      (when (and warn-on-override (get attributes ~k))
-        (println "WARNING: Overwriting defcomponent" ~k))
-
       (alter-var-root #'attributes assoc ~k ~attr-map)
 
       ~@(for [[sys & fn-body] sys-impls
@@ -128,7 +125,7 @@
            `(do
              (assert (keyword? ~k) (pr-str ~k))
 
-             (alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
+             ;(alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
 
              (when (and warn-on-override
                         (get (methods @~sys-var) ~k))
@@ -136,7 +133,7 @@
 
              (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
                [& params#]
-               (let [~(if let-bindings? let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
+               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v. ;
                      ~fn-params params#]
                  ~@fn-exprs)))))
       ~k)))

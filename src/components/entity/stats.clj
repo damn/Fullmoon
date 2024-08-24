@@ -38,11 +38,11 @@
      [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
-(defcomponent :tx/apply-modifiers {}
+(defcomponent :tx/apply-modifiers
   (effect/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers conj-value)))
 
-(defcomponent :tx/reverse-modifiers {}
+(defcomponent :tx/reverse-modifiers
   (effect/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
@@ -131,10 +131,10 @@
               (str (k->pretty-name stat-k) ": " value))))
 
 (defn defmodifier [modifier-k operations]
-  (defcomponent modifier-k (data/components operations)))
+  (defcomponent modifier-k {:data (data/components operations)}))
 
 (defn defstat [stat-k attr-m & {:keys [operations]}]
-  (defcomponent stat-k attr-m)
+  (defcomponent stat-k {:data attr-m})
   (when (seq operations)
     (defmodifier (stat-k->modifier-k stat-k) operations)))
 
@@ -152,7 +152,7 @@
 
 ; is called ::stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
 ; for :skill/effects
-(defcomponent ::stat-effect {}
+(defcomponent ::stat-effect
   (effect/text [[k operations] _effect-ctx]
     (str/join "\n"
               (for [operation operations]
@@ -172,10 +172,10 @@
                   effective-value
                   operations)]]))))
 
-(defcomponent :effect/hp (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]))
+(defcomponent :effect/hp {:data (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])})
 (derive :effect/hp ::stat-effect)
 
-(defcomponent :effect/mana (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]))
+(defcomponent :effect/mana {:data (data/components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])})
 (derive :effect/mana ::stat-effect)
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
@@ -191,7 +191,7 @@
 ; TODO show the stat in different color red/green if it was permanently modified ?
 ; or an icon even on the creature
 ; also we want audiovisuals always ...
-(defcomponent :effect/movement-speed (data/components [:op/mult]))
+(defcomponent :effect/movement-speed {:data (data/components [:op/mult])})
 (derive :effect/movement-speed ::stat-effect)
 
 ; TODO clamp into ->pos-int
@@ -221,8 +221,8 @@
 (defmodifier :modifier/damage-deal    [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-receive [:op/inc :op/mult])
 
-(defcomponent :stats/modifiers (data/components [:modifier/damage-deal
-                                                 :modifier/damage-receive]))
+(defcomponent :stats/modifiers {:data (data/components [:modifier/damage-deal
+                                                        :modifier/damage-receive])})
 
 (extend-type core.entity.Entity
   entity/Stats
@@ -257,8 +257,9 @@
     (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
  )
 
-(defcomponent :entity/stats (data/components-attribute :stats)
-  stats
+(defcomponent :entity/stats
+  {:let stats
+   :data (data/components-attribute :stats)}
   (component/create [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
@@ -290,7 +291,7 @@
                                      (- height (* 2 border))
                                      (hpbar-color ratio))))))))
 
-(defcomponent :tx.entity.stats/pay-mana-cost {}
+(defcomponent :tx.entity.stats/pay-mana-cost
   (effect/do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
@@ -334,7 +335,7 @@
 (defn- damage-effect [{:keys [effect/source]}]
   [:effect/damage (entity*->melee-damage @source)])
 
-(defcomponent :effect/melee-damage {}
+(defcomponent :effect/melee-damage
   (effect/text [_ {:keys [effect/source] :as effect-ctx}]
     (str "Damage based on entity strength."
          (when source
@@ -391,8 +392,9 @@
 
 (defcomponent :damage/min-max data/val-max-attr)
 
-(defcomponent :effect/damage (data/map-attribute :damage/min-max)
-  damage
+(defcomponent :effect/damage
+  {:let damage
+   :data (data/map-attribute :damage/min-max)}
   (effect/text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]

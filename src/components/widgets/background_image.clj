@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]))
 
-(defcomponent :widgets/background-image {}
+(defcomponent :widgets/background-image
   (component/create [[_ file] _ctx]
     (def ^:private image-file file)
     nil))

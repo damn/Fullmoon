@@ -51,8 +51,8 @@
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )
 
-(defcomponent :npc-idle {}
-  {:keys [eid]}
+(defcomponent :npc-idle
+  {:let {:keys [eid]}}
   (component/create [[_ eid] _ctx]
     {:eid eid})
 

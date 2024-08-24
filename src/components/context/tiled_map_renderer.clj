@@ -21,7 +21,7 @@
                                   (apply [_ color x y]
                                     (color-setter color x y)))))
 
-(defcomponent :context/tiled-map-renderer {}
+(defcomponent :context/tiled-map-renderer
   (component/create [_ _ctx]
     (memoize map-renderer-for)))
 

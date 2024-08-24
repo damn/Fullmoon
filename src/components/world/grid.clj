@@ -152,7 +152,7 @@
     :entities #{}
     :occupied #{}}))
 
-(defcomponent :world/grid {}
+(defcomponent :world/grid
   (component/create [[_ [width height position->value]] _world]
     (grid2d/create-grid width
                         height

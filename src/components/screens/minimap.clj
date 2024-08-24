@@ -64,6 +64,6 @@
       (ctx/change-screen context :screens/world)
       context)))
 
-(defcomponent :screens/minimap {}
+(defcomponent :screens/minimap
   (component/create [_ _ctx]
     (->Screen)))
