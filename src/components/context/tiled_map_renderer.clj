@@ -1,6 +1,6 @@
 (ns components.context.tiled-map-renderer
-  (:require [gdx.maps.map-renderer :as map-renderer]
-            [gdx.maps.map-layer :as map-layer]
+  (:require [gdx.maps.renderer :as map-renderer]
+            [gdx.maps.layer :as map-layer]
             [gdx.maps.tiled.tmx-map-loader :refer [->tmx-map-loader] :as tmx-map-loader]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]

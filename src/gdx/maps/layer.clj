@@ -1,4 +1,4 @@
-(ns gdx.maps.map-layer
+(ns gdx.maps.layer
   (:import com.badlogic.gdx.maps.MapLayer))
 
 (defn visible? [^MapLayer layer]

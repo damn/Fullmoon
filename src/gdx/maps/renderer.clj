@@ -1,4 +1,4 @@
-(ns gdx.maps.map-renderer
+(ns gdx.maps.renderer
   (:import com.badlogic.gdx.maps.MapRenderer))
 
 (defn set-view! [^MapRenderer map-renderer camera]

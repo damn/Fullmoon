@@ -1,6 +1,6 @@
 (ns core.maps.tiled
-  (:require [gdx.maps.map-properties :as properties]
-            [gdx.maps.map-layers :as map-layers])
+  (:require [gdx.maps.properties :as properties]
+            [gdx.maps.layers :as map-layers])
   (:import com.badlogic.gdx.maps.MapLayer
            [com.badlogic.gdx.maps.tiled TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
 
