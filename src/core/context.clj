@@ -164,3 +164,6 @@
 
 (defprotocol ActiveSkill
   (skill-usable-state [ctx entity* skill]))
+
+(defprotocol WorldGenerator
+  (->world [ctx world-id]))

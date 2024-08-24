@@ -143,7 +143,7 @@ direction keys: move")
 
 (defn- generate [context properties]
   (let [;{:keys [tiled-map area-level-grid start-position]} (module-gen/generate context properties)
-        {:keys [tiled-map start-position]} (module-gen/uf-caves context {:world/map-size 250 :world/spawn-rate 0.02})
+        {:keys [tiled-map start-position]} (ctx/->world context :worlds/vampire)
         atom-data (current-data context)]
     (dispose (:tiled-map @atom-data))
     (swap! atom-data assoc
@@ -194,7 +194,7 @@ direction keys: move")
                  :pack? true}))
 
 (defn- ->screen [context]
-  {:actors [(->generate-map-window context :worlds/first-level)
+  {:actors [(->generate-map-window context :worlds/vampire)
             (->info-window context)]
    :sub-screen (->SubScreen (atom {:tiled-map (->tiled-map context module-gen/modules-file)
                                    :show-movement-properties false
