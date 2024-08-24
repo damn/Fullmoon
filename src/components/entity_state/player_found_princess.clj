@@ -1,11 +1,9 @@
 (ns components.entity-state.player-found-princess
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity-state :as state]))
 
 (defcomponent :player-found-princess {}
-  (component/create [[_ v] _ctx] v)
-
   (state/player-enter [_]
     [[:tx.context.cursor/set :cursors/black-x]])
 

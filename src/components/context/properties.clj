@@ -136,9 +136,8 @@
     (defcomponent :property/image       data/image)
     (defcomponent :property/animation   data/animation)
     (defcomponent :property/sound       data/sound)
-    (let [types (zipmap types (repeat true))
-          _ (component/load! types)
-          types (component/update-map types component/create nil)]
+    (component/load-ks! types)
+    (let [types (component/ks->create-all types {})]
       {:file file
        :types types
        :db (load-edn ctx types file)})))

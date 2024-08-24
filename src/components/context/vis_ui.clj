@@ -55,7 +55,7 @@
     (set-tooltip-config!)
     true)
 
-  (component/destroy [_ _ctx]
+  (component/destroy [_]
     (VisUI/dispose)))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME

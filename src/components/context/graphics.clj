@@ -28,7 +28,7 @@
               (components.graphics.views/->build views)
               (components.graphics.cursors/->build cursors)))))
 
-  (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}] _ctx]
+  (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
     (dispose batch)
     (dispose shape-drawer-texture)
     (dispose default-font)

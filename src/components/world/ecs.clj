@@ -40,13 +40,13 @@
                  (not (contains? components :entity/uid))))
     (let [entity (atom nil)
           body (entity/->Body body)
-          components (-> components
-                         (assoc :entity/id entity
-                                :entity/uid (unique-number!))
-                         (component/update-map component/create ctx))
+          components (assoc components
+                            :entity/id entity
+                            :entity/uid (unique-number!))
+          components (component/create-all components ctx)
           entity* (safe-merge body components)]
       (reset! entity entity*)
-      [(fn [ctx]
+      [(fn create-entity [ctx]
          (for [component @entity]
            (fn [ctx]
              ; we are assuming components dont remove other ones at entity/create
@@ -67,7 +67,7 @@
   (try
    (when show-body-bounds
      (draw-body-rect g entity* (if (:collides? entity*) color/white color/gray)))
-   (dorun (component/apply-system system entity* g ctx))
+   (run! #(system % entity* g ctx) entity*)
    (catch Throwable t
      (draw-body-rect g entity* color/red)
      (p/pretty-pst t 12))))

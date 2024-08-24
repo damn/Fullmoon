@@ -10,22 +10,19 @@
 
 (def state (atom nil))
 
-(defn- ->context [context]
-  (component/load! context)
-  (component/build (assoc (ctx/->Context) :context/state state)
-                   component/create
-                   context
-                   :log?
-                   false))
+(defn- ->context [components]
+  (component/load! components)
+  (component/create-into (assoc (ctx/->Context) :context/state state)
+                         components))
 
-(defn- create-context [context]
-  (->> context
+(defn- create-context [components]
+  (->> components
        ->context
        ctx/init-first-screen
        (reset! state)))
 
 (defn- destroy-context []
-  (component/run-system! component/destroy @state))
+  (run! component/destroy @state))
 
 (defn- render-context []
   (ctx/fix-viewport-update @state)
@@ -37,16 +34,16 @@
 (defn- update-viewports [w h]
   (ctx/update-viewports @state w h))
 
-(defn- ->application [context]
+(defn- ->application [components]
   (->application-listener
-   :create #(create-context context)
+   :create #(create-context components)
    :dispose destroy-context
    :render render-context
    :resize update-viewports))
 
 (defn- start [config]
   (assert (:context config))
-  (component/load! (:components config))
+  (component/load-ks! (:components config))
   (lwjgl3/->application (->application (:context config))
                         (lwjgl3/->configuration (:app config))))
 

@@ -5,47 +5,51 @@
        :fps 60}
  ; :components is here so we dont't call component/create on those (e.g. entity/body without args)
  ; just the namespaces will be loaded, that's it
- :components [[:entity/delete-after-duration]
+ :components [:entity/delete-after-duration
 
-              [:entity/movement]
-              [:entity/projectile-collision]
-              [:entity/destroy-audiovisual]
+              :entity/movement
+              :entity/projectile-collision
 
-              [:entity/image]
-              [:entity/animation]
-              [:entity/delete-after-animation-stopped]
-              [:entity/line-render]
+              :entity/destroy-audiovisual
 
-              [:entity/mouseover]
-              [:entity/clickable]
+              :entity/image
 
-              [:entity/state]
-              [:entity/player]
+              :entity/animation
+              :entity/delete-after-animation-stopped
 
-              [:entity/shout]
-              [:entity/faction]
-              [:entity/stats]
-              [:entity/string-effect]
-              [:entity/skills]
-              [:entity/inventory]
+              :entity/line-render
 
-              [:entity-state/load]
+              :entity/mouseover
+              :entity/clickable
 
-              [:effect/target-entity]
-              [:effect/target-all]
+              :entity/state
 
-              [:world/line-of-sight]
-              [:world/mouseover-entity]
-              [:world/potential-fields]
-              [:world/ecs]
-              [:world/time]
-              [:world/widgets]
-              [:world/effect-handler]
+              :entity/player
 
-              [:world/grid]
-              [:world/raycaster]
-              [:world/content-grid]
-              [:world/explored-tile-corners]]
+              :entity/shout
+
+              :entity/faction
+              :entity/stats
+              :entity/string-effect
+              :entity/skills
+              :entity/inventory
+
+              :entity-state/load
+
+              :effect/target-entity
+              :effect/target-all
+
+              :world/line-of-sight
+              :world/mouseover-entity
+              :world/potential-fields
+              :world/ecs
+              :world/time
+              :world/widgets
+              :world/effect-handler
+              :world/grid
+              :world/raycaster
+              :world/content-grid
+              :world/explored-tile-corners]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false

@@ -15,9 +15,16 @@
 (defmethod tick :default [_ entity ctx])
 
 (defsystem render-below   [_ entity* g ctx])
+(defmethod render-below :default [_ entity* g ctx])
+
 (defsystem render-default [_ entity* g ctx])
+(defmethod render-default :default [_ entity* g ctx])
+
 (defsystem render-above   [_ entity* g ctx])
+(defmethod render-above :default [_ entity* g ctx])
+
 (defsystem render-info    [_ entity* g ctx])
+(defmethod render-info :default [_ entity* g ctx])
 
 (def render-systems [render-below
                      render-default

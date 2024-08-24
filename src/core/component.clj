@@ -2,11 +2,6 @@
 
 ; TODO line number for overwrite warnings or ns at least....
 
-; TODO (keys (methods create-fn)) is weird - what if there are hundreds of fn but only 1 component?
-; => we could cache this directly @ core.component/attributes (rename to core.component/components)
-; => the intersection of systems for each component
-; => can also visualize that then
-
 (def warn-on-override true)
 
 (def defsystems {})
@@ -131,10 +126,6 @@
                           " Given " (count fn-params)  " args: " fn-params))))
 
            `(do
-             ; TODO k down there doesn't work if its a let binding
-             ; assumes its a keyword ....
-             ; but anyway remove other defmacro
-             ; defmacro def-set-to-max-effect
              (assert (keyword? ~k) (pr-str ~k))
 
              (alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
@@ -150,104 +141,54 @@
                  ~@fn-exprs)))))
       ~k)))
 
-(defn strict-update [m system ctx]
+
+(defsystem create [_ ctx])
+(defmethod create :default [[_ v] _ctx]
+  v)
+
+(defsystem destroy [_])
+(defmethod destroy :default [_])
+
+(defsystem info-text [_ ctx])
+(defmethod info-text :default [_ ctx])
+
+(defn create-all [components ctx]
+  (assert (map? ctx))
+  (reduce (fn [m [k v]]
+            (assoc m k (create [k v] ctx)))
+          {}
+          components))
+
+(defn- ks->components [ks]
+  (zipmap ks (repeat nil)))
+
+(defn ks->create-all [ks ctx]
+  (create-all (ks->components ks) ctx))
+
+(defn create-into [ctx components]
+  (assert (map? ctx))
   (reduce (fn [ctx [k v]]
-            (if-let [v (system [k v] ctx)]
+            (if-let [v (create [k v] ctx)]
               (assoc ctx k v)
               ctx))
-   ctx
-   m))
+          ctx
+          components))
 
-(defn update-map
-  "Recursively calls (assoc m k (apply component/fn [k v] args)) for every k of (keys (methods component/fn)),
-  which is non-nil/false in m."
-  [m multimethod & args]
-  (loop [ks (keys (methods multimethod))
-         m m]
-    (if (seq ks)
-      (recur (rest ks)
-             (let [k (first ks)]
-               (if-let [v (k m)]
-                 (assoc m k (apply multimethod [k v] args))
-                 m)))
-      m)))
+; ??
+; tools namespace doesn't load them in right order, if we are asserting order of component matters, we need to reload them.
+; but this is quite though because then so much loading
+; or those which just define components which are used somewhere else we might pass a :reload flag there ???
+; TODO force reload fucks up other stuff !!!  ???
+; this has to work ... shit !
 
-(comment
- (defmulti foo ffirst)
- (defmethod foo :bar [[_ v]] (+ v 2))
- (= (update-map {} foo) {})
- (= (update-map {:baz 2} foo) {:baz 2})
- (= (update-map {:baz 2 :bar 0} foo) {:baz 2, :bar 2})
- )
-
-; TODO can be removed and used with dorun ...
-; do that inside here
-; used at render entities also
-(defn run-system! [system obj & args]
-  (doseq [k (keys (methods system))
-          :let [v (k obj)]
-          :when v]
-    (apply system [k v] obj args)))
-
-; TODO why keys methods?
-; is when v important ? we dissoc non used keys right
-; => then always need default values
-(defn apply-system [system m & args]
-  (for [k (keys (methods system))
-        :let [v (k m)]
-        :when v]
-    (apply system [k v] m args)))
-
-; TODO transducer ?
-; transduce
-; return xform and only run once over coll ?
-#_(defn- apply-system [system m ctx]
-  (into []
-        ; TODO comp keep ?
-        (map (fn [k]
-               (let [v (k m)]
-                 (when v
-                   (system [k v] m ctx)))))
-        (keys (methods system))))
-
-; TODO also asserts component exists ! do this maybe first w. schema or sth.
 (defn load! [components & {:keys [log?]}]
   (assert (apply distinct? (map first components)))
   (doseq [[k _] components
           :let [component-ns (k->component-ns k)]]
     (when log? (println "require " component-ns))
     (require component-ns)
-    ; tools namespace doesn't load them in right order, if we are asserting order of component matters, we need to reload them.
-    ; but this is quite though because then so much loading
-    ; or those which just define components which are used somewhere else we might pass a :reload flag there ???
-
-    ; TODO force reload fucks up other stuff !!!  ???
-
-    ; this has to work ... shit !
-
     (assert (find-ns component-ns)
             (str "Cannot find component namespace " component-ns))))
 
-; TODO or default method return 'value' ....
-; => TODO just use (keys system)  ... ?
-; TODO why (get component/attributes k)
-; TODO similar to update-map
-; TODO :context/assets false does still load
-; also [:context/assets] w/o args possible
-(defn build [obj create-fn components & {:keys [log?]}]
-  (reduce (fn [obj {k 0 :as component}]
-            (when log? (println k))
-            (if ((set (keys (methods create-fn))) k)
-              (let [v (create-fn component obj)]
-                (if v ; just side effects @ create-fn, no need to add nil
-                  (assoc obj k v)
-                  obj))
-              obj))
-          obj
-          components))
-
-(defsystem create  [_ ctx])
-(defsystem destroy [_ ctx])
-
-(defsystem info-text [_ ctx])
-(defmethod info-text :default [_ ctx])
+(defn load-ks! [ks]
+  (load! (ks->components ks)))

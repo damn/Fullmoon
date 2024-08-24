@@ -36,34 +36,31 @@
                              :clickable {:type :clickable/player}
                              :click-distance-tiles 1.5}]])))
 
-(defn- create-components [ctx components]
-  (component/strict-update components component/create ctx))
-
+; TODO (check-not-allowed-diagonals grid)
+; done at module-gen? but not custom tiledmap?
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
-  (create-components
-   #:world {:tiled-map tiled-map
-            :start-position start-position}
-   #:world {:grid [(tiled/width tiled-map)
-                   (tiled/height tiled-map)
-                   #(case (tiled/movement-property tiled-map %)
-                      "none" :none
-                      "air"  :air
-                      "all"  :all)]
-            :raycaster #(cell/blocked? % :z-order/flying)
-            :content-grid [16 16]
-            :explored-tile-corners true})
-  ; TODO (check-not-allowed-diagonals grid)
-  )
+  (component/create-into #:world {:tiled-map tiled-map
+                                  :start-position start-position}
+                         #:world {:grid [(tiled/width tiled-map)
+                                         (tiled/height tiled-map)
+                                         #(case (tiled/movement-property tiled-map %)
+                                            "none" :none
+                                            "air"  :air
+                                            "all"  :all)]
+                                  :raycaster #(cell/blocked? % :z-order/flying)
+                                  :content-grid [16 16]
+                                  :explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (let [ctx (-> ctx
                 (dissoc ::tick-error)
                 (merge {::game-loop-mode mode}
-                       (create-components ctx
-                                          #:world {:ecs true
-                                                   :time true
-                                                   :widgets true
-                                                   :effect-handler [mode record-transactions?]})))]
+                       (component/create-into
+                        ctx
+                        #:world {:ecs true
+                                 :time true
+                                 :widgets true
+                                 :effect-handler [mode record-transactions?]})))]
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:world/tiled-map ctx)]

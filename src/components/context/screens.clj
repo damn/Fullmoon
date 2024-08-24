@@ -4,15 +4,13 @@
             [core.screen :as screen]))
 
 (defcomponent :context/screens {}
-  screens
+  screen-ks
   (component/create [_ ctx]
-    (let [first-screen (first screens)
-          screens (zipmap screens (repeat true))]
-      (component/load! screens)
-      {:screens (component/update-map screens component/create ctx)
-       :first-screen first-screen}))
+    (component/load-ks! screen-ks)
+    {:screens (component/ks->create-all screen-ks ctx)
+     :first-screen (first screen-ks)})
 
-  (component/destroy [_ ctx]
+  (component/destroy [_]
     ; TODO dispose all screen stages ....
     ; call dispose ?
     ; is it doing anything? because has batch right ? but stuff ... idk
