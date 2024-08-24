@@ -110,6 +110,7 @@
 
 ; TODO performance bottleneck -> every time getting same layers
 ; takes 600 ms to read movement-properties
+; lazy seqs??
 
 (defn- tile-movement-property [tiled-map layer position]
   (let [value (property-value tiled-map layer position :movement)]
