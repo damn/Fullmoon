@@ -71,7 +71,9 @@
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...
                      #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
-    (when-not (nil? (:direction movement))
-      [[:tx.entity/assoc entity :entity/movement movement]])))
+    [(if (or (nil? movement)
+             (nil? (:direction movement)))
+       [:tx.entity/dissoc entity :entity/movement]
+       [:tx.entity/assoc entity :entity/movement movement])]))
 
 ; TODO add teleport effect ~ or tx
