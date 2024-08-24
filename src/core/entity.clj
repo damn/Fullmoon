@@ -5,6 +5,25 @@
             [core.component :refer [defsystem]]
             [utils.core :as utils]))
 
+(defsystem create [_ entity ctx])
+(defmethod create :default [_ entity ctx])
+
+(defsystem destroy [_ entity ctx])
+(defmethod destroy :default [_ entity ctx])
+
+(defsystem tick [_ entity ctx])
+(defmethod tick :default [_ entity ctx])
+
+(defsystem render-below   [_ entity* g ctx])
+(defsystem render-default [_ entity* g ctx])
+(defsystem render-above   [_ entity* g ctx])
+(defsystem render-info    [_ entity* g ctx])
+
+(def render-systems [render-below
+                     render-default
+                     render-above
+                     render-info])
+
 ; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
 (def max-delta-time 0.04)
 
@@ -86,25 +105,6 @@
 
 (defn collides? [entity* other-entity*]
   (geom/collides? entity* other-entity*))
-
-(defsystem create [_ entity ctx])
-(defmethod create :default [_ entity ctx])
-
-(defsystem destroy [_ entity ctx])
-(defmethod destroy :default [_ entity ctx])
-
-(defsystem tick [_ entity ctx])
-(defmethod tick :default [_ entity ctx])
-
-(defsystem render-below   [_ entity* g ctx])
-(defsystem render-default [_ entity* g ctx])
-(defsystem render-above   [_ entity* g ctx])
-(defsystem render-info    [_ entity* g ctx])
-
-(def render-systems [render-below
-                     render-default
-                     render-above
-                     render-info])
 
 (defprotocol State
   (state [_])
