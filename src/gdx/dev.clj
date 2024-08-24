@@ -3,14 +3,6 @@
   restarting the JVM.
   Also starts an nrepl server which will keep up even between app crashes and restarts.
 
-  How to use:
-  lein run -m gdx.dev ~app-namespace~ ~app-fn-with-no-args~
-
-  Example:
-  lein run -m gdx.dev gdl.simple-test app
-
-  See also project.clj for the `lein dev` shortcut.
-
   In case of an error, the console prints `WAITING FOR RESTART` and
   the `/restart!` function will restart the app and call `refresh`.
 
@@ -18,7 +10,6 @@
   ``` vimscript
   nmap <F5> :Eval (do (in-ns 'gdx.dev)(restart!))
   ```"
-
   (:require [clojure.java.io :as io]
             [nrepl.server :refer [start-server]]
             [clojure.tools.namespace.repl :refer [disable-reload!
@@ -27,13 +18,12 @@
 
 (disable-reload!) ; keep same connection/nrepl-server up throughout refreshs
 
-(declare ^:private app-ns
-         ^:private app-fn)
+(declare ^:private app-edn-file)
 
 (defn- start-app []
   (eval `(do ; old namespace/var bindings are unloaded with refresh-all so always evaluate them fresh
-          (require (quote ~app-ns))
-          (~app-fn))))
+          (require (quote app))
+          (app/-main ~app-edn-file))))
 
 (def ^:private ^Object obj (Object.))
 
@@ -65,7 +55,6 @@
   (reset! thrown true))
 
 (defn dev-loop []
-  (println "start-app")
   (try (start-app)
        (catch Throwable t
          (handle-throwable! t)))
@@ -92,10 +81,9 @@
 
 (declare ^:private nrepl-server)
 
-(defn -main [& [app-namespace app-start-fn]]
-  (.bindRoot #'app-ns (symbol app-namespace))
-  (.bindRoot #'app-fn (symbol (str app-namespace "/" app-start-fn)))
+(defn -main [& [app-edn-file]]
+  (.bindRoot #'app-edn-file app-edn-file)
   (.bindRoot #'nrepl-server (start-server))
   (save-port-file nrepl-server)
-  ;(println "Started nrepl server on port" (:port nrepl-server))
+  (println "Started nrepl server on port" (:port nrepl-server))
   (dev-loop))

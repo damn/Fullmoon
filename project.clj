@@ -38,11 +38,11 @@
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :global-vars {;*warn-on-reflection* true
-                *print-level* 3
-                ;*assert* false
                 ;*unchecked-math* :warn-on-boxed
+                ;*assert* false
+                *print-level* 3
                 }
-  :aliases {"app"        ["run" "-m" "gdx.dev" "app" "-main"]
+  :aliases {"dev" ["run" "-m" "gdx.dev" "resources/app.edn"]
             "gdl.simple" ["run" "-m" "gdx.dev" "gdl.simple" "app"]})
 
 ; * Notes

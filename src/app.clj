@@ -41,14 +41,11 @@
    :render render-context
    :resize update-viewports))
 
-(defn- start [config]
-  (assert (:context config))
-  (component/load-ks! (:components config))
-  (lwjgl3/->application (->application (:context config))
-                        (lwjgl3/->configuration (:app config))))
-
-(defn -main []
-  (-> "resources/app.edn"
-      slurp
-      edn/read-string
-      start))
+(defn -main [& [app-edn-file]]
+  (let [app (-> app-edn-file slurp edn/read-string)]
+    (assert (:components app))
+    (assert (:context app))
+    (assert (:app app))
+    (component/load-ks! (:components app))
+    (lwjgl3/->application (->application (:context app))
+                          (lwjgl3/->configuration (:app app)))))
