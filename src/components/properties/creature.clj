@@ -6,8 +6,7 @@
             [core.data :as data]
             [core.context :as ctx]
             [core.effect :as effect]
-            [core.entity :as entity]
-            [components.entity-state.fsms :as fsms]))
+            [core.entity :as entity]))
 
 (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
 
@@ -203,8 +202,8 @@
 ; or entity/controller creates all of this ?
 (defn- set-state [[player-or-npc initial-state]]
   ((case player-or-npc
-     :state/player fsms/->player-state
-     :state/npc fsms/->npc-state)
+     :state/player ->player-state
+     :state/npc ->npc-state)
    initial-state))
 
 ; if controller = :controller/player
