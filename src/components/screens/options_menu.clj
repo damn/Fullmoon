@@ -26,7 +26,7 @@
 
 (defn- debug-flags []
   (apply concat
-         (for [nmspace (utils.ns/get-namespaces #{"world" "context"})]
+         (for [nmspace (utils.ns/get-namespaces #{"components"})]
            (utils.ns/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
 
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
