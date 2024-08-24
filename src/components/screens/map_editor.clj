@@ -1,17 +1,17 @@
 (ns components.screens.map-editor
-  (:require [gdx.input :as input]
+  (:require [clojure.string :as str]
+            [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.graphics.color :as color]
             [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.utils.disposable :refer [dispose]]
-            [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
+            utils.camera
             [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [core.graphics :as g]
             core.screen
-            core.graphics.camera
             [core.maps.tiled :as tiled]
             [core.scene2d.actor :refer [set-position!]]
             [core.scene2d.group :refer [add-actor!]]
@@ -34,12 +34,11 @@
                         [(/ (tiled/width  tiled-map) 2)
                          (/ (tiled/height tiled-map) 2)])
   (orthographic-camera/set-zoom! camera
-                                 (core.graphics.camera/calculate-zoom
-                                  camera
-                                  :left [0 0]
-                                  :top [0 (tiled/height tiled-map)]
-                                  :right [(tiled/width tiled-map) 0]
-                                  :bottom [0 0])))
+                                 (utils.camera/calculate-zoom camera
+                                                              :left [0 0]
+                                                              :top [0 (tiled/height tiled-map)]
+                                                              :right [(tiled/width tiled-map) 0]
+                                                              :bottom [0 0])))
 
 (defn- current-data [ctx]
   (-> ctx
@@ -120,7 +119,7 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (core.graphics.camera/visible-tiles (ctx/world-camera ctx))
+        visible-tiles (utils.camera/visible-tiles (ctx/world-camera ctx))
         [x y] (->tile (ctx/world-mouse-position ctx))]
     (g/draw-rectangle g x y 1 1 color/white)
     (when start-position

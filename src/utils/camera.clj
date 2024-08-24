@@ -1,10 +1,10 @@
-(ns core.graphics.camera
+(ns utils.camera
   (:require [gdx.graphics.camera :as camera])
-  (:import com.badlogic.gdx.math.Vector3))
+  (:import com.badlogic.gdx.math.vector3))
 
 (defn frustum [camera]
-  (let [frustum-points (for [^Vector3 point (take 4
-                                                  (.planePoints
+  (let [frustum-points (for [^vector3 point (take 4
+                                                  (.planepoints
                                                    (camera/frustum camera)))
                              :let [x (.x point)
                                    y (.y point)]]
@@ -22,7 +22,7 @@
       [x y])))
 
 (defn calculate-zoom
-  "Calculates the zoom value for camera to see all the 4 points."
+  "calculates the zoom value for camera to see all the 4 points."
   [camera & {:keys [left top right bottom]}]
   (let [viewport-width  (camera/viewport-width  camera)
         viewport-height (camera/viewport-height camera)

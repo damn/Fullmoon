@@ -4,10 +4,10 @@
             [gdx.graphics.camera :as camera]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
+            utils.camera
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
             [core.graphics :as g]
-            core.graphics.camera
             core.screen))
 
 ; 28.4 viewportwidth
@@ -28,11 +28,11 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (core.graphics.camera/calculate-zoom (ctx/world-camera ctx)
-                                        :left left
-                                        :top top
-                                        :right right
-                                        :bottom bottom)))
+    (utils.camera/calculate-zoom (ctx/world-camera ctx)
+                                 :left left
+                                 :top top
+                                 :right right
+                                 :bottom bottom)))
 
 (defn- ->tile-corner-color-setter [explored?]
   (fn tile-corner-color-setter [color x y]

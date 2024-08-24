@@ -1,10 +1,10 @@
 (ns components.world.debug-render
   (:require [gdx.graphics.color :as color]
             [utils.core :refer [->tile]]
+            [utils.camera :as camera]
             [math.geom :as geom]
             [core.context :as ctx :refer [world-grid]]
             [core.graphics :as g]
-            [core.graphics.camera :as camera]
             [core.world.grid :refer [circle->cells]]
             [components.world.potential-fields :as potential-field]))
 
