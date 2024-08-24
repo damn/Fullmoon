@@ -212,7 +212,8 @@
 (defstat :stats/armor-save   {:widget :text-field :schema number?} :operations [:op/inc])
 (defstat :stats/armor-pierce {:widget :text-field :schema number?} :operations [:op/inc])
 
-(defstat :stats/aggro-range data/nat-int-attr)
+; TODO needs to be there for each npc - make non-removable (added to all creatures)
+(defstat :stats/aggro-range (assoc data/nat-int-attr :optional? false))
 
 ; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
 ; just inc/mult ?

@@ -6,6 +6,7 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
+            [core.data :as data]
             core.screen
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
@@ -282,22 +283,16 @@
       (name k)])
    properties))
 
-; TODO this is == :optional key @ components-attribute ?
-(defn- removable-component? [k]
-  ;(#{"tx" "modifier" "stats" #_"entity"} (namespace k))
-  true
-
-  )
-
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->label ctx (name k))
-        _ (when-let [doc (:doc (get component/attributes k))]
+        attr-m (get component/attributes k)
+        _ (when-let [doc (:doc attr-m)]
             (add-tooltip! label doc))
         value-widget (->value-widget [k v] ctx)
         table (->table ctx {:id k
                             :cell-defaults {:pad 4}})
         column (remove nil?
-                       [(when (removable-component? k)
+                       [(when (data/optional? attr-m)
                           (->text-button ctx "-" (fn [ctx]
                                                    (let [window (find-ancestor-window table)]
                                                      (remove! table)

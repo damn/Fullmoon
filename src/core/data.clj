@@ -46,12 +46,18 @@
                           (vector k (or (:schema (get component/attributes k))
                                         :some)))))})
 
+(defn optional? [attr-m]
+  (let [optional? (get attr-m :optional? :not-found)]
+    (if (= optional? :not-found)
+      true
+      optional?)))
+
 (defn components [ks]
   {:widget :nested-map
    :schema (vec (concat [:map {:closed true}]
-                        (for [k ks]
-                          [k {:optional true} (or (:schema (get component/attributes k))
-                                                  :some)])))
+                        (for [k ks
+                              :let [attr-m (get component/attributes k)]]
+                          [k {:optional (optional? attr-m)} (or (:schema attr-m) :some)])))
    :components ks})
 
 (defn components-attribute [component-namespace]
