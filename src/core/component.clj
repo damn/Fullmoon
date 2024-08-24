@@ -23,7 +23,7 @@
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def attributes {})
+(def attributes {}) ; just 'data'
 
 (def warn-name-ns-mismatch? false)
 

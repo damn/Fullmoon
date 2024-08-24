@@ -4,6 +4,8 @@
             [core.data :as data]
             mapgen.module-gen))
 
+; TODO move the whole properties stuff out into app.edn!
+
 (defcomponent :properties/world
   (component/create [_ _ctx]
 

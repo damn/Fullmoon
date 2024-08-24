@@ -43,8 +43,14 @@
 
 ;;
 
-(defn- attr->value-widget [k]
-  (or (:widget (get component/attributes k)) :label))
+(defn- ck->widget [ck]
+  (:widget (get core.data/defs (get component/attributes ck))))
+
+(defn- ck->schema [ck]
+  (:schema (get core.data/defs (get component/attributes ck))))
+
+(defn- attr->value-widget [ck]
+  (or (ck->widget ck) :label))
 
 (defmulti ->value-widget     (fn [[k _v] _ctx] (attr->value-widget k)))
 (defmulti value-widget->data (fn [k _widget]   (attr->value-widget k)))
@@ -65,7 +71,7 @@
 
 (defmethod ->value-widget :text-field [[k v] ctx]
   (let [widget (->text-field ctx (->edn v) {})]
-    (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema (get component/attributes k))))))
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (ck->schema k)))))
     widget))
 
 (defmethod value-widget->data :text-field [_ widget]

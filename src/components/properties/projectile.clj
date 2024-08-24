@@ -16,7 +16,7 @@
     ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
     (defcomponent :projectile/max-range {:schema :pos-int?})
     (defcomponent :projectile/speed     {:schema :pos-int?})
-    (defcomponent :projectile/effects   {:schema [:components :effect]})
+    (defcomponent :projectile/effects   {:schema [:components-ns :effect]})
     (defcomponent :projectile/piercing? {:schema :boolean})
 
     {:id-namespace "projectiles"

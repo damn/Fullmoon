@@ -15,7 +15,7 @@
     (defcomponent :skill/action-time              {:schema :pos?})
     (defcomponent :skill/cooldown                 {:schema :nat-int?})
     (defcomponent :skill/cost                     {:schema :nat-int?})
-    (defcomponent :skill/effects                  {:schema [:components :effect]})
+    (defcomponent :skill/effects                  {:schema [:components-ns :effect]})
     (defcomponent :skill/start-action-sound       {:schema :sound})
     (defcomponent :skill/action-time-modifier-key {:schema [:enum :stats/cast-speed :stats/attack-speed]})
     {:id-namespace "skills"

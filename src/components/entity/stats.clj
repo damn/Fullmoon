@@ -283,7 +283,7 @@
 
 (defcomponent :entity/stats
   {:let stats
-   :schema [:components :stats]}
+   :schema [:components-ns :stats]}
   (component/create [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))

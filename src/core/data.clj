@@ -17,6 +17,9 @@
 ; :schema (malli)
 ; items/components/default-value
 
+; TODO its not schema but :data
+; see :val-max / sound / image
+
 (defdata :boolean   {:widget :check-box  :schema :boolean :default-value true})
 
 (defdata :some      {:widget :label      :schema :some})
@@ -37,19 +40,65 @@
 (defdata :pos?     {:widget :text-field :schema pos?})
 (defdata :pos-int? {:widget :text-field :schema pos-int?})
 
+; derive from mnumber
+; and use same malli schema
+; and just identity ??/
+; but case statements so i know hwats going on
+
 
 ; [:enum :good :evil]
-(defdata :enum  {:widget :enum :schema (apply vector :enum items)})
-(defn enum [& items]
-  {:widget :enum
-   :schema (apply vector :enum items)
-   :items items})
+; :schema function and just use identity in many cases??
+(defdata :enum  {:widget :enum
+                 :schema identity
+                 :items rest})
 
-; :effect/target-all mess
-; :effect/target-entity mess
 
-; [:components :effect] ; gives ns
+; TODO not checking if one of existing ids used
+; widget requires property/image.
+(defdata :one-to-many-ids
+  {:widget :one-to-many
+   :schema [:set :qualified-keyword] ; TODO namespace missing
+   :linked-property-type second}) ; => fetch from schema namespaced ?
 
+; TODO similar to components-attribute
+(defdata :map
+  {:widget :nested-map
+   :schema #(vec (concat [:map {:closed true}]
+                         (for [k (rest %)]
+                           (vector k (or (:schema (get component/attributes k))
+                                         :some)))))})
+
+
+(defn optional? [attr-m]
+  (let [optional? (get attr-m :optional? :not-found)]
+    (if (= optional? :not-found)
+      true
+      optional?)))
+
+(defdata :components
+  {:widget :nested-map
+   :schema (fn [ks]
+             (vec (concat [:map {:closed true}]
+                          (for [k ks
+                                :let [attr-m (get component/attributes k)]]
+                            [k {:optional (optional? attr-m)} (or (:schema attr-m) :some)]))))
+   :components ks})
+
+(defdata :components-ns
+  (fn [k]
+    (components (filter #(= (name k) (namespace k))
+                        (keys component/attributes)))))
+
+; TODO similar to map-attribute & components-attribute
+(defn map-attribute-schema [id-attribute attr-ks]
+  (m/schema
+   (vec (concat [:map {:closed true} id-attribute] ; TODO same id-attribute w. different namespaces ...
+                ; creature/id ?
+                ; item/id ?
+                (for [k attr-ks]
+                  (vector k (:schema (utils/safe-get component/attributes k))))))))
+
+; [:components-ns :effect] ; gives ns
 ; [:components operations] ; gives keys
 
 ; [:one-to-many-ids :properties/item]
@@ -90,43 +139,5 @@
 
 
 
-; TODO not checking if one of existing ids used
-; widget requires property/image.
-(defn one-to-many-ids [property-type]
-  {:widget :one-to-many
-   :schema [:set :qualified-keyword]
-   :linked-property-type property-type}) ; => fetch from schema namespaced ?
 
-(defn map-attribute [& attr-ks] ; TODO similar to components-attribute
-  {:widget :nested-map
-   :schema (vec (concat [:map {:closed true}]
-                        (for [k attr-ks]
-                          (vector k (or (:schema (get component/attributes k))
-                                        :some)))))})
 
-(defn optional? [attr-m]
-  (let [optional? (get attr-m :optional? :not-found)]
-    (if (= optional? :not-found)
-      true
-      optional?)))
-
-(defn components [ks]
-  {:widget :nested-map
-   :schema (vec (concat [:map {:closed true}]
-                        (for [k ks
-                              :let [attr-m (get component/attributes k)]]
-                          [k {:optional (optional? attr-m)} (or (:schema attr-m) :some)])))
-   :components ks})
-
-(defn components-attribute [component-namespace]
-  (components (filter #(= (name component-namespace) (namespace %))
-                      (keys component/attributes))))
-
-; TODO similar to map-attribute & components-attribute
-(defn map-attribute-schema [id-attribute attr-ks]
-  (m/schema
-   (vec (concat [:map {:closed true} id-attribute] ; TODO same id-attribute w. different namespaces ...
-                ; creature/id ?
-                ; item/id ?
-                (for [k attr-ks]
-                  (vector k (:schema (utils/safe-get component/attributes k))))))))
