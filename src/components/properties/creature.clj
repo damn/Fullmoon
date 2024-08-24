@@ -8,27 +8,19 @@
             [core.effect :as effect]
             [core.entity :as entity]))
 
-(defcomponent :entity.creature/name {}
-  (component/info-text [[_ name] _ctx]
-    name))
-
-(defcomponent :entity.creature/species {}
-  (component/info-text [[_ species] _ctx]
-    (str "[LIGHT_GRAY]Species: " species "[]")))
-
 (defcomponent :properties/creature {}
   (component/create [_ _ctx]
 
-    ; TODO how 2 do default values,its not default-values , its non-optional attributes !
-    ; similar to components nested-map
-    ;:default-value {:width 0.5 :height 0.5 :collides? true}
-    ; TODO label == not editable
-    ; TODO just defattribute ? warn on overwrite add there !
-    ; TODO body assert >+ min body size @ properties !
-    (defcomponent :property/bounds {:widget :label :schema :some}) ; TODO make px
+    ; TODO assert min body size from core.entity
+    ; TODO make px
+    (defcomponent :property/bounds {:widget :label :schema :some})
+
     (defcomponent :creature/species {:widget :label :schema [:qualified-keyword {:namespace :species}]})
+
     (defcomponent :creature/level {:widget :text-field :schema [:maybe pos-int?]})
+
     (defcomponent :entity/flying? data/boolean-attr)
+
     (defcomponent :entity/reaction-time data/pos-attr)
 
     (defcomponent :creature/entity (data/components ; TODO no required/optional settings ! just cannot remove & already there !
@@ -206,6 +198,14 @@
 ; :click-distance-tiles 1.5
 
 ; otherwise
+
+(defcomponent :entity.creature/name {}
+  (component/info-text [[_ name] _ctx]
+    name))
+
+(defcomponent :entity.creature/species {}
+  (component/info-text [[_ species] _ctx]
+    (str "[LIGHT_GRAY]Species: " species "[]")))
 
 (defcomponent :tx.entity/creature {}
   (effect/do! [[_ creature-id components] ctx]

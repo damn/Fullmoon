@@ -1,14 +1,12 @@
-; this is actually editor/components ... -> and maybe make into a function
-; for components for loading dependencies doesn't matter
 (ns core.data
   (:require [malli.core :as m]
-            [core.component :as component]
             [utils.core :as utils]
+            [core.component :as component]
             [core.val-max :refer [val-max-schema]]))
 
-; this is 'value-types'
-; and each value-type can actually define modifiers&effects for it
-; e.g. mana/hp val-max-data -> create there automatically
+; * which data is there? (for properties)
+; * do they all have proper widget/schema/optional?
+; * define not at entity/foo but at components/properties ? (creature state different than entity/state ..)
 
 ; TODO validate value-type-schema
 ; => do @ specific component types, write extra macro
