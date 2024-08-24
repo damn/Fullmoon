@@ -1,0 +1,15 @@
+
+; TODO game doesnt show that its paused because of an error  (only console)
+
+; allow default component/create which just returns value? -> how much code does it affect?
+; does it break anything? I have it that way so it throws when a context/etc. forgets to add create fn
+; but this is a minor issue isnt it
+; also interesting components getting eid, then don;t need to pass @ fn....?
+; every component/create before created add :eid ???
+; so component is a record with 'eid' field? or 'parent-entity-id' ?
+
+
+
+* item/ionventory skills also does zipmap over id
+* and properties too when loading
+=> they are components in a way ?
