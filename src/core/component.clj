@@ -103,7 +103,7 @@
       (println "WARNING: Overwriting defcomponent" k))
 
     `(do
-      (alter-var-root #'attributes assoc ~k ~attr-map)
+      (alter-var-root #'attributes assoc ~k (:data ~attr-map))
 
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
@@ -133,7 +133,7 @@
 
              (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
                [& params#]
-               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v. ;
+               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
                      ~fn-params params#]
                  ~@fn-exprs)))))
       ~k)))

@@ -390,7 +390,7 @@
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
-(defcomponent :damage/min-max data/val-max-attr)
+(defcomponent :damage/min-max {:data data/val-max-attr})
 
 (defcomponent :effect/damage
   {:let damage

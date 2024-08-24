@@ -143,8 +143,9 @@
   {:initial-state initial-state
    :fsm npc-fsm})
 
-(defcomponent :effect/stun {:data data/pos-attr}
-  {:let duration}
+(defcomponent :effect/stun
+  {:data data/pos-attr
+   :let duration}
   (effect/text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
@@ -269,9 +270,10 @@
  )
 
 ; => one to one attr!?
-(defcomponent :effect/spawn {:data {:widget :text-field
-                                    :schema [:qualified-keyword {:namespace :creatures}]}}
-  {:let creature-id}
+(defcomponent :effect/spawn
+  {:data {:widget :text-field
+          :schema [:qualified-keyword {:namespace :creatures}]}
+   :let creature-id}
   (effect/text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))
 

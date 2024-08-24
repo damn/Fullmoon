@@ -84,8 +84,9 @@
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
-(defcomponent :entity/inventory {:data (data/one-to-many-ids :properties/item)}
-  item-ids
+(defcomponent :entity/inventory
+  {:data (data/one-to-many-ids :properties/item)
+   :let item-ids}
   (entity/create [_ eid context]
     (cons [:tx.entity/assoc eid :entity/inventory inventory/empty-inventory]
           (for [item-id item-ids]

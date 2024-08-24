@@ -31,15 +31,15 @@
 (defcomponent :hit-effects {:data (data/components-attribute :effect)})
 
 (defcomponent :effect/target-entity
-  {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
-   :schema [:map {:closed true}
-            [:hit-effects [:map]]
-            [:maxrange pos?]]
-   :default-value {:hit-effects {}
-                   :max-range 2.0}
-   :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
-        Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
-  {:keys [maxrange hit-effects]}
+  {:let {:keys [maxrange hit-effects]}
+   :data {:widget :nested-map ; TODO circular depdenency components-attribute  - cannot use map-attribute..
+          :schema [:map {:closed true}
+                   [:hit-effects [:map]]
+                   [:maxrange pos?]]
+          :default-value {:hit-effects {}
+                          :max-range 2.0}
+          :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
+               Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}}
   (effect/text [_ ctx]
     (str "Range " maxrange " meters\n"
          (ctx/effect-text ctx hit-effects)))

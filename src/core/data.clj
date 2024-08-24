@@ -8,6 +8,10 @@
 ; * do they all have proper widget/schema/optional?
 ; * define not at entity/foo but at components/properties ? (creature state different than entity/state ..)
 
+; => just pass :schema/:optional?/:doc
+; from schema calculate :widget (my use cases first)
+; remove core.data dependencies
+
 ; TODO validate value-type-schema
 ; => do @ specific component types, write extra macro
 ; context/def or entity/def etc.

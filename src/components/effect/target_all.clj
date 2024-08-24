@@ -30,11 +30,12 @@
 
 (defcomponent :hit-effects {:data (data/components-attribute :effect)})
 
-(defcomponent :effect/target-all {:data {:widget :nested-map
-                                         :schema [:map {:closed true}
-                                                  [:hit-effects [:map]] ]
-                                         :default-value {:hit-effects {}}}}
-  {:keys [hit-effects]}
+(defcomponent :effect/target-all
+  {:data {:widget :nested-map
+          :schema [:map {:closed true}
+                   [:hit-effects [:map]] ]
+          :default-value {:hit-effects {}}}
+   :let {:keys [hit-effects]}}
   (effect/text [_ ctx]
     (str "All visible targets:" (ctx/effect-text ctx hit-effects)))
 
