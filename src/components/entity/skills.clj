@@ -9,7 +9,7 @@
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
 (defcomponent :entity/skills
-  {:schema [:one-to-many-ids :properties/skill]}
+  {:data [:one-to-many-ids :properties/skill]}
   (component/create [[_ skill-ids] ctx]
     (zipmap skill-ids (map #(get-property ctx %) skill-ids)))
 

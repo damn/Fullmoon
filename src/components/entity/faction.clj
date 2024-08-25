@@ -4,7 +4,7 @@
 
 (defcomponent :entity/faction
   {:let faction
-   :schema [:enum :good :evil]}
+   :data [:enum :good :evil]}
   (component/info-text [_ _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
@@ -19,7 +19,7 @@
     faction))
 
 (defcomponent :effect/convert
-  {:schema :some}
+  {:data :some}
   (component/info-text [_ _effect-ctx]
     "Converts target to your side.")
 

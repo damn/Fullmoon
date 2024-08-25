@@ -15,9 +15,9 @@
 
     ; could make optional - shorter properties.edn ...
     ; and some items could just be fluff
-    (defcomponent :item/modifiers {:schema [:components-ns :modifier]})
+    (defcomponent :item/modifiers {:data [:components-ns :modifier]})
 
-    (defcomponent :item/slot {:schema [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+    (defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
 
     {:id-namespace "items"
      :schema (data/map-attribute-schema

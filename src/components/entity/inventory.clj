@@ -83,7 +83,7 @@
     (boolean (pickup-item entity* item))))
 
 (defcomponent :entity/inventory
-  {:schema [:one-to-many-ids :properties/item]
+  {:data [:one-to-many-ids :properties/item]
    :let item-ids}
   (component/create-e [_ eid context]
     (cons [:tx.entity/assoc eid :entity/inventory inventory/empty-inventory]

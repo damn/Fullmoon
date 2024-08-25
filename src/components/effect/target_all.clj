@@ -26,10 +26,10 @@
 
  )
 
-(defcomponent :hit-effects {:schema [:components-ns :effect]})
+(defcomponent :hit-effects {:data [:components-ns :effect]})
 
 (defcomponent :effect/target-all
-  {:schema :some #_[:map :hit-effects]
+  {:data :some #_[:map :hit-effects]
    :let {:keys [hit-effects]}}
   (component/info-text [_ ctx]
     (str "All visible targets:" (ctx/effect-text ctx hit-effects)))

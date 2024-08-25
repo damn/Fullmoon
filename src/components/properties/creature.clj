@@ -20,20 +20,20 @@
 
     ; TODO assert min body size from core.entity
     ; TODO make px
-    (defcomponent :property/bounds {:schema :some})
-    (defcomponent :creature/species {:schema [:qualified-keyword {:namespace :species}]})
-    (defcomponent :creature/level {:schema :pos-int?})
-    (defcomponent :entity/flying? {:schema :boolean})
-    (defcomponent :entity/reaction-time {:schema :pos?})
+    (defcomponent :property/bounds {:data :some})
+    (defcomponent :creature/species {:data [:qualified-keyword {:namespace :species}]})
+    (defcomponent :creature/level {:data :pos-int})
+    (defcomponent :entity/flying? {:data :boolean})
+    (defcomponent :entity/reaction-time {:data :pos})
 
-    (defcomponent :creature/entity {:schema [:components ; TODO no required/optional settings ! just cannot remove & already there !
-                                             :entity/animation
-                                             :entity/flying? ; remove
-                                             :entity/reaction-time ; in frames 0.016x
-                                             :entity/faction ; remove
-                                             :entity/stats
-                                             :entity/inventory  ; remove
-                                             :entity/skills]})
+    (defcomponent :creature/entity {:data [:components ; TODO no required/optional settings ! just cannot remove & already there !
+                                           :entity/animation
+                                           :entity/flying? ; remove
+                                           :entity/reaction-time ; in frames 0.016x
+                                           :entity/faction ; remove
+                                           :entity/stats
+                                           :entity/inventory  ; remove
+                                           :entity/skills]})
 
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema
@@ -139,7 +139,7 @@
    :fsm npc-fsm})
 
 (defcomponent :effect/stun
-  {:schema :pos?
+  {:data :pos
    :let duration}
   (component/info-text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
@@ -152,7 +152,7 @@
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect/kill
-  {:schema :some}
+  {:data :some}
   (component/info-text [_ _effect-ctx]
     "Kills target")
 
@@ -267,7 +267,7 @@
 
 ; => one to one attr!?
 (defcomponent :effect/spawn
-  {:schema [:qualified-keyword {:namespace :creatures}]
+  {:data [:qualified-keyword {:namespace :creatures}]
    :let creature-id}
   (component/info-text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))

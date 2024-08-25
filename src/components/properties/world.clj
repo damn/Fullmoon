@@ -11,13 +11,13 @@
 
     ;(defcomponent :world/map-size data/pos-int-attr)
     ;(defcomponent :world/max-area-level data/pos-int-attr) ; TODO <= map-size !?
-    ;(defcomponent :world/princess {:schema [:qualified-keyword {:namespace :creatures}]})
+    ;(defcomponent :world/princess {:data [:qualified-keyword {:namespace :creatures}]})
     ;(defcomponent :world/spawn-rate data/pos-attr) ; TODO <1 !
 
-    (defcomponent :world/type {:schema [:enum
-                                        :world.type/tiled-map
-                                        :world.type/modules
-                                        :world.type/uf-caves]})
+    (defcomponent :world/type {:data [:enum
+                                      :world.type/tiled-map
+                                      :world.type/modules
+                                      :world.type/uf-caves]})
 
     {:id-namespace "worlds"
      :schema (data/map-attribute-schema

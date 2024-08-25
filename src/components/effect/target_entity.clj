@@ -23,15 +23,15 @@
          (v/scale (entity/direction entity* target*)
                   maxrange)))
 
-(defcomponent :maxrange {:schema :pos?})
+(defcomponent :maxrange {:data :pos})
 
 ; TODO how should this work ???
 ; can not contain the other effects properly o.o
-(defcomponent :hit-effects {:schema [:components-ns :effect]})
+(defcomponent :hit-effects {:data [:components-ns :effect]})
 
 (defcomponent :effect/target-entity
   {:let {:keys [maxrange hit-effects]}
-   :schema :some #_[:map :hit-effects :maxrange]
+   :data :some #_[:map :hit-effects :maxrange]
    :default-value {:hit-effects {}
                    :max-range 2.0}
    :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.

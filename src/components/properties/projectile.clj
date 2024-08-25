@@ -13,10 +13,10 @@
 
     ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
     ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
-    (defcomponent :projectile/max-range {:schema :pos-int?})
-    (defcomponent :projectile/speed     {:schema :pos-int?})
-    (defcomponent :projectile/effects   {:schema [:components-ns :effect]})
-    (defcomponent :projectile/piercing? {:schema :boolean})
+    (defcomponent :projectile/max-range {:data :pos-int})
+    (defcomponent :projectile/speed     {:data :pos-int})
+    (defcomponent :projectile/effects   {:data [:components-ns :effect]})
+    (defcomponent :projectile/piercing? {:data :boolean})
 
     {:id-namespace "projectiles"
      :schema (data/map-attribute-schema
@@ -69,7 +69,7 @@
 ; as it is just sent .....
 ; or we adjust the effect when we send it ....
 (defcomponent :effect/projectile
-  {:schema [:qualified-keyword {:namespace :projectiles}]}
+  {:data [:qualified-keyword {:namespace :projectiles}]}
   (component/info-text [[_ projectile-id] ctx]
     (ctx/effect-text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
 

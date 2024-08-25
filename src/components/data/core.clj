@@ -11,11 +11,11 @@
 (defcomponent :image     {:widget :image      :schema :some})
 (defcomponent :animation {:widget :animation  :schema :some})
 (defcomponent :val-max   {:widget :text-field :schema (m/form val-max-schema)})
-(defcomponent :number?   {:widget :text-field :schema number?})
-(defcomponent :nat-int?  {:widget :text-field :schema nat-int?})
-(defcomponent :int?      {:widget :text-field :schema int?})
-(defcomponent :pos?      {:widget :text-field :schema pos?})
-(defcomponent :pos-int?  {:widget :text-field :schema pos-int?})
+(defcomponent :number    {:widget :text-field :schema number?})
+(defcomponent :nat-int   {:widget :text-field :schema nat-int?})
+(defcomponent :int       {:widget :text-field :schema int?})
+(defcomponent :pos       {:widget :text-field :schema pos?})
+(defcomponent :pos-int   {:widget :text-field :schema pos-int?})
 
 (defcomponent :enum
   (component/data [[k & items :as schema]]

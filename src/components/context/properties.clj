@@ -117,12 +117,12 @@
 (defcomponent :context/properties
   {:let {:keys [file types]}}
   (component/create [_ ctx]
-    (defcomponent :property/id          {:schema [:qualified-keyword {}]
+    (defcomponent :property/id          {:data [:qualified-keyword {}]
                                          :optional? false})
-    (defcomponent :property/pretty-name {:schema :string})
-    (defcomponent :property/image       {:schema :image})
-    (defcomponent :property/animation   {:schema :animation})
-    (defcomponent :property/sound       {:schema :sound})
+    (defcomponent :property/pretty-name {:data :string})
+    (defcomponent :property/image       {:data :image})
+    (defcomponent :property/animation   {:data :animation})
+    (defcomponent :property/sound       {:data :sound})
     (component/load-ks! types)
     (let [types (component/ks->create-all types {})]
       {:file file
