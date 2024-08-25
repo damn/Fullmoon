@@ -33,7 +33,7 @@
      :schema schema}))
 
 (defn- map-schema [ks]
-  (apply vector :map {:closed true} (component/attribute-schema attr-ks)))
+  (apply vector :map {:closed true} (component/attribute-schema ks)))
 
 (defcomponent :map
   (component/->data [[_ & ks]]
