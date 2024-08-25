@@ -16,6 +16,11 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
 
+; TODO save button show if changes made, otherwise disabled?
+; when closing (lose changes? yes no)
+
+; TODO overview table not refreshed after changes in property editor window
+
 (defn- ->scroll-pane-cell [ctx rows]
   (let [table (->table ctx {:rows rows
                             :cell-defaults {:pad 1}
@@ -33,19 +38,6 @@
                  :close-on-escape? true
                  :rows [[(->scroll-pane-cell ctx rows)]]
                  :pack? true}))
-
-;;
-
-; TODO save button show if changes made, otherwise disabled?
-; when closing (lose changes? yes no)
-
-; TODO overview table not refreshed after changes in property editor window
-
-;;
-
-
-
-;;
 
 (defn- attr->value-widget [ck]
   (or (data/ck->widget ck) :label))
