@@ -101,7 +101,7 @@
            [:widgets/background-image "images/moon_background.png"]
            [:context/screens [:screens/main-menu
                               :screens/map-editor
-                              :screens/minimap
+                              ;:screens/minimap
                               :screens/options-menu
                               :screens/property-editor
                               :screens/world]]]}

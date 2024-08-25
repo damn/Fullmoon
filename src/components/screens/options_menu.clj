@@ -4,8 +4,7 @@
             [utils.core :refer [safe-get]]
             utils.ns
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx :refer [->text-button ->check-box ->table]]
-            core.screen))
+            [core.context :as ctx :refer [->text-button ->check-box ->table]]))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -58,18 +57,16 @@
             :fill-parent? true
             :cell-defaults {:pad-bottom 10}}))
 
-(deftype SubScreen []
-  core.screen/Screen
-  (show [_ _ctx])
-  (hide [_ _ctx])
-  (render [_ ctx]
+(defcomponent ::sub-screen
+  (component/render-ctx [_ ctx]
     (if (input/key-just-pressed? input.keys/escape)
       (ctx/change-screen ctx :screens/world)
       ctx)))
 
+(derive :screens/options-menu :screens/stage-screen)
 (defcomponent :screens/options-menu
   (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors [(ctx/->background-image ctx)
                                   (create-table ctx)]
-                         :sub-screen (->SubScreen)})))
+                         :sub-screen [::sub-screen]})))

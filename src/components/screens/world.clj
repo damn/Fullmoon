@@ -5,7 +5,6 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.screen :refer [Screen]]
             [components.context.world :as world]
             (components.world [debug-render :as debug-render]
                               render
@@ -51,19 +50,19 @@
         :else
         ctx))
 
-(defrecord SubScreen []
-  Screen
-  (show [_ _ctx])
-  (hide [_ ctx]
+(defcomponent ::sub-screen
+  (component/exit [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
-  (render [_ ctx]
+
+  (component/render-ctx [_ ctx]
     (render-world! ctx)
     (-> ctx
         world/game-loop
         check-key-input)))
 
+(derive :screens/world :screens/stage-screen)
 (defcomponent :screens/world
   (component/create [_ ctx]
     (ctx/->stage-screen ctx
                         {:actors []
-                         :sub-screen (->SubScreen)})))
+                         :sub-screen [::sub-screen]})))

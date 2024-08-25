@@ -7,8 +7,7 @@
             utils.camera
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
-            [core.graphics :as g]
-            core.screen))
+            [core.graphics :as g]))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -40,8 +39,7 @@
       color/white
       color/black)))
 
-(deftype Screen []
-  core.screen/Screen
+#_(deftype Screen []
   (show [_ ctx]
     (orthographic-camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
 
@@ -64,6 +62,6 @@
       (ctx/change-screen context :screens/world)
       context)))
 
-(defcomponent :screens/minimap
+#_(defcomponent :screens/minimap
   (component/create [_ _ctx]
     (->Screen)))

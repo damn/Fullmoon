@@ -5,8 +5,7 @@
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
-            [core.context :as ctx]
-            [core.screen :as screen]))
+            [core.context :as ctx]))
 
 (def state (atom nil))
 
@@ -29,7 +28,7 @@
   (screen-utils/clear color/black)
   (-> @state
       ctx/current-screen
-      (screen/render! state)))
+      (component/render! state)))
 
 (defn- update-viewports [w h]
   (ctx/update-viewports @state w h))

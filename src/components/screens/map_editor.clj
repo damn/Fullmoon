@@ -11,7 +11,6 @@
             utils.camera
             [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
             [core.graphics :as g]
-            core.screen
             [core.maps.tiled :as tiled]
             [core.scene2d.actor :refer [set-position!]]
             [core.scene2d.group :refer [add-actor!]]
@@ -42,9 +41,10 @@
 
 (defn- current-data [ctx]
   (-> ctx
-      current-screen
-      :sub-screen
-      :current-data))
+    current-screen
+    (get 1)
+    :sub-screen
+    (get 1)))
 
 (def ^:private infotext
   "L: grid lines
@@ -152,33 +152,6 @@ direction keys: move")
     (show-whole-map! (ctx/world-camera context) tiled-map)
     context))
 
-(defrecord SubScreen [current-data]
-  ; TODO ?
-  ;com.badlogic.gdx.utils.Disposable
-  #_(dispose [_]
-    (dispose (:tiled-map @current-data)))
-
-  core.screen/Screen
-  (show [_ ctx]
-    (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
-
-  (hide [_ ctx]
-    (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
-
-  (render [_ context]
-    (ctx/render-tiled-map context
-                          (:tiled-map @current-data)
-                          (constantly color/white))
-    (ctx/render-world-view context #(render-on-map % context))
-    (if (input/key-just-pressed? input.keys/l)
-      (swap! current-data update :show-grid-lines not))
-    (if (input/key-just-pressed? input.keys/m)
-      (swap! current-data update :show-movement-properties not))
-    (camera-controls context (ctx/world-camera context))
-    (if (input/key-just-pressed? input.keys/escape)
-      (ctx/change-screen context :screens/main-menu)
-      context)))
-
 (defn ->generate-map-window [ctx level-id]
   (->window ctx {:title "Properties"
                  :cell-defaults {:pad 10}
@@ -192,13 +165,40 @@ direction keys: move")
                                                                %)))]]
                  :pack? true}))
 
-(defn- ->screen [context]
-  {:actors [(->generate-map-window context :worlds/vampire)
-            (->info-window context)]
-   :sub-screen (->SubScreen (atom {:tiled-map (->tiled-map context module-gen/modules-file)
-                                   :show-movement-properties false
-                                   :show-grid-lines false}))})
+(defcomponent ::sub-screen
+  {:let current-data}
+  ; TODO ?
+  ;com.badlogic.gdx.utils.Disposable
+  #_(dispose [_]
+    (dispose (:tiled-map @current-data)))
 
+  (component/enter [_ ctx]
+    (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
+
+  (component/exit [_ ctx]
+    (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
+
+  (component/render-ctx [_ context]
+    (ctx/render-tiled-map context
+                          (:tiled-map @current-data)
+                          (constantly color/white))
+    (ctx/render-world-view context #(render-on-map % context))
+    (if (input/key-just-pressed? input.keys/l)
+      (swap! current-data update :show-grid-lines not))
+    (if (input/key-just-pressed? input.keys/m)
+      (swap! current-data update :show-movement-properties not))
+    (camera-controls context (ctx/world-camera context))
+    (if (input/key-just-pressed? input.keys/escape)
+      (ctx/change-screen context :screens/main-menu)
+      context)))
+
+(derive :screens/map-editor :screens/stage-screen)
 (defcomponent :screens/map-editor
   (component/create [_ ctx]
-    (ctx/->stage-screen ctx (->screen ctx))))
+    (ctx/->stage-screen ctx
+                        {:actors [(->generate-map-window ctx :worlds/vampire)
+                                  (->info-window ctx)]
+                         :sub-screen [::sub-screen
+                                      (atom {:tiled-map (->tiled-map ctx module-gen/modules-file)
+                                             :show-movement-properties false
+                                             :show-grid-lines false})]})))

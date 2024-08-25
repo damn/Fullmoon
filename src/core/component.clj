@@ -82,7 +82,6 @@
                  ~@fn-exprs)))))
       ~k)))
 
-
 (defsystem create [_ ctx])
 (defmethod create :default [[_ v] _ctx]
   v)
@@ -92,6 +91,14 @@
 
 (defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
+
+;; Screen
+
+(defsystem render! [_ app-state])
+
+(defsystem render-ctx [_ ctx])
+(defmethod render-ctx :default [_ ctx]
+  ctx)
 
 ;; TX
 
@@ -120,6 +127,7 @@
 (defmethod render :default [_ g ctx])
 
 ;; State
+
 (defsystem enter [_ ctx])
 (defmethod enter :default [_ ctx])
 
