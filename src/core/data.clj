@@ -4,6 +4,12 @@
             [core.component :as component]
             [core.val-max :refer [val-max-schema]]))
 
+; TODO be clear (just use namespaced keywords for all these things ...)
+; m/schema
+; or core/schema
+; or data/type ?
+; dont have 2 different :schema keys
+
 ; data itself because a component (miltimethod widget,schema, ...)
 ; it snot schema but :data :data/foo
 
@@ -34,15 +40,11 @@
          data-type (safe-get core.data/defs (if (vector? core-schema)
                                               (first core-schema)
                                               core-schema))]
-     (println "core-schema: " core-schema)
-     (println "data-type: " data-type)
      (if (map? data-type)
        data-type
        (data-type core-schema)))
    (catch Throwable t
-     (throw (ex-info "" {:ck ck} t))
-     )
-   ))
+     (throw (ex-info "" {:ck ck} t)))))
 
 (defn ck->widget [ck]
   (:widget (ck->data-schema ck)))
@@ -51,19 +53,13 @@
   (:schema (ck->data-schema ck)))
 
 (defn ck->enum-items [ck]
-  (let [core-schema (ck->data-schema ck)]
-    ((:items (get core.data/defs core-schema))
-     core-schema)))
+  (:items (ck->data-schema ck)))
 
 (defn ck->components [ck]
-  (let [core-schema (ck->data-schema ck)]
-    ((:components (get core.data/defs core-schema))
-     core-schema)))
+  (:components (ck->data-schema ck)))
 
 (defn ck->linked-property-types [ck]
-  (let [core-schema (ck->data-schema ck)]
-    ((:linked-property-type (get core.data/defs core-schema))
-     core-schema)))
+  (:linked-property-type (ck->data-schema ck)))
 
 (defn ck->doc [ck]
   (:doc (get component/attributes ck)))
@@ -96,13 +92,10 @@
 
 ; [:enum :good :evil]
 ; :schema function and just use identity in many cases??
-(defdata :enum (fn [[k & items :as enum-schema]]
+(defdata :enum (fn [[k & items :as schema]]
                  {:widget :enum
-                  :schema enum-schema
+                  :schema schema
                   :items items}))
-
-((get defs :enum) [:enum :a :b :c])
-
 
 ; TODO not checking if one of existing ids used
 ; widget requires property/image.
@@ -111,6 +104,11 @@
     {:widget :one-to-many
      :schema [:set :qualified-keyword] ; TODO namespace missing
      :linked-property-type property-type})) ; => fetch from schema namespaced ?
+
+(defdata :qualified-keyword
+  (fn [schema]
+    {:widget :label
+     :schema schema}))
 
 (defn optional? [k]
   (let [optional? (get (get component/attributes k) :optional? :not-found)]
@@ -123,35 +121,15 @@
                (for [k ks]
                  [k {:optional (optional? k)} (ck->schema k)]))))
 
-(binding [*print-level* nil]
-  (clojure.repl/pst *e))
+(comment
+ (ck->schema :creature/entity)
+ (binding [*print-level* nil]
+   (clojure.repl/pst *e)))
 
-(ck->schema :creature/entity)
-
-(m-map-schema
- [:entity/animation :entity/flying? :entity/reaction-time :entity/faction :entity/stats :entity/inventory :entity/skills]
- )
-
-; TODO similar to components-attribute
 (defdata :map
   (fn [[_ & ks]]
     {:widget :nested-map
      :schema (m-map-schema ks)}))
-
-
-[:qualified-keyword {:namespace :creatures}]
-(defdata :qualified-keyword
-  (fn [schema]
-    {:widget :label
-     :schema schema}))
-
-
-
-; TODO be clear (just use namespaced keywords for all these things ...)
-; m/schema
-; or core/schema
-; or data/type ?
-; dont have 2 different :schema keys
 
 (defdata :components
   (fn [[_ & ks]]
@@ -176,15 +154,6 @@
     (try (m/schema schema-form)
          (catch Throwable t
            (throw (ex-info "" {:schema-form schema-form} t))))))
-
-
-(map-attribute-schema
- [:property/id [:qualified-keyword {:namespace :creatures}]]
- [:property/image
-  :property/bounds
-  :creature/species
-  :creature/level
-  :creature/entity])
 
 
 ; (m/form entity/movement-speed-schema)

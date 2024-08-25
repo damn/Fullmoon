@@ -32,7 +32,7 @@
 
 (defcomponent :effect/target-entity
   {:let {:keys [maxrange hit-effects]}
-   :schema [:map :hit-effects :maxrange]
+   :schema :some #_[:map :hit-effects :maxrange]
    :default-value {:hit-effects {}
                    :max-range 2.0}
    :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.

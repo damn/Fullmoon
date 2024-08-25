@@ -28,13 +28,13 @@
     (defcomponent :entity/reaction-time {:schema :pos?})
 
     (defcomponent :creature/entity {:schema [:components ; TODO no required/optional settings ! just cannot remove & already there !
-                                             [:entity/animation
-                                              :entity/flying? ; remove
-                                              :entity/reaction-time ; in frames 0.016x
-                                              :entity/faction ; remove
-                                              :entity/stats
-                                              :entity/inventory  ; remove
-                                              :entity/skills]]})
+                                             :entity/animation
+                                             :entity/flying? ; remove
+                                             :entity/reaction-time ; in frames 0.016x
+                                             :entity/faction ; remove
+                                             :entity/stats
+                                             :entity/inventory  ; remove
+                                             :entity/skills]})
 
     {:id-namespace "creatures"
      :schema (data/map-attribute-schema

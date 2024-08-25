@@ -308,4 +308,7 @@
        :stats/modifiers
        :modifier/mana))
 
+ (binding [*print-level* nil]
+   (clojure.repl/pst *e))
+
  )
