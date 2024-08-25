@@ -51,7 +51,8 @@
               :world/content-grid
               :world/explored-tile-corners
 
-              :operation/numbers]
+              :operation/numbers
+              :data/core]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false

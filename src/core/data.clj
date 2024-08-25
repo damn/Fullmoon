@@ -1,8 +1,7 @@
 (ns core.data
   (:require [malli.core :as m]
             [utils.core :refer [safe-get]]
-            [core.component :as component :refer [defcomponent]]
-            [core.val-max :refer [val-max-schema]]))
+            [core.component :as component]))
 
 ; Next, see :context/properties (dependencies on core.data check)
 ; can move defcomponents into app.edn itself
@@ -64,60 +63,10 @@
       true
       optional?)))
 
-(defcomponent :boolean   {:widget :check-box  :schema :boolean :default-value true})
-(defcomponent :some      {:widget :label      :schema :some})
-(defcomponent :string    {:widget :text-field :schema :string})
-(defcomponent :sound     {:widget :sound      :schema :string})
-(defcomponent :image     {:widget :image      :schema :some})
-(defcomponent :animation {:widget :animation  :schema :some})
-(defcomponent :val-max   {:widget :text-field :schema (m/form val-max-schema)})
-(defcomponent :number?   {:widget :text-field :schema number?})
-(defcomponent :nat-int?  {:widget :text-field :schema nat-int?})
-(defcomponent :int?      {:widget :text-field :schema int?})
-(defcomponent :pos?      {:widget :text-field :schema pos?})
-(defcomponent :pos-int?  {:widget :text-field :schema pos-int?})
-
-(defcomponent :enum
-  (component/data [[k & items :as schema]]
-    {:widget :enum
-     :schema schema
-     :items items}))
-
-; not checking if one of existing ids used
-; widget requires property/image for displaying overview
-(defcomponent :one-to-many-ids
-  (component/data [[_ property-type]]
-    {:widget :one-to-many
-     :schema [:set :qualified-keyword] ; namespace missing
-     :linked-property-type property-type})) ; => fetch from schema namespaced ?
-
-(defcomponent :qualified-keyword
-  (component/data [schema]
-    {:widget :label
-     :schema schema}))
-
-(defn- m-map-schema [ks]
+(defn map-schema [ks]
   (vec (concat [:map {:closed true}]
                (for [k ks]
                  [k {:optional (optional? k)} (ck->schema k)]))))
-
-(defcomponent :map
-  (component/data [[_ & ks]]
-    {:widget :nested-map
-     :schema (m-map-schema ks)}))
-
-(defcomponent :components
-  (component/data [[_ & ks]]
-    {:widget :nested-map
-     :schema (m-map-schema ks)
-     :components ks}))
-
-(defcomponent :components-ns
-  (component/data [[_ k]]
-    (let [ks (filter #(= (name k) (namespace %)) (keys component/attributes))]
-      {:widget :nested-map
-       :schema (m-map-schema ks)
-       :components ks})))
 
 (defn map-attribute-schema [id-attribute attr-ks]
   (let [schema-form (vec (concat [:map {:closed true} id-attribute]
