@@ -37,14 +37,14 @@
 
 (defn- component-k->data-type [ck]
   (try
-   (let [core-schema (:schema (safe-get component/attributes ck))
-         data-type (safe-get component/attributes
-                             (if (vector? core-schema)
-                               (first core-schema)
-                               core-schema))]
-     (if (seq data-type)
-       data-type
-       (component/data core-schema)))
+   (let [data-type (:schema (safe-get component/attributes ck))
+         data (safe-get component/attributes
+                        (if (vector? data-type)
+                          (first data-type)
+                          data-type))]
+     (if (seq data)
+       data
+       (component/data data-type)))
    (catch Throwable t
      (throw (ex-info "" {:ck ck} t)))))
 
