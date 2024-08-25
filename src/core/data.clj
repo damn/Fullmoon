@@ -4,7 +4,7 @@
             [core.component :as component]
             [core.val-max :refer [val-max-schema]]))
 
-; Next, see :context/properties
+; Next, see :context/properties (dependencies on core.data check)
 ; can move defcomponents into app.edn itself
 
 ; also defstats -> effects & operations should be deducted from :schema
@@ -47,9 +47,9 @@
 (defn- ck->data-schema [ck]
   (try
    (let [core-schema (:schema (safe-get component/attributes ck))
-         data-type (safe-get core.data/defs (if (vector? core-schema)
-                                              (first core-schema)
-                                              core-schema))]
+         data-type (safe-get defs (if (vector? core-schema)
+                                    (first core-schema)
+                                    core-schema))]
      (if (map? data-type)
        data-type
        (data-type core-schema)))
