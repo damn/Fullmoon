@@ -44,10 +44,36 @@
 ;;
 
 (defn- ck->widget [ck]
-  (:widget (get core.data/defs (get component/attributes ck))))
+  (:widget (get core.data/defs (:schema (get component/attributes ck)))))
 
 (defn- ck->schema [ck]
-  (:schema (get core.data/defs (get component/attributes ck))))
+  (:schema (get core.data/defs (:schema (get component/attributes ck)))))
+
+(defn- ck->enum-items [ck]
+  (let [core-schema (:schema (get component/attributes ck))]
+    ((:items (get core.data/defs core-schema))
+     core-schema)))
+
+(defn- ck->components [ck]
+  (let [core-schema (:schema (get component/attributes ck))]
+    ((:components (get core.data/defs core-schema))
+     core-schema)))
+
+(defn- ck->linked-property-types [ck]
+  (let [core-schema (:schema (get component/attributes ck))]
+    ((:linked-property-type (get core.data/defs core-schema))
+     core-schema)))
+
+(defn- ck->doc [ck]
+  (:doc (get component/attributes k)))
+
+; :components
+; :default-value
+; :linked-property-type
+; :doc
+; :optional?
+
+;;
 
 (defn- attr->value-widget [ck]
   (or (ck->widget ck) :label))
@@ -89,7 +115,7 @@
 ;;
 
 (defmethod ->value-widget :enum [[k v] ctx]
-  (->select-box ctx {:items (map ->edn (:items (component/attributes k)))
+  (->select-box ctx {:items (map ->edn (ck->enum-items k))
                      :selected (->edn v)}))
 
 (defmethod value-widget->data :enum [_ widget]
@@ -147,7 +173,7 @@
                                  :close-on-escape? true
                                  :cell-defaults {:pad 5}})]
        (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                                      (:components (component/attributes k))))]
+                                                      (ck->components k)))]
                            [(->text-button ctx (name nested-k)
                                            (fn [ctx]
                                              (remove! window)
@@ -169,9 +195,9 @@
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (->table ctx {:cell-defaults {:pad 5}
                   :rows (remove nil?
-                                [(when (:components (component/attributes k))
+                                [(when (ck->components k)
                                    [(->add-nested-map-button ctx k attribute-widget-group)])
-                                 (when (:components (component/attributes k))
+                                 (when (ck->components k)
                                    [(->horizontal-separator-cell 1)])
                                  [attribute-widget-group]])})))
 
@@ -252,7 +278,7 @@
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
-                          (:linked-property-type (component/attributes attribute))
+                          (ck->linked-property-types attribute)
                           property-ids)
     table))
 
@@ -291,14 +317,13 @@
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->label ctx (name k))
-        attr-m (get component/attributes k)
-        _ (when-let [doc (:doc attr-m)]
+        _ (when-let [doc (ck->doc k)]
             (add-tooltip! label doc))
         value-widget (->value-widget [k v] ctx)
         table (->table ctx {:id k
                             :cell-defaults {:pad 4}})
         column (remove nil?
-                       [(when (data/optional? attr-m)
+                       [(when (data/optional? k)
                           (->text-button ctx "-" (fn [ctx]
                                                    (let [window (find-ancestor-window table)]
                                                      (remove! table)

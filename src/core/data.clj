@@ -60,34 +60,42 @@
    :schema [:set :qualified-keyword] ; TODO namespace missing
    :linked-property-type second}) ; => fetch from schema namespaced ?
 
-; TODO similar to components-attribute
-(defdata :map
-  {:widget :nested-map
-   :schema #(vec (concat [:map {:closed true}]
-                         (for [k (rest %)]
-                           (vector k (or (:schema (get component/attributes k))
-                                         :some)))))})
-
-
-(defn optional? [attr-m]
-  (let [optional? (get attr-m :optional? :not-found)]
+(defn optional? [k]
+  (let [optional? (get (get component/attributes k) :optional? :not-found)]
     (if (= optional? :not-found)
       true
       optional?)))
 
+(defn- m-map-schema [ks]
+  (vec (concat [:map {:closed true}]
+               (for [k ks]
+                 [k {:optional (optional? k)} (ck->schema k)]))))
+
+; TODO similar to components-attribute
+(defdata :map
+  {:widget :nested-map
+   :schema #(m-map-schema (rest %))})
+
+
+
+; TODO be clear
+; m/schema
+; or core/schema
+; or data/type ?
+; dont have 2 different :schema keys
+
 (defdata :components
   {:widget :nested-map
-   :schema (fn [ks]
-             (vec (concat [:map {:closed true}]
-                          (for [k ks
-                                :let [attr-m (get component/attributes k)]]
-                            [k {:optional (optional? attr-m)} (or (:schema attr-m) :some)]))))
-   :components ks})
+   :schema #(m-map-schema (rest %))
+   :components rest})
+
+(defn- kw-ns->components [[_ k]]
+  (filter #(= (name k) (namespace %)) (keys component/attributes)))
 
 (defdata :components-ns
-  (fn [k]
-    (components (filter #(= (name k) (namespace k))
-                        (keys component/attributes)))))
+  {:widget :nested-map
+   :schema #(m-map-schema (kw-ns->components %))
+   :components kw-ns->components})
 
 ; TODO similar to map-attribute & components-attribute
 (defn map-attribute-schema [id-attribute attr-ks]
@@ -96,7 +104,7 @@
                 ; creature/id ?
                 ; item/id ?
                 (for [k attr-ks]
-                  (vector k (:schema (utils/safe-get component/attributes k))))))))
+                  (vector k (ck->schema k)))))))
 
 ; [:components-ns :effect] ; gives ns
 ; [:components operations] ; gives keys
