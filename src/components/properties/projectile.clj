@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
-            [core.data :as data]
             [core.context :as ctx]
             [core.entity :as entity]))
 
@@ -19,13 +18,12 @@
     (defcomponent :projectile/piercing? {:data :boolean})
 
     {:id-namespace "projectiles"
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :projectiles}]]
+     :schema [[:property/id [:qualified-keyword {:namespace :projectiles}]]
               [:property/image ; TODO what is optional/obligatory??
                :projectile/max-range
                :projectile/speed
                :projectile/effects
-               :projectile/piercing?])
+               :projectile/piercing?]]
      :edn-file-sort-order 8
      :overview {:title "Projectiles"
                 :columns 16

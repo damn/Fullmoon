@@ -3,10 +3,10 @@
             [clojure.string :as str]
             [malli.core :as m]
             [malli.error :as me]
+            [utils.core :refer [safe-get mapvals]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.animation :as animation]
-            [utils.core :refer [safe-get]]))
+            [core.animation :as animation]))
 
 (defn- edn->image [ctx {:keys [file sub-image-bounds]}]
   {:pre [file]}
@@ -114,6 +114,13 @@
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
+(defn- map-attribute-schema [[id-attribute attr-ks]]
+  (let [schema-form (apply vector :map {:closed true} id-attribute
+                           (component/attribute-schema attr-ks))]
+    (try (m/schema schema-form)
+         (catch Throwable t
+           (throw (ex-info "" {:schema-form schema-form} t))))))
+
 (defcomponent :context/properties
   {:let {:keys [file types]}}
   (component/create [_ ctx]
@@ -123,8 +130,10 @@
     (defcomponent :property/image       {:data :image})
     (defcomponent :property/animation   {:data :animation})
     (defcomponent :property/sound       {:data :sound})
+
     (component/load-ks! types)
-    (let [types (component/ks->create-all types {})]
+    (let [types (component/ks->create-all types {})
+          types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
        :types types
        :db (load-edn ctx types file)})))

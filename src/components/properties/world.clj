@@ -1,7 +1,6 @@
 (ns components.properties.world
   (:require [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.data :as data]
             mapgen.module-gen))
 
 ; TODO move the whole properties stuff out into app.edn!
@@ -20,12 +19,11 @@
                                       :world.type/uf-caves]})
 
     {:id-namespace "worlds"
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :worlds}]]
+     :schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
               ;[:world/generator]
               [:world/type]
 
-              )
+              ]
      :edn-file-sort-order 5
      :overview {:title "Worlds"
                 :columns 10

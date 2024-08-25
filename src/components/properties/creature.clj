@@ -4,7 +4,6 @@
             [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.data :as data]
             [core.entity :as entity]))
 
 (defcomponent :entity.creature/name
@@ -36,13 +35,12 @@
                                            :entity/skills]})
 
     {:id-namespace "creatures"
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :creatures}]]
+     :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               [:property/image
                :property/bounds
                :creature/species
                :creature/level
-               :creature/entity])
+               :creature/entity]]
      :edn-file-sort-order 1
      :overview {:title "Creatures"
                 :columns 15

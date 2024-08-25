@@ -6,7 +6,6 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
-            [core.data :as data]
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
             [core.scene2d.ui.text-field :as text-field]
@@ -14,6 +13,11 @@
             [core.scene2d.ui.cell :refer [set-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
+
+(defn- ck->widget                [k] (:widget               (component/k->data k)))
+(defn- ck->enum-items            [k] (:items                (component/k->data k)))
+(defn- ck->components            [k] (:components           (component/k->data k)))
+(defn- ck->linked-property-types [k] (:linked-property-type (component/k->data k)))
 
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
@@ -39,7 +43,7 @@
                  :pack? true}))
 
 (defn- attr->value-widget [ck]
-  (or (data/ck->widget ck) :label))
+  (or (ck->widget ck) :label))
 
 (defmulti ->value-widget     (fn [[k _v] _ctx] (attr->value-widget k)))
 (defmulti value-widget->data (fn [k _widget]   (attr->value-widget k)))
@@ -60,7 +64,7 @@
 
 (defmethod ->value-widget :text-field [[k v] ctx]
   (let [widget (->text-field ctx (->edn v) {})]
-    (add-tooltip! widget (str "Schema: " (pr-str (m/form (data/ck->schema k)))))
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (component/schema k)))))
     widget))
 
 (defmethod value-widget->data :text-field [_ widget]
@@ -78,7 +82,7 @@
 ;;
 
 (defmethod ->value-widget :enum [[k v] ctx]
-  (->select-box ctx {:items (map ->edn (data/ck->enum-items k))
+  (->select-box ctx {:items (map ->edn (ck->enum-items k))
                      :selected (->edn v)}))
 
 (defmethod value-widget->data :enum [_ widget]
@@ -136,7 +140,7 @@
                                  :close-on-escape? true
                                  :cell-defaults {:pad 5}})]
        (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                                      (data/ck->components k)))]
+                                                      (ck->components k)))]
                            [(->text-button ctx (name nested-k)
                                            (fn [ctx]
                                              (remove! window)
@@ -158,9 +162,9 @@
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (->table ctx {:cell-defaults {:pad 5}
                   :rows (remove nil?
-                                [(when (data/ck->components k)
+                                [(when (ck->components k)
                                    [(->add-nested-map-button ctx k attribute-widget-group)])
-                                 (when (data/ck->components k)
+                                 (when (ck->components k)
                                    [(->horizontal-separator-cell 1)])
                                  [attribute-widget-group]])})))
 
@@ -241,7 +245,7 @@
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
-                          (data/ck->linked-property-types attribute)
+                          (ck->linked-property-types attribute)
                           property-ids)
     table))
 
@@ -280,13 +284,13 @@
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->label ctx (name k))
-        _ (when-let [doc (data/ck->doc k)]
+        _ (when-let [doc (component/doc k)]
             (add-tooltip! label doc))
         value-widget (->value-widget [k v] ctx)
         table (->table ctx {:id k
                             :cell-defaults {:pad 4}})
         column (remove nil?
-                       [(when (data/optional? k)
+                       [(when (component/optional? k)
                           (->text-button ctx "-" (fn [ctx]
                                                    (let [window (find-ancestor-window table)]
                                                      (remove! table)

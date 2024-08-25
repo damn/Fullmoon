@@ -1,7 +1,6 @@
 (ns components.properties.item
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
-            [core.data :as data]
             [core.modifiers :as modifiers]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
@@ -20,12 +19,11 @@
     (defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
 
     {:id-namespace "items"
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :items}]]
+     :schema [[:property/id [:qualified-keyword {:namespace :items}]]
               [:property/pretty-name
                :property/image
                :item/slot
-               :item/modifiers])
+               :item/modifiers]]
      :edn-file-sort-order 3
      :overview {:title "Items"
                 :columns 17

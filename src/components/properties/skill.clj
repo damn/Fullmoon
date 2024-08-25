@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]
-            [core.data :as data]
             [core.context :as ctx]))
 
 (def ^:private skill-cost-color "[CYAN]")
@@ -19,15 +18,14 @@
     (defcomponent :skill/start-action-sound       {:data :sound})
     (defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
     {:id-namespace "skills"
-     :schema (data/map-attribute-schema
-              [:property/id [:qualified-keyword {:namespace :skills}]]
+     :schema [[:property/id [:qualified-keyword {:namespace :skills}]]
               [:property/image
                :skill/action-time
                :skill/cooldown
                :skill/cost
                :skill/effects
                :skill/start-action-sound
-               :skill/action-time-modifier-key])
+               :skill/action-time-modifier-key]]
      :edn-file-sort-order 0
      :overview {:title "Skills"
                 :columns 16

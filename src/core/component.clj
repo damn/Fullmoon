@@ -1,5 +1,6 @@
 (ns core.component
-  (:refer-clojure :exclude [apply]))
+  (:refer-clojure :exclude [apply])
+  (:require [utils.core :refer [safe-get]]))
 
 ; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override true)
@@ -82,7 +83,9 @@
                  ~@fn-exprs)))))
       ~k)))
 
-(defsystem data [_])
+(defsystem ->data [_])
+
+;;
 
 (defsystem create [_ ctx])
 (defmethod create :default [[_ v] _ctx]
@@ -240,52 +243,26 @@
 (defn load-ks! [ks]
   (load! (ks->components ks)))
 
-(comment
- (defn- component-systems [component-k]
-   (for [[sys-name sys-var] defsystems
-         [k method] (methods @sys-var)
-         :when (= k component-k)]
-     sys-name))
+(defn doc [k]
+  (:doc (get attributes k)))
 
- (spit "components.txt"
-       (with-out-str
-        (clojure.pprint/pprint (group-by namespace
-                                         (sort (keys attributes))))))
+(defn k->data [k]
+  (try
+   (let [data-form (:data (safe-get attributes k))]
+     (if (vector? data-form)
+       (->data data-form)
+       (safe-get attributes data-form)))
+   (catch Throwable t
+     (throw (ex-info "" {:k k} t)))))
 
- (ancestors :op/val-inc)
+(def schema (comp :schema k->data))
 
- (spit "components.md"
-       (binding [*print-level* nil]
-         (with-out-str
-          (doseq [[nmsp components] (sort-by first
-                                             (group-by namespace
-                                                       (sort (keys attributes))))]
-            (println "\n#" nmsp)
-            (doseq [k components]
-              (println "*" k
-                       (if-let [ancestrs (ancestors k)]
-                         (str "-> "(clojure.string/join "," ancestrs))
-                         "")
-                       (let [attr-map (get attributes k)]
-                         (if (seq attr-map)
-                           (pr-str (:core.component/fn-params attr-map))
-                           #_(binding [*print-level* nil]
-                               (with-out-str
-                                (clojure.pprint/pprint attr-map)))
-                           "")))
-              #_(doseq [system-name (component-systems k)]
-                  (println "  * " system-name)))))))
+(defn optional? [k]
+  (let [optional? (get (get attributes k) :optional? :not-found)]
+    (if (= optional? :not-found)
+      true
+      optional?)))
 
- ; & add all tx's ?
-
- ; -> only components who have a system ???
- ; -> not skill/cost or something ...
- ; and each system just add docstring
- ; and component schema
- ; then expandable and upload to wiki
-
- ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
- ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
-
- ; -> and after each 'build' I can have a bash script which uploads the components go github
- )
+(defn attribute-schema [ks]
+  (for [k ks]
+    [k {:optional (optional? k)} (schema k)]))

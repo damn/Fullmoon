@@ -6,6 +6,55 @@
             [core.entity :as entity]
             [core.scene2d.actor :as actor]
             app))
+(comment
+ (defn- component-systems [component-k]
+   (for [[sys-name sys-var] defsystems
+         [k method] (methods @sys-var)
+         :when (= k component-k)]
+     sys-name))
+
+ (spit "components.txt"
+       (with-out-str
+        (clojure.pprint/pprint (group-by namespace
+                                         (sort (keys attributes))))))
+
+ (ancestors :op/val-inc)
+
+ (spit "components.md"
+       (binding [*print-level* nil]
+         (with-out-str
+          (doseq [[nmsp components] (sort-by first
+                                             (group-by namespace
+                                                       (sort (keys attributes))))]
+            (println "\n#" nmsp)
+            (doseq [k components]
+              (println "*" k
+                       (if-let [ancestrs (ancestors k)]
+                         (str "-> "(clojure.string/join "," ancestrs))
+                         "")
+                       (let [attr-map (get attributes k)]
+                         (if (seq attr-map)
+                           (pr-str (:core.component/fn-params attr-map))
+                           #_(binding [*print-level* nil]
+                               (with-out-str
+                                (clojure.pprint/pprint attr-map)))
+                           "")))
+              #_(doseq [system-name (component-systems k)]
+                  (println "  * " system-name)))))))
+
+ ; & add all tx's ?
+
+ ; -> only components who have a system ???
+ ; -> not skill/cost or something ...
+ ; and each system just add docstring
+ ; and component schema
+ ; then expandable and upload to wiki
+
+ ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
+ ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
+
+ ; -> and after each 'build' I can have a bash script which uploads the components go github
+ )
 
 (comment
 

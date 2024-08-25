@@ -3,7 +3,7 @@
             [malli.core :as m]
             [core.component :as component :refer [defcomponent]]))
 
-(def val-max-schema
+(def ^:private val-max-schema
   (m/schema [:and
              [:vector {:min 2 :max 2} [:int {:min 0}]]
              [:fn {:error/fn (fn [{[^int v ^int mx] :value} _]
@@ -84,3 +84,5 @@
   (= (component/apply [:op/max-mult -0.8] [5 10]) [1 1])
   (= (component/apply [:op/max-mult -0.9] [5 10]) [0 0]))
  )
+
+(defcomponent :val-max {:widget :text-field :schema (m/form val-max-schema)})
