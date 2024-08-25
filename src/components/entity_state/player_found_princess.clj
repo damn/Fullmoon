@@ -1,16 +1,15 @@
 (ns components.entity-state.player-found-princess
-  (:require [core.component :refer [defcomponent]]
-            [core.context :as ctx]
-            [core.entity-state :as state]))
+  (:require [core.component :as component :refer [defcomponent]]
+            [core.context :as ctx]))
 
 (defcomponent :player-found-princess
-  (state/player-enter [_]
+  (component/player-enter [_]
     [[:tx.context.cursor/set :cursors/black-x]])
 
-  (state/pause-game? [_]
+  (component/pause-game? [_]
     true)
 
-  (state/enter [_ _ctx]
+  (component/enter [_ _ctx]
     [[:tx/sound "sounds/bfxr_playerdeath.wav"]
      [:tx/player-modal {:title "YOU WON!"
                         :text "\nYou found the princess!"

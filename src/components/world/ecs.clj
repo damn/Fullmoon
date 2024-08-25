@@ -5,8 +5,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.graphics :as g]
-            [core.entity :as entity :refer [map->Entity]]
-            [core.effect :as effect]))
+            [core.entity :as entity :refer [map->Entity]]))
 
 (def ^:private this :world/ecs)
 
@@ -18,11 +17,11 @@
 
 (defcomponent :entity/uid
   {:let uid}
-  (entity/create [_ entity ctx]
+  (component/create-e [_ entity ctx]
     (assert (number? uid))
     (update ctx this assoc uid entity))
 
-  (entity/destroy [_ _entity ctx]
+  (component/destroy-e [_ _entity ctx]
     (assert (contains? (entities ctx) uid))
     (update ctx this dissoc uid)))
 
@@ -31,11 +30,11 @@
     (swap! cnt inc)))
 
 (defcomponent :entity/id
-  (entity/create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
-  (entity/destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
+  (component/create-e  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
+  (component/destroy-e [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
 
 (defcomponent :tx/create
-  (effect/do! [[_ body components] ctx]
+  (component/do! [[_ body components] ctx]
     (assert (and (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
     (let [entity (atom nil)
@@ -49,12 +48,12 @@
       [(fn create-entity [ctx]
          (for [component @entity]
            (fn [ctx]
-             ; we are assuming components dont remove other ones at entity/create
+             ; we are assuming components dont remove other ones at component/create-e
              ; thats why we reuse component and not fetch each time again for key
-             (entity/create component entity ctx))))])))
+             (component/create-e component entity ctx))))])))
 
 (defcomponent :tx/destroy
-  (effect/do! [[_ entity] ctx]
+  (component/do! [[_ entity] ctx]
     [[:tx.entity/assoc entity :entity/destroyed? true]]))
 
 (def ^:private ^:dbg-flag show-body-bounds false)
@@ -82,7 +81,7 @@
              ; should be moved together?
              (if-let [v (k @entity)]
                (let [component [k v]]
-                 (ctx/do! ctx (entity/tick component entity ctx)))
+                 (ctx/do! ctx (component/tick component entity ctx)))
                ctx))
            ctx
            (keys @entity))
@@ -106,7 +105,7 @@
                            (sort-by-order (group-by :z-order entities*)
                                           first
                                           entity/render-order))
-            system entity/render-systems
+            system component/render-systems
             entity* entities*]
       (render-entity* system entity* g context)))
 
@@ -114,32 +113,32 @@
     (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
           component @entity]
       (fn [ctx]
-        (entity/destroy component entity ctx)))))
+        (component/destroy-e component entity ctx)))))
 
 (defcomponent :tx.entity/assoc
-  (effect/do! [[_ entity k v] ctx]
+  (component/do! [[_ entity k v] ctx]
     (assert (keyword? k))
     (swap! entity assoc k v)
     ctx))
 
 (defcomponent :tx.entity/assoc-in
-  (effect/do! [[_ entity ks v] ctx]
+  (component/do! [[_ entity ks v] ctx]
     (swap! entity assoc-in ks v)
     ctx))
 
 (defcomponent :tx.entity/dissoc
-  (effect/do! [[_ entity k] ctx]
+  (component/do! [[_ entity k] ctx]
     (assert (keyword? k))
     (swap! entity dissoc k)
     ctx))
 
 (defcomponent :tx.entity/dissoc-in
-  (effect/do! [[_ entity ks] ctx]
+  (component/do! [[_ entity ks] ctx]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     ctx))
 
 (defcomponent :tx.entity/update-in
-  (effect/do! [[_ entity ks f] ctx]
+  (component/do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))

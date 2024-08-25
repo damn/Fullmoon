@@ -1,8 +1,7 @@
 (ns core.val-max
   (:require [clojure.string :as str]
             [malli.core :as m]
-            [core.component :refer [defcomponent]]
-            [core.operation :as op]))
+            [core.component :as component :refer [defcomponent]]))
 
 (def val-max-schema
   (m/schema [:and
@@ -40,17 +39,17 @@
  )
 
 (defcomponent :op/val-max
-  (op/value-text [[op-k value]]
+  (component/value-text [[op-k value]]
     (let [[val-or-max op-k] (val-max-op-k->parts op-k)]
-      (str (op/value-text [op-k value]) " " (case val-or-max
+      (str (component/value-text [op-k value]) " " (case val-or-max
                                               :val "Minimum"
                                               :max "Maximum"))))
 
 
-  (op/apply [[operation-k value] val-max]
+  (component/apply [[operation-k value] val-max]
     (assert (m/validate val-max-schema val-max) (pr-str val-max))
     (let [[val-or-max op-k] (val-max-op-k->parts operation-k)
-          f #(op/apply [op-k value] %)
+          f #(component/apply [op-k value] %)
           [v mx] (update val-max (case val-or-max :val 0 :max 1) f)
           v  (->pos-int v)
           mx (->pos-int mx)
@@ -60,9 +59,9 @@
       (assert (m/validate val-max-schema vmx))
       vmx))
 
-  (op/order [[op-k value]]
+  (component/order [[op-k value]]
     (let [[_ op-k] (val-max-op-k->parts op-k)]
-      (op/order [op-k value]))))
+      (component/order [op-k value]))))
 
 (defcomponent :op/val-inc {:schema :int?})
 (derive       :op/val-inc :op/val-max)
@@ -78,10 +77,10 @@
 
 (comment
  (and
-  (= (op/apply [:op/val-inc 30]    [5 10]) [35 35])
-  (= (op/apply [:op/max-mult -0.5] [5 10]) [5 5])
-  (= (op/apply [:op/val-mult 2]    [5 10]) [15 15])
-  (= (op/apply [:op/val-mult 1.3]  [5 10]) [11 11])
-  (= (op/apply [:op/max-mult -0.8] [5 10]) [1 1])
-  (= (op/apply [:op/max-mult -0.9] [5 10]) [0 0]))
+  (= (component/apply [:op/val-inc 30]    [5 10]) [35 35])
+  (= (component/apply [:op/max-mult -0.5] [5 10]) [5 5])
+  (= (component/apply [:op/val-mult 2]    [5 10]) [15 15])
+  (= (component/apply [:op/val-mult 1.3]  [5 10]) [11 11])
+  (= (component/apply [:op/max-mult -0.8] [5 10]) [1 1])
+  (= (component/apply [:op/max-mult -0.9] [5 10]) [0 0]))
  )

@@ -9,7 +9,6 @@
             [data.grid2d :as grid2d]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.maps.tiled :as tiled]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
@@ -87,7 +86,7 @@
   (world-grid  [ctx]  (:world/grid         ctx)))
 
 (defcomponent :tx/add-to-world
-  (effect/do! [[_ entity] ctx]
+  (component/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     ; hmm
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
@@ -95,13 +94,13 @@
     ctx))
 
 (defcomponent :tx/remove-from-world
-  (effect/do! [[_ entity] ctx]
+  (component/do! [[_ entity] ctx]
     (content-grid/remove-entity! (ctx/content-grid ctx) entity)
     (world-grid/remove-entity! (ctx/world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/position-changed
-  (effect/do! [[_ entity] ctx]
+  (component/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))

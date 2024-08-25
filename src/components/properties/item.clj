@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.data :as data]
-            [core.effect :as effect]
             [core.modifiers :as modifiers]))
 
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
@@ -45,7 +44,7 @@
 
 ; TODO use image w. shadows spritesheet
 (defcomponent :tx.entity/item
-  (effect/do! [[_ position item] _ctx]
+  (component/do! [[_ position item] _ctx]
     (assert (:property/image item))
     [[:tx/create
       {:position position

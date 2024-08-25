@@ -1,19 +1,17 @@
 (ns components.entity.line-render
-  (:require [core.component :refer [defcomponent]]
-            [core.graphics :as g]
-            [core.entity :as entity]
-            [core.effect :as effect]))
+  (:require [core.component :as component :refer [defcomponent]]
+            [core.graphics :as g]))
 
 (defcomponent :entity/line-render
   {:let {:keys [thick? end color]}}
-  (entity/render-default [_ entity* g _ctx]
+  (component/render-default [_ entity* g _ctx]
     (let [position (:position entity*)]
       (if thick?
         (g/with-shape-line-width g 4 #(g/draw-line g position end color))
         (g/draw-line g position end color)))))
 
 (defcomponent :tx.entity/line-render
-  (effect/do! [[_ {:keys [start end duration color thick?]}] _ctx]
+  (component/do! [[_ {:keys [start end duration color thick?]}] _ctx]
     [[:tx/create
       {:position start
        :width 0.5

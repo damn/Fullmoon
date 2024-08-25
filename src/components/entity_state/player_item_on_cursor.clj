@@ -5,7 +5,6 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
-            [core.entity-state :as state]
             [core.graphics :as g]
             [core.inventory :as inventory]))
 
@@ -66,22 +65,22 @@
     {:eid eid
      :item item})
 
-  (state/pause-game? [_]
+  (component/pause-game? [_]
     true)
 
-  (state/manual-tick [_ ctx]
+  (component/manual-tick [_ ctx]
     (when (and (input/button-just-pressed? buttons/left)
                (world-item? ctx))
       [[:tx/event eid :drop-item]]))
 
-  (state/clicked-inventory-cell [_ cell]
+  (component/clicked-inventory-cell [_ cell]
     (clicked-cell @eid cell))
 
-  (state/enter [_ _ctx]
+  (component/enter [_ _ctx]
     [[:tx.context.cursor/set :cursors/hand-grab]
      [:tx.entity/assoc eid :entity/item-on-cursor item]])
 
-  (state/exit [_ ctx]
+  (component/exit [_ ctx]
     ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
@@ -92,7 +91,7 @@
          [:tx.entity/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
          [:tx.entity/dissoc eid :entity/item-on-cursor]])))
 
-  (entity/render-below [_ entity* g ctx]
+  (component/render-below [_ entity* g ctx]
     (when (world-item? ctx)
       (g/draw-centered-image g (:property/image item) (item-place-position ctx entity*)))))
 

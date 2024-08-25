@@ -1,10 +1,9 @@
 (ns components.widgets.action-bar
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [->image-button player-tooltip-text]]
             [core.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [core.scene2d.group :refer [clear-children! add-actor!]]
-            [core.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]
-            [core.effect :as effect]))
+            [core.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
 
 (defn ->build [ctx]
   (let [group (ctx/->horizontal-group ctx {:pad 2 :space 2})]
@@ -20,7 +19,7 @@
    :button-group (:action-bar (:world/widgets ctx))})
 
 (defcomponent :tx.context.action-bar/add-skill
-  (effect/do! [[_ {:keys [property/id property/image] :as skill}] ctx]
+  (component/do! [[_ {:keys [property/id property/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (->image-button ctx image identity {:dimensions [48 48]})]
       (actor/set-id! button id)
@@ -30,7 +29,7 @@
       ctx)))
 
 (defcomponent :tx.context.action-bar/remove-skill
-  (effect/do! [[_ {:keys [property/id]}] ctx]
+  (component/do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
       (remove! button)

@@ -1,8 +1,7 @@
 (ns components.entity.destroy-audiovisual
-  (:require [core.component :refer [defcomponent]]
-            [core.entity :as entity]))
+  (:require [core.component :as component :refer [defcomponent]]))
 
 (defcomponent :entity/destroy-audiovisual
   {:let audiovisuals-id}
-  (entity/destroy [_ entity ctx]
+  (component/destroy-e [_ entity ctx]
     [[:tx.entity/audiovisual (:position @entity) audiovisuals-id]]))

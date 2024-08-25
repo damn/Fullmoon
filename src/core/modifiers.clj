@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [gdx.graphics.color :as color]
             [utils.core :refer [k->pretty-name]]
-            [core.operation :as op]))
+            [core.operation :as operation]))
 
 (com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
                                       color/cyan
@@ -24,5 +24,5 @@
        (str/join "\n"
                  (for [[modifier-k operations] modifiers
                        operation operations]
-                   (str (op/info-text operation) " " (k->pretty-name modifier-k))))
+                   (str (operation/info-text operation) " " (k->pretty-name modifier-k))))
        "[]"))

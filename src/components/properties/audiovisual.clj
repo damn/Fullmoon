@@ -1,8 +1,7 @@
 (ns components.properties.audiovisual
   (:require [core.component :as component :refer [defcomponent]]
             [core.data :as data]
-            [core.context :as ctx]
-            [core.effect :as effect]))
+            [core.context :as ctx]))
 
 (defcomponent :properties/audiovisual
   (component/create [_ _ctx]
@@ -18,7 +17,7 @@
      }))
 
 (defcomponent :tx.entity/audiovisual
-  (effect/do! [[_ position id] ctx]
+  (component/do! [[_ position id] ctx]
     ; assert property of type audiovisual
     (let [{:keys [property/sound
                   property/animation]} (ctx/get-property ctx id)]

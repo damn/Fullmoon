@@ -6,8 +6,7 @@
             [gdx.files :as files]
             [gdx.files.file-handle :as file-handle]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
-            [core.effect :as effect]))
+            [core.context :as ctx]))
 
 (defn- recursively-search-files [folder extensions]
   (loop [[file & remaining] (file-handle/list (files/internal folder))
@@ -69,6 +68,6 @@
 
 (defcomponent :tx/sound
   {:let file}
-  (effect/do! [_ ctx]
+  (component/do! [_ ctx]
     (ctx/play-sound! ctx file)
     ctx))

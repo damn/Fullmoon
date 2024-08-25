@@ -2,9 +2,7 @@
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
-            [core.effect :as effect]
             [core.entity :as entity]
-            [core.entity-state :as state]
             [core.world.cell :as cell]))
 
 (defn- nearest-enemy [ctx entity*]
@@ -27,9 +25,9 @@
 ; usable?
 (defn- useful? [ctx effects]
   ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter #(effect/applicable? % ctx) effects)
+  (let [applicable-effects (filter #(component/applicable? % ctx) effects)
         ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some #(effect/useful? % ctx) applicable-effects)]
+        useful-effect (some #(component/useful? % ctx) applicable-effects)]
     ;(println "Useful: " useful-effect)
     useful-effect))
 
@@ -56,7 +54,7 @@
   (component/create [[_ eid] _ctx]
     {:eid eid})
 
-  (entity/tick [_ eid ctx]
+  (component/tick [_ eid ctx]
     (let [entity* @eid
           effect-ctx (->effect-ctx ctx entity*)]
       (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]

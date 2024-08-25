@@ -2,9 +2,7 @@
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
-            [core.effect :as effect]
             [core.entity :as entity]
-            [core.entity-state :as state]
             [core.graphics :as g]))
 
 ; SCHEMA effect-ctx
@@ -30,10 +28,10 @@
 ; and dissoc-ks (keys of extra-ctx)
 ; its a more general thing than tx/effect
 (defcomponent :tx/effect
-  (effect/do! [[_ effect-ctx effects] ctx]
+  (component/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
+        (ctx/do! (filter #(component/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?
@@ -112,20 +110,20 @@
                    (apply-action-speed-modifier @eid skill)
                    (->counter ctx))})
 
-  (state/player-enter [_]
+  (component/player-enter [_]
     [[:tx.context.cursor/set :cursors/sandclock]])
 
-  (state/pause-game? [_]
+  (component/pause-game? [_]
     false)
 
-  (state/enter [_ ctx]
+  (component/enter [_ ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
        [:tx.entity/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (entity/tick [_ eid context]
+  (component/tick [_ eid context]
     (cond
      (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
@@ -136,7 +134,7 @@
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (entity/render-info [_ entity* g ctx]
+  (component/render-info [_ entity* g ctx]
     (let [{:keys [property/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
-      (run! #(effect/render-info % g (merge ctx effect-ctx)) effects))))
+      (run! #(component/render % g (merge ctx effect-ctx)) effects))))

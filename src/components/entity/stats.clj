@@ -6,11 +6,10 @@
             [utils.random :as random]
             [core.val-max :refer [val-max-schema val-max-ratio lower-than-max? set-to-max]]
             [core.component :as component :refer [defcomponent]]
-            [core.effect :as effect]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.modifiers :as modifiers]
-            [core.operation :as op]))
+            [core.operation :as operation]
+            [core.modifiers :as modifiers]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -38,11 +37,11 @@
  )
 
 (defcomponent :tx/apply-modifiers
-  (effect/do! [[_ entity modifiers] _ctx]
+  (component/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers conj-value)))
 
 (defcomponent :tx/reverse-modifiers
-  (effect/do! [[_ entity modifiers] _ctx]
+  (component/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
 ; DRY ->effective-value (summing)
@@ -66,9 +65,9 @@
   (->> stats
        :stats/modifiers
        modifier-k
-       (sort-by op/order)
+       (sort-by component/order)
        (reduce (fn [base-value [operation-k values]]
-                 (op/apply [operation-k (apply + values)] base-value))
+                 (component/apply [operation-k (apply + values)] base-value))
                base-value)))
 
 (comment
@@ -157,22 +156,22 @@
 ; is called ::stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
 ; for :skill/effects
 (defcomponent ::stat-effect
-  (effect/text [[k operations] _effect-ctx]
+  (component/text [[k operations] _effect-ctx]
     (str/join "\n"
               (for [operation operations]
-                (str (op/info-text operation) " " (k->pretty-name k)))))
+                (str (operation/info-text operation) " " (k->pretty-name k)))))
 
-  (effect/applicable? [[k _] {:keys [effect/target]}]
+  (component/applicable? [[k _] {:keys [effect/target]}]
     (and target
          (entity/stat @target (effect-k->stat-k k))))
 
-  (effect/useful? [_ _effect-ctx] true)
+  (component/useful? [_ _effect-ctx] true)
 
-  (effect/do! [[effect-k operations] {:keys [effect/target]}]
+  (component/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx.entity/assoc-in target [:entity/stats stat-k]
-          (reduce (fn [value operation] (op/apply operation value))
+          (reduce (fn [value operation] (component/apply operation value))
                   effective-value
                   operations)]]))))
 
@@ -294,10 +293,10 @@
          "\n"
          (stats-modifiers-info-text (:stats/modifiers stats))))
 
-  (entity/render-info [_
-                       {:keys [width half-width half-height entity/mouseover?] :as entity*}
-                       g
-                       _ctx]
+  (component/render-info [_
+                          {:keys [width half-width half-height entity/mouseover?] :as entity*}
+                          g
+                          _ctx]
     (when-let [hp (entity/stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
             [x y] (:position entity*)]
@@ -315,7 +314,7 @@
                                      (hpbar-color ratio))))))))
 
 (defcomponent :tx.entity.stats/pay-mana-cost
-  (effect/do! [[_ entity cost] _ctx]
+  (component/do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
       [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
@@ -325,23 +324,23 @@
        entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
-   (= (effect/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+   (= (component/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
 
 ; breaks with defcomponent because the sys-impls are not a list but a 'cons'
-#_(defcomponent ::effect/stats-mana-set-to-max {:widget :label
+#_(defcomponent :effect/stats-mana-set-to-max {:widget :label
                                               :schema [:= true]
                                               :default-value true}
-  (effect/text [_ _effect-ctx]
+  (component/text [_ _effect-ctx]
     (str "Sets " (name stat) " to max."))
 
-  (effect/applicable? ~'[_ _effect-ctx] true)
+  (component/applicable? ~'[_ _effect-ctx] true)
 
-  (effect/useful? ~'[_ {:keys [effect/source]}]
+  (component/useful? ~'[_ {:keys [effect/source]}]
     (lower-than-max? (~stat (:entity/stats @~'source))))
 
-  (effect/do! ~'[_ {:keys [effect/source]}]
+  (component/do! ~'[_ {:keys [effect/source]}]
     [[:tx/sound "sounds/bfxr_click.wav"]
      [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))
 
@@ -360,16 +359,16 @@
 
 (defcomponent :effect/melee-damage
   {:schema :some}
-  (effect/text [_ {:keys [effect/source] :as effect-ctx}]
+  (component/text [_ {:keys [effect/source] :as effect-ctx}]
     (str "Damage based on entity strength."
          (when source
-           (str "\n" (effect/text (damage-effect effect-ctx)
+           (str "\n" (component/text (damage-effect effect-ctx)
                                   effect-ctx)))))
 
-  (effect/applicable? [_ effect-ctx]
-    (effect/applicable? (damage-effect effect-ctx) effect-ctx))
+  (component/applicable? [_ effect-ctx]
+    (component/applicable? (damage-effect effect-ctx) effect-ctx))
 
-  (effect/do! [_ ctx]
+  (component/do! [_ ctx]
     [(damage-effect ctx)]))
 
 (defn- effective-armor-save [source* target*]
@@ -419,7 +418,7 @@
 (defcomponent :effect/damage
   {:let damage
    :schema [:map :damage/min-max]}
-  (effect/text [_ {:keys [effect/source]}]
+  (component/text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
@@ -427,11 +426,11 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (effect/applicable? [_ {:keys [effect/target]}]
+  (component/applicable? [_ {:keys [effect/target]}]
     (and target
          (entity/stat @target :stats/hp)))
 
-  (effect/do! [_ {:keys [effect/source effect/target]}]
+  (component/do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]

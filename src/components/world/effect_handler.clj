@@ -3,8 +3,7 @@
             core.image
             core.animation
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
-            [core.effect :as effect]))
+            [core.context :as ctx]))
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -64,7 +63,7 @@
 (defn- handle-tx! [ctx tx]
   (let [result (if (fn? tx)
                  (tx ctx)
-                 (effect/do! tx ctx))]
+                 (component/do! tx ctx))]
     (if (map? result) ; probably faster than (instance? core.context.Context result)
       (do
        (tx-happened! tx ctx)
@@ -96,8 +95,8 @@
 
   (effect-text [ctx effects]
     (->> effects
-         (keep #(effect/text % ctx))
+         (keep #(component/text % ctx))
          (str/join "\n")))
 
   (effect-applicable? [ctx effects]
-    (some #(effect/applicable? % ctx) effects)))
+    (some #(component/applicable? % ctx) effects)))

@@ -1,12 +1,11 @@
 (ns components.widgets.player-message
   (:require [gdx.graphics :as graphics]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [->actor]]
-            [core.graphics :as g]
-            [core.effect :as effect]))
+            [core.graphics :as g]))
 
 (defcomponent :tx/msg-to-player
-  (effect/do! [[_ message] ctx]
+  (component/do! [[_ message] ctx]
     (assoc ctx ::msg {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)

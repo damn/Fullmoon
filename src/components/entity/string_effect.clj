@@ -1,16 +1,15 @@
 (ns components.entity.string-effect
-  (:require [core.component :refer [defcomponent]]
-            [core.graphics :as g]
-            [core.context :refer [->counter stopped? reset]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.effect :as effect]))
+            [core.graphics :as g]
+            [core.context :refer [->counter stopped? reset]]))
 
 (defcomponent :entity/string-effect
-  (entity/tick [[k {:keys [counter]}] eid context]
+  (component/tick [[k {:keys [counter]}] eid context]
     (when (stopped? context counter)
       [[:tx.entity/dissoc eid k]]))
 
-  (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
+  (component/render-above [[_ {:keys [text]}] entity* g _ctx]
     (let [[x y] (:position entity*)]
       (g/draw-text g
                    {:text text
@@ -20,7 +19,7 @@
                     :up? true}))))
 
 (defcomponent :tx/add-text-effect
-  (effect/do! [[_ entity text] ctx]
+  (component/do! [[_ entity text] ctx]
     [[:tx.entity/assoc
       entity
       :entity/string-effect

@@ -1,4 +1,5 @@
-(ns core.component)
+(ns core.component
+  (:refer-clojure :exclude [apply]))
 
 ; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override true)
@@ -92,6 +93,104 @@
 (defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
 
+;; TX/Effect
+
+; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
+; when returning a 'map?'
+
+; 2. return seq of txs -> those txs will be done recursively
+; 2.1 also seq of fns wih [ctx] param can be passed.
+
+; 3. return nil in case of doing nothing -> will just continue with existing ctx.
+
+; do NOT do a ctx/do! inside a effect/do! because then we have to return a context
+; and that means that transaction will be recorded and done double with all the sub-transactions
+; in the replay mode
+; we only want to record actual side effects, not transactions returning other lower level transactions
+(defsystem do! [_ ctx])
+
+;; Effect
+
+(defsystem text [_ ctx]) ; TODO duplicated
+
+(defsystem applicable? [_ ctx])
+
+(defsystem useful? [_ ctx])
+(defmethod useful? :default [_ ctx] true)
+
+(defsystem render [_ g ctx])
+(defmethod render :default [_ g ctx])
+
+;; State
+(defsystem enter [_ ctx])
+(defmethod enter :default [_ ctx])
+
+(defsystem exit  [_ ctx])
+(defmethod exit :default  [_ ctx])
+
+;; Player-State
+
+(defsystem player-enter [_])
+(defmethod player-enter :default [_])
+
+(defsystem pause-game? [_])
+(defmethod pause-game? :default [_])
+
+(defsystem manual-tick [_ ctx])
+(defmethod manual-tick :default [_ ctx])
+
+(defsystem clicked-inventory-cell [_ cell])
+(defmethod clicked-inventory-cell :default [_ cell])
+
+(defsystem clicked-skillmenu-skill [_ skill])
+(defmethod clicked-skillmenu-skill :default [_ skill])
+
+;; Operation
+
+(defsystem value-text [_])
+(defsystem apply [_ base-value])
+(defsystem order [_])
+
+;; Entity
+
+(defsystem create-e [_ entity ctx])
+(defmethod create-e :default [_ entity ctx])
+
+(defsystem destroy-e [_ entity ctx])
+(defmethod destroy-e :default [_ entity ctx])
+
+(defsystem tick [_ entity ctx])
+(defmethod tick :default [_ entity ctx])
+
+; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
+; actually we dont want this to be called over that
+; it should be :components? then ?
+; => shouldn't need default fns for render -> don't call it if its not there
+
+; every component has parent-entity-id (peid)
+; fetch active entity-ids
+; then fetch all components which implement render-below
+; and have parent-id in entity-ids, etc.
+
+(defsystem render-below [_ entity* g ctx])
+(defmethod render-below :default [_ entity* g ctx])
+
+(defsystem render-default [_ entity* g ctx])
+(defmethod render-default :default [_ entity* g ctx])
+
+(defsystem render-above [_ entity* g ctx])
+(defmethod render-above :default [_ entity* g ctx])
+
+(defsystem render-info [_ entity* g ctx])
+(defmethod render-info :default [_ entity* g ctx])
+
+(def render-systems [render-below
+                     render-default
+                     render-above
+                     render-info])
+
+;;
+
 (defn create-all [components ctx]
   (assert (map? ctx))
   (reduce (fn [m [k v]]
@@ -122,7 +221,7 @@
 ; this has to work ... shit !
 
 (defn load! [components & {:keys [log?]}]
-  (assert (apply distinct? (map first components)))
+  (assert (clojure.core/apply distinct? (map first components)))
   (doseq [[k _] components
           :let [component-ns (k->component-ns k)]]
     (when log? (println "require " component-ns))

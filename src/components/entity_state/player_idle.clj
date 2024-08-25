@@ -7,7 +7,6 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
             [core.entity :as entity]
-            [core.entity-state :as state]
             [core.graphics :as g]
             [core.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.scene2d.ui.button :refer [button?]]
@@ -137,10 +136,10 @@
   (component/create [[_ eid] _ctx]
     {:eid eid})
 
-  (state/pause-game? [_]
+  (component/pause-game? [_]
     true)
 
-  (state/manual-tick [_ ctx]
+  (component/manual-tick [_ ctx]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state ctx @eid)]
@@ -148,14 +147,14 @@
               (when (input/button-just-pressed? buttons/left)
                 (on-click))))))
 
-  (state/clicked-inventory-cell [_ cell]
+  (component/clicked-inventory-cell [_ cell]
     ; TODO no else case
     (when-let [item (get-in (:entity/inventory @eid) cell)]
       [[:tx/sound "sounds/bfxr_takeit.wav"]
        [:tx/event eid :pickup-item item]
        [:tx/remove-item eid cell]]))
 
-  (state/clicked-skillmenu-skill [_ skill]
+  (component/clicked-skillmenu-skill [_ skill]
     (let [free-skill-points (:entity/free-skill-points @eid)]
       ; TODO no else case, no visible free-skill-points
       (when (and (pos? free-skill-points)

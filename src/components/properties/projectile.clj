@@ -4,7 +4,6 @@
             [core.component :refer [defcomponent] :as component]
             [core.data :as data]
             [core.context :as ctx]
-            [core.effect :as effect]
             [core.entity :as entity]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
@@ -38,7 +37,7 @@
   (first (:world-unit-dimensions (:property/image projectile-property))))
 
 (defcomponent :tx.entity/projectile
-  (effect/do! [[_ projectile-id {:keys [position direction faction]}]
+  (component/do! [[_ projectile-id {:keys [position direction faction]}]
                 ctx]
     (let [{:keys [property/image
                   projectile/max-range
@@ -71,15 +70,15 @@
 ; or we adjust the effect when we send it ....
 (defcomponent :effect/projectile
   {:schema [:qualified-keyword {:namespace :projectiles}]}
-  (effect/text [[_ projectile-id] ctx]
+  (component/text [[_ projectile-id] ctx]
     (ctx/effect-text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
 
   ; TODO for npcs need target -- anyway only with direction
-  (effect/applicable? [_ {:keys [effect/direction]}]
+  (component/applicable? [_ {:keys [effect/direction]}]
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (effect/useful? [[_ projectile-id] {:keys [effect/source effect/target] :as ctx}]
+  (component/useful? [[_ projectile-id] {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (:position @source)
           target-p (:position @target)
           prop (ctx/get-property ctx projectile-id)]
@@ -92,7 +91,7 @@
                           target-p)
               (:projectile/max-range prop)))))
 
-  (effect/do! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
+  (component/do! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx.entity/projectile
       projectile-id

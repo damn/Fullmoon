@@ -1,10 +1,9 @@
 (ns components.entity.movement
   (:require [malli.core :as m]
             [math.vector :as v]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.world.cell :as cell]
             [core.world.grid :as world-grid]))
 
@@ -47,7 +46,7 @@
 
 (defcomponent :entity/movement
   {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
-  (entity/tick [_ eid ctx]
+  (component/tick [_ eid ctx]
     (assert (m/validate entity/movement-speed-schema speed))
     (assert (or (zero? (v/length direction))
                 (v/normalised? direction)))
@@ -66,7 +65,7 @@
            [:tx/position-changed eid]])))))
 
 (defcomponent :tx.entity/set-movement
-  (effect/do! [[_ entity movement] ctx]
+  (component/do! [[_ entity movement] ctx]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...

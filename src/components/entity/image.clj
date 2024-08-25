@@ -1,11 +1,10 @@
 (ns components.entity.image
-  (:require [core.component :refer [defcomponent]]
-            [core.graphics :as g]
-            [core.entity :as entity]))
+  (:require [core.component :as component :refer [defcomponent]]
+            [core.graphics :as g]))
 
 (defcomponent :entity/image
   {:let image}
-  (entity/render-default [_ entity* g _ctx]
+  (component/render-default [_ entity* g _ctx]
     (g/draw-rotated-centered-image g
                                    image
                                    (or (:rotation-angle entity*) 0)

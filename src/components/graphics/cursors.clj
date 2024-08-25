@@ -3,9 +3,8 @@
             [gdx.graphics :as graphics]
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :as utils :refer [mapvals]]
-            [core.component :refer [defcomponent]]
-            [core.context :as ctx]
-            [core.effect :as effect]))
+            [core.component :as component :refer [defcomponent]]
+            [core.context :as ctx]))
 
 (defn- ->cursor [file hotspot]
   (let [pixmap (graphics/->pixmap (files/internal file))
@@ -24,6 +23,6 @@
     (graphics/set-cursor (utils/safe-get (:cursors g) cursor-key))))
 
 (defcomponent :tx.context.cursor/set
-  (effect/do! [[_ cursor-key] ctx]
+  (component/do! [[_ cursor-key] ctx]
     (ctx/set-cursor! ctx cursor-key)
     ctx))

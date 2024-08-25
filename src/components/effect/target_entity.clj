@@ -1,9 +1,8 @@
 (ns components.effect.target-entity
   (:require [math.vector :as v]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.context :as ctx]
-            [core.effect :as effect]
             [core.entity :as entity]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
@@ -37,20 +36,20 @@
                    :max-range 2.0}
    :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
         Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
-  (effect/text [_ ctx]
+  (component/text [_ ctx]
     (str "Range " maxrange " meters\n"
          (ctx/effect-text ctx hit-effects)))
 
-  (effect/applicable? [_ {:keys [effect/target] :as ctx}]
+  (component/applicable? [_ {:keys [effect/target] :as ctx}]
     (and target
          (ctx/effect-applicable? ctx hit-effects)))
 
-  (effect/useful? [_ {:keys [effect/source effect/target]}]
+  (component/useful? [_ {:keys [effect/source effect/target]}]
     (assert source)
     (assert target)
     (in-range? @source @target maxrange))
 
-  (effect/do! [_ {:keys [effect/source effect/target]}]
+  (component/do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -71,7 +70,7 @@
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx.entity/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (effect/render-info [_ g {:keys [effect/source effect/target]}]
+  (component/render [_ g {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (g/draw-line g

@@ -1,9 +1,8 @@
 (ns components.entity.inventory
   (:require [utils.core :refer [find-first]]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :refer [get-property]]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.inventory :as inventory]))
 
 (defn- set-item [{:keys [entity/id] :as entity*} cell item]
@@ -26,11 +25,11 @@
        [:tx/remove-item-from-widget cell])]))
 
 (defcomponent :tx/set-item
-  (effect/do! [[_ entity cell item] _ctx]
+  (component/do! [[_ entity cell item] _ctx]
     (set-item @entity cell item)))
 
 (defcomponent :tx/remove-item
-  (effect/do! [[_ entity cell] _ctx]
+  (component/do! [[_ entity cell] _ctx]
     (remove-item @entity cell)))
 
 ; TODO doesnt exist, stackable, usable items with action/skillbar thingy
@@ -55,7 +54,7 @@
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
 (defcomponent :tx/stack-item
-  (effect/do! [[_ entity cell item] _ctx]
+  (component/do! [[_ entity cell item] _ctx]
     (stack-item @entity cell item)))
 
 (defn- try-put-item-in [entity* slot item]
@@ -75,7 +74,7 @@
    (try-put-item-in entity* :inventory.slot/bag item)))
 
 (defcomponent :tx/pickup-item
-  (effect/do! [[_ entity item] _ctx]
+  (component/do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
 (extend-type core.entity.Entity
@@ -86,7 +85,7 @@
 (defcomponent :entity/inventory
   {:schema [:one-to-many-ids :properties/item]
    :let item-ids}
-  (entity/create [_ eid context]
+  (component/create-e [_ eid context]
     (cons [:tx.entity/assoc eid :entity/inventory inventory/empty-inventory]
           (for [item-id item-ids]
             [:tx/pickup-item eid (get-property context item-id)]))))

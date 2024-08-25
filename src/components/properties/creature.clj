@@ -5,7 +5,6 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.data :as data]
-            [core.effect :as effect]
             [core.entity :as entity]))
 
 (defcomponent :entity.creature/name
@@ -142,26 +141,26 @@
 (defcomponent :effect/stun
   {:schema :pos?
    :let duration}
-  (effect/text [_ _effect-ctx]
+  (component/text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (effect/applicable? [_ {:keys [effect/target]}]
+  (component/applicable? [_ {:keys [effect/target]}]
     (and target
          (:entity/state @target)))
 
-  (effect/do! [_ {:keys [effect/target]}]
+  (component/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect/kill
   {:schema :some}
-  (effect/text [_ _effect-ctx]
+  (component/text [_ _effect-ctx]
     "Kills target")
 
-  (effect/applicable? [_ {:keys [effect/source effect/target]}]
+  (component/applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (:entity/state @target)))
 
-  (effect/do! [_ {:keys [effect/target]}]
+  (component/do! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))
 
 ; TODO @ properties.creature set optional/obligatory .... what is needed ???
@@ -206,7 +205,7 @@
 ; otherwise
 
 (defcomponent :tx.entity/creature
-  (effect/do! [[_ creature-id components] ctx]
+  (component/do! [[_ creature-id components] ctx]
     (assert (:entity/state components))
     (let [props (ctx/get-property ctx creature-id)
           creature-components (:creature/entity props)]
@@ -232,7 +231,7 @@
 
  (set! *print-level* nil)
  (clojure.pprint/pprint
-  (effect/do! [:tx.entity/creature :creatures/vampire {:entity/position [1 2]
+  (component/do! [:tx.entity/creature :creatures/vampire {:entity/position [1 2]
                                                        :entity/state [:state/npc :npc-sleeping]}]
               (reify core.context/PropertyStore
                 (get-property [_ id]
@@ -270,16 +269,16 @@
 (defcomponent :effect/spawn
   {:schema [:qualified-keyword {:namespace :creatures}]
    :let creature-id}
-  (effect/text [_ _effect-ctx]
+  (component/text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))
 
-  (effect/applicable? [_ {:keys [effect/source effect/target-position]}]
+  (component/applicable? [_ {:keys [effect/source effect/target-position]}]
     ; TODO line of sight ? / not blocked tile..
     ; (part of target-position make)
     (and (:entity/faction @source)
          target-position))
 
-  (effect/do! [_ {:keys [effect/source effect/target-position]}]
+  (component/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx.entity/creature
       creature-id

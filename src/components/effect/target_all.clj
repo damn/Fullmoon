@@ -1,9 +1,8 @@
 (ns components.effect.target-all
   (:require [math.vector :as v]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.context :as ctx]
-            [core.effect :as effect]
             [core.entity :as entity]
             components.context.world))
 
@@ -32,17 +31,17 @@
 (defcomponent :effect/target-all
   {:schema :some #_[:map :hit-effects]
    :let {:keys [hit-effects]}}
-  (effect/text [_ ctx]
+  (component/text [_ ctx]
     (str "All visible targets:" (ctx/effect-text ctx hit-effects)))
 
-  (effect/applicable? [_ _ctx] true)
+  (component/applicable? [_ _ctx] true)
 
-  (effect/useful? [_ _ctx]
+  (component/useful? [_ _ctx]
     ; TODO
     false
     )
 
-  (effect/do! [_ {:keys [effect/source effect/target] :as ctx}]
+  (component/do! [_ {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source]
       (apply concat
              (for [target (all-targets ctx)]
@@ -59,7 +58,7 @@
                 ; find a way to pass ctx / effect-ctx separate ?
                 [:tx/effect {:effect/source source :effect/target target} hit-effects]]))))
 
-  (effect/render-info [_ g {:keys [effect/source effect/target] :as ctx}]
+  (component/render [_ g {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source]
       (doseq [target* (map deref (all-targets ctx))]
         (g/draw-line g

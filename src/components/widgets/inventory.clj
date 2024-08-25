@@ -2,12 +2,11 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
                                          player-tooltip-text]]
             [core.graphics :as g]
             [core.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [core.effect :as effect]
             [core.entity :as entity]
             [core.inventory :as inventory]
             app)
@@ -134,7 +133,7 @@
    :slot->background (:slot->background (:world/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget
-  (effect/do! [[_ cell item] ctx]
+  (component/do! [[_ cell item] ctx]
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)
@@ -145,7 +144,7 @@
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget
-  (effect/do! [[_ cell] ctx]
+  (component/do! [[_ cell] ctx]
     (let [{:keys [table slot->background]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)]

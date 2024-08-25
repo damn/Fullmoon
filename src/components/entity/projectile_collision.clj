@@ -1,6 +1,6 @@
 (ns components.entity.projectile-collision
-  (:require [core.component :as component :refer [defcomponent]]
-            [utils.core :refer [find-first]]
+  (:require [utils.core :refer [find-first]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [world-grid]]
             [core.entity :as entity]
             [core.world.grid :refer [rectangle->cells]]
@@ -18,7 +18,7 @@
          "[LIME]" (ctx/effect-text ctx hit-effects) "[]"))
 
   ; TODO probably belongs to body
-  (entity/tick [[k _] entity ctx]
+  (component/tick [[k _] entity ctx]
     ; TODO this could be called from body on collision
     ; for non-solid
     ; means non colliding with other entities
