@@ -13,27 +13,16 @@
 
 ; TODO HERE
 ; * unique max 16 modules, not random take @ #'floor->module-index, also special start, end modules, rare modules...
-; * at the beginning enemies very close, different area different spawn-rate !
-; beginning slow enemies low hp low dmg etc.
-; * flood-fill gets 8 neighbour posis -> no NADs on modules ! assert !
-; * assuming bottom left in floor module is walkable
-; whats the assumption here? => or put extra borders around? / assert!
 
-(comment
- (let [{:keys [start grid]} (->cave-grid :size 15)
-       _ (println "BASE GRID:\n")
-       _ (printgrid grid)
-       ;_ (println)
-       ;_ (println "WITH START POSITION (0) :\n")
-       ;_ (printgrid (assoc grid start 0))
-       ;_ (println "\nwidth:  " (grid/width  grid)
-       ;           "height: " (grid/height grid)
-       ;           "start " start "\n")
-       ;_ (println (grid/posis grid))
-       _ (println "\n\n")
-       filled (flood-fill grid start (fn [p] (= :ground (get grid p))))
-       _ (printgrid (reduce #(assoc %1 %2 nil) grid filled))])
- )
+; * at the beginning enemies very close, different area different spawn-rate !
+
+; beginning slow enemies low hp low dmg etc.
+
+; * flood-fill gets 8 neighbour posis -> no NADs on modules ! assert !
+
+; * assuming bottom left in floor module is walkable
+
+; whats the assumption here? => or put extra borders around? / assert!
 
 ; TODO generates 51,52. not max 50
 ; TODO can use different turn-ratio/depth/etc. params
@@ -139,6 +128,22 @@
              (concat filled next-positions)
              (assoc-ks grid next-positions nil))
       filled)))
+
+(comment
+ (let [{:keys [start grid]} (->cave-grid :size 15)
+       _ (println "BASE GRID:\n")
+       _ (printgrid grid)
+       ;_ (println)
+       ;_ (println "WITH START POSITION (0) :\n")
+       ;_ (printgrid (assoc grid start 0))
+       ;_ (println "\nwidth:  " (grid/width  grid)
+       ;           "height: " (grid/height grid)
+       ;           "start " start "\n")
+       ;_ (println (grid/posis grid))
+       _ (println "\n\n")
+       filled (flood-fill grid start (fn [p] (= :ground (get grid p))))
+       _ (printgrid (reduce #(assoc %1 %2 nil) grid filled))])
+ )
 
 ; can adjust:
 ; * split percentage , for higher level areas may scale faster (need to be more careful)
