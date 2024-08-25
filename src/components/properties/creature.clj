@@ -23,7 +23,7 @@
     ; TODO make px
     (defcomponent :property/bounds {:schema :some})
     (defcomponent :creature/species {:schema [:qualified-keyword {:namespace :species}]})
-    (defcomponent :creature/level {:schema [:maybe :pos-int?]})
+    (defcomponent :creature/level {:schema :pos-int?})
     (defcomponent :entity/flying? {:schema :boolean})
     (defcomponent :entity/reaction-time {:schema :pos?})
 

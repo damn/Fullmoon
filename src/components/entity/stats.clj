@@ -191,7 +191,7 @@
 
 ; TODO clamp between 0 and max-speed ( same as movement-speed-schema )
 (defstat :stats/movement-speed
-  {:schema (m/form entity/movement-speed-schema)
+  {:schema :pos?;(m/form entity/movement-speed-schema)
    :operations [:op/inc :op/mult]})
 
 ; TODO show the stat in different color red/green if it was permanently modified ?

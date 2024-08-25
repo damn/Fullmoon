@@ -1,6 +1,6 @@
 (ns core.data
   (:require [malli.core :as m]
-            [utils.core :as utils]
+            [utils.core :as utils :refer [safe-get]]
             [core.component :as component]
             [core.val-max :refer [val-max-schema]]))
 
@@ -19,6 +19,54 @@
 
 ; TODO its not schema but :data
 ; see :val-max / sound / image
+
+(def defs {})
+
+(defn defdata [k m]
+  (when (get defs k)
+    (println "WARNING: Overwriting defdata" k))
+  (alter-var-root #'defs assoc k m)
+  k)
+
+(defn- ck->data-schema [ck]
+  (try
+   (let [core-schema (:schema (safe-get component/attributes ck))
+         data-type (safe-get core.data/defs (if (vector? core-schema)
+                                              (first core-schema)
+                                              core-schema))]
+     (println "core-schema: " core-schema)
+     (println "data-type: " data-type)
+     (if (map? data-type)
+       data-type
+       (data-type core-schema)))
+   (catch Throwable t
+     (throw (ex-info "" {:ck ck} t))
+     )
+   ))
+
+(defn ck->widget [ck]
+  (:widget (ck->data-schema ck)))
+
+(defn ck->schema [ck]
+  (:schema (ck->data-schema ck)))
+
+(defn ck->enum-items [ck]
+  (let [core-schema (ck->data-schema ck)]
+    ((:items (get core.data/defs core-schema))
+     core-schema)))
+
+(defn ck->components [ck]
+  (let [core-schema (ck->data-schema ck)]
+    ((:components (get core.data/defs core-schema))
+     core-schema)))
+
+(defn ck->linked-property-types [ck]
+  (let [core-schema (ck->data-schema ck)]
+    ((:linked-property-type (get core.data/defs core-schema))
+     core-schema)))
+
+(defn ck->doc [ck]
+  (:doc (get component/attributes ck)))
 
 (defdata :boolean   {:widget :check-box  :schema :boolean :default-value true})
 
@@ -48,17 +96,21 @@
 
 ; [:enum :good :evil]
 ; :schema function and just use identity in many cases??
-(defdata :enum  {:widget :enum
-                 :schema identity
-                 :items rest})
+(defdata :enum (fn [[k & items :as enum-schema]]
+                 {:widget :enum
+                  :schema enum-schema
+                  :items items}))
+
+((get defs :enum) [:enum :a :b :c])
 
 
 ; TODO not checking if one of existing ids used
 ; widget requires property/image.
 (defdata :one-to-many-ids
-  {:widget :one-to-many
-   :schema [:set :qualified-keyword] ; TODO namespace missing
-   :linked-property-type second}) ; => fetch from schema namespaced ?
+  (fn [[_ property-type]]
+    {:widget :one-to-many
+     :schema [:set :qualified-keyword] ; TODO namespace missing
+     :linked-property-type property-type})) ; => fetch from schema namespaced ?
 
 (defn optional? [k]
   (let [optional? (get (get component/attributes k) :optional? :not-found)]
@@ -71,54 +123,71 @@
                (for [k ks]
                  [k {:optional (optional? k)} (ck->schema k)]))))
 
+(binding [*print-level* nil]
+  (clojure.repl/pst *e))
+
+(ck->schema :creature/entity)
+
+(m-map-schema
+ [:entity/animation :entity/flying? :entity/reaction-time :entity/faction :entity/stats :entity/inventory :entity/skills]
+ )
+
 ; TODO similar to components-attribute
 (defdata :map
-  {:widget :nested-map
-   :schema #(m-map-schema (rest %))})
+  (fn [[_ & ks]]
+    {:widget :nested-map
+     :schema (m-map-schema ks)}))
+
+
+[:qualified-keyword {:namespace :creatures}]
+(defdata :qualified-keyword
+  (fn [schema]
+    {:widget :label
+     :schema schema}))
 
 
 
-; TODO be clear
+; TODO be clear (just use namespaced keywords for all these things ...)
 ; m/schema
 ; or core/schema
 ; or data/type ?
 ; dont have 2 different :schema keys
 
 (defdata :components
-  {:widget :nested-map
-   :schema #(m-map-schema (rest %))
-   :components rest})
-
-(defn- kw-ns->components [[_ k]]
-  (filter #(= (name k) (namespace %)) (keys component/attributes)))
+  (fn [[_ & ks]]
+    {:widget :nested-map
+     :schema (m-map-schema ks)
+     :components ks}))
 
 (defdata :components-ns
-  {:widget :nested-map
-   :schema #(m-map-schema (kw-ns->components %))
-   :components kw-ns->components})
+  (fn [[_ k]]
+    (let [ks (filter #(= (name k) (namespace %)) (keys component/attributes))]
+      {:widget :nested-map
+       :schema (m-map-schema ks)
+       :components ks})))
 
 ; TODO similar to map-attribute & components-attribute
 (defn map-attribute-schema [id-attribute attr-ks]
-  (m/schema
-   (vec (concat [:map {:closed true} id-attribute] ; TODO same id-attribute w. different namespaces ...
-                ; creature/id ?
-                ; item/id ?
-                (for [k attr-ks]
-                  (vector k (ck->schema k)))))))
+  (let [schema-form (vec (concat [:map {:closed true} id-attribute] ; TODO same id-attribute w. different namespaces ...
+                                 ; creature/id ?
+                                 ; item/id ?
+                                 (for [k attr-ks]
+                                   (vector k (ck->schema k)))))]
+    (try (m/schema schema-form)
+         (catch Throwable t
+           (throw (ex-info "" {:schema-form schema-form} t))))))
 
-; [:components-ns :effect] ; gives ns
-; [:components operations] ; gives keys
 
-; [:one-to-many-ids :properties/item]
-; [:one-to-many-ids :properties/skill]
+(map-attribute-schema
+ [:property/id [:qualified-keyword {:namespace :creatures}]]
+ [:property/image
+  :property/bounds
+  :creature/species
+  :creature/level
+  :creature/entity])
+
 
 ; (m/form entity/movement-speed-schema)
-
-; [:map :damage/min-max]
-
-; [:qualified-keyword {:namespace :species}]
-
-; [:maybe :pos-int?]
 
 
 ; TODO :derive add to defcomponent map ? (used at val-max)
