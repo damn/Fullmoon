@@ -3,21 +3,8 @@
             [core.context :as ctx]
             mapgen.module-gen))
 
-; TODO move the whole properties stuff out into app.edn!
-
 (defcomponent :properties/world
   (component/create [_ _ctx]
-
-    ;(defcomponent :world/map-size data/pos-int-attr)
-    ;(defcomponent :world/max-area-level data/pos-int-attr) ; TODO <= map-size !?
-    ;(defcomponent :world/princess {:data [:qualified-keyword {:namespace :creatures}]})
-    ;(defcomponent :world/spawn-rate data/pos-attr) ; TODO <1 !
-
-    (defcomponent :world/type {:data [:enum
-                                      :world.type/tiled-map
-                                      :world.type/modules
-                                      :world.type/uf-caves]})
-
     {:id-namespace "worlds"
      :schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
               ;[:world/generator]

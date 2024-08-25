@@ -32,8 +32,12 @@
 (defn- k->component-ns [k]
   (symbol (str "components." (name (namespace k)) "." (name k))))
 
-(defmacro defcomponent [k & sys-impls]
+(defn defcomponent* [k attr-map]
+  (when (and warn-on-override (get attributes k))
+    (println "WARNING: Overwriting defcomponent" k))
+  (alter-var-root #'attributes assoc k attr-map))
 
+(defmacro defcomponent [k & sys-impls]
   (when (and warn-name-ns-mismatch?
              (not= (k->component-ns k) (ns-name *ns*)))
     (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*)))
@@ -43,12 +47,8 @@
         sys-impls (if attr-map? (rest sys-impls) sys-impls)
         let-bindings (:let attr-map)
         attr-map (dissoc attr-map :let)]
-
-    (when (and warn-on-override (get attributes k))
-      (println "WARNING: Overwriting defcomponent" k))
-
     `(do
-      (alter-var-root #'attributes assoc ~k ~attr-map)
+      (defcomponent* ~k ~attr-map)
 
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)

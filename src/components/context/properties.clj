@@ -122,15 +122,10 @@
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
 (defcomponent :context/properties
-  {:let {:keys [file types]}}
+  {:let {:keys [defcomponents types file]}}
   (component/create [_ ctx]
-    (defcomponent :property/id          {:data [:qualified-keyword {}]
-                                         :optional? false})
-    (defcomponent :property/pretty-name {:data :string})
-    (defcomponent :property/image       {:data :image})
-    (defcomponent :property/animation   {:data :animation})
-    (defcomponent :property/sound       {:data :sound})
-
+    (doseq [[k m] defcomponents]
+      (component/defcomponent* k m))
     (component/load-ks! types)
     (let [types (component/ks->create-all types {})
           types (mapvals #(update % :schema map-attribute-schema) types)]

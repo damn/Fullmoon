@@ -16,24 +16,6 @@
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]
-
-    ; TODO assert min body size from core.entity
-    ; TODO make px
-    (defcomponent :property/bounds {:data :some})
-    (defcomponent :creature/species {:data [:qualified-keyword {:namespace :species}]})
-    (defcomponent :creature/level {:data :pos-int})
-    (defcomponent :entity/flying? {:data :boolean})
-    (defcomponent :entity/reaction-time {:data :pos})
-
-    (defcomponent :creature/entity {:data [:components ; TODO no required/optional settings ! just cannot remove & already there !
-                                           :entity/animation
-                                           :entity/flying? ; remove
-                                           :entity/reaction-time ; in frames 0.016x
-                                           :entity/faction ; remove
-                                           :entity/stats
-                                           :entity/inventory  ; remove
-                                           :entity/skills]})
-
     {:id-namespace "creatures"
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               [:property/image

@@ -11,13 +11,6 @@
 
 (defcomponent :properties/item
   (component/create [_ _ctx]
-
-    ; could make optional - shorter properties.edn ...
-    ; and some items could just be fluff
-    (defcomponent :item/modifiers {:data [:components-ns :modifier]})
-
-    (defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
-
     {:id-namespace "items"
      :schema [[:property/id [:qualified-keyword {:namespace :items}]]
               [:property/pretty-name
