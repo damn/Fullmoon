@@ -18,7 +18,7 @@
 (defcomponent :pos-int   {:widget :text-field :schema pos-int?})
 
 (defcomponent :enum
-  (component/data [[k & items :as schema]]
+  (component/data [[_ & items :as schema]]
     {:widget :enum
      :schema schema
      :items items}))
@@ -50,6 +50,4 @@
 (defcomponent :components-ns
   (component/data [[_ k]]
     (let [ks (filter #(= (name k) (namespace %)) (keys component/attributes))]
-      {:widget :nested-map
-       :schema (data/map-schema ks)
-       :components ks})))
+      (component/data (apply vector :components ks)))))
