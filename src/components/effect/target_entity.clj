@@ -36,7 +36,7 @@
                    :max-range 2.0}
    :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
         Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
-  (component/text [_ ctx]
+  (component/info-text [_ ctx]
     (str "Range " maxrange " meters\n"
          (ctx/effect-text ctx hit-effects)))
 

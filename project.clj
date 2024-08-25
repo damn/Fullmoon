@@ -80,4 +80,7 @@
               "components.properties"
               }}))
 
+ ; Current problems: simple!
+ ; lein hiera :layout :horizontal :ignore "#{gdx, utils, math, mapgen, core.component, components.entity-state.load, core.entity, core.context, core.graphics, core.world, core.operation, core.modifiers, core.inventory}"
+
  )

@@ -90,10 +90,16 @@
 (defsystem destroy [_])
 (defmethod destroy :default [_])
 
+; grep str/join
+; also used @ tooltip-text
+; properties are components?
+; skills too
+; stats
+; map-editor/debug-infos -> tiles too
 (defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-;; TX/Effect
+;; TX
 
 ; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
 ; when returning a 'map?'
@@ -110,8 +116,6 @@
 (defsystem do! [_ ctx])
 
 ;; Effect
-
-(defsystem text [_ ctx]) ; TODO duplicated
 
 (defsystem applicable? [_ ctx])
 

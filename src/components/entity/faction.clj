@@ -20,7 +20,7 @@
 
 (defcomponent :effect/convert
   {:schema :some}
-  (component/text [_ _effect-ctx]
+  (component/info-text [_ _effect-ctx]
     "Converts target to your side.")
 
   (component/applicable? [_ {:keys [effect/source effect/target]}]

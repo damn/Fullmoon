@@ -49,7 +49,9 @@
               :world/grid
               :world/raycaster
               :world/content-grid
-              :world/explored-tile-corners]
+              :world/explored-tile-corners
+
+              :operation/numbers]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false

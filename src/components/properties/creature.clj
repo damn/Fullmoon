@@ -141,7 +141,7 @@
 (defcomponent :effect/stun
   {:schema :pos?
    :let duration}
-  (component/text [_ _effect-ctx]
+  (component/info-text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
   (component/applicable? [_ {:keys [effect/target]}]
@@ -153,7 +153,7 @@
 
 (defcomponent :effect/kill
   {:schema :some}
-  (component/text [_ _effect-ctx]
+  (component/info-text [_ _effect-ctx]
     "Kills target")
 
   (component/applicable? [_ {:keys [effect/source effect/target]}]
@@ -269,7 +269,7 @@
 (defcomponent :effect/spawn
   {:schema [:qualified-keyword {:namespace :creatures}]
    :let creature-id}
-  (component/text [_ _effect-ctx]
+  (component/info-text [_ _effect-ctx]
     (str "Spawns a " (name creature-id)))
 
   (component/applicable? [_ {:keys [effect/source effect/target-position]}]

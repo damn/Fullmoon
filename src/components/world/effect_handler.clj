@@ -95,7 +95,7 @@
 
   (effect-text [ctx effects]
     (->> effects
-         (keep #(component/text % ctx))
+         (keep #(component/info-text % ctx))
          (str/join "\n")))
 
   (effect-applicable? [ctx effects]

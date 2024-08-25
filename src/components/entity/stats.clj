@@ -156,7 +156,7 @@
 ; is called ::stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
 ; for :skill/effects
 (defcomponent ::stat-effect
-  (component/text [[k operations] _effect-ctx]
+  (component/info-text [[k operations] _effect-ctx]
     (str/join "\n"
               (for [operation operations]
                 (str (operation/info-text operation) " " (k->pretty-name k)))))
@@ -332,7 +332,7 @@
 #_(defcomponent :effect/stats-mana-set-to-max {:widget :label
                                               :schema [:= true]
                                               :default-value true}
-  (component/text [_ _effect-ctx]
+  (component/info-text [_ _effect-ctx]
     (str "Sets " (name stat) " to max."))
 
   (component/applicable? ~'[_ _effect-ctx] true)
@@ -359,11 +359,11 @@
 
 (defcomponent :effect/melee-damage
   {:schema :some}
-  (component/text [_ {:keys [effect/source] :as effect-ctx}]
+  (component/info-text [_ {:keys [effect/source] :as effect-ctx}]
     (str "Damage based on entity strength."
          (when source
-           (str "\n" (component/text (damage-effect effect-ctx)
-                                  effect-ctx)))))
+           (str "\n" (component/info-text (damage-effect effect-ctx)
+                                          effect-ctx)))))
 
   (component/applicable? [_ effect-ctx]
     (component/applicable? (damage-effect effect-ctx) effect-ctx))
@@ -418,7 +418,7 @@
 (defcomponent :effect/damage
   {:let damage
    :schema [:map :damage/min-max]}
-  (component/text [_ {:keys [effect/source]}]
+  (component/info-text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)

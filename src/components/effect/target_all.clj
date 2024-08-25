@@ -31,7 +31,7 @@
 (defcomponent :effect/target-all
   {:schema :some #_[:map :hit-effects]
    :let {:keys [hit-effects]}}
-  (component/text [_ ctx]
+  (component/info-text [_ ctx]
     (str "All visible targets:" (ctx/effect-text ctx hit-effects)))
 
   (component/applicable? [_ _ctx] true)

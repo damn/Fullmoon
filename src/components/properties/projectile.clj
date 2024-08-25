@@ -70,7 +70,7 @@
 ; or we adjust the effect when we send it ....
 (defcomponent :effect/projectile
   {:schema [:qualified-keyword {:namespace :projectiles}]}
-  (component/text [[_ projectile-id] ctx]
+  (component/info-text [[_ projectile-id] ctx]
     (ctx/effect-text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
 
   ; TODO for npcs need target -- anyway only with direction
