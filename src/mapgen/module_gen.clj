@@ -11,6 +11,17 @@
             [mapgen.nad :as nad])
   (:import java.util.Random))
 
+; TODO generates 51,52. not max 50
+; TODO can use different turn-ratio/depth/etc. params
+(defn- ->cave-grid [& {:keys [size]}]
+  (let [{:keys [start grid]} (cave-gen/cave-gridgen (Random.) size size :wide)
+        grid (nad/fix-not-allowed-diagonals grid)]
+    (assert (= #{:wall :ground} (set (grid/cells grid))))
+    {:start start
+     :grid grid}))
+
+; (printgrid (:grid (->cave-grid :size 800)))
+
 ; TODO HERE
 ; * unique max 16 modules, not random take @ #'floor->module-index, also special start, end modules, rare modules...
 
@@ -23,15 +34,6 @@
 ; * assuming bottom left in floor module is walkable
 
 ; whats the assumption here? => or put extra borders around? / assert!
-
-; TODO generates 51,52. not max 50
-; TODO can use different turn-ratio/depth/etc. params
-(defn- ->cave-grid [& {:keys [size]}]
-  (let [{:keys [start grid]} (cave-gen/cave-gridgen (Random.) size size :wide)
-        grid (nad/fix-not-allowed-diagonals grid)]
-    (assert (= #{:wall :ground} (set (grid/cells grid))))
-    {:start start
-     :grid grid}))
 
 (defn- adjacent-wall-positions [grid]
   (filter (fn [p] (and (= :wall (get grid p))
