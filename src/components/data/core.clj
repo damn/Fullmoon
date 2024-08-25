@@ -1,5 +1,6 @@
 (ns components.data.core
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [malli.core :as m]
+            [core.component :as component :refer [defcomponent]]
             [core.data :as data]
             [core.val-max :refer [val-max-schema]]))
 
