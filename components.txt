@@ -1,5 +1,13 @@
 
+; grep str/join
+; also used @ tooltip-text
+; properties are components?
+; skills too
+; stats
+; map-editor/debug-infos -> tiles too
+
 ; TODO game doesnt show that its paused because of an error  (only console)
+; (menu bar with info like an operation system? FPS/elapsed-time/frame/... ) ?
 
 ; also interesting components getting eid, then don;t need to pass @ fn....?
 ; every component/create before created add :eid ???

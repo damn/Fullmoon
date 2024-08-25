@@ -90,12 +90,6 @@
 (defsystem destroy [_])
 (defmethod destroy :default [_])
 
-; grep str/join
-; also used @ tooltip-text
-; properties are components?
-; skills too
-; stats
-; map-editor/debug-infos -> tiles too
 (defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
 
