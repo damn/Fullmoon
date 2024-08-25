@@ -11,7 +11,7 @@
 ; and stats itself can be passed @ created in resources/app.edn
 
 ; * which data is there? (for properties - or in general)
-; * do they all have proper widget/schema/optional?
+; * do they all have proper widget/schema/optional? - optional? belongs in the map definition not attribute ?
 ; * define not at entity/foo but at components/properties ? (creature state different than entity/state ..)
 
 ; => just pass :schema/:optional?/:doc
@@ -78,11 +78,11 @@
 (defdata :image     {:widget :image      :schema :some})
 (defdata :animation {:widget :animation  :schema :some})
 (defdata :val-max   {:widget :text-field :schema (m/form val-max-schema)})
-(defdata :number?  {:widget :text-field :schema number?})
-(defdata :nat-int? {:widget :text-field :schema nat-int?})
-(defdata :int?     {:widget :text-field :schema int?})
-(defdata :pos?     {:widget :text-field :schema pos?})
-(defdata :pos-int? {:widget :text-field :schema pos-int?})
+(defdata :number?   {:widget :text-field :schema number?})
+(defdata :nat-int?  {:widget :text-field :schema nat-int?})
+(defdata :int?      {:widget :text-field :schema int?})
+(defdata :pos?      {:widget :text-field :schema pos?})
+(defdata :pos-int?  {:widget :text-field :schema pos-int?})
 
 (defdata :enum (fn [[k & items :as schema]]
                  {:widget :enum
