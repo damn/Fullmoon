@@ -24,7 +24,7 @@
    {:rows (remove nil?
                   [[(ctx/->text-button ctx "Start vampire.tmx" (start-game! :worlds/vampire))]
                    [(ctx/->text-button ctx "start-uf-caves!"   (start-game! :worlds/uf-caves))]
-                   [(ctx/->text-button ctx "Start procedural"  (start-game! :worlds/first-level))]
+                   [(ctx/->text-button ctx "Start procedural"  (start-game! :worlds/modules))]
                    (when (safe-get config :map-editor?)
                      [(ctx/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])
                    (when (safe-get config :property-editor?)
