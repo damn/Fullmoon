@@ -1,6 +1,5 @@
 (ns components.context.world
   (:require [clj-commons.pretty.repl :as p]
-            [gdx.app :as app]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
@@ -182,7 +181,8 @@
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
  (require 'app)
- (app/post-runnable
+ (require 'gdx.app)
+ (gdx.app/post-runnable
   (fn []
     (swap! app/state start-replay-mode!)))
 

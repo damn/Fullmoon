@@ -1,6 +1,6 @@
 (ns core.data
   (:require [malli.core :as m]
-            [utils.core :as utils :refer [safe-get]]
+            [utils.core :refer [safe-get]]
             [core.component :as component]
             [core.val-max :refer [val-max-schema]]))
 
