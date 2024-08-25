@@ -82,6 +82,8 @@
                  ~@fn-exprs)))))
       ~k)))
 
+(defsystem data [_])
+
 (defsystem create [_ ctx])
 (defmethod create :default [[_ v] _ctx]
   v)

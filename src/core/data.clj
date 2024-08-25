@@ -1,7 +1,7 @@
 (ns core.data
   (:require [malli.core :as m]
             [utils.core :refer [safe-get]]
-            [core.component :as component]
+            [core.component :as component :refer [defcomponent]]
             [core.val-max :refer [val-max-schema]]))
 
 ; Next, see :context/properties (dependencies on core.data check)
@@ -36,31 +36,24 @@
 ;(assert (:widget attr-map) k)
 ; optional: :doc ! (maybe not optional make ...)
 
-(def defs {})
-
-(defn defdata [k m]
-  (when (get defs k)
-    (println "WARNING: Overwriting defdata" k))
-  (alter-var-root #'defs assoc k m)
-  k)
-
-(defn- ck->data-schema [ck]
+(defn- component-k->data-type [ck]
   (try
    (let [core-schema (:schema (safe-get component/attributes ck))
-         data-type (safe-get defs (if (vector? core-schema)
-                                    (first core-schema)
-                                    core-schema))]
-     (if (map? data-type)
+         data-type (safe-get component/attributes
+                             (if (vector? core-schema)
+                               (first core-schema)
+                               core-schema))]
+     (if (seq data-type)
        data-type
-       (data-type core-schema)))
+       (component/data core-schema)))
    (catch Throwable t
      (throw (ex-info "" {:ck ck} t)))))
 
-(defn ck->widget                [ck] (:widget               (ck->data-schema ck)))
-(defn ck->schema                [ck] (:schema               (ck->data-schema ck)))
-(defn ck->enum-items            [ck] (:items                (ck->data-schema ck)))
-(defn ck->components            [ck] (:components           (ck->data-schema ck)))
-(defn ck->linked-property-types [ck] (:linked-property-type (ck->data-schema ck)))
+(defn ck->widget                [ck] (:widget               (component-k->data-type ck)))
+(defn ck->schema                [ck] (:schema               (component-k->data-type ck)))
+(defn ck->enum-items            [ck] (:items                (component-k->data-type ck)))
+(defn ck->components            [ck] (:components           (component-k->data-type ck)))
+(defn ck->linked-property-types [ck] (:linked-property-type (component-k->data-type ck)))
 
 (defn ck->doc [ck]
   (:doc (get component/attributes ck)))
@@ -71,34 +64,35 @@
       true
       optional?)))
 
-(defdata :boolean   {:widget :check-box  :schema :boolean :default-value true})
-(defdata :some      {:widget :label      :schema :some})
-(defdata :string    {:widget :text-field :schema :string})
-(defdata :sound     {:widget :sound      :schema :string})
-(defdata :image     {:widget :image      :schema :some})
-(defdata :animation {:widget :animation  :schema :some})
-(defdata :val-max   {:widget :text-field :schema (m/form val-max-schema)})
-(defdata :number?   {:widget :text-field :schema number?})
-(defdata :nat-int?  {:widget :text-field :schema nat-int?})
-(defdata :int?      {:widget :text-field :schema int?})
-(defdata :pos?      {:widget :text-field :schema pos?})
-(defdata :pos-int?  {:widget :text-field :schema pos-int?})
+(defcomponent :boolean   {:widget :check-box  :schema :boolean :default-value true})
+(defcomponent :some      {:widget :label      :schema :some})
+(defcomponent :string    {:widget :text-field :schema :string})
+(defcomponent :sound     {:widget :sound      :schema :string})
+(defcomponent :image     {:widget :image      :schema :some})
+(defcomponent :animation {:widget :animation  :schema :some})
+(defcomponent :val-max   {:widget :text-field :schema (m/form val-max-schema)})
+(defcomponent :number?   {:widget :text-field :schema number?})
+(defcomponent :nat-int?  {:widget :text-field :schema nat-int?})
+(defcomponent :int?      {:widget :text-field :schema int?})
+(defcomponent :pos?      {:widget :text-field :schema pos?})
+(defcomponent :pos-int?  {:widget :text-field :schema pos-int?})
 
-(defdata :enum (fn [[k & items :as schema]]
-                 {:widget :enum
-                  :schema schema
-                  :items items}))
+(defcomponent :enum
+  (component/data [[k & items :as schema]]
+    {:widget :enum
+     :schema schema
+     :items items}))
 
 ; not checking if one of existing ids used
 ; widget requires property/image for displaying overview
-(defdata :one-to-many-ids
-  (fn [[_ property-type]]
+(defcomponent :one-to-many-ids
+  (component/data [[_ property-type]]
     {:widget :one-to-many
      :schema [:set :qualified-keyword] ; namespace missing
      :linked-property-type property-type})) ; => fetch from schema namespaced ?
 
-(defdata :qualified-keyword
-  (fn [schema]
+(defcomponent :qualified-keyword
+  (component/data [schema]
     {:widget :label
      :schema schema}))
 
@@ -107,19 +101,19 @@
                (for [k ks]
                  [k {:optional (optional? k)} (ck->schema k)]))))
 
-(defdata :map
-  (fn [[_ & ks]]
+(defcomponent :map
+  (component/data [[_ & ks]]
     {:widget :nested-map
      :schema (m-map-schema ks)}))
 
-(defdata :components
-  (fn [[_ & ks]]
+(defcomponent :components
+  (component/data [[_ & ks]]
     {:widget :nested-map
      :schema (m-map-schema ks)
      :components ks}))
 
-(defdata :components-ns
-  (fn [[_ k]]
+(defcomponent :components-ns
+  (component/data [[_ k]]
     (let [ks (filter #(= (name k) (namespace %)) (keys component/attributes))]
       {:widget :nested-map
        :schema (m-map-schema ks)

@@ -117,7 +117,8 @@
 (defcomponent :context/properties
   {:let {:keys [file types]}}
   (component/create [_ ctx]
-    (defcomponent :property/id          {:schema [:qualified-keyword {}] :optional? false})
+    (defcomponent :property/id          {:schema [:qualified-keyword {}]
+                                         :optional? false})
     (defcomponent :property/pretty-name {:schema :string})
     (defcomponent :property/image       {:schema :image})
     (defcomponent :property/animation   {:schema :animation})
