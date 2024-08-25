@@ -66,7 +66,7 @@
 (derive :screens/options-menu :screens/stage-screen)
 (defcomponent :screens/options-menu
   (component/create [_ ctx]
-    (ctx/->stage-screen ctx
-                        {:actors [(ctx/->background-image ctx)
-                                  (create-table ctx)]
-                         :sub-screen [::sub-screen]})))
+    {:stage (ctx/->stage ctx
+                         [(ctx/->background-image ctx)
+                          (create-table ctx)])
+     :sub-screen [::sub-screen]}))

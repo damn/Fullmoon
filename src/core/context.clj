@@ -58,10 +58,7 @@
   (update-viewports [_ w h]))
 
 (defprotocol Stage
-  (->stage-screen [_ {:keys [stage sub-screen]}]
-                  "A screen with a stage as an input-processor which gets drawn and 'act'ed after the given sub-screen.
-                  The stage will get disposed also.
-                  Sub-screen is optional.")
+  (->stage [_ actors])
   (get-stage [_] "Stage implements clojure.lang.ILookup (get) on actor id.")
   (mouse-on-stage-actor? [_])
   (add-to-stage! [_ actor]))

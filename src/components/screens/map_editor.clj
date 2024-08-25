@@ -195,10 +195,9 @@ direction keys: move")
 (derive :screens/map-editor :screens/stage-screen)
 (defcomponent :screens/map-editor
   (component/create [_ ctx]
-    (ctx/->stage-screen ctx
-                        {:actors [(->generate-map-window ctx :worlds/vampire)
-                                  (->info-window ctx)]
-                         :sub-screen [::sub-screen
-                                      (atom {:tiled-map (->tiled-map ctx module-gen/modules-file)
-                                             :show-movement-properties false
-                                             :show-grid-lines false})]})))
+    {:sub-screen [::sub-screen
+                  (atom {:tiled-map (->tiled-map ctx module-gen/modules-file)
+                         :show-movement-properties false
+                         :show-grid-lines false})]
+     :stage (ctx/->stage ctx [(->generate-map-window ctx :worlds/vampire)
+                              (->info-window ctx)])}))

@@ -57,24 +57,6 @@
   (component/destroy [_]
     (VisUI/dispose)))
 
-(defn- find-actor-with-id [^Group group id]
-  (let [actors (.getChildren group)
-        ids (keep actor/id actors)]
-    (assert (or (empty? ids)
-                (apply distinct? ids)) ; TODO could check @ add
-            (str "Actor ids are not distinct: " (vec ids)))
-    (first (filter #(= id (actor/id %))
-                   actors))))
-
-(defn- ->stage [viewport batch]
-  (proxy [Stage clojure.lang.ILookup] [viewport batch]
-    (valAt
-      ([id]
-       (find-actor-with-id (stage/root this) id))
-      ([id not-found]
-       (or (find-actor-with-id (stage/root this) id)
-           not-found)))))
-
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage-screen
   {:let {:keys [stage sub-screen]}}
@@ -94,13 +76,30 @@
     (swap! app-state #(component/render-ctx sub-screen %))
     (stage/draw stage)))
 
+(defn- find-actor-with-id [^Group group id]
+  (let [actors (.getChildren group)
+        ids (keep actor/id actors)]
+    (assert (or (empty? ids)
+                (apply distinct? ids)) ; TODO could check @ add
+            (str "Actor ids are not distinct: " (vec ids)))
+    (first (filter #(= id (actor/id %))
+                   actors))))
+
+(defn- ->stage [viewport batch]
+  (proxy [Stage clojure.lang.ILookup] [viewport batch]
+    (valAt
+      ([id]
+       (find-actor-with-id (stage/root this) id))
+      ([id not-found]
+       (or (find-actor-with-id (stage/root this) id)
+           not-found)))))
+
 (extend-type core.context.Context
   core.context/Stage
-  (->stage-screen [{{:keys [gui-view batch]} :context/graphics} {:keys [sub-screen actors]}]
+  (->stage [{{:keys [gui-view batch]} :context/graphics} actors]
     (let [stage (->stage (:viewport gui-view) batch)]
       (stage/add-actors! stage actors)
-      {:stage stage
-       :sub-screen sub-screen}))
+      stage))
 
   (get-stage [context]
     (:stage ((ctx/current-screen context) 1)))

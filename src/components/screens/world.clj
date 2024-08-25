@@ -63,6 +63,5 @@
 (derive :screens/world :screens/stage-screen)
 (defcomponent :screens/world
   (component/create [_ ctx]
-    (ctx/->stage-screen ctx
-                        {:actors []
-                         :sub-screen [::sub-screen]})))
+    {:stage (ctx/->stage ctx [])
+     :sub-screen [::sub-screen]}))

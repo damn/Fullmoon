@@ -37,13 +37,15 @@
   (component/enter [_ ctx]
     (ctx/set-cursor! ctx :cursors/default)))
 
+(defn- ->actors [ctx]
+  [(ctx/->background-image ctx)
+   (->buttons ctx)
+   (ctx/->actor ctx {:act (fn [_ctx]
+                            (when (input/key-just-pressed? input.keys/escape)
+                              (app/exit)))})])
+
 (derive :screens/main-menu :screens/stage-screen)
 (defcomponent :screens/main-menu
   (component/create [[k _] ctx]
-    (ctx/->stage-screen ctx
-                        {:actors [(ctx/->background-image ctx)
-                                  (->buttons ctx)
-                                  (ctx/->actor ctx {:act (fn [_ctx]
-                                                           (when (input/key-just-pressed? input.keys/escape)
-                                                             (app/exit)))})]
-                         :sub-screen [::sub-screen]})))
+    {:sub-screen [::sub-screen]
+     :stage (ctx/->stage ctx (->actors ctx))}))

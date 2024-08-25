@@ -404,8 +404,8 @@
 (derive :screens/property-editor :screens/stage-screen)
 (defcomponent :screens/property-editor
   (component/create [_ ctx]
-    (ctx/->stage-screen ctx
-                        {:actors [(ctx/->background-image ctx)
-                                  (->table ctx {:id :main-table
-                                                :rows [[(->left-widget ctx) nil]]
-                                                :fill-parent? true})]})))
+    {:stage (ctx/->stage ctx
+                         [(ctx/->background-image ctx)
+                          (->table ctx {:id :main-table
+                                        :rows [[(->left-widget ctx) nil]]
+                                        :fill-parent? true})])}))
