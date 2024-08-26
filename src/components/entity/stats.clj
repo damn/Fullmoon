@@ -153,9 +153,9 @@
 ; op/set-to-ratio 0.5 ....
 ; sets the hp to 50%...
 
-; is called ::stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
+; is called :base/stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
 ; for :skill/effects
-(defcomponent ::stat-effect
+(defcomponent :base/stat-effect
   (component/info-text [[k operations] _effect-ctx]
     (str/join "\n"
               (for [operation operations]
@@ -165,23 +165,27 @@
     (and target
          (entity/stat @target (effect-k->stat-k k))))
 
-  (component/useful? [_ _effect-ctx] true)
+  (component/useful? [_ _effect-ctx]
+    true)
 
   (component/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx.entity/assoc-in target [:entity/stats stat-k]
+          ; TODO similar to ->effective-value
+          ; but operations not sort-by component/order ??
+          ; component/apply reuse fn over operations to get effectiv value
           (reduce (fn [value operation] (component/apply operation value))
                   effective-value
                   operations)]]))))
 
 (defcomponent :effect/hp
   {:data [:components :op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
-(derive :effect/hp ::stat-effect)
+(derive :effect/hp :base/stat-effect)
 
 (defcomponent :effect/mana
   {:data [:components :op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
-(derive :effect/mana ::stat-effect)
+(derive :effect/mana :base/stat-effect)
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
 ; * just don't create movement-speed increases too much?
@@ -198,7 +202,7 @@
 ; also we want audiovisuals always ...
 (defcomponent :effect/movement-speed
   {:data [:components :op/mult]})
-(derive :effect/movement-speed ::stat-effect)
+(derive :effect/movement-speed :base/stat-effect)
 
 ; TODO clamp into ->pos-int
 (defstat :stats/strength
