@@ -1,8 +1,11 @@
 
 # components.entity.stats
+```
 [:components.entity.stats/stat-effect [[effect-k operations] {:keys [effect/target]}]]
+```
 
 # effect
+```
 [:effect/convert [_ {:keys [effect/source effect/target]}]]
 [:effect/damage [_ {:keys [effect/source effect/target]}]]
 [:effect/kill [_ {:keys [effect/target]}]]
@@ -12,8 +15,10 @@
 [:effect/stun [_ {:keys [effect/target]}]]
 [:effect/target-all [_ {:keys [effect/source effect/target], :as ctx}]]
 [:effect/target-entity [_ {:keys [effect/source effect/target]}]]
+```
 
 # tx
+```
 [:tx/add-skill [[_ entity {:keys [property/id], :as skill}] _ctx]]
 [:tx/add-text-effect [[_ entity text] ctx]]
 [:tx/add-to-world [[_ entity] ctx]]
@@ -35,15 +40,21 @@
 [:tx/set-item-image-in-widget [[_ cell item] ctx]]
 [:tx/sound [_ ctx]]
 [:tx/stack-item [[_ entity cell item] _ctx]]
+```
 
 # tx.context.action-bar
+```
 [:tx.context.action-bar/add-skill [[_ {:keys [property/id property/image], :as skill}] ctx]]
 [:tx.context.action-bar/remove-skill [[_ {:keys [property/id]}] ctx]]
+```
 
 # tx.context.cursor
+```
 [:tx.context.cursor/set [[_ cursor-key] ctx]]
+```
 
 # tx.entity
+```
 [:tx.entity/assoc [[_ entity k v] ctx]]
 [:tx.entity/assoc-in [[_ entity ks v] ctx]]
 [:tx.entity/audiovisual [[_ position id] ctx]]
@@ -56,6 +67,9 @@
 [:tx.entity/set-movement [[_ entity movement] ctx]]
 [:tx.entity/shout [[_ position faction delay-seconds] ctx]]
 [:tx.entity/update-in [[_ entity ks f] ctx]]
+```
 
 # tx.entity.stats
+```
 [:tx.entity.stats/pay-mana-cost [[_ entity cost] _ctx]]
+```
