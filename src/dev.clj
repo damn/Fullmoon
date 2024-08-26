@@ -2,6 +2,7 @@
   (:require [clojure.pprint :refer :all]
             [clojure.string :as str]
             utils.ns
+            [core.component :as component]
             [core.context :as ctx :refer :all]
             [core.entity :as entity]
             [core.scene2d.actor :as actor]
@@ -18,7 +19,26 @@
         (clojure.pprint/pprint (group-by namespace
                                          (sort (keys attributes))))))
 
- (ancestors :op/val-inc)
+ (set! *print-level* nil)
+ (spit "txs.md"
+       (with-out-str
+        (doseq [[nmsp ks] (sort-by first
+                                   (group-by namespace (sort (keys (methods component/do!)))))]
+
+          (println "\n#" nmsp)
+          (doseq [k ks
+                  :let [attr-m (get component/attributes k)]]
+            (println (str "* __" k "__ `" (get (:params attr-m) "do!") "`"))
+            (when-let [data (:data attr-m)]
+              (println (str "    * data: `" (pr-str data) "`")))
+            (let [ks (descendants k)]
+              (when (seq ks)
+                (println "    * Descendants"))
+              (doseq [k ks]
+                (println "      *" k)
+                (println (str "        * data: `" (pr-str (:data (get component/attributes k))) "`"))))
+            ;(println)
+            ))))
 
  (spit "components.md"
        (binding [*print-level* nil]

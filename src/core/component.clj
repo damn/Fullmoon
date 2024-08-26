@@ -7,12 +7,7 @@
 
 (def defsystems {})
 
-(defmacro defsystem
-  "Defines a component function with the given parameter vector.
-  See also core.defcomponent.
-  Obligatory first parameter: component, a vector of [key/attribute value].
-  Dispatching on component attribute."
-  [sys-name params]
+(defmacro defsystem [sys-name params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
   (when warn-on-override
@@ -34,7 +29,7 @@
 
 (defn defcomponent* [k attr-map]
   (when (and warn-on-override (get attributes k))
-    (println "WARNING: Overwriting defcomponent" k))
+    (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'attributes assoc k attr-map))
 
 (defmacro defcomponent [k & sys-impls]
@@ -48,7 +43,8 @@
         let-bindings (:let attr-map)
         attr-map (dissoc attr-map :let)]
     `(do
-      (defcomponent* ~k ~attr-map)
+      (when ~attr-map?
+        (defcomponent* ~k ~attr-map))
 
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
@@ -70,7 +66,7 @@
            `(do
              (assert (keyword? ~k) (pr-str ~k))
 
-             ;(alter-var-root #'attributes assoc-in [~k :core.component/fn-params ~(name (symbol sys-var))] (quote ~(first fn-params)))
+             (alter-var-root #'attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
 
              (when (and warn-on-override
                         (get (methods @~sys-var) ~k))
