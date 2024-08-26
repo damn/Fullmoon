@@ -92,57 +92,12 @@
                                          :cursors/princess-gray ["exclamation001_gray" [0 0]]}}]
            [:context/tiled-map-renderer]
            [:context/vis-ui :skin-scale/x1]
-           [:context/properties {:defcomponents [[:property/id          {:data [:qualified-keyword {}] :optional? false}]
+           [:context/properties {:defcomponents [[:property/id          {:data [:qualified-keyword {}]
+                                                                         :optional? false}]
                                                  [:property/pretty-name {:data :string}]
                                                  [:property/image       {:data :image}]
                                                  [:property/animation   {:data :animation}]
-                                                 [:property/sound       {:data :sound}]
-
-                                                 [:skill/action-time              {:data :pos}]
-                                                 [:skill/cooldown                 {:data :nat-int}]
-                                                 [:skill/cost                     {:data :nat-int}]
-                                                 [:skill/effects                  {:data [:components-ns :effect]}]
-                                                 [:skill/start-action-sound       {:data :sound}]
-                                                 [:skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]}]
-
-                                                 ; TODO assert min body size from core.entity
-                                                 ; TODO make px
-                                                 [:property/bounds {:data :some}]
-                                                 [:creature/species {:data [:qualified-keyword {:namespace :species}]}]
-                                                 [:creature/level {:data :pos-int}]
-                                                 [:entity/flying? {:data :boolean}]
-                                                 [:entity/reaction-time {:data :pos}]
-
-                                                 [:creature/entity {:data [:components ; TODO no required/optional settings ! just cannot remove & already there !
-                                                                           :entity/animation
-                                                                           :entity/flying? ; remove
-                                                                           :entity/reaction-time ; in frames 0.016x
-                                                                           :entity/faction ; remove
-                                                                           :entity/stats
-                                                                           :entity/inventory  ; remove
-                                                                           :entity/skills]}]
-
-                                                 ; could make optional - shorter properties.edn ...
-                                                 ; and some items could just be fluff
-                                                 [:item/modifiers {:data [:components-ns :modifier]}]
-                                                 [:item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]}] ; TODO one of ... == 'enum' !!
-
-                                                 ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
-                                                 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
-                                                 [:projectile/max-range {:data :pos-int}]
-                                                 [:projectile/speed     {:data :pos-int}]
-                                                 [:projectile/effects   {:data [:components-ns :effect]}]
-                                                 [:projectile/piercing? {:data :boolean}]
-
-                                                 ; [:world/map-size data/pos-int-attr]
-                                                 ; [:world/max-area-level data/pos-int-attr] ; TODO <= map-size !?
-                                                 ; [:world/princess {:data [:qualified-keyword {:namespace :creatures}]}]
-                                                 ; [:world/spawn-rate data/pos-attr] ; TODO <1 !
-
-                                                 [:world/type {:data [:enum
-                                                                      :world.type/tiled-map
-                                                                      :world.type/modules
-                                                                      :world.type/uf-caves]}]]
+                                                 [:property/sound       {:data :sound}]]
                                  :types [:properties/audiovisual
                                          :properties/creature
                                          :properties/item

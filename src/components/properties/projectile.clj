@@ -7,6 +7,13 @@
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 
+; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
+; -> first range check then ray ! otherwise somewhere in contentfield out of sight
+(defcomponent :projectile/max-range {:data :pos-int})
+(defcomponent :projectile/speed     {:data :pos-int})
+(defcomponent :projectile/effects   {:data [:components-ns :effect]})
+(defcomponent :projectile/piercing? {:data :boolean})
+
 (defcomponent :properties/projectile
   (component/create [_ _ctx]
     {:id-namespace "projectiles"

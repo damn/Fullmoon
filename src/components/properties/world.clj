@@ -3,6 +3,16 @@
             [core.context :as ctx]
             mapgen.module-gen))
 
+; [:world/map-size data/pos-int-attr]
+; [:world/max-area-level data/pos-int-attr] ; TODO <= map-size !?
+; [:world/princess {:data [:qualified-keyword {:namespace :creatures}]}]
+; [:world/spawn-rate data/pos-attr] ; TODO <1 !
+
+(defcomponent :world/type {:data [:enum
+                                  :world.type/tiled-map
+                                  :world.type/modules
+                                  :world.type/uf-caves]})
+
 (defcomponent :properties/world
   (component/create [_ _ctx]
     {:id-namespace "worlds"

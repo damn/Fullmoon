@@ -3,6 +3,11 @@
             [core.component :as component :refer [defcomponent]]
             [core.modifiers :as modifiers]))
 
+; could make optional - shorter properties.edn ...
+; and some items could just be fluff
+(defcomponent :item/modifiers {:data [:components-ns :modifier]})
+(defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+
 (com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
                                       (com.badlogic.gdx.graphics.Color. (float 0.84)
                                                                         (float 0.8)

@@ -9,6 +9,13 @@
 (def ^:private cooldown-color "[SKY]")
 (def ^:private effect-color "[CHARTREUSE]")
 
+(defcomponent :skill/action-time              {:data :pos})
+(defcomponent :skill/cooldown                 {:data :nat-int})
+(defcomponent :skill/cost                     {:data :nat-int})
+(defcomponent :skill/effects                  {:data [:components-ns :effect]})
+(defcomponent :skill/start-action-sound       {:data :sound})
+(defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
+
 (defcomponent :properties/skill
   (component/create [_ _ctx]
     {:id-namespace "skills"
