@@ -134,7 +134,7 @@
   {:initial-state initial-state
    :fsm npc-fsm})
 
-(defcomponent :effect/stun
+(defcomponent :effect.entity/stun
   {:data :pos
    :let duration}
   (component/info-text [_ _effect-ctx]
@@ -147,7 +147,7 @@
   (component/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
-(defcomponent :effect/kill
+(defcomponent :effect.entity/kill
   {:data :some}
   (component/info-text [_ _effect-ctx]
     "Kills target")

@@ -18,8 +18,9 @@
   (friendly-faction [{:keys [entity/faction]}]
     faction))
 
-(defcomponent :effect/convert
-  {:data :some}
+(defcomponent :effect.entity/convert
+  {:data :some
+   :default-value true}
   (component/info-text [_ _effect-ctx]
     "Converts target to your side.")
 

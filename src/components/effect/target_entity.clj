@@ -25,15 +25,13 @@
 
 (defcomponent :maxrange {:data :pos})
 
-; TODO how should this work ???
-; can not contain the other effects properly o.o
-(defcomponent :hit-effects {:data [:components-ns :effect]})
+(defcomponent :hit-effects {:data [:components-ns :effect.entity]})
 
 (defcomponent :effect/target-entity
   {:let {:keys [maxrange hit-effects]}
-   :data :some #_[:map :hit-effects :maxrange]
-   :default-value {:hit-effects {}
-                   :max-range 2.0}
+   :data [:map :hit-effects :maxrange]
+   :default-value {:hit-effects {} ; TODO required for all map stuffs see targe-tall empty cannot add stuffs
+                   :maxrange 2.0}
    :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
         Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
   (component/info-text [_ ctx]

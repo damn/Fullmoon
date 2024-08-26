@@ -179,13 +179,13 @@
                   effective-value
                   operations)]]))))
 
-(defcomponent :effect/hp
+(defcomponent :effect.entity/hp
   {:data [:components :op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
-(derive :effect/hp :base/stat-effect)
+(derive :effect.entity/hp :base/stat-effect)
 
-(defcomponent :effect/mana
+(defcomponent :effect.entity/mana
   {:data [:components :op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
-(derive :effect/mana :base/stat-effect)
+(derive :effect.entity/mana :base/stat-effect)
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
 ; * just don't create movement-speed increases too much?
@@ -200,9 +200,9 @@
 ; TODO show the stat in different color red/green if it was permanently modified ?
 ; or an icon even on the creature
 ; also we want audiovisuals always ...
-(defcomponent :effect/movement-speed
+(defcomponent :effect.entity/movement-speed
   {:data [:components :op/mult]})
-(derive :effect/movement-speed :base/stat-effect)
+(derive :effect.entity/movement-speed :base/stat-effect)
 
 ; TODO clamp into ->pos-int
 (defstat :stats/strength
@@ -359,9 +359,9 @@
     {:damage/min-max [strength strength]}))
 
 (defn- damage-effect [{:keys [effect/source]}]
-  [:effect/damage (entity*->melee-damage @source)])
+  [:effect.entity/damage (entity*->melee-damage @source)])
 
-(defcomponent :effect/melee-damage
+(defcomponent :effect.entity/melee-damage
   {:data :some}
   (component/info-text [_ {:keys [effect/source] :as effect-ctx}]
     (str "Damage based on entity strength."
@@ -419,7 +419,7 @@
 
 (defcomponent :damage/min-max {:data :val-max})
 
-(defcomponent :effect/damage
+(defcomponent :effect.entity/damage
   {:let damage
    :data [:map :damage/min-max]}
   (component/info-text [_ {:keys [effect/source]}]

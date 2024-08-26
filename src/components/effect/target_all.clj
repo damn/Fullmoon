@@ -26,15 +26,18 @@
 
  )
 
-(defcomponent :hit-effects {:data [:components-ns :effect]})
+(defcomponent :hit-effects {:data [:components-ns :effect.entity]})
 
 (defcomponent :effect/target-all
-  {:data :some #_[:map :hit-effects]
+  {:data [:map :hit-effects]
+   :default-value {:hit-effects {}}
    :let {:keys [hit-effects]}}
   (component/info-text [_ ctx]
-    (str "All visible targets:" (ctx/effect-text ctx hit-effects)))
+    (str "All visible targets\n"
+         (ctx/effect-text ctx hit-effects)))
 
-  (component/applicable? [_ _ctx] true)
+  (component/applicable? [_ _ctx]
+    true)
 
   (component/useful? [_ _ctx]
     ; TODO
