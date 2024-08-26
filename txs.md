@@ -1,296 +1,249 @@
 
 # base
-## :base/stat-effect
+** :base/stat-effect ** ` [[effect-k operations] {:keys [effect/target]}] `
 ```
 * :data nil
-* :params [[effect-k operations] {:keys [effect/target]}]
 ```
 
 
 # effect
-## :effect/convert
+** :effect/convert ** ` [_ {:keys [effect/source effect/target]}] `
 ```
 * :data :some
-* :params [_ {:keys [effect/source effect/target]}]
 ```
 
-## :effect/damage
+** :effect/damage ** ` [_ {:keys [effect/source effect/target]}] `
 ```
 * :data [:map :damage/min-max]
-* :params [_ {:keys [effect/source effect/target]}]
 ```
 
-## :effect/kill
+** :effect/kill ** ` [_ {:keys [effect/target]}] `
 ```
 * :data :some
-* :params [_ {:keys [effect/target]}]
 ```
 
-## :effect/melee-damage
+** :effect/melee-damage ** ` [_ ctx] `
 ```
 * :data :some
-* :params [_ ctx]
 ```
 
-## :effect/projectile
+** :effect/projectile ** ` [[_ projectile-id] {:keys [effect/source effect/direction], :as ctx}] `
 ```
 * :data [:qualified-keyword {:namespace :projectiles}]
-* :params [[_ projectile-id] {:keys [effect/source effect/direction], :as ctx}]
 ```
 
-## :effect/spawn
+** :effect/spawn ** ` [_ {:keys [effect/source effect/target-position]}] `
 ```
 * :data [:qualified-keyword {:namespace :creatures}]
-* :params [_ {:keys [effect/source effect/target-position]}]
 ```
 
-## :effect/stun
+** :effect/stun ** ` [_ {:keys [effect/target]}] `
 ```
 * :data :pos
-* :params [_ {:keys [effect/target]}]
 ```
 
-## :effect/target-all
+** :effect/target-all ** ` [_ {:keys [effect/source effect/target], :as ctx}] `
 ```
 * :data :some
-* :params [_ {:keys [effect/source effect/target], :as ctx}]
 ```
 
-## :effect/target-entity
+** :effect/target-entity ** ` [_ {:keys [effect/source effect/target]}] `
 ```
 * :data :some
-* :params [_ {:keys [effect/source effect/target]}]
 ```
 
 
 # tx
-## :tx/add-skill
+** :tx/add-skill ** ` [[_ entity {:keys [property/id], :as skill}] _ctx] `
 ```
 * :data nil
-* :params [[_ entity {:keys [property/id], :as skill}] _ctx]
 ```
 
-## :tx/add-text-effect
+** :tx/add-text-effect ** ` [[_ entity text] ctx] `
 ```
 * :data nil
-* :params [[_ entity text] ctx]
 ```
 
-## :tx/add-to-world
+** :tx/add-to-world ** ` [[_ entity] ctx] `
 ```
 * :data nil
-* :params [[_ entity] ctx]
 ```
 
-## :tx/apply-modifiers
+** :tx/apply-modifiers ** ` [[_ entity modifiers] _ctx] `
 ```
 * :data nil
-* :params [[_ entity modifiers] _ctx]
 ```
 
-## :tx/create
+** :tx/create ** ` [[_ body components] ctx] `
 ```
 * :data nil
-* :params [[_ body components] ctx]
 ```
 
-## :tx/destroy
+** :tx/destroy ** ` [[_ entity] ctx] `
 ```
 * :data nil
-* :params [[_ entity] ctx]
 ```
 
-## :tx/effect
+** :tx/effect ** ` [[_ effect-ctx effects] ctx] `
 ```
 * :data nil
-* :params [[_ effect-ctx effects] ctx]
 ```
 
-## :tx/event
+** :tx/event ** ` [[_ eid event params] ctx] `
 ```
 * :data nil
-* :params [[_ eid event params] ctx]
 ```
 
-## :tx/msg-to-player
+** :tx/msg-to-player ** ` [[_ message] ctx] `
 ```
 * :data nil
-* :params [[_ message] ctx]
 ```
 
-## :tx/pickup-item
+** :tx/pickup-item ** ` [[_ entity item] _ctx] `
 ```
 * :data nil
-* :params [[_ entity item] _ctx]
 ```
 
-## :tx/player-modal
+** :tx/player-modal ** ` [[_ params] ctx] `
 ```
 * :data nil
-* :params [[_ params] ctx]
 ```
 
-## :tx/position-changed
+** :tx/position-changed ** ` [[_ entity] ctx] `
 ```
 * :data nil
-* :params [[_ entity] ctx]
 ```
 
-## :tx/remove-from-world
+** :tx/remove-from-world ** ` [[_ entity] ctx] `
 ```
 * :data nil
-* :params [[_ entity] ctx]
 ```
 
-## :tx/remove-item
+** :tx/remove-item ** ` [[_ entity cell] _ctx] `
 ```
 * :data nil
-* :params [[_ entity cell] _ctx]
 ```
 
-## :tx/remove-item-from-widget
+** :tx/remove-item-from-widget ** ` [[_ cell] ctx] `
 ```
 * :data nil
-* :params [[_ cell] ctx]
 ```
 
-## :tx/remove-skill
+** :tx/remove-skill ** ` [[_ entity {:keys [property/id], :as skill}] _ctx] `
 ```
 * :data nil
-* :params [[_ entity {:keys [property/id], :as skill}] _ctx]
 ```
 
-## :tx/reverse-modifiers
+** :tx/reverse-modifiers ** ` [[_ entity modifiers] _ctx] `
 ```
 * :data nil
-* :params [[_ entity modifiers] _ctx]
 ```
 
-## :tx/set-item
+** :tx/set-item ** ` [[_ entity cell item] _ctx] `
 ```
 * :data nil
-* :params [[_ entity cell item] _ctx]
 ```
 
-## :tx/set-item-image-in-widget
+** :tx/set-item-image-in-widget ** ` [[_ cell item] ctx] `
 ```
 * :data nil
-* :params [[_ cell item] ctx]
 ```
 
-## :tx/sound
+** :tx/sound ** ` [_ ctx] `
 ```
 * :data nil
-* :params [_ ctx]
 ```
 
-## :tx/stack-item
+** :tx/stack-item ** ` [[_ entity cell item] _ctx] `
 ```
 * :data nil
-* :params [[_ entity cell item] _ctx]
 ```
 
 
 # tx.context.action-bar
-## :tx.context.action-bar/add-skill
+** :tx.context.action-bar/add-skill ** ` [[_ {:keys [property/id property/image], :as skill}] ctx] `
 ```
 * :data nil
-* :params [[_ {:keys [property/id property/image], :as skill}] ctx]
 ```
 
-## :tx.context.action-bar/remove-skill
+** :tx.context.action-bar/remove-skill ** ` [[_ {:keys [property/id]}] ctx] `
 ```
 * :data nil
-* :params [[_ {:keys [property/id]}] ctx]
 ```
 
 
 # tx.context.cursor
-## :tx.context.cursor/set
+** :tx.context.cursor/set ** ` [[_ cursor-key] ctx] `
 ```
 * :data nil
-* :params [[_ cursor-key] ctx]
 ```
 
 
 # tx.entity
-## :tx.entity/assoc
+** :tx.entity/assoc ** ` [[_ entity k v] ctx] `
 ```
 * :data nil
-* :params [[_ entity k v] ctx]
 ```
 
-## :tx.entity/assoc-in
+** :tx.entity/assoc-in ** ` [[_ entity ks v] ctx] `
 ```
 * :data nil
-* :params [[_ entity ks v] ctx]
 ```
 
-## :tx.entity/audiovisual
+** :tx.entity/audiovisual ** ` [[_ position id] ctx] `
 ```
 * :data nil
-* :params [[_ position id] ctx]
 ```
 
-## :tx.entity/creature
+** :tx.entity/creature ** ` [[_ creature-id components] ctx] `
 ```
 * :data nil
-* :params [[_ creature-id components] ctx]
 ```
 
-## :tx.entity/dissoc
+** :tx.entity/dissoc ** ` [[_ entity k] ctx] `
 ```
 * :data nil
-* :params [[_ entity k] ctx]
 ```
 
-## :tx.entity/dissoc-in
+** :tx.entity/dissoc-in ** ` [[_ entity ks] ctx] `
 ```
 * :data nil
-* :params [[_ entity ks] ctx]
 ```
 
-## :tx.entity/item
+** :tx.entity/item ** ` [[_ position item] _ctx] `
 ```
 * :data nil
-* :params [[_ position item] _ctx]
 ```
 
-## :tx.entity/line-render
+** :tx.entity/line-render ** ` [[_ {:keys [start end duration color thick?]}] _ctx] `
 ```
 * :data nil
-* :params [[_ {:keys [start end duration color thick?]}] _ctx]
 ```
 
-## :tx.entity/projectile
+** :tx.entity/projectile ** ` [[_ projectile-id {:keys [position direction faction]}] ctx] `
 ```
 * :data nil
-* :params [[_ projectile-id {:keys [position direction faction]}] ctx]
 ```
 
-## :tx.entity/set-movement
+** :tx.entity/set-movement ** ` [[_ entity movement] ctx] `
 ```
 * :data nil
-* :params [[_ entity movement] ctx]
 ```
 
-## :tx.entity/shout
+** :tx.entity/shout ** ` [[_ position faction delay-seconds] ctx] `
 ```
 * :data nil
-* :params [[_ position faction delay-seconds] ctx]
 ```
 
-## :tx.entity/update-in
+** :tx.entity/update-in ** ` [[_ entity ks f] ctx] `
 ```
 * :data nil
-* :params [[_ entity ks f] ctx]
 ```
 
 
 # tx.entity.stats
-## :tx.entity.stats/pay-mana-cost
+** :tx.entity.stats/pay-mana-cost ** ` [[_ entity cost] _ctx] `
 ```
 * :data nil
-* :params [[_ entity cost] _ctx]
 ```
 
