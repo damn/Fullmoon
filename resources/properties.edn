@@ -1,4 +1,13 @@
-({:property/id :skills/spawn,
+({:property/id :skills/double-fireball,
+  :property/image
+  {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
+  :skill/action-time 0.01,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effects {:effect/projectile :projectiles/double-fireball},
+  :skill/start-action-sound "sounds/bfxr_cast.wav"}
+ {:property/id :skills/spawn,
   :property/image
   {:file "images/skills.png", :sub-image-bounds [160 64 32 32]},
   :skill/action-time 0.4,
