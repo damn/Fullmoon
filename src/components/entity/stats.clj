@@ -4,7 +4,7 @@
             [gdx.graphics.color :as color]
             [utils.core :as utils :refer [k->pretty-name readable-number]]
             [utils.random :as random]
-            [core.val-max :refer [val-max-ratio #_lower-than-max? #_set-to-max]]
+            [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
@@ -331,28 +331,6 @@
    (= (component/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
-
-; breaks with defcomponent because the sys-impls are not a list but a 'cons'
-#_(defcomponent :effect/stats-mana-set-to-max {:widget :label
-                                              :data [:= true]
-                                              :default-value true}
-  (component/info-text [_ _effect-ctx]
-    (str "Sets " (name stat) " to max."))
-
-  (component/applicable? ~'[_ _effect-ctx] true)
-
-  (component/useful? ~'[_ {:keys [effect/source]}]
-    (lower-than-max? (~stat (:entity/stats @~'source))))
-
-  (component/do! ~'[_ {:keys [effect/source]}]
-    [[:tx/sound "sounds/bfxr_click.wav"]
-     [:tx.entity/assoc-in ~'source [:entity/stats ~stat] (set-to-max (~stat (:entity/stats @~'source)))]]))
-
-; TODO sound will be played twice !
-; => or re-add effect/sound & make it useful? false ....
-; also this is target-self
-#_(def-set-to-max-effect :stats/hp)
-#_(def-set-to-max-effect :stats/mana)
 
 (defn- entity*->melee-damage [entity*]
   (let [strength (or (entity/stat entity* :stats/strength) 0)]

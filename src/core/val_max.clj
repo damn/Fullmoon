@@ -19,11 +19,11 @@
     0
     (/ v mx)))
 
-(defn lower-than-max? [[^int v ^int mx]]
+#_(defn lower-than-max? [[^int v ^int mx]]
   {:pre [(m/validate val-max-schema [v mx])]}
   (< v mx))
 
-(defn set-to-max [[v mx]]
+#_(defn set-to-max [[v mx]]
   {:pre [(m/validate val-max-schema [v mx])]}
   [mx mx])
 
