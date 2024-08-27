@@ -16,7 +16,7 @@
 (defcomponent :enum
   (component/->data [[_ items]]
     {:widget :enum
-     :schema [:enum items]
+     :schema (apply vector :enum items)
      :items items}))
 
 ; not checking if one of existing ids used
@@ -51,4 +51,4 @@
 (defcomponent :components-ns
   (component/->data [[_ k]]
     (let [ks (filter #(= (name k) (namespace %)) (keys component/attributes))]
-      (component/->data (apply vector :components ks)))))
+      (component/->data [:components ks]))))
