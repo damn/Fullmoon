@@ -105,6 +105,7 @@
   (when-let [base-value (stat-k stats)]
     (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
 
+; TODO pull out
 (def ^:private stats-info-text-order
   [:stats/hp
    :stats/mana
@@ -113,14 +114,8 @@
    :stats/cast-speed
    :stats/attack-speed
    :stats/armor-save
-   :stats/armor-pierce
-   ])
+   :stats/armor-pierce])
 
-; widgets / icons ? (see WoW )
-; * HP color based on ratio like hp bar samey (take same color definitions etc.)
-; * mana color same in the whole app
-; * red positive/green negative
-; * readable-number on ->effective-value but doesn't work on val-max ->pretty-value fn ?
 (defn- stats-info-texts [stats]
   (str/join "\n"
             (for [stat-k stats-info-text-order

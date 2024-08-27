@@ -1,7 +1,6 @@
 (ns components.effect.target-all
   (:require [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
-            [core.components :as components]
             [core.graphics :as g]
             [core.context :as ctx]
             [core.entity :as entity]
@@ -30,8 +29,8 @@
 (defcomponent :effect/target-all
   {:data [:map :entity-effects]
    :let {:keys [entity-effects]}}
-  (component/info-text [_ ctx]
-    (str "All visible targets\n" (components/info-text entity-effects ctx)))
+
+  (component/info-text [_ ctx] "All visible targets")
 
   (component/applicable? [_ _ctx]
     true)

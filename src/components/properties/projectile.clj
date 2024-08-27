@@ -12,7 +12,9 @@
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
 (defcomponent :projectile/max-range {:data :pos-int})
 (defcomponent :projectile/speed     {:data :pos-int})
-(defcomponent :projectile/piercing? {:data :boolean})
+
+(defcomponent :projectile/piercing? {:data :boolean}
+  (component/info-text [_ ctx] "[GRAY]Piercing[]"))
 
 (defcomponent :properties/projectile
   (component/create [_ _ctx]
@@ -61,6 +63,8 @@
   (v/add (:position entity*)
          (v/scale direction
                   (+ (:radius entity*) size 0.1))))
+
+; TODO here pass the projectile itself ... (info-text etc.)
 
 ; TODO effect/text ... shouldn't have source/target dmg stuff ....
 ; as it is just sent .....
