@@ -350,6 +350,8 @@
 
  ; TODO I want to maintain the test-map with test-items & test-skills
  ; - maybe put in the map-properties player items/skills ....
+
+ ; TODO ADD TO MAP !!!
  (gdx.app/post-runnable (fn []
                           (do
                            (learn-skill! :skills/projectile)
@@ -360,6 +362,8 @@
                            (learn-skill! :skills/convert)
                            (learn-skill! :skills/blood-curse)
                            (learn-skill! :skills/slow)
+                           (learn-skill! :skills/double-fireball)
+
                            )))
 
 

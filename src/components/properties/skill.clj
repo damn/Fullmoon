@@ -16,6 +16,107 @@
 (defcomponent :skill/start-action-sound       {:data :sound})
 (defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
 
+ ; Try to remove source/target and just pass eid?
+
+ ; effect/convert -> faction
+ ; effect/damage -> hit-effect/entity-target-effect
+ ; effect/kill => more generic effect/event
+ ; :effect/melee-damage => more generic effect/event
+ ; :effect/stun
+
+ ; possible to apply on entity ->
+ ; tx/destroy (on projectiles ... , kill all around?)
+ ; tx/add-skill
+ ; tx/add-text-effect
+
+ ; => apply modifiers ?!  same as base/stat-effect??
+ ; :tx/pickup-item
+
+ ; expandable/tree-like make
+ ; link to code O.O?
+
+ ; go deeper => each component should supply all operations/effects
+ ; that means for each !data! effects/operations/txs are supplied ...
+
+; @ entity-state.player-idle moving button-just-pressed? to button-pressed? ...
+; then denied sound plays continously ....
+; TODO if out of range w. clickable => move in that dir.
+; TODO if skill not usable & reason is max-range => move in that dir.
+
+; set-to-max => vmx/set-ratio operation
+; heal ... etc. actions
+
+; * sounds move into action .... grep tx/sound anyway remv
+
+; can attack own faction w. melee ..
+
+; (component/schema :skill/effects)
+; TODO how on restarts clear out core.component/attributes & defsystems  & reload _ALL_ affecet ns's defcomponents ??
+
+; => its part of context then ?
+
+; al data needs also to supply default value
+; e.g. DRY
+; convert nil cannot set it
+
+; Bow shouldn't have player modified stuff...
+
+; Window doesn't icnrease size on change (add components)
+; anyway full size?
+; also use tree? its messy ....
+; => needs to be nice...
+
+; maxrange needs to be connected w. los - max player range / creatures
+; etc.
+; and optional
+
+; TODO effect/projectile
+; needs direction & source & targeT?!
+; its what effect-target type usable?
+; player usable in just direction, NPC's use it w. target-entity to check if possible ....
+
+; or just keep  effect - projectile fits there
+; but other ones cannot use directly -
+; - entity-effect -  ?
+
+; TODO tx.ui / tx.create / tx.entity
+; or with effect
+; but tx. shorter
+
+; but doesn't work with effect/hp => stats/hp
+; or always effect.entity/_stat_
+; autocreate
+
+; :entity.effect/faction
+; :effect.entity/faction ?
+;
+; :entity-effect/damage
+; :hit-effect/damage
+; :tx.entity/damage
+; :tx.e/damage
+; ?
+
+; * convert
+; * ::stat-effect
+; * melee-damage
+; * damage
+; * stun/kill (use all events, add even 'interrupt' or destroy' ?
+
+; => SO ITS ABOUT definint hit-effects (also use @ projectile hit-effects)
+; or entity-effects???
+; there are more ... also add-skill/etc.?
+; see defcomponents do! ...
+
+
+; TODO effect-target/position => {:effect/spawn :creatures/skeleton-warrior}
+; don't pass anymore effect/source & effect/target etc.
+; =. effect-target/position or direction?? {:effect/projectile :projectiles/black}
+; (more complicated ...)
+
+; TODO probably action/sound and not sound at low lvl places ... ?
+
+; TODO can I move other skill related stuff over here? grep key usage ???
+
 (defcomponent :properties/skill
   (component/create [_ _ctx]
     {:id-namespace "skills"

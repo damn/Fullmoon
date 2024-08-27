@@ -257,6 +257,13 @@
   (let [optional? (get (get attributes k) :optional? :not-found)]
     (if (= optional? :not-found)
       true
+      ; wanted to do false but then all validation errors .... need to go through all components and see first
+      ; components-components mostly optional?
+      ; => it depends on the property !
+      ; the same component can be used different ways ... in same ways optional some not ...
+      ; e.g. all effects optional // modifiers //
+      ; => define in the map itself?
+      ; or ':opt?' key
       optional?)))
 
 (defn attribute-schema [ks]
