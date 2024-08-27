@@ -10,6 +10,7 @@
 
 
 ; TODO pull out => entity/type or just type ?
+; also order is there @ property-editor-screen
 (def ^:private info-text-key-order
   [; Creature
    :entity.creature/name

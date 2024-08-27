@@ -8,9 +8,9 @@
 ; [:world/spawn-rate data/pos-attr] ; TODO <1 !
 
 (defcomponent :world/type {:data [:enum
-                                  :world.type/tiled-map
-                                  :world.type/modules
-                                  :world.type/uf-caves]})
+                                  [:world.type/tiled-map
+                                   :world.type/modules
+                                   :world.type/uf-caves]]})
 
 (defcomponent :properties/world
   (component/create [_ _ctx]

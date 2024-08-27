@@ -27,7 +27,7 @@
  )
 
 (defcomponent :effect/target-all
-  {:data [:map :entity-effects]
+  {:data [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
 
   (component/info-text [_ ctx] "All visible targets")

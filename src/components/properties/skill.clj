@@ -15,7 +15,7 @@
 (defcomponent :skill/cost                     {:data :nat-int})
 (defcomponent :skill/effects                  {:data [:components-ns :effect]})
 (defcomponent :skill/start-action-sound       {:data :sound})
-(defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
+(defcomponent :skill/action-time-modifier-key {:data [:enum [:stats/cast-speed :stats/attack-speed]]})
 
 ; effect-ctx safe-merge into effect value !
 ; can let

@@ -124,7 +124,7 @@
               (str (k->pretty-name stat-k) ": " value))))
 
 (defn defmodifier [modifier-k operations]
-  (defcomponent modifier-k {:data (apply vector :components operations)}))
+  (defcomponent modifier-k {:data [:components operations]}))
 
 (defn defstat [stat-k {:keys [data operations]}]
   (defcomponent stat-k {:data data})
@@ -175,11 +175,11 @@
                   operations)]]))))
 
 (defcomponent :effect.entity/hp
-  {:data [:components :op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
+  {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
 (derive :effect.entity/hp :base/stat-effect)
 
 (defcomponent :effect.entity/mana
-  {:data [:components :op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
+  {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
 (derive :effect.entity/mana :base/stat-effect)
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
@@ -196,7 +196,7 @@
 ; or an icon even on the creature
 ; also we want audiovisuals always ...
 (defcomponent :effect.entity/movement-speed
-  {:data [:components :op/mult]})
+  {:data [:components [:op/mult]]})
 (derive :effect.entity/movement-speed :base/stat-effect)
 
 ; TODO clamp into ->pos-int
@@ -243,7 +243,7 @@
 (defmodifier :modifier/damage-receive [:op/inc :op/mult])
 
 (defcomponent :stats/modifiers
-  {:data [:components :modifier/damage-deal :modifier/damage-receive]})
+  {:data [:components [:modifier/damage-deal :modifier/damage-receive]]})
 
 (extend-type core.entity.Entity
   entity/Stats
@@ -394,7 +394,7 @@
 
 (defcomponent :effect.entity/damage
   {:let damage
-   :data [:map :damage/min-max]}
+   :data [:map [:damage/min-max]]}
   (component/info-text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]

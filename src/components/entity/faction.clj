@@ -4,7 +4,7 @@
 
 (defcomponent :entity/faction
   {:let faction
-   :data [:enum :good :evil]}
+   :data [:enum [:good :evil]]}
   (component/info-text [_ _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 

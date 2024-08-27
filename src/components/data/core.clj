@@ -14,9 +14,9 @@
 (defcomponent :pos-int   {:widget :text-field :schema pos-int?})
 
 (defcomponent :enum
-  (component/->data [[_ & items :as schema]]
+  (component/->data [[_ items]]
     {:widget :enum
-     :schema schema
+     :schema [:enum items]
      :items items}))
 
 ; not checking if one of existing ids used
@@ -36,13 +36,13 @@
   (apply vector :map {:closed true} (component/attribute-schema ks)))
 
 (defcomponent :map
-  (component/->data [[_ & ks]]
+  (component/->data [[_ ks]]
     {:widget :nested-map
      :schema (map-schema ks)
      :default-value (zipmap ks (map component/default-value ks))}))
 
 (defcomponent :components
-  (component/->data [[_ & ks]]
+  (component/->data [[_ ks]]
     {:widget :nested-map
      :schema (map-schema ks)
      :components ks
