@@ -5,7 +5,6 @@
 
 ; [:world/map-size data/pos-int-attr]
 ; [:world/max-area-level data/pos-int-attr] ; TODO <= map-size !?
-; [:world/princess {:data [:qualified-keyword {:namespace :creatures}]}]
 ; [:world/spawn-rate data/pos-attr] ; TODO <1 !
 
 (defcomponent :world/type {:data [:enum
@@ -37,7 +36,6 @@
                 start-position]} (mapgen.module-gen/generate ctx
                                                              {:world/map-size 3,
                                                               :world/max-area-level 3,
-                                                              :world/princess :creatures/lady-a,
                                                               :world/spawn-rate 0.05})]
     {:tiled-map tiled-map
      :start-position start-position}))

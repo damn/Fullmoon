@@ -44,19 +44,12 @@
   [ctx _clicked-entity*]
   (toggle-visible! (inventory-window ctx))) ; TODO no tx
 
-(defmethod on-clicked :clickable/princess
-  [ctx _clicked-entity*]
-  [[:tx/event (:entity/id (ctx/player-entity* ctx)) :found-princess]])
-
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
     :clickable/item (if too-far-away?
                       :cursors/hand-before-grab-gray
                       :cursors/hand-before-grab)
-    :clickable/player :cursors/bag
-    :clickable/princess (if too-far-away?
-                          :cursors/princess-gray
-                          :cursors/princess)))
+    :clickable/player :cursors/bag))
 
 (defn- ->clickable-mouseover-entity-interaction [ctx player-entity* mouseover-entity*]
   (if (and (< (v/distance (:position player-entity*)

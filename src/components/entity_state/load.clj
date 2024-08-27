@@ -6,7 +6,6 @@
                                      npc-moving
                                      npc-sleeping
                                      player-dead
-                                     player-found-princess
                                      player-idle
                                      player-item-on-cursor
                                      player-moving)))

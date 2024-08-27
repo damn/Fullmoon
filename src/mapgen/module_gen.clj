@@ -221,17 +221,11 @@
           (when (seq creatures)
             (set-tile! layer position (creature->tile (rand-nth creatures)))))))))
 
-(defn- place-princess! [context tiled-map position princess]
-  (set-tile! (tiled/get-layer tiled-map "creatures")
-             position
-             (creature->tile (core.context/get-property context princess))))
-
 (defn generate
   "The generated tiled-map needs to be disposed."
   [context {:keys [world/map-size
                    world/max-area-level
-                   world/spawn-rate
-                   world/princess]}]
+                   world/spawn-rate]}]
   (assert (<= max-area-level map-size))
   (let [{:keys [start grid]} (->cave-grid :size map-size)
         ;_ (printgrid grid)
@@ -276,7 +270,6 @@
                                                     (tiled/property-value tiled-map :creatures p :id))))
                                             spawn-positions)))]
     (place-creatures! context spawn-rate tiled-map spawn-positions scaled-area-level-grid)
-    (place-princess! context tiled-map (get-free-position-in-area-level max-area-level) princess)
     {:tiled-map tiled-map
      :start-position (get-free-position-in-area-level 0)
      :area-level-grid scaled-area-level-grid}))
@@ -407,7 +400,6 @@
         spawn-positions (flood-fill grid start-position can-spawn?)
         ]
     ; TODO don't spawn my faction vampire w. items ...
-    ; TODO don't spawn princess with clickable
     ; TODO don't spawn creatures on start position
     ; (all check have HP/movement..../?? ?) (breaks potential field, targeting, ...)
     (uf-place-creatures! ctx spawn-rate tiled-map spawn-positions)

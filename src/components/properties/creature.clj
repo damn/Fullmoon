@@ -82,8 +82,7 @@
     :stun -> :stunned
     :start-action -> :active-skill
     :pickup-item -> :player-item-on-cursor
-    :movement-input -> :player-moving
-    :found-princess -> :princess-saved]
+    :movement-input -> :player-moving]
    [:player-moving
     :kill -> :player-dead
     :stun -> :stunned
@@ -100,7 +99,6 @@
     :stun -> :stunned
     :drop-item -> :player-idle
     :dropped-item -> :player-idle]
-   [:princess-saved]
    [:player-dead]])
 
 (defn ->player-state [initial-state]
@@ -215,9 +213,7 @@
                     :z-order/ground)}
         (-> creature-components
             (dissoc :entity/flying?)
-            (merge (dissoc components :entity/position)
-                   (when (= creature-id :creatures/lady-a) ; do @ ? ; TODO delete princess
-                     {:entity/clickable {:type :clickable/princess}}))
+            (merge (dissoc components :entity/position))
             (update :entity/state set-state)  ; do @ entity/state itself
             (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
                    :entity.creature/species (str/capitalize (name (:creature/species props)))

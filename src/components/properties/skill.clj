@@ -16,36 +16,6 @@
 (defcomponent :skill/start-action-sound       {:data :sound})
 (defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
 
- ; Try to remove source/target and just pass eid?
-
- ; effect/convert -> faction
- ; effect/damage -> hit-effect/entity-target-effect
- ; effect/kill => more generic effect/event
- ; :effect/melee-damage => more generic effect/event
- ; :effect/stun
-
- ; possible to apply on entity ->
- ; tx/destroy (on projectiles ... , kill all around?)
- ; tx/add-skill
- ; tx/add-text-effect
-
- ; => apply modifiers ?!  same as base/stat-effect??
- ; :tx/pickup-item
-
- ; expandable/tree-like make
- ; link to code O.O?
-
- ; go deeper => each component should supply all operations/effects
- ; that means for each !data! effects/operations/txs are supplied ...
-
-; @ entity-state.player-idle moving button-just-pressed? to button-pressed? ...
-; then denied sound plays continously ....
-; TODO if out of range w. clickable => move in that dir.
-; TODO if skill not usable & reason is max-range => move in that dir.
-
-; set-to-max => vmx/set-ratio operation
-; heal ... etc. actions
-
 ; * sounds move into action .... grep tx/sound anyway remv
 
 ; can attack own faction w. melee ..
