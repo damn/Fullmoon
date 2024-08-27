@@ -26,15 +26,13 @@
 
  )
 
-(defcomponent :hit-effects {:data [:components-ns :effect.entity]})
-
 (defcomponent :effect/target-all
-  {:data [:map :hit-effects]
-   :default-value {:hit-effects {}}
-   :let {:keys [hit-effects]}}
+  {:data [:map :entity-effects]
+   :default-value {:entity-effects {}}
+   :let {:keys [entity-effects]}}
   (component/info-text [_ ctx]
     (str "All visible targets\n"
-         (ctx/effect-text ctx hit-effects)))
+         (ctx/effect-text ctx entity-effects)))
 
   (component/applicable? [_ _ctx]
     true)
@@ -59,7 +57,7 @@
                 ; at sub-effects
                 ; and no more safe - merge
                 ; find a way to pass ctx / effect-ctx separate ?
-                [:tx/effect {:effect/source source :effect/target target} hit-effects]]))))
+                [:tx/effect {:effect/source source :effect/target target} entity-effects]]))))
 
   (component/render [_ g {:keys [effect/source effect/target] :as ctx}]
     (let [source* @source]

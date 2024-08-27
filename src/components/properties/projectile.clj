@@ -11,7 +11,6 @@
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
 (defcomponent :projectile/max-range {:data :pos-int})
 (defcomponent :projectile/speed     {:data :pos-int})
-(defcomponent :projectile/effects   {:data [:components-ns :effect.entity]}) ; == entity-hit-effects ?
 (defcomponent :projectile/piercing? {:data :boolean})
 
 (defcomponent :properties/projectile
@@ -21,8 +20,8 @@
               [:property/image ; TODO what is optional/obligatory??
                :projectile/max-range
                :projectile/speed
-               :projectile/effects
-               :projectile/piercing?]]
+               :projectile/piercing?
+               :entity-effects]]
      :edn-file-sort-order 8
      :overview {:title "Projectiles"
                 :columns 16
@@ -39,7 +38,7 @@
     (let [{:keys [property/image
                   projectile/max-range
                   projectile/speed
-                  projectile/effects
+                  entity-effects
                   projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
           size (projectile-size prop)]
       [[:tx/create
@@ -54,7 +53,7 @@
                   :faction faction
                   :delete-after-duration (/ max-range speed)
                   :destroy-audiovisual :audiovisuals/hit-wall
-                  :projectile-collision {:hit-effects effects
+                  :projectile-collision {:entity-effects entity-effects
                                          :piercing? piercing?}}]])))
 
 (defn- start-point [entity* direction size]
@@ -68,7 +67,7 @@
 (defcomponent :effect/projectile
   {:data [:qualified-keyword {:namespace :projectiles}]}
   (component/info-text [[_ projectile-id] ctx]
-    (ctx/effect-text ctx (:projectile/effects (ctx/get-property ctx projectile-id))))
+    (ctx/effect-text ctx (:entity-effects (ctx/get-property ctx projectile-id))))
 
   ; TODO for npcs need target -- anyway only with direction
   (component/applicable? [_ {:keys [effect/direction]}]

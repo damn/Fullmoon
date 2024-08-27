@@ -89,28 +89,28 @@
             type))
         types))
 
-(defn- validate [types property & {:keys [humanize?]}]
-  (let [type (property->type types property)
-        schema (:schema (type types))]
-    (if (try (m/validate schema property)
-             (catch Throwable t
-               (throw (ex-info "m/validate fail" {:property property :type type} t))))
-      property
-      (throw (Error. (let [explained (m/explain schema property)]
-                       (str (if humanize?
-                              (me/humanize explained)
-                              (binding [*print-level* nil]
-                                (with-out-str
-                                 (clojure.pprint/pprint
-                                  explained)))))))))))
+(defn- validation-error-message [schema property]
+  (let [explained (m/explain schema property)]
+    (str (me/humanize explained))))
 
 (def ^:private validate? true)
+
+(defn- validate [types property]
+  (if validate?
+    (let [type (property->type types property)
+          schema (:schema (type types))]
+      (if (try (m/validate schema property)
+               (catch Throwable t
+                 (throw (ex-info "m/validate fail" {:property property :type type} t))))
+        property
+        (throw (Error. (validation-error-message schema property)))))
+    property))
 
 (defn- load-edn [context types file]
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
-         (map #(if validate? (validate types %) %))
+         (map #(validate types %))
          (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
 
@@ -185,7 +185,7 @@
             {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
            (contains? db id)]}
-    (when validate? (validate types property :humanize? true))
+    (validate types property)
     ;(binding [*print-level* nil] (clojure.pprint/pprint property))
     (let [new-ctx (update-in ctx [:context/properties :db] assoc id property)]
       (write-properties-to-file! new-ctx)

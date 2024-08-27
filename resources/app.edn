@@ -97,7 +97,8 @@
                                                  [:property/pretty-name {:data :string}]
                                                  [:property/image       {:data :image}]
                                                  [:property/animation   {:data :animation}]
-                                                 [:property/sound       {:data :sound}]]
+                                                 [:property/sound       {:data :sound}]
+                                                 [:entity-effects       {:data [:components-ns :effect.entity]}]]
                                  :types [:properties/audiovisual
                                          :properties/creature
                                          :properties/item

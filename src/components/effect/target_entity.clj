@@ -25,22 +25,21 @@
 
 (defcomponent :maxrange {:data :pos})
 
-(defcomponent :hit-effects {:data [:components-ns :effect.entity]})
-
 (defcomponent :effect/target-entity
-  {:let {:keys [maxrange hit-effects]}
-   :data [:map :hit-effects :maxrange]
-   :default-value {:hit-effects {} ; TODO required for all map stuffs see targe-tall empty cannot add stuffs
+  {:let {:keys [maxrange entity-effects]}
+   :data [:map :entity-effects :maxrange]
+   :default-value {:entity-effects {} ; TODO required for all map stuffs see targe-tall empty cannot add stuffs
                    :maxrange 2.0}
-   :doc "Applies hit-effects to a target if they are inside max-range & in line of sight.
+   :doc "Applies entity-effects to a target if they are inside max-range & in line of sight.
         Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
+
   (component/info-text [_ ctx]
     (str "Range " maxrange " meters\n"
-         (ctx/effect-text ctx hit-effects)))
+         (ctx/effect-text ctx entity-effects)))
 
   (component/applicable? [_ {:keys [effect/target] :as ctx}]
     (and target
-         (ctx/effect-applicable? ctx hit-effects)))
+         (ctx/effect-applicable? ctx entity-effects)))
 
   (component/useful? [_ {:keys [effect/source effect/target]}]
     (assert source)
@@ -60,7 +59,7 @@
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         hit-effects)
+         entity-effects)
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )

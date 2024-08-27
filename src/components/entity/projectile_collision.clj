@@ -7,7 +7,7 @@
             [core.world.cell :as cell :refer [cells->entities]]))
 
 (defcomponent :entity/projectile-collision
-  {:let {:keys [hit-effects already-hit-bodies piercing?]}}
+  {:let {:keys [entity-effects already-hit-bodies piercing?]}}
   (component/create [[_ v] _ctx]
     (assoc v :already-hit-bodies #{}))
 
@@ -15,7 +15,7 @@
   ; TODO DRY! LIME color for effects ...
   (component/info-text [_ ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
-         "[LIME]" (ctx/effect-text ctx hit-effects) "[]"))
+         "[LIME]" (ctx/effect-text ctx entity-effects) "[]"))
 
   ; TODO probably belongs to body
   (component/tick [[k _] entity ctx]
@@ -39,4 +39,4 @@
        (when destroy?
          [:tx/destroy id])
        (when hit-entity
-         [:tx/effect {:effect/source id :effect/target hit-entity} hit-effects])])))
+         [:tx/effect {:effect/source id :effect/target hit-entity} entity-effects])])))

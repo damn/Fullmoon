@@ -25,7 +25,7 @@
   :skill/cost 20,
   :skill/effects
   {:effect/target-entity
-   {:hit-effects {:effect.entity/convert true}, :maxrange 10}},
+   {:entity-effects {:effect.entity/convert true}, :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
  {:property/id :skills/blood-curse,
   :property/image
@@ -36,7 +36,7 @@
   :skill/cost 1,
   :skill/effects
   {:effect/target-all
-   {:hit-effects {:effect.entity/hp {:op/val-mult -0.5}}}},
+   {:entity-effects {:effect.entity/hp {:op/val-mult -0.5}}}},
   :skill/start-action-sound "sounds/bfxr_healmonsters.wav"}
  {:property/id :skills/bow,
   :property/image
@@ -47,7 +47,7 @@
   :skill/cost 0,
   :skill/effects
   {:effect/target-entity
-   {:hit-effects {:effect.entity/damage {:damage/min-max [0 10]}},
+   {:entity-effects {:effect.entity/damage {:damage/min-max [0 10]}},
     :maxrange 5}},
   :skill/start-action-sound "sounds/slash.wav"}
  {:property/id :skills/slow,
@@ -59,7 +59,7 @@
   :skill/cost 5,
   :skill/effects
   {:effect/target-entity
-   {:hit-effects {:effect.entity/movement-speed {:op/mult -0.5}},
+   {:entity-effects {:effect.entity/movement-speed {:op/mult -0.5}},
     :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
  {:property/id :skills/meditation,
@@ -80,7 +80,7 @@
   :skill/cost 10,
   :skill/effects
   {:effect/target-entity
-   {:hit-effects {:effect.entity/kill true}, :maxrange 10}},
+   {:entity-effects {:effect.entity/kill true}, :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_bossdeath.wav"}
  {:property/id :skills/projectile,
   :property/image
@@ -100,7 +100,7 @@
   :skill/cost 0,
   :skill/effects
   {:effect/target-entity
-   {:hit-effects {:effect.entity/melee-damage true}, :maxrange 0.5}},
+   {:entity-effects {:effect.entity/melee-damage true}, :maxrange 0.5}},
   :skill/start-action-sound "sounds/slash.wav"}
  {:creature/entity
   {:entity/animation
@@ -4592,7 +4592,7 @@
    :looping? nil},
   :property/id :audiovisuals/hit-ground,
   :property/sound "sounds/bfxr_fisthit.wav"}
- {:projectile/effects
+ {:entity-effects
   {:effect.entity/damage {:damage/min-max [4 8]},
    :effect.entity/stun 0.5},
   :projectile/max-range 10,
@@ -4601,7 +4601,7 @@
   :property/id :projectiles/black,
   :property/image
   {:file "images/uf_FX.png", :sub-image-bounds [24 288 24 24]}}
- {:projectile/effects {:effect.entity/kill true},
+ {:entity-effects {:effect.entity/kill true},
   :projectile/max-range 15,
   :projectile/piercing? true,
   :projectile/speed 9,
