@@ -17,6 +17,14 @@
 (defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
 
 ; * sounds move into action .... grep tx/sound anyway remv
+; => but what abt. target-entity? (in case of hit ground there's something already?)
+; should be the 'abort' case??? and not
+; & damage already has its own sound/audiovisual ?
+; => each group of 'effects' has its sound ? e.g. damage grouped with 3 other things, make its own sound
+
+; * get clear creature components/stats which required (hp for princess ... because potential field etc.)
+; and flatten _
+
 
 ; can attack own faction w. melee ..
 
