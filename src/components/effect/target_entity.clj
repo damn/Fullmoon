@@ -28,8 +28,6 @@
 (defcomponent :effect/target-entity
   {:let {:keys [maxrange entity-effects]}
    :data [:map :entity-effects :maxrange]
-   :default-value {:entity-effects {} ; TODO required for all map stuffs see targe-tall empty cannot add stuffs
-                   :maxrange 2.0}
    :doc "Applies entity-effects to a target if they are inside max-range & in line of sight.
         Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
 

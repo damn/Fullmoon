@@ -269,3 +269,5 @@
 (defn attribute-schema [ks]
   (for [k ks]
     [k {:optional (optional? k)} (schema k)]))
+
+(def default-value (comp :default-value k->data))

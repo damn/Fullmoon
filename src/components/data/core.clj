@@ -38,13 +38,15 @@
 (defcomponent :map
   (component/->data [[_ & ks]]
     {:widget :nested-map
-     :schema (map-schema ks)}))
+     :schema (map-schema ks)
+     :default-value (zipmap ks (map component/default-value ks))}))
 
 (defcomponent :components
   (component/->data [[_ & ks]]
     {:widget :nested-map
      :schema (map-schema ks)
-     :components ks}))
+     :components ks
+     :default-value {}}))
 
 (defcomponent :components-ns
   (component/->data [[_ k]]

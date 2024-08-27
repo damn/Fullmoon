@@ -150,7 +150,7 @@
                                              (remove! window)
                                              (add-actor! attribute-widget-group
                                                          (->attribute-widget-table ctx
-                                                                                   [nested-k (:default-value (component/attributes nested-k))]
+                                                                                   [nested-k (component/default-value nested-k)]
                                                                                    :horizontal-sep?
                                                                                    (pos? (count (children attribute-widget-group)))))
                                              (pack-ancestor-window! attribute-widget-group)

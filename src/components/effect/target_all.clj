@@ -28,7 +28,6 @@
 
 (defcomponent :effect/target-all
   {:data [:map :entity-effects]
-   :default-value {:entity-effects {}}
    :let {:keys [entity-effects]}}
   (component/info-text [_ ctx]
     (str "All visible targets\n"
