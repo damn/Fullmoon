@@ -30,8 +30,12 @@
                             :pack? true})
         scroll-pane (->scroll-pane ctx table)]
     {:actor scroll-pane
-     :width (+ (actor/width table) 200)
-     :height (min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
+     :width (- (ctx/gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)
+     :height (- (ctx/gui-viewport-height ctx) 100) })) ;(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))
+
+; TODO set to preferred width/height ??? why layouting not working properly?
+; use a tree?
+; make example with plain data
 
 (defn ->scrollable-choose-window [ctx rows]
   (->window ctx {:title "Choose"
