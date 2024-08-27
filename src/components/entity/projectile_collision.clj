@@ -1,6 +1,7 @@
 (ns components.entity.projectile-collision
   (:require [utils.core :refer [find-first]]
             [core.component :as component :refer [defcomponent]]
+            [core.components :as components]
             [core.context :as ctx :refer [world-grid]]
             [core.entity :as entity]
             [core.world.grid :refer [rectangle->cells]]
@@ -15,7 +16,7 @@
   ; TODO DRY! LIME color for effects ...
   (component/info-text [_ ctx]
     (str (when piercing? "[GRAY]Piercing[]\n")
-         "[LIME]" (ctx/effect-text ctx entity-effects) "[]"))
+         "[LIME]" (components/info-text entity-effects ctx) "[]"))
 
   ; TODO probably belongs to body
   (component/tick [[k _] entity ctx]

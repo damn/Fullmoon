@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
+            [core.components :as components]
             [core.context :as ctx]
             [core.entity :as entity]))
 
@@ -67,7 +68,8 @@
 (defcomponent :effect/projectile
   {:data [:qualified-keyword {:namespace :projectiles}]}
   (component/info-text [[_ projectile-id] ctx]
-    (ctx/effect-text ctx (:entity-effects (ctx/get-property ctx projectile-id))))
+    (components/info-text (:entity-effects (ctx/get-property ctx projectile-id))
+                          ctx ))
 
   ; TODO for npcs need target -- anyway only with direction
   (component/applicable? [_ {:keys [effect/direction]}]

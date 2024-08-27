@@ -1,6 +1,5 @@
 (ns components.world.effect-handler
-  (:require [clojure.string :as str]
-            core.image
+  (:require core.image
             core.animation
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
@@ -92,11 +91,6 @@
 
   (frame->txs [_ frame-number]
     (@frame->txs frame-number))
-
-  (effect-text [ctx effects]
-    (->> effects
-         (keep #(component/info-text % ctx))
-         (str/join "\n")))
 
   (effect-applicable? [ctx effects]
     (some #(component/applicable? % ctx) effects)))

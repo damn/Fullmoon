@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]
+            [core.components :as components]
             [core.context :as ctx]))
 
 (def ^:private skill-cost-color "[CYAN]")
@@ -15,6 +16,11 @@
 (defcomponent :skill/effects                  {:data [:components-ns :effect]})
 (defcomponent :skill/start-action-sound       {:data :sound})
 (defcomponent :skill/action-time-modifier-key {:data [:enum :stats/cast-speed :stats/attack-speed]})
+
+; effect-ctx safe-merge into effect value !
+; can let
+; no merge ctx
+; ?
 
 ; * sounds move into action .... grep tx/sound anyway remv
 ; => but what abt. target-entity? (in case of hit ground there's something already?)
@@ -127,6 +133,6 @@
                 (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
                 ; don't used player-entity* as it may be nil when just created, could use the current property creature @ editor
                 (str effect-color
-                     (ctx/effect-text (assoc ctx :effect/source (ctx/player-entity ctx))
-                                      effects)
+                     (components/info-text effects
+                                           (assoc ctx :effect/source (ctx/player-entity ctx)))
                      "[]")])}))
