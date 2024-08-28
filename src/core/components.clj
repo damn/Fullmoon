@@ -42,7 +42,7 @@
 
 (defn sort-by-order [components]
   (sort-by (fn [[k _]]
-             (index-of k-order k))
+             (or (index-of k-order k) 99))
            components))
 
 (defn- remove-newlines [s]
