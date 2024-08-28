@@ -278,17 +278,18 @@
     (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
  )
 
-(defcomponent :entity/stats
+(defcomponent :property/stats
   {:data [:components-ns :stats]
    :optional? false
    :let stats}
+  (component/create-kv [_ _ctx]
+    [:entity/stats (-> stats
+                       (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
+                       (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
+                       (update :stats/modifiers build-modifiers))]))
 
-  (component/create [stats _ctx]
-    (-> stats
-        (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
-        (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
-        (update :stats/modifiers build-modifiers)))
-
+(defcomponent :entity/stats
+  {:let stats}
   (component/info-text [_ _ctx]
     (str (stats-info-texts stats)
          "\n"

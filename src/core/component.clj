@@ -81,6 +81,10 @@
 
 (defsystem ->data [_])
 
+(defsystem create-kv [_ ctx])
+(defmethod create-kv :default [kv _ctx]
+  kv)
+
 ;;
 
 (defsystem create [_ ctx])

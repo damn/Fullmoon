@@ -40,9 +40,9 @@
    :creature/level
    :entity/animation
    :entity/reaction-time ; in frames 0.016x
-   :entity/stats
+   :property/stats
    :entity/inventory  ; remove
-   :entity/skills])
+   :property/skills])
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]
@@ -73,6 +73,10 @@
               :z-order/flying
               :z-order/ground)})
 
+(defn- create-kvs [components ctx]
+  (into {} (for [component components]
+             (component/create-kv component ctx))))
+
 (defcomponent :tx.entity/creature
   {:let {:keys [position creature-id components]}}
   (component/do! [_ ctx]
@@ -81,6 +85,7 @@
         (->body position props)
         (-> props
             (select-keys entity-component-attributes)
+            (create-kvs ctx)
             (safe-merge components)
             (assoc :destroy-audiovisual :audiovisuals/creature-die))]])))
 

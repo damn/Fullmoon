@@ -125,8 +125,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -147,8 +147,8 @@
     {:file "images/animations/goblin-warrior-4.png"}),
    :looping? true},
   :entity/reaction-time 0.5,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0,
@@ -175,8 +175,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -198,8 +198,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -221,8 +221,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -244,8 +244,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.05,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/armor-save 0.5,
    :stats/hp 20,
@@ -269,8 +269,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -292,8 +292,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -315,8 +315,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -338,8 +338,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -361,8 +361,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -384,8 +384,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
@@ -407,8 +407,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -431,8 +431,8 @@
   :entity/flying? false,
   :entity/inventory #{},
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -454,8 +454,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -477,8 +477,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -500,8 +500,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
+  :property/skills #{},
+  :property/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-b,
   :property/image
@@ -519,8 +519,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -542,8 +542,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -565,8 +565,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -588,8 +588,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -611,8 +611,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
@@ -634,8 +634,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -657,8 +657,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -680,8 +680,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -703,8 +703,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0.7,
@@ -731,8 +731,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -754,8 +754,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
@@ -777,8 +777,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -800,8 +800,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -823,8 +823,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -846,8 +846,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -869,8 +869,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -892,8 +892,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 1},
   :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-hawk,
@@ -912,8 +912,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -935,8 +935,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats {:stats/aggro-range 6, :stats/movement-speed 1},
+  :property/skills #{},
+  :property/stats {:stats/aggro-range 6, :stats/movement-speed 1},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-a,
   :property/image
@@ -954,8 +954,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -977,8 +977,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/movement-speed 2.4,
@@ -1000,8 +1000,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -1023,8 +1023,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 4},
   :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-crow,
@@ -1043,8 +1043,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
@@ -1066,8 +1066,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1089,8 +1089,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/bow},
-  :entity/stats
+  :property/skills #{:skills/bow},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1112,8 +1112,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1135,8 +1135,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
+  :property/skills #{},
+  :property/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-a,
   :property/image
@@ -1154,8 +1154,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1177,8 +1177,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1200,8 +1200,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
@@ -1223,8 +1223,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1246,8 +1246,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
@@ -1269,8 +1269,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1292,8 +1292,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -1315,8 +1315,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1338,8 +1338,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/spawn},
-  :entity/stats
+  :property/skills #{:skills/spawn},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1361,8 +1361,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -1384,8 +1384,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
@@ -1407,8 +1407,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1430,8 +1430,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1453,8 +1453,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -1476,8 +1476,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1499,8 +1499,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1522,8 +1522,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1545,8 +1545,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1568,8 +1568,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1591,8 +1591,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -1614,8 +1614,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1637,8 +1637,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1660,8 +1660,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
@@ -1683,8 +1683,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/meditation :skills/projectile},
-  :entity/stats
+  :property/skills #{:skills/meditation :skills/projectile},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1706,8 +1706,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1729,8 +1729,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1752,7 +1752,7 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/stats {:stats/aggro-range 6, :stats/mana 11},
+  :property/stats {:stats/aggro-range 6, :stats/mana 11},
   :property/bounds {:height 13/16, :width 2/3},
   :property/id :creatures/banshee,
   :property/image
@@ -1770,8 +1770,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1793,8 +1793,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1816,8 +1816,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 4},
   :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-dove,
@@ -1836,8 +1836,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1859,8 +1859,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1882,8 +1882,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1905,8 +1905,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -1928,8 +1928,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 18,
    :stats/mana 11,
@@ -1951,8 +1951,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -1974,8 +1974,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
@@ -1997,8 +1997,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2019,8 +2019,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
@@ -2042,8 +2042,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -2065,8 +2065,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2088,8 +2088,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2111,8 +2111,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2134,8 +2134,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
@@ -2157,8 +2157,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2180,8 +2180,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2218,8 +2218,8 @@
     :items/cloth-chest
     :items/gold-chest},
   :entity/reaction-time 0.02,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0,
@@ -2246,8 +2246,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2269,8 +2269,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2292,8 +2292,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
+  :property/skills #{},
+  :property/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-b,
   :property/image
@@ -2311,8 +2311,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2334,8 +2334,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2357,8 +2357,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2380,8 +2380,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2403,8 +2403,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2426,8 +2426,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2449,8 +2449,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2472,8 +2472,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2495,8 +2495,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2518,8 +2518,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2541,8 +2541,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2564,8 +2564,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2587,8 +2587,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/modifiers {:modifier/damage-receive {:op/mult -0.9}},
@@ -2611,8 +2611,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2634,8 +2634,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2657,8 +2657,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2680,8 +2680,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2703,8 +2703,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.1,
-  :entity/skills #{:skills/melee-attack},
-  :entity/stats
+  :property/skills #{:skills/melee-attack},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0,
@@ -2731,8 +2731,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2754,8 +2754,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2777,8 +2777,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
@@ -2800,8 +2800,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2823,8 +2823,8 @@
    :looping? true},
   :entity/flying? true,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -2846,8 +2846,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2869,8 +2869,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -2892,8 +2892,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2915,8 +2915,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2938,8 +2938,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2961,8 +2961,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2985,8 +2985,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -3008,8 +3008,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -3031,8 +3031,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -3054,8 +3054,8 @@
    :looping? true},
   :entity/flying? false,
   :entity/reaction-time 0.2,
-  :entity/skills #{},
-  :entity/stats
+  :property/skills #{},
+  :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,

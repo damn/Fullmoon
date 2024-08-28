@@ -4,16 +4,16 @@
             [core.context :as ctx :refer [->counter stopped?]]
             [core.entity :as entity]))
 
+(defcomponent :property/skills
+  {:data [:one-to-many-ids :properties/skill]}
+  (component/create-kv [[_ skill-ids] ctx]
+    [:entity/skills (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids))]))
+
 ; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
 ; https://trello.com/c/R6GSIDO1/363
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
 (defcomponent :entity/skills
-  {:data [:one-to-many-ids :properties/skill]}
-
-  (component/create [[_ skill-ids] ctx]
-    (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
-
   (component/info-text [[_ skills] _ctx]
     ; => recursive info-text leads to endless text wall
     #_(when (seq skills)
