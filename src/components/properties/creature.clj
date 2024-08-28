@@ -16,14 +16,6 @@
 (defcomponent :creature/skills      {:data [:one-to-many-ids :properties/skill]})
 (defcomponent :creature/stats       {:data [:components-ns :stats]})
 
-(defcomponent :creature/entity {:data [:components ; TODO no required/optional settings ! just cannot remove & already there !
-                                       [:entity/animation
-                                        :entity/flying? ; remove
-                                        :entity/reaction-time ; in frames 0.016x
-                                        :creature/stats
-                                        :entity/inventory  ; remove
-                                        :creature/skills]]})
-
 (defcomponent :entity.creature/name
   (component/info-text [[_ name] _ctx]
     name))
@@ -40,9 +32,12 @@
                :property/bounds
                :creature/species
                :creature/level
-
-               :creature/entity
-
+               :entity/animation
+               :entity/flying? ; remove
+               :entity/reaction-time ; in frames 0.016x
+               :creature/stats
+               :entity/inventory  ; remove
+               :creature/skills
                ]]
      :edn-file-sort-order 1
      :overview {:title "Creatures"
@@ -194,14 +189,13 @@
 (defcomponent :tx.entity/creature
   {:let {:keys [position creature-id components]}}
   (component/do! [_ ctx]
-    (let [props (ctx/get-property ctx creature-id)
-          creature-components (:creature/entity props)]
+    (let [props (ctx/get-property ctx creature-id)]
       [[:tx/create
         {:position position
          :width  (:width  (:property/bounds props))
          :height (:height (:property/bounds props))
          :collides? true
-         :z-order (if (:entity/flying? creature-components)
+         :z-order (if (:entity/flying? props)
                     :z-order/flying
                     :z-order/ground)}
         (safe-merge
@@ -209,14 +203,14 @@
                              :entity/state)
                      {:entity.creature/name    (str/capitalize (name (:property/id props)))
                       :entity.creature/species (str/capitalize (name (:creature/species props)))})
-         #:entity {:animation (:entity/animation creature-components)
-                   :reaction-time (:entity/reaction-time creature-components)
+         #:entity {:animation (:entity/animation props)
+                   :reaction-time (:entity/reaction-time props)
                    :state (set-state (:entity/state components))
-                   :inventory (:entity/inventory creature-components)
+                   :inventory (:entity/inventory props)
                    :skills (let [skill-ids (:creature/skills props)]
                              (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
                    :destroy-audiovisual :audiovisuals/creature-die
-                   :stats (-> (:creature/stats creature-components)
+                   :stats (-> (:creature/stats props)
                               (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
                               (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
                               (update :stats/modifiers build-modifiers))})]])))
