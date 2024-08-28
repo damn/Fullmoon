@@ -1,5 +1,7 @@
 (ns app
   (:require [clojure.edn :as edn]
+            [clojure.string :as str]
+            [utils.files :as files]
             [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
@@ -9,8 +11,19 @@
 
 (def state (atom nil))
 
+(defn require-all-components! []
+  (doseq [file (files/recursively-search "src/components/" #{"clj"})
+          :let [ns (-> file
+                       (str/replace "src/" "")
+                       (str/replace ".clj" "")
+                       (str/replace "/" ".")
+                       symbol)]]
+    (when-not (find-ns ns)
+      ;(println "require" ns)
+      (require ns))))
+
 (defn- create-context [components]
-  (component/require-all!)
+  (require-all-components!)
   (->> components
        (component/create-into (assoc (ctx/->Context) :context/state state))
        ctx/init-first-screen

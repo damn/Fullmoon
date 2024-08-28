@@ -1,8 +1,6 @@
 (ns core.component
   (:refer-clojure :exclude [apply])
-  (:require [clojure.string :as str]
-            [utils.core :refer [safe-get]]
-            [utils.files :as files]))
+  (:require [utils.core :refer [safe-get]]))
 
 ; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override true)
@@ -225,17 +223,6 @@
               ctx))
           ctx
           components))
-
-(defn require-all! []
-  (doseq [file (files/recursively-search "src/components/" #{"clj"})
-          :let [ns (-> file
-                       (str/replace "src/" "")
-                       (str/replace ".clj" "")
-                       (str/replace "/" ".")
-                       symbol)]]
-    (when-not (find-ns ns)
-      ;(println "cannot find " ns " , requiring.")
-      (require ns))))
 
 (defn doc [k]
   (:doc (get attributes k)))
