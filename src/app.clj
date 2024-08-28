@@ -7,8 +7,7 @@
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
-            [core.context :as ctx]
-            components.context.properties))
+            [core.context :as ctx]))
 
 (def state (atom nil))
 
@@ -23,20 +22,20 @@
       ;(println "require" ns)
       (require ns))))
 
-(defn- ->application [properties app-edn-file]
+(defn- ->application [properties file]
   (->application-listener
    :create (fn []
              (require-all-components!) ; here @ create because files/internal requires libgdx context
              (let [context (conj
                             (:app/context (get properties :app/core))
-                            [:context/properties {:file app-edn-file :properties properties}]
+                            [:context/properties {:file file
+                                                  :properties properties}]
                             [:context/screens [:screens/main-menu
                                                :screens/map-editor
                                                ;:screens/minimap
                                                :screens/options-menu
                                                :screens/property-editor
                                                :screens/world]])]
-               (clojure.pprint/pprint context)
                (->> context
                     (component/create-into (assoc (ctx/->Context) :context/state state))
                     ctx/init-first-screen
@@ -55,7 +54,13 @@
    :resize (fn [w h]
              (ctx/update-viewports @state w h))))
 
-(defn -main [& [app-edn-file]]
-  (let [properties (components.context.properties/load-edn-raw app-edn-file)]
-    (lwjgl3/->application (->application properties app-edn-file)
+(defn- load-properties [file]
+  (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
+    (assert (apply distinct? (map :property/id properties)))
+    (->> properties
+         (#(zipmap (map :property/id %) %)))))
+
+(defn -main [& [file]]
+  (let [properties (load-properties file)]
+    (lwjgl3/->application (->application properties file)
                           (lwjgl3/->configuration (:app/lwjgl3 (get properties :app/core))))))

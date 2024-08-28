@@ -99,12 +99,6 @@
            (throw (ex-info "" {:types types :property property} t))))
     property))
 
-(defn load-edn-raw [file]
-  (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
-    (assert (apply distinct? (map :property/id properties)))
-    (->> properties
-         (#(zipmap (map :property/id %) %)))))
-
 (defn- validate-and-deserialize [ctx types properties]
   (utils.core/mapvals #(->> %
                            (validate types)
