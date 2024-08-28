@@ -31,11 +31,10 @@
                              :entity/projectile-collision])
 
 (def ^:private k-order
-  (vec
-   (concat property-order
-           item-order
-           skill-order
-           entity-order)))
+  (vec (concat property-order
+               item-order
+               skill-order
+               entity-order)))
 
 (defn- index-of [v k]
   (let [idx (.indexOf v k)]
@@ -47,10 +46,6 @@
   (sort-by (fn [[k _v]]
              (index-of k-order k))
            components))
-
-
-
-; TODO this is recursive, e.g. projcetile/collision first piercing than effects?
 
 (defn- remove-newlines [s]
   (let [new-s (-> s
@@ -76,7 +71,6 @@
 ; entity/info-text? entity = bag of components ?
 ; core.entity is acatually core.body ?
 
-
 ; also properties == entities with uid property/id ?
 ; get-entity not get-property ?
 ; property -> create entity function generic make?
@@ -101,7 +95,6 @@
 ; :base/stat-effect ?? why not recursively?
 ; also stats why not modifiers has its own ?
 ; effect/projectile ...
-
 
 ; TODO then color as of component make ....
 ; default (name k?)
