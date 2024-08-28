@@ -13,40 +13,48 @@
 (defcomponent :creature/species
   {:data [:qualified-keyword {:namespace :species}]
    :optional? false}
+  (component/create [[_ species] _ctx]
+    (str/capitalize (name species)))
   (component/info-text [[_ species] _ctx]
     (str "[LIGHT_GRAY]Species: " species "[]")))
 
 (defcomponent :creature/level
   {:data :pos-int
-   :optional? false})
+   :optional? false}
+  (component/info-text [[_ lvl] _ctx]
+    (str "[GRAY]Level " lvl "[]")))
 
 (defcomponent :entity/flying?
   {:data :boolean
-   :optional? false})
+   :optional? true})
 
 (defcomponent :entity/reaction-time
   {:data :pos
    :optional? false})
 
+; TODO cannot add components if they are optional, no :data  [:components ..]
+
+(def ^:private entity-component-attributes
+  [:property/pretty-name
+   :creature/species
+   :creature/level
+   :entity/animation
+   :entity/reaction-time ; in frames 0.016x
+   :entity/stats
+   :entity/inventory  ; remove
+   :entity/skills])
+
 (defcomponent :properties/creature
   (component/create [_ _ctx]
     {:id-namespace "creatures"
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
-              [:property/pretty-name
-               :property/image
-
-               ; body
-               :property/bounds
-               :entity/flying? ; remove
-
-               :creature/species
-               :creature/level
-               :entity/animation
-               :entity/reaction-time ; in frames 0.016x
-               :entity/stats
-               :entity/inventory  ; remove
-               :entity/skills
-               ]]
+              (apply vector
+                     ; property
+                     :property/image
+                     ; body
+                     :property/bounds
+                     :entity/flying?
+                     entity-component-attributes)]
      :edn-file-sort-order 1
      :overview {:title "Creatures"
                 :columns 15
@@ -88,33 +96,25 @@
 
 ; otherwise
 
+(defn- ->body [position props]
+  {:position position
+   :width  (:width  (:property/bounds props))
+   :height (:height (:property/bounds props))
+   :collides? true
+   :z-order (if (:entity/flying? props)
+              :z-order/flying
+              :z-order/ground)})
 
 (defcomponent :tx.entity/creature
   {:let {:keys [position creature-id components]}}
   (component/do! [_ ctx]
     (let [props (ctx/get-property ctx creature-id)]
       [[:tx/create
-        {:position position
-         :width  (:width  (:property/bounds props))
-         :height (:height (:property/bounds props))
-         :collides? true
-         :z-order (if (:entity/flying? props)
-                    :z-order/flying
-                    :z-order/ground)}
-        (safe-merge
-
-         (safe-merge (dissoc components
-                             :entity/state)
-                     {:property/pretty-name (:property/pretty-name props)
-                      :creature/species     (str/capitalize (name (:creature/species props)))})
-
-         #:entity {:animation (:entity/animation props)
-                   :reaction-time (:entity/reaction-time props)
-                   :state (:entity/state components)
-                   :inventory (:entity/inventory props)
-                   :skills (:entity/skills props)
-                   :destroy-audiovisual :audiovisuals/creature-die
-                   :stats (:entity/stats props)})]])))
+        (->body position props)
+        (-> props
+            (select-keys entity-component-attributes)
+            (safe-merge components)
+            (assoc :destroy-audiovisual :audiovisuals/creature-die))]])))
 
 
 ; TODO spawning on player both without error ?! => not valid position checked
