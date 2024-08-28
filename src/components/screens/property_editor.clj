@@ -47,11 +47,8 @@
                  :rows [[(->scroll-pane-cell ctx rows)]]
                  :pack? true}))
 
-(defn- attr->value-widget [ck]
-  (or (ck->widget ck) :label))
-
-(defmulti ->value-widget     (fn [[k _v] _ctx] (attr->value-widget k)))
-(defmulti value-widget->data (fn [k _widget]   (attr->value-widget k)))
+(defmulti ->value-widget     (fn [[k _v] _ctx] (ck->widget k)))
+(defmulti value-widget->data (fn [k _widget]   (ck->widget k)))
 
 (defmethod value-widget->data :default [_ widget]
   (actor/id widget))
