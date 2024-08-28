@@ -3,14 +3,14 @@
   (:require [utils.core :refer [safe-get]]))
 
 ; TODO line number for overwrite warnings or ns at least....
-(def warn-on-override true)
+(def warn-on-override? true)
 
 (def defsystems {})
 
 (defmacro defsystem [sys-name params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
-  (when warn-on-override
+  (when warn-on-override?
     (when-let [avar (resolve sys-name)]
       (println "WARNING: Overwriting defsystem:" avar)))
   `(do
@@ -27,8 +27,8 @@
 (defn- k->component-ns [k]
   (symbol (str "components." (name (namespace k)) "." (name k))))
 
-(defn defcomponent* [k attr-map & {:keys [warn-on-override]}]
-  (when (and warn-on-override (get attributes k))
+(defn defcomponent* [k attr-map & {:keys [warn-on-override?]}]
+  (when (and warn-on-override? (get attributes k))
     (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'attributes assoc k attr-map))
 
@@ -44,7 +44,7 @@
         attr-map (dissoc attr-map :let)]
     `(do
       (when ~attr-map?
-        (defcomponent* ~k ~attr-map) :warn-on-override warn-on-override)
+        (defcomponent* ~k ~attr-map) :warn-on-override? warn-on-override?)
 
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
@@ -68,7 +68,7 @@
 
              (alter-var-root #'attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
 
-             (when (and warn-on-override
+             (when (and warn-on-override?
                         (get (methods @~sys-var) ~k))
                (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
 

@@ -118,7 +118,7 @@
   {:let {:keys [defcomponents types file]}}
   (component/create [_ ctx]
     (doseq [[k m] defcomponents]
-      (component/defcomponent* k m :warn-on-override false))
+      (component/defcomponent* k m :warn-on-override? false))
     (let [types (component/ks->create-all types {})
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
