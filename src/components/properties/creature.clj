@@ -157,6 +157,5 @@
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx.entity/creature {:position target-position
                            :creature-id creature-id
-                           :components #:entity {:position target-position
-                                                 :state [:state/npc :npc-idle]
+                           :components #:entity {:state [:state/npc :npc-idle]
                                                  :faction (:entity/faction @source)}}]]))
