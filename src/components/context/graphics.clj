@@ -8,7 +8,6 @@
             [core.component :refer [defcomponent] :as component]
             [core.graphics :as g]
             (components.graphics cursors
-                                 image
                                  shape-drawer
                                  text
                                  views)))
