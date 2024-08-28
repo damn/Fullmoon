@@ -20,7 +20,6 @@
                                        [:entity/animation
                                         :entity/flying? ; remove
                                         :entity/reaction-time ; in frames 0.016x
-                                        :entity/faction ; remove
                                         :creature/stats
                                         :entity/inventory  ; remove
                                         :creature/skills]]})
@@ -52,10 +51,7 @@
                 :sort-by-fn #(vector (:creature/level %)
                                      (name (:creature/species %))
                                      (name (:property/id %)))
-                :extra-info-text #(str (:creature/level %)
-                                       #_(case (:entity/faction (:creature/entity %))
-                                         :good "g"
-                                         :evil "e"))}}))
+                :extra-info-text #(str (:creature/level %))}}))
 
 (comment
  ; graphviz required in path
@@ -210,13 +206,11 @@
                     :z-order/ground)}
         (safe-merge
          (safe-merge (dissoc components
-                             :entity/state
-                             :entity/faction)
+                             :entity/state)
                      {:entity.creature/name    (str/capitalize (name (:property/id props)))
                       :entity.creature/species (str/capitalize (name (:creature/species props)))})
          #:entity {:animation (:entity/animation creature-components)
                    :reaction-time (:entity/reaction-time creature-components)
-                   :faction (or (:entity/faction creature-components) (:entity/faction components))
                    :state (set-state (:entity/state components))
                    :inventory (:entity/inventory creature-components)
                    :skills (let [skill-ids (:creature/skills props)]

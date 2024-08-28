@@ -21,13 +21,14 @@
                        (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
                          [:tx.entity/creature {:position (tile->middle posi)
                                                :creature-id (keyword creature-id)
-                                               :components #:entity {:state [:state/npc :npc-sleeping]}}]))
+                                               :components #:entity {:state [:state/npc :npc-sleeping]
+                                                                     :faction :evil}}]))
               ctx)]
     (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
     (ctx/do! ctx [[:tx.entity/creature {:position (tile->middle start-position)
                                         :creature-id :creatures/vampire
-                                        :components #:entity {:position
-                                                              :state [:state/player :player-idle]
+                                        :components #:entity {:state [:state/player :player-idle]
+                                                              :faction :good
                                                               :player? true
                                                               :free-skill-points 3
                                                               :clickable {:type :clickable/player}
