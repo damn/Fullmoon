@@ -196,12 +196,12 @@
  )
 
 (defcomponent :tx.entity/creature
-  (component/do! [[_ creature-id components] ctx]
-    (assert (:entity/state components))
+  {:let {:keys [position creature-id components]}}
+  (component/do! [_ ctx]
     (let [props (ctx/get-property ctx creature-id)
           creature-components (:creature/entity props)]
       [[:tx/create
-        {:position (:entity/position components)
+        {:position position
          :width  (:width  (:property/bounds props))
          :height (:height (:property/bounds props))
          :collides? true
@@ -210,7 +210,6 @@
                     :z-order/ground)}
         (safe-merge
          (safe-merge (dissoc components
-                             :entity/position
                              :entity/state
                              :entity/faction)
                      {:entity.creature/name    (str/capitalize (name (:property/id props)))
@@ -227,21 +226,6 @@
                               (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
                               (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
                               (update :stats/modifiers build-modifiers))})]])))
-
-
-(comment
-
- (set! *print-level* nil)
- (clojure.pprint/pprint
-  (component/do! [:tx.entity/creature :creatures/vampire {:entity/position [1 2]
-                                                       :entity/state [:state/npc :npc-sleeping]}]
-              (reify core.context/PropertyStore
-                (get-property [_ id]
-                  {:property/width 5
-                   :property/height 5
-                   :creature/entity {:entity/flying? true}}))))
-
- )
 
 
 ; TODO spawning on player both without error ?! => not valid position checked
@@ -282,8 +266,8 @@
 
   (component/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
-     [:tx.entity/creature
-      creature-id
-      #:entity {:position target-position
-                :state [:state/npc :npc-idle]
-                :faction (:entity/faction @source)}]]))
+     [:tx.entity/creature {:position target-position
+                           :creature-id creature-id
+                           :components #:entity {:position target-position
+                                                 :state [:state/npc :npc-idle]
+                                                 :faction (:entity/faction @source)}}]]))
