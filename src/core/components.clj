@@ -17,13 +17,11 @@
                             :skill/effects
                             :skill/start-action-sound])
 
-(def ^:private entity-order [:entity/animation
+(def ^:private entity-order [:creature/species
+                             :creature/level
+                             :entity/animation
                              :entity/flying?
                              :entity/reaction-time
-                             :creature/level
-                             :creature/species
-                             :entity.creature/name
-                             :entity.creature/species
                              :entity/faction
                              :entity/state
                              :entity/stats

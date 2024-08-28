@@ -7,7 +7,7 @@
     {:id-namespace "audiovisuals"
      :schema [[:property/id [:qualified-keyword {:namespace :audiovisuals}]]
               [:property/sound
-               :property/animation]]
+               :entity/animation]]
      :edn-file-sort-order 7
      :overview {:title "Audiovisuals"
                 :columns 10
@@ -16,7 +16,7 @@
 (defcomponent :tx.entity/audiovisual
   (component/do! [[_ position id] ctx]
     (let [{:keys [property/sound
-                  property/animation]} (ctx/get-property ctx id)]
+                  entity/animation]} (ctx/get-property ctx id)]
       [[:tx/sound sound]
        [:tx/create
         {:position position

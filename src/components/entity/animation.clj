@@ -8,7 +8,8 @@
 
 (defcomponent :entity/animation
   {:let animation
-   :data :animation}
+   :data :animation
+   :optional? false}
   (component/create-e [_ eid _ctx]
     [(tx-assoc-image-current-frame eid animation)])
 

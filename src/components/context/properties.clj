@@ -55,7 +55,6 @@
        (#(if (:property/image %)
            (update % :property/image (fn [img] (edn->image context img)))
            %))
-       (#(if (:property/animation %) (update % :property/animation (fn [anim] (edn->animation context anim))) %))
        (#(if (:entity/animation   %) (update % :entity/animation   (fn [anim] (edn->animation context anim))) %))))
 
 ; Other approaches to serialization:
@@ -66,7 +65,6 @@
 (defn- serialize [data]
   (->> data
        (#(if (:property/image %) (update % :property/image image->edn) %))
-       (#(if (:property/animation %) (update % :property/animation animation->edn) %))
        (#(if (:entity/animation   %) (update % :entity/animation   animation->edn) %))))
 
 (defn- of-type?

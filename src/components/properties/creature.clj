@@ -9,20 +9,16 @@
 ; TODO make px
 (defcomponent :property/bounds      {:data :some})
 
-(defcomponent :creature/species     {:data [:qualified-keyword {:namespace :species}]})
+(defcomponent :creature/species
+  {:data [:qualified-keyword {:namespace :species}]}
+  (component/info-text [[_ species] _ctx]
+    (str "[LIGHT_GRAY]Species: " species "[]")))
+
 (defcomponent :creature/level       {:data :pos-int})
 (defcomponent :entity/flying?       {:data :boolean})
 (defcomponent :entity/reaction-time {:data :pos})
 (defcomponent :creature/skills      {:data [:one-to-many-ids :properties/skill]})
 (defcomponent :creature/stats       {:data [:components-ns :stats]})
-
-(defcomponent :entity.creature/name
-  (component/info-text [[_ name] _ctx]
-    name))
-
-(defcomponent :entity.creature/species
-  (component/info-text [[_ species] _ctx]
-    (str "[LIGHT_GRAY]Species: " species "[]")))
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]
@@ -201,8 +197,8 @@
         (safe-merge
          (safe-merge (dissoc components
                              :entity/state)
-                     {:entity.creature/name    (str/capitalize (name (:property/id props)))
-                      :entity.creature/species (str/capitalize (name (:creature/species props)))})
+                     {:property/pretty-name (:property/pretty-name props)
+                      :creature/species     (str/capitalize (name (:creature/species props)))})
          #:entity {:animation (:entity/animation props)
                    :reaction-time (:entity/reaction-time props)
                    :state (set-state (:entity/state components))
