@@ -24,7 +24,8 @@
   (component/create [_ _ctx]
     {:id-namespace "creatures"
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
-              [:property/image
+              [:property/pretty-name
+               :property/image
                :property/bounds
                :creature/species
                :creature/level
