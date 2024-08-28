@@ -29,7 +29,7 @@
 (defn- k->component-ns [k]
   (symbol (str "components." (name (namespace k)) "." (name k))))
 
-(defn defcomponent* [k attr-map]
+(defn defcomponent* [k attr-map & {:keys [warn-on-override]}]
   (when (and warn-on-override (get attributes k))
     (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'attributes assoc k attr-map))
@@ -46,7 +46,7 @@
         attr-map (dissoc attr-map :let)]
     `(do
       (when ~attr-map?
-        (defcomponent* ~k ~attr-map))
+        (defcomponent* ~k ~attr-map) :warn-on-override warn-on-override)
 
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
@@ -233,7 +233,9 @@
                        (str/replace ".clj" "")
                        (str/replace "/" ".")
                        symbol)]]
-    (require ns)))
+    (when-not (find-ns ns)
+      ;(println "cannot find " ns " , requiring.")
+      (require ns))))
 
 (defn doc [k]
   (:doc (get attributes k)))

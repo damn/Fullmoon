@@ -7,7 +7,6 @@
             [core.context :as ctx]
             [components.context.world :as world]
             (components.world [debug-render :as debug-render]
-                              render
                               [widgets :as widgets])))
 
 (defn- render-world! [ctx]

@@ -14,8 +14,7 @@
             [components.widgets.debug-window :as debug-window]
             [components.widgets.entity-info-window :as entity-info-window]
             [components.widgets.inventory :as inventory]
-            [components.widgets.hp-mana-bars :refer [->hp-mana-bars]]
-            components.widgets.player-modal))
+            [components.widgets.hp-mana-bars :refer [->hp-mana-bars]]))
 
 (defn- ->action-bar-table [ctx]
   (ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)
