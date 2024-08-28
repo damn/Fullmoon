@@ -1,0 +1,35 @@
+
+
+get-property => get-entity or just ctx/entity
+
+=> skills/items/etc call component/create on animation/entity
+
+also entity/image entity/animation then
+
+no more edn->image or edn->animation serialization anymore (can delete )
+
+later whole game ctx/components into property-editor ( !! entity-component-editor !! )
+
+
+
+* deserialize => move to component/create
+* validate => means every entity validates itself when created???
+means schema for everything ?? and can even check schema at dev mode during assoc's, etc ??
+or after eveery effect/do! for example on ctx???
+
+
+But then we clear out all ecs ? only entities clear themself out? no need to empty ecs?
+
+deserialize at get-property by calling component/create
+=> performance problems @ audiovisual?
+=> can already prepare those desrialized properties by moving into entities?
+
+!! effect/projectile needs to be create w. component/create ...
+
+or load them into entities but then they all get atoms??
+or not ...
+
+[:one-to-many-ids :properties/skill] -> on create fetches itself
+:effect/projectile -> one-to-one fetches its data
+animation/image creates itself
+world?
