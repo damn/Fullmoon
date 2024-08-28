@@ -25,7 +25,7 @@
 (defn- ->application [components]
   (->application-listener
    :create (fn []
-             (require-all-components!)
+             (require-all-components!) ; here @ create because files/internal requires libgdx context
              (->> components
                   (component/create-into (assoc (ctx/->Context) :context/state state))
                   ctx/init-first-screen
