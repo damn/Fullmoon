@@ -5,17 +5,34 @@
             [core.components :as components]
             [core.context :as ctx]))
 
-(def ^:private skill-cost-color "[CYAN]")
-(def ^:private action-time-color "[GOLD]")
-(def ^:private cooldown-color "[SKY]")
-(def ^:private effect-color "[CHARTREUSE]")
+(defcomponent :skill/action-time {:data :pos}
+  (component/info-text [[_ v] _ctx]
+    (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
-(defcomponent :skill/action-time              {:data :pos})
-(defcomponent :skill/cooldown                 {:data :nat-int})
-(defcomponent :skill/cost                     {:data :nat-int})
-(defcomponent :skill/effects                  {:data [:components-ns :effect]})
-(defcomponent :skill/start-action-sound       {:data :sound})
-(defcomponent :skill/action-time-modifier-key {:data [:enum [:stats/cast-speed :stats/attack-speed]]})
+(defcomponent :skill/cooldown {:data :nat-int}
+  (component/info-text [[_ v] _ctx]
+    (when-not (zero? v)
+      (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
+
+(defcomponent :skill/cost {:data :nat-int}
+  (component/info-text [[_ v] _ctx]
+    (when-not (zero? v)
+      (str "[CYAN]Cost: " v " Mana[]"))))
+
+(defcomponent :skill/effects {:data [:components-ns :effect]}
+  #_(component/info-text [[_ v] ctx]
+    ; don't used player-entity* as it may be nil when just created, could use the current property creature @ editor
+    (str "[CHARTREUSE]"
+         (components/info-text v (assoc ctx :effect/source (ctx/player-entity ctx)))
+         "[]")))
+
+(defcomponent :skill/start-action-sound {:data :sound})
+
+(defcomponent :skill/action-time-modifier-key {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
+  (component/info-text [[_ v] _ctx]
+    (str "[VIOLET]" (case v
+                      :stats/cast-speed "Spell"
+                      :stats/attack-speed "Attack") "[]")))
 
 ; effect-ctx safe-merge into effect value !
 ; can let
@@ -105,7 +122,8 @@
   (component/create [_ _ctx]
     {:id-namespace "skills"
      :schema [[:property/id [:qualified-keyword {:namespace :skills}]]
-              [:property/image
+              [:property/pretty-name
+               :property/image
                :skill/action-time
                :skill/cooldown
                :skill/cost
@@ -115,24 +133,4 @@
      :edn-file-sort-order 0
      :overview {:title "Skills"
                 :columns 16
-                :image/dimensions [70 70]}
-     :->text (fn [ctx {:keys [property/id
-                              skill/action-time
-                              skill/cooldown
-                              skill/cost
-                              skill/effects
-                              skill/action-time-modifier-key]}]
-               [(str/capitalize (name id))
-                (str skill-cost-color "Cost: " cost "[]")
-                (str action-time-color
-                     (case action-time-modifier-key
-                       :stats/cast-speed "Casting-Time"
-                       :stats/attack-speed "Attack-Time")
-                     ": "
-                     (readable-number action-time) " seconds" "[]")
-                (str cooldown-color "Cooldown: " (readable-number cooldown) "[]")
-                ; don't used player-entity* as it may be nil when just created, could use the current property creature @ editor
-                (str effect-color
-                     (components/info-text effects
-                                           (assoc ctx :effect/source (ctx/player-entity ctx)))
-                     "[]")])}))
+                :image/dimensions [70 70]}}))

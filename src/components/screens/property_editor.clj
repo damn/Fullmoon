@@ -5,7 +5,8 @@
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties tooltip-text]]
+            [core.components :as components]
+            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties]]
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
             [core.scene2d.ui.text-field :as text-field]
@@ -239,7 +240,7 @@
                         image-widget (->image-widget ctx ; TODO image-button (link)
                                                      (:property/image props)
                                                      {:id (:property/id props)})]
-                    (add-tooltip! image-widget #(tooltip-text % props))
+                    (add-tooltip! image-widget #(components/info-text props %))
                     image-widget))
                 (for [prop-id property-ids]
                   (->text-button ctx "-"
@@ -258,33 +259,6 @@
   (->> (children widget) (keep actor/id) set))
 
 ;;
-
-; define for each property-type as exactly the order for property-editor-window
-; :property-editor-order
-; or make always alphabetically?
-(defn- sort-attributes [properties]
-  (sort-by
-   (fn [[k _v]]
-     [(case k
-        :property/id 0
-        :property/image 1
-        :property/pretty-name 2
-        :property/bounds 3
-
-        :entity/animation 2
-        :item/slot 3
-        :entity/faction 5
-        :entity/flying? 6
-        :entity/reaction-time 8
-
-        :creature/level 3
-        :creature/species 4
-
-        :skill/start-action-sound 3
-        :skill/action-time-modifier-key 4
-        11)
-      (name k)])
-   properties))
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->label ctx (name k))
@@ -314,7 +288,7 @@
 
 (defn- ->attribute-widget-tables [ctx props]
   (let [first-row? (atom true)]
-    (for [[k v] (sort-attributes props)
+    (for [[k v] (components/sort-by-order props)
           :let [sep? (not @first-row?)
                 _ (reset! first-row? false)]]
       (->attribute-widget-table ctx [k v] :horizontal-sep? sep?))))
@@ -390,7 +364,7 @@
                                                                       ""))
                                           stack (->stack ctx [button top-widget])]]
                                 (do
-                                 (add-tooltip! button #(tooltip-text % props))
+                                 (add-tooltip! button #(components/info-text props %))
                                  (set-touchable! top-widget :disabled)
                                  stack))))})))
 

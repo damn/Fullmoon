@@ -28,9 +28,7 @@
      :edn-file-sort-order 8
      :overview {:title "Projectiles"
                 :columns 16
-                :image/dimensions [48 48]}
-     :->text (fn [ctx {:keys [property/id]}]
-               [(str/capitalize (name id))])}))
+                :image/dimensions [48 48]}}))
 
 (defn- projectile-size [projectile-property]
   (first (:world-unit-dimensions (:property/image projectile-property))))

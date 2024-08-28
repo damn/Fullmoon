@@ -3,16 +3,14 @@
             [core.component :as component :refer [defcomponent]]
             [core.modifiers :as modifiers]))
 
-; could make optional - shorter properties.edn ...
-; and some items could just be fluff
-(defcomponent :item/modifiers {:data [:components-ns :modifier]})
-(defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]}) ; TODO one of ... == 'enum' !!
+(defcomponent :item/modifiers
+  {:data [:components-ns :modifier]
+   :let modifiers}
+  (component/info-text [_ _ctx]
+    (when (seq modifiers)
+      (modifiers/info-text modifiers))))
 
-(com.badlogic.gdx.graphics.Colors/put "ITEM_GOLD"
-                                      (com.badlogic.gdx.graphics.Color. (float 0.84)
-                                                                        (float 0.8)
-                                                                        (float 0.52)
-                                                                        (float 1)))
+(defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]})
 
 (defcomponent :properties/item
   (component/create [_ _ctx]
@@ -29,14 +27,7 @@
                 :sort-by-fn #(vector (if-let [slot (:item/slot %)]
                                        (name slot)
                                        "")
-                                     (name (:property/id %)))}
-     :->text (fn [ctx
-                  {:keys [property/pretty-name
-                          item/modifiers]
-                   :as item}]
-               [(str "[ITEM_GOLD]" pretty-name (when-let [cnt (:count item)] (str " (" cnt ")")) "[]")
-                (when (seq modifiers)
-                  (modifiers/info-text modifiers))])}))
+                                     (name (:property/id %)))}}))
 
 ; TODO use image w. shadows spritesheet
 (defcomponent :tx.entity/item

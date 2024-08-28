@@ -1,5 +1,6 @@
 (ns components.widgets.skill-window
-  (:require [core.context :as ctx :refer [->window ->image-button get-property player-tooltip-text]]
+  (:require [core.components :as components]
+            [core.context :as ctx :refer [->window ->image-button get-property]]
             [core.scene2d.actor :refer [add-tooltip!]]))
 
 ; TODO render text label free-skill-points
@@ -21,6 +22,6 @@
                                                        (fn [ctx]
                                                          (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]
                       (do
-                       (add-tooltip! button #(player-tooltip-text % (get-property % id)))
+                       (add-tooltip! button #(components/info-text (get-property % id) %))
                        button))]
              :pack? true}))

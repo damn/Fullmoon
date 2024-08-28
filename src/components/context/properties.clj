@@ -198,63 +198,23 @@
       (write-properties-to-file! new-ctx)
       new-ctx)))
 
-(defn- property->text [{{:keys [types]} :context/properties :as ctx} property]
-  ((:->text ((property->type types property) types))
-   ctx
-   property))
+(comment
 
-; TODO property text is without effect-ctx .... handle that different .... ?
-; maybe don't even need that @ editor ??? different lvl ...
-; its basically ';component - join newlines & to text ... '
-; generic thing for that ...
-
-(extend-type core.context.Context
-  core.context/TooltipText
-  (tooltip-text [ctx property]
-    (try (->> property
-              (property->text ctx)
-              (remove nil?)
-              (str/join "\n"))
-         (catch Throwable t
-           (str t))))
-
-  (player-tooltip-text [ctx property]
-    (when (ctx/player-entity ctx)
-      (ctx/tooltip-text
-       ; player has item @ start
-       ; =>
-       ; context.world/transact-create-entities-from-tiledmap
-       ; =>
-       ; :tx/set-item-image-in-widget
-       ; =>
-       ; FIXME the bug .... player-entity has not been set yet inside context/game ....
-       ; same problem w. actionbar or wherever player-entity is used
-       ; => avoid player-entity* at initialisation
-       ; assert also earlier
-       ; pass player0entity itself to actionbar/inventory ....
-       ; skill window is same problem ...... if we create it @ start
-       ; there will be no player
-       ; or we create the tooltips on demand
-       ctx ;(assoc ctx :effect/source (:entity/id (ctx/player-entity* ctx))) ; TODO !!
-       property))))
-
-(defn- migrate [property-type prop-fn]
+ (defn- migrate [property-type prop-fn]
    (def validate? false)
    (let [ctx @app/state]
      (def write-to-file? false)
      (time
       (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
-        (print (:property/id prop) ", ")
+        (println (:property/id prop) ", " (:property/pretty-name prop))
         (swap! app/state ctx/update! prop)))
      (def write-to-file? true)
      (write-properties-to-file! @app/state)
      (def validate? true)
      nil))
 
-(comment
-
- (migrate :properties/creature
-          #(-> %
-               (update-in [:creature/entity :entity/stats]
-                       assoc :stats/aggro-range 6)))
+ (migrate :properties/skill
+          (fn [prop]
+            (-> prop
+                (assoc :property/pretty-name (str/capitalize (name (:property/id prop)))))))
  )

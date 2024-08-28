@@ -145,10 +145,6 @@
   (update! [_ property])
   (delete! [_ id]))
 
-(defprotocol TooltipText
-  (tooltip-text [_ property])
-  (player-tooltip-text [_ property]))
-
 (defprotocol InventoryWindow
   (inventory-window [_]))
 

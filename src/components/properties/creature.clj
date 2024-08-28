@@ -13,14 +13,17 @@
 (defcomponent :creature/level       {:data :pos-int})
 (defcomponent :entity/flying?       {:data :boolean})
 (defcomponent :entity/reaction-time {:data :pos})
+(defcomponent :creature/skills      {:data [:one-to-many-ids :properties/skill]})
+(defcomponent :creature/stats       {:data [:components-ns :stats]})
+
 (defcomponent :creature/entity {:data [:components ; TODO no required/optional settings ! just cannot remove & already there !
                                        [:entity/animation
                                         :entity/flying? ; remove
                                         :entity/reaction-time ; in frames 0.016x
                                         :entity/faction ; remove
-                                        :entity/stats
+                                        :creature/stats
                                         :entity/inventory  ; remove
-                                        :entity/skills]]})
+                                        :creature/skills]]})
 
 (defcomponent :entity.creature/name
   (component/info-text [[_ name] _ctx]
@@ -49,26 +52,7 @@
                 :extra-info-text #(str (:creature/level %)
                                        #_(case (:entity/faction (:creature/entity %))
                                          :good "g"
-                                         :evil "e"))}
-     :->text (fn [_ctx
-                  {:keys [property/id
-                          creature/species
-                          creature/level
-                          creature/entity]}]
-               #_[(str/capitalize (name id)) ; == pretty name
-                (str "Species: " (str/capitalize (name species)))
-                (when level (str "Level: " level))
-                (binding [*print-level* nil]
-                  (with-out-str
-                   (clojure.pprint/pprint
-                    (select-keys entity
-                                 [;:entity/animation
-                                  :entity/faction
-                                  :entity/flying?
-                                  :entity/reaction-time
-                                  :entity/inventory
-                                  :entity/skills
-                                  :entity/stats]))))])}))
+                                         :evil "e"))}}))
 
 (comment
  ; graphviz required in path
@@ -198,6 +182,17 @@
 
 ; otherwise
 
+(defn- build-modifiers [modifiers]
+  (into {} (for [[modifier-k operations] modifiers]
+             [modifier-k (into {} (for [[operation-k value] operations]
+                                    [operation-k [value]]))])))
+
+(comment
+ (= {:modifier/damage-receive {:op/mult [-0.9]}}
+    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
+ )
+
+
 (defcomponent :tx.entity/creature
   (component/do! [[_ creature-id components] ctx]
     (assert (:entity/state components))
@@ -213,11 +208,24 @@
                     :z-order/ground)}
         (-> creature-components
             (dissoc :entity/flying?)
-            (merge (dissoc components :entity/position))
+            (merge (dissoc components
+                           :entity/position
+                           :creature/skills
+                           :creature/stats
+                           ))
             (update :entity/state set-state)  ; do @ entity/state itself
             (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
                    :entity.creature/species (str/capitalize (name (:creature/species props)))
-                   :entity/destroy-audiovisual :audiovisuals/creature-die))]])))
+                   :entity/destroy-audiovisual :audiovisuals/creature-die
+                   :entity/skills (let [skill-ids (:creature/skills props)]
+                                    (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
+                   :entity/stats (-> (:creature/stats creature-components)
+                                     (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
+                                     (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
+                                     (update :stats/modifiers build-modifiers))
+                   ))]])))
+
+; search more :data / component/create and move it here ....
 
 (comment
 

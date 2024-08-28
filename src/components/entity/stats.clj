@@ -268,37 +268,18 @@
 
 (def ^:private borders-px 1)
 
-(defn- build-modifiers [modifiers]
-  (into {} (for [[modifier-k operations] modifiers]
-             [modifier-k (into {} (for [[operation-k value] operations]
-                                    [operation-k [value]]))])))
-
-(comment
- (= {:modifier/damage-receive {:op/mult [-0.9]}}
-    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
- )
-
 (defcomponent :entity/stats
-  {:let stats
-   :data [:components-ns :stats]}
-  (component/create [_ _ctx]
-    (-> stats
-        (update :stats/hp (fn [hp] (when hp [hp hp])))
-        (update :stats/mana (fn [mana] (when mana [mana mana])))
-        (update :stats/modifiers build-modifiers)))
-
+  {:let stats}
   (component/info-text [_ _ctx]
     (str (stats-info-texts stats)
          "\n"
          (stats-modifiers-info-text (:stats/modifiers stats))))
 
-  (component/render-info [_
-                          {:keys [width half-width half-height entity/mouseover?] :as entity*}
-                          g
-                          _ctx]
+  (component/render-info [_ entity* g _ctx]
     (when-let [hp (entity/stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
-            [x y] (:position entity*)]
+            {:keys [position width half-width half-height entity/mouseover?]} entity*
+            [x y] position]
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)

@@ -3,8 +3,8 @@
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget
-                                         player-tooltip-text]]
+            [core.components :as components]
+            [core.context :as ctx :refer [spritesheet get-sprite get-stage ->table ->window ->texture-region-drawable ->stack ->image-widget]]
             [core.graphics :as g]
             [core.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.entity :as entity]
@@ -140,7 +140,7 @@
           drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
       (.setMinSize drawable (float cell-size) (float cell-size))
       (.setDrawable image-widget drawable)
-      (add-tooltip! cell-widget #(player-tooltip-text % item))
+      (add-tooltip! cell-widget #(components/info-text item %))
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget
