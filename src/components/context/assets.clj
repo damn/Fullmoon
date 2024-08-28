@@ -18,7 +18,8 @@
        (files/recursively-search folder file-extensions)))
 
 (defcomponent :context/assets
-  {:let {:keys [folder
+  {:data :some
+   :let {:keys [folder
                 sound-file-extensions
                 image-file-extensions
                 log?]}}

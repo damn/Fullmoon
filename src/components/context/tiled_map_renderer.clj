@@ -22,6 +22,7 @@
                                     (color-setter color x y)))))
 
 (defcomponent :context/tiled-map-renderer
+  {:data :some}
   (component/create [_ _ctx]
     (memoize map-renderer-for)))
 

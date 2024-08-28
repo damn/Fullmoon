@@ -3,7 +3,8 @@
             [core.context :as ctx]))
 
 (defcomponent :context/screens
-  {:let screen-ks}
+  {:data :some
+   :let screen-ks}
   (component/create [_ ctx]
     {:screens (component/ks->create-all screen-ks ctx)
      :first-screen (first screen-ks)})

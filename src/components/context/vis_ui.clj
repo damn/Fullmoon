@@ -44,7 +44,8 @@
 
 
 (defcomponent :context/vis-ui
-  {:let skin-scale}
+  {:data :some
+   :let skin-scale}
   (component/create [_ _ctx]
     (check-cleanup-visui!)
     (VisUI/load (case skin-scale

@@ -112,7 +112,8 @@
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
 (defcomponent :context/properties
-  {:let {:keys [file properties]}}
+  {:data :some
+   :let {:keys [file properties]}}
   (component/create [_ ctx]
     (doseq [[k m] [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
                    [:entity-effects {:data [:components-ns :effect.entity]}]]]

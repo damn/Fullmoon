@@ -98,7 +98,7 @@
   (defn safe-get [m k]
     (let [result (clojure.core/get m k obj)]
       (if (= result obj)
-        (throw (IllegalArgumentException. (str "Cannot find " k)))
+        (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
         result))))
 
 (defn ->tile [position]

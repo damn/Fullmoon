@@ -26,16 +26,15 @@
   (->application-listener
    :create (fn []
              (require-all-components!) ; here @ create because files/internal requires libgdx context
-             (let [context (conj
-                            (:app/context (get properties :app/core))
-                            [:context/properties {:file file
-                                                  :properties properties}]
-                            [:context/screens [:screens/main-menu
-                                               :screens/map-editor
-                                               ;:screens/minimap
-                                               :screens/options-menu
-                                               :screens/property-editor
-                                               :screens/world]])]
+             (let [context (merge (:app/context (get properties :app/core))
+                                  {:context/properties {:file file
+                                                        :properties properties}
+                                   :context/screens [:screens/main-menu
+                                                     :screens/map-editor
+                                                     ;:screens/minimap
+                                                     :screens/options-menu
+                                                     :screens/property-editor
+                                                     :screens/world]})]
                (->> context
                     (component/create-into (assoc (ctx/->Context) :context/state state))
                     ctx/init-first-screen
