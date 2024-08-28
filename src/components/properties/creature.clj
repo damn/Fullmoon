@@ -50,7 +50,7 @@
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               (apply vector
                      ; property
-                     :property/image
+                     :entity/image
                      ; body
                      :property/bounds
                      :entity/flying?

@@ -3,7 +3,7 @@
             [core.component :as component]))
 
 (def ^:private property-order [:property/id
-                               :property/image
+                               :entity/image
                                :property/pretty-name
                                :property/bounds])
 

@@ -1,5 +1,5 @@
 ({:property/id :skills/double-fireball,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
   :property/pretty-name "Double-fireball",
   :skill/action-time 0.01,
@@ -9,7 +9,7 @@
   :skill/effects {:effect/projectile :projectiles/double-fireball},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/spawn,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [160 64 32 32]},
   :property/pretty-name "Spawn",
   :skill/action-time 0.4,
@@ -19,7 +19,7 @@
   :skill/effects {:effect/spawn :creatures/skeleton-warrior},
   :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
  {:property/id :skills/convert,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [0 64 32 32]},
   :property/pretty-name "Convert",
   :skill/action-time 1,
@@ -31,7 +31,7 @@
    {:entity-effects {:effect.entity/convert true}, :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
  {:property/id :skills/blood-curse,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [128 0 32 32]},
   :property/pretty-name "Blood-curse",
   :skill/action-time 1,
@@ -43,7 +43,7 @@
    {:entity-effects {:effect.entity/hp {:op/val-mult -0.5}}}},
   :skill/start-action-sound "sounds/bfxr_healmonsters.wav"}
  {:property/id :skills/bow,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [96 64 32 32]},
   :property/pretty-name "Bow",
   :skill/action-time 1.5,
@@ -56,7 +56,7 @@
     :maxrange 5}},
   :skill/start-action-sound "sounds/slash.wav"}
  {:property/id :skills/slow,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [64 64 32 32]},
   :property/pretty-name "Slow",
   :skill/action-time 0.4,
@@ -69,7 +69,7 @@
     :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
  {:property/id :skills/meditation,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [64 96 32 32]},
   :property/pretty-name "Meditation",
   :skill/action-time 7,
@@ -79,7 +79,7 @@
   :skill/effects {},
   :skill/start-action-sound "sounds/shoot.wav"}
  {:property/id :skills/death-ray,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [32 96 32 32]},
   :property/pretty-name "Death-ray",
   :skill/action-time 0.666,
@@ -91,7 +91,7 @@
    {:entity-effects {:effect.entity/kill true}, :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_bossdeath.wav"}
  {:property/id :skills/projectile,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
   :property/pretty-name "Projectile",
   :skill/action-time 0.4,
@@ -101,7 +101,7 @@
   :skill/effects {:effect/projectile :projectiles/black},
   :skill/start-action-sound "sounds/bfxr_cast.wav"}
  {:property/id :skills/melee-attack,
-  :property/image
+  :entity/image
   {:file "images/skills.png", :sub-image-bounds [0 0 32 32]},
   :property/pretty-name "Melee-attack",
   :skill/action-time 0.5,
@@ -133,7 +133,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 11/24, :width 2/3},
   :property/id :creatures/toad-horned,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]},
   :property/pretty-name "Toad-horned"}
  {:creature/level 2,
@@ -160,7 +160,7 @@
    :stats/strength 1},
   :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/goblin-warrior,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 144 48 48]},
   :property/pretty-name "Goblin-warrior"}
  {:creature/level 4,
@@ -183,7 +183,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/lizardman-blue-shaman,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]},
   :property/pretty-name "Lizardman-blue-shaman"}
  {:creature/level 3,
@@ -206,7 +206,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 11/16},
   :property/id :creatures/barbarian-f,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]},
   :property/pretty-name "Barbarian-f"}
  {:creature/level 14,
@@ -229,7 +229,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 31/48, :width 2/3},
   :property/id :creatures/mummy,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]},
   :property/pretty-name "Mummy"}
  {:creature/level 3,
@@ -254,7 +254,7 @@
    :stats/strength 10},
   :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/helion,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 0 48 48]},
   :property/pretty-name "Helion"}
  {:creature/level 3,
@@ -277,7 +277,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/priest,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]},
   :property/pretty-name "Priest"}
  {:creature/level 4,
@@ -300,7 +300,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 11/16},
   :property/id :creatures/lizardman-green-spear,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]},
   :property/pretty-name "Lizardman-green-spear"}
  {:creature/level 5,
@@ -323,7 +323,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 9/16, :width 35/48},
   :property/id :creatures/dwarf-cleric,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]},
   :property/pretty-name "Dwarf-cleric"}
  {:creature/level 3,
@@ -346,7 +346,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/thief,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]},
   :property/pretty-name "Thief"}
  {:creature/level 4,
@@ -369,7 +369,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/lizardman-green-shaman,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]},
   :property/pretty-name "Lizardman-green-shaman"}
  {:creature/level 5,
@@ -392,7 +392,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 19/24, :width 5/6},
   :property/id :creatures/beholder,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]},
   :property/pretty-name "Beholder"}
  {:creature/level 1,
@@ -415,7 +415,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 19/48, :width 13/24},
   :property/id :creatures/spider-brown,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]},
   :property/pretty-name "Spider-brown"}
  {:creature/level 6,
@@ -439,7 +439,7 @@
    :stats/movement-speed 6},
   :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/vampire-lord,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 240 48 48]},
   :property/pretty-name "Vampire-lord"}
  {:creature/level 3,
@@ -462,7 +462,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/witch,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]},
   :property/pretty-name "Witch"}
  {:creature/level 3,
@@ -485,7 +485,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/minstrel-f,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]},
   :property/pretty-name "Minstrel-f"}
  {:creature/level 6,
@@ -504,7 +504,7 @@
   :property/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-b,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]},
   :property/pretty-name "Lady-b"}
  {:creature/level 5,
@@ -527,7 +527,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 9/16, :width 35/48},
   :property/id :creatures/dwarf,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]},
   :property/pretty-name "Dwarf"}
  {:creature/level 5,
@@ -550,7 +550,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-air,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]},
   :property/pretty-name "Elemental-air"}
  {:creature/level 2,
@@ -573,7 +573,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 5/12, :width 1/2},
   :property/id :creatures/beetle-fire,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]},
   :property/pretty-name "Beetle-fire"}
  {:creature/level 3,
@@ -596,7 +596,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/warrior-f,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]},
   :property/pretty-name "Warrior-f"}
  {:creature/level 4,
@@ -619,7 +619,7 @@
    :stats/movement-speed 2},
   :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-mud,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Golem-mud"}
  {:creature/level 3,
@@ -642,7 +642,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/merchant-f,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]},
   :property/pretty-name "Merchant-f"}
  {:creature/level 3,
@@ -665,7 +665,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/minstrel-m,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]},
   :property/pretty-name "Minstrel-m"}
  {:creature/level 4,
@@ -688,7 +688,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 5/6, :width 3/4},
   :property/id :creatures/spirit-greater,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]},
   :property/pretty-name "Spirit-greater"}
  {:creature/level 3,
@@ -716,7 +716,7 @@
    :stats/strength 2},
   :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/knight,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 0 48 48]},
   :property/pretty-name "Knight"}
  {:creature/level 8,
@@ -739,7 +739,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/zombie-b,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]},
   :property/pretty-name "Zombie-b"}
  {:creature/level 6,
@@ -762,7 +762,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-green,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Demon-green"}
  {:creature/level 5,
@@ -785,7 +785,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/drow-wizard,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]},
   :property/pretty-name "Drow-wizard"}
  {:creature/level 2,
@@ -808,7 +808,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/goblin-shaman,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]},
   :property/pretty-name "Goblin-shaman"}
  {:creature/level 2,
@@ -831,7 +831,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 13/24, :width 7/12},
   :property/id :creatures/beetle-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]},
   :property/pretty-name "Beetle-giant"}
  {:creature/level 2,
@@ -854,7 +854,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/prisoner-b,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]},
   :property/pretty-name "Prisoner-b"}
  {:creature/level 5,
@@ -877,7 +877,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/dwarf-mage,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]},
   :property/pretty-name "Dwarf-mage"}
  {:creature/level 1,
@@ -897,7 +897,7 @@
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 1},
   :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-hawk,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 432 48 48]},
   :property/pretty-name "Bird-hawk"}
  {:creature/level 4,
@@ -920,7 +920,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 3/4, :width 13/24},
   :property/id :creatures/pixie-b,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]},
   :property/pretty-name "Pixie-b"}
  {:creature/level 6,
@@ -939,7 +939,7 @@
   :property/stats {:stats/aggro-range 6, :stats/movement-speed 1},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-a,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]},
   :property/pretty-name "Lady-a"}
  {:creature/level 5,
@@ -962,7 +962,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 35/48, :width 11/16},
   :property/id :creatures/drow,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]},
   :property/pretty-name "Drow"}
  {:creature/level 2,
@@ -985,7 +985,7 @@
    :stats/strength 2},
   :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/goblin,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 144 48 48]},
   :property/pretty-name "Goblin"}
  {:creature/level 1,
@@ -1008,7 +1008,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/wolf-black,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]},
   :property/pretty-name "Wolf-black"}
  {:creature/level 1,
@@ -1028,7 +1028,7 @@
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 4},
   :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-crow,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]},
   :property/pretty-name "Bird-crow"}
  {:creature/level 6,
@@ -1051,7 +1051,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-red,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]},
   :property/pretty-name "Demon-red"}
  {:creature/level 4,
@@ -1074,7 +1074,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 3/4, :width 13/24},
   :property/id :creatures/pixie-a,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]},
   :property/pretty-name "Pixie-a"}
  {:creature/level 3,
@@ -1097,7 +1097,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/archer,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]},
   :property/pretty-name "Archer"}
  {:creature/level 2,
@@ -1120,7 +1120,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 11/16, :width 41/48},
   :property/id :creatures/rat-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]},
   :property/pretty-name "Rat-giant"}
  {:creature/level 6,
@@ -1139,7 +1139,7 @@
   :property/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-a,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]},
   :property/pretty-name "Lord-a"}
  {:creature/level 6,
@@ -1162,7 +1162,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-black,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Wraith-black"}
  {:creature/level 6,
@@ -1185,7 +1185,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-red,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]},
   :property/pretty-name "Wraith-red"}
  {:creature/level 4,
@@ -1208,7 +1208,7 @@
    :stats/movement-speed 2},
   :property/bounds {:height 5/6, :width 17/24},
   :property/id :creatures/golem-fire,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]},
   :property/pretty-name "Golem-fire"}
  {:creature/level 4,
@@ -1231,7 +1231,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 3/4, :width 5/8},
   :property/id :creatures/wisp-ancient,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]},
   :property/pretty-name "Wisp-ancient"}
  {:creature/level 2,
@@ -1254,7 +1254,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/troll,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]},
   :property/pretty-name "Troll"}
  {:creature/level 6,
@@ -1277,7 +1277,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-blue,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]},
   :property/pretty-name "Wraith-blue"}
  {:creature/level 2,
@@ -1300,7 +1300,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 13/24, :width 7/12},
   :property/id :creatures/beetle-fire-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]},
   :property/pretty-name "Beetle-fire-giant"}
  {:creature/level 4,
@@ -1323,7 +1323,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 11/16},
   :property/id :creatures/lizardman-blue-spear,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]},
   :property/pretty-name "Lizardman-blue-spear"}
  {:creature/level 5,
@@ -1346,7 +1346,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/dark-knight,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]},
   :property/pretty-name "Dark-knight"}
  {:creature/level 1,
@@ -1369,7 +1369,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 7/12, :width 2/3},
   :property/id :creatures/wolf-brown,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]},
   :property/pretty-name "Wolf-brown"}
  {:creature/level 6,
@@ -1392,7 +1392,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-blue,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]},
   :property/pretty-name "Demon-blue"}
  {:creature/level 1,
@@ -1415,7 +1415,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-red,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]},
   :property/pretty-name "Moth-red"}
  {:creature/level 2,
@@ -1438,7 +1438,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/prisoner-c,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]},
   :property/pretty-name "Prisoner-c"}
  {:creature/level 17,
@@ -1461,7 +1461,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 9/16, :width 1/2},
   :property/id :creatures/mimic,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]},
   :property/pretty-name "Mimic"}
  {:creature/level 4,
@@ -1484,7 +1484,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 3/4, :width 11/16},
   :property/id :creatures/lizardman-green,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]},
   :property/pretty-name "Lizardman-green"}
  {:creature/level 3,
@@ -1507,7 +1507,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 11/16},
   :property/id :creatures/paladin,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]},
   :property/pretty-name "Paladin"}
  {:creature/level 6,
@@ -1530,7 +1530,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-green,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]},
   :property/pretty-name "Dragon-green"}
  {:creature/level 1,
@@ -1553,7 +1553,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 23/48, :width 31/48},
   :property/id :creatures/rat,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]},
   :property/pretty-name "Rat"}
  {:creature/level 5,
@@ -1576,7 +1576,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-vorpal,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]},
   :property/pretty-name "Elemental-vorpal"}
  {:creature/level 8,
@@ -1599,7 +1599,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/zombie-a,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]},
   :property/pretty-name "Zombie-a"}
  {:creature/level 6,
@@ -1622,7 +1622,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-blue,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]},
   :property/pretty-name "Dragon-blue"}
  {:creature/level 2,
@@ -1645,7 +1645,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 19/48, :width 13/24},
   :property/id :creatures/spider-black,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]},
   :property/pretty-name "Spider-black"}
  {:creature/level 4,
@@ -1668,7 +1668,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/ogre,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]},
   :property/pretty-name "Ogre"}
  {:creature/level 3,
@@ -1691,7 +1691,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/wizard,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]},
   :property/pretty-name "Wizard"}
  {:creature/level 4,
@@ -1714,7 +1714,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-earth,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]},
   :property/pretty-name "Elemental-earth"}
  {:creature/level 6,
@@ -1737,7 +1737,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-shadow,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 384 48 48]},
   :property/pretty-name "Dragon-shadow"}
  {:creature/level 5,
@@ -1755,7 +1755,7 @@
   :property/stats {:stats/aggro-range 6, :stats/mana 11},
   :property/bounds {:height 13/16, :width 2/3},
   :property/id :creatures/banshee,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]},
   :property/pretty-name "Banshee"}
  {:creature/level 3,
@@ -1778,7 +1778,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/warrior-m,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]},
   :property/pretty-name "Warrior-m"}
  {:creature/level 1,
@@ -1801,7 +1801,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-white,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]},
   :property/pretty-name "Moth-white"}
  {:creature/level 1,
@@ -1821,7 +1821,7 @@
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 4},
   :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-dove,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 432 48 48]},
   :property/pretty-name "Bird-dove"}
  {:creature/level 4,
@@ -1844,7 +1844,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 3/4, :width 11/16},
   :property/id :creatures/lizardman-blue,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]},
   :property/pretty-name "Lizardman-blue"}
  {:creature/level 6,
@@ -1867,7 +1867,7 @@
    :stats/movement-speed 1.0},
   :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-red,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]},
   :property/pretty-name "Dragon-red"}
  {:creature/level 2,
@@ -1890,7 +1890,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 31/48, :width 5/6},
   :property/id :creatures/spider-brown-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]},
   :property/pretty-name "Spider-brown-giant"}
  {:creature/level 4,
@@ -1913,7 +1913,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 3/4, :width 1/2},
   :property/id :creatures/spirit,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]},
   :property/pretty-name "Spirit"}
  {:creature/level 6,
@@ -1936,7 +1936,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/lich,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]},
   :property/pretty-name "Lich"}
  {:creature/level 11,
@@ -1959,7 +1959,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/skeleton-archer,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]},
   :property/pretty-name "Skeleton-archer"}
  {:creature/level 4,
@@ -1982,7 +1982,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 35/48, :width 35/48},
   :property/id :creatures/ogre-mystic,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]},
   :property/pretty-name "Ogre-mystic"}
  {:creature/level 6,
@@ -2005,7 +2005,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 1, :width 1},
   :property/id :creatures/bone-dragon,
-  :property/image {:file "images/animations/bone-dragon-1.png"},
+  :entity/image {:file "images/animations/bone-dragon-1.png"},
   :property/pretty-name "Bone-dragon"}
  {:creature/level 4,
   :creature/species :species/golem,
@@ -2027,7 +2027,7 @@
    :stats/movement-speed 2},
   :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-metal,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]},
   :property/pretty-name "Golem-metal"}
  {:creature/level 5,
@@ -2050,7 +2050,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-fire,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]},
   :property/pretty-name "Elemental-fire"}
  {:creature/level 3,
@@ -2073,7 +2073,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 41/48, :width 2/3},
   :property/id :creatures/templar,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]},
   :property/pretty-name "Templar"}
  {:creature/level 4,
@@ -2096,7 +2096,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 5/8, :width 1/2},
   :property/id :creatures/wisp,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]},
   :property/pretty-name "Wisp"}
  {:creature/level 2,
@@ -2119,7 +2119,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 5/6},
   :property/id :creatures/snake-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]},
   :property/pretty-name "Snake-giant"}
  {:creature/level 5,
@@ -2142,7 +2142,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 35/48, :width 35/48},
   :property/id :creatures/minotaur,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]},
   :property/pretty-name "Minotaur"}
  {:creature/level 5,
@@ -2165,7 +2165,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 17/24},
   :property/id :creatures/valkyrie-a,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]},
   :property/pretty-name "Valkyrie-a"}
  {:creature/level 1,
@@ -2188,7 +2188,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 5/12, :width 2/3},
   :property/id :creatures/toad-green,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]},
   :property/pretty-name "Toad-green"}
  {:creature/level 17,
@@ -2231,7 +2231,7 @@
    :stats/strength 1},
   :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/vampire,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 240 48 48]},
   :property/pretty-name "Vampire"}
  {:creature/level 1,
@@ -2254,7 +2254,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-black,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]},
   :property/pretty-name "Moth-black"}
  {:creature/level 3,
@@ -2277,7 +2277,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 35/48},
   :property/id :creatures/monk,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]},
   :property/pretty-name "Monk"}
  {:creature/level 6,
@@ -2296,7 +2296,7 @@
   :property/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-b,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]},
   :property/pretty-name "Lord-b"}
  {:creature/level 2,
@@ -2319,7 +2319,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 11/16},
   :property/id :creatures/warden,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]},
   :property/pretty-name "Warden"}
  {:creature/level 3,
@@ -2342,7 +2342,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 11/16},
   :property/id :creatures/druid,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]},
   :property/pretty-name "Druid"}
  {:creature/level 5,
@@ -2365,7 +2365,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 31/48, :width 2/3},
   :property/id :creatures/elf-wizard,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]},
   :property/pretty-name "Elf-wizard"}
  {:creature/level 11,
@@ -2388,7 +2388,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/skeleton-mage,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]},
   :property/pretty-name "Skeleton-mage"}
  {:creature/level 1,
@@ -2411,7 +2411,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/halfling-fighter,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]},
   :property/pretty-name "Halfling-fighter"}
  {:creature/level 11,
@@ -2434,7 +2434,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/skeleton-warrior,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]},
   :property/pretty-name "Skeleton-warrior"}
  {:creature/level 1,
@@ -2457,7 +2457,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 5/8, :width 17/24},
   :property/id :creatures/halfling-thief,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]},
   :property/pretty-name "Halfling-thief"}
  {:creature/level 3,
@@ -2480,7 +2480,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 17/24, :width 11/16},
   :property/id :creatures/barbarian-m,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]},
   :property/pretty-name "Barbarian-m"}
  {:creature/level 5,
@@ -2503,7 +2503,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 37/48, :width 2/3},
   :property/id :creatures/elf-bowman,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]},
   :property/pretty-name "Elf-bowman"}
  {:creature/level 2,
@@ -2526,7 +2526,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 5/12, :width 1/2},
   :property/id :creatures/beetle,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]},
   :property/pretty-name "Beetle"}
  {:creature/level 2,
@@ -2549,7 +2549,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 3/4, :width 5/6},
   :property/id :creatures/bat-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]},
   :property/pretty-name "Bat-giant"}
  {:creature/level 1,
@@ -2572,7 +2572,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 5/12, :width 2/3},
   :property/id :creatures/toad-blue,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]},
   :property/pretty-name "Toad-blue"}
  {:creature/level 4,
@@ -2596,7 +2596,7 @@
    :stats/strength 10},
   :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-stone,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]},
   :property/pretty-name "Golem-stone"}
  {:creature/level 6,
@@ -2619,7 +2619,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/necromancer,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]},
   :property/pretty-name "Necromancer"}
  {:creature/level 2,
@@ -2642,7 +2642,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 5/8, :width 5/6},
   :property/id :creatures/spider-black-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]},
   :property/pretty-name "Spider-black-giant"}
  {:creature/level 5,
@@ -2665,7 +2665,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 3/4, :width 17/24},
   :property/id :creatures/valkyrie-b,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]},
   :property/pretty-name "Valkyrie-b"}
  {:creature/level 2,
@@ -2688,7 +2688,7 @@
    :stats/movement-speed 1},
   :property/bounds {:height 31/48, :width 13/24},
   :property/id :creatures/bat,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]},
   :property/pretty-name "Bat"}
  {:creature/level 1,
@@ -2716,7 +2716,7 @@
    :stats/strength 3},
   :property/bounds {:height 25/48, :width 31/48},
   :property/id :creatures/snake,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 240 48 48]},
   :property/pretty-name "Snake"}
  {:creature/level 1,
@@ -2739,7 +2739,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 5/8, :width 25/48},
   :property/id :creatures/flies,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]},
   :property/pretty-name "Flies"}
  {:creature/level 2,
@@ -2762,7 +2762,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/prisoner-a,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]},
   :property/pretty-name "Prisoner-a"}
  {:creature/level 5,
@@ -2785,7 +2785,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 19/24, :width 5/6},
   :property/id :creatures/beholder-deep,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]},
   :property/pretty-name "Beholder-deep"}
  {:creature/level 11,
@@ -2808,7 +2808,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/skeleton,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]},
   :property/pretty-name "Skeleton"}
  {:creature/level 5,
@@ -2831,7 +2831,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-water,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]},
   :property/pretty-name "Elemental-water"}
  {:creature/level 3,
@@ -2854,7 +2854,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/cultist,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]},
   :property/pretty-name "Cultist"}
  {:creature/level 14,
@@ -2877,7 +2877,7 @@
    :stats/movement-speed 1.6},
   :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/mummy-pharao,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]},
   :property/pretty-name "Mummy-pharao"}
  {:creature/level 1,
@@ -2900,7 +2900,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/halfling-wizard,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]},
   :property/pretty-name "Halfling-wizard"}
  {:creature/level 5,
@@ -2923,7 +2923,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/drow-bowman,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]},
   :property/pretty-name "Drow-bowman"}
  {:creature/level 2,
@@ -2946,7 +2946,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 17/24, :width 5/6},
   :property/id :creatures/worm-giant,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]},
   :property/pretty-name "Worm-giant"}
  {:creature/level 3,
@@ -2970,7 +2970,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/merchant-m,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]},
   :property/pretty-name "Merchant-m"}
  {:creature/level 5,
@@ -2993,7 +2993,7 @@
    :stats/movement-speed 3.0},
   :property/bounds {:height 17/24, :width 11/16},
   :property/id :creatures/elf,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]},
   :property/pretty-name "Elf"}
  {:creature/level 1,
@@ -3016,7 +3016,7 @@
    :stats/movement-speed 2.4},
   :property/bounds {:height 1/2, :width 7/12},
   :property/id :creatures/worm,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]},
   :property/pretty-name "Worm"}
  {:creature/level 1,
@@ -3039,7 +3039,7 @@
    :stats/movement-speed 2.0},
   :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/halfling-sling,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]},
   :property/pretty-name "Halfling-sling"}
  {:creature/level 4,
@@ -3062,991 +3062,991 @@
    :stats/movement-speed 2},
   :property/bounds {:height 3/4, :width 17/24},
   :property/id :creatures/golem-ice,
-  :property/image
+  :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 432 48 48]},
   :property/pretty-name "Golem-ice"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 144 48 48]},
   :property/pretty-name "Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-small-gold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 384 48 48]},
   :property/pretty-name "Gold Small Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-cloth,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 432 48 48]},
   :property/pretty-name "Cloth Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 240 48 48]},
   :property/pretty-name "Heater Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/axe,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 96 48 48]},
   :property/pretty-name "Axe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/coin-copper,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 0 48 48]},
   :property/pretty-name "Copper Coin"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-ruby,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 384 48 48]},
   :property/pretty-name "Ruby Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-dragon,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 336 48 48]},
   :property/pretty-name "Dragon Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/mystic-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 624 48 48]},
   :property/pretty-name "Boot Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/cloth-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 432 48 48]},
   :property/pretty-name "Helm Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-blood,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 336 48 48]},
   :property/pretty-name "Blood Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/chain-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 432 48 48]},
   :property/pretty-name "Helm Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 288 48 48]},
   :property/pretty-name "Great Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/dagger,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 96 48 48]},
   :property/pretty-name "Dagger"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-large-open,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 384 48 48]},
   :property/pretty-name "Open Large Skull"}
  {:item/modifiers {:modifier/movement-speed {:op/mult 0.4}},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-royal,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 528 48 48]},
   :property/pretty-name "Royal Cloak"}
  {:item/modifiers {:modifier/movement-speed {:op/inc 0.5}},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 288 48 48]},
   :property/pretty-name "Buckler Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/gold-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 528 48 48]},
   :property/pretty-name "Leg Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/handaxe,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 96 48 48]},
   :property/pretty-name "Handaxe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/flask-red,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [816 48 48 48]},
   :property/pretty-name "Red Flask"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 288 48 48]},
   :property/pretty-name "Great Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-ruby,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 336 48 48]},
   :property/pretty-name "Ruby Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/wild-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 624 48 48]},
   :property/pretty-name "Boot Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/cloth-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 576 48 48]},
   :property/pretty-name "Glove Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/studded-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 528 48 48]},
   :property/pretty-name "Leg Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 288 48 48]},
   :property/pretty-name "Heater Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/coin-gold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 0 48 48]},
   :property/pretty-name "Gold Coin"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-cross,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 384 48 48]},
   :property/pretty-name "Cross Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-eye,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 624 48 48]},
   :property/pretty-name "Eye Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-hammer-sun,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 192 48 48]},
   :property/pretty-name "Sun Hammer Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-blue,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 0 48 48]},
   :property/pretty-name "Blue Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/club-spiked,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 96 48 48]},
   :property/pretty-name "Spiked Club"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-tourmaline,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 384 48 48]},
   :property/pretty-name "Tourmaline Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/plate-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 528 48 48]},
   :property/pretty-name "Leg Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 288 48 48]},
   :property/pretty-name "Buckler Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-azure,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 336 48 48]},
   :property/pretty-name "Azure Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/royal-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 624 48 48]},
   :property/pretty-name "Boot Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-flame,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 192 48 48]},
   :property/pretty-name "Flame Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/mystic-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 480 48 48]},
   :property/pretty-name "Chest Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/mystic-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 528 48 48]},
   :property/pretty-name "Leg Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/hammer-exotic1,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 144 48 48]},
   :property/pretty-name "Exotic1 Hammer"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/crossbow,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 144 48 48]},
   :property/pretty-name "Crossbow"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/dirk,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 96 48 48]},
   :property/pretty-name "Dirk"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 240 48 48]},
   :property/pretty-name "Buckler Mystic Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-spear-blood,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 192 48 48]},
   :property/pretty-name "Blood Spear Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-ornate,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 336 48 48]},
   :property/pretty-name "Ornate Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-diamond,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 336 48 48]},
   :property/pretty-name "Diamond Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-small-blood,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 384 48 48]},
   :property/pretty-name "Blood Small Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/royal-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 432 48 48]},
   :property/pretty-name "Helm Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-black,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 0 48 48]},
   :property/pretty-name "Black Potion"}
  {:item/modifiers {:modifier/damage-deal {:op/val-mult 3}},
   :item/slot :inventory.slot/leg,
   :property/id :items/chain-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 528 48 48]},
   :property/pretty-name "Leg Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-sapphire,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 384 48 48]},
   :property/pretty-name "Sapphire Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 288 48 48]},
   :property/pretty-name "Great Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/studded-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 576 48 48]},
   :property/pretty-name "Glove Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/cloth-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 528 48 48]},
   :property/pretty-name "Leg Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-red,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 0 48 48]},
   :property/pretty-name "Red Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-emerald,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 336 48 48]},
   :property/pretty-name "Emerald Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [864 240 48 48]},
   :property/pretty-name "Kite Mystic Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/leather-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 624 48 48]},
   :property/pretty-name "Boot Leather"}
  {:item/modifiers {:modifier/hp {:op/max-inc 2}},
   :item/slot :inventory.slot/glove,
   :property/id :items/chain-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 576 48 48]},
   :property/pretty-name "Glove Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/spear,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 144 48 48]},
   :property/pretty-name "Spear"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-flame,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 336 48 48]},
   :property/pretty-name "Flame Ring"}
  {:item/modifiers {:modifier/damage-deal {:op/max-mult 1}},
   :item/slot :inventory.slot/helm,
   :property/id :items/studded-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 432 48 48]},
   :property/pretty-name "Helm Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-silver,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 0 48 48]},
   :property/pretty-name "Silver Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-red-half,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [816 0 48 48]},
   :property/pretty-name "Half Red Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-empty,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 48 48 48]},
   :property/pretty-name "Empty Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-leather,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 480 48 48]},
   :property/pretty-name "Leather Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-gold-open,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 48 48 48]},
   :property/pretty-name "Open Gold Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-amethyst,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 384 48 48]},
   :property/pretty-name "Amethyst Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-red,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 0 48 48]},
   :property/pretty-name "Red Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-latch,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 48 48 48]},
   :property/pretty-name "Latch Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic2,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 96 48 48]},
   :property/pretty-name "Exotic2 Sword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-bone,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 0 48 48]},
   :property/pretty-name "Bone Key"}
  {:item/modifiers {:modifier/hp {:op/max-inc -200}},
   :item/slot :inventory.slot/helm,
   :property/id :items/blood-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Helm Blood"}
  {:item/modifiers {:modifier/damage-receive {:op/inc -1}},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [912 240 48 48]},
   :property/pretty-name "Great Mystic Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/plate-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 432 48 48]},
   :property/pretty-name "Helm Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/plate-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 624 48 48]},
   :property/pretty-name "Boot Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/shortbow,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 144 48 48]},
   :property/pretty-name "Shortbow"}
  {:item/modifiers {:modifier/mana {:op/max-mult -0.5}},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-copper,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 336 48 48]},
   :property/pretty-name "Copper Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/wild-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 528 48 48]},
   :property/pretty-name "Leg Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-amethyst,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 384 48 48]},
   :property/pretty-name "Amethyst Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/leather-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 480 48 48]},
   :property/pretty-name "Chest Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 240 48 48]},
   :property/pretty-name "Heater Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/torch-lit,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 48 48 48]},
   :property/pretty-name "Lit Torch"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/mace,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 96 48 48]},
   :property/pretty-name "Mace"}
  {:item/modifiers {:modifier/cast-speed {:op/inc 0.5}},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-gold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Gold Ring"}
  {:item/modifiers {:modifier/hp {:op/max-inc 10, :op/max-mult 0.05}},
   :item/slot :inventory.slot/boot,
   :property/id :items/cloth-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 624 48 48]},
   :property/pretty-name "Boot Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-brown,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 48 48 48]},
   :property/pretty-name "Brown Book"}
  {:item/modifiers {:modifier/strength {:op/inc 5}},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-eye,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 384 48 48]},
   :property/pretty-name "Eye Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-gold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 0 48 48]},
   :property/pretty-name "Gold Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/stiletto,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 96 48 48]},
   :property/pretty-name "Stiletto"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 288 48 48]},
   :property/pretty-name "Heater Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 96 48 48]},
   :property/pretty-name "Sword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-evil,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 48 48 48]},
   :property/pretty-name "Evil Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-silver-,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 48 48 48]},
   :property/pretty-name "Silver Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/leather-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 576 48 48]},
   :property/pretty-name "Glove Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-hellfire,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 192 48 48]},
   :property/pretty-name "Hellfire Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/flask-blue,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [864 48 48 48]},
   :property/pretty-name "Blue Flask"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/wild-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 432 48 48]},
   :property/pretty-name "Helm Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/wild-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 576 48 48]},
   :property/pretty-name "Glove Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-small,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 384 48 48]},
   :property/pretty-name "Small Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-cloud,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 336 48 48]},
   :property/pretty-name "Cloud Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-ornate,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 384 48 48]},
   :property/pretty-name "Ornate Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 240 48 48]},
   :property/pretty-name "Great Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 240 48 48]},
   :property/pretty-name "Buckler Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-empty,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 0 48 48]},
   :property/pretty-name "Empty Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-green,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 0 48 48]},
   :property/pretty-name "Green Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 240 48 48]},
   :property/pretty-name "Great Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-ankh,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 144 48 48]},
   :property/pretty-name "Ankh Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-silver-open,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 48 48 48]},
   :property/pretty-name "Open Silver Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-venom,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 192 48 48]},
   :property/pretty-name "Venom Staff Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greataxe,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 96 48 48]},
   :property/pretty-name "Greataxe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/blood-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 480 48 48]},
   :property/pretty-name "Chest Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-gold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 48 48 48]},
   :property/pretty-name "Gold Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-vorpal,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 192 48 48]},
   :property/pretty-name "Vorpal Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-dark,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [864 384 48 48]},
   :property/pretty-name "Dark Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-winged,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 192 48 48]},
   :property/pretty-name "Winged Staff Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-ruby,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 384 48 48]},
   :property/pretty-name "Ruby Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 240 48 48]},
   :property/pretty-name "Buckler Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-blood,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 624 48 48]},
   :property/pretty-name "Blood Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/chain-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 624 48 48]},
   :property/pretty-name "Boot Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-white,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 0 48 48]},
   :property/pretty-name "White Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 240 48 48]},
   :property/pretty-name "Buckler Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/quarterstaff,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 144 48 48]},
   :property/pretty-name "Quarterstaff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/skull-large-closed,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 384 48 48]},
   :property/pretty-name "Closed Large Skull"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-cold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 336 48 48]},
   :property/pretty-name "Cold Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/blood-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 624 48 48]},
   :property/pretty-name "Boot Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-ornate,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 528 48 48]},
   :property/pretty-name "Ornate Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/flask-green,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [912 48 48 48]},
   :property/pretty-name "Green Flask"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/axe-exotic1,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 144 48 48]},
   :property/pretty-name "Exotic1 Axe"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/falchion,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 96 48 48]},
   :property/pretty-name "Falchion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/drumstick,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 48 48 48]},
   :property/pretty-name "Drumstick"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-lightning,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 192 48 48]},
   :property/pretty-name "Lightning Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 288 48 48]},
   :property/pretty-name "Heater Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-gold-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 240 48 48]},
   :property/pretty-name "Kite Gold Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-axe-frost,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 192 48 48]},
   :property/pretty-name "Frost Axe Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/leather-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 528 48 48]},
   :property/pretty-name "Leg Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-crimson,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [816 336 48 48]},
   :property/pretty-name "Crimson Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-gold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 432 48 48]},
   :property/pretty-name "Gold Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic1,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 96 48 48]},
   :property/pretty-name "Exotic1 Sword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 288 48 48]},
   :property/pretty-name "Heater Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sling,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 144 48 48]},
   :property/pretty-name "Sling"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-winged,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 144 48 48]},
   :property/pretty-name "Winged Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/chain-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 480 48 48]},
   :property/pretty-name "Chest Chain"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/hammer,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 96 48 48]},
   :property/pretty-name "Hammer"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-sun,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [864 336 48 48]},
   :property/pretty-name "Sun Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-pearl,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Pearl Ring"}
  {:item/modifiers {:modifier/strength {:op/inc 3}},
   :item/slot :inventory.slot/glove,
   :property/id :items/blood-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 576 48 48]},
   :property/pretty-name "Glove Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-acid,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 192 48 48]},
   :property/pretty-name "Acid Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/gold-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 432 48 48]},
   :property/pretty-name "Helm Gold"}
  {:item/modifiers {:modifier/movement-speed {:op/inc 12}},
   :item/slot :inventory.slot/boot,
   :property/id :items/gold-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 624 48 48]},
   :property/pretty-name "Boot Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-emerald,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 384 48 48]},
   :property/pretty-name "Emerald Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/blood-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 528 48 48]},
   :property/pretty-name "Leg Blood"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/longbow,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 144 48 48]},
   :property/pretty-name "Longbow"}
  {:item/modifiers {},
   :item/slot :inventory.slot/boot,
   :property/id :items/studded-boot,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 624 48 48]},
   :property/pretty-name "Boot Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 240 48 48]},
   :property/pretty-name "Kite Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 240 48 48]},
   :property/pretty-name "Great Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-elven-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 288 48 48]},
   :property/pretty-name "Kite Elven Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-glow,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 576 48 48]},
   :property/pretty-name "Glow Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-emerald,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 384 48 48]},
   :property/pretty-name "Emerald Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-staff-chaos,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 192 48 48]},
   :property/pretty-name "Chaos Staff Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/royal-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 480 48 48]},
   :property/pretty-name "Chest Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 288 48 48]},
   :property/pretty-name "Great Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/leg,
   :property/id :items/royal-leg,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 528 48 48]},
   :property/pretty-name "Leg Royal"}
  {:item/modifiers
@@ -4054,343 +4054,343 @@
    :modifier/movement-speed {:op/mult 0.1}},
   :item/slot :inventory.slot/chest,
   :property/id :items/cloth-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 480 48 48]},
   :property/pretty-name "Chest Cloth"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-bow-horned,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 192 48 48]},
   :property/pretty-name "Horned Bow Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-red,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 48 48 48]},
   :property/pretty-name "Red Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-wood-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 240 48 48]},
   :property/pretty-name "Kite Wood Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-blue,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 48 48 48]},
   :property/pretty-name "Blue Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/wild-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 480 48 48]},
   :property/pretty-name "Chest Wild"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/coin-silver,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [672 0 48 48]},
   :property/pretty-name "Silver Coin"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-black,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 48 48 48]},
   :property/pretty-name "Black Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-branch,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 144 48 48]},
   :property/pretty-name "Branch Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/club,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 96 48 48]},
   :property/pretty-name "Club"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 288 48 48]},
   :property/pretty-name "Buckler Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-blue,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 0 48 48]},
   :property/pretty-name "Blue Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/potion-empty,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 0 48 48]},
   :property/pretty-name "Empty Potion"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-great,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 240 48 48]},
   :property/pretty-name "Great Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-green-half,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [912 0 48 48]},
   :property/pretty-name "Half Green Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greatmace,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 96 48 48]},
   :property/pretty-name "Greatmace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/staff-jeweled,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 144 48 48]},
   :property/pretty-name "Jeweled Staff"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/royal-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 576 48 48]},
   :property/pretty-name "Glove Royal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/trident,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 144 48 48]},
   :property/pretty-name "Trident"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/studded-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 480 48 48]},
   :property/pretty-name "Chest Studded"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-sky,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 336 48 48]},
   :property/pretty-name "Sky Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/plate-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 576 48 48]},
   :property/pretty-name "Glove Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-silver,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 336 48 48]},
   :property/pretty-name "Silver Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/mystic-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 432 48 48]},
   :property/pretty-name "Helm Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-mystic,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [816 384 48 48]},
   :property/pretty-name "Mystic Necklace"}
  {:item/modifiers {},
   :item/slot :inventory.slot/chest,
   :property/id :items/plate-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 480 48 48]},
   :property/pretty-name "Chest Plate"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/maul,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 96 48 48]},
   :property/pretty-name "Maul"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-vorpal-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 288 48 48]},
   :property/pretty-name "Kite Vorpal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/crystal-onyx,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [768 336 48 48]},
   :property/pretty-name "Onyx Crystal"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/gold-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 576 48 48]},
   :property/pretty-name "Glove Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [384 240 48 48]},
   :property/pretty-name "Buckler Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-green-full,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [960 0 48 48]},
   :property/pretty-name "Full Green Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/gem-tourmaline,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 384 48 48]},
   :property/pretty-name "Tourmaline Gem"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/lance,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [144 144 48 48]},
   :property/pretty-name "Lance"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/greatspear,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 144 48 48]},
   :property/pretty-name "Greatspear"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-ice-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 288 48 48]},
   :property/pretty-name "Kite Ice Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/heart-red-full,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [864 0 48 48]},
   :property/pretty-name "Full Red Heart"}
  {:item/modifiers {},
   :item/slot :inventory.slot/rings,
   :property/id :items/ring-amethyst,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 336 48 48]},
   :property/pretty-name "Amethyst Ring"}
  {:item/modifiers {},
   :item/slot :inventory.slot/helm,
   :property/id :items/leather-helm,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [48 432 48 48]},
   :property/pretty-name "Helm Leather"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/satchel,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [720 48 48 48]},
   :property/pretty-name "Satchel"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-tattered,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [528 480 48 48]},
   :property/pretty-name "Tattered Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/broadsword,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 96 48 48]},
   :property/pretty-name "Broadsword"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/book-green,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 48 48 48]},
   :property/pretty-name "Green Book"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/chest-silver-empty,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [576 48 48 48]},
   :property/pretty-name "Empty Silver Chest"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/torch,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [624 48 48 48]},
   :property/pretty-name "Torch"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 240 48 48]},
   :property/pretty-name "Heater Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-royal-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 240 48 48]},
   :property/pretty-name "Kite Royal Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/cross,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 144 48 48]},
   :property/pretty-name "Cross"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-ornate,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 0 48 48]},
   :property/pretty-name "Ornate Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/glove,
   :property/id :items/mystic-glove,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [432 576 48 48]},
   :property/pretty-name "Glove Mystic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/bag,
   :property/id :items/key-green,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [192 0 48 48]},
   :property/pretty-name "Green Key"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/magic-sword-cold,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [336 192 48 48]},
   :property/pretty-name "Cold Sword Magic"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-kite,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [96 288 48 48]},
   :property/pretty-name "Kite Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-iron-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [240 240 48 48]},
   :property/pretty-name "Heater Iron Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/cloak,
   :property/id :items/cloak-fur,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [480 576 48 48]},
   :property/pretty-name "Fur Cloak"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-flame-buckler,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [0 288 48 48]},
   :property/pretty-name "Buckler Flame Shield"}
  {:item/modifiers {},
   :item/slot :inventory.slot/weapon,
   :property/id :items/sword-exotic3,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [816 96 48 48]},
   :property/pretty-name "Exotic3 Sword"}
  {:item/modifiers
@@ -4400,13 +4400,13 @@
    :modifier/movement-speed {:op/mult 0.1}},
   :item/slot :inventory.slot/chest,
   :property/id :items/gold-chest,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [288 480 48 48]},
   :property/pretty-name "Chest Gold"}
  {:item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-heater,
-  :property/image
+  :entity/image
   {:file "images/items.png", :sub-image-bounds [816 240 48 48]},
   :property/pretty-name "Heater Mystic Shield"}
  {:property/id :worlds/vampire, :world/type :world.type/tiled-map}
@@ -4483,13 +4483,13 @@
   :projectile/piercing? true,
   :projectile/speed 9,
   :property/id :projectiles/black,
-  :property/image
+  :entity/image
   {:file "images/uf_FX.png", :sub-image-bounds [24 288 24 24]}}
  {:entity-effects {:effect.entity/kill true},
   :projectile/max-range 15,
   :projectile/piercing? true,
   :projectile/speed 9,
   :property/id :projectiles/double-fireball,
-  :property/image
+  :entity/image
   {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
    :sub-image-bounds [32 192 32 32]}})

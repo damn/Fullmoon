@@ -52,7 +52,7 @@
 
 (defn- deserialize [context data]
   (->> data
-       (#(if (:property/image   %) (update % :property/image   (fn [img ] (edn->image     context img ))) %))
+       (#(if (:entity/image     %) (update % :entity/image     (fn [img ] (edn->image     context img ))) %))
        (#(if (:entity/animation %) (update % :entity/animation (fn [anim] (edn->animation context anim))) %))))
 
 ; Other approaches to serialization:
@@ -62,7 +62,7 @@
 ; => simplest way: just define keys which are assets (which are all the same anyway at the moment)
 (defn- serialize [data]
   (->> data
-       (#(if (:property/image   %) (update % :property/image     image->edn    ) %))
+       (#(if (:entity/image     %) (update % :entity/image       image->edn    ) %))
        (#(if (:entity/animation %) (update % :entity/animation   animation->edn) %))))
 
 (defn- of-type?

@@ -123,6 +123,6 @@
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
   (component/render-info [_ entity* g ctx]
-    (let [{:keys [property/image skill/effects]} skill]
+    (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
       (run! #(component/render % g (merge ctx effect-ctx)) effects))))

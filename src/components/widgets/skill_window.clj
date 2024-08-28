@@ -17,7 +17,7 @@
                               :skills/melee-attack]
                           :let [; get-property in callbacks if they get changed, this is part of context permanently
                                 button (->image-button context
-                                                       (:property/image (get-property context id)) ; TODO here anyway taken
+                                                       (:entity/image (get-property context id)) ; TODO here anyway taken
                                                        ; => should probably build this window @ game start
                                                        (fn [ctx]
                                                          (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]

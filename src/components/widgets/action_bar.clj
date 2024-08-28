@@ -20,7 +20,7 @@
    :button-group (:action-bar (:world/widgets ctx))})
 
 (defcomponent :tx.context.action-bar/add-skill
-  (component/do! [[_ {:keys [property/id property/image] :as skill}] ctx]
+  (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (->image-button ctx image identity {:dimensions [48 48]})]
       (actor/set-id! button id)

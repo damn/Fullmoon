@@ -20,7 +20,7 @@
   (component/create [_ _ctx]
     {:id-namespace "projectiles"
      :schema [[:property/id [:qualified-keyword {:namespace :projectiles}]]
-              [:property/image ; TODO what is optional/obligatory??
+              [:entity/image
                :projectile/max-range
                :projectile/speed
                :projectile/piercing?
@@ -31,12 +31,12 @@
                 :image/dimensions [48 48]}}))
 
 (defn- projectile-size [projectile-property]
-  (first (:world-unit-dimensions (:property/image projectile-property))))
+  (first (:world-unit-dimensions (:entity/image projectile-property))))
 
 (defcomponent :tx.entity/projectile
   (component/do! [[_ projectile-id {:keys [position direction faction]}]
                 ctx]
-    (let [{:keys [property/image
+    (let [{:keys [entity/image
                   projectile/max-range
                   projectile/speed
                   entity-effects

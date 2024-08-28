@@ -3,7 +3,9 @@
             [core.graphics :as g]))
 
 (defcomponent :entity/image
-  {:let image}
+  {:data :image
+   :optional? false
+   :let image}
   (component/render-default [_ entity* g _ctx]
     (g/draw-rotated-centered-image g
                                    image

@@ -137,7 +137,7 @@
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)
-          drawable (->texture-region-drawable ctx (:texture-region (:property/image item)))]
+          drawable (->texture-region-drawable ctx (:texture-region (:entity/image item)))]
       (.setMinSize drawable (float cell-size) (float cell-size))
       (.setDrawable image-widget drawable)
       (add-tooltip! cell-widget #(components/info-text item %))

@@ -39,7 +39,7 @@
     {:id-namespace "skills"
      :schema [[:property/id [:qualified-keyword {:namespace :skills}]]
               [:property/pretty-name
-               :property/image
+               :entity/image
                :skill/action-time
                :skill/cooldown
                :skill/cost

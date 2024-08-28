@@ -237,7 +237,7 @@
                   (let [props (get-property ctx prop-id)
                         ; TODO also x2 dimensions
                         image-widget (->image-widget ctx ; TODO image-button (link)
-                                                     (:property/image props)
+                                                     (:entity/image props)
                                                      {:id (:property/id props)})]
                     (add-tooltip! image-widget #(components/info-text props %))
                     image-widget))
@@ -354,8 +354,8 @@
                             (for [entities (partition-all number-columns entities)] ; TODO can just do 1 for?
                               (for [{:keys [property/id] :as props} entities
                                     :let [on-clicked #(clicked-id-fn % id)
-                                          button (if (:property/image props)
-                                                   (->image-button ctx (:property/image props) on-clicked
+                                          button (if (:entity/image props)
+                                                   (->image-button ctx (:entity/image props) on-clicked
                                                                    {:dimensions dimensions})
                                                    (->text-button ctx (name id) on-clicked))
                                           top-widget (->label ctx (or (and extra-info-text

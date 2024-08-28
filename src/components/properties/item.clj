@@ -19,7 +19,7 @@
     {:id-namespace "items"
      :schema [[:property/id [:qualified-keyword {:namespace :items}]]
               [:property/pretty-name
-               :property/image
+               :entity/image
                :item/slot
                :item/modifiers]]
      :edn-file-sort-order 3
@@ -34,13 +34,13 @@
 ; TODO use image w. shadows spritesheet
 (defcomponent :tx.entity/item
   (component/do! [[_ position item] _ctx]
-    (assert (:property/image item))
+    (assert (:entity/image item))
     [[:tx/create
       {:position position
        :width 0.5 ; TODO use item-body-dimensions
        :height 0.5
        :z-order :z-order/on-ground}
-      #:entity {:image (:property/image item)
+      #:entity {:image (:entity/image item)
                 :item item
                 :clickable {:type :clickable/item
                             :text (:property/pretty-name item)}}]]))

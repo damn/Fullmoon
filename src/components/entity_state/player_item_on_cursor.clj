@@ -93,12 +93,12 @@
 
   (component/render-below [_ entity* g ctx]
     (when (world-item? ctx)
-      (g/draw-centered-image g (:property/image item) (item-place-position ctx entity*)))))
+      (g/draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
 (defn draw-item-on-cursor [g ctx]
   (let [player-entity* (ctx/player-entity* ctx)]
     (when (and (= :player-item-on-cursor (entity/state player-entity*))
                (not (world-item? ctx)))
       (g/draw-centered-image g
-                             (:property/image (:entity/item-on-cursor player-entity*))
+                             (:entity/image (:entity/item-on-cursor player-entity*))
                              (ctx/gui-mouse-position ctx)))))

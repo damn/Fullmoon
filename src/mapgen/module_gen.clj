@@ -201,7 +201,7 @@
 
 (def ^:private creature->tile
   (memoize
-   (fn [{:keys [property/id property/image]}]
+   (fn [{:keys [property/id entity/image]}]
      (assert (and id image))
      (let [tile (->static-tiled-map-tile (:texture-region image))]
        (put! (tiled/properties tile) "id" id)
