@@ -1,6 +1,8 @@
 (ns core.component
   (:refer-clojure :exclude [apply])
-  (:require [utils.core :refer [safe-get]]))
+  (:require [clojure.string :as str]
+            [utils.core :refer [safe-get]]
+            [utils.files :as files]))
 
 ; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override true)
@@ -224,24 +226,14 @@
           ctx
           components))
 
-; ??
-; tools namespace doesn't load them in right order, if we are asserting order of component matters, we need to reload them.
-; but this is quite though because then so much loading
-; or those which just define components which are used somewhere else we might pass a :reload flag there ???
-; TODO force reload fucks up other stuff !!!  ???
-; this has to work ... shit !
-
-(defn load! [components & {:keys [log?]}]
-  (assert (clojure.core/apply distinct? (map first components)))
-  (doseq [[k _] components
-          :let [component-ns (k->component-ns k)]]
-    (when log? (println "require " component-ns))
-    (require component-ns)
-    (assert (find-ns component-ns)
-            (str "Cannot find component namespace " component-ns))))
-
-(defn load-ks! [ks]
-  (load! (ks->components ks)))
+(defn require-all! []
+  (doseq [file (files/recursively-search "src/components/" #{"clj"})
+          :let [ns (-> file
+                       (str/replace "src/" "")
+                       (str/replace ".clj" "")
+                       (str/replace "/" ".")
+                       symbol)]]
+    (require ns)))
 
 (defn doc [k]
   (:doc (get attributes k)))

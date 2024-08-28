@@ -3,58 +3,6 @@
        :height 900
        :full-screen? false
        :fps 60}
- ; :components is here so we dont't call component/create on those (e.g. entity/body without args)
- ; just the namespaces will be loaded, that's it
- :components [:entity/delete-after-duration
-
-              :entity/movement
-              :entity/projectile-collision
-
-              :entity/destroy-audiovisual
-
-              :entity/image
-
-              :entity/animation
-              :entity/delete-after-animation-stopped
-
-              :entity/line-render
-
-              :entity/mouseover
-              :entity/clickable
-
-              :entity/state
-
-              :entity/player
-
-              :entity/shout
-
-              :entity/faction
-              :entity/stats
-              :entity/string-effect
-              :entity/skills
-              :entity/inventory
-
-              :entity-state/load
-
-              :effect/target-entity
-              :effect/target-all
-
-              :world/line-of-sight
-              :world/mouseover-entity
-              :world/potential-fields
-              :world/ecs
-              :world/time
-              :world/widgets
-              :world/effect-handler
-              :world/grid
-              :world/raycaster
-              :world/content-grid
-              :world/explored-tile-corners
-
-              :operation/numbers
-              :data/core
-              :property/core
-              ]
  :context [[:context/config {:tag :dev
                              :configs {:prod {:map-editor? false
                                               :property-editor? false
@@ -67,7 +15,7 @@
            [:context/assets {:folder "resources/"
                              :sound-file-extensions #{"wav"}
                              :image-file-extensions #{"png" "bmp"}
-                             :log-load-assets? false}]
+                             :log? false}]
            [:context/graphics {:views {:gui-view {:world-width 1440
                                                   :world-height 900}
                                        :world-view {:world-width 1440

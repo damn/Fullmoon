@@ -5,7 +5,6 @@
 (defcomponent :context/screens
   {:let screen-ks}
   (component/create [_ ctx]
-    (component/load-ks! screen-ks)
     {:screens (component/ks->create-all screen-ks ctx)
      :first-screen (first screen-ks)})
 

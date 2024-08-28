@@ -9,14 +9,10 @@
 
 (def state (atom nil))
 
-(defn- ->context [components]
-  (component/load! components)
-  (component/create-into (assoc (ctx/->Context) :context/state state)
-                         components))
-
 (defn- create-context [components]
+  (component/require-all!)
   (->> components
-       ->context
+       (component/create-into (assoc (ctx/->Context) :context/state state))
        ctx/init-first-screen
        (reset! state)))
 
@@ -42,9 +38,7 @@
 
 (defn -main [& [app-edn-file]]
   (let [app (-> app-edn-file slurp edn/read-string)]
-    (assert (:components app))
     (assert (:context app))
     (assert (:app app))
-    (component/load-ks! (:components app))
     (lwjgl3/->application (->application (:context app))
                           (lwjgl3/->configuration (:app app)))))
