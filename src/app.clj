@@ -22,13 +22,17 @@
       ;(println "require" ns)
       (require ns))))
 
+(def ^:private app-k :app/core)
+
 (defn- ->application [properties file]
   (->application-listener
    :create (fn []
              (require-all-components!) ; here @ create because files/internal requires libgdx context
-             (let [context (merge (:app/context (get properties :app/core))
+             (let [context (merge (:app/context (get properties app-k))
                                   {:context/properties {:file file
                                                         :properties properties}
+                                   ; map editor calls ctx/get-property & property editor ctx/all-properties
+                                   ; so load afterwards
                                    :context/screens [:screens/main-menu
                                                      :screens/map-editor
                                                      ;:screens/minimap
@@ -62,4 +66,4 @@
 (defn -main [& [file]]
   (let [properties (load-properties file)]
     (lwjgl3/->application (->application properties file)
-                          (lwjgl3/->configuration (:app/lwjgl3 (get properties :app/core))))))
+                          (lwjgl3/->configuration (:app/lwjgl3 (get properties app-k))))))
