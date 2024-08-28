@@ -1,5 +1,6 @@
 (ns components.entity.state
   (:require [reduce-fsm :as fsm]
+            [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]))
 
@@ -92,8 +93,8 @@
   (component/create [[_ [player-or-npc initial-state]] _ctx]
     {:initial-state initial-state
      :fsm (case player-or-npc
-            :state/player player-fms
-            :state/npc nps-fsm)})
+            :state/player player-fsm
+            :state/npc npc-fsm)})
 
   (component/create-e [[k {:keys [fsm initial-state]}] eid ctx]
     [[:tx.entity/assoc eid k (->init-fsm fsm initial-state)]
