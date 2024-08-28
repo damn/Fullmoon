@@ -113,11 +113,18 @@
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
 (defcomponent :context/properties
-  {:let {:keys [defcomponents types file]}}
+  {:let {:keys [file]}}
   (component/create [_ ctx]
-    (doseq [[k m] defcomponents]
+    (doseq [[k m] [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
+                   [:entity-effects {:data [:components-ns :effect.entity]}]]]
       (component/defcomponent* k m :warn-on-override? false))
-    (let [types (component/ks->create-all types {})
+    (let [types (component/ks->create-all [:properties/audiovisual
+                                           :properties/creature
+                                           :properties/item
+                                           :properties/projectile
+                                           :properties/skill
+                                           :properties/world]
+                                          {})
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
        :types types

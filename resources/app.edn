@@ -40,15 +40,7 @@
                                          :cursors/move-window ["move002" [16 16]]}}]
            [:context/tiled-map-renderer]
            [:context/vis-ui :skin-scale/x1]
-           [:context/properties {:defcomponents [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
-                                                 [:entity-effects {:data [:components-ns :effect.entity]}]]
-                                 :types [:properties/audiovisual
-                                         :properties/creature
-                                         :properties/item
-                                         :properties/projectile
-                                         :properties/skill
-                                         :properties/world]
-                                 :file "resources/properties.edn"}]
+           [:context/properties {:file "resources/properties.edn"}]
            [:widgets/background-image "images/moon_background.png"]
            [:context/screens [:screens/main-menu
                               :screens/map-editor
