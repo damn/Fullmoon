@@ -1,3 +1,6 @@
+GREP components ks
+move usage together
+
 
 ; widgets / icons ? (see WoW )
 ; * HP color based on ratio like hp bar samey (take same color definitions etc.)

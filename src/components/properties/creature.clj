@@ -1,10 +1,9 @@
 (ns components.properties.creature
   (:require [clojure.string :as str]
             [reduce-fsm :as fsm]
-            [utils.core :refer [readable-number]]
+            [utils.core :refer [readable-number safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
-            [core.entity :as entity]))
+            [core.context :as ctx]))
 
 ; TODO assert min body size from core.entity
 ; TODO make px
@@ -42,7 +41,10 @@
                :property/bounds
                :creature/species
                :creature/level
-               :creature/entity]]
+
+               :creature/entity
+
+               ]]
      :edn-file-sort-order 1
      :overview {:title "Creatures"
                 :columns 15
@@ -193,7 +195,6 @@
     (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
  )
 
-
 (defcomponent :tx.entity/creature
   (component/do! [[_ creature-id components] ctx]
     (assert (:entity/state components))
@@ -207,26 +208,26 @@
          :z-order (if (:entity/flying? creature-components)
                     :z-order/flying
                     :z-order/ground)}
-        (-> creature-components
-            (dissoc :entity/flying?)
-            (merge (dissoc components
-                           :entity/position
-                           :creature/skills
-                           :creature/stats
-                           ))
-            (update :entity/state set-state)  ; do @ entity/state itself
-            (assoc :entity.creature/name    (str/capitalize (name (:property/id props)))
-                   :entity.creature/species (str/capitalize (name (:creature/species props)))
-                   :entity/destroy-audiovisual :audiovisuals/creature-die
-                   :entity/skills (let [skill-ids (:creature/skills props)]
-                                    (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
-                   :entity/stats (-> (:creature/stats creature-components)
-                                     (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
-                                     (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
-                                     (update :stats/modifiers build-modifiers))
-                   ))]])))
+        (safe-merge
+         (safe-merge (dissoc components
+                             :entity/position
+                             :entity/state
+                             :entity/faction)
+                     {:entity.creature/name    (str/capitalize (name (:property/id props)))
+                      :entity.creature/species (str/capitalize (name (:creature/species props)))})
+         #:entity {:animation (:entity/animation creature-components)
+                   :reaction-time (:entity/reaction-time creature-components)
+                   :faction (or (:entity/faction creature-components) (:entity/faction components))
+                   :state (set-state (:entity/state components))
+                   :inventory (:entity/inventory creature-components)
+                   :skills (let [skill-ids (:creature/skills props)]
+                             (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
+                   :destroy-audiovisual :audiovisuals/creature-die
+                   :stats (-> (:creature/stats creature-components)
+                              (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
+                              (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
+                              (update :stats/modifiers build-modifiers))})]])))
 
-; search more :data / component/create and move it here ....
 
 (comment
 
