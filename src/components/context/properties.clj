@@ -87,23 +87,29 @@
 
 (defn- validate [types property]
   (if validate?
-    (let [type (property->type types property)
-          schema (:schema (type types))]
-      (if (try (m/validate schema property)
-               (catch Throwable t
-                 (throw (ex-info "m/validate fail" {:property property :type type} t))))
-        property
-        (throw (ex-info (validation-error-message schema property)
-                        {:property property}))))
+    (try (let [type (property->type types property)
+               schema (:schema (type types))]
+           (if (try (m/validate schema property)
+                    (catch Throwable t
+                      (throw (ex-info "m/validate fail" {:property property :type type} t))))
+             property
+             (throw (ex-info (validation-error-message schema property)
+                             {:property property}))))
+         (catch Throwable t
+           (throw (ex-info "" {:types types :property property} t))))
     property))
 
-(defn- load-edn [context types file]
+(defn load-edn-raw [file]
   (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
-         (map #(validate types %))
-         (map #(deserialize context %))
          (#(zipmap (map :property/id %) %)))))
+
+(defn- validate-and-deserialize [ctx types properties]
+  (utils.core/mapvals #(->> %
+                           (validate types)
+                           (deserialize ctx))
+                      properties))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
   (let [schema-form (apply vector :map {:closed true} id-attribute
@@ -113,12 +119,13 @@
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
 (defcomponent :context/properties
-  {:let {:keys [file]}}
+  {:let {:keys [file properties]}}
   (component/create [_ ctx]
     (doseq [[k m] [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
                    [:entity-effects {:data [:components-ns :effect.entity]}]]]
       (component/defcomponent* k m :warn-on-override? false))
-    (let [types (component/ks->create-all [:properties/audiovisual
+    (let [types (component/ks->create-all [:properties/app
+                                           :properties/audiovisual
                                            :properties/creature
                                            :properties/item
                                            :properties/projectile
@@ -128,7 +135,7 @@
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
        :types types
-       :db (load-edn ctx types file)})))
+       :db (validate-and-deserialize ctx types properties)})))
 
 (defn- pprint-spit [file data]
   (binding [*print-level* nil]
