@@ -1,6 +1,5 @@
 (ns components.context.properties
-  (:require [clojure.edn :as edn]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get mapvals]]
