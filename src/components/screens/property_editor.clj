@@ -15,7 +15,6 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
 
-(defn- ck->widget                [k] (:widget               (component/k->data k)))
 (defn- ck->enum-items            [k] (:items                (component/k->data k)))
 (defn- ck->components            [k] (:components           (component/k->data k)))
 (defn- ck->linked-property-types [k] (:linked-property-type (component/k->data k)))
@@ -46,6 +45,9 @@
                  :close-on-escape? true
                  :rows [[(->scroll-pane-cell ctx rows)]]
                  :pack? true}))
+
+(defn- ck->widget [k]
+  (:widget (component/k->data k)))
 
 (defmulti ->value-widget     (fn [[k _v] _ctx] (ck->widget k)))
 (defmulti value-widget->data (fn [k _widget]   (ck->widget k)))
