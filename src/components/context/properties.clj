@@ -52,10 +52,8 @@
 
 (defn- deserialize [context data]
   (->> data
-       (#(if (:property/image %)
-           (update % :property/image (fn [img] (edn->image context img)))
-           %))
-       (#(if (:entity/animation   %) (update % :entity/animation   (fn [anim] (edn->animation context anim))) %))))
+       (#(if (:property/image   %) (update % :property/image   (fn [img ] (edn->image     context img ))) %))
+       (#(if (:entity/animation %) (update % :entity/animation (fn [anim] (edn->animation context anim))) %))))
 
 ; Other approaches to serialization:
 ; * multimethod & postwalk like cdq & use records ... or metadata hmmm , but then have these records there with nil fields etc.
@@ -64,8 +62,8 @@
 ; => simplest way: just define keys which are assets (which are all the same anyway at the moment)
 (defn- serialize [data]
   (->> data
-       (#(if (:property/image %) (update % :property/image image->edn) %))
-       (#(if (:entity/animation   %) (update % :entity/animation   animation->edn) %))))
+       (#(if (:property/image   %) (update % :property/image     image->edn    ) %))
+       (#(if (:entity/animation %) (update % :entity/animation   animation->edn) %))))
 
 (defn- of-type?
   ([property-type {:keys [property/id]}]
