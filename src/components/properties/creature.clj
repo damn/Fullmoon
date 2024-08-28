@@ -7,18 +7,34 @@
 
 ; TODO assert min body size from core.entity
 ; TODO make px
-(defcomponent :property/bounds      {:data :some})
+(defcomponent :property/bounds
+  {:data :some
+   :optional? false})
 
 (defcomponent :creature/species
-  {:data [:qualified-keyword {:namespace :species}]}
+  {:data [:qualified-keyword {:namespace :species}]
+   :optional? false}
   (component/info-text [[_ species] _ctx]
     (str "[LIGHT_GRAY]Species: " species "[]")))
 
-(defcomponent :creature/level       {:data :pos-int})
-(defcomponent :entity/flying?       {:data :boolean})
-(defcomponent :entity/reaction-time {:data :pos})
-(defcomponent :creature/skills      {:data [:one-to-many-ids :properties/skill]})
-(defcomponent :creature/stats       {:data [:components-ns :stats]})
+(defcomponent :creature/level
+  {:data :pos-int
+   :optional? false})
+
+(defcomponent :entity/flying?
+  {:data :boolean
+   :optional? false})
+
+(defcomponent :entity/reaction-time
+  {:data :pos
+   :optional? false})
+
+(defcomponent :creature/skills
+  {:data [:one-to-many-ids :properties/skill]})
+
+(defcomponent :creature/stats
+  {:data [:components-ns :stats]
+   :optional? false})
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]
@@ -26,11 +42,14 @@
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               [:property/pretty-name
                :property/image
+
+               ; body
                :property/bounds
+               :entity/flying? ; remove
+
                :creature/species
                :creature/level
                :entity/animation
-               :entity/flying? ; remove
                :entity/reaction-time ; in frames 0.016x
                :creature/stats
                :entity/inventory  ; remove

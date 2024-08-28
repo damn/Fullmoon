@@ -2,7 +2,9 @@
   (:require [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]))
 
-(defcomponent :skill/action-time {:data :pos}
+(defcomponent :skill/action-time
+  {:data :pos
+   :optional? false}
   (component/info-text [[_ v] _ctx]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
@@ -16,11 +18,17 @@
     (when-not (zero? v)
       (str "[CYAN]Cost: " v " Mana[]"))))
 
-(defcomponent :skill/effects {:data [:components-ns :effect]})
+(defcomponent :skill/effects
+  {:data [:components-ns :effect]
+   :optional? false})
 
-(defcomponent :skill/start-action-sound {:data :sound})
+(defcomponent :skill/start-action-sound
+  {:data :sound
+   :optional? false})
 
-(defcomponent :skill/action-time-modifier-key {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
+(defcomponent :skill/action-time-modifier-key
+  {:data [:enum [:stats/cast-speed :stats/attack-speed]]
+   :optional? false}
   (component/info-text [[_ v] _ctx]
     (str "[VIOLET]" (case v
                       :stats/cast-speed "Spell"

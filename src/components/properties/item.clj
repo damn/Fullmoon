@@ -10,7 +10,9 @@
     (when (seq modifiers)
       (modifiers/info-text modifiers))))
 
-(defcomponent :item/slot {:data [:qualified-keyword {:namespace :inventory.slot}]})
+(defcomponent :item/slot
+  {:data [:qualified-keyword {:namespace :inventory.slot}]
+   :optional? false})
 
 (defcomponent :properties/item
   (component/create [_ _ctx]
