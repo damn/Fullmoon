@@ -64,38 +64,6 @@
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %))}}))
 
-; TODO @ properties.creature set optional/obligatory .... what is needed ???
-; body
-; skills
-; mana
-; stats (cast,attack-speed -> move to skills?)
-; movement (if should move w. movement-vector ?!, otherwise still in 'moving' state ... )
-
-; npc:
-; reaction-time
-; faction
-
-; player:
-; click-distance-tiles
-; free-skill-points
-; inventory
-; item-on-cursor (added by itself)
-
-
-;;;; add 'controller'
-; :type controller/npc or controller/player
-;;; dissoc here and assign components ....
-; only npcs need reaction time ....
-
-; if controller = :controller/player
-; -> add those fields
-; :player? true ; -> api -> 'entity/player?' fn
-; :free-skill-points 3
-; :clickable {:type :clickable/player}
-; :click-distance-tiles 1.5
-
-; otherwise
-
 (defn- ->body [position props]
   {:position position
    :width  (:width  (:property/bounds props))
