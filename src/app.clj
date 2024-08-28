@@ -11,7 +11,7 @@
 
 (def state (atom nil))
 
-(defn require-all-components! []
+(defn- require-all-components! []
   (doseq [file (files/recursively-search "src/components/" #{"clj"})
           :let [ns (-> file
                        (str/replace "src/" "")
@@ -22,32 +22,27 @@
       ;(println "require" ns)
       (require ns))))
 
-(defn- create-context [components]
-  (require-all-components!)
-  (->> components
-       (component/create-into (assoc (ctx/->Context) :context/state state))
-       ctx/init-first-screen
-       (reset! state)))
-
-(defn- destroy-context []
-  (run! component/destroy @state))
-
-(defn- render-context []
-  (ctx/fix-viewport-update @state)
-  (screen-utils/clear color/black)
-  (-> @state
-      ctx/current-screen
-      (component/render! state)))
-
-(defn- update-viewports [w h]
-  (ctx/update-viewports @state w h))
-
 (defn- ->application [components]
   (->application-listener
-   :create #(create-context components)
-   :dispose destroy-context
-   :render render-context
-   :resize update-viewports))
+   :create (fn []
+             (require-all-components!)
+             (->> components
+                  (component/create-into (assoc (ctx/->Context) :context/state state))
+                  ctx/init-first-screen
+                  (reset! state)))
+
+   :dispose (fn []
+              (run! component/destroy @state))
+
+   :render (fn []
+             (ctx/fix-viewport-update @state)
+             (screen-utils/clear color/black)
+             (-> @state
+                 ctx/current-screen
+                 (component/render! state)))
+
+   :resize (fn [w h]
+             (ctx/update-viewports @state w h))))
 
 (defn -main [& [app-edn-file]]
   (let [app (-> app-edn-file slurp edn/read-string)]
