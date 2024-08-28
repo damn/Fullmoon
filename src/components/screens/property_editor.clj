@@ -1,6 +1,7 @@
 (ns components.screens.property-editor
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
+            [clj-commons.pretty.repl :as p]
             [malli.core :as m]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
@@ -310,6 +311,9 @@
      (f ctx)
      (catch Throwable t
        (error-window! ctx t)
+       ; TODO all error in 1 place utils handle
+       (binding [*print-level* 5]
+         (p/pretty-pst t 24))
        ctx))))
 
 (defn ->property-editor-window [context id]
