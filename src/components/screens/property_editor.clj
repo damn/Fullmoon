@@ -15,9 +15,9 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
 
-(defn- ck->enum-items            [k] (:items                (component/k->data k)))
-(defn- ck->components            [k] (:components           (component/k->data k)))
-(defn- ck->linked-property-types [k] (:linked-property-type (component/k->data k)))
+(defn- ck->enum-items           [k] (:items                (component/k->data k)))
+(defn- ck->components           [k] (:components           (component/k->data k)))
+(defn- ck->linked-property-type [k] (:linked-property-type (component/k->data k)))
 
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
@@ -76,7 +76,7 @@
 
 ;;
 
-(defmethod ->value-widget :check-box [[k checked?] ctx]
+(defmethod ->value-widget :check-box [[_ checked?] ctx]
   (assert (boolean? checked?))
   (->check-box ctx "" (fn [_]) checked?))
 
@@ -249,7 +249,7 @@
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
-                          (ck->linked-property-types attribute)
+                          (ck->linked-property-type attribute)
                           property-ids)
     table))
 
