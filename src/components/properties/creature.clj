@@ -9,6 +9,7 @@
 ; TODO assert min body size from core.entity
 ; TODO make px
 (defcomponent :property/bounds      {:data :some})
+
 (defcomponent :creature/species     {:data [:qualified-keyword {:namespace :species}]})
 (defcomponent :creature/level       {:data :pos-int})
 (defcomponent :entity/flying?       {:data :boolean})
