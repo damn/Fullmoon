@@ -95,7 +95,8 @@
                (catch Throwable t
                  (throw (ex-info "m/validate fail" {:property property :type type} t))))
         property
-        (throw (Error. (validation-error-message schema property)))))
+        (throw (ex-info (validation-error-message schema property)
+                        {:property property}))))
     property))
 
 (defn- load-edn [context types file]
