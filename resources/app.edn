@@ -42,7 +42,6 @@
            [:context/vis-ui :skin-scale/x1]
            [:context/properties {:defcomponents [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
                                                  [:property/image {:data :image                  :optional? false}]
-                                                 [:property/sound {:data :sound                  :optional? false}]
                                                  [:entity-effects {:data [:components-ns :effect.entity]}]]
                                  :types [:properties/audiovisual
                                          :properties/creature

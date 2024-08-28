@@ -4421,7 +4421,7 @@
      :sub-image-bounds [96 64 32 32]}),
    :looping? nil},
   :property/id :audiovisuals/convert,
-  :property/sound "sounds/bfxr_burrow.wav"}
+  :tx/sound "sounds/bfxr_burrow.wav"}
  {:entity/animation
   {:frame-duration 0.05,
    :frames
@@ -4431,7 +4431,7 @@
      :sub-image-bounds [240 0 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/damage,
-  :property/sound "sounds/bfxr_normalhit.wav"}
+  :tx/sound "sounds/bfxr_normalhit.wav"}
  {:entity/animation
   {:frame-duration 0.025,
    :frames
@@ -4443,7 +4443,7 @@
     {:file "images/uf_FX.png", :sub-image-bounds [120 168 24 24]}),
    :looping? nil},
   :property/id :audiovisuals/hit-wall,
-  :property/sound "sounds/bfxr_projectile_wallhit.wav"}
+  :tx/sound "sounds/bfxr_projectile_wallhit.wav"}
  {:entity/animation
   {:frame-duration 0.05,
    :frames
@@ -4453,7 +4453,7 @@
      :sub-image-bounds [384 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/unused,
-  :property/sound "sounds/bfxr_curse.wav"}
+  :tx/sound "sounds/bfxr_curse.wav"}
  {:entity/animation
   {:frame-duration 0.05,
    :frames
@@ -4465,7 +4465,7 @@
     {:file "images/uf_FX.png", :sub-image-bounds [216 144 24 24]}),
    :looping? nil},
   :property/id :audiovisuals/creature-die,
-  :property/sound "sounds/oryx_8-bit_sounds/abilities/special_a.wav"}
+  :tx/sound "sounds/oryx_8-bit_sounds/abilities/special_a.wav"}
  {:entity/animation
   {:frame-duration 0.05,
    :frames
@@ -4475,7 +4475,7 @@
      :sub-image-bounds [96 48 48 48]}),
    :looping? nil},
   :property/id :audiovisuals/hit-ground,
-  :property/sound "sounds/bfxr_fisthit.wav"}
+  :tx/sound "sounds/bfxr_fisthit.wav"}
  {:entity-effects
   {:effect.entity/damage {:damage/min-max [4 8]},
    :effect.entity/stun 0.5},

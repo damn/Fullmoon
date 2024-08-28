@@ -50,7 +50,9 @@
   (all-texture-files [ctx] (:texture-files (this ctx))))
 
 (defcomponent :tx/sound
-  {:let file}
+  {:data :sound
+   :optional? false
+   :let file}
   (component/do! [_ ctx]
     (ctx/play-sound! ctx file)
     ctx))
