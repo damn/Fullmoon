@@ -1,7 +1,7 @@
 (ns components.entity.skills
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
-            [core.context :refer [->counter stopped?]]
+            [core.context :as ctx :refer [->counter stopped?]]
             [core.entity :as entity]))
 
 ; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
@@ -9,6 +9,11 @@
 
 ; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
 (defcomponent :entity/skills
+  {:data [:one-to-many-ids :properties/skill]}
+
+  (component/create [[_ skill-ids] ctx]
+    (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
+
   (component/info-text [[_ skills] _ctx]
     ; => recursive info-text leads to endless text wall
     #_(when (seq skills)

@@ -114,9 +114,9 @@
     :maxrange 0.5}},
   :skill/start-action-sound "sounds/slash.wav"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/toad,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -137,9 +137,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]},
   :property/pretty-name "Toad-horned"}
  {:creature/level 2,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/goblin,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0,
@@ -164,9 +164,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 144 48 48]},
   :property/pretty-name "Goblin-warrior"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lizardman-blue,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -187,9 +187,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]},
   :property/pretty-name "Lizardman-blue-shaman"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/barbarian,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -210,9 +210,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]},
   :property/pretty-name "Barbarian-f"}
  {:creature/level 14,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/mummy,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -233,9 +233,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]},
   :property/pretty-name "Mummy"}
  {:creature/level 3,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/armor-save 0.5,
    :stats/hp 20,
@@ -258,9 +258,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 0 48 48]},
   :property/pretty-name "Helion"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -281,9 +281,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]},
   :property/pretty-name "Priest"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lizardman-green,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -304,9 +304,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]},
   :property/pretty-name "Lizardman-green-spear"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dwarf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -327,9 +327,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]},
   :property/pretty-name "Dwarf-cleric"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -350,9 +350,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]},
   :property/pretty-name "Thief"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lizardman-green,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -373,9 +373,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]},
   :property/pretty-name "Lizardman-green-shaman"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/beholder,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
@@ -396,9 +396,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]},
   :property/pretty-name "Beholder"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/spider,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -419,9 +419,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]},
   :property/pretty-name "Spider-brown"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/vampire,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -443,9 +443,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 240 48 48]},
   :property/pretty-name "Vampire-lord"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -466,9 +466,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]},
   :property/pretty-name "Witch"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -489,9 +489,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]},
   :property/pretty-name "Minstrel-f"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
+  :entity/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :entity/animation
   {:frame-duration 0.1,
    :frames
@@ -508,9 +508,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]},
   :property/pretty-name "Lady-b"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dwarf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -531,9 +531,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]},
   :property/pretty-name "Dwarf"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elemental,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -554,9 +554,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]},
   :property/pretty-name "Elemental-air"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/beetle,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -577,9 +577,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]},
   :property/pretty-name "Beetle-fire"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -600,9 +600,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]},
   :property/pretty-name "Warrior-f"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/golem,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
@@ -623,9 +623,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]},
   :property/pretty-name "Golem-mud"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -646,9 +646,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]},
   :property/pretty-name "Merchant-f"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -669,9 +669,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]},
   :property/pretty-name "Minstrel-m"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/spirit,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -692,9 +692,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]},
   :property/pretty-name "Spirit-greater"}
  {:creature/level 3,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0.7,
@@ -720,9 +720,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 0 48 48]},
   :property/pretty-name "Knight"}
  {:creature/level 8,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/zombie,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -743,9 +743,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]},
   :property/pretty-name "Zombie-b"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/demon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
@@ -766,9 +766,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]},
   :property/pretty-name "Demon-green"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/drow,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -789,9 +789,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]},
   :property/pretty-name "Drow-wizard"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/goblin,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -812,9 +812,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]},
   :property/pretty-name "Goblin-shaman"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/beetle,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -835,9 +835,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]},
   :property/pretty-name "Beetle-giant"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -858,9 +858,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]},
   :property/pretty-name "Prisoner-b"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dwarf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -881,9 +881,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]},
   :property/pretty-name "Dwarf-mage"}
  {:creature/level 1,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/bird,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 1},
   :entity/animation
   {:frame-duration 0.1,
@@ -901,9 +901,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 432 48 48]},
   :property/pretty-name "Bird-hawk"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/pixie,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -924,9 +924,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]},
   :property/pretty-name "Pixie-b"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats {:stats/aggro-range 6, :stats/movement-speed 1},
+  :entity/stats {:stats/aggro-range 6, :stats/movement-speed 1},
   :entity/animation
   {:frame-duration 0.1,
    :frames
@@ -943,9 +943,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]},
   :property/pretty-name "Lady-a"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/drow,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -966,9 +966,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]},
   :property/pretty-name "Drow"}
  {:creature/level 2,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/goblin,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/movement-speed 2.4,
@@ -989,9 +989,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 144 48 48]},
   :property/pretty-name "Goblin"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wolf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -1012,9 +1012,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]},
   :property/pretty-name "Wolf-black"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/bird,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 4},
   :entity/animation
   {:frame-duration 0.1,
@@ -1032,9 +1032,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]},
   :property/pretty-name "Bird-crow"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/demon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
@@ -1055,9 +1055,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]},
   :property/pretty-name "Demon-red"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/pixie,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1078,9 +1078,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]},
   :property/pretty-name "Pixie-a"}
  {:creature/level 3,
-  :creature/skills #{:skills/bow},
+  :entity/skills #{:skills/bow},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1101,9 +1101,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]},
   :property/pretty-name "Archer"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/rat,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1124,9 +1124,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]},
   :property/pretty-name "Rat-giant"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
+  :entity/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :entity/animation
   {:frame-duration 0.1,
    :frames
@@ -1143,9 +1143,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]},
   :property/pretty-name "Lord-a"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wraith,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1166,9 +1166,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]},
   :property/pretty-name "Wraith-black"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wraith,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1189,9 +1189,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]},
   :property/pretty-name "Wraith-red"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/golem,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
@@ -1212,9 +1212,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]},
   :property/pretty-name "Golem-fire"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wisp,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1235,9 +1235,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]},
   :property/pretty-name "Wisp-ancient"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/troll,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
@@ -1258,9 +1258,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]},
   :property/pretty-name "Troll"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wraith,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1281,9 +1281,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]},
   :property/pretty-name "Wraith-blue"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/beetle,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -1304,9 +1304,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]},
   :property/pretty-name "Beetle-fire-giant"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lizardman-blue,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1327,9 +1327,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]},
   :property/pretty-name "Lizardman-blue-spear"}
  {:creature/level 5,
-  :creature/skills #{:skills/spawn},
+  :entity/skills #{:skills/spawn},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1350,9 +1350,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]},
   :property/pretty-name "Dark-knight"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wolf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -1373,9 +1373,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]},
   :property/pretty-name "Wolf-brown"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/demon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
@@ -1396,9 +1396,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]},
   :property/pretty-name "Demon-blue"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/moth,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1419,9 +1419,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]},
   :property/pretty-name "Moth-red"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1442,9 +1442,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]},
   :property/pretty-name "Prisoner-c"}
  {:creature/level 17,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/mimic,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -1465,9 +1465,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]},
   :property/pretty-name "Mimic"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lizardman-green,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1488,9 +1488,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]},
   :property/pretty-name "Lizardman-green"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1511,9 +1511,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]},
   :property/pretty-name "Paladin"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dragon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1534,9 +1534,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]},
   :property/pretty-name "Dragon-green"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/rat,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1557,9 +1557,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]},
   :property/pretty-name "Rat"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elemental,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1580,9 +1580,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]},
   :property/pretty-name "Elemental-vorpal"}
  {:creature/level 8,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/zombie,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
@@ -1603,9 +1603,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]},
   :property/pretty-name "Zombie-a"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dragon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1626,9 +1626,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]},
   :property/pretty-name "Dragon-blue"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/spider,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1649,9 +1649,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]},
   :property/pretty-name "Spider-black"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/ogre,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
@@ -1672,9 +1672,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]},
   :property/pretty-name "Ogre"}
  {:creature/level 3,
-  :creature/skills #{:skills/meditation :skills/projectile},
+  :entity/skills #{:skills/meditation :skills/projectile},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1695,9 +1695,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]},
   :property/pretty-name "Wizard"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elemental,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -1718,9 +1718,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]},
   :property/pretty-name "Elemental-earth"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dragon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1742,7 +1742,7 @@
   :property/pretty-name "Dragon-shadow"}
  {:creature/level 5,
   :creature/species :species/banshee,
-  :creature/stats {:stats/aggro-range 6, :stats/mana 11},
+  :entity/stats {:stats/aggro-range 6, :stats/mana 11},
   :entity/animation
   {:frame-duration 0.1,
    :frames
@@ -1759,9 +1759,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]},
   :property/pretty-name "Banshee"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1782,9 +1782,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]},
   :property/pretty-name "Warrior-m"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/moth,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1805,9 +1805,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]},
   :property/pretty-name "Moth-white"}
  {:creature/level 1,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/bird,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6, :stats/hp 8, :stats/movement-speed 4},
   :entity/animation
   {:frame-duration 0.1,
@@ -1825,9 +1825,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 432 48 48]},
   :property/pretty-name "Bird-dove"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lizardman-blue,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -1848,9 +1848,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]},
   :property/pretty-name "Lizardman-blue"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dragon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
@@ -1871,9 +1871,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]},
   :property/pretty-name "Dragon-red"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/spider,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -1894,9 +1894,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]},
   :property/pretty-name "Spider-brown-giant"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/spirit,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -1917,9 +1917,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]},
   :property/pretty-name "Spirit"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/lich,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 18,
    :stats/mana 11,
@@ -1940,9 +1940,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]},
   :property/pretty-name "Lich"}
  {:creature/level 11,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/skeleton,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -1963,9 +1963,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]},
   :property/pretty-name "Skeleton-archer"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/ogre,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
@@ -1986,9 +1986,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]},
   :property/pretty-name "Ogre-mystic"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/dragon,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2008,9 +2008,9 @@
   :property/image {:file "images/animations/bone-dragon-1.png"},
   :property/pretty-name "Bone-dragon"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/golem,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
@@ -2031,9 +2031,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]},
   :property/pretty-name "Golem-metal"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elemental,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -2054,9 +2054,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]},
   :property/pretty-name "Elemental-fire"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2077,9 +2077,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]},
   :property/pretty-name "Templar"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/wisp,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2100,9 +2100,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]},
   :property/pretty-name "Wisp"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/snake,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2123,9 +2123,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]},
   :property/pretty-name "Snake-giant"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/minotaur,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
@@ -2146,9 +2146,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]},
   :property/pretty-name "Minotaur"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/valkyrie,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2169,9 +2169,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]},
   :property/pretty-name "Valkyrie-a"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/toad,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2192,9 +2192,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]},
   :property/pretty-name "Toad-green"}
  {:creature/level 17,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/vampire,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0,
@@ -2235,9 +2235,9 @@
   {:file "images/creatures.png", :sub-image-bounds [336 240 48 48]},
   :property/pretty-name "Vampire"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/moth,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2258,9 +2258,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]},
   :property/pretty-name "Moth-black"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2281,9 +2281,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]},
   :property/pretty-name "Monk"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
+  :entity/stats {:stats/aggro-range 6, :stats/hp 10, :stats/mana 11},
   :entity/animation
   {:frame-duration 0.1,
    :frames
@@ -2300,9 +2300,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]},
   :property/pretty-name "Lord-b"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2323,9 +2323,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]},
   :property/pretty-name "Warden"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2346,9 +2346,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]},
   :property/pretty-name "Druid"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2369,9 +2369,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]},
   :property/pretty-name "Elf-wizard"}
  {:creature/level 11,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/skeleton,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2392,9 +2392,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]},
   :property/pretty-name "Skeleton-mage"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/halfling,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2415,9 +2415,9 @@
   {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]},
   :property/pretty-name "Halfling-fighter"}
  {:creature/level 11,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/skeleton,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2438,9 +2438,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]},
   :property/pretty-name "Skeleton-warrior"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/halfling,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2461,9 +2461,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]},
   :property/pretty-name "Halfling-thief"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/barbarian,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2484,9 +2484,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]},
   :property/pretty-name "Barbarian-m"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2507,9 +2507,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]},
   :property/pretty-name "Elf-bowman"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/beetle,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2530,9 +2530,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]},
   :property/pretty-name "Beetle"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/bat,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2553,9 +2553,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]},
   :property/pretty-name "Bat-giant"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/toad,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
@@ -2576,9 +2576,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]},
   :property/pretty-name "Toad-blue"}
  {:creature/level 4,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/golem,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/modifiers {:modifier/damage-receive {:op/mult -0.9}},
@@ -2600,9 +2600,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]},
   :property/pretty-name "Golem-stone"}
  {:creature/level 6,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2623,9 +2623,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]},
   :property/pretty-name "Necromancer"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/spider,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2646,9 +2646,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]},
   :property/pretty-name "Spider-black-giant"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/valkyrie,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2669,9 +2669,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]},
   :property/pretty-name "Valkyrie-b"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/bat,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2692,9 +2692,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]},
   :property/pretty-name "Bat"}
  {:creature/level 1,
-  :creature/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/melee-attack},
   :creature/species :species/snake,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
    :stats/armor-save 0,
@@ -2720,9 +2720,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 240 48 48]},
   :property/pretty-name "Snake"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/flies,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2743,9 +2743,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]},
   :property/pretty-name "Flies"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2766,9 +2766,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]},
   :property/pretty-name "Prisoner-a"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/beholder,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
@@ -2789,9 +2789,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]},
   :property/pretty-name "Beholder-deep"}
  {:creature/level 11,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/skeleton,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
@@ -2812,9 +2812,9 @@
   {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]},
   :property/pretty-name "Skeleton"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elemental,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -2835,9 +2835,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]},
   :property/pretty-name "Elemental-water"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2858,9 +2858,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]},
   :property/pretty-name "Cultist"}
  {:creature/level 14,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/mummy,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
@@ -2881,9 +2881,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]},
   :property/pretty-name "Mummy-pharao"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/halfling,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -2904,9 +2904,9 @@
   {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]},
   :property/pretty-name "Halfling-wizard"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/drow,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2927,9 +2927,9 @@
   {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]},
   :property/pretty-name "Drow-bowman"}
  {:creature/level 2,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/worm,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -2950,9 +2950,9 @@
   {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]},
   :property/pretty-name "Worm-giant"}
  {:creature/level 3,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/human,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2973,9 +2973,9 @@
   {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]},
   :property/pretty-name "Merchant-m"}
  {:creature/level 5,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/elf,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
@@ -2996,9 +2996,9 @@
   {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]},
   :property/pretty-name "Elf"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/worm,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
@@ -3019,9 +3019,9 @@
   {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]},
   :property/pretty-name "Worm"}
  {:creature/level 1,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/halfling,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
@@ -3042,9 +3042,9 @@
   {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]},
   :property/pretty-name "Halfling-sling"}
  {:creature/level 4,
-  :creature/skills #{},
+  :entity/skills #{},
   :creature/species :species/golem,
-  :creature/stats
+  :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,

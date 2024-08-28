@@ -268,8 +268,27 @@
 
 (def ^:private borders-px 1)
 
+(defn- build-modifiers [modifiers]
+  (into {} (for [[modifier-k operations] modifiers]
+             [modifier-k (into {} (for [[operation-k value] operations]
+                                    [operation-k [value]]))])))
+
+(comment
+ (= {:modifier/damage-receive {:op/mult [-0.9]}}
+    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
+ )
+
 (defcomponent :entity/stats
-  {:let stats}
+  {:data [:components-ns :stats]
+   :optional? false
+   :let stats}
+
+  (component/create [stats _ctx]
+    (-> stats
+        (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
+        (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
+        (update :stats/modifiers build-modifiers)))
+
   (component/info-text [_ _ctx]
     (str (stats-info-texts stats)
          "\n"

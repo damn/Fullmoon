@@ -1,6 +1,5 @@
 (ns components.properties.creature
   (:require [clojure.string :as str]
-            [reduce-fsm :as fsm]
             [utils.core :refer [readable-number safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
@@ -29,13 +28,6 @@
   {:data :pos
    :optional? false})
 
-(defcomponent :creature/skills
-  {:data [:one-to-many-ids :properties/skill]})
-
-(defcomponent :creature/stats
-  {:data [:components-ns :stats]
-   :optional? false})
-
 (defcomponent :properties/creature
   (component/create [_ _ctx]
     {:id-namespace "creatures"
@@ -51,9 +43,9 @@
                :creature/level
                :entity/animation
                :entity/reaction-time ; in frames 0.016x
-               :creature/stats
+               :entity/stats
                :entity/inventory  ; remove
-               :creature/skills
+               :entity/skills
                ]]
      :edn-file-sort-order 1
      :overview {:title "Creatures"
@@ -63,93 +55,6 @@
                                      (name (:creature/species %))
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %))}}))
-
-(comment
- ; graphviz required in path
- (fsm/show-fsm player-fsm)
-
- )
-
-(fsm/defsm-inc ^:private player-fsm
-  [[:player-idle
-    :kill -> :player-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :pickup-item -> :player-item-on-cursor
-    :movement-input -> :player-moving]
-   [:player-moving
-    :kill -> :player-dead
-    :stun -> :stunned
-    :no-movement-input -> :player-idle]
-   [:active-skill
-    :kill -> :player-dead
-    :stun -> :stunned
-    :action-done -> :player-idle]
-   [:stunned
-    :kill -> :player-dead
-    :effect-wears-off -> :player-idle]
-   [:player-item-on-cursor
-    :kill -> :player-dead
-    :stun -> :stunned
-    :drop-item -> :player-idle
-    :dropped-item -> :player-idle]
-   [:player-dead]])
-
-(defn ->player-state [initial-state]
-  {:initial-state initial-state
-   :fsm player-fsm})
-
-(fsm/defsm-inc ^:private npc-fsm
-  [[:npc-sleeping
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :alert -> :npc-idle]
-   [:npc-idle
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :movement-direction -> :npc-moving]
-   [:npc-moving
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :timer-finished -> :npc-idle]
-   [:active-skill
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :action-done -> :npc-idle]
-   [:stunned
-    :kill -> :npc-dead
-    :effect-wears-off -> :npc-idle]
-   [:npc-dead]])
-
-(defn ->npc-state [initial-state]
-  {:initial-state initial-state
-   :fsm npc-fsm})
-
-(defcomponent :effect.entity/stun
-  {:data :pos
-   :let duration}
-  (component/info-text [_ _effect-ctx]
-    (str "Stuns for " (readable-number duration) " seconds"))
-
-  (component/applicable? [_ {:keys [effect/target]}]
-    (and target
-         (:entity/state @target)))
-
-  (component/do! [_ {:keys [effect/target]}]
-    [[:tx/event target :stun duration]]))
-
-(defcomponent :effect.entity/kill
-  {:data :some}
-  (component/info-text [_ _effect-ctx]
-    "Kills target")
-
-  (component/applicable? [_ {:keys [effect/source effect/target]}]
-    (and target
-         (:entity/state @target)))
-
-  (component/do! [_ {:keys [effect/target]}]
-    [[:tx/event target :kill]]))
 
 ; TODO @ properties.creature set optional/obligatory .... what is needed ???
 ; body
@@ -174,15 +79,6 @@
 ;;; dissoc here and assign components ....
 ; only npcs need reaction time ....
 
-; TODO move to entity/state component, don'tneed to know about that here .... >
-; but what about controller component stuff ?
-; or entity/controller creates all of this ?
-(defn- set-state [[player-or-npc initial-state]]
-  ((case player-or-npc
-     :state/player ->player-state
-     :state/npc ->npc-state)
-   initial-state))
-
 ; if controller = :controller/player
 ; -> add those fields
 ; :player? true ; -> api -> 'entity/player?' fn
@@ -192,15 +88,6 @@
 
 ; otherwise
 
-(defn- build-modifiers [modifiers]
-  (into {} (for [[modifier-k operations] modifiers]
-             [modifier-k (into {} (for [[operation-k value] operations]
-                                    [operation-k [value]]))])))
-
-(comment
- (= {:modifier/damage-receive {:op/mult [-0.9]}}
-    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
- )
 
 (defcomponent :tx.entity/creature
   {:let {:keys [position creature-id components]}}
@@ -215,21 +102,19 @@
                     :z-order/flying
                     :z-order/ground)}
         (safe-merge
+
          (safe-merge (dissoc components
                              :entity/state)
                      {:property/pretty-name (:property/pretty-name props)
                       :creature/species     (str/capitalize (name (:creature/species props)))})
+
          #:entity {:animation (:entity/animation props)
                    :reaction-time (:entity/reaction-time props)
-                   :state (set-state (:entity/state components))
+                   :state (:entity/state components)
                    :inventory (:entity/inventory props)
-                   :skills (let [skill-ids (:creature/skills props)]
-                             (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids)))
+                   :skills (:entity/skills props)
                    :destroy-audiovisual :audiovisuals/creature-die
-                   :stats (-> (:creature/stats props)
-                              (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
-                              (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
-                              (update :stats/modifiers build-modifiers))})]])))
+                   :stats (:entity/stats props)})]])))
 
 
 ; TODO spawning on player both without error ?! => not valid position checked
