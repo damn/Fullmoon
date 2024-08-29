@@ -256,6 +256,7 @@
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
+; separate fn because cannot use entity/stat @ entity-info-widget because select-keys loses map record type
 (defn- ->stat-effective-value [entity* stat-k]
   (when-let [base-value (stat-k (:entity/stats entity*))]
     (->effective-value base-value (stat-k->modifier-k stat-k) (:entity/modifiers entity*))))
