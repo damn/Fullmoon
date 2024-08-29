@@ -19,13 +19,11 @@
      :schema (apply vector :enum items)
      :items items}))
 
-; not checking if one of existing ids used
-; widget requires property/image for displaying overview
 (defcomponent :one-to-many-ids
   (component/->data [[_ property-type]]
     {:widget :one-to-many
-     :schema [:set :qualified-keyword] ; namespace missing
-     :linked-property-type property-type})) ; => fetch from schema namespaced ?
+     :schema [:set :qualified-keyword]
+     :linked-property-type property-type}))
 
 (defcomponent :qualified-keyword
   (component/->data [schema]
