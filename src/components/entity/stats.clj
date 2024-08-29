@@ -60,7 +60,6 @@
         :when (seq operations)]
     [modifier-k operations]))
 
-; info-text fails @ properrty-screen, different data format...
 (defcomponent :entity/modifiers
   {:data [:components-ns :modifier]
    :optional? true
