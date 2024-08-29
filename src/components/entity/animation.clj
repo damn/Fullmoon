@@ -10,15 +10,8 @@
   {:data :animation
    :optional? false
    :let animation}
-  (component/edn->value [[_ {:keys [frames frame-duration looping?]}] ctx]
-    (animation/create (map #(component/edn->value [:entity/image %] ctx) frames)
-                      :frame-duration frame-duration
-                      :looping? looping?))
-
-  (component/value->edn [_]
-    (-> animation
-        (update :frames (fn [frames] (map #(component/value->edn [:entity/image %]) frames)))
-        (select-keys [:frames :frame-duration :looping?])))
+  (component/edn->value [_ ctx] (animation/edn->animation animation ctx))
+  (component/value->edn [_]     (animation/animation->edn animation))
 
   (component/create-e [_ eid _ctx]
     [(tx-assoc-image-current-frame eid animation)])

@@ -1,4 +1,5 @@
-(ns core.animation)
+(ns core.animation
+  (:require [core.image :as image]))
 
 (defprotocol Animation
   (tick [_ delta])
@@ -32,3 +33,13 @@
      :looping? looping?
      :cnt 0
      :maxcnt (* (count frames) (float frame-duration))}))
+
+(defn edn->animation [{:keys [frames frame-duration looping?]} ctx]
+  (create (map #(image/edn->image % ctx) frames)
+          :frame-duration frame-duration
+          :looping? looping?))
+
+(defn animation->edn [animation]
+  (-> animation
+      (update :frames (fn [frames] (map #(image/image->edn %) frames)))
+      (select-keys [:frames :frame-duration :looping?])))
