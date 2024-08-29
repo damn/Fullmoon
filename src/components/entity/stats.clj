@@ -272,16 +272,6 @@
 
 (def ^:private borders-px 1)
 
-(defn- build-modifiers [modifiers]
-  (into {} (for [[modifier-k operations] modifiers]
-             [modifier-k (into {} (for [[operation-k value] operations]
-                                    [operation-k [value]]))])))
-
-(comment
- (= {:modifier/damage-receive {:op/mult [-0.9]}}
-    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
- )
-
 (let [stats-order [:stats/hp
                    :stats/mana
                    ;:stats/movement-speed
@@ -309,8 +299,7 @@
   (component/create [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
-        (update :stats/mana (fn [mana] (when mana [mana mana])))
-        (update :stats/modifiers build-modifiers)))
+        (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
   (component/info-text [_ _ctx]
     (str (stats-info-texts (dissoc stats :stats/modifiers))
