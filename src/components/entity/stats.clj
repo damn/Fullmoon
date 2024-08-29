@@ -99,18 +99,19 @@
      6.5))
  )
 
-(defn defmodifier [modifier-k operations]
-  (defcomponent* modifier-k {:data [:components operations]}))
+(defn- defmodifier [k operations]
+  (defcomponent* k {:data [:components operations]}))
 
-(defn- stat-k->modifier-k [stat-k]
-  (keyword "modifier" (name stat-k)))
+(defn- stat-k->modifier-k [k]
+  (keyword "modifier" (name k)))
 
-(defn defstat [stat-k {:keys [operations] :as attr-m}]
-  (defcomponent* stat-k attr-m)
+(defn- defstat [k {:keys [operations] :as attr-m}]
+  (defcomponent* k attr-m)
   (when operations
-    (defmodifier (stat-k->modifier-k stat-k) operations)))
+    (defmodifier (stat-k->modifier-k k) operations)))
 
 ; TODO modifiers/effects based on data? don't have to use to change aggro-range etc?
+; => but then stats/hp has different schema than its actually used?
 ; modifiers and effects use directly stat ??
 ; also create fns component/create move here ? (e.g. hp)
 
