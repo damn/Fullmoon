@@ -30,7 +30,8 @@
   {:data [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
 
-  (component/info-text [_ ctx] "All visible targets")
+  (component/info-text [_ ctx]
+    "[LIGHT_GRAY]All visible targets[]")
 
   (component/applicable? [_ _ctx]
     true)

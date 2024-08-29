@@ -20,18 +20,6 @@ move usage together
 ; also stats why not modifiers has its own ?
 ; effect/projectile ...
 
-; TODO then color as of component make ....
-; default (name k?)
-
-; TODO use also @ properties => text
-
-; TODO use at \n split everywhere (entity info widget not using this)
-; grep info-text or split \ntoo
-; (damage ... move to dmg, modifiers?)
-
-; colors ... widgets ...
-
-; TODO 8 source modifiers not showing (effects)
 ; TODO entity.effect no color set.... ?
 
 #_(extend-type core.context.Context

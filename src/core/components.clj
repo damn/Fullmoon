@@ -35,12 +35,16 @@
                              :entity/delete-after-duration
                              :entity/projectile-collision])
 
+(def ^:private effect-order [:maxrange
+                             :entity-effects])
+
 (def ^:private k-order
   (vec (concat properties-order
                property-order
                item-order
                skill-order
-               entity-order)))
+               entity-order
+               effect-order)))
 
 (defn sort-index-of [k]
   (let [idx (.indexOf k-order k)]
