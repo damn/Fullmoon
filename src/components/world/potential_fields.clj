@@ -147,8 +147,9 @@
                                           max-iterations)))))
 
 ; TODO main potential field context component create-component params
-(def ^:private factions-iterations {:good 5
-                                    :evil 15})
+; !!
+(def ^:private factions-iterations {:good 15
+                                    :evil 5})
 
 ;; MOVEMENT AI
 

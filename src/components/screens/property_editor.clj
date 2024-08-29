@@ -266,7 +266,7 @@
 ;;
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
-  (let [label (->label ctx (name k))
+  (let [label (->label ctx (str k))
         _ (when-let [doc (component/doc k)]
             (add-tooltip! label doc))
         value-widget (->value-widget [k v] ctx)

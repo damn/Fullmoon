@@ -233,14 +233,19 @@
   {:data :nat-int
    :optional? false})
 
+; TODO negate this value also @ use
+; so can make positiive modifeirs green , negative red....
+(defstat :stats/damage-receive
+  {:data :number
+   :optional? true
+   :operations [:op/inc :op/mult]})
+
 ; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
 ; just inc/mult ?
 ; or even mana/hp does it make a difference ?
-(defmodifier :modifier/damage-deal    [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
-(defmodifier :modifier/damage-receive [:op/inc :op/mult])
+(defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
-(defcomponent :stats/modifiers
-  {:data [:components [:modifier/damage-deal :modifier/damage-receive]]})
+#_(defcomponent :stats/modifiers {:data [:components [:modifier/damage-deal :modifier/damage-receive]]})
 
 (defn- stat-k->effective-value [stat-k stats]
   (when-let [base-value (stat-k stats)]
@@ -279,19 +284,6 @@
     (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
  )
 
-(defcomponent :property/stats
-  {:data [:components-ns :stats]
-   :optional? false
-   :let stats}
-  (component/create-kv [_ _ctx]
-    ; this does not work because defstat doesn't pass sys-impls ...
-    ; again edn->widget->value for val-max define only max ??
-    ; (component/apply-system stats component/create)
-    [:entity/stats (-> stats
-                       (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
-                       (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
-                       (update :stats/modifiers build-modifiers))]))
-
 (let [stats-order [:stats/hp
                    :stats/mana
                    ;:stats/movement-speed
@@ -299,6 +291,7 @@
                    :stats/cast-speed
                    :stats/attack-speed
                    :stats/armor-save
+                   :stats/damage-receive
                    ;:stats/armor-pierce
                    ;:stats/aggro-range
                    ;:stats/reaction-time
@@ -312,7 +305,15 @@
                 (str (k->pretty-name stat-k) ": " value)))))
 
 (defcomponent :entity/stats
-  {:let stats}
+  {:data [:components-ns :stats]
+   :optional? false
+   :let stats}
+  (component/create [_ _ctx]
+    (-> stats
+        (update :stats/hp (fn [hp] (when hp [hp hp])))
+        (update :stats/mana (fn [mana] (when mana [mana mana])))
+        (update :stats/modifiers build-modifiers)))
+
   (component/info-text [_ _ctx]
     (str (stats-info-texts (dissoc stats :stats/modifiers))
          "\n"

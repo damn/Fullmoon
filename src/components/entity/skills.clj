@@ -4,16 +4,13 @@
             [core.context :as ctx :refer [->counter stopped?]]
             [core.entity :as entity]))
 
-(defcomponent :property/skills
-  {:data [:one-to-many-ids :properties/skill]}
-  (component/create-kv [[_ skill-ids] ctx]
-    [:entity/skills (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids))]))
-
 (defcomponent :entity/skills
-  (component/create-e [[_ skills] eid ctx]
-    (when (:entity/player? @eid)
-      (for [[skill-id skill] skills]
-        [:tx.context.action-bar/add-skill skill])))
+  {:data [:one-to-many-ids :properties/skill]}
+  (component/create-e [[k skill-ids] eid ctx]
+    (cons
+     [:tx.entity/assoc eid k nil]
+     (for [skill (map #(ctx/get-property ctx %) skill-ids)]
+       [:tx/add-skill eid skill])))
 
   (component/info-text [[_ skills] _ctx]
     ; => recursive info-text leads to endless text wall

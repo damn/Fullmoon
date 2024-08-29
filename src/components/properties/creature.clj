@@ -42,9 +42,9 @@
    :creature/species
    :creature/level
    :entity/animation
-   :property/stats
+   :entity/stats
    :entity/inventory  ; remove
-   :property/skills])
+   :entity/skills])
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]
@@ -69,10 +69,28 @@
    :collides? true
    :z-order (if flying? :z-order/flying :z-order/ground)})
 
-(defn- create-kvs [components ctx]
-  (into {} (for [component components]
-             (component/create-kv component ctx))))
+; this is there because for skills/stats
+; info-text breaks
+; when used at tooltip
+; for skill its because one-to-many-ids is not realized at get-property
+; and stats is hp/mana... valmax only max
+; get-property needs to realize more things at start
+; with one-to-many and one-to-one (projectile effect)
+; also similar to image/animation from edn
+; based on _data_ go through recursively ....?
 
+; but how do we know something is image/animation?
+; :data :animation / :data :image ....
+
+; fetch get-property to see where its (wrongly) used...
+
+; * entity/inventory :data [:one-to-many-ids :properties/item]
+; * property/skills {:data [:one-to-many-ids :properties/skill]}
+; * audiovisual no for now
+; * creature no for now
+; * effect/projectile YES !
+; * world
+; * property-editor
 (defcomponent :tx.entity/creature
   {:let {:keys [position creature-id components]}}
   (component/do! [_ ctx]
@@ -81,7 +99,6 @@
         (->body position (:entity/body props))
         (-> props
             (select-keys entity-component-attributes)
-            (create-kvs ctx)
             (safe-merge components)
             (assoc :entity/destroy-audiovisual :audiovisuals/creature-die))]])))
 
