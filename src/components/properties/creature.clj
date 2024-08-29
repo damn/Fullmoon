@@ -4,10 +4,15 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
 
+
 ; TODO assert min body size from core.entity
 ; TODO make px
-(defcomponent :property/bounds
-  {:data :some
+(defcomponent :body/width   {:data :number  :optional? false})
+(defcomponent :body/height  {:data :number  :optional? false})
+(defcomponent :body/flying? {:data :boolean :optional? false})
+
+(defcomponent :entity/body
+  {:data [:map [:body/width :body/height :body/flying?]]
    :optional? false})
 
 (defcomponent :creature/species
@@ -23,10 +28,6 @@
    :optional? false}
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
-
-(defcomponent :entity/flying?
-  {:data :boolean
-   :optional? true})
 
 (defcomponent :entity/reaction-time
   {:data :pos
@@ -49,11 +50,8 @@
     {:id-namespace "creatures"
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               (apply vector
-                     ; property
                      :entity/image
-                     ; body
-                     :property/bounds
-                     :entity/flying?
+                     :entity/body
                      entity-component-attributes)]
      :edn-file-sort-order 1
      :overview {:title "Creatures"
@@ -64,14 +62,12 @@
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %))}}))
 
-(defn- ->body [position props]
+(defn- ->body [position {:keys [body/width body/height body/flying?]}]
   {:position position
-   :width  (:width  (:property/bounds props))
-   :height (:height (:property/bounds props))
+   :width  width
+   :height height
    :collides? true
-   :z-order (if (:entity/flying? props)
-              :z-order/flying
-              :z-order/ground)})
+   :z-order (if flying?  :z-order/flying :z-order/ground)})
 
 (defn- create-kvs [components ctx]
   (into {} (for [component components]
@@ -82,7 +78,7 @@
   (component/do! [_ ctx]
     (let [props (ctx/get-property ctx creature-id)]
       [[:tx/create
-        (->body position props)
+        (->body position (:entity/body props))
         (-> props
             (select-keys entity-component-attributes)
             (create-kvs ctx)

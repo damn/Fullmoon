@@ -4,8 +4,7 @@
 
 (def ^:private property-order [:property/id
                                :entity/image
-                               :property/pretty-name
-                               :property/bounds])
+                               :property/pretty-name])
 
 (def ^:private item-order [:item/slot
                            :item/modifiers])
@@ -17,10 +16,10 @@
                             :skill/effects
                             :skill/start-action-sound])
 
-(def ^:private entity-order [:creature/species
+(def ^:private entity-order [:entity/body
+                             :creature/species
                              :creature/level
                              :entity/animation
-                             :entity/flying?
                              :entity/reaction-time
                              :entity/faction
                              :entity/state

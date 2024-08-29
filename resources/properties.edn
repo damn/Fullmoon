@@ -191,11 +191,11 @@
     {:file "images/animations/toad-horned-3.png"}
     {:file "images/animations/toad-horned-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/24, :width 2/3},
   :property/id :creatures/toad-horned,
   :property/pretty-name "Toad-horned",
   :property/skills #{},
@@ -214,10 +214,11 @@
     {:file "images/animations/goblin-warrior-3.png"}
     {:file "images/animations/goblin-warrior-4.png"}),
    :looping? true},
+  :entity/body
+  {:body/flying? false, :body/height 29/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 144 48 48]},
   :entity/reaction-time 0.5,
-  :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/goblin-warrior,
   :property/pretty-name "Goblin-warrior",
   :property/skills #{:skills/melee-attack},
@@ -241,11 +242,11 @@
     {:file "images/animations/lizardman-blue-shaman-3.png"}
     {:file "images/animations/lizardman-blue-shaman-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 37/48, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/lizardman-blue-shaman,
   :property/pretty-name "Lizardman-blue-shaman",
   :property/skills #{},
@@ -264,11 +265,11 @@
     {:file "images/animations/barbarian-f-3.png"}
     {:file "images/animations/barbarian-f-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 11/16},
   :property/id :creatures/barbarian-f,
   :property/pretty-name "Barbarian-f",
   :property/skills #{},
@@ -287,11 +288,11 @@
     {:file "images/animations/mummy-3.png"}
     {:file "images/animations/mummy-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 31/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 2/3},
   :property/id :creatures/mummy,
   :property/pretty-name "Mummy",
   :property/skills #{},
@@ -310,11 +311,11 @@
     {:file "images/animations/helion-3.png"}
     {:file "images/animations/helion-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 0 48 48]},
   :entity/reaction-time 0.05,
-  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/helion,
   :property/pretty-name "Helion",
   :property/skills #{:skills/melee-attack},
@@ -335,11 +336,11 @@
     {:file "images/animations/priest-3.png"}
     {:file "images/animations/priest-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 17/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/priest,
   :property/pretty-name "Priest",
   :property/skills #{},
@@ -358,11 +359,11 @@
     {:file "images/animations/lizardman-green-spear-3.png"}
     {:file "images/animations/lizardman-green-spear-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 13/16, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 11/16},
   :property/id :creatures/lizardman-green-spear,
   :property/pretty-name "Lizardman-green-spear",
   :property/skills #{},
@@ -381,11 +382,11 @@
     {:file "images/animations/dwarf-cleric-3.png"}
     {:file "images/animations/dwarf-cleric-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 9/16, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 9/16, :width 35/48},
   :property/id :creatures/dwarf-cleric,
   :property/pretty-name "Dwarf-cleric",
   :property/skills #{},
@@ -404,11 +405,11 @@
     {:file "images/animations/thief-3.png"}
     {:file "images/animations/thief-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/thief,
   :property/pretty-name "Thief",
   :property/skills #{},
@@ -427,11 +428,11 @@
     {:file "images/animations/lizardman-green-shaman-3.png"}
     {:file "images/animations/lizardman-green-shaman-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 37/48, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/lizardman-green-shaman,
   :property/pretty-name "Lizardman-green-shaman",
   :property/skills #{},
@@ -450,11 +451,11 @@
     {:file "images/animations/beholder-3.png"}
     {:file "images/animations/beholder-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 19/24, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 5/6},
   :property/id :creatures/beholder,
   :property/pretty-name "Beholder",
   :property/skills #{},
@@ -473,11 +474,11 @@
     {:file "images/animations/spider-brown-3.png"}
     {:file "images/animations/spider-brown-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/48, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/48, :width 13/24},
   :property/id :creatures/spider-brown,
   :property/pretty-name "Spider-brown",
   :property/skills #{},
@@ -496,12 +497,12 @@
     {:file "images/animations/vampire-lord-3.png"}
     {:file "images/animations/vampire-lord-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 240 48 48]},
   :entity/inventory #{},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/vampire-lord,
   :property/pretty-name "Vampire-lord",
   :property/skills #{},
@@ -520,11 +521,11 @@
     {:file "images/animations/witch-3.png"}
     {:file "images/animations/witch-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/witch,
   :property/pretty-name "Witch",
   :property/skills #{},
@@ -543,11 +544,11 @@
     {:file "images/animations/minstrel-f-3.png"}
     {:file "images/animations/minstrel-f-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/minstrel-f,
   :property/pretty-name "Minstrel-f",
   :property/skills #{},
@@ -566,11 +567,11 @@
     {:file "images/animations/lady-b-3.png"}
     {:file "images/animations/lady-b-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-b,
   :property/pretty-name "Lady-b",
   :property/skills #{},
@@ -585,11 +586,11 @@
     {:file "images/animations/dwarf-3.png"}
     {:file "images/animations/dwarf-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 9/16, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 9/16, :width 35/48},
   :property/id :creatures/dwarf,
   :property/pretty-name "Dwarf",
   :property/skills #{},
@@ -608,11 +609,11 @@
     {:file "images/animations/elemental-air-3.png"}
     {:file "images/animations/elemental-air-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-air,
   :property/pretty-name "Elemental-air",
   :property/skills #{},
@@ -631,11 +632,11 @@
     {:file "images/animations/beetle-fire-3.png"}
     {:file "images/animations/beetle-fire-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/12, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/12, :width 1/2},
   :property/id :creatures/beetle-fire,
   :property/pretty-name "Beetle-fire",
   :property/skills #{},
@@ -654,11 +655,11 @@
     {:file "images/animations/warrior-f-3.png"}
     {:file "images/animations/warrior-f-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/warrior-f,
   :property/pretty-name "Warrior-f",
   :property/skills #{},
@@ -677,11 +678,11 @@
     {:file "images/animations/golem-mud-3.png"}
     {:file "images/animations/golem-mud-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-mud,
   :property/pretty-name "Golem-mud",
   :property/skills #{},
@@ -700,11 +701,11 @@
     {:file "images/animations/merchant-f-3.png"}
     {:file "images/animations/merchant-f-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 29/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/merchant-f,
   :property/pretty-name "Merchant-f",
   :property/skills #{},
@@ -723,11 +724,11 @@
     {:file "images/animations/minstrel-m-3.png"}
     {:file "images/animations/minstrel-m-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/minstrel-m,
   :property/pretty-name "Minstrel-m",
   :property/skills #{},
@@ -746,11 +747,10 @@
     {:file "images/animations/spirit-greater-3.png"}
     {:file "images/animations/spirit-greater-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body {:body/flying? true, :body/height 5/6, :body/width 3/4},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/6, :width 3/4},
   :property/id :creatures/spirit-greater,
   :property/pretty-name "Spirit-greater",
   :property/skills #{},
@@ -769,11 +769,11 @@
     {:file "images/animations/knight-3.png"}
     {:file "images/animations/knight-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/knight,
   :property/pretty-name "Knight",
   :property/skills #{:skills/melee-attack},
@@ -797,11 +797,11 @@
     {:file "images/animations/zombie-b-3.png"}
     {:file "images/animations/zombie-b-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/zombie-b,
   :property/pretty-name "Zombie-b",
   :property/skills #{},
@@ -820,11 +820,11 @@
     {:file "images/animations/demon-green-3.png"}
     {:file "images/animations/demon-green-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 19/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-green,
   :property/pretty-name "Demon-green",
   :property/skills #{},
@@ -843,11 +843,11 @@
     {:file "images/animations/drow-wizard-3.png"}
     {:file "images/animations/drow-wizard-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/drow-wizard,
   :property/pretty-name "Drow-wizard",
   :property/skills #{},
@@ -866,11 +866,11 @@
     {:file "images/animations/goblin-shaman-3.png"}
     {:file "images/animations/goblin-shaman-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/goblin-shaman,
   :property/pretty-name "Goblin-shaman",
   :property/skills #{},
@@ -889,11 +889,11 @@
     {:file "images/animations/beetle-giant-3.png"}
     {:file "images/animations/beetle-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 13/24, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/24, :width 7/12},
   :property/id :creatures/beetle-giant,
   :property/pretty-name "Beetle-giant",
   :property/skills #{},
@@ -912,11 +912,11 @@
     {:file "images/animations/prisoner-b-3.png"}
     {:file "images/animations/prisoner-b-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/prisoner-b,
   :property/pretty-name "Prisoner-b",
   :property/skills #{},
@@ -935,11 +935,11 @@
     {:file "images/animations/dwarf-mage-3.png"}
     {:file "images/animations/dwarf-mage-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 7/12, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/dwarf-mage,
   :property/pretty-name "Dwarf-mage",
   :property/skills #{},
@@ -958,11 +958,11 @@
     {:file "images/animations/bird-hawk-3.png"}
     {:file "images/animations/bird-hawk-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 35/48, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-hawk,
   :property/pretty-name "Bird-hawk",
   :property/skills #{:skills/melee-attack},
@@ -978,11 +978,11 @@
     {:file "images/animations/pixie-b-3.png"}
     {:file "images/animations/pixie-b-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 3/4, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 13/24},
   :property/id :creatures/pixie-b,
   :property/pretty-name "Pixie-b",
   :property/skills #{},
@@ -1001,11 +1001,11 @@
     {:file "images/animations/lady-a-3.png"}
     {:file "images/animations/lady-a-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/lady-a,
   :property/pretty-name "Lady-a",
   :property/skills #{},
@@ -1020,11 +1020,11 @@
     {:file "images/animations/drow-3.png"}
     {:file "images/animations/drow-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 11/16},
   :property/id :creatures/drow,
   :property/pretty-name "Drow",
   :property/skills #{},
@@ -1043,11 +1043,11 @@
     {:file "images/animations/goblin-3.png"}
     {:file "images/animations/goblin-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 29/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 29/48, :width 2/3},
   :property/id :creatures/goblin,
   :property/pretty-name "Goblin",
   :property/skills #{:skills/melee-attack},
@@ -1066,11 +1066,11 @@
     {:file "images/animations/wolf-black-3.png"}
     {:file "images/animations/wolf-black-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/8, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/wolf-black,
   :property/pretty-name "Wolf-black",
   :property/skills #{},
@@ -1089,11 +1089,11 @@
     {:file "images/animations/bird-crow-3.png"}
     {:file "images/animations/bird-crow-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 35/48, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-crow,
   :property/pretty-name "Bird-crow",
   :property/skills #{},
@@ -1109,11 +1109,11 @@
     {:file "images/animations/demon-red-3.png"}
     {:file "images/animations/demon-red-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 19/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-red,
   :property/pretty-name "Demon-red",
   :property/skills #{},
@@ -1132,11 +1132,11 @@
     {:file "images/animations/pixie-a-3.png"}
     {:file "images/animations/pixie-a-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 3/4, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 13/24},
   :property/id :creatures/pixie-a,
   :property/pretty-name "Pixie-a",
   :property/skills #{},
@@ -1155,11 +1155,11 @@
     {:file "images/animations/archer-3.png"}
     {:file "images/animations/archer-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/archer,
   :property/pretty-name "Archer",
   :property/skills #{:skills/bow},
@@ -1178,11 +1178,11 @@
     {:file "images/animations/rat-giant-3.png"}
     {:file "images/animations/rat-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 41/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 41/48},
   :property/id :creatures/rat-giant,
   :property/pretty-name "Rat-giant",
   :property/skills #{},
@@ -1201,11 +1201,11 @@
     {:file "images/animations/lord-a-3.png"}
     {:file "images/animations/lord-a-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 17/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-a,
   :property/pretty-name "Lord-a",
   :property/skills #{},
@@ -1220,11 +1220,11 @@
     {:file "images/animations/wraith-black-3.png"}
     {:file "images/animations/wraith-black-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-black,
   :property/pretty-name "Wraith-black",
   :property/skills #{},
@@ -1243,11 +1243,11 @@
     {:file "images/animations/wraith-red-3.png"}
     {:file "images/animations/wraith-red-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-red,
   :property/pretty-name "Wraith-red",
   :property/skills #{},
@@ -1266,11 +1266,11 @@
     {:file "images/animations/golem-fire-3.png"}
     {:file "images/animations/golem-fire-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/6, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/6, :width 17/24},
   :property/id :creatures/golem-fire,
   :property/pretty-name "Golem-fire",
   :property/skills #{},
@@ -1289,11 +1289,10 @@
     {:file "images/animations/wisp-ancient-3.png"}
     {:file "images/animations/wisp-ancient-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body {:body/flying? true, :body/height 3/4, :body/width 5/8},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 5/8},
   :property/id :creatures/wisp-ancient,
   :property/pretty-name "Wisp-ancient",
   :property/skills #{},
@@ -1312,11 +1311,11 @@
     {:file "images/animations/troll-3.png"}
     {:file "images/animations/troll-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/troll,
   :property/pretty-name "Troll",
   :property/skills #{},
@@ -1335,11 +1334,11 @@
     {:file "images/animations/wraith-blue-3.png"}
     {:file "images/animations/wraith-blue-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 2/3},
   :property/id :creatures/wraith-blue,
   :property/pretty-name "Wraith-blue",
   :property/skills #{},
@@ -1358,11 +1357,11 @@
     {:file "images/animations/beetle-fire-giant-3.png"}
     {:file "images/animations/beetle-fire-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 13/24, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/24, :width 7/12},
   :property/id :creatures/beetle-fire-giant,
   :property/pretty-name "Beetle-fire-giant",
   :property/skills #{},
@@ -1381,11 +1380,11 @@
     {:file "images/animations/lizardman-blue-spear-3.png"}
     {:file "images/animations/lizardman-blue-spear-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 13/16, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 11/16},
   :property/id :creatures/lizardman-blue-spear,
   :property/pretty-name "Lizardman-blue-spear",
   :property/skills #{},
@@ -1404,11 +1403,11 @@
     {:file "images/animations/dark-knight-3.png"}
     {:file "images/animations/dark-knight-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/dark-knight,
   :property/pretty-name "Dark-knight",
   :property/skills #{:skills/spawn},
@@ -1427,11 +1426,11 @@
     {:file "images/animations/wolf-brown-3.png"}
     {:file "images/animations/wolf-brown-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 7/12, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 7/12, :width 2/3},
   :property/id :creatures/wolf-brown,
   :property/pretty-name "Wolf-brown",
   :property/skills #{},
@@ -1450,11 +1449,11 @@
     {:file "images/animations/demon-blue-3.png"}
     {:file "images/animations/demon-blue-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 19/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 19/24},
   :property/id :creatures/demon-blue,
   :property/pretty-name "Demon-blue",
   :property/skills #{},
@@ -1473,11 +1472,11 @@
     {:file "images/animations/moth-red-3.png"}
     {:file "images/animations/moth-red-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 31/48, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-red,
   :property/pretty-name "Moth-red",
   :property/skills #{},
@@ -1496,11 +1495,11 @@
     {:file "images/animations/prisoner-c-3.png"}
     {:file "images/animations/prisoner-c-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/prisoner-c,
   :property/pretty-name "Prisoner-c",
   :property/skills #{},
@@ -1519,11 +1518,11 @@
     {:file "images/animations/mimic-3.png"}
     {:file "images/animations/mimic-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 9/16, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 9/16, :width 1/2},
   :property/id :creatures/mimic,
   :property/pretty-name "Mimic",
   :property/skills #{},
@@ -1542,11 +1541,11 @@
     {:file "images/animations/lizardman-green-3.png"}
     {:file "images/animations/lizardman-green-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 11/16},
   :property/id :creatures/lizardman-green,
   :property/pretty-name "Lizardman-green",
   :property/skills #{},
@@ -1565,11 +1564,11 @@
     {:file "images/animations/paladin-3.png"}
     {:file "images/animations/paladin-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 11/16},
   :property/id :creatures/paladin,
   :property/pretty-name "Paladin",
   :property/skills #{},
@@ -1588,11 +1587,11 @@
     {:file "images/animations/dragon-green-3.png"}
     {:file "images/animations/dragon-green-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/6, :body/width 23/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-green,
   :property/pretty-name "Dragon-green",
   :property/skills #{},
@@ -1611,11 +1610,11 @@
     {:file "images/animations/rat-3.png"}
     {:file "images/animations/rat-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 23/48, :body/width 31/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 23/48, :width 31/48},
   :property/id :creatures/rat,
   :property/pretty-name "Rat",
   :property/skills #{},
@@ -1634,11 +1633,11 @@
     {:file "images/animations/elemental-vorpal-3.png"}
     {:file "images/animations/elemental-vorpal-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-vorpal,
   :property/pretty-name "Elemental-vorpal",
   :property/skills #{},
@@ -1657,11 +1656,11 @@
     {:file "images/animations/zombie-a-3.png"}
     {:file "images/animations/zombie-a-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/zombie-a,
   :property/pretty-name "Zombie-a",
   :property/skills #{},
@@ -1680,11 +1679,11 @@
     {:file "images/animations/dragon-blue-3.png"}
     {:file "images/animations/dragon-blue-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/6, :body/width 23/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-blue,
   :property/pretty-name "Dragon-blue",
   :property/skills #{},
@@ -1703,11 +1702,11 @@
     {:file "images/animations/spider-black-3.png"}
     {:file "images/animations/spider-black-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/48, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/48, :width 13/24},
   :property/id :creatures/spider-black,
   :property/pretty-name "Spider-black",
   :property/skills #{},
@@ -1726,11 +1725,11 @@
     {:file "images/animations/ogre-3.png"}
     {:file "images/animations/ogre-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 35/48},
   :property/id :creatures/ogre,
   :property/pretty-name "Ogre",
   :property/skills #{},
@@ -1749,11 +1748,11 @@
     {:file "images/animations/wizard-3.png"}
     {:file "images/animations/wizard-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/wizard,
   :property/pretty-name "Wizard",
   :property/skills #{:skills/meditation :skills/projectile},
@@ -1772,11 +1771,11 @@
     {:file "images/animations/elemental-earth-3.png"}
     {:file "images/animations/elemental-earth-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-earth,
   :property/pretty-name "Elemental-earth",
   :property/skills #{},
@@ -1795,11 +1794,11 @@
     {:file "images/animations/dragon-shadow-3.png"}
     {:file "images/animations/dragon-shadow-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/6, :body/width 23/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-shadow,
   :property/pretty-name "Dragon-shadow",
   :property/skills #{},
@@ -1818,11 +1817,11 @@
     {:file "images/animations/banshee-3.png"}
     {:file "images/animations/banshee-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 2/3},
   :property/id :creatures/banshee,
   :property/pretty-name "Banshee",
   :property/stats {:stats/aggro-range 6, :stats/mana 11}}
@@ -1836,11 +1835,11 @@
     {:file "images/animations/warrior-m-3.png"}
     {:file "images/animations/warrior-m-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/warrior-m,
   :property/pretty-name "Warrior-m",
   :property/skills #{},
@@ -1859,11 +1858,11 @@
     {:file "images/animations/moth-white-3.png"}
     {:file "images/animations/moth-white-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 31/48, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-white,
   :property/pretty-name "Moth-white",
   :property/skills #{},
@@ -1882,11 +1881,11 @@
     {:file "images/animations/bird-dove-3.png"}
     {:file "images/animations/bird-dove-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 35/48, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 13/24},
   :property/id :creatures/bird-dove,
   :property/pretty-name "Bird-dove",
   :property/skills #{:skills/melee-attack},
@@ -1902,11 +1901,11 @@
     {:file "images/animations/lizardman-blue-3.png"}
     {:file "images/animations/lizardman-blue-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 11/16},
   :property/id :creatures/lizardman-blue,
   :property/pretty-name "Lizardman-blue",
   :property/skills #{},
@@ -1925,11 +1924,11 @@
     {:file "images/animations/dragon-red-3.png"}
     {:file "images/animations/dragon-red-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/6, :body/width 23/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/6, :width 23/24},
   :property/id :creatures/dragon-red,
   :property/pretty-name "Dragon-red",
   :property/skills #{},
@@ -1948,11 +1947,11 @@
     {:file "images/animations/spider-brown-giant-3.png"}
     {:file "images/animations/spider-brown-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 31/48, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 5/6},
   :property/id :creatures/spider-brown-giant,
   :property/pretty-name "Spider-brown-giant",
   :property/skills #{},
@@ -1971,11 +1970,10 @@
     {:file "images/animations/spirit-3.png"}
     {:file "images/animations/spirit-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body {:body/flying? true, :body/height 3/4, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 1/2},
   :property/id :creatures/spirit,
   :property/pretty-name "Spirit",
   :property/skills #{},
@@ -1994,11 +1992,11 @@
     {:file "images/animations/lich-3.png"}
     {:file "images/animations/lich-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 2/3},
   :property/id :creatures/lich,
   :property/pretty-name "Lich",
   :property/skills #{},
@@ -2017,11 +2015,11 @@
     {:file "images/animations/skeleton-archer-3.png"}
     {:file "images/animations/skeleton-archer-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 37/48, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 37/48, :width 11/16},
   :property/id :creatures/skeleton-archer,
   :property/pretty-name "Skeleton-archer",
   :property/skills #{},
@@ -2040,11 +2038,11 @@
     {:file "images/animations/ogre-mystic-3.png"}
     {:file "images/animations/ogre-mystic-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 35/48},
   :property/id :creatures/ogre-mystic,
   :property/pretty-name "Ogre-mystic",
   :property/skills #{},
@@ -2063,10 +2061,9 @@
     {:file "images/animations/bone-dragon-3.png"}
     {:file "images/animations/bone-dragon-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body {:body/flying? false, :body/height 1, :body/width 1},
   :entity/image {:file "images/animations/bone-dragon-1.png"},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 1, :width 1},
   :property/id :creatures/bone-dragon,
   :property/pretty-name "Bone-dragon",
   :property/skills #{},
@@ -2085,11 +2082,11 @@
     {:file "images/animations/golem-metal-3.png"}
     {:file "images/animations/golem-metal-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-metal,
   :property/pretty-name "Golem-metal",
   :property/skills #{},
@@ -2108,11 +2105,11 @@
     {:file "images/animations/elemental-fire-3.png"}
     {:file "images/animations/elemental-fire-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-fire,
   :property/pretty-name "Elemental-fire",
   :property/skills #{},
@@ -2131,11 +2128,11 @@
     {:file "images/animations/templar-3.png"}
     {:file "images/animations/templar-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 41/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 41/48, :width 2/3},
   :property/id :creatures/templar,
   :property/pretty-name "Templar",
   :property/skills #{},
@@ -2154,11 +2151,10 @@
     {:file "images/animations/wisp-3.png"}
     {:file "images/animations/wisp-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body {:body/flying? true, :body/height 5/8, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 1/2},
   :property/id :creatures/wisp,
   :property/pretty-name "Wisp",
   :property/skills #{},
@@ -2177,11 +2173,11 @@
     {:file "images/animations/snake-giant-3.png"}
     {:file "images/animations/snake-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 5/6},
   :property/id :creatures/snake-giant,
   :property/pretty-name "Snake-giant",
   :property/skills #{},
@@ -2200,11 +2196,11 @@
     {:file "images/animations/minotaur-3.png"}
     {:file "images/animations/minotaur-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 35/48},
   :property/id :creatures/minotaur,
   :property/pretty-name "Minotaur",
   :property/skills #{},
@@ -2223,11 +2219,11 @@
     {:file "images/animations/valkyrie-a-3.png"}
     {:file "images/animations/valkyrie-a-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 17/24},
   :property/id :creatures/valkyrie-a,
   :property/pretty-name "Valkyrie-a",
   :property/skills #{},
@@ -2246,11 +2242,11 @@
     {:file "images/animations/toad-green-3.png"}
     {:file "images/animations/toad-green-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/12, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/12, :width 2/3},
   :property/id :creatures/toad-green,
   :property/pretty-name "Toad-green",
   :property/skills #{},
@@ -2269,7 +2265,8 @@
     {:file "images/animations/vampire-3.png"}
     {:file "images/animations/vampire-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [336 240 48 48]},
   :entity/inventory
@@ -2288,7 +2285,6 @@
     :items/cloth-chest
     :items/gold-chest},
   :entity/reaction-time 0.02,
-  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/vampire,
   :property/pretty-name "Vampire",
   :property/skills #{},
@@ -2312,11 +2308,11 @@
     {:file "images/animations/moth-black-3.png"}
     {:file "images/animations/moth-black-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 31/48, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 1/2},
   :property/id :creatures/moth-black,
   :property/pretty-name "Moth-black",
   :property/skills #{},
@@ -2335,11 +2331,11 @@
     {:file "images/animations/monk-3.png"}
     {:file "images/animations/monk-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 35/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 35/48},
   :property/id :creatures/monk,
   :property/pretty-name "Monk",
   :property/skills #{},
@@ -2358,11 +2354,11 @@
     {:file "images/animations/lord-b-3.png"}
     {:file "images/animations/lord-b-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 17/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 17/24, :width 2/3},
   :property/id :creatures/lord-b,
   :property/pretty-name "Lord-b",
   :property/skills #{},
@@ -2377,11 +2373,11 @@
     {:file "images/animations/warden-3.png"}
     {:file "images/animations/warden-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 11/16},
   :property/id :creatures/warden,
   :property/pretty-name "Warden",
   :property/skills #{},
@@ -2400,11 +2396,11 @@
     {:file "images/animations/druid-3.png"}
     {:file "images/animations/druid-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 11/16},
   :property/id :creatures/druid,
   :property/pretty-name "Druid",
   :property/skills #{},
@@ -2423,11 +2419,11 @@
     {:file "images/animations/elf-wizard-3.png"}
     {:file "images/animations/elf-wizard-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 31/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 2/3},
   :property/id :creatures/elf-wizard,
   :property/pretty-name "Elf-wizard",
   :property/skills #{},
@@ -2446,11 +2442,11 @@
     {:file "images/animations/skeleton-mage-3.png"}
     {:file "images/animations/skeleton-mage-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/skeleton-mage,
   :property/pretty-name "Skeleton-mage",
   :property/skills #{},
@@ -2469,11 +2465,11 @@
     {:file "images/animations/halfling-fighter-3.png"}
     {:file "images/animations/halfling-fighter-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 7/12, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/halfling-fighter,
   :property/pretty-name "Halfling-fighter",
   :property/skills #{},
@@ -2492,11 +2488,11 @@
     {:file "images/animations/skeleton-warrior-3.png"}
     {:file "images/animations/skeleton-warrior-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 2/3},
   :property/id :creatures/skeleton-warrior,
   :property/pretty-name "Skeleton-warrior",
   :property/skills #{},
@@ -2515,11 +2511,11 @@
     {:file "images/animations/halfling-thief-3.png"}
     {:file "images/animations/halfling-thief-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/8, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 17/24},
   :property/id :creatures/halfling-thief,
   :property/pretty-name "Halfling-thief",
   :property/skills #{},
@@ -2538,11 +2534,11 @@
     {:file "images/animations/barbarian-m-3.png"}
     {:file "images/animations/barbarian-m-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 17/24, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 17/24, :width 11/16},
   :property/id :creatures/barbarian-m,
   :property/pretty-name "Barbarian-m",
   :property/skills #{},
@@ -2561,11 +2557,11 @@
     {:file "images/animations/elf-bowman-3.png"}
     {:file "images/animations/elf-bowman-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 37/48, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 37/48, :width 2/3},
   :property/id :creatures/elf-bowman,
   :property/pretty-name "Elf-bowman",
   :property/skills #{},
@@ -2584,11 +2580,11 @@
     {:file "images/animations/beetle-3.png"}
     {:file "images/animations/beetle-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/12, :body/width 1/2},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/12, :width 1/2},
   :property/id :creatures/beetle,
   :property/pretty-name "Beetle",
   :property/skills #{},
@@ -2607,11 +2603,10 @@
     {:file "images/animations/bat-giant-3.png"}
     {:file "images/animations/bat-giant-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body {:body/flying? true, :body/height 3/4, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 5/6},
   :property/id :creatures/bat-giant,
   :property/pretty-name "Bat-giant",
   :property/skills #{},
@@ -2630,11 +2625,11 @@
     {:file "images/animations/toad-blue-3.png"}
     {:file "images/animations/toad-blue-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/12, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/12, :width 2/3},
   :property/id :creatures/toad-blue,
   :property/pretty-name "Toad-blue",
   :property/skills #{},
@@ -2653,11 +2648,11 @@
     {:file "images/animations/golem-stone-3.png"}
     {:file "images/animations/golem-stone-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 35/48, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 35/48, :width 17/24},
   :property/id :creatures/golem-stone,
   :property/pretty-name "Golem-stone",
   :property/skills #{:skills/melee-attack},
@@ -2677,11 +2672,11 @@
     {:file "images/animations/necromancer-3.png"}
     {:file "images/animations/necromancer-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/necromancer,
   :property/pretty-name "Necromancer",
   :property/skills #{},
@@ -2700,11 +2695,11 @@
     {:file "images/animations/spider-black-giant-3.png"}
     {:file "images/animations/spider-black-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/8, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 5/6},
   :property/id :creatures/spider-black-giant,
   :property/pretty-name "Spider-black-giant",
   :property/skills #{},
@@ -2723,11 +2718,11 @@
     {:file "images/animations/valkyrie-b-3.png"}
     {:file "images/animations/valkyrie-b-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 3/4, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 17/24},
   :property/id :creatures/valkyrie-b,
   :property/pretty-name "Valkyrie-b",
   :property/skills #{},
@@ -2746,11 +2741,11 @@
     {:file "images/animations/bat-3.png"}
     {:file "images/animations/bat-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 31/48, :body/width 13/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 31/48, :width 13/24},
   :property/id :creatures/bat,
   :property/pretty-name "Bat",
   :property/skills #{},
@@ -2769,11 +2764,11 @@
     {:file "images/animations/snake-3.png"}
     {:file "images/animations/snake-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 25/48, :body/width 31/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 240 48 48]},
   :entity/reaction-time 0.1,
-  :property/bounds {:height 25/48, :width 31/48},
   :property/id :creatures/snake,
   :property/pretty-name "Snake",
   :property/skills #{:skills/melee-attack},
@@ -2797,11 +2792,11 @@
     {:file "images/animations/flies-3.png"}
     {:file "images/animations/flies-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 5/8, :body/width 25/48},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 25/48},
   :property/id :creatures/flies,
   :property/pretty-name "Flies",
   :property/skills #{},
@@ -2820,11 +2815,11 @@
     {:file "images/animations/prisoner-a-3.png"}
     {:file "images/animations/prisoner-a-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/prisoner-a,
   :property/pretty-name "Prisoner-a",
   :property/skills #{},
@@ -2843,11 +2838,11 @@
     {:file "images/animations/beholder-deep-3.png"}
     {:file "images/animations/beholder-deep-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 19/24, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 5/6},
   :property/id :creatures/beholder-deep,
   :property/pretty-name "Beholder-deep",
   :property/skills #{},
@@ -2866,11 +2861,11 @@
     {:file "images/animations/skeleton-3.png"}
     {:file "images/animations/skeleton-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/8, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/skeleton,
   :property/pretty-name "Skeleton",
   :property/skills #{},
@@ -2889,11 +2884,11 @@
     {:file "images/animations/elemental-water-3.png"}
     {:file "images/animations/elemental-water-4.png"}),
    :looping? true},
-  :entity/flying? true,
+  :entity/body
+  {:body/flying? true, :body/height 13/16, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 13/16, :width 7/12},
   :property/id :creatures/elemental-water,
   :property/pretty-name "Elemental-water",
   :property/skills #{},
@@ -2912,11 +2907,11 @@
     {:file "images/animations/cultist-3.png"}
     {:file "images/animations/cultist-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/cultist,
   :property/pretty-name "Cultist",
   :property/skills #{},
@@ -2935,11 +2930,11 @@
     {:file "images/animations/mummy-pharao-3.png"}
     {:file "images/animations/mummy-pharao-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 11/16, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 11/16, :width 2/3},
   :property/id :creatures/mummy-pharao,
   :property/pretty-name "Mummy-pharao",
   :property/skills #{},
@@ -2958,11 +2953,11 @@
     {:file "images/animations/halfling-wizard-3.png"}
     {:file "images/animations/halfling-wizard-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 2/3, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 2/3, :width 17/24},
   :property/id :creatures/halfling-wizard,
   :property/pretty-name "Halfling-wizard",
   :property/skills #{},
@@ -2981,11 +2976,11 @@
     {:file "images/animations/drow-bowman-3.png"}
     {:file "images/animations/drow-bowman-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 19/24, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 19/24, :width 2/3},
   :property/id :creatures/drow-bowman,
   :property/pretty-name "Drow-bowman",
   :property/skills #{},
@@ -3004,11 +2999,11 @@
     {:file "images/animations/worm-giant-3.png"}
     {:file "images/animations/worm-giant-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 17/24, :body/width 5/6},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 17/24, :width 5/6},
   :property/id :creatures/worm-giant,
   :property/pretty-name "Worm-giant",
   :property/skills #{},
@@ -3027,11 +3022,11 @@
     {:file "images/animations/merchant-m-3.png"}
     {:file "images/animations/merchant-m-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 5/8, :body/width 2/3},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 5/8, :width 2/3},
   :property/id :creatures/merchant-m,
   :property/pretty-name "Merchant-m",
   :property/skills #{},
@@ -3051,11 +3046,11 @@
     {:file "images/animations/elf-3.png"}
     {:file "images/animations/elf-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 17/24, :body/width 11/16},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 17/24, :width 11/16},
   :property/id :creatures/elf,
   :property/pretty-name "Elf",
   :property/skills #{},
@@ -3074,11 +3069,11 @@
     {:file "images/animations/worm-3.png"}
     {:file "images/animations/worm-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 1/2, :body/width 7/12},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 1/2, :width 7/12},
   :property/id :creatures/worm,
   :property/pretty-name "Worm",
   :property/skills #{},
@@ -3097,11 +3092,11 @@
     {:file "images/animations/halfling-sling-3.png"}
     {:file "images/animations/halfling-sling-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 7/12, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 7/12, :width 17/24},
   :property/id :creatures/halfling-sling,
   :property/pretty-name "Halfling-sling",
   :property/skills #{},
@@ -3120,11 +3115,11 @@
     {:file "images/animations/golem-ice-3.png"}
     {:file "images/animations/golem-ice-4.png"}),
    :looping? true},
-  :entity/flying? false,
+  :entity/body
+  {:body/flying? false, :body/height 3/4, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [384 432 48 48]},
   :entity/reaction-time 0.2,
-  :property/bounds {:height 3/4, :width 17/24},
   :property/id :creatures/golem-ice,
   :property/pretty-name "Golem-ice",
   :property/skills #{},
