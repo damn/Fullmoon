@@ -36,7 +36,7 @@
                entity-order
                effect-order)))
 
-(defn sort-by-order [components]
+(defn- sort-by-order [components]
   (sort-by (fn [[k _]] (or (index-of k-order k) 99))
            components))
 
