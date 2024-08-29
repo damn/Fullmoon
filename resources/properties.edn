@@ -66,121 +66,70 @@
    :title "Core",
    :width 1440},
   :property/id :app/core}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
-  :property/id :skills/double-fireball,
-  :property/pretty-name "Double-fireball",
-  :skill/action-time 0.01,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 0,
-  :skill/effects {:effect/projectile :projectiles/double-fireball},
-  :skill/start-action-sound "sounds/bfxr_cast.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [160 64 32 32]},
-  :property/id :skills/spawn,
-  :property/pretty-name "Spawn",
-  :skill/action-time 0.4,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 0,
-  :skill/effects {:effect/spawn :creatures/skeleton-warrior},
-  :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [0 64 32 32]},
-  :property/id :skills/convert,
-  :property/pretty-name "Convert",
-  :skill/action-time 1,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 20,
-  :skill/effects
-  {:effect/target-entity
-   {:entity-effects {:effect.entity/convert true}, :maxrange 10}},
-  :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [128 0 32 32]},
-  :property/id :skills/blood-curse,
-  :property/pretty-name "Blood-curse",
-  :skill/action-time 1,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 1,
-  :skill/effects
-  {:effect/target-all
-   {:entity-effects {:effect.entity/hp {:op/val-mult -0.5}}}},
-  :skill/start-action-sound "sounds/bfxr_healmonsters.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [96 64 32 32]},
-  :property/id :skills/bow,
-  :property/pretty-name "Bow",
-  :skill/action-time 1.5,
-  :skill/action-time-modifier-key :stats/attack-speed,
-  :skill/cooldown 0,
-  :skill/cost 0,
-  :skill/effects
-  {:effect/target-entity
-   {:entity-effects {:effect.entity/damage {:damage/min-max [0 10]}},
-    :maxrange 5}},
-  :skill/start-action-sound "sounds/slash.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [64 64 32 32]},
-  :property/id :skills/slow,
-  :property/pretty-name "Slow",
-  :skill/action-time 0.4,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 5,
-  :skill/effects
-  {:effect/target-entity
-   {:entity-effects {:effect.entity/movement-speed {:op/mult -0.5}},
-    :maxrange 10}},
-  :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [64 96 32 32]},
-  :property/id :skills/meditation,
-  :property/pretty-name "Meditation",
-  :skill/action-time 7,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 0,
-  :skill/effects {},
-  :skill/start-action-sound "sounds/shoot.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [32 96 32 32]},
-  :property/id :skills/death-ray,
-  :property/pretty-name "Death-ray",
-  :skill/action-time 0.666,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 3,
-  :skill/cost 10,
-  :skill/effects
-  {:effect/target-entity
-   {:entity-effects {:effect.entity/kill true}, :maxrange 10}},
-  :skill/start-action-sound "sounds/bfxr_bossdeath.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
-  :property/id :skills/projectile,
-  :property/pretty-name "Projectile",
-  :skill/action-time 0.4,
-  :skill/action-time-modifier-key :stats/cast-speed,
-  :skill/cooldown 0,
-  :skill/cost 4,
-  :skill/effects {:effect/projectile :projectiles/black},
-  :skill/start-action-sound "sounds/bfxr_cast.wav"}
- {:entity/image
-  {:file "images/skills.png", :sub-image-bounds [0 0 32 32]},
-  :property/id :skills/melee-attack,
-  :property/pretty-name "Melee-attack",
-  :skill/action-time 0.5,
-  :skill/action-time-modifier-key :stats/attack-speed,
-  :skill/cooldown 0,
-  :skill/cost 0,
-  :skill/effects
-  {:effect/target-entity
-   {:entity-effects {:effect.entity/melee-damage true},
-    :maxrange 0.5}},
-  :skill/start-action-sound "sounds/slash.wav"}
+ {:entity/animation
+  {:frame-duration 0.1,
+   :frames
+   ({:file "images/oryx_16bit_scifi_FX_lg_trans.png",
+     :sub-image-bounds [64 64 32 32]}
+    {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
+     :sub-image-bounds [96 64 32 32]}),
+   :looping? nil},
+  :property/id :audiovisuals/convert,
+  :tx/sound "sounds/bfxr_burrow.wav"}
+ {:entity/animation
+  {:frame-duration 0.05,
+   :frames
+   ({:file "images/uf_FX_impact.png", :sub-image-bounds [144 0 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [192 0 48 48]}
+    {:file "images/uf_FX_impact.png",
+     :sub-image-bounds [240 0 48 48]}),
+   :looping? nil},
+  :property/id :audiovisuals/damage,
+  :tx/sound "sounds/bfxr_normalhit.wav"}
+ {:entity/animation
+  {:frame-duration 0.025,
+   :frames
+   ({:file "images/uf_FX.png", :sub-image-bounds [0 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [24 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [48 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [72 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [96 168 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [120 168 24 24]}),
+   :looping? nil},
+  :property/id :audiovisuals/hit-wall,
+  :tx/sound "sounds/bfxr_projectile_wallhit.wav"}
+ {:entity/animation
+  {:frame-duration 0.05,
+   :frames
+   ({:file "images/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
+    {:file "images/uf_FX_impact.png",
+     :sub-image-bounds [384 48 48 48]}),
+   :looping? nil},
+  :property/id :audiovisuals/unused,
+  :tx/sound "sounds/bfxr_curse.wav"}
+ {:entity/animation
+  {:frame-duration 0.05,
+   :frames
+   ({:file "images/uf_FX.png", :sub-image-bounds [96 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [120 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [144 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [168 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [192 144 24 24]}
+    {:file "images/uf_FX.png", :sub-image-bounds [216 144 24 24]}),
+   :looping? nil},
+  :property/id :audiovisuals/creature-die,
+  :tx/sound "sounds/oryx_8-bit_sounds/abilities/special_a.wav"}
+ {:entity/animation
+  {:frame-duration 0.05,
+   :frames
+   ({:file "images/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
+    {:file "images/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
+    {:file "images/uf_FX_impact.png",
+     :sub-image-bounds [96 48 48 48]}),
+   :looping? nil},
+  :property/id :audiovisuals/hit-ground,
+  :tx/sound "sounds/bfxr_fisthit.wav"}
  {:creature/level 1,
   :creature/species :species/toad,
   :entity/animation
@@ -4620,73 +4569,6 @@
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-heater,
   :property/pretty-name "Heater Mystic Shield"}
- {:property/id :worlds/vampire, :world/type :world.type/tiled-map}
- {:property/id :worlds/uf-caves, :world/type :world.type/uf-caves}
- {:property/id :worlds/modules, :world/type :world.type/modules}
- {:entity/animation
-  {:frame-duration 0.1,
-   :frames
-   ({:file "images/oryx_16bit_scifi_FX_lg_trans.png",
-     :sub-image-bounds [64 64 32 32]}
-    {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
-     :sub-image-bounds [96 64 32 32]}),
-   :looping? nil},
-  :property/id :audiovisuals/convert,
-  :tx/sound "sounds/bfxr_burrow.wav"}
- {:entity/animation
-  {:frame-duration 0.05,
-   :frames
-   ({:file "images/uf_FX_impact.png", :sub-image-bounds [144 0 48 48]}
-    {:file "images/uf_FX_impact.png", :sub-image-bounds [192 0 48 48]}
-    {:file "images/uf_FX_impact.png",
-     :sub-image-bounds [240 0 48 48]}),
-   :looping? nil},
-  :property/id :audiovisuals/damage,
-  :tx/sound "sounds/bfxr_normalhit.wav"}
- {:entity/animation
-  {:frame-duration 0.025,
-   :frames
-   ({:file "images/uf_FX.png", :sub-image-bounds [0 168 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [24 168 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [48 168 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [72 168 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [96 168 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [120 168 24 24]}),
-   :looping? nil},
-  :property/id :audiovisuals/hit-wall,
-  :tx/sound "sounds/bfxr_projectile_wallhit.wav"}
- {:entity/animation
-  {:frame-duration 0.05,
-   :frames
-   ({:file "images/uf_FX_impact.png", :sub-image-bounds [288 48 48 48]}
-    {:file "images/uf_FX_impact.png", :sub-image-bounds [336 48 48 48]}
-    {:file "images/uf_FX_impact.png",
-     :sub-image-bounds [384 48 48 48]}),
-   :looping? nil},
-  :property/id :audiovisuals/unused,
-  :tx/sound "sounds/bfxr_curse.wav"}
- {:entity/animation
-  {:frame-duration 0.05,
-   :frames
-   ({:file "images/uf_FX.png", :sub-image-bounds [96 144 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [120 144 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [144 144 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [168 144 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [192 144 24 24]}
-    {:file "images/uf_FX.png", :sub-image-bounds [216 144 24 24]}),
-   :looping? nil},
-  :property/id :audiovisuals/creature-die,
-  :tx/sound "sounds/oryx_8-bit_sounds/abilities/special_a.wav"}
- {:entity/animation
-  {:frame-duration 0.05,
-   :frames
-   ({:file "images/uf_FX_impact.png", :sub-image-bounds [0 48 48 48]}
-    {:file "images/uf_FX_impact.png", :sub-image-bounds [48 48 48 48]}
-    {:file "images/uf_FX_impact.png",
-     :sub-image-bounds [96 48 48 48]}),
-   :looping? nil},
-  :property/id :audiovisuals/hit-ground,
-  :tx/sound "sounds/bfxr_fisthit.wav"}
  {:entity-effects
   {:effect.entity/damage {:damage/min-max [4 8]},
    :effect.entity/stun 0.5},
@@ -4703,4 +4585,122 @@
   :projectile/max-range 14,
   :projectile/piercing? true,
   :projectile/speed 9,
-  :property/id :projectiles/double-fireball})
+  :property/id :projectiles/double-fireball}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
+  :property/id :skills/double-fireball,
+  :property/pretty-name "Double-fireball",
+  :skill/action-time 0.01,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effects {:effect/projectile :projectiles/double-fireball},
+  :skill/start-action-sound "sounds/bfxr_cast.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [160 64 32 32]},
+  :property/id :skills/spawn,
+  :property/pretty-name "Spawn",
+  :skill/action-time 0.4,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effects {:effect/spawn :creatures/skeleton-warrior},
+  :skill/start-action-sound "sounds/bfxr_minedeath.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [0 64 32 32]},
+  :property/id :skills/convert,
+  :property/pretty-name "Convert",
+  :skill/action-time 1,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 20,
+  :skill/effects
+  {:effect/target-entity
+   {:entity-effects {:effect.entity/convert true}, :maxrange 10}},
+  :skill/start-action-sound "sounds/bfxr_portaluse.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [128 0 32 32]},
+  :property/id :skills/blood-curse,
+  :property/pretty-name "Blood-curse",
+  :skill/action-time 1,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 1,
+  :skill/effects
+  {:effect/target-all
+   {:entity-effects {:effect.entity/hp {:op/val-mult -0.5}}}},
+  :skill/start-action-sound "sounds/bfxr_healmonsters.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [96 64 32 32]},
+  :property/id :skills/bow,
+  :property/pretty-name "Bow",
+  :skill/action-time 1.5,
+  :skill/action-time-modifier-key :stats/attack-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effects
+  {:effect/target-entity
+   {:entity-effects {:effect.entity/damage {:damage/min-max [1 10]}},
+    :maxrange 5}},
+  :skill/start-action-sound "sounds/slash.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [64 64 32 32]},
+  :property/id :skills/slow,
+  :property/pretty-name "Slow",
+  :skill/action-time 0.4,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 5,
+  :skill/effects
+  {:effect/target-entity
+   {:entity-effects {:effect.entity/movement-speed {:op/mult -0.5}},
+    :maxrange 10}},
+  :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [64 96 32 32]},
+  :property/id :skills/meditation,
+  :property/pretty-name "Meditation",
+  :skill/action-time 7,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effects {},
+  :skill/start-action-sound "sounds/shoot.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [32 96 32 32]},
+  :property/id :skills/death-ray,
+  :property/pretty-name "Death-ray",
+  :skill/action-time 0.666,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 3,
+  :skill/cost 10,
+  :skill/effects
+  {:effect/target-entity
+   {:entity-effects {:effect.entity/kill true}, :maxrange 10}},
+  :skill/start-action-sound "sounds/bfxr_bossdeath.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [96 32 32 32]},
+  :property/id :skills/projectile,
+  :property/pretty-name "Projectile",
+  :skill/action-time 0.4,
+  :skill/action-time-modifier-key :stats/cast-speed,
+  :skill/cooldown 0,
+  :skill/cost 4,
+  :skill/effects {:effect/projectile :projectiles/black},
+  :skill/start-action-sound "sounds/bfxr_cast.wav"}
+ {:entity/image
+  {:file "images/skills.png", :sub-image-bounds [0 0 32 32]},
+  :property/id :skills/melee-attack,
+  :property/pretty-name "Melee-attack",
+  :skill/action-time 0.5,
+  :skill/action-time-modifier-key :stats/attack-speed,
+  :skill/cooldown 0,
+  :skill/cost 0,
+  :skill/effects
+  {:effect/target-entity
+   {:entity-effects {:effect.entity/melee-damage true},
+    :maxrange 0.5}},
+  :skill/start-action-sound "sounds/slash.wav"}
+ {:property/id :worlds/vampire, :world/type :world.type/tiled-map}
+ {:property/id :worlds/uf-caves, :world/type :world.type/uf-caves}
+ {:property/id :worlds/modules, :world/type :world.type/modules})
