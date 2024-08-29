@@ -16,6 +16,10 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
 
+(defn- property->image [{:keys [entity/image entity/animation]}]
+  (or image
+      (first (:frames animation))))
+
 (defn- ck->enum-items           [k] (:items                (component/k->data k)))
 (defn- ck->components           [k] (:components           (component/k->data k)))
 (defn- ck->linked-property-type [k] (:linked-property-type (component/k->data k)))
@@ -236,9 +240,9 @@
                                   ctx))]
                 (for [prop-id property-ids]
                   (let [props (get-property ctx prop-id)
-                        ; TODO also x2 dimensions
-                        image-widget (->image-widget ctx ; TODO image-button (link)
-                                                     (:entity/image props)
+                        ; x2 dimensions?
+                        image-widget (->image-widget ctx ; image-button/link?
+                                                     (property->image props)
                                                      {:id (:property/id props)})]
                     (add-tooltip! image-widget #(components/info-text props %))
                     image-widget))
@@ -358,8 +362,10 @@
                             (for [entities (partition-all number-columns entities)] ; TODO can just do 1 for?
                               (for [{:keys [property/id] :as props} entities
                                     :let [on-clicked #(clicked-id-fn % id)
-                                          button (if (:entity/image props)
-                                                   (->image-button ctx (:entity/image props) on-clicked
+                                          button (if-let [image (property->image props)]
+                                                   (->image-button ctx
+                                                                   image
+                                                                   on-clicked
                                                                    {:dimensions dimensions})
                                                    (->text-button ctx (name id) on-clicked))
                                           top-widget (->label ctx (or (and extra-info-text

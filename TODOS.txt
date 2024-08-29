@@ -1,3 +1,11 @@
+
+
+create-kvs
+create
+edn->value
+== same??
+properties use entity ? all entities validate on create? everything schema/validated?
+
 GREP components ks
 move usage together
 

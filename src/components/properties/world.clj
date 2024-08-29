@@ -22,8 +22,7 @@
               ]
      :edn-file-sort-order 5
      :overview {:title "Worlds"
-                :columns 10
-                :image/dimensions [96 96]}}))
+                :columns 10}}))
 
 (defmulti generate (fn [ctx world] (:world/type world)))
 

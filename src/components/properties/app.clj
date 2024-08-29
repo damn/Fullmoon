@@ -23,5 +23,4 @@
                :app/context]]
      :edn-file-sort-order -1
      :overview {:title "Apps"
-                :columns 10
-                :image/dimensions [96 96]}}))
+                :columns 10}}))
