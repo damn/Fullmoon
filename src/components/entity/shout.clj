@@ -25,8 +25,8 @@
 (defcomponent :tx/shout
   (component/do! [[_ position faction delay-seconds] ctx]
     [[:tx/create
-      {:position position
-       :width 0.5
+      position
+      {:width 0.5
        :height 0.5
        :z-order :z-order/effect}
       #:entity {:faction faction

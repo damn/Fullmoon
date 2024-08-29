@@ -18,8 +18,8 @@
                   entity/animation]} (ctx/get-property ctx id)]
       [[:tx/sound sound]
        [:tx/create
-        {:position position
-         :width 0.5
+        position
+        {:width 0.5
          :height 0.5
          :z-order :z-order/effect}
         #:entity {:animation animation

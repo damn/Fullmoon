@@ -34,11 +34,13 @@
   (component/destroy-e [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
 
 (defcomponent :tx/create
-  (component/do! [[_ body components] ctx]
+  (component/do! [[_ position body components] ctx]
     (assert (and (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
     (let [entity (atom nil)
-          body (entity/->Body body)
+          body (-> body
+                   (assoc :position position)
+                   entity/->Body)
           components (assoc components
                             :entity/id entity
                             :entity/uid (unique-number!))

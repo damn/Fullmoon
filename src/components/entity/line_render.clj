@@ -13,8 +13,8 @@
 (defcomponent :tx/line-render
   (component/do! [[_ {:keys [start end duration color thick?]}] _ctx]
     [[:tx/create
-      {:position start
-       :width 0.5
+      start
+      {:width 0.5
        :height 0.5
        :z-order :z-order/effect}
       #:entity {:line-render {:thick? thick? :end end :color color}

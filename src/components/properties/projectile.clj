@@ -42,8 +42,8 @@
                   projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
           size (projectile-size prop)]
       [[:tx/create
-        {:position position
-         :width size
+        position
+        {:width size
          :height size
          :z-order :z-order/flying
          :rotation-angle (v/get-angle-from-vector direction)}

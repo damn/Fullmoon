@@ -63,9 +63,8 @@
                                      (name (:property/id %)))
                 :extra-info-text #(str (:creature/level %))}}))
 
-(defn- ->body [position {:keys [body/width body/height body/flying?]}]
-  {:position position
-   :width  width
+(defn- ->body [{:keys [body/width body/height body/flying?]}]
+  {:width  width
    :height height
    :collides? true
    :z-order (if flying? :z-order/flying :z-order/ground)})
@@ -75,7 +74,8 @@
   (component/do! [_ ctx]
     (let [props (ctx/get-property ctx creature-id)]
       [[:tx/create
-        (->body position (:entity/body props))
+        position
+        (->body (:entity/body props))
         (-> props
             (select-keys entity-component-attributes)
             (safe-merge components)

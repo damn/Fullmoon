@@ -35,8 +35,8 @@
   (component/do! [[_ position item] _ctx]
     (assert (:entity/image item))
     [[:tx/create
-      {:position position
-       :width 0.5 ; TODO use item-body-dimensions
+      position
+      {:width 0.5 ; TODO use item-body-dimensions
        :height 0.5
        :z-order :z-order/on-ground}
       #:entity {:image (:entity/image item)
