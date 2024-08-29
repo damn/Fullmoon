@@ -2,17 +2,6 @@
   (:require [clojure.string :as str]
             [core.component :as component]))
 
-; order should be defined for all entity-types
-; e.g. target-all or target-entity range comes after/before entity-effects
-
-(def ^:private properties-order [:properties/app
-                                 :properties/skill
-                                 :properties/creature
-                                 :properties/item
-                                 :properties/world
-                                 :properties/audiovisual
-                                 :properties/projectile])
-
 (def ^:private property-order [:property/id
                                :entity/image
                                :property/pretty-name])
@@ -50,8 +39,7 @@
                             :stats/armor-pierce])
 
 (def ^:private k-order
-  (vec (concat properties-order
-               property-order
+  (vec (concat property-order
                item-order
                skill-order
                entity-order
