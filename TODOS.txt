@@ -1,4 +1,5 @@
 
+; TODO source modifiers not showing (effects, modifiers)
 
 create-kvs
 create

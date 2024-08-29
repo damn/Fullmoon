@@ -4,6 +4,10 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
 
+; * editable false body
+; * stats whats optional/not ... and assert
+; => creatures can be made
+
 
 ; TODO assert min body size from core.entity
 ; TODO make px

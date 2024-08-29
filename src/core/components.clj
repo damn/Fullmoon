@@ -2,6 +2,9 @@
   (:require [clojure.string :as str]
             [core.component :as component]))
 
+; order should be defined for all entity-types
+; e.g. target-all or target-entity range comes after/before entity-effects
+
 (def ^:private properties-order [:properties/app
                                  :properties/skill
                                  :properties/creature

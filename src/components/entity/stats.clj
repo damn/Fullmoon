@@ -135,6 +135,10 @@
   {:data :pos-int
    :optional? false})
 
+; TODO optional is not merged to stat-k's
+; modifiers and effects use directly stat ??
+; also create fns component/create move here ?
+; as its not pos-int ?
 (defstat :stats/hp
   {:data :pos-int
    :operations [:op/max-inc :op/max-mult]})
