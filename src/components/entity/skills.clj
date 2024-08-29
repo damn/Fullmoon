@@ -9,15 +9,16 @@
   (component/create-kv [[_ skill-ids] ctx]
     [:entity/skills (zipmap skill-ids (map #(ctx/get-property ctx %) skill-ids))]))
 
-; FIXME starting skills do not trigger :tx.context.action-bar/add-skill
-; https://trello.com/c/R6GSIDO1/363
-
-; required by npc state, also mana!, also movement (no not needed, doesnt do anything then)
 (defcomponent :entity/skills
+  (component/create-e [[_ skills] eid ctx]
+    (when (:entity/player? @eid)
+      (for [[skill-id skill] skills]
+        [:tx.context.action-bar/add-skill skill])))
+
   (component/info-text [[_ skills] _ctx]
     ; => recursive info-text leads to endless text wall
     #_(when (seq skills)
-      (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
+        (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
 
   (component/tick [[k skills] eid ctx]
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
