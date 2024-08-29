@@ -6,6 +6,7 @@
             [utils.random :as random]
             [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent]]
+            [core.components :as components]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.operation :as operation]
@@ -105,20 +106,9 @@
   (when-let [base-value (stat-k stats)]
     (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
 
-; TODO pull out
-(def ^:private stats-info-text-order
-  [:stats/hp
-   :stats/mana
-   :stats/movement-speed
-   :stats/strength
-   :stats/cast-speed
-   :stats/attack-speed
-   :stats/armor-save
-   :stats/armor-pierce])
-
 (defn- stats-info-texts [stats]
   (str/join "\n"
-            (for [stat-k stats-info-text-order
+            (for [[stat-k _] (components/sort-by-order stats)
                   :let [value (stat-k->effective-value stat-k stats)]
                   :when value]
               (str (k->pretty-name stat-k) ": " value))))
@@ -299,7 +289,7 @@
 (defcomponent :entity/stats
   {:let stats}
   (component/info-text [_ _ctx]
-    (str (stats-info-texts stats)
+    (str (stats-info-texts (dissoc stats :stats/modifiers))
          "\n"
          (stats-modifiers-info-text (:stats/modifiers stats))))
 

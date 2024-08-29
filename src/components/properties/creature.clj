@@ -8,6 +8,8 @@
 ; * stats whats optional/not ... and assert
 ; => creatures can be made
 
+; player doesn;t need aggro-range/reaction-time
+
 
 ; TODO assert min body size from core.entity
 ; TODO make px

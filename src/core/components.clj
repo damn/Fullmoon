@@ -40,13 +40,23 @@
 (def ^:private effect-order [:maxrange
                              :entity-effects])
 
+(def ^:private stats-order [:stats/hp
+                            :stats/mana
+                            :stats/movement-speed
+                            :stats/strength
+                            :stats/cast-speed
+                            :stats/attack-speed
+                            :stats/armor-save
+                            :stats/armor-pierce])
+
 (def ^:private k-order
   (vec (concat properties-order
                property-order
                item-order
                skill-order
                entity-order
-               effect-order)))
+               effect-order
+               stats-order)))
 
 (defn sort-index-of [k]
   (let [idx (.indexOf k-order k)]
