@@ -5,7 +5,7 @@
             [utils.core :as utils :refer [k->pretty-name readable-number]]
             [utils.random :as random]
             [core.val-max :refer [val-max-ratio]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent defcomponent*]]
             [core.components :as components]
             [core.entity :as entity]
             [core.graphics :as g]
@@ -99,36 +99,25 @@
      6.5))
  )
 
+(defn defmodifier [modifier-k operations]
+  (defcomponent* modifier-k {:data [:components operations]}))
+
 (defn- stat-k->modifier-k [stat-k]
   (keyword "modifier" (name stat-k)))
 
-(defn- stat-k->effective-value [stat-k stats]
-  (when-let [base-value (stat-k stats)]
-    (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
-
-(defn- stats-info-texts [stats]
-  (str/join "\n"
-            (for [[stat-k _] (components/sort-by-order stats)
-                  :let [value (stat-k->effective-value stat-k stats)]
-                  :when value]
-              (str (k->pretty-name stat-k) ": " value))))
-
-(defn defmodifier [modifier-k operations]
-  (defcomponent modifier-k {:data [:components operations]}))
-
-(defn defstat [stat-k {:keys [data operations]}]
-  (defcomponent stat-k {:data data})
+(defn defstat [stat-k {:keys [operations] :as attr-m}]
+  (defcomponent* stat-k attr-m)
   (when operations
     (defmodifier (stat-k->modifier-k stat-k) operations)))
 
-(defcomponent :stats/reaction-time
+; TODO modifiers/effects based on data? don't have to use to change aggro-range etc?
+; modifiers and effects use directly stat ??
+; also create fns component/create move here ? (e.g. hp)
+
+(defstat :stats/reaction-time
   {:data :pos-int
    :optional? false})
 
-; TODO optional is not merged to stat-k's
-; modifiers and effects use directly stat ??
-; also create fns component/create move here ?
-; as its not pos-int ?
 (defstat :stats/hp
   {:data :pos-int
    :operations [:op/max-inc :op/max-mult]})
@@ -243,6 +232,10 @@
 (defcomponent :stats/modifiers
   {:data [:components [:modifier/damage-deal :modifier/damage-receive]]})
 
+(defn- stat-k->effective-value [stat-k stats]
+  (when-let [base-value (stat-k stats)]
+    (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
+
 (extend-type core.entity.Entity
   entity/Stats
   (stat [{:keys [entity/stats]} stat-k]
@@ -285,6 +278,13 @@
                        (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
                        (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
                        (update :stats/modifiers build-modifiers))]))
+
+(defn- stats-info-texts [stats]
+  (str/join "\n"
+            (for [[stat-k _] (components/sort-by-order stats)
+                  :let [value (stat-k->effective-value stat-k stats)]
+                  :when value]
+              (str (k->pretty-name stat-k) ": " value))))
 
 (defcomponent :entity/stats
   {:let stats}
