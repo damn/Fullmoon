@@ -9,7 +9,11 @@
 (defcomponent :title {:data :string})
 
 (defcomponent :app/lwjgl3 {:data [:map [:fps :full-screen? :width :height :title]]})
-(defcomponent :app/context {:data [:components-ns :context]})
+
+; screens require vis-ui / properties (map-editor, property editor uses properties)
+; properties requires graphics (image)
+; so cannot be [:components-ns :context] map but has to be a vector
+(defcomponent :app/context {:data :some})
 
 (defcomponent :properties/app
   (component/create [_ _ctx]

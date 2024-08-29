@@ -51,19 +51,16 @@
     (->> properties
          (#(zipmap (map :property/id %) %)))))
 
+(defn- inject [components k value]
+  (for [component components]
+    (if (= (first component) k)
+      [k (merge (component 1) value)]
+      component)))
+
 (defn -main [& [file]]
   (let [properties (load-properties file)
         {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
-        context (merge context
-                       {:context/properties {:file file
-                                             :properties properties}
-                        ; map editor calls ctx/get-property & property editor ctx/all-properties
-                        ; so load afterwards
-                        :context/screens [:screens/main-menu
-                                          :screens/map-editor
-                                          ;:screens/minimap
-                                          :screens/options-menu
-                                          :screens/property-editor
-                                          :screens/world]})]
+        context (inject context :context/properties {:file file
+                                                     :properties properties})]
     (lwjgl3/->application (->application context)
                           (lwjgl3/->configuration lwjgl3))))
