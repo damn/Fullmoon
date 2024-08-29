@@ -51,7 +51,7 @@
 ; * line-render
 
 (defsystem render-above   [_ entity* g ctx])
-; * damage effect (shouldn't be at z-order of entities ....)
+; * damage effect (shouldn't be at z-order of entities .... (is under skill icon! ))
 ; * state - sleeping zzzz
 
 (defsystem render-info    [_ entity* g ctx])
