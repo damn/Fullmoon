@@ -245,8 +245,6 @@
 ; or even mana/hp does it make a difference ?
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
-#_(defcomponent :stats/modifiers {:data [:components [:modifier/damage-deal :modifier/damage-receive]]})
-
 (defn- stat-k->effective-value [stat-k stats]
   (when-let [base-value (stat-k stats)]
     (->effective-value base-value (stat-k->modifier-k stat-k) stats)))
