@@ -4,8 +4,6 @@
             [core.graphics :as g])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion))
 
-; TODO to and from edn is actually not based on attribute but :data...
-
 (defn- is-sub-texture? [^TextureRegion texture-region]
   (let [texture (.getTexture texture-region)]
     (or (not= (.getRegionWidth  texture-region) (.getWidth  texture))
