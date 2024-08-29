@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
             [utils.files :as files]
-            [utils.core :refer [safe-get]]
+            [utils.core :refer [safe-merge safe-get]]
             [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
@@ -54,7 +54,7 @@
 (defn- inject [components k value]
   (for [component components]
     (if (= (first component) k)
-      [k (merge (component 1) value)]
+      [k (safe-merge (component 1) value)]
       component)))
 
 (defn -main [& [file]]

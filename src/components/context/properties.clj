@@ -113,19 +113,12 @@
 
 (defcomponent :context/properties
   {:data :some
-   :let {:keys [file properties]}}
+   :let {:keys [types file properties]}}
   (component/create [_ ctx]
     (doseq [[k m] [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
                    [:entity-effects {:data [:components-ns :effect.entity]}]]]
       (component/defcomponent* k m :warn-on-override? false))
-    (let [types (component/ks->create-all [:properties/app
-                                           :properties/audiovisual
-                                           :properties/creature
-                                           :properties/item
-                                           :properties/projectile
-                                           :properties/skill
-                                           :properties/world]
-                                          {})
+    (let [types (component/ks->create-all types {})
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
        :types types
