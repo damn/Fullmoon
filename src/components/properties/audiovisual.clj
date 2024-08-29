@@ -12,7 +12,7 @@
                 :columns 10
                 :image/dimensions [96 96]}}))
 
-(defcomponent :tx.entity/audiovisual
+(defcomponent :tx/audiovisual
   (component/do! [[_ position id] ctx]
     (let [{:keys [tx/sound
                   entity/animation]} (ctx/get-property ctx id)]

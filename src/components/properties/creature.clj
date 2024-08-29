@@ -69,7 +69,7 @@
    :collides? true
    :z-order (if flying? :z-order/flying :z-order/ground)})
 
-(defcomponent :tx.entity/creature
+(defcomponent :tx/creature
   {:let {:keys [position creature-id components]}}
   (component/do! [_ ctx]
     (let [props (ctx/get-property ctx creature-id)]
@@ -119,7 +119,7 @@
 
   (component/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
-     [:tx.entity/creature {:position target-position
-                           :creature-id creature-id
-                           :components #:entity {:state [:state/npc :npc-idle]
-                                                 :faction (:entity/faction @source)}}]]))
+     [:tx/creature {:position target-position
+                    :creature-id creature-id
+                    :components #:entity {:state [:state/npc :npc-idle]
+                                          :faction (:entity/faction @source)}}]]))

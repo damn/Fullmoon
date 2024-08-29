@@ -31,7 +31,7 @@
                                      (name (:property/id %)))}}))
 
 ; TODO use image w. shadows spritesheet
-(defcomponent :tx.entity/item
+(defcomponent :tx/item
   (component/do! [[_ position item] _ctx]
     (assert (:entity/image item))
     [[:tx/create

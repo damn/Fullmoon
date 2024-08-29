@@ -32,8 +32,8 @@
                    nil
                    (calculate-mouseover-entity ctx))]
       [(when-let [old-entity (this-k ctx)]
-         [:tx.entity/dissoc old-entity :entity/mouseover?])
+         [:tx/dissoc old-entity :entity/mouseover?])
        (when entity
-         [:tx.entity/assoc entity :entity/mouseover? true])
+         [:tx/assoc entity :entity/mouseover? true])
        (fn [ctx]
          (assoc ctx this-k entity))])))

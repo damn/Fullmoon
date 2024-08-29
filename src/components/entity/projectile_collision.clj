@@ -29,7 +29,7 @@
                        (some #(cell/blocked? % (:z-order entity*)) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
-         [:tx.entity/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
+         [:tx/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
        (when destroy?
          [:tx/destroy id])
        (when hit-entity

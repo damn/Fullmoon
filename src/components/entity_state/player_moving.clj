@@ -16,14 +16,14 @@
     false)
 
   (component/enter [_ _ctx]
-    [[:tx.entity/set-movement eid {:direction movement-vector
-                                   :speed (entity/stat @eid :stats/movement-speed)}]])
+    [[:tx/set-movement eid {:direction movement-vector
+                            :speed (entity/stat @eid :stats/movement-speed)}]])
 
   (component/exit [_ _ctx]
-    [[:tx.entity/set-movement eid nil]])
+    [[:tx/set-movement eid nil]])
 
   (component/tick [_ eid context]
     (if-let [movement-vector (WASD-movement-vector)]
-      [[:tx.entity/set-movement eid {:direction movement-vector
-                                     :speed (entity/stat @eid :stats/movement-speed)}]]
+      [[:tx/set-movement eid {:direction movement-vector
+                              :speed (entity/stat @eid :stats/movement-speed)}]]
       [[:tx/event eid :no-movement-input]])))

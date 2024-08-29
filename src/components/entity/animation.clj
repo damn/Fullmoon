@@ -4,7 +4,7 @@
             [core.context :as ctx]))
 
 (defn- tx-assoc-image-current-frame [eid animation]
-  [:tx.entity/assoc eid :entity/image (animation/current-frame animation)])
+  [:tx/assoc eid :entity/image (animation/current-frame animation)])
 
 (defcomponent :entity/animation
   {:data :animation
@@ -18,4 +18,4 @@
 
   (component/tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
-     [:tx.entity/assoc eid k (animation/tick animation (ctx/delta-time ctx))]]))
+     [:tx/assoc eid k (animation/tick animation (ctx/delta-time ctx))]]))

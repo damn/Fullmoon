@@ -23,7 +23,7 @@
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers
         [operation-k value] operations]
-    [:tx.entity/update-in entity [:entity/stats :stats/modifiers modifier-k operation-k] (f value)]))
+    [:tx/update-in entity [:entity/stats :stats/modifiers modifier-k operation-k] (f value)]))
 
 (comment
  (= (txs-update-modifiers :entity
@@ -31,9 +31,9 @@
                                         :op/max-mult 0.3}
                           :modifier/movement-speed {:op/mult 0.1}}
                          (fn [value] :fn))
-    [[:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-inc] :fn]
-     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-mult] :fn]
-     [:tx.entity/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
+    [[:tx/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-inc] :fn]
+     [:tx/update-in :entity [:entity/stats :stats/modifiers :modifier/hp :op/max-mult] :fn]
+     [:tx/update-in :entity [:entity/stats :stats/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
 (defcomponent :tx/apply-modifiers
@@ -155,7 +155,7 @@
   (component/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
-        [[:tx.entity/assoc-in target [:entity/stats stat-k]
+        [[:tx/assoc-in target [:entity/stats stat-k]
           ; TODO similar to ->effective-value
           ; but operations not sort-by component/order ??
           ; component/apply reuse fn over operations to get effectiv value
@@ -339,7 +339,7 @@
   (component/do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
-      [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
+      [[:tx/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
 
 (comment
  (let [mana-val 4
@@ -347,7 +347,7 @@
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
    (= (component/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
-      [[:tx.entity/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+      [[:tx/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
 
 (defn- entity*->melee-damage [entity*]
@@ -449,7 +449,7 @@
              dmg-amount (->effective-value dmg-amount :modifier/damage-receive (:entity/stats target*))
              ;_ (println "effective dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
-         [[:tx.entity/audiovisual (:position target*) :audiovisuals/damage]
+         [[:tx/audiovisual (:position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          [:tx.entity/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
+          [:tx/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
           [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))

@@ -14,11 +14,11 @@
      :counter (->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
 
   (component/enter [_ _ctx]
-    [[:tx.entity/set-movement eid {:direction movement-vector
-                                   :speed (or (entity/stat @eid :stats/movement-speed) 0)}]])
+    [[:tx/set-movement eid {:direction movement-vector
+                            :speed (or (entity/stat @eid :stats/movement-speed) 0)}]])
 
   (component/exit [_ _ctx]
-    [[:tx.entity/set-movement eid nil]])
+    [[:tx/set-movement eid nil]])
 
   (component/tick [_ eid ctx]
     (when (stopped? ctx counter)

@@ -97,8 +97,8 @@
             :state/npc npc-fsm)})
 
   (component/create-e [[k {:keys [fsm initial-state]}] eid ctx]
-    [[:tx.entity/assoc eid k (->init-fsm fsm initial-state)]
-     [:tx.entity/assoc eid initial-state (component/create [initial-state eid] ctx)]])
+    [[:tx/assoc eid k (->init-fsm fsm initial-state)]
+     [:tx/assoc eid initial-state (component/create [initial-state eid] ctx)]])
 
   (component/info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
@@ -124,9 +124,9 @@
            #(component/enter new-state-obj %)
            (if (:entity/player? @eid)
              (fn [_ctx] (component/player-enter new-state-obj)))
-           [:tx.entity/assoc eid :entity/state new-fsm]
-           [:tx.entity/dissoc eid old-state-k]
-           [:tx.entity/assoc eid new-state-k (new-state-obj 1)]])))))
+           [:tx/assoc eid :entity/state new-fsm]
+           [:tx/dissoc eid old-state-k]
+           [:tx/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defcomponent :tx/event
   (component/do! [[_ eid event params] ctx]

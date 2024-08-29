@@ -32,7 +32,7 @@
 (defn- projectile-size [projectile-property]
   (first (:world-unit-dimensions (:entity/image projectile-property))))
 
-(defcomponent :tx.entity/projectile
+(defcomponent :tx/projectile
   (component/do! [[_ projectile-id {:keys [position direction faction]}]
                 ctx]
     (let [{:keys [entity/image
@@ -92,7 +92,7 @@
 
   (component/do! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
-     [:tx.entity/projectile
+     [:tx/projectile
       projectile-id
       {:position (start-point @source
                               direction
@@ -111,6 +111,6 @@
                        [-1 -1]
                        [-1 1]
                        [-1 0]])]
-   [:tx.entity/projectile projectile-id ...]
+   [:tx/projectile projectile-id ...]
    )
  )

@@ -45,11 +45,11 @@
     (let [source* @source]
       (apply concat
              (for [target (all-targets ctx)]
-               [[:tx.entity/line-render {:start (:position source*) #_(start-point source* target*)
-                                         :end (:position @target)
-                                         :duration 0.05
-                                         :color [1 0 0 0.75]
-                                         :thick? true}]
+               [[:tx/line-render {:start (:position source*) #_(start-point source* target*)
+                                  :end (:position @target)
+                                  :duration 0.05
+                                  :color [1 0 0 0.75]
+                                  :thick? true}]
                 ; some sound .... or repeat smae sound???
                 ; skill do sound  / skill start sound >?
                 ; problem : nested tx/effect , we are still having direction/target-position

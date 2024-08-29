@@ -8,7 +8,7 @@
   {:data [:one-to-many-ids :properties/skill]}
   (component/create-e [[k skill-ids] eid ctx]
     (cons
-     [:tx.entity/assoc eid k nil]
+     [:tx/assoc eid k nil]
      (for [skill (map #(ctx/get-property ctx %) skill-ids)]
        [:tx/add-skill eid skill])))
 
@@ -21,7 +21,7 @@
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
                      (stopped? ctx cooling-down?))]
-      [:tx.entity/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
+      [:tx/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
 (extend-type core.entity.Entity
   core.entity/Skills
@@ -32,7 +32,7 @@
   (component/do! [[_ entity {:keys [property/id] :as skill}]
                _ctx]
     (assert (not (entity/has-skill? @entity skill)))
-    [[:tx.entity/assoc-in entity [:entity/skills id] skill]
+    [[:tx/assoc-in entity [:entity/skills id] skill]
      (when (:entity/player? @entity)
        [:tx.context.action-bar/add-skill skill])]))
 
@@ -41,6 +41,6 @@
   (component/do! [[_ entity {:keys [property/id] :as skill}]
                 _ctx]
     (assert (entity/has-skill? @entity skill))
-    [[:tx.entity/dissoc-in entity [:entity/skills id]]
+    [[:tx/dissoc-in entity [:entity/skills id]]
      (when (:entity/player? @entity)
        [:tx.context.action-bar/remove-skill skill])]))

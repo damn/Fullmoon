@@ -12,7 +12,7 @@
 
   (component/exit [_ ctx]
     [[:tx/add-text-effect eid "[WHITE]!"]
-     [:tx.entity/shout (:position @eid) (:entity/faction @eid) 0.2]])
+     [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
   (component/tick [_ eid context]
     (let [entity* @eid

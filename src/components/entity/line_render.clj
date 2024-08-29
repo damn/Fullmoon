@@ -10,7 +10,7 @@
         (g/with-shape-line-width g 4 #(g/draw-line g position end color))
         (g/draw-line g position end color)))))
 
-(defcomponent :tx.entity/line-render
+(defcomponent :tx/line-render
   (component/do! [[_ {:keys [start end duration color thick?]}] _ctx]
     [[:tx/create
       {:position start

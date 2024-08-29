@@ -54,7 +54,7 @@
 
 (defcomponent :tx/destroy
   (component/do! [[_ entity] ctx]
-    [[:tx.entity/assoc entity :entity/destroyed? true]]))
+    [[:tx/assoc entity :entity/destroyed? true]]))
 
 (def ^:private ^:dbg-flag show-body-bounds false)
 
@@ -115,30 +115,30 @@
       (fn [ctx]
         (component/destroy-e component entity ctx)))))
 
-(defcomponent :tx.entity/assoc
+(defcomponent :tx/assoc
   (component/do! [[_ entity k v] ctx]
     (assert (keyword? k))
     (swap! entity assoc k v)
     ctx))
 
-(defcomponent :tx.entity/assoc-in
+(defcomponent :tx/assoc-in
   (component/do! [[_ entity ks v] ctx]
     (swap! entity assoc-in ks v)
     ctx))
 
-(defcomponent :tx.entity/dissoc
+(defcomponent :tx/dissoc
   (component/do! [[_ entity k] ctx]
     (assert (keyword? k))
     (swap! entity dissoc k)
     ctx))
 
-(defcomponent :tx.entity/dissoc-in
+(defcomponent :tx/dissoc-in
   (component/do! [[_ entity ks] ctx]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     ctx))
 
-(defcomponent :tx.entity/update-in
+(defcomponent :tx/update-in
   (component/do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))

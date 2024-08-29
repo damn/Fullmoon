@@ -58,13 +58,13 @@
         (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
                           (try-move-solid-body (ctx/world-grid ctx) body movement)
                           (move-body body movement))]
-          [[:tx.entity/assoc eid :position    (:position    body)]
-           [:tx.entity/assoc eid :left-bottom (:left-bottom body)]
+          [[:tx/assoc eid :position    (:position    body)]
+           [:tx/assoc eid :left-bottom (:left-bottom body)]
            (when rotate-in-movement-direction?
-             [:tx.entity/assoc eid :rotation-angle (v/get-angle-from-vector direction)])
+             [:tx/assoc eid :rotation-angle (v/get-angle-from-vector direction)])
            [:tx/position-changed eid]])))))
 
-(defcomponent :tx.entity/set-movement
+(defcomponent :tx/set-movement
   (component/do! [[_ entity movement] ctx]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
@@ -72,7 +72,7 @@
                      #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
     [(if (or (nil? movement)
              (nil? (:direction movement)))
-       [:tx.entity/dissoc entity :entity/movement]
-       [:tx.entity/assoc entity :entity/movement movement])]))
+       [:tx/dissoc entity :entity/movement]
+       [:tx/assoc entity :entity/movement movement])]))
 
 ; TODO add teleport effect ~ or tx

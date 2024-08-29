@@ -4,4 +4,4 @@
 (defcomponent :entity/destroy-audiovisual
   {:let audiovisuals-id}
   (component/destroy-e [_ entity ctx]
-    [[:tx.entity/audiovisual (:position @entity) audiovisuals-id]]))
+    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))

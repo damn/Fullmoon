@@ -22,7 +22,7 @@
             (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context @entity shout-range)]
               [:tx/event entity :alert])))))
 
-(defcomponent :tx.entity/shout
+(defcomponent :tx/shout
   (component/do! [[_ position faction delay-seconds] ctx]
     [[:tx/create
       {:position position

@@ -30,5 +30,5 @@
             (entity/enemy-faction @source))))
 
   (component/do! [_ {:keys [effect/source effect/target]}]
-    [[:tx.entity/audiovisual (:position @target) :audiovisuals/convert]
-     [:tx.entity/assoc target :entity/faction (entity/friendly-faction @source)]]))
+    [[:tx/audiovisual (:position @target) :audiovisuals/convert]
+     [:tx/assoc target :entity/faction (entity/friendly-faction @source)]]))
