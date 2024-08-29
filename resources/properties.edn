@@ -42,13 +42,15 @@
      {:gui-view {:world-height 900, :world-width 1440},
       :world-view
       {:tile-size 48, :world-height 900, :world-width 1440}}}]
-   [:context/properties {:types [:properties/app
-                                 :properties/audiovisual
-                                 :properties/creature
-                                 :properties/item
-                                 :properties/projectile
-                                 :properties/skill
-                                 :properties/world]}]
+   [:context/properties
+    {:types
+     [:properties/app
+      :properties/audiovisual
+      :properties/creature
+      :properties/item
+      :properties/projectile
+      :properties/skill
+      :properties/world]}]
    [:context/vis-ui :skin-scale/x1]
    [:context/screens
     [:screens/main-menu

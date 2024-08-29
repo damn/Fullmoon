@@ -79,6 +79,14 @@
                  ~@fn-exprs)))))
       ~k)))
 
+(defsystem edn->value [_ ctx])
+(defmethod edn->value :default [[_ v] _ctx]
+  v)
+
+(defsystem value->edn [_])
+(defmethod value->edn :default [[_ v]]
+  v)
+
 (defsystem ->data [_])
 
 (defsystem create-kv [_ ctx])
@@ -202,12 +210,15 @@
 
 ;;
 
-(defn create-all [components ctx]
-  (assert (map? ctx))
+(defn apply-system [components system & args]
   (reduce (fn [m [k v]]
-            (assoc m k (create [k v] ctx)))
+            (assoc m k (clojure.core/apply system [k v] args)))
           {}
           components))
+
+(defn create-all [components ctx]
+  (assert (map? ctx))
+  (apply-system components create ctx))
 
 (defn- ks->components [ks]
   (zipmap ks (repeat nil)))

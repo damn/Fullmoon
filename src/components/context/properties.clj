@@ -1,68 +1,8 @@
 (ns components.context.properties
-  (:require [clojure.string :as str]
-            [malli.core :as m]
+  (:require [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get mapvals]]
-            [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
-            [core.animation :as animation]))
-
-(defn- edn->image [ctx {:keys [file sub-image-bounds]}]
-  {:pre [file]}
-  (if sub-image-bounds
-    (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
-          [tilew tileh]       (drop 2 sub-image-bounds)]
-      (ctx/get-sprite ctx
-                      (ctx/spritesheet ctx file tilew tileh)
-                      [(int (/ sprite-x tilew))
-                       (int (/ sprite-y tileh))]))
-    (ctx/create-image ctx file)))
-
-(import 'com.badlogic.gdx.graphics.g2d.TextureRegion)
-
-(defn- is-sub-texture? [^TextureRegion texture-region]
-  (let [texture (.getTexture texture-region)]
-    (or (not= (.getRegionWidth  texture-region) (.getWidth  texture))
-        (not= (.getRegionHeight texture-region) (.getHeight texture)))))
-
-(defn- region-bounds [^TextureRegion texture-region]
-  [(.getRegionX texture-region)
-   (.getRegionY texture-region)
-   (.getRegionWidth texture-region)
-   (.getRegionHeight texture-region)])
-
-(defn- texture-region->file [^TextureRegion texture-region]
-  (.toString (.getTextureData (.getTexture texture-region))))
-
-(defn- image->edn [{:keys [texture-region]}] ; not serializing color,scale.
-  (merge {:file (texture-region->file texture-region)}
-         (if (is-sub-texture? texture-region)
-           {:sub-image-bounds (region-bounds texture-region)})))
-
-(defn- edn->animation [context {:keys [frames frame-duration looping?]}]
-  (animation/create (map #(edn->image context %) frames)
-                    :frame-duration frame-duration
-                    :looping? looping?))
-
-(defn- animation->edn [animation]
-  (-> animation
-      (update :frames #(map image->edn %))
-      (select-keys [:frames :frame-duration :looping?])))
-
-(defn- deserialize [context data]
-  (->> data
-       (#(if (:entity/image     %) (update % :entity/image     (fn [img ] (edn->image     context img ))) %))
-       (#(if (:entity/animation %) (update % :entity/animation (fn [anim] (edn->animation context anim))) %))))
-
-; Other approaches to serialization:
-; * multimethod & postwalk like cdq & use records ... or metadata hmmm , but then have these records there with nil fields etc.
-; * print-dup prints weird stuff like #Float 0.5
-; * print-method fucks up console printing, would have to add methods and remove methods during save/load
-; => simplest way: just define keys which are assets (which are all the same anyway at the moment)
-(defn- serialize [data]
-  (->> data
-       (#(if (:entity/image     %) (update % :entity/image       image->edn    ) %))
-       (#(if (:entity/animation %) (update % :entity/animation   animation->edn) %))))
+            [core.component :refer [defcomponent] :as component]))
 
 (defn- of-type?
   ([property-type {:keys [property/id]}]
@@ -84,7 +24,7 @@
 
 (def ^:private validate? true)
 
-(defn- validate [types property]
+(defn- validate [property types]
   (if validate?
     (try (let [type (property->type types property)
                schema (:schema (type types))]
@@ -97,12 +37,6 @@
          (catch Throwable t
            (throw (ex-info "" {:types types :property property} t))))
     property))
-
-(defn- validate-and-deserialize [ctx types properties]
-  (utils.core/mapvals #(->> %
-                           (validate types)
-                           (deserialize ctx))
-                      properties))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
   (let [schema-form (apply vector :map {:closed true} id-attribute
@@ -122,7 +56,10 @@
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
        :types types
-       :db (validate-and-deserialize ctx types properties)})))
+       :db (mapvals #(-> %
+                         (validate types)
+                         (component/apply-system component/edn->value ctx))
+                    properties)})))
 
 (defn- pprint-spit [file data]
   (binding [*print-level* nil]
@@ -154,7 +91,7 @@
         (->> db
              vals
              (sort-by-type types)
-             (map serialize)
+             (map #(component/apply-system % component/value->edn))
              (map sort-map)
              (pprint-spit file)))))))
 
@@ -176,7 +113,7 @@
             {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
            (contains? db id)]}
-    (validate types property)
+    (validate property types)
     ;(binding [*print-level* nil] (clojure.pprint/pprint property))
     (let [new-ctx (update-in ctx [:context/properties :db] assoc id property)]
       (write-properties-to-file! new-ctx)
@@ -190,6 +127,10 @@
       new-ctx)))
 
 (comment
+
+ ; TODO to dev?
+
+ (require '[core.context :as ctx])
 
  (defn- migrate [property-type prop-fn]
    (def validate? false)
