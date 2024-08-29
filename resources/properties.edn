@@ -197,13 +197,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]},
   :property/id :creatures/toad-horned,
   :property/pretty-name "Toad-horned",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/goblin,
   :entity/animation
@@ -248,13 +249,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]},
   :property/id :creatures/lizardman-blue-shaman,
   :property/pretty-name "Lizardman-blue-shaman",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/barbarian,
   :entity/animation
@@ -271,13 +273,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]},
   :property/id :creatures/barbarian-f,
   :property/pretty-name "Barbarian-f",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 14,
   :creature/species :species/mummy,
   :entity/animation
@@ -294,13 +297,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]},
   :property/id :creatures/mummy,
   :property/pretty-name "Mummy",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -342,13 +346,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]},
   :property/id :creatures/priest,
   :property/pretty-name "Priest",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/lizardman-green,
   :entity/animation
@@ -365,13 +370,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]},
   :property/id :creatures/lizardman-green-spear,
   :property/pretty-name "Lizardman-green-spear",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/dwarf,
   :entity/animation
@@ -388,13 +394,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]},
   :property/id :creatures/dwarf-cleric,
   :property/pretty-name "Dwarf-cleric",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -411,13 +418,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]},
   :property/id :creatures/thief,
   :property/pretty-name "Thief",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/lizardman-green,
   :entity/animation
@@ -434,13 +442,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]},
   :property/id :creatures/lizardman-green-shaman,
   :property/pretty-name "Lizardman-green-shaman",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/beholder,
   :entity/animation
@@ -457,13 +466,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]},
   :property/id :creatures/beholder,
   :property/pretty-name "Beholder",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/spider,
   :entity/animation
@@ -480,13 +490,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]},
   :property/id :creatures/spider-brown,
   :property/pretty-name "Spider-brown",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/vampire,
   :entity/animation
@@ -504,13 +515,14 @@
   :entity/inventory #{},
   :property/id :creatures/vampire-lord,
   :property/pretty-name "Vampire-lord",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
    :stats/movement-speed 6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -527,13 +539,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]},
   :property/id :creatures/witch,
   :property/pretty-name "Witch",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -550,13 +563,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]},
   :property/id :creatures/minstrel-f,
   :property/pretty-name "Minstrel-f",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/human,
   :entity/animation
@@ -573,12 +587,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]},
   :property/id :creatures/lady-b,
   :property/pretty-name "Lady-b",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
-   :stats/reaction-time 12}}
+   :stats/movement-speed 2,
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/dwarf,
   :entity/animation
@@ -595,13 +611,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]},
   :property/id :creatures/dwarf,
   :property/pretty-name "Dwarf",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elemental,
   :entity/animation
@@ -618,13 +635,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]},
   :property/id :creatures/elemental-air,
   :property/pretty-name "Elemental-air",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/beetle,
   :entity/animation
@@ -641,13 +659,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]},
   :property/id :creatures/beetle-fire,
   :property/pretty-name "Beetle-fire",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -664,13 +683,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]},
   :property/id :creatures/warrior-f,
   :property/pretty-name "Warrior-f",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/golem,
   :entity/animation
@@ -687,13 +707,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]},
   :property/id :creatures/golem-mud,
   :property/pretty-name "Golem-mud",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
    :stats/movement-speed 2,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -710,13 +731,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]},
   :property/id :creatures/merchant-f,
   :property/pretty-name "Merchant-f",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -733,13 +755,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]},
   :property/id :creatures/minstrel-m,
   :property/pretty-name "Minstrel-m",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/spirit,
   :entity/animation
@@ -755,13 +778,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]},
   :property/id :creatures/spirit-greater,
   :property/pretty-name "Spirit-greater",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -806,13 +830,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]},
   :property/id :creatures/zombie-b,
   :property/pretty-name "Zombie-b",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/demon,
   :entity/animation
@@ -829,13 +854,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]},
   :property/id :creatures/demon-green,
   :property/pretty-name "Demon-green",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/drow,
   :entity/animation
@@ -852,13 +878,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]},
   :property/id :creatures/drow-wizard,
   :property/pretty-name "Drow-wizard",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/goblin,
   :entity/animation
@@ -875,13 +902,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]},
   :property/id :creatures/goblin-shaman,
   :property/pretty-name "Goblin-shaman",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/beetle,
   :entity/animation
@@ -898,13 +926,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]},
   :property/id :creatures/beetle-giant,
   :property/pretty-name "Beetle-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/human,
   :entity/animation
@@ -921,13 +950,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]},
   :property/id :creatures/prisoner-b,
   :property/pretty-name "Prisoner-b",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/dwarf,
   :entity/animation
@@ -944,13 +974,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]},
   :property/id :creatures/dwarf-mage,
   :property/pretty-name "Dwarf-mage",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/bird,
   :entity/animation
@@ -972,7 +1003,8 @@
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/movement-speed 1,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/pixie,
   :entity/animation
@@ -989,13 +1021,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]},
   :property/id :creatures/pixie-b,
   :property/pretty-name "Pixie-b",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/human,
   :entity/animation
@@ -1012,11 +1045,13 @@
   {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]},
   :property/id :creatures/lady-a,
   :property/pretty-name "Lady-a",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
+   :stats/hp 1,
    :stats/movement-speed 1,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/drow,
   :entity/animation
@@ -1033,13 +1068,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]},
   :property/id :creatures/drow,
   :property/pretty-name "Drow",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/goblin,
   :entity/animation
@@ -1079,13 +1115,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]},
   :property/id :creatures/wolf-black,
   :property/pretty-name "Wolf-black",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/bird,
   :entity/animation
@@ -1125,13 +1162,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]},
   :property/id :creatures/demon-red,
   :property/pretty-name "Demon-red",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/pixie,
   :entity/animation
@@ -1148,13 +1186,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]},
   :property/id :creatures/pixie-a,
   :property/pretty-name "Pixie-a",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -1171,13 +1210,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]},
   :property/id :creatures/archer,
   :property/pretty-name "Archer",
-  :property/skills #{:skills/bow},
+  :property/skills #{:skills/bow :skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/rat,
   :entity/animation
@@ -1194,13 +1234,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]},
   :property/id :creatures/rat-giant,
   :property/pretty-name "Rat-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/human,
   :entity/animation
@@ -1217,12 +1258,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]},
   :property/id :creatures/lord-a,
   :property/pretty-name "Lord-a",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
-   :stats/reaction-time 12}}
+   :stats/movement-speed 2,
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/wraith,
   :entity/animation
@@ -1239,13 +1282,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]},
   :property/id :creatures/wraith-black,
   :property/pretty-name "Wraith-black",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/wraith,
   :entity/animation
@@ -1262,13 +1306,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]},
   :property/id :creatures/wraith-red,
   :property/pretty-name "Wraith-red",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/golem,
   :entity/animation
@@ -1285,13 +1330,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]},
   :property/id :creatures/golem-fire,
   :property/pretty-name "Golem-fire",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
    :stats/movement-speed 2,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/wisp,
   :entity/animation
@@ -1307,13 +1353,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]},
   :property/id :creatures/wisp-ancient,
   :property/pretty-name "Wisp-ancient",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/troll,
   :entity/animation
@@ -1330,13 +1377,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]},
   :property/id :creatures/troll,
   :property/pretty-name "Troll",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/wraith,
   :entity/animation
@@ -1353,13 +1401,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]},
   :property/id :creatures/wraith-blue,
   :property/pretty-name "Wraith-blue",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/beetle,
   :entity/animation
@@ -1376,13 +1425,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]},
   :property/id :creatures/beetle-fire-giant,
   :property/pretty-name "Beetle-fire-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/lizardman-blue,
   :entity/animation
@@ -1399,13 +1449,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]},
   :property/id :creatures/lizardman-blue-spear,
   :property/pretty-name "Lizardman-blue-spear",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/human,
   :entity/animation
@@ -1422,13 +1473,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]},
   :property/id :creatures/dark-knight,
   :property/pretty-name "Dark-knight",
-  :property/skills #{:skills/spawn},
+  :property/skills #{:skills/spawn :skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/wolf,
   :entity/animation
@@ -1445,13 +1497,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]},
   :property/id :creatures/wolf-brown,
   :property/pretty-name "Wolf-brown",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/demon,
   :entity/animation
@@ -1468,13 +1521,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]},
   :property/id :creatures/demon-blue,
   :property/pretty-name "Demon-blue",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 32,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/moth,
   :entity/animation
@@ -1491,13 +1545,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]},
   :property/id :creatures/moth-red,
   :property/pretty-name "Moth-red",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/human,
   :entity/animation
@@ -1514,13 +1569,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]},
   :property/id :creatures/prisoner-c,
   :property/pretty-name "Prisoner-c",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 17,
   :creature/species :species/mimic,
   :entity/animation
@@ -1537,13 +1593,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]},
   :property/id :creatures/mimic,
   :property/pretty-name "Mimic",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/lizardman-green,
   :entity/animation
@@ -1560,13 +1617,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]},
   :property/id :creatures/lizardman-green,
   :property/pretty-name "Lizardman-green",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -1583,13 +1641,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]},
   :property/id :creatures/paladin,
   :property/pretty-name "Paladin",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/dragon,
   :entity/animation
@@ -1606,13 +1665,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]},
   :property/id :creatures/dragon-green,
   :property/pretty-name "Dragon-green",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/rat,
   :entity/animation
@@ -1629,13 +1689,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]},
   :property/id :creatures/rat,
   :property/pretty-name "Rat",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elemental,
   :entity/animation
@@ -1652,13 +1713,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]},
   :property/id :creatures/elemental-vorpal,
   :property/pretty-name "Elemental-vorpal",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 8,
   :creature/species :species/zombie,
   :entity/animation
@@ -1675,13 +1737,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]},
   :property/id :creatures/zombie-a,
   :property/pretty-name "Zombie-a",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 25,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/dragon,
   :entity/animation
@@ -1698,13 +1761,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]},
   :property/id :creatures/dragon-blue,
   :property/pretty-name "Dragon-blue",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/spider,
   :entity/animation
@@ -1721,13 +1785,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]},
   :property/id :creatures/spider-black,
   :property/pretty-name "Spider-black",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/ogre,
   :entity/animation
@@ -1744,13 +1809,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]},
   :property/id :creatures/ogre,
   :property/pretty-name "Ogre",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -1767,13 +1833,15 @@
   {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]},
   :property/id :creatures/wizard,
   :property/pretty-name "Wizard",
-  :property/skills #{:skills/meditation :skills/projectile},
+  :property/skills
+  #{:skills/meditation :skills/projectile :skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/elemental,
   :entity/animation
@@ -1790,13 +1858,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]},
   :property/id :creatures/elemental-earth,
   :property/pretty-name "Elemental-earth",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/dragon,
   :entity/animation
@@ -1813,13 +1882,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 384 48 48]},
   :property/id :creatures/dragon-shadow,
   :property/pretty-name "Dragon-shadow",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/banshee,
   :entity/animation
@@ -1836,8 +1906,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]},
   :property/id :creatures/banshee,
   :property/pretty-name "Banshee",
+  :property/skills #{:skills/melee-attack},
   :property/stats
-  {:stats/aggro-range 6, :stats/mana 11, :stats/reaction-time 12}}
+  {:stats/aggro-range 6,
+   :stats/hp 1,
+   :stats/mana 11,
+   :stats/movement-speed 2,
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -1854,13 +1930,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]},
   :property/id :creatures/warrior-m,
   :property/pretty-name "Warrior-m",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/moth,
   :entity/animation
@@ -1877,13 +1954,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]},
   :property/id :creatures/moth-white,
   :property/pretty-name "Moth-white",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/bird,
   :entity/animation
@@ -1905,7 +1983,8 @@
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/movement-speed 4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/lizardman-blue,
   :entity/animation
@@ -1922,13 +2001,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]},
   :property/id :creatures/lizardman-blue,
   :property/pretty-name "Lizardman-blue",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/dragon,
   :entity/animation
@@ -1945,13 +2025,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]},
   :property/id :creatures/dragon-red,
   :property/pretty-name "Dragon-red",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 45,
    :stats/mana 11,
    :stats/movement-speed 1.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/spider,
   :entity/animation
@@ -1968,13 +2049,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]},
   :property/id :creatures/spider-brown-giant,
   :property/pretty-name "Spider-brown-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/spirit,
   :entity/animation
@@ -1990,13 +2072,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]},
   :property/id :creatures/spirit,
   :property/pretty-name "Spirit",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/lich,
   :entity/animation
@@ -2013,13 +2096,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]},
   :property/id :creatures/lich,
   :property/pretty-name "Lich",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 18,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 11,
   :creature/species :species/skeleton,
   :entity/animation
@@ -2036,13 +2120,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]},
   :property/id :creatures/skeleton-archer,
   :property/pretty-name "Skeleton-archer",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/ogre,
   :entity/animation
@@ -2059,13 +2144,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]},
   :property/id :creatures/ogre-mystic,
   :property/pretty-name "Ogre-mystic",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/dragon,
   :entity/animation
@@ -2080,13 +2166,14 @@
   :entity/image {:file "images/animations/bone-dragon-1.png"},
   :property/id :creatures/bone-dragon,
   :property/pretty-name "Bone-dragon",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/golem,
   :entity/animation
@@ -2103,13 +2190,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]},
   :property/id :creatures/golem-metal,
   :property/pretty-name "Golem-metal",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
    :stats/movement-speed 2,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elemental,
   :entity/animation
@@ -2126,13 +2214,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]},
   :property/id :creatures/elemental-fire,
   :property/pretty-name "Elemental-fire",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -2149,13 +2238,14 @@
   {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]},
   :property/id :creatures/templar,
   :property/pretty-name "Templar",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/wisp,
   :entity/animation
@@ -2171,13 +2261,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]},
   :property/id :creatures/wisp,
   :property/pretty-name "Wisp",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/snake,
   :entity/animation
@@ -2194,13 +2285,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]},
   :property/id :creatures/snake-giant,
   :property/pretty-name "Snake-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/minotaur,
   :entity/animation
@@ -2217,13 +2309,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]},
   :property/id :creatures/minotaur,
   :property/pretty-name "Minotaur",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 28,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/valkyrie,
   :entity/animation
@@ -2240,13 +2333,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]},
   :property/id :creatures/valkyrie-a,
   :property/pretty-name "Valkyrie-a",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/toad,
   :entity/animation
@@ -2263,13 +2357,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]},
   :property/id :creatures/toad-green,
   :property/pretty-name "Toad-green",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 17,
   :creature/species :species/vampire,
   :entity/animation
@@ -2301,7 +2396,7 @@
     :items/gold-chest},
   :property/id :creatures/vampire,
   :property/pretty-name "Vampire",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/armor-pierce 0,
@@ -2329,13 +2424,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]},
   :property/id :creatures/moth-black,
   :property/pretty-name "Moth-black",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -2352,13 +2448,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]},
   :property/id :creatures/monk,
   :property/pretty-name "Monk",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/human,
   :entity/animation
@@ -2375,12 +2472,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]},
   :property/id :creatures/lord-b,
   :property/pretty-name "Lord-b",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
-   :stats/reaction-time 12}}
+   :stats/movement-speed 2,
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/human,
   :entity/animation
@@ -2397,13 +2496,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]},
   :property/id :creatures/warden,
   :property/pretty-name "Warden",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -2420,13 +2520,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]},
   :property/id :creatures/druid,
   :property/pretty-name "Druid",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elf,
   :entity/animation
@@ -2443,13 +2544,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]},
   :property/id :creatures/elf-wizard,
   :property/pretty-name "Elf-wizard",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 11,
   :creature/species :species/skeleton,
   :entity/animation
@@ -2466,13 +2568,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]},
   :property/id :creatures/skeleton-mage,
   :property/pretty-name "Skeleton-mage",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/halfling,
   :entity/animation
@@ -2489,13 +2592,14 @@
   {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]},
   :property/id :creatures/halfling-fighter,
   :property/pretty-name "Halfling-fighter",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 11,
   :creature/species :species/skeleton,
   :entity/animation
@@ -2512,13 +2616,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]},
   :property/id :creatures/skeleton-warrior,
   :property/pretty-name "Skeleton-warrior",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/halfling,
   :entity/animation
@@ -2535,13 +2640,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]},
   :property/id :creatures/halfling-thief,
   :property/pretty-name "Halfling-thief",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/barbarian,
   :entity/animation
@@ -2558,13 +2664,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]},
   :property/id :creatures/barbarian-m,
   :property/pretty-name "Barbarian-m",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elf,
   :entity/animation
@@ -2581,13 +2688,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]},
   :property/id :creatures/elf-bowman,
   :property/pretty-name "Elf-bowman",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/beetle,
   :entity/animation
@@ -2604,13 +2712,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]},
   :property/id :creatures/beetle,
   :property/pretty-name "Beetle",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/bat,
   :entity/animation
@@ -2626,13 +2735,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]},
   :property/id :creatures/bat-giant,
   :property/pretty-name "Bat-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/toad,
   :entity/animation
@@ -2649,13 +2759,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]},
   :property/id :creatures/toad-blue,
   :property/pretty-name "Toad-blue",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 12,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/golem,
   :entity/animation
@@ -2696,13 +2807,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]},
   :property/id :creatures/necromancer,
   :property/pretty-name "Necromancer",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/spider,
   :entity/animation
@@ -2719,13 +2831,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]},
   :property/id :creatures/spider-black-giant,
   :property/pretty-name "Spider-black-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/valkyrie,
   :entity/animation
@@ -2742,13 +2855,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]},
   :property/id :creatures/valkyrie-b,
   :property/pretty-name "Valkyrie-b",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/bat,
   :entity/animation
@@ -2765,13 +2879,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]},
   :property/id :creatures/bat,
   :property/pretty-name "Bat",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
    :stats/movement-speed 1,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/snake,
   :entity/animation
@@ -2816,13 +2931,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]},
   :property/id :creatures/flies,
   :property/pretty-name "Flies",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/human,
   :entity/animation
@@ -2839,13 +2955,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]},
   :property/id :creatures/prisoner-a,
   :property/pretty-name "Prisoner-a",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/beholder,
   :entity/animation
@@ -2862,13 +2979,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]},
   :property/id :creatures/beholder-deep,
   :property/pretty-name "Beholder-deep",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 35,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 11,
   :creature/species :species/skeleton,
   :entity/animation
@@ -2885,13 +3003,14 @@
   {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]},
   :property/id :creatures/skeleton,
   :property/pretty-name "Skeleton",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 15,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elemental,
   :entity/animation
@@ -2908,13 +3027,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]},
   :property/id :creatures/elemental-water,
   :property/pretty-name "Elemental-water",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -2931,13 +3051,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]},
   :property/id :creatures/cultist,
   :property/pretty-name "Cultist",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 14,
   :creature/species :species/mummy,
   :entity/animation
@@ -2954,13 +3075,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]},
   :property/id :creatures/mummy-pharao,
   :property/pretty-name "Mummy-pharao",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 22,
    :stats/mana 11,
    :stats/movement-speed 1.6,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/halfling,
   :entity/animation
@@ -2977,13 +3099,14 @@
   {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]},
   :property/id :creatures/halfling-wizard,
   :property/pretty-name "Halfling-wizard",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/drow,
   :entity/animation
@@ -3000,13 +3123,14 @@
   {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]},
   :property/id :creatures/drow-bowman,
   :property/pretty-name "Drow-bowman",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 2,
   :creature/species :species/worm,
   :entity/animation
@@ -3023,13 +3147,14 @@
   {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]},
   :property/id :creatures/worm-giant,
   :property/pretty-name "Worm-giant",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 3,
   :creature/species :species/human,
   :entity/animation
@@ -3046,14 +3171,15 @@
   {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]},
   :property/id :creatures/merchant-m,
   :property/pretty-name "Merchant-m",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/modifiers {:modifier/damage-receive {:op/mult -0.1}},
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 5,
   :creature/species :species/elf,
   :entity/animation
@@ -3070,13 +3196,14 @@
   {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]},
   :property/id :creatures/elf,
   :property/pretty-name "Elf",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 10,
    :stats/mana 11,
    :stats/movement-speed 3.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/worm,
   :entity/animation
@@ -3093,13 +3220,14 @@
   {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]},
   :property/id :creatures/worm,
   :property/pretty-name "Worm",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 5,
    :stats/mana 11,
    :stats/movement-speed 2.4,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 1,
   :creature/species :species/halfling,
   :entity/animation
@@ -3116,13 +3244,14 @@
   {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]},
   :property/id :creatures/halfling-sling,
   :property/pretty-name "Halfling-sling",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
    :stats/mana 11,
    :stats/movement-speed 2.0,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:creature/level 4,
   :creature/species :species/golem,
   :entity/animation
@@ -3139,13 +3268,14 @@
   {:file "images/creatures.png", :sub-image-bounds [384 432 48 48]},
   :property/id :creatures/golem-ice,
   :property/pretty-name "Golem-ice",
-  :property/skills #{},
+  :property/skills #{:skills/melee-attack},
   :property/stats
   {:stats/aggro-range 6,
    :stats/hp 350,
    :stats/mana 11,
    :stats/movement-speed 2,
-   :stats/reaction-time 12}}
+   :stats/reaction-time 12,
+   :stats/strength 1}}
  {:entity/image
   {:file "images/items.png", :sub-image-bounds [528 144 48 48]},
   :item/modifiers {},

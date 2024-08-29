@@ -27,16 +27,14 @@
 
 (defn- validate [property types]
   (if validate?
-    (try (let [type (property->type types property)
-               schema (:schema (type types))]
-           (if (try (m/validate schema property)
-                    (catch Throwable t
-                      (throw (ex-info "m/validate fail" {:property property :type type} t))))
-             property
-             (throw (ex-info (validation-error-message schema property)
-                             {:property property}))))
-         (catch Throwable t
-           (throw (ex-info "" {:types types :property property} t))))
+    (let [type (property->type types property)
+          schema (:schema (type types))]
+      (if (try (m/validate schema property)
+               (catch Throwable t
+                 (throw (ex-info "m/validate fail" {:property property :type type} t))))
+        property
+        (throw (ex-info (validation-error-message schema property)
+                        {:property property}))))
     property))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
