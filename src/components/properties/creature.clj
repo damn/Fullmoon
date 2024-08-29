@@ -7,9 +7,10 @@
 
 ; TODO assert min body size from core.entity
 ; TODO make px
-(defcomponent :body/width   {:data :some :optional? false})
-(defcomponent :body/height  {:data :some :optional? false})
-(defcomponent :body/flying? {:data :some :optional? false})
+
+(defcomponent :body/width   {:data :pos     :optional? false})
+(defcomponent :body/height  {:data :pos     :optional? false})
+(defcomponent :body/flying? {:data :boolean :optional? false})
 
 (defcomponent :entity/body
   {:data [:map [:body/width :body/height :body/flying?]]
