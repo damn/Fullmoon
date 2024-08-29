@@ -44,7 +44,8 @@
    :entity/animation
    :entity/stats
    :entity/inventory  ; remove
-   :entity/skills])
+   :entity/skills
+   :entity/modifiers])
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]

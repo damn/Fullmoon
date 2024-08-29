@@ -2730,10 +2730,10 @@
   {:body/flying? false, :body/height 35/48, :body/width 17/24},
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]},
+  :entity/modifiers {:modifier/damage-receive {:op/max-mult -0.9}},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
-   :stats/damage-receive -0.9,
    :stats/hp 350,
    :stats/movement-speed 2,
    :stats/reaction-time 12,
@@ -3670,7 +3670,7 @@
   :property/pretty-name "Helm Blood"}
  {:entity/image
   {:file "images/items.png", :sub-image-bounds [912 240 48 48]},
-  :item/modifiers {:modifier/damage-receive {:op/inc -1}},
+  :item/modifiers {},
   :item/slot :inventory.slot/shield,
   :property/id :items/shield-mystic-great,
   :property/pretty-name "Great Mystic Shield"}
@@ -3754,7 +3754,9 @@
   :property/pretty-name "Brown Book"}
  {:entity/image
   {:file "images/items.png", :sub-image-bounds [768 384 48 48]},
-  :item/modifiers {:modifier/strength {:op/inc 5}},
+  :item/modifiers
+  {:modifier/damage-deal {:op/val-mult 10},
+   :modifier/strength {:op/inc 5}},
   :item/slot :inventory.slot/necklace,
   :property/id :items/necklace-eye,
   :property/pretty-name "Eye Necklace"}
@@ -4556,7 +4558,6 @@
   {:file "images/items.png", :sub-image-bounds [288 480 48 48]},
   :item/modifiers
   {:modifier/armor-save {:op/inc 0.1},
-   :modifier/damage-receive {:op/mult -0.1},
    :modifier/hp {:op/max-mult 0.1},
    :modifier/movement-speed {:op/mult 0.1}},
   :item/slot :inventory.slot/chest,

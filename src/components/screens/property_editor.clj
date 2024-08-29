@@ -17,6 +17,11 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
 
+(defn- components-info-text [props ctx]
+  (try (components/info-text props ctx)
+       (catch Throwable t
+         (str (:property/id props))))) ; because :entity/modifiers
+
 (defn- property->image [{:keys [entity/image entity/animation]}]
   (or image
       (first (:frames animation))))
@@ -245,7 +250,7 @@
                         image-widget (->image-widget ctx ; image-button/link?
                                                      (property->image props)
                                                      {:id (:property/id props)})]
-                    (add-tooltip! image-widget #(components/info-text props %))
+                    (add-tooltip! image-widget #(components-info-text props %))
                     image-widget))
                 (for [prop-id property-ids]
                   (->text-button ctx "-"
@@ -395,7 +400,7 @@
                                                                       ""))
                                           stack (->stack ctx [button top-widget])]]
                                 (do
-                                 (add-tooltip! button #(components/info-text props %))
+                                 (add-tooltip! button #(components-info-text props %))
                                  (set-touchable! top-widget :disabled)
                                  stack))))})))
 

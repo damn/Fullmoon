@@ -60,8 +60,16 @@
         :when (seq operations)]
     [modifier-k operations]))
 
+; info-text fails @ properrty-screen, different data format...
 (defcomponent :entity/modifiers
-  {:let modifiers}
+  {:data [:components-ns :modifier]
+   :optional? true
+   :let modifiers}
+  (component/create [_ _ctx]
+    (into {} (for [[modifier-k operations] modifiers]
+               [modifier-k (into {} (for [[operation-k value] operations]
+                                      [operation-k [value]]))])))
+
   (component/info-text [_ _ctx]
     (let [modifiers (sum-operation-values modifiers)]
       (when (seq modifiers)
@@ -241,14 +249,11 @@
 
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
-(defstat :stats/damage-receive
-  {:data :number
-   :optional? true
-   :operations [:op/inc :op/mult]})
 
 ; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
 ; just inc/mult ?
 ; or even mana/hp does it make a difference ?
+(defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
 (defn- ->stat-effective-value [entity* stat-k]
@@ -278,16 +283,6 @@
 
 (def ^:private borders-px 1)
 
-(defn- build-modifiers [modifiers]
-  (into {} (for [[modifier-k operations] modifiers]
-             [modifier-k (into {} (for [[operation-k value] operations]
-                                    [operation-k [value]]))])))
-
-(comment
- (= {:modifier/damage-receive {:op/mult [-0.9]}}
-    (build-modifiers {:modifier/damage-receive {:op/mult -0.9}}))
- )
-
 (let [stats-order [:stats/hp
                    :stats/mana
                    ;:stats/movement-speed
@@ -314,8 +309,7 @@
   (component/create [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
-        (update :stats/mana (fn [mana] (when mana [mana mana])))
-        (update :stats/modifiers build-modifiers)))
+        (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
   (component/info-text [_ {:keys [info-text/entity*]}]
     (stats-info-texts entity* stats))
@@ -446,15 +440,11 @@
 
        :else
        (let [{:keys [damage/min-max]} (->effective-damage damage source*)
-             _ (println "\nmin-max:" min-max)
+             ;_ (println "\nmin-max:" min-max)
+             min-max (->effective-value min-max :modifier/damage-receive (:entity/modifiers target*))
+             ;_ (println "effective min-max: " min-max)
              dmg-amount (random/rand-int-between min-max)
-             _ (println "dmg-amount: " dmg-amount)
-
-             ; TODO this is broken? not using base-value anymore?
-             ; Tests?
-             dmg-amount (->effective-value dmg-amount :modifier/damage-receive (:entity/modifiers target*))
-
-             _ (println "effective dmg-amount: " dmg-amount)
+             ;_ (println "dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx/audiovisual (:position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
