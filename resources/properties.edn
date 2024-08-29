@@ -1101,13 +1101,14 @@
   :entity/image
   {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]},
   :property/id :creatures/bird-crow,
-  :property/pretty-name "Bird-crow",
-  :property/skills #{},
+  :property/pretty-name "Crow",
+  :property/skills #{:skills/melee-attack},
   :property/stats
-  {:stats/aggro-range 6,
-   :stats/hp 8,
-   :stats/movement-speed 4,
-   :stats/reaction-time 12}}
+  {:stats/aggro-range 3,
+   :stats/hp 1,
+   :stats/movement-speed 6,
+   :stats/reaction-time 5,
+   :stats/strength 1}}
  {:creature/level 6,
   :creature/species :species/demon,
   :entity/animation

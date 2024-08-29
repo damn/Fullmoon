@@ -275,6 +275,9 @@
    :optional? false
    :let stats}
   (component/create-kv [_ _ctx]
+    ; this does not work because defstat doesn't pass sys-impls ...
+    ; again edn->widget->value for val-max define only max ??
+    ; (component/apply-system stats component/create)
     [:entity/stats (-> stats
                        (update :stats/hp (fn [hp] (when hp [hp hp]))) ; TODO mana required
                        (update :stats/mana (fn [mana] (when mana [mana mana]))) ; ? dont do it when not there
