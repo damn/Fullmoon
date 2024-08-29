@@ -35,7 +35,8 @@
   (->> components
        sort-by-order
        (keep (fn [{v 1 :as component}]
-               (str (component/info-text component ctx)
+               (str (component/info-text component
+                                         (assoc ctx :info-text/entity* components))
                     (when (map? v)
                       (str "\n" (info-text v ctx))))))
        (str/join "\n")
