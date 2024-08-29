@@ -1,40 +1,22 @@
 (ns core.components
   (:require [clojure.string :as str]
+            [utils.core :refer [index-of]]
             [core.component :as component]))
 
-(def ^:private property-order [:property/id
-                               :entity/image
-                               :property/pretty-name])
-
-(def ^:private item-order [:item/slot
-                           :item/modifiers])
-
-(def ^:private skill-order [:skill/action-time-modifier-key
-                            :skill/action-time
-                            :skill/cooldown
-                            :skill/cost
-                            :skill/effects
-                            :skill/start-action-sound])
-
-(def ^:private entity-order [:entity/body
-                             :creature/species
-                             :creature/level
-                             :entity/animation
-                             :entity/faction
-                             :entity/state
-                             :entity/stats
-                             :entity/delete-after-duration
-                             :entity/projectile-collision])
-
-(def ^:private effect-order [:maxrange
-                             :entity-effects])
-
 (def ^:private k-order
-  (vec (concat property-order
-               item-order
-               skill-order
-               entity-order
-               effect-order)))
+  [:property/pretty-name
+   :skill/action-time-modifier-key
+   :skill/action-time
+   :skill/cooldown
+   :skill/cost
+   :skill/effects
+   :creature/species
+   :creature/level
+   :entity/stats
+   :entity/delete-after-duration
+   :entity/projectile-collision
+   :maxrange
+   :entity-effects])
 
 (defn- sort-by-order [components]
   (sort-by (fn [[k _]] (or (index-of k k-order) 99))
