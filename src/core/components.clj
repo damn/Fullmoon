@@ -46,14 +46,8 @@
                effect-order
                stats-order)))
 
-(defn- sort-index-of [k]
-  (let [idx (.indexOf k-order k)]
-    (if (= -1 idx)
-      99
-      idx)))
-
 (defn sort-by-order [components]
-  (sort-by (fn [[k _]] (sort-index-of k))
+  (sort-by (fn [[k _]] (or (index-of k-order k) 99))
            components))
 
 (defn- remove-newlines [s]

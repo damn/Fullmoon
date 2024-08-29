@@ -5,6 +5,7 @@
             [malli.core :as m]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
+            [utils.core :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
             [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties]]
@@ -290,9 +291,30 @@
 (defn- attribute-widget-table->value-widget [table]
   (-> table children last))
 
+(let [k-sort-order [:property/id
+                    :app/lwjgl3
+                    :entity/image
+                    :entity/animation
+                    :property/pretty-name
+                    :creature/species
+                    :creature/level
+                    :entity/body
+                    :item/slot
+                    :projectile/speed
+                    :projectile/max-range
+                    :projectile/piercing?
+                    :skill/action-time-modifier-key
+                    :skill/action-time
+                    :skill/start-action-sound
+                    :skill/cost
+                    :skill/cooldown]]
+  (defn- sort-attributes [props]
+    (sort-by #(or (index-of (first %) k-sort-order) 99)
+             props)))
+
 (defn- ->attribute-widget-tables [ctx props]
   (let [first-row? (atom true)]
-    (for [[k v] (components/sort-by-order props)
+    (for [[k v] (sort-attributes props)
           :let [sep? (not @first-row?)
                 _ (reset! first-row? false)]]
       (->attribute-widget-table ctx [k v] :horizontal-sep? sep?))))
