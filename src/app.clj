@@ -2,6 +2,7 @@
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
             [utils.files :as files]
+            [utils.core :refer [safe-get]]
             [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
@@ -22,27 +23,14 @@
       ;(println "require" ns)
       (require ns))))
 
-(def ^:private app-k :app/core)
-
-(defn- ->application [properties file]
+(defn- ->application [context]
   (->application-listener
    :create (fn []
              (require-all-components!) ; here @ create because files/internal requires libgdx context
-             (let [context (merge (:app/context (get properties app-k))
-                                  {:context/properties {:file file
-                                                        :properties properties}
-                                   ; map editor calls ctx/get-property & property editor ctx/all-properties
-                                   ; so load afterwards
-                                   :context/screens [:screens/main-menu
-                                                     :screens/map-editor
-                                                     ;:screens/minimap
-                                                     :screens/options-menu
-                                                     :screens/property-editor
-                                                     :screens/world]})]
-               (->> context
-                    (component/create-into (assoc (ctx/->Context) :context/state state))
-                    ctx/init-first-screen
-                    (reset! state))))
+             (->> context
+                  (component/create-into (assoc (ctx/->Context) :context/state state))
+                  ctx/init-first-screen
+                  (reset! state)))
 
    :dispose (fn []
               (run! component/destroy @state))
@@ -58,12 +46,24 @@
              (ctx/update-viewports @state w h))))
 
 (defn- load-properties [file]
-  (let [properties (-> file slurp edn/read-string)] ; TODO use .internal Gdx/files  => part of context protocol
+  (let [properties (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id properties)))
     (->> properties
          (#(zipmap (map :property/id %) %)))))
 
 (defn -main [& [file]]
-  (let [properties (load-properties file)]
-    (lwjgl3/->application (->application properties file)
-                          (lwjgl3/->configuration (:app/lwjgl3 (get properties app-k))))))
+  (let [properties (load-properties file)
+        {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
+        context (merge context
+                       {:context/properties {:file file
+                                             :properties properties}
+                        ; map editor calls ctx/get-property & property editor ctx/all-properties
+                        ; so load afterwards
+                        :context/screens [:screens/main-menu
+                                          :screens/map-editor
+                                          ;:screens/minimap
+                                          :screens/options-menu
+                                          :screens/property-editor
+                                          :screens/world]})]
+    (lwjgl3/->application (->application context)
+                          (lwjgl3/->configuration lwjgl3))))
