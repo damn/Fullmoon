@@ -21,6 +21,5 @@
      :schema [[:property/id [:qualified-keyword {:namespace :app}]]
               [:app/lwjgl3
                :app/context]]
-     :edn-file-sort-order -1
      :overview {:title "Apps"
                 :columns 10}}))

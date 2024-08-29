@@ -7,9 +7,9 @@
 
 ; TODO assert min body size from core.entity
 ; TODO make px
-(defcomponent :body/width   {:data :number  :optional? false})
-(defcomponent :body/height  {:data :number  :optional? false})
-(defcomponent :body/flying? {:data :boolean :optional? false})
+(defcomponent :body/width   {:data :some :optional? false})
+(defcomponent :body/height  {:data :some :optional? false})
+(defcomponent :body/flying? {:data :some :optional? false})
 
 (defcomponent :entity/body
   {:data [:map [:body/width :body/height :body/flying?]]
@@ -34,7 +34,6 @@
    :optional? false})
 
 ; TODO cannot add components if they are optional, no :data  [:components ..]
-
 (def ^:private entity-component-attributes
   [:property/pretty-name
    :creature/species
@@ -53,7 +52,6 @@
                      :entity/image
                      :entity/body
                      entity-component-attributes)]
-     :edn-file-sort-order 1
      :overview {:title "Creatures"
                 :columns 15
                 :image/dimensions [60 60]
@@ -67,7 +65,7 @@
    :width  width
    :height height
    :collides? true
-   :z-order (if flying?  :z-order/flying :z-order/ground)})
+   :z-order (if flying? :z-order/flying :z-order/ground)})
 
 (defn- create-kvs [components ctx]
   (into {} (for [component components]

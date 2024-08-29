@@ -2,6 +2,14 @@
   (:require [clojure.string :as str]
             [core.component :as component]))
 
+(def ^:private properties-order [:properties/app
+                                 :properties/skill
+                                 :properties/creature
+                                 :properties/item
+                                 :properties/world
+                                 :properties/audiovisual
+                                 :properties/projectile])
+
 (def ^:private property-order [:property/id
                                :entity/image
                                :property/pretty-name])
@@ -28,20 +36,20 @@
                              :entity/projectile-collision])
 
 (def ^:private k-order
-  (vec (concat property-order
+  (vec (concat properties-order
+               property-order
                item-order
                skill-order
                entity-order)))
 
-(defn- index-of [v k]
-  (let [idx (.indexOf v k)]
+(defn sort-index-of [k]
+  (let [idx (.indexOf k-order k)]
     (if (= -1 idx)
-      nil
+      99
       idx)))
 
 (defn sort-by-order [components]
-  (sort-by (fn [[k _]]
-             (or (index-of k-order k) 99))
+  (sort-by (fn [[k _]] (sort-index-of k))
            components))
 
 (defn- remove-newlines [s]

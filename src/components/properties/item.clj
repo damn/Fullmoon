@@ -22,7 +22,6 @@
                :entity/image
                :item/slot
                :item/modifiers]]
-     :edn-file-sort-order 3
      :overview {:title "Items"
                 :columns 17
                 :image/dimensions [60 60]

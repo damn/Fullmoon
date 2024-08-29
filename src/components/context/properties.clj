@@ -2,7 +2,8 @@
   (:require [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get mapvals]]
-            [core.component :refer [defcomponent] :as component]))
+            [core.component :refer [defcomponent] :as component]
+            [core.components :as components]))
 
 (defn- of-type?
   ([property-type {:keys [property/id]}]
@@ -68,10 +69,9 @@
          with-out-str
          (spit file))))
 
-(defn- sort-by-type [types properties-values]
-  (sort-by (fn [property]
-             (:edn-file-sort-order ((property->type types property) types)))
-           properties-values))
+(defn- sort-by-type [types properties]
+  (sort-by #(components/sort-index-of (property->type types %))
+           properties))
 
 (def ^:private write-to-file? true)
 

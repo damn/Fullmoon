@@ -8,7 +8,6 @@
      :schema [[:property/id [:qualified-keyword {:namespace :audiovisuals}]]
               [:tx/sound
                :entity/animation]]
-     :edn-file-sort-order 7
      :overview {:title "Audiovisuals"
                 :columns 10
                 :image/dimensions [96 96]}}))

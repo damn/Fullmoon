@@ -17,10 +17,7 @@
     {:id-namespace "worlds"
      :schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
               ;[:world/generator]
-              [:world/type]
-
-              ]
-     :edn-file-sort-order 5
+              [:world/type]]
      :overview {:title "Worlds"
                 :columns 10}}))
 

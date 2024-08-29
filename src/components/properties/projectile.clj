@@ -25,7 +25,6 @@
                :projectile/speed
                :projectile/piercing?
                :entity-effects]]
-     :edn-file-sort-order 8
      :overview {:title "Projectiles"
                 :columns 16
                 :image/dimensions [48 48]}}))
