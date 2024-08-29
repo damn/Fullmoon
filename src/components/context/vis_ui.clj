@@ -44,7 +44,7 @@
 
 
 (defcomponent :context/vis-ui
-  {:data :some
+  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
    :let skin-scale}
   (component/create [_ _ctx]
     (check-cleanup-visui!)
