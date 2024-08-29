@@ -357,13 +357,11 @@
                            (learn-skill! :skills/projectile)
                            (learn-skill! :skills/spawn)
                            (learn-skill! :skills/meditation)
-                           (learn-skill! :skills/melee-attack)
                            (learn-skill! :skills/death-ray)
                            (learn-skill! :skills/convert)
                            (learn-skill! :skills/blood-curse)
                            (learn-skill! :skills/slow)
                            (learn-skill! :skills/double-fireball)
-
                            )))
 
 

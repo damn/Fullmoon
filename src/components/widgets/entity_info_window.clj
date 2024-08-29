@@ -5,6 +5,10 @@
             [core.scene2d.group :refer [add-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]))
 
+(def ^:private disallowed-keys #{:entity/skills
+                                 :entity/state
+                                 :entity/faction})
+
 (defn create [context]
   (let [label (->label context "")
         window (->window context {:title "Info"
@@ -17,6 +21,8 @@
     (add-actor! window (->actor context {:act (fn update-label-text [ctx]
                                                 (set-text! label
                                                            (when-let [entity* (ctx/mouseover-entity* ctx)]
-                                                             (components/info-text entity* ctx)))
+                                                             (components/info-text
+                                                              (select-keys entity* (remove disallowed-keys (keys entity*)))
+                                                              ctx)))
                                                 (pack! window))}))
     window))

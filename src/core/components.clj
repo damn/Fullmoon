@@ -37,7 +37,7 @@
                effect-order)))
 
 (defn- sort-by-order [components]
-  (sort-by (fn [[k _]] (or (index-of k-order k) 99))
+  (sort-by (fn [[k _]] (or (index-of k k-order) 99))
            components))
 
 (defn- remove-newlines [s]
