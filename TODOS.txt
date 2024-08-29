@@ -1,5 +1,12 @@
 
+:destroy-audiovisual
+=> should be entity/destroy-audiovisual
+=> entity schema would be great ....
+
+
+
 ; TODO source modifiers not showing (effects, modifiers)
+(e.g. melee attack not showing )
 
 create-kvs
 create

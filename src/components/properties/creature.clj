@@ -83,7 +83,7 @@
             (select-keys entity-component-attributes)
             (create-kvs ctx)
             (safe-merge components)
-            (assoc :destroy-audiovisual :audiovisuals/creature-die))]])))
+            (assoc :entity/destroy-audiovisual :audiovisuals/creature-die))]])))
 
 
 ; TODO spawning on player both without error ?! => not valid position checked
