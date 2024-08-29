@@ -131,6 +131,10 @@
   (when operations
     (defmodifier (stat-k->modifier-k stat-k) operations)))
 
+(defcomponent :stats/reaction-time
+  {:data :pos-int
+   :optional? false})
+
 (defstat :stats/hp
   {:data :pos-int
    :operations [:op/max-inc :op/max-mult]})

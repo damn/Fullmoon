@@ -126,27 +126,29 @@
       (write-properties-to-file! new-ctx)
       new-ctx)))
 
+(require '[core.context :as ctx])
+
+(defn- migrate [property-type prop-fn]
+  (def validate? false)
+  (let [ctx @app/state]
+    (def write-to-file? false)
+    (time
+     (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
+       (println (:property/id prop) ", " (:property/pretty-name prop))
+       (swap! app/state ctx/update! prop)))
+    (def write-to-file? true)
+    (write-properties-to-file! @app/state)
+    (def validate? true)
+    nil))
+
+
 (comment
 
- ; TODO to dev?
-
- (require '[core.context :as ctx])
-
- (defn- migrate [property-type prop-fn]
-   (def validate? false)
-   (let [ctx @app/state]
-     (def write-to-file? false)
-     (time
-      (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
-        (println (:property/id prop) ", " (:property/pretty-name prop))
-        (swap! app/state ctx/update! prop)))
-     (def write-to-file? true)
-     (write-properties-to-file! @app/state)
-     (def validate? true)
-     nil))
-
- (migrate :properties/skill
+ (migrate :properties/creature
           (fn [prop]
             (-> prop
-                (assoc :property/pretty-name (str/capitalize (name (:property/id prop)))))))
+                (dissoc :entity/reaction-time)
+                (update :property/stats assoc :stats/reaction-time
+                        (max (int (/ (:entity/reaction-time prop) 0.016))
+                             2)))))
  )

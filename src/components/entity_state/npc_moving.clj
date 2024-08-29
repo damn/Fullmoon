@@ -11,7 +11,7 @@
   (component/create [[_ eid movement-vector] ctx]
     {:eid eid
      :movement-vector movement-vector
-     :counter (->counter ctx (:entity/reaction-time @eid))})
+     :counter (->counter ctx (* (entity/stat :stats/reaction-time @eid) (* 0.016 60)))})
 
   (component/enter [_ _ctx]
     [[:tx.entity/set-movement eid {:direction movement-vector

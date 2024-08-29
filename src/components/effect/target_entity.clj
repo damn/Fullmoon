@@ -25,7 +25,7 @@
 
 (defcomponent :maxrange {:data :pos}
   (component/info-text [[_ maxrange] ctx]
-    (str "Range " maxrange " meters")))
+    (str "[LIGHT_GRAY]Range " maxrange " meters[]")))
 
 (defcomponent :effect/target-entity
   {:let {:keys [maxrange entity-effects]}

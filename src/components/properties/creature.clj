@@ -30,17 +30,12 @@
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
-(defcomponent :entity/reaction-time
-  {:data :pos
-   :optional? false})
-
 ; TODO cannot add components if they are optional, no :data  [:components ..]
 (def ^:private entity-component-attributes
   [:property/pretty-name
    :creature/species
    :creature/level
    :entity/animation
-   :entity/reaction-time ; in frames 0.016x
    :property/stats
    :entity/inventory  ; remove
    :property/skills])

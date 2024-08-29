@@ -28,7 +28,6 @@
                              :creature/species
                              :creature/level
                              :entity/animation
-                             :entity/reaction-time
                              :entity/faction
                              :entity/state
                              :entity/stats
