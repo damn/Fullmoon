@@ -46,7 +46,7 @@
                effect-order
                stats-order)))
 
-(defn sort-index-of [k]
+(defn- sort-index-of [k]
   (let [idx (.indexOf k-order k)]
     (if (= -1 idx)
       99
