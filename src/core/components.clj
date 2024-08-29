@@ -29,22 +29,12 @@
 (def ^:private effect-order [:maxrange
                              :entity-effects])
 
-(def ^:private stats-order [:stats/hp
-                            :stats/mana
-                            :stats/movement-speed
-                            :stats/strength
-                            :stats/cast-speed
-                            :stats/attack-speed
-                            :stats/armor-save
-                            :stats/armor-pierce])
-
 (def ^:private k-order
   (vec (concat property-order
                item-order
                skill-order
                entity-order
-               effect-order
-               stats-order)))
+               effect-order)))
 
 (defn sort-by-order [components]
   (sort-by (fn [[k _]] (or (index-of k-order k) 99))
