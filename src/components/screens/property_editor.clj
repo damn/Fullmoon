@@ -354,7 +354,7 @@
         save!   (apply-context-fn window #(core.context/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(core.context/delete! % id))]
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
-                                                     [(->text-button context "Save" save!)
+                                                     [(->text-button context "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                       (->text-button context "Delete" delete!)]])]])
     (add-actor! window (->actor context {:act (fn [{:keys [context/state]}]
                                                 (when (input/key-just-pressed? input.keys/enter)
@@ -425,9 +425,21 @@
     {:title (:title (core.context/overview ctx property-type))
      :content (->overview-table ctx property-type open-property-editor-window!)}))
 
+(import 'com.badlogic.gdx.scenes.scene2d.InputListener)
+
 (derive :screens/property-editor :screens/stage-screen)
 (defcomponent :screens/property-editor
-  (component/create [_ ctx]
-    {:stage (ctx/->stage ctx
+  (component/create [_ {:keys [context/state] :as ctx}]
+    {:stage (let [stage (ctx/->stage ctx
                          [(ctx/->background-image ctx)
-                          (->tabbed-pane ctx (->tabs-data ctx))])}))
+                          (->tabbed-pane ctx (conj (->tabs-data ctx)
+                                                   {:title "Left-Shift: Back to Main Menu"
+                                                    :content nil}))])]
+              (.addListener stage (proxy [InputListener] []
+                                    (keyDown [event keycode]
+                                      (if (= keycode gdx.input.keys/shift-left)
+                                        (do
+                                         (swap! state ctx/change-screen :screens/main-menu)
+                                         true)
+                                        false))))
+              stage)}))
