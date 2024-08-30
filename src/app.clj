@@ -20,7 +20,6 @@
                        (str/replace "/" ".")
                        symbol)]]
     (when-not (find-ns ns)
-      ;(println "require" ns)
       (require ns))))
 
 (defn- ->application [context]

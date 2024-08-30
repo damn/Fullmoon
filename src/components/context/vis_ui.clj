@@ -23,7 +23,7 @@
   (when (VisUI/isLoaded)
     (VisUI/dispose)))
 
-; TODO font either too big or too small ;;;;
+; TODO font either too big or too small
 ; https://stackoverflow.com/questions/45227586/libgdx-changing-vis-ui-font-using-scene-2d-doesnt-work-is-there-an-alternati
 ; 1. copy skin files into my folder:
 ; https://github.com/kotcrab/vis-ui/tree/master/ui/src/main/resources/com/kotcrab/vis/ui/skin

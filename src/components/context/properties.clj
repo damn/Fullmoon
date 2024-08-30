@@ -108,7 +108,7 @@
 
   (update! [{{:keys [db types]} :context/properties :as ctx}
             {:keys [property/id] :as property}]
-    {:pre [(contains? property :property/id) ; <=  part of validate - but misc does not have property/id -> add !
+    {:pre [(contains? property :property/id)
            (contains? db id)]}
     (validate property types)
     ;(binding [*print-level* nil] (clojure.pprint/pprint property))
