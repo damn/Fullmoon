@@ -365,9 +365,7 @@
 (def ^:private uf-caves-scale 4)
 
 (defn uf-caves [ctx {:keys [world/map-size world/spawn-rate]}]
-  (let [map-size 30
-        spawn-rate 0.02
-        {:keys [start grid]} (->cave-grid :size map-size)
+  (let [{:keys [start grid]} (->cave-grid :size map-size)
         ;_ (println "Start: " start)
         ;_ (printgrid grid)
         ;_ (println)

@@ -4446,6 +4446,15 @@
    {:entity-effects {:effect.entity/melee-damage true},
     :maxrange 0.5}},
   :skill/start-action-sound "sounds/slash.wav"}
- {:property/id :worlds/vampire, :world/type :world.type/tiled-map}
- {:property/id :worlds/uf-caves, :world/type :world.type/uf-caves}
- {:property/id :worlds/modules, :world/type :world.type/modules})
+ {:property/id :worlds/vampire,
+  :world/generator :world.generator/tiled-map,
+  :world/tiled-map "maps/vampire.tmx"}
+ {:property/id :worlds/uf-caves,
+  :world/generator :world.generator/uf-caves,
+  :world/map-size 1000,
+  :world/spawn-rate 0.01}
+ {:property/id :worlds/modules,
+  :world/generator :world.generator/modules,
+  :world/map-size 50,
+  :world/max-area-level 6,
+  :world/spawn-rate 0.1})
