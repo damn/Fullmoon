@@ -86,7 +86,7 @@
     (= (->modified-value (->entity {:modifier/damage-deal {:op/val-inc [30]}
                                     :stats/fooz-barz {:op/babu [1 2 3]}})
                          :modifier/damage-deal
-                         [5 10] )
+                         [5 10])
        [35 35])
     (= (->modified-value (core.entity/map->Entity {})
                          :modifier/damage-deal

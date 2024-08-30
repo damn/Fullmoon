@@ -334,13 +334,13 @@
        [[:tx/add-text-effect target "[WHITE]ARMOR"]] ; TODO !_!_!_!_!_!
 
        :else
-       (let [_ (println "Source unmodified damage:" damage)
+       (let [;_ (println "Source unmodified damage:" damage)
              {:keys [damage/min-max]} (->effective-damage damage source*)
-             _ (println "\nSource modified: min-max:" min-max)
+             ;_ (println "\nSource modified: min-max:" min-max)
              min-max (entity/->modified-value target* :modifier/damage-receive min-max)
-             _ (println "effective min-max: " min-max)
+             ;_ (println "effective min-max: " min-max)
              dmg-amount (random/rand-int-between min-max)
-             _ (println "dmg-amount: " dmg-amount)
+             ;_ (println "dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx/audiovisual (:position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
