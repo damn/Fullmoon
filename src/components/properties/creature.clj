@@ -4,16 +4,8 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
 
-; * editable false body
-; * stats whats optional/not ... and assert
-; => creatures can be made
-
 ; player doesn;t need aggro-range/reaction-time
-
-
-; TODO assert min body size from core.entity
-; TODO make px
-
+; assert min body size from core.entity
 (defcomponent :body/width   {:data :pos     :optional? false})
 (defcomponent :body/height  {:data :pos     :optional? false})
 (defcomponent :body/flying? {:data :boolean :optional? false})
