@@ -140,9 +140,11 @@ direction keys: move")
     (when show-grid-lines
       (g/draw-grid g 0 0 (tiled/width  tiled-map) (tiled/height tiled-map) 1 1 [1 1 1 0.5]))))
 
+(def ^:private world-id :worlds/modules)
+
 (defn- generate [context properties]
   (let [;{:keys [tiled-map area-level-grid start-position]} (module-gen/generate context properties)
-        {:keys [tiled-map start-position]} (ctx/->world context :worlds/vampire)
+        {:keys [tiled-map start-position]} (ctx/->world context world-id)
         atom-data (current-data context)]
     (dispose (:tiled-map @atom-data))
     (swap! atom-data assoc
@@ -199,5 +201,5 @@ direction keys: move")
                   (atom {:tiled-map (->tiled-map ctx module-gen/modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
-     :stage (ctx/->stage ctx [(->generate-map-window ctx :worlds/vampire)
+     :stage (ctx/->stage ctx [(->generate-map-window ctx world-id)
                               (->info-window ctx)])}))
