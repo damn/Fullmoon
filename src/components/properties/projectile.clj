@@ -70,7 +70,7 @@
   {:data [:qualified-keyword {:namespace :projectiles}]}
   (component/info-text [[_ projectile-id] ctx]
     (components/info-text (:entity-effects (ctx/get-property ctx projectile-id))
-                          ctx ))
+                          ctx))
 
   ; TODO for npcs need target -- anyway only with direction
   (component/applicable? [_ {:keys [effect/direction]}]

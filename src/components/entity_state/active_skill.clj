@@ -72,7 +72,7 @@
   (let [[width height] (:world-unit-dimensions icon)
         _ (assert (= width height))
         radius (/ (float width) 2)
-        y (+ (float y) (float (:half-height entity*)))
+        y (+ (float y) (float (:half-height entity*)) (float 0.15))
         center [x (+ y radius)]]
     (g/draw-filled-circle g center radius [1 1 1 0.125])
     (g/draw-sector g center radius

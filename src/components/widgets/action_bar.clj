@@ -24,7 +24,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (->image-button ctx image identity {:dimensions [48 48]})]
       (actor/set-id! button id)
-      (add-tooltip! button #(components/info-text skill %))
+      (add-tooltip! button #(components/info-text skill (assoc % :effect/source (ctx/player-entity %))))
       (add-actor! horizontal-group button)
       (add! button-group button)
       ctx)))

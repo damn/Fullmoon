@@ -5,6 +5,7 @@
             [core.context :as ctx]))
 
 ; player doesn;t need aggro-range/reaction-time
+; stats armor-pierce wrong place
 ; assert min body size from core.entity
 (defcomponent :body/width   {:data :pos     :optional? false})
 (defcomponent :body/height  {:data :pos     :optional? false})

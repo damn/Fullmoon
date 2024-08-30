@@ -1,4 +1,13 @@
 
+; Also weird :stats/foo and :modifier/bla
+; or effect/blub
+; but then entity/component
+; and not entities/componnet
+when to use plural , singular ?
+effects/effect?
+ir its ONE effect with multiple effect components
+one entity/modifier??
+
 :destroy-audiovisual
 => should be entity/destroy-audiovisual
 => entity schema would be great ....

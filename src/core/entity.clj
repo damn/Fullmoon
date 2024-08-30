@@ -102,3 +102,6 @@
 
 (defprotocol Stats
   (stat [_ stat] "Calculating value of the stat w. modifiers"))
+
+(defprotocol Modifiers
+  (->modified-value [_ modifier-k base-value]))

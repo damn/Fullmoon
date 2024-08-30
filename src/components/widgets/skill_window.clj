@@ -22,6 +22,6 @@
                                                        (fn [ctx]
                                                          (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]
                       (do
-                       (add-tooltip! button #(components/info-text (get-property % id) %))
+                       (add-tooltip! button #(components/info-text (get-property % id) %)) ; TODO no player modifiers applied (see actionbar)
                        button))]
              :pack? true}))

@@ -2,114 +2,13 @@
   (:require [clojure.string :as str]
             [malli.core :as m]
             [gdx.graphics.color :as color]
-            [utils.core :as utils :refer [k->pretty-name readable-number]]
+            [utils.core :refer [k->pretty-name readable-number]]
             [utils.random :as random]
             [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.operation :as operation]
-            [core.modifiers :as modifiers]))
-
-(defn- conj-value [value]
-  (fn [values]
-    (conj values value)))
-
-(defn- remove-value [value]
-  (fn [values]
-    {:post [(= (count %) (dec (count values)))]}
-    (utils/remove-one values value)))
-
-(defn- txs-update-modifiers [entity modifiers f]
-  (for [[modifier-k operations] modifiers
-        [operation-k value] operations]
-    [:tx/update-in entity [:entity/modifiers modifier-k operation-k] (f value)]))
-
-; TODO or each stat is just a component
-; with * base-value & * modifiers
-; so just stat/modifier/operation
-; and no modifier-k/effect-k ?
-
-(comment
- (= (txs-update-modifiers :entity
-                         {:modifier/hp {:op/max-inc 5
-                                        :op/max-mult 0.3}
-                          :modifier/movement-speed {:op/mult 0.1}}
-                         (fn [value] :fn))
-    [[:tx/update-in :entity [:entity/modifiers :modifier/hp :op/max-inc] :fn]
-     [:tx/update-in :entity [:entity/modifiers :modifier/hp :op/max-mult] :fn]
-     [:tx/update-in :entity [:entity/modifiers :modifier/movement-speed :op/mult] :fn]])
- )
-
-(defcomponent :tx/apply-modifiers
-  (component/do! [[_ entity modifiers] _ctx]
-    (txs-update-modifiers entity modifiers conj-value)))
-
-(defcomponent :tx/reverse-modifiers
-  (component/do! [[_ entity modifiers] _ctx]
-    (txs-update-modifiers entity modifiers remove-value)))
-
-; DRY ->effective-value (summing)
-; also: sort-by op/order @ modifier/info-text itself (so player will see applied order)
-(defn- sum-operation-values [modifiers]
-  (for [[modifier-k operations] modifiers
-        :let [operations (for [[operation-k values] operations
-                               :let [value (apply + values)]
-                               :when (not (zero? value))]
-                           [operation-k value])]
-        :when (seq operations)]
-    [modifier-k operations]))
-
-(defcomponent :entity/modifiers
-  {:data [:components-ns :modifier]
-   :optional? true
-   :let modifiers}
-  (component/create [_ _ctx]
-    (into {} (for [[modifier-k operations] modifiers]
-               [modifier-k (into {} (for [[operation-k value] operations]
-                                      [operation-k [value]]))])))
-
-  (component/info-text [_ _ctx]
-    (let [modifiers (sum-operation-values modifiers)]
-      (when (seq modifiers)
-        (modifiers/info-text modifiers)))))
-
-(defn- ->effective-value [base-value modifier-k modifiers]
-  {:pre [(= "modifier" (namespace modifier-k))]}
-  (->> modifiers
-       modifier-k
-       (sort-by component/order)
-       (reduce (fn [base-value [operation-k values]]
-                 (component/apply [operation-k (apply + values)] base-value))
-               base-value)))
-
-(comment
- (and
-  (= (->effective-value [5 10]
-                        :modifier/damage-deal
-                        {:modifier/damage-deal {:op/val-inc [30]
-                                                :op/val-mult [0.5]}})
-     [52 52])
-  (= (->effective-value [5 10]
-                        :modifier/damage-deal
-                        {:modifier/damage-deal {:op/val-inc [30]}
-                         :stats/fooz-barz {:op/babu [1 2 3]}})
-     [35 35])
-  (= (->effective-value [5 10]
-                        :modifier/damage-deal
-                        {})
-     [5 10])
-  (= (->effective-value [100 100]
-                        :modifier/hp
-                        {:modifier/hp {:op/max-inc [10 1]
-                                       :op/max-mult [0.5]}})
-     [100 166])
-  (= (->effective-value 3
-                        :modifier/movement-speed
-                        {:modifier/movement-speed {:op/inc [2]
-                                                   :op/mult [0.1 0.2]}})
-     6.5))
- )
+            [core.operation :as operation]))
 
 (defn- defmodifier [k operations]
   (defcomponent* k {:data [:components operations]}))
@@ -255,15 +154,11 @@
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
-; separate fn because cannot use entity/stat @ entity-info-widget because select-keys loses map record type
-(defn- ->stat-effective-value [entity* stat-k]
-  (when-let [base-value (stat-k (:entity/stats entity*))]
-    (->effective-value base-value (stat-k->modifier-k stat-k) (:entity/modifiers entity*))))
-
 (extend-type core.entity.Entity
   entity/Stats
   (stat [entity* stat-k]
-    (->stat-effective-value entity* stat-k )))
+    (when-let [base-value (stat-k (:entity/stats entity*))]
+      (entity/->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
 
 ; TODO remove vector shaboink -> gdx.graphics.color/->color use.
 (def ^:private hpbar-colors
@@ -298,7 +193,7 @@
   (defn- stats-info-texts [entity* stats]
     (str/join "\n"
               (for [stat-k stats-order
-                    :let [value (->stat-effective-value entity* stat-k)]
+                    :let [value (entity/stat entity* stat-k)]
                     :when value]
                 (str (k->pretty-name stat-k) ": " value)))))
 
@@ -384,7 +279,7 @@
   (< (rand) (effective-armor-save source* target*)))
 
 (defn- ->effective-damage [damage source*]
-  (update damage :damage/min-max ->effective-value :modifier/damage-deal (:entity/modifiers source*)))
+  (update damage :damage/min-max #(entity/->modified-value source* :modifier/damage-deal %)))
 
 (comment
  (let [->source (fn [mods] {:entity/modifiers mods})]
@@ -439,12 +334,13 @@
        [[:tx/add-text-effect target "[WHITE]ARMOR"]] ; TODO !_!_!_!_!_!
 
        :else
-       (let [{:keys [damage/min-max]} (->effective-damage damage source*)
-             ;_ (println "\nmin-max:" min-max)
-             min-max (->effective-value min-max :modifier/damage-receive (:entity/modifiers target*))
-             ;_ (println "effective min-max: " min-max)
+       (let [_ (println "Source unmodified damage:" damage)
+             {:keys [damage/min-max]} (->effective-damage damage source*)
+             _ (println "\nSource modified: min-max:" min-max)
+             min-max (entity/->modified-value target* :modifier/damage-receive min-max)
+             _ (println "effective min-max: " min-max)
              dmg-amount (random/rand-int-between min-max)
-             ;_ (println "dmg-amount: " dmg-amount)
+             _ (println "dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx/audiovisual (:position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
