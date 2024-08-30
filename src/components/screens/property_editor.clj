@@ -9,7 +9,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
             [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties]]
-            [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-listener! add-tooltip! find-ancestor-window pack-ancestor-window!]]
+            [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
             [core.scene2d.ui.text-field :as text-field]
             [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
@@ -376,46 +376,58 @@
         entities (all-properties ctx property-type)
         entities (if sort-by-fn
                    (sort-by sort-by-fn entities)
-                   entities)
-        number-columns columns]
+                   entities)]
     (->table ctx
-             {:cell-defaults {:pad 2}
-              :rows (concat [[{:actor (->label ctx title) :colspan number-columns}]]
-                            (for [entities (partition-all number-columns entities)] ; TODO can just do 1 for?
-                              (for [{:keys [property/id] :as props} entities
-                                    :let [on-clicked #(clicked-id-fn % id)
-                                          button (if-let [image (property->image props)]
-                                                   (->image-button ctx image on-clicked {:scale scale})
-                                                   (->text-button ctx (name id) on-clicked))
-                                          top-widget (->label ctx (or (and extra-info-text
-                                                                           (extra-info-text props))
-                                                                      ""))
-                                          stack (->stack ctx [button top-widget])]]
-                                (do
-                                 (add-tooltip! button #(components/info-text props %))
-                                 (set-touchable! top-widget :disabled)
-                                 stack))))})))
+             {:cell-defaults {:pad 5}
+              :rows (for [entities (partition-all columns entities)] ; TODO can just do 1 for?
+                      (for [{:keys [property/id] :as props} entities
+                            :let [on-clicked #(clicked-id-fn % id)
+                                  button (if-let [image (property->image props)]
+                                           (->image-button ctx image on-clicked {:scale scale})
+                                           (->text-button ctx (name id) on-clicked))
+                                  top-widget (->label ctx (or (and extra-info-text
+                                                                   (extra-info-text props))
+                                                              ""))
+                                  stack (->stack ctx [button top-widget])]]
+                        (do
+                         (add-tooltip! button #(components/info-text props %))
+                         (set-touchable! top-widget :disabled)
+                         stack)))})))
 
-(defn- set-second-widget! [context widget]
-  (let [table (:main-table (get-stage context))]
-    (set-actor! (second (cells table)) widget)
-    (pack! table)))
+(import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
+(import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)
+(import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter)
+(import 'com.kotcrab.vis.ui.widget.VisTable)
 
-(defn- ->left-widget [context]
-  (->table context {:cell-defaults {:pad 5}
-                    :rows (concat
-                           (for [property-type (ctx/property-types context)]
-                             [(->text-button context
-                                             (:title (core.context/overview context property-type))
-                                             #(do (set-second-widget! % (->overview-table % property-type open-property-editor-window!))
-                                                  %))])
-                           [[(->text-button context "Back to Main Menu" #(ctx/change-screen % :screens/main-menu))]])}))
+(defn- ->tab [{:keys [title content savable?  closable-by-user?]}]
+  (proxy [Tab] [(boolean savable?) (boolean closable-by-user?)]
+    (getTabTitle [] title)
+    (getContentTable [] content)))
+
+(defn- ->tabbed-pane [ctx tabs-data]
+  (let [main-table (ctx/->table ctx {:fill-parent? true})
+        container (VisTable.)
+        tabbed-pane (TabbedPane.)]
+    (.addListener tabbed-pane
+                  (proxy [TabbedPaneAdapter] []
+                    (switchedTab [tab]
+                      (.clearChildren container)
+                      (.fill (.expand (.add container (.getContentTable tab)))))))
+    (.fillX (.expandX (.add main-table (.getTable tabbed-pane))))
+    (.row main-table)
+    (.fill (.expand (.add main-table container)))
+    (doseq [tab-data tabs-data]
+      (.add tabbed-pane (->tab tab-data)))
+    main-table))
+
+(defn- ->tabs-data [ctx]
+  (for [property-type (ctx/property-types ctx)]
+    {:title (:title (core.context/overview ctx property-type))
+     :content (->overview-table ctx property-type open-property-editor-window!)}))
 
 (derive :screens/property-editor :screens/stage-screen)
 (defcomponent :screens/property-editor
   (component/create [_ ctx]
     {:stage (ctx/->stage ctx
                          [(ctx/->background-image ctx)
-                          (->table ctx {:id :main-table
-                                        :rows [[(->left-widget ctx) nil]]
-                                        :fill-parent? true})])}))
+                          (->tabbed-pane ctx (->tabs-data ctx))])}))
