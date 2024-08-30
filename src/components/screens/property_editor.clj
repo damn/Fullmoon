@@ -8,6 +8,7 @@
             [utils.core :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
+            core.property
             [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties]]
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
@@ -16,10 +17,6 @@
             [core.scene2d.ui.cell :refer [set-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
-
-(defn- property->image [{:keys [entity/image entity/animation]}]
-  (or image
-      (first (:frames animation))))
 
 (defn- ck->enum-items           [k] (:items                (component/k->data k)))
 (defn- ck->components           [k] (:components           (component/k->data k)))
@@ -243,7 +240,7 @@
                   (let [props (get-property ctx prop-id)
                         ; x2 dimensions?
                         image-widget (->image-widget ctx ; image-button/link?
-                                                     (property->image props)
+                                                     (core.property/property->image props)
                                                      {:id (:property/id props)})]
                     (add-tooltip! image-widget #(components/info-text props %))
                     image-widget))
@@ -382,7 +379,7 @@
               :rows (for [entities (partition-all columns entities)] ; TODO can just do 1 for?
                       (for [{:keys [property/id] :as props} entities
                             :let [on-clicked #(clicked-id-fn % id)
-                                  button (if-let [image (property->image props)]
+                                  button (if-let [image (core.property/property->image props)]
                                            (->image-button ctx image on-clicked {:scale scale})
                                            (->text-button ctx (name id) on-clicked))
                                   top-widget (->label ctx (or (and extra-info-text

@@ -2,8 +2,8 @@
   (:require [utils.core :refer [assoc-ks]]
             [data.grid2d :as grid]
             [core.maps.tiled :as tiled]
-            [core.context :as ctx :refer [->tiled-map]]
-            [core.context :refer [all-properties]]
+            [core.context :as ctx :refer [->tiled-map all-properties]]
+            core.property
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer! grid->tiled-map]]
             [mapgen.transitions :as transitions]
@@ -201,9 +201,10 @@
 
 (def ^:private creature->tile
   (memoize
-   (fn [{:keys [property/id entity/image]}]
-     (assert (and id image))
-     (let [tile (->static-tiled-map-tile (:texture-region image))]
+   (fn [{:keys [property/id] :as prop}]
+     (assert (and id))
+     (let [image (core.property/property->image prop)
+           tile (->static-tiled-map-tile (:texture-region image))]
        (put! (tiled/properties tile) "id" id)
        tile))))
 
