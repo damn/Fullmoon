@@ -45,12 +45,11 @@
     {:id-namespace "creatures"
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               (apply vector
-                     :entity/image
                      :entity/body
                      entity-component-attributes)]
      :overview {:title "Creatures"
                 :columns 15
-                :image/dimensions [60 60]
+                :image/scale 1.5
                 :sort-by-fn #(vector (:creature/level %)
                                      (name (:creature/species %))
                                      (name (:property/id %)))

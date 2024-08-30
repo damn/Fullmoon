@@ -142,8 +142,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -166,8 +164,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 29/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -194,8 +190,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 37/48, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -218,8 +212,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -242,8 +234,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 31/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -266,8 +256,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -291,8 +279,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 17/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -315,8 +301,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 13/16, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -339,8 +323,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 9/16, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -363,8 +345,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -387,8 +367,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 37/48, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -411,8 +389,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 19/24, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -435,8 +411,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/48, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -459,8 +433,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 240 48 48]},
   :entity/inventory #{},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
@@ -484,8 +456,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -508,8 +478,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -532,8 +500,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -556,8 +522,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 9/16, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -580,8 +544,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -604,8 +566,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/12, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -628,8 +588,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -652,8 +610,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -676,8 +632,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 29/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -700,8 +654,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -723,8 +675,6 @@
     {:file "images/animations/spirit-greater-4.png"}),
    :looping? true},
   :entity/body {:body/flying? true, :body/height 5/6, :body/width 3/4},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -747,8 +697,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -775,8 +723,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -799,8 +745,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 19/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -823,8 +767,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -847,8 +789,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -871,8 +811,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 13/24, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -895,8 +833,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -919,8 +855,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 7/12, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -943,8 +877,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 35/48, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -966,8 +898,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 3/4, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -990,8 +920,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1013,8 +941,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1037,8 +963,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 29/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1060,8 +984,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/8, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1084,8 +1006,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 35/48, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 3,
@@ -1107,8 +1027,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 19/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1131,8 +1049,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 3/4, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1155,8 +1071,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 0 48 48]},
   :entity/skills #{:skills/bow :skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1179,8 +1093,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 41/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1203,8 +1115,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 17/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1227,8 +1137,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1251,8 +1159,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1275,8 +1181,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/6, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1298,8 +1202,6 @@
     {:file "images/animations/wisp-ancient-4.png"}),
    :looping? true},
   :entity/body {:body/flying? true, :body/height 3/4, :body/width 5/8},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1322,8 +1224,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1346,8 +1246,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1370,8 +1268,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 13/24, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1394,8 +1290,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 13/16, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1418,8 +1312,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 48 48 48]},
   :entity/skills #{:skills/spawn :skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1442,8 +1334,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 7/12, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1466,8 +1356,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 19/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1490,8 +1378,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 31/48, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1514,8 +1400,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1538,8 +1422,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 9/16, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1562,8 +1444,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1586,8 +1466,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1610,8 +1488,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/6, :body/width 23/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1634,8 +1510,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 23/48, :body/width 31/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1658,8 +1532,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1682,8 +1554,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1706,8 +1576,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/6, :body/width 23/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1730,8 +1598,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/48, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1754,8 +1620,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1778,8 +1642,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 0 48 48]},
   :entity/skills
   #{:skills/meditation :skills/projectile :skills/melee-attack},
   :entity/stats
@@ -1803,8 +1665,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1827,8 +1687,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/6, :body/width 23/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1851,8 +1709,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1875,8 +1731,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1899,8 +1753,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 31/48, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1923,8 +1775,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 35/48, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1946,8 +1796,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1970,8 +1818,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/6, :body/width 23/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -1994,8 +1840,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 31/48, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2017,8 +1861,6 @@
     {:file "images/animations/spirit-4.png"}),
    :looping? true},
   :entity/body {:body/flying? true, :body/height 3/4, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2041,8 +1883,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2065,8 +1905,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 37/48, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2089,8 +1927,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2112,7 +1948,6 @@
     {:file "images/animations/bone-dragon-4.png"}),
    :looping? true},
   :entity/body {:body/flying? false, :body/height 1, :body/width 1},
-  :entity/image {:file "images/animations/bone-dragon-1.png"},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2135,8 +1970,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2159,8 +1992,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2183,8 +2014,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 41/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2206,8 +2035,6 @@
     {:file "images/animations/wisp-4.png"}),
    :looping? true},
   :entity/body {:body/flying? true, :body/height 5/8, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2230,8 +2057,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2254,8 +2079,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2278,8 +2101,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2302,8 +2123,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/12, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2326,8 +2145,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [336 240 48 48]},
   :entity/inventory
   #{:items/cloak-royal
     :items/shield-vorpal-buckler
@@ -2369,8 +2186,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 31/48, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2393,8 +2208,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 35/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2417,8 +2230,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 17/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2441,8 +2252,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2465,8 +2274,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2489,8 +2296,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 31/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2513,8 +2318,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2537,8 +2340,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 7/12, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [96 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2561,8 +2362,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2585,8 +2384,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/8, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2609,8 +2406,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 17/24, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2633,8 +2428,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 37/48, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2657,8 +2450,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/12, :body/width 1/2},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 480 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2680,8 +2471,6 @@
     {:file "images/animations/bat-giant-4.png"}),
    :looping? true},
   :entity/body {:body/flying? true, :body/height 3/4, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2704,8 +2493,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/12, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2728,8 +2515,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 35/48, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 432 48 48]},
   :entity/modifiers {:modifier/damage-receive {:op/max-mult -0.9}},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
@@ -2752,8 +2537,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 48 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2776,8 +2559,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/8, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2800,8 +2581,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 3/4, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 336 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2824,8 +2603,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 31/48, :body/width 13/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 192 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2848,8 +2625,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 25/48, :body/width 31/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 240 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2876,8 +2651,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 5/8, :body/width 25/48},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2900,8 +2673,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2924,8 +2695,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 19/24, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 288 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2948,8 +2717,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/8, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [0 144 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2972,8 +2739,6 @@
    :looping? true},
   :entity/body
   {:body/flying? true, :body/height 13/16, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -2996,8 +2761,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 0 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3020,8 +2783,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 11/16, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3044,8 +2805,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 2/3, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [144 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3068,8 +2827,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 19/24, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [432 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3092,8 +2849,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 17/24, :body/width 5/6},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [288 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3116,8 +2871,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 5/8, :body/width 2/3},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 576 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3140,8 +2893,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 17/24, :body/width 11/16},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [192 96 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3164,8 +2915,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 1/2, :body/width 7/12},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [240 528 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3188,8 +2937,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 7/12, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [48 384 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
@@ -3212,8 +2959,6 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 3/4, :body/width 17/24},
-  :entity/image
-  {:file "images/creatures.png", :sub-image-bounds [384 432 48 48]},
   :entity/skills #{:skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,

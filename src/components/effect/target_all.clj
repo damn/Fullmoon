@@ -14,6 +14,8 @@
        (filter #(ctx/line-of-sight? ctx (ctx/player-entity* ctx) @%))
        (remove #(:entity/player? @%))))
 
+; TODO targets projectiles with -50% hp !!
+
 (comment
  ; TODO showing one a bit further up
  ; maybe world view port is cut

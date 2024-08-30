@@ -6,6 +6,8 @@
             [core.scene2d.group :refer [clear-children! add-actor!]]
             [core.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
 
+(def ^:private image-scale 2)
+
 (defn ->build [ctx]
   (let [group (ctx/->horizontal-group ctx {:pad 2 :space 2})]
     (actor/set-id! group ::action-bar)
@@ -22,7 +24,7 @@
 (defcomponent :tx.context.action-bar/add-skill
   (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-          button (->image-button ctx image identity {:dimensions [48 48]})]
+          button (->image-button ctx image identity {:scale image-scale})]
       (actor/set-id! button id)
       (add-tooltip! button #(components/info-text skill (assoc % :effect/source (ctx/player-entity %))))
       (add-actor! horizontal-group button)

@@ -10,7 +10,7 @@
                :entity/animation]]
      :overview {:title "Audiovisuals"
                 :columns 10
-                :image/dimensions [96 96]}}))
+                :image/scale 2}}))
 
 (defcomponent :tx/audiovisual
   (component/do! [[_ position id] ctx]

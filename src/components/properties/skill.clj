@@ -48,4 +48,4 @@
                :skill/action-time-modifier-key]]
      :overview {:title "Skills"
                 :columns 16
-                :image/dimensions [70 70]}}))
+                :image/scale 2}}))

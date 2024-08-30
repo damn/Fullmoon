@@ -24,7 +24,7 @@
                :item/modifiers]]
      :overview {:title "Items"
                 :columns 17
-                :image/dimensions [60 60]
+                :image/scale 1
                 :sort-by-fn #(vector (if-let [slot (:item/slot %)]
                                        (name slot)
                                        "")

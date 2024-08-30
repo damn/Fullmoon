@@ -237,11 +237,12 @@
   (->image-button
     ([context image on-clicked]
      (core.context/->image-button context image on-clicked {}))
-    ([context image on-clicked {:keys [dimensions]}]
+    ([context image on-clicked {:keys [scale]}]
      (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture-region image))
            button (VisImageButton. drawable)]
-       (when-let [[w h] dimensions]
-         (.setMinSize drawable (float w) (float h)))
+       (when scale
+         (let [[w h] (:pixel-dimensions image)]
+           (.setMinSize drawable (float (* scale w)) (float (* scale h)))))
        (.addListener button (->change-listener context on-clicked))
        button)))
 

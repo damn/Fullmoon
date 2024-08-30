@@ -70,7 +70,7 @@
   (->check-box [_ text on-clicked checked?] "on-clicked is a fn of one arg, taking the current isChecked state")
   (->select-box [_ {:keys [items selected]}])
   (->image-button [_ image on-clicked]
-                  [_ image on-clicked {:keys [dimensions]}])
+                  [_ image on-clicked {:keys [scale]}])
   (->table [_ opts])
   (->window [_ {:keys [title modal? close-button? center?] :as opts}])
   (->label [_ text])

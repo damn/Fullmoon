@@ -27,7 +27,7 @@
                :entity-effects]]
      :overview {:title "Projectiles"
                 :columns 16
-                :image/dimensions [48 48]}}))
+                :image/scale 2}}))
 
 (defn- projectile-size [projectile-property]
   (first (:world-unit-dimensions (:entity/image projectile-property))))

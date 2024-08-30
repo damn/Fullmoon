@@ -372,7 +372,7 @@
                 sort-by-fn
                 extra-info-text
                 columns
-                image/dimensions]} (core.context/overview ctx property-type)
+                image/scale]} (core.context/overview ctx property-type)
         entities (all-properties ctx property-type)
         entities (if sort-by-fn
                    (sort-by sort-by-fn entities)
@@ -385,10 +385,7 @@
                               (for [{:keys [property/id] :as props} entities
                                     :let [on-clicked #(clicked-id-fn % id)
                                           button (if-let [image (property->image props)]
-                                                   (->image-button ctx
-                                                                   image
-                                                                   on-clicked
-                                                                   {:dimensions dimensions})
+                                                   (->image-button ctx image on-clicked {:scale scale})
                                                    (->text-button ctx (name id) on-clicked))
                                           top-widget (->label ctx (or (and extra-info-text
                                                                            (extra-info-text props))

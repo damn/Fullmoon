@@ -20,7 +20,7 @@
 ; so wasting space ...
 ; can maybe make a smaller textureatlas or something...
 
-(def ^:private cell-size 96)
+(def ^:private cell-size 48)
 (def ^:private droppable-color    [0   0.6 0 0.8])
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
