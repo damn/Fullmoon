@@ -35,8 +35,12 @@
   (->> components
        sort-by-order
        (keep (fn [{v 1 :as component}]
-               (str (component/info-text component
-                                         (assoc ctx :info-text/entity* components))
+               (str (try (component/info-text component (assoc ctx :info-text/entity* components))
+                         (catch Throwable t
+                           ; calling from property-editor where entity components
+                           ; have a different data schema than after component/create
+                           ; and info-text might break
+                           (pr-str component)))
                     (when (map? v)
                       (str "\n" (info-text v ctx))))))
        (str/join "\n")

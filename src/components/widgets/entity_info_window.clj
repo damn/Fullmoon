@@ -7,7 +7,8 @@
 
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state
-                                :entity/faction])
+                                :entity/faction
+                                :active-skill])
 
 (defn create [context]
   (let [label (->label context "")
