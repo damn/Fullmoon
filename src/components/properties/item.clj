@@ -23,8 +23,8 @@
                :item/slot
                :item/modifiers]]
      :overview {:title "Items"
-                :columns 17
-                :image/scale 1
+                :columns 20
+                :image/scale 1.1
                 :sort-by-fn #(vector (if-let [slot (:item/slot %)]
                                        (name slot)
                                        "")
