@@ -416,6 +416,8 @@
     (.fillX (.expandX (.add main-table (.getTable tabbed-pane))))
     (.row main-table)
     (.fill (.expand (.add main-table container)))
+    (.row main-table)
+    (.left (.add main-table (ctx/->label ctx "[LIGHT_GRAY]Left-Shift: Back to Main Menu[]")))
     (doseq [tab-data tabs-data]
       (.add tabbed-pane (->tab tab-data)))
     main-table))
@@ -432,9 +434,7 @@
   (component/create [_ {:keys [context/state] :as ctx}]
     {:stage (let [stage (ctx/->stage ctx
                          [(ctx/->background-image ctx)
-                          (->tabbed-pane ctx (conj (->tabs-data ctx)
-                                                   {:title "Left-Shift: Back to Main Menu"
-                                                    :content nil}))])]
+                          (->tabbed-pane ctx (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
                                       (if (= keycode gdx.input.keys/shift-left)
