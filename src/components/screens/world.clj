@@ -7,7 +7,8 @@
             [core.context :as ctx]
             [components.context.world :as world]
             (components.world [debug-render :as debug-render]
-                              [widgets :as widgets])))
+                              [widgets :as widgets]
+                              render)))
 
 (defn- render-world! [ctx]
   (let [player-entity* (ctx/player-entity* ctx)]

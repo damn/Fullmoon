@@ -1,16 +1,14 @@
 (ns components.context.vis-ui
-  (:require [gdx.input :as input]
-            [gdx.scene2d.stage :as stage]
+  (:require [core.component :refer [defcomponent] :as component]
             core.image
-            [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
+            core.context
             [core.scene2d.actor :as actor]
             [core.scene2d.group :as group]
             [core.scene2d.ui.table :as table]
             [core.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
-           (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
+           (com.badlogic.gdx.scenes.scene2d Actor Group)
            (com.badlogic.gdx.scenes.scene2d.ui Image Button Label Table WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
@@ -57,63 +55,6 @@
 
   (component/destroy [_]
     (VisUI/dispose)))
-
-; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
-(defcomponent :screens/stage-screen
-  {:let {:keys [stage sub-screen]}}
-  (component/enter [_ context]
-    (input/set-processor! stage)
-    (component/enter sub-screen context))
-
-  (component/exit [_ context]
-    (input/set-processor! nil)
-    (component/exit sub-screen context))
-
-  (component/render! [_ app-state]
-    ; stage act first so user-screen calls change-screen -> is the end of frame
-    ; otherwise would need render-after-stage
-    ; or on change-screen the stage of the current screen would still .act
-    (stage/act! stage)
-    (swap! app-state #(component/render-ctx sub-screen %))
-    (stage/draw stage)))
-
-(defn- find-actor-with-id [^Group group id]
-  (let [actors (.getChildren group)
-        ids (keep actor/id actors)]
-    (assert (or (empty? ids)
-                (apply distinct? ids)) ; TODO could check @ add
-            (str "Actor ids are not distinct: " (vec ids)))
-    (first (filter #(= id (actor/id %))
-                   actors))))
-
-(defn- ->stage [viewport batch]
-  (proxy [Stage clojure.lang.ILookup] [viewport batch]
-    (valAt
-      ([id]
-       (find-actor-with-id (stage/root this) id))
-      ([id not-found]
-       (or (find-actor-with-id (stage/root this) id)
-           not-found)))))
-
-(extend-type core.context.Context
-  core.context/Stage
-  (->stage [{{:keys [gui-view batch]} :context/graphics} actors]
-    (let [stage (->stage (:viewport gui-view) batch)]
-      (stage/add-actors! stage actors)
-      stage))
-
-  (get-stage [context]
-    (:stage ((ctx/current-screen context) 1)))
-
-  (mouse-on-stage-actor? [context]
-    (stage/hit (ctx/get-stage context)
-               (ctx/gui-mouse-position context)
-               :touchable? true))
-
-  (add-to-stage! [ctx actor]
-    (-> ctx
-        ctx/get-stage
-        (stage/add-actor! actor))))
 
 (defn- ->change-listener [{:keys [context/state]} on-clicked]
   (proxy [ChangeListener] []
@@ -168,16 +109,6 @@
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defmacro proxy-ILookup
-  "For actors inheriting from Group."
-  [class args]
-  `(proxy [~class clojure.lang.ILookup] ~args
-     (valAt
-       ([id#]
-        (find-actor-with-id ~'this id#))
-       ([id# not-found#]
-        (or (find-actor-with-id ~'this id#) not-found#)))))
-
 (extend-type core.context.Context
   core.context/Widgets
   (->actor [{:keys [context/state]} {:keys [draw act]}]
@@ -192,18 +123,18 @@
           (act @state)))))
 
   (->group [_ {:keys [actors] :as opts}]
-    (let [group (proxy-ILookup Group [])]
+    (let [group (group/proxy-ILookup Group [])]
       (run! #(group/add-actor! group %) actors)
       (set-opts group opts)))
 
   (->horizontal-group [_ {:keys [space pad]}]
-    (let [group (proxy-ILookup HorizontalGroup [])]
+    (let [group (group/proxy-ILookup HorizontalGroup [])]
       (when space (.space group (float space)))
       (when pad   (.pad   group (float pad)))
       group))
 
   (->vertical-group [_ actors]
-    (let [group (proxy-ILookup VerticalGroup [])]
+    (let [group (group/proxy-ILookup VerticalGroup [])]
       (run! #(group/add-actor! group %) actors)
       group))
 
@@ -247,11 +178,11 @@
        button)))
 
   (->table ^Table [_ opts]
-    (-> (proxy-ILookup VisTable [])
+    (-> (group/proxy-ILookup VisTable [])
         (set-opts opts)))
 
   (->window [_ {:keys [title modal? close-button? center? close-on-escape?] :as opts}]
-    (-> (let [window (doto (proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
+    (-> (let [window (doto (group/proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
                        (.setModal (boolean modal?)))]
           (when close-button?    (.addCloseButton window))
           (when center?          (.centerWindow   window))
@@ -274,7 +205,7 @@
         (set-actor-opts opts)))
 
   (->stack [_ actors]
-    (proxy-ILookup Stack [(into-array Actor actors)]))
+    (group/proxy-ILookup Stack [(into-array Actor actors)]))
 
   ; TODO widget also make, for fill parent
   (->image-widget [_ object {:keys [scaling align fill-parent?] :as opts}]
