@@ -12,23 +12,17 @@
         (ctx/change-screen :screens/world)
         (ctx/start-new-game (ctx/->world ctx world-id)))))
 
-(comment
- (ctx/all-properties context :properties/world)
-
- )
-
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ctx/->table
    ctx
-   {:rows (remove nil?
-                  [[(ctx/->text-button ctx "Start vampire.tmx" (start-game! :worlds/vampire))]
-                   [(ctx/->text-button ctx "start-uf-caves!"   (start-game! :worlds/uf-caves))]
-                   [(ctx/->text-button ctx "Start procedural"  (start-game! :worlds/modules))]
-                   (when (safe-get config :map-editor?)
-                     [(ctx/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])
-                   (when (safe-get config :property-editor?)
-                     [(ctx/->text-button ctx "Property editor" #(ctx/change-screen % :screens/property-editor))])
-                   [(ctx/->text-button ctx "Exit" (fn [ctx] (app/exit) ctx))]])
+   {:rows (remove nil? (concat
+                         (for [{:keys [property/id]} (ctx/all-properties ctx :properties/world)]
+                           [(ctx/->text-button ctx (str "Start " id) (start-game! id))])
+                         [(when (safe-get config :map-editor?)
+                            [(ctx/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])
+                          (when (safe-get config :property-editor?)
+                            [(ctx/->text-button ctx "Property editor" #(ctx/change-screen % :screens/property-editor))])
+                          [(ctx/->text-button ctx "Exit" (fn [ctx] (app/exit) ctx))]]))
     :cell-defaults {:pad-bottom 25}
     :fill-parent? true}))
 
