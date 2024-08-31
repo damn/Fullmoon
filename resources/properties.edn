@@ -4451,7 +4451,7 @@
   :world/tiled-map "maps/vampire.tmx"}
  {:property/id :worlds/uf-caves,
   :world/generator :world.generator/uf-caves,
-  :world/map-size 1000,
+  :world/map-size 200,
   :world/spawn-rate 0.01}
  {:property/id :worlds/modules,
   :world/generator :world.generator/modules,
