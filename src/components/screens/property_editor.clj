@@ -9,7 +9,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
             core.property
-            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane get-property all-properties]]
+            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane all-properties]]
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
             [core.scene2d.ui.text-field :as text-field]
@@ -237,7 +237,7 @@
                                     (add-to-stage! ctx window))
                                   ctx))]
                 (for [prop-id property-ids]
-                  (let [props (get-property ctx prop-id)
+                  (let [props (ctx/property ctx prop-id)
                         ; x2 dimensions?
                         image-widget (->image-widget ctx ; image-button/link?
                                                      (core.property/property->image props)
@@ -340,7 +340,7 @@
        ctx))))
 
 (defn ->property-editor-window [context id]
-  (let [props (get-property context id)
+  (let [props (ctx/property context id)
         window (->window context {:title ""
                                   :modal? true
                                   :close-button? true

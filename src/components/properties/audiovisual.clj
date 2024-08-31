@@ -15,7 +15,7 @@
 (defcomponent :tx/audiovisual
   (component/do! [[_ position id] ctx]
     (let [{:keys [tx/sound
-                  entity/animation]} (ctx/get-property ctx id)]
+                  entity/animation]} (ctx/property ctx id)]
       [[:tx/sound sound]
        [:tx/create
         position

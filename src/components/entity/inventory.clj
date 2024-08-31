@@ -85,7 +85,7 @@
 (defcomponent :entity/inventory
   {:data [:one-to-many-ids :properties/item]}
   (component/create [[_ item-ids] ctx]
-    (map #(ctx/get-property ctx %) item-ids))
+    (map #(ctx/property ctx %) item-ids))
 
   (component/create-e [[_ items] eid _ctx]
     (cons [:tx/assoc eid :entity/inventory inventory/empty-inventory]

@@ -296,13 +296,13 @@
   (do-on-ctx!  (fn [ctx]
                  [:tx/add-skill
                   (:entity/id (ctx/player-entity* ctx))
-                  (ctx/get-property ctx skill-id)])))
+                  (ctx/property ctx skill-id)])))
 
 (defn create-item! [item-id]
   (do-on-ctx!  (fn [ctx]
                  [:tx/item
                   (:position (ctx/player-entity* ctx))
-                  (ctx/get-property ctx item-id)])))
+                  (ctx/property ctx item-id)])))
 
 
 

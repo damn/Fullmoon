@@ -7,7 +7,7 @@
 (defcomponent :entity/skills
   {:data [:one-to-many-ids :properties/skill]}
   (component/create [[_ skill-ids] ctx]
-    (map #(ctx/get-property ctx %) skill-ids))
+    (map #(ctx/property ctx %) skill-ids))
 
   (component/create-e [[k skills] eid ctx]
     (cons

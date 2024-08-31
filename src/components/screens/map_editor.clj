@@ -9,7 +9,7 @@
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
             utils.camera
-            [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen get-property]]
+            [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen]]
             [core.graphics :as g]
             [core.maps.tiled :as tiled]
             [core.scene2d.actor :refer [set-position!]]
@@ -159,8 +159,8 @@ direction keys: move")
                  :cell-defaults {:pad 10}
                  :rows [[(->label ctx (with-out-str
                                        (clojure.pprint/pprint
-                                        (get-property ctx level-id))))]
-                        [(->text-button ctx "Generate" #(try (generate % (get-property % level-id))
+                                        (ctx/property ctx level-id))))]
+                        [(->text-button ctx "Generate" #(try (generate % (ctx/property % level-id))
                                                              (catch Throwable t
                                                                (error-window! % t)
                                                                (println t)

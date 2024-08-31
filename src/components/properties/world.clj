@@ -45,4 +45,4 @@
 (extend-type core.context.Context
  core.context/WorldGenerator
  (->world [ctx world-id]
-   (generate ctx (ctx/get-property ctx world-id))))
+   (generate ctx (ctx/property ctx world-id))))

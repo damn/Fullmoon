@@ -39,7 +39,7 @@
                   projectile/max-range
                   projectile/speed
                   entity-effects
-                  projectile/piercing?] :as prop} (ctx/get-property ctx projectile-id)
+                  projectile/piercing?] :as prop} (ctx/property ctx projectile-id)
           size (projectile-size prop)]
       [[:tx/create
         position
@@ -69,7 +69,7 @@
 (defcomponent :effect/projectile
   {:data [:qualified-keyword {:namespace :projectiles}]}
   (component/info-text [[_ projectile-id] ctx]
-    (components/info-text (:entity-effects (ctx/get-property ctx projectile-id))
+    (components/info-text (:entity-effects (ctx/property ctx projectile-id))
                           ctx))
 
   ; TODO for npcs need target -- anyway only with direction
@@ -80,7 +80,7 @@
   (component/useful? [[_ projectile-id] {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (:position @source)
           target-p (:position @target)
-          prop (ctx/get-property ctx projectile-id)]
+          prop (ctx/property ctx projectile-id)]
       (and (not (ctx/path-blocked? ctx ; TODO test
                                    source-p
                                    target-p
@@ -96,7 +96,7 @@
       projectile-id
       {:position (start-point @source
                               direction
-                              (projectile-size (ctx/get-property ctx projectile-id)))
+                              (projectile-size (ctx/property ctx projectile-id)))
        :direction direction
        :faction (:entity/faction @source)}]]))
 

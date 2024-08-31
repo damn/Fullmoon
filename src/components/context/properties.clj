@@ -94,7 +94,7 @@
 
 (extend-type core.context.Context
   core.context/PropertyStore
-  (get-property [{{:keys [db]} :context/properties} id]
+  (property [{{:keys [db]} :context/properties} id]
     (safe-get db id))
 
   (all-properties [{{:keys [db types]} :context/properties :as ctx} type]

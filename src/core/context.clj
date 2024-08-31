@@ -139,7 +139,7 @@
   (world-grid [_]))
 
 (defprotocol PropertyStore
-  (get-property [_ id])
+  (property [_ id])
   (all-properties [_ type])
   (overview [_ property-type])
   (property-types [_])

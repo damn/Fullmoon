@@ -1,6 +1,6 @@
 (ns components.widgets.skill-window
   (:require [core.components :as components]
-            [core.context :as ctx :refer [->window ->image-button get-property]]
+            [core.context :as ctx :refer [->window ->image-button]]
             [core.scene2d.actor :refer [add-tooltip!]]))
 
 ; TODO render text label free-skill-points
@@ -17,11 +17,11 @@
                               :skills/melee-attack]
                           :let [; get-property in callbacks if they get changed, this is part of context permanently
                                 button (->image-button context ; TODO reuse actionbar button scale?
-                                                       (:entity/image (get-property context id)) ; TODO here anyway taken
+                                                       (:entity/image (ctx/property context id)) ; TODO here anyway taken
                                                        ; => should probably build this window @ game start
                                                        (fn [ctx]
-                                                         (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (get-property ctx id)))))]]
+                                                         (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (ctx/property ctx id)))))]]
                       (do
-                       (add-tooltip! button #(components/info-text (get-property % id) %)) ; TODO no player modifiers applied (see actionbar)
+                       (add-tooltip! button #(components/info-text (ctx/property % id) %)) ; TODO no player modifiers applied (see actionbar)
                        button))]
              :pack? true}))
