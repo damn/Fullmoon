@@ -24,6 +24,7 @@
     (when (>= counter duration-seconds)
       (swap! state assoc ::msg nil))))
 
-(defn ->build [ctx]
-  (->actor ctx {:draw draw-player-message
-                :act check-remove-message}))
+(defcomponent :widgets/player-message
+  (component/create [_ ctx]
+    (->actor ctx {:draw draw-player-message
+                  :act check-remove-message})))

@@ -9,7 +9,6 @@
             [core.scene2d.group :as group]
             core.scene2d.ui.button-group
             [components.entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
-            [components.widgets.player-message :as player-message]
             [components.widgets.action-bar :as action-bar]
             [components.widgets.debug-window :as debug-window]
             [components.widgets.entity-info-window :as entity-info-window]
@@ -49,7 +48,7 @@
    (->hp-mana-bars         ctx)
    (->windows              ctx widget-data)
    (->item-on-cursor-actor ctx)
-   (player-message/->build ctx)])
+   (component/create [:widgets/player-message] ctx)])
 
 (defn- reset-stage-actors! [ctx widget-data]
   (assert (= :screens/world (ctx/current-screen-key ctx)))
@@ -71,14 +70,16 @@
    (when (utils/safe-get config :debug-window?)
      {input.keys/z :debug-window})))
 
-(defn check-window-hotkeys [ctx]
-  (doseq [[hotkey window-id] (hotkey->window-id ctx)
-          :when (input/key-just-pressed? hotkey)]
-    (actor/toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
+(extend-type core.context.Context
+  core.context/IngameWindows
+  (check-window-hotkeys [ctx]
+    (doseq [[hotkey window-id] (hotkey->window-id ctx)
+            :when (input/key-just-pressed? hotkey)]
+      (actor/toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
 
-(defn close-windows? [context]
-  (let [windows (group/children (:windows (ctx/get-stage context)))]
-    (if (some actor/visible? windows)
-      (do
-       (run! #(actor/set-visible! % false) windows)
-       true))))
+  (close-windows? [context]
+    (let [windows (group/children (:windows (ctx/get-stage context)))]
+      (if (some actor/visible? windows)
+        (do
+         (run! #(actor/set-visible! % false) windows)
+         true)))))

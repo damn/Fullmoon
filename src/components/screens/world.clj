@@ -5,25 +5,22 @@
             [gdx.input.keys :as input.keys]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [components.context.world :as world]
-            (components.world [debug-render :as debug-render]
-                              [widgets :as widgets]
-                              render)))
+            [components.context.world :as world]))
 
 (defn- render-world! [ctx]
   (let [player-entity* (ctx/player-entity* ctx)]
     (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
-    (components.world.render/render-map ctx (camera/position (ctx/world-camera ctx)))
+    (ctx/render-map ctx (camera/position (ctx/world-camera ctx)))
     (ctx/render-world-view ctx
                            (fn [g]
-                             (debug-render/before-entities ctx g)
+                             (ctx/debug-render-before-entities ctx g)
                              (ctx/render-entities! ctx
                                                    g
                                                    (->> (ctx/active-entities ctx)
                                                         (map deref)
                                                         (filter :z-order)
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))
-                             (debug-render/after-entities ctx g)))))
+                             (ctx/debug-render-after-entities ctx g)))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
@@ -38,9 +35,9 @@
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
   (check-zoom-keys ctx)
-  (widgets/check-window-hotkeys ctx)
+  (ctx/check-window-hotkeys ctx)
   (cond (and (input/key-just-pressed? input.keys/escape)
-             (not (widgets/close-windows? ctx)))
+             (not (ctx/close-windows? ctx)))
         (ctx/change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen/render!
