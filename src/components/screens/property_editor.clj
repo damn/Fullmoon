@@ -18,7 +18,6 @@
 
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
-
 ; TODO overview table not refreshed after changes in property editor window
 
 (defn- ->scroll-pane-cell [ctx rows]
@@ -63,12 +62,22 @@
 
 ;;
 
-(defmethod ->value-widget :text-field [[k v] ctx]
+(defmethod ->value-widget :string-text-field [[k v] ctx]
+  (let [widget (->text-field ctx v {})]
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (component/schema k)))))
+    widget))
+
+(defmethod value-widget->data :string-text-field [_ widget]
+  (text-field/text widget))
+
+;;
+
+(defmethod ->value-widget :number-text-field [[k v] ctx]
   (let [widget (->text-field ctx (->edn v) {})]
     (add-tooltip! widget (str "Schema: " (pr-str (m/form (component/schema k)))))
     widget))
 
-(defmethod value-widget->data :text-field [_ widget]
+(defmethod value-widget->data :number-text-field [_ widget]
   (edn/read-string (text-field/text widget)))
 
 ;;

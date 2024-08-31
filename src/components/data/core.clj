@@ -6,7 +6,7 @@
 
 (defcomponent :boolean   {:widget :check-box  :schema :boolean :default-value true})
 (defcomponent :some      {:widget :label      :schema :some})
-(defcomponent :string    {:widget :text-field :schema :string})
+(defcomponent :string    {:widget :string-text-field :schema :string})
 (defcomponent :sound     {:widget :sound      :schema :string})
 
 (defcomponent :image
@@ -21,11 +21,11 @@
    :->edn core.animation/animation->edn
    :->value core.animation/edn->animation})
 
-(defcomponent :number    {:widget :text-field :schema number?})
-(defcomponent :nat-int   {:widget :text-field :schema nat-int?})
-(defcomponent :int       {:widget :text-field :schema int?})
-(defcomponent :pos       {:widget :text-field :schema pos?})
-(defcomponent :pos-int   {:widget :text-field :schema pos-int?})
+(defcomponent :number    {:widget :number-text-field :schema number?})
+(defcomponent :nat-int   {:widget :number-text-field :schema nat-int?})
+(defcomponent :int       {:widget :number-text-field :schema int?})
+(defcomponent :pos       {:widget :number-text-field :schema pos?})
+(defcomponent :pos-int   {:widget :number-text-field :schema pos-int?})
 
 (defcomponent :enum
   (component/->data [[_ items]]
