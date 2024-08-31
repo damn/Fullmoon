@@ -23,19 +23,15 @@
   (let [explained (m/explain schema property)]
     (str (me/humanize explained))))
 
-(def ^:private validate? true)
-
 (defn- validate [property types]
-  (if validate?
-    (let [type (property->type types property)
-          schema (:schema (type types))]
-      (if (try (m/validate schema property)
-               (catch Throwable t
-                 (throw (ex-info "m/validate fail" {:property property :type type} t))))
-        property
-        (throw (ex-info (validation-error-message schema property)
-                        {:property property}))))
-    property))
+  (let [type (property->type types property)
+        schema (:schema (type types))]
+    (if (try (m/validate schema property)
+             (catch Throwable t
+               (throw (ex-info "m/validate fail" {:property property :type type} t))))
+      property
+      (throw (ex-info (validation-error-message schema property)
+                      {:property property})))))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
   (let [schema-form (apply vector :map {:closed true} id-attribute
@@ -171,24 +167,20 @@
         (update-in [:context/properties :db] dissoc property-id)
         validate-and-write-to-file!)))
 
-#_(require '[core.context :as ctx])
-
-; now broken -> work directly on edn
-#_(defn- migrate [property-type prop-fn]
-  (def validate? false)
-  (let [ctx @app/state]
-    (def write-to-file? false)
-    (time
-     (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))] ; TODO this fetches references, work on plain db?
-       (println (:property/id prop) ", " (:property/pretty-name prop))
-       (swap! app/state ctx/update! prop)))
-    (def write-to-file? true)
-    (validate-and-write-to-file! @app/state)
-    (def validate? true)
-    nil))
-
 
 (comment
+
+ ; now broken -> work directly on edn
+ #_(require '[core.context :as ctx])
+
+ #_(defn- migrate [property-type prop-fn]
+     (let [ctx @app/state]
+       (time
+        (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
+          (println (:property/id prop) ", " (:property/pretty-name prop))
+          (swap! app/state ctx/update! prop)))
+       (validate-and-write-to-file! @app/state)
+       nil))
 
  (migrate :properties/creature
           (fn [prop]
