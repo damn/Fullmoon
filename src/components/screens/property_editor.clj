@@ -70,8 +70,6 @@
 (defmethod value-widget->data :string-text-field [_ widget]
   (text-field/text widget))
 
-;;
-
 (defmethod ->value-widget :number-text-field [[k v] ctx]
   (let [widget (->text-field ctx (->edn v) {})]
     (add-tooltip! widget (str "Schema: " (pr-str (m/form (component/schema k)))))
@@ -125,17 +123,6 @@
   (->table ctx {:rows [(for [image (:frames animation)]
                          (->image-widget ctx image {}))]
                 :cell-defaults {:pad 1}}))
-
-;;
-
-(declare ->property-editor-window)
-
-(defn open-property-editor-window! [context property-id]
-  (add-to-stage! context (->property-editor-window context property-id))
-  context)
-
-(defmethod ->value-widget :link-button [[_ prop-id] context]
-  (->text-button context (name prop-id) #(open-property-editor-window! % prop-id)))
 
 ;;
 
@@ -392,7 +379,7 @@
      (catch Throwable t
        (ctx/error-window! ctx t)))))
 
-(defn ->property-editor-window [context id]
+(defn- ->property-editor-window [context id]
   (let [props (ctx/property context id)
         window (->window context {:title ""
                                   :modal? true
@@ -476,6 +463,10 @@
     (doseq [tab-data tabs-data]
       (.add tabbed-pane (->tab tab-data)))
     main-table))
+
+(defn- open-property-editor-window! [context property-id]
+  (add-to-stage! context (->property-editor-window context property-id))
+  context)
 
 (defn- ->tabs-data [ctx]
   (for [property-type (ctx/property-types ctx)]
