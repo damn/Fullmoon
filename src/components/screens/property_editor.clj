@@ -18,10 +18,6 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [components.widgets.error-modal :refer [error-window!]]))
 
-(defn- ck->enum-items           [k] (:items                (component/k->data k)))
-(defn- ck->components           [k] (:components           (component/k->data k)))
-(defn- ck->linked-property-type [k] (:linked-property-type (component/k->data k)))
-
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
 
@@ -88,6 +84,8 @@
 
 ;;
 
+(defn- ck->enum-items [k] (:items (component/k->data k)))
+
 (defmethod ->value-widget :enum [[k v] ctx]
   (->select-box ctx {:items (map ->edn (ck->enum-items k))
                      :selected (->edn v)}))
@@ -136,6 +134,8 @@
 
 (declare ->attribute-widget-table
          attribute-widget-group->data)
+
+(defn- ck->components [k] (:components (component/k->data k)))
 
 (defn- ->add-nested-map-button [ctx k attribute-widget-group]
   (->text-button ctx (str "Add " (name k) " component")
@@ -245,6 +245,8 @@
                     image-widget))
                 (for [{:keys [property/id]} properties]
                   (->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
+
+(defn- ck->linked-property-type [k] (:linked-property-type (component/k->data k)))
 
 (defmethod ->value-widget :one-to-many [[attribute properties] context]
   (let [table (->table context {:cell-defaults {:pad 5}})]
