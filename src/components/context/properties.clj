@@ -10,10 +10,9 @@
                             :optional? false})
 
 (defn load-raw-properties [file]
-  (let [properties (-> file slurp edn/read-string)]
-    (assert (apply distinct? (map :property/id properties)))
-    (->> properties
-         (#(zipmap (map :property/id %) %)))))
+  (let [values (-> file slurp edn/read-string)]
+    (assert (apply distinct? (map :property/id values)))
+    (zipmap (map :property/id values) values)))
 
 (defn- of-type?
   ([property-type {:keys [property/id]}]
