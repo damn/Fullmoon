@@ -54,11 +54,18 @@
                   (->value v ctx)
                   v))))
 
-(defn- value->edn [property ctx]
+(defn- value->edn [property]
   (apply-vals property
               (fn [k v]
                 (if-let [->edn (:->edn (component/k->data k))]
                   (->edn v)
+                  v))))
+
+(defn- fetch-references [property ctx]
+  (apply-vals property
+              (fn [k v]
+                (if-let [fetch-references (:fetch-references (component/k->data k))]
+                  (fetch-references v ctx)
                   v))))
 
 (defcomponent :context/properties
@@ -112,8 +119,8 @@
 
 (extend-type core.context.Context
   core.context/PropertyStore
-  (property [{{:keys [db]} :context/properties} id]
-    (safe-get db id))
+  (property [{{:keys [db]} :context/properties :as ctx} id]
+    (fetch-references (safe-get db id) ctx))
 
   (all-properties [{{:keys [db types]} :context/properties :as ctx} type]
     (filter #(of-type? types % type) (vals db)))

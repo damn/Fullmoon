@@ -1,15 +1,12 @@
 (ns components.entity.skills
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [->counter stopped?]]
+            [core.context :as ctx]
             [core.entity :as entity]))
 
 (defcomponent :entity/skills
   {:data [:one-to-many-ids :properties/skill]}
-  (component/create [[_ skill-ids] ctx]
-    (map #(ctx/property ctx %) skill-ids))
-
-  (component/create-e [[k skills] eid ctx]
+  (component/create-e [[k ids-skills] eid ctx]
     (cons
      [:tx/assoc eid k nil]
      (for [skill skills]
@@ -23,7 +20,7 @@
   (component/tick [[k skills] eid ctx]
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
-                     (stopped? ctx cooling-down?))]
+                     (ctx/stopped? ctx cooling-down?))]
       [:tx/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
 (extend-type core.entity.Entity

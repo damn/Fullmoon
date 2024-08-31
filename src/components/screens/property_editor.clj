@@ -215,11 +215,12 @@
 
 (declare ->overview-table)
 
-(defn- add-one-to-many-rows [ctx table property-type property-ids]
+(defn- add-one-to-many-rows [ctx table property-type properties]
   (let [redo-rows (fn [ctx property-ids]
                     (clear-children! table)
-                    (add-one-to-many-rows ctx table property-type property-ids)
-                    (pack-ancestor-window! table))]
+                    (add-one-to-many-rows ctx table property-type (map #(ctx/property ctx %) property-ids))
+                    (pack-ancestor-window! table))
+        property-ids (set (map :property/id properties))]
     (add-rows! table
                [[(->text-button ctx "+"
                                 (fn [ctx]
@@ -230,30 +231,27 @@
                                                               :close-on-escape? true})
                                         clicked-id-fn (fn [ctx id]
                                                         (remove! window)
-                                                        (redo-rows ctx (conj (set property-ids) id))
+                                                        (redo-rows ctx (conj property-ids id))
                                                         ctx)]
                                     (add! window (->overview-table ctx property-type clicked-id-fn))
                                     (pack! window)
                                     (add-to-stage! ctx window))
                                   ctx))]
-                (for [prop-id property-ids]
-                  (let [props (ctx/property ctx prop-id)
-                        ; x2 dimensions?
-                        image-widget (->image-widget ctx ; image-button/link?
-                                                     (core.property/property->image props)
-                                                     {:id (:property/id props)})]
-                    (add-tooltip! image-widget #(components/info-text props %))
+                (for [property properties]
+                  (let [image-widget (->image-widget ctx ; image-button/link?
+                                                     (core.property/property->image property)
+                                                     {:id (:property/id property)})]
+                    (add-tooltip! image-widget #(components/info-text property %))
                     image-widget))
-                (for [prop-id property-ids]
-                  (->text-button ctx "-"
-                                 #(do (redo-rows % (disj (set property-ids) prop-id)) %)))])))
+                (for [{:keys [property/id]} properties]
+                  (->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
-(defmethod ->value-widget :one-to-many [[attribute property-ids] context]
+(defmethod ->value-widget :one-to-many [[attribute properties] context]
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
                           (ck->linked-property-type attribute)
-                          property-ids)
+                          properties)
     table))
 
 ; TODO use id of the value-widget itself and set/change it
@@ -370,14 +368,14 @@
                 extra-info-text
                 columns
                 image/scale]} (core.context/overview ctx property-type)
-        entities (all-properties ctx property-type)
-        entities (if sort-by-fn
-                   (sort-by sort-by-fn entities)
-                   entities)]
+        properties (all-properties ctx property-type)
+        properties (if sort-by-fn
+                     (sort-by sort-by-fn properties)
+                     properties)]
     (->table ctx
              {:cell-defaults {:pad 5}
-              :rows (for [entities (partition-all columns entities)] ; TODO can just do 1 for?
-                      (for [{:keys [property/id] :as props} entities
+              :rows (for [properties (partition-all columns properties)] ; TODO can just do 1 for?
+                      (for [{:keys [property/id] :as props} properties
                             :let [on-clicked #(clicked-id-fn % id)
                                   button (if-let [image (core.property/property->image props)]
                                            (->image-button ctx image on-clicked {:scale scale})

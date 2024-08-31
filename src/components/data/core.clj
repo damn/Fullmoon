@@ -1,5 +1,6 @@
 (ns components.data.core
   (:require [core.component :as component :refer [defcomponent]]
+            [core.context :as ctx]
             core.animation
             core.image))
 
@@ -36,7 +37,9 @@
   (component/->data [[_ property-type]]
     {:widget :one-to-many
      :schema [:set :qualified-keyword]
-     :linked-property-type property-type}))
+     :linked-property-type property-type
+     :fetch-references (fn [ids ctx]
+                         (map #(ctx/property ctx %) ids))}))
 
 (defcomponent :qualified-keyword
   (component/->data [schema]
