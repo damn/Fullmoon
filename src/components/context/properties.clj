@@ -6,6 +6,9 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]))
 
+(defcomponent :property/id {:data [:qualified-keyword {}]
+                            :optional? false})
+
 (defn load-raw-properties [file]
   (let [properties (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id properties)))
@@ -118,9 +121,6 @@
   {:data :some
    :let {:keys [types file properties]}}
   (component/create [_ ctx]
-    (doseq [[k m] [[:property/id    {:data [:qualified-keyword {}] :optional? false}]
-                   [:entity-effects {:data [:components-ns :effect.entity]}]]]
-      (component/defcomponent* k m :warn-on-override? false))
     (let [types (component/ks->create-all types {})
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file

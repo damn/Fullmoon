@@ -5,6 +5,8 @@
             [core.context :as ctx]
             [core.entity :as entity]))
 
+(defcomponent :entity-effects {:data [:components-ns :effect.entity]})
+
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
 (defn- all-targets [ctx]
