@@ -42,11 +42,8 @@
                  :rows [[(->scroll-pane-cell ctx rows)]]
                  :pack? true}))
 
-(defn- ck->widget [k]
-  (:widget (component/k->data k)))
-
-(defmulti ->value-widget     (fn [[k _v] _ctx] (ck->widget k)))
-(defmulti value-widget->data (fn [k _widget]   (ck->widget k)))
+(defmulti ->value-widget     (fn [data _v _ctx] (:widget data)))
+(defmulti value-widget->data (fn [data _widget] (:widget data)))
 
 (defmethod value-widget->data :default [_ widget]
   (actor/id widget))
@@ -57,22 +54,22 @@
   (binding [*print-level* nil]
     (pr-str v)))
 
-(defmethod ->value-widget :label [[_ v] ctx]
+(defmethod ->value-widget :label [_ v ctx]
   (->label ctx (->edn v)))
 
 ;;
 
-(defmethod ->value-widget :string-text-field [[k v] ctx]
+(defmethod ->value-widget :string-text-field [data v ctx]
   (let [widget (->text-field ctx v {})]
-    (add-tooltip! widget (str "Schema: " (pr-str (m/form (component/schema k)))))
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
     widget))
 
 (defmethod value-widget->data :string-text-field [_ widget]
   (text-field/text widget))
 
-(defmethod ->value-widget :number-text-field [[k v] ctx]
+(defmethod ->value-widget :number-text-field [data v ctx]
   (let [widget (->text-field ctx (->edn v) {})]
-    (add-tooltip! widget (str "Schema: " (pr-str (m/form (component/schema k)))))
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
     widget))
 
 (defmethod value-widget->data :number-text-field [_ widget]
@@ -80,7 +77,7 @@
 
 ;;
 
-(defmethod ->value-widget :check-box [[_ checked?] ctx]
+(defmethod ->value-widget :check-box [_ checked? ctx]
   (assert (boolean? checked?))
   (->check-box ctx "" (fn [_]) checked?))
 
@@ -89,10 +86,8 @@
 
 ;;
 
-(defn- ck->enum-items [k] (:items (component/k->data k)))
-
-(defmethod ->value-widget :enum [[k v] ctx]
-  (->select-box ctx {:items (map ->edn (ck->enum-items k))
+(defmethod ->value-widget :enum [data v ctx]
+  (->select-box ctx {:items (map ->edn (:items data))
                      :selected (->edn v)}))
 
 (defmethod value-widget->data :enum [_ widget]
@@ -107,7 +102,7 @@
     [(->image-button ctx (core.context/create-image ctx file) identity)]
     #_[(->text-button ctx file identity)]))
 
-(defmethod ->value-widget :image [[_ image] ctx]
+(defmethod ->value-widget :image [_ image ctx]
   (->image-widget ctx image {})
   #_(->image-button ctx image
                   #(do (add-to-stage! % (->scrollable-choose-window % (texture-rows %))) %)
@@ -119,7 +114,7 @@
 ; frame-duration
 ; frames ....
 ; hidden actor act tick atom animation & set current frame image drawable
-(defmethod ->value-widget :animation [[_ animation] ctx]
+(defmethod ->value-widget :animation [_ animation ctx]
   (->table ctx {:rows [(for [image (:frames animation)]
                          (->image-widget ctx image {}))]
                 :cell-defaults {:pad 1}}))
@@ -129,10 +124,10 @@
 (declare ->attribute-widget-table
          attribute-widget-group->data)
 
-(defn- ck->components [k] (:components (component/k->data k)))
-
-(defn- ->add-nested-map-button [ctx k attribute-widget-group]
-  (->text-button ctx (str "Add " (name k) " component")
+(defn- ->add-nested-map-button [data attribute-widget-group ctx]
+  (->text-button
+   ctx
+   "Add component"
    (fn [ctx]
      (let [window (->window ctx {:title "Choose"
                                  :modal? true
@@ -141,7 +136,7 @@
                                  :close-on-escape? true
                                  :cell-defaults {:pad 5}})]
        (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                                      (ck->components k)))]
+                                                      (:components data)))]
                            [(->text-button ctx (name nested-k)
                                            (fn [ctx]
                                              (remove! window)
@@ -158,14 +153,14 @@
 
 (declare ->attribute-widget-group)
 
-(defmethod ->value-widget :nested-map [[k props] ctx]
-  (let [attribute-widget-group (->attribute-widget-group ctx props)]
+(defmethod ->value-widget :nested-map [data m ctx]
+  (let [attribute-widget-group (->attribute-widget-group ctx m)]
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (->table ctx {:cell-defaults {:pad 5}
                   :rows (remove nil?
-                                [(when (ck->components k)
-                                   [(->add-nested-map-button ctx k attribute-widget-group)])
-                                 (when (ck->components k)
+                                [(when (:components data)
+                                   [(->add-nested-map-button data attribute-widget-group ctx)])
+                                 (when (:components data)
                                    [(->horizontal-separator-cell 1)])
                                  [attribute-widget-group]])})))
 
@@ -198,7 +193,7 @@
   [(->text-button ctx (name sound-file) #(open-sounds-window! % table))
    (->play-sound-button ctx sound-file)])
 
-(defmethod ->value-widget :sound [[_ sound-file] ctx]
+(defmethod ->value-widget :sound [_ sound-file ctx]
   (let [table (->table ctx {:cell-defaults {:pad 5}})]
     (add-rows! table [(if sound-file
                         (->sound-columns ctx table sound-file)
@@ -240,13 +235,11 @@
                 (for [{:keys [property/id]} properties]
                   (->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
-(defn- ck->linked-property-type [k] (:linked-property-type (component/k->data k)))
-
-(defmethod ->value-widget :one-to-many [[attribute properties] context]
+(defmethod ->value-widget :one-to-many [data properties context]
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
-                          (ck->linked-property-type attribute)
+                          (:linked-property-type data)
                           properties)
     table))
 
@@ -292,11 +285,11 @@
                                             %)))]])))
 
 ; TODO DRY with one-to-many
-(defmethod ->value-widget :one-to-one [[attribute property] ctx]
+(defmethod ->value-widget :one-to-one [data property ctx]
   (let [table (->table ctx {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
-                         (ck->linked-property-type attribute)
+                         (:linked-property-type data)
                          property)
     table))
 
@@ -309,7 +302,7 @@
   (let [label (->label ctx (str k))
         _ (when-let [doc (component/doc k)]
             (add-tooltip! label doc))
-        value-widget (->value-widget [k v] ctx)
+        value-widget (->value-widget (component/k->data k) v ctx)
         table (->table ctx {:id k
                             :cell-defaults {:pad 4}})
         column (remove nil?
@@ -366,7 +359,7 @@
   (into {} (for [k (map actor/id (children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (value-widget->data k value-widget)])))
+             [k (value-widget->data (component/k->data k) value-widget)])))
 
 ;;
 

@@ -238,8 +238,6 @@
    (catch Throwable t
      (throw (ex-info "" {:k k} t)))))
 
-(def schema (comp :schema k->data))
-
 (defn optional? [k]
   (let [optional? (get (get attributes k) :optional? :not-found)]
     (if (= optional? :not-found)
@@ -255,6 +253,6 @@
 
 (defn attribute-schema [ks]
   (for [k ks]
-    [k {:optional (optional? k)} (schema k)]))
+    [k {:optional (optional? k)} (:schema (k->data k))]))
 
 (def default-value (comp :default-value k->data))
