@@ -29,17 +29,14 @@
     (contains? skills id)))
 
 (defcomponent :tx/add-skill
-  (component/do! [[_ entity {:keys [property/id] :as skill}]
-               _ctx]
+  (component/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
     (assert (not (entity/has-skill? @entity skill)))
     [[:tx/assoc-in entity [:entity/skills id] skill]
      (when (:entity/player? @entity)
        [:tx.context.action-bar/add-skill skill])]))
 
-; unused.
 (defcomponent :tx/remove-skill
-  (component/do! [[_ entity {:keys [property/id] :as skill}]
-                _ctx]
+  (component/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
     (assert (entity/has-skill? @entity skill))
     [[:tx/dissoc-in entity [:entity/skills id]]
      (when (:entity/player? @entity)
