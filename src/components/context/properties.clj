@@ -91,10 +91,25 @@
                     properties)]
     (mapvals #(recur-fetch-refs % db) db)))
 
-(defn- properties->edn-and-validate [types properties]
-  (->> properties
+(defn- sort-by-type [types properties]
+  (sort-by #(property->type types %)
+           properties))
+
+(defn- sort-map [m]
+  (into (sorted-map)
+        (zipmap (keys m)
+                (map #(if (map? %)
+                        (sort-map %)
+                        %)
+                     (vals m)))))
+
+(defn- db->edn [types db]
+  (->> db
+       vals
+       (sort-by-type types)
        (map recur-value->edn)
-       (map #(validate % types))))
+       (map #(validate % types))
+       (map sort-map)))
 
 (defcomponent :context/properties
   {:data :some
@@ -121,24 +136,9 @@
            (catch Throwable t
              (ctx/error-window! ctx t)))))))
 
-(defn- sort-by-type [types properties]
-  (sort-by #(property->type types %)
-           properties))
-
-(defn- sort-map [m]
-  (into (sorted-map)
-        (zipmap (keys m)
-                (map #(if (map? %)
-                        (sort-map %)
-                        %)
-                     (vals m)))))
-
 (defn- validate-and-write-to-file! [{{:keys [types db file]} :context/properties :as ctx}]
   (->> db
-       vals
-       (sort-by-type types)
-       (properties->edn-and-validate types)
-       (map sort-map)
+       (db->edn types)
        doall
        (async-pprint-spit ctx file))
   ctx)
