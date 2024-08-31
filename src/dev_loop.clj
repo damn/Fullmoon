@@ -50,7 +50,7 @@
 (declare ^:private refresh-error)
 
 (defn- handle-throwable! [t]
-  (binding [*print-level* 5]
+  (binding [*print-level* 10]
     (p/pretty-pst t 24))
   (reset! thrown true))
 
