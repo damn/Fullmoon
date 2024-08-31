@@ -3,13 +3,12 @@
             [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.context :as ctx]
-            [core.entity :as entity]
-            components.context.world))
+            [core.entity :as entity]))
 
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
 (defn- all-targets [ctx]
-  (->> (components.context.world/active-entities ctx)
+  (->> (ctx/active-entities ctx)
        (filter #(:z-order @%)) ; all have anyway ? all have body now ?
        (filter #(ctx/line-of-sight? ctx (ctx/player-entity* ctx) @%))
        (remove #(:entity/player? @%))))

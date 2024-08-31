@@ -19,7 +19,7 @@
                              (debug-render/before-entities ctx g)
                              (ctx/render-entities! ctx
                                                    g
-                                                   (->> (world/active-entities ctx)
+                                                   (->> (ctx/active-entities ctx)
                                                         (map deref)
                                                         (filter :z-order)
                                                         (filter #(ctx/line-of-sight? ctx player-entity* %))))

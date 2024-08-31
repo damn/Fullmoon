@@ -82,7 +82,12 @@
 
   ; TODO these two what to do ?
   (content-grid [ctx] (:world/content-grid ctx))
-  (world-grid  [ctx]  (:world/grid         ctx)))
+
+  (active-entities [ctx]
+    (content-grid/active-entities (ctx/content-grid ctx)
+                                  (ctx/player-entity* ctx)))
+
+  (world-grid [ctx] (:world/grid ctx)))
 
 (defcomponent :tx/add-to-world
   (component/do! [[_ entity] ctx]
@@ -121,13 +126,9 @@
   (game-paused? [ctx]
     (::paused? ctx)))
 
-(defn active-entities [ctx]
-  (content-grid/active-entities (ctx/content-grid ctx)
-                                (ctx/player-entity* ctx)))
-
 (defn- update-world [ctx]
   (let [ctx (ctx/update-time ctx)
-        active-entities (active-entities ctx)]
+        active-entities (ctx/active-entities ctx)]
     (ctx/update-potential-fields ctx active-entities)
     (try (ctx/tick-entities! ctx active-entities)
          (catch Throwable t
