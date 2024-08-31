@@ -1,6 +1,7 @@
 (ns components.properties.item
   (:require [clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
+            [core.inventory :as inventory]
             [core.modifiers :as modifiers]))
 
 (defcomponent :item/modifiers
@@ -11,7 +12,7 @@
       (modifiers/info-text modifiers))))
 
 (defcomponent :item/slot
-  {:data [:enum (keys core.inventory/empty-inventory)]
+  {:data [:enum (keys inventory/empty-inventory)]
    :optional? false})
 
 (defcomponent :properties/item
