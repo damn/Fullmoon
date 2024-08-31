@@ -20,6 +20,11 @@
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
     (add-actor! window (->actor context {:act (fn update-label-text [ctx]
+                                                ; items then have 2x pretty-name
+                                                #_(set-text! (.getTitleLabel window)
+                                                           (if-let [entity* (ctx/mouseover-entity* ctx)]
+                                                             (core.component/info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                             "Entity Info"))
                                                 (set-text! label
                                                            (when-let [entity* (ctx/mouseover-entity* ctx)]
                                                              (components/info-text
