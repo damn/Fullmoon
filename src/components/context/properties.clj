@@ -1,9 +1,16 @@
 (ns components.context.properties
-  (:require [malli.core :as m]
+  (:require [clojure.edn :as edn]
+            [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get mapvals]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]))
+
+(defn load-raw-properties [file]
+  (let [properties (-> file slurp edn/read-string)]
+    (assert (apply distinct? (map :property/id properties)))
+    (->> properties
+         (#(zipmap (map :property/id %) %)))))
 
 (defn- of-type?
   ([property-type {:keys [property/id]}]

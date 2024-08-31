@@ -1,6 +1,5 @@
 (ns app
-  (:require [clojure.edn :as edn]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [utils.files :as files]
             [utils.core :refer [safe-merge safe-get]]
             [gdx.app :refer [->application-listener]]
@@ -8,7 +7,8 @@
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [components.context.properties :as properties]))
 
 (def state (atom nil))
 
@@ -44,12 +44,6 @@
    :resize (fn [w h]
              (ctx/update-viewports @state w h))))
 
-(defn- load-properties [file]
-  (let [properties (-> file slurp edn/read-string)]
-    (assert (apply distinct? (map :property/id properties)))
-    (->> properties
-         (#(zipmap (map :property/id %) %)))))
-
 (defn- inject [components k value]
   (for [component components]
     (if (= (first component) k)
@@ -57,7 +51,7 @@
       component)))
 
 (defn -main [& [file]]
-  (let [properties (load-properties file)
+  (let [properties (properties/load-raw-properties file)
         {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
         context (inject context :context/properties {:file file
                                                      :properties properties})]
