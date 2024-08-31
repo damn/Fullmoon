@@ -91,11 +91,11 @@
   (sort-by #(property->type types %)
            properties))
 
-(defn- sort-map [m]
+(defn- recur-sort-map [m]
   (into (sorted-map)
         (zipmap (keys m)
                 (map #(if (map? %)
-                        (sort-map %)
+                        (recur-sort-map %)
                         %)
                      (vals m)))))
 
@@ -105,7 +105,7 @@
        (sort-by-type types)
        (map recur-value->edn)
        (map #(validate % types))
-       (map sort-map)))
+       (map recur-sort-map)))
 
 (defcomponent :context/properties
   {:data :some
