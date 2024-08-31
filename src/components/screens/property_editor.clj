@@ -9,7 +9,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
             core.property
-            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane all-properties]]
+            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane]]
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
             [core.scene2d.ui.text-field :as text-field]
@@ -368,7 +368,7 @@
                 extra-info-text
                 columns
                 image/scale]} (core.context/overview ctx property-type)
-        properties (all-properties ctx property-type)
+        properties (ctx/all-properties ctx property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
                      properties)]
