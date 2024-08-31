@@ -1,7 +1,6 @@
 (ns components.screens.property-editor
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
-            [clj-commons.pretty.repl :as p]
             [malli.core :as m]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
@@ -15,8 +14,7 @@
             [core.scene2d.ui.text-field :as text-field]
             [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [core.scene2d.ui.cell :refer [set-actor!]]
-            [core.scene2d.ui.widget-group :refer [pack!]]
-            [components.widgets.error-modal :refer [error-window!]]))
+            [core.scene2d.ui.widget-group :refer [pack!]]))
 
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
@@ -240,7 +238,7 @@
                 (for [property properties]
                   (let [image-widget (->image-widget ctx ; image-button/link?
                                                      (core.property/property->image property)
-                                                     {:id (:property/id property)})]
+                                                     {:id property})]
                     (add-tooltip! image-widget #(components/info-text property %))
                     image-widget))
                 (for [{:keys [property/id]} properties]
@@ -258,7 +256,55 @@
 
 ; TODO use id of the value-widget itself and set/change it
 (defmethod value-widget->data :one-to-many [_ widget]
-  (->> (children widget) (keep actor/id) set))
+  (->> (children widget)
+       (keep actor/id)
+       set))
+
+;;
+
+(defn- add-one-to-one-rows [ctx table property-type property]
+  (let [redo-rows (fn [ctx id]
+                    (clear-children! table)
+                    (add-one-to-one-rows ctx table property-type (when id (ctx/property ctx id)))
+                    (pack-ancestor-window! table))]
+    (add-rows! table
+               [[(when-not property
+                   (->text-button ctx "+"
+                                  (fn [ctx]
+                                    (let [window (->window ctx {:title "Choose"
+                                                                :modal? true
+                                                                :close-button? true
+                                                                :center? true
+                                                                :close-on-escape? true})
+                                          clicked-id-fn (fn [ctx id]
+                                                          (remove! window)
+                                                          (redo-rows ctx id)
+                                                          ctx)]
+                                      (add! window (->overview-table ctx property-type clicked-id-fn))
+                                      (pack! window)
+                                      (add-to-stage! ctx window))
+                                    ctx)))]
+                [(when property
+                   (let [image-widget (->image-widget ctx ; image-button/link?
+                                                      (core.property/property->image property)
+                                                      {:id property})]
+                     (add-tooltip! image-widget #(components/info-text property %))
+                     image-widget))]
+                [(when property
+                   (->text-button ctx "-" #(do
+                                            (redo-rows % nil)
+                                            %)))]])))
+
+(defmethod ->value-widget :one-to-one [[attribute property] ctx]
+  (let [table (->table ctx {:cell-defaults {:pad 5}})]
+    (add-one-to-one-rows ctx
+                         table
+                         (ck->linked-property-type attribute)
+                         property)
+    table))
+
+(defmethod value-widget->data :one-to-one [_ widget]
+  (->> (children widget) (keep actor/id) first))
 
 ;;
 
@@ -334,11 +380,7 @@
        (remove! window)
        ctx)
      (catch Throwable t
-       (error-window! ctx t)
-       ; TODO all error in 1 place utils handle
-       (binding [*print-level* 5]
-         (p/pretty-pst t 24))
-       ctx))))
+       (ctx/error-window! ctx t)))))
 
 (defn ->property-editor-window [context id]
   (let [props (ctx/property context id)
@@ -362,6 +404,20 @@
 
 ;;
 
+(defn- ->overview-property-widget [{:keys [property/id] :as props} ctx clicked-id-fn extra-info-text scale]
+  (let [on-clicked #(clicked-id-fn % id)
+        button (if-let [image (core.property/property->image props)]
+                 (->image-button ctx image on-clicked {:scale scale})
+                 (->text-button ctx (name id) on-clicked))
+        top-widget (->label ctx (or (and extra-info-text
+                                         (extra-info-text props))
+                                    ""))
+        stack (->stack ctx [button top-widget])]
+    (do
+     (add-tooltip! button #(components/info-text props %))
+     (set-touchable! top-widget :disabled)
+     stack)))
+
 (defn- ->overview-table
   "Creates a table with all-properties of property-type and buttons for each id
   which on-clicked calls clicked-id-fn."
@@ -378,19 +434,10 @@
     (->table ctx
              {:cell-defaults {:pad 5}
               :rows (for [properties (partition-all columns properties)] ; TODO can just do 1 for?
-                      (for [{:keys [property/id] :as props} properties
-                            :let [on-clicked #(clicked-id-fn % id)
-                                  button (if-let [image (core.property/property->image props)]
-                                           (->image-button ctx image on-clicked {:scale scale})
-                                           (->text-button ctx (name id) on-clicked))
-                                  top-widget (->label ctx (or (and extra-info-text
-                                                                   (extra-info-text props))
-                                                              ""))
-                                  stack (->stack ctx [button top-widget])]]
-                        (do
-                         (add-tooltip! button #(components/info-text props %))
-                         (set-touchable! top-widget :disabled)
-                         stack)))})))
+                      (for [property properties]
+                        (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
+                             (catch Throwable t
+                               (throw (ex-info "" {:property property} t))))))})))
 
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)

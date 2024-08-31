@@ -171,3 +171,6 @@
 
 (defprotocol WorldTiledMap
   (render-map [_ light-position]))
+
+(defprotocol ErrorWindow
+  (error-window! [_ throwable]))

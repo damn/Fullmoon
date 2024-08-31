@@ -2,7 +2,8 @@
   (:require [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get mapvals]]
-            [core.component :refer [defcomponent] :as component]))
+            [core.component :refer [defcomponent] :as component]
+            [core.context :as ctx]))
 
 (defn- of-type?
   ([property-type {:keys [property/id]}]
@@ -43,30 +44,57 @@
          (catch Throwable t
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
-(defn- apply-vals [m f]
-  (into {} (for [[k v] m]
-             [k (f k v)])))
+(defn- apply-kvs
+  "Calls for every key in map (f k v) to calculate new value at k."
+  [m f]
+  (reduce (fn [m k]
+            (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
+          m
+          (keys m)))
 
-(defn- edn->value [property ctx]
-  (apply-vals property
-              (fn [k v]
-                (if-let [->value (:->value (component/k->data k))]
-                  (->value v ctx)
-                  v))))
+(defn- try-data [k]
+  (try (component/k->data k) (catch Throwable t)))
 
-(defn- value->edn [property]
-  (apply-vals property
-              (fn [k v]
-                (if-let [->edn (:->edn (component/k->data k))]
-                  (->edn v)
-                  v))))
+(defn- edn->value [ctx]
+  (fn [k v]
+    (if-let [->value (:->value (component/k->data k))]
+      (->value v ctx)
+      v)))
 
-(defn- fetch-references [property ctx]
-  (apply-vals property
-              (fn [k v]
-                (if-let [fetch-references (:fetch-references (component/k->data k))]
-                  (fetch-references v ctx)
-                  v))))
+(defn- value->edn [k v]
+  (if-let [->edn (:->edn (try-data k))]
+    (->edn v)
+    v))
+
+(defn- recur-value->edn [property]
+  (apply-kvs property
+             (fn [k v]
+               (let [v (if (map? v)
+                         (recur-value->edn v)
+                         v)]
+                 (value->edn k v)))))
+
+(defn- recur-fetch-refs [property db]
+  (apply-kvs property
+             (fn [k v]
+               (let [v (if (map? v)
+                         (recur-fetch-refs v db)
+                         v)]
+                 (if-let [fetch (:fetch-references (try-data k))]
+                   (fetch db v)
+                   v)))))
+
+(defn- edn->db [properties types ctx]
+  (let [db (mapvals #(-> %
+                         (validate types)
+                         (apply-kvs (edn->value ctx)))
+                    properties)]
+    (mapvals #(recur-fetch-refs % db) db)))
+
+(defn- properties->edn-and-validate [types properties]
+  (->> properties
+       (map recur-value->edn)
+       (map #(validate % types))))
 
 (defcomponent :context/properties
   {:data :some
@@ -79,23 +107,23 @@
           types (mapvals #(update % :schema map-attribute-schema) types)]
       {:file file
        :types types
-       :db (mapvals #(-> %
-                         (validate types)
-                         (edn->value ctx))
-                    properties)})))
+       :db (edn->db properties types ctx)})))
 
-(defn- pprint-spit [file data]
-  (binding [*print-level* nil]
-    (->> data
-         clojure.pprint/pprint
-         with-out-str
-         (spit file))))
+(defn- async-pprint-spit [ctx file data]
+  (.start
+   (Thread.
+    (fn []
+      (try (binding [*print-level* nil]
+             (->> data
+                  clojure.pprint/pprint
+                  with-out-str
+                  (spit file)))
+           (catch Throwable t
+             (ctx/error-window! ctx t)))))))
 
 (defn- sort-by-type [types properties]
   (sort-by #(property->type types %)
            properties))
-
-(def ^:private write-to-file? true)
 
 (defn- sort-map [m]
   (into (sorted-map)
@@ -105,25 +133,24 @@
                         %)
                      (vals m)))))
 
-(defn- write-properties-to-file! [{{:keys [types db file]} :context/properties :as ctx}]
-  (when write-to-file?
-    (.start
-     (Thread.
-      (fn []
-        (->> db
-             vals
-             (sort-by-type types)
-             (map value->edn)
-             (map sort-map)
-             (pprint-spit file)))))))
+(defn- validate-and-write-to-file! [{{:keys [types db file]} :context/properties :as ctx}]
+  (->> db
+       vals
+       (sort-by-type types)
+       (properties->edn-and-validate types)
+       (map sort-map)
+       doall
+       (async-pprint-spit ctx file))
+  ctx)
 
 (extend-type core.context.Context
   core.context/PropertyStore
-  (property [{{:keys [db]} :context/properties :as ctx} id]
-    (fetch-references (safe-get db id) ctx))
+  (property [{{:keys [db]} :context/properties} id]
+    (safe-get db id))
 
   (all-properties [{{:keys [db types]} :context/properties :as ctx} type]
-    (filter #(of-type? types % type) (vals db)))
+    (->> (vals db)
+         (filter #(of-type? types % type))))
 
   (overview [{{:keys [types]} :context/properties} property-type]
     (:overview (property-type types)))
@@ -131,35 +158,32 @@
   (property-types [{{:keys [types]} :context/properties}]
     (keys types))
 
-  (update! [{{:keys [db types]} :context/properties :as ctx}
-            {:keys [property/id] :as property}]
+  (update! [{{:keys [db types]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
            (contains? db id)]}
-    (validate property types)
-    ;(binding [*print-level* nil] (clojure.pprint/pprint property))
-    (let [new-ctx (update-in ctx [:context/properties :db] assoc id property)]
-      (write-properties-to-file! new-ctx)
-      new-ctx))
+    (-> ctx
+        (update-in [:context/properties :db] assoc id property)
+        validate-and-write-to-file!))
 
-  (delete! [{{:keys [db]} :context/properties :as ctx}
-            property-id]
+  (delete! [{{:keys [db]} :context/properties :as ctx} property-id]
     {:pre [(contains? db property-id)]}
-    (let [new-ctx (update-in ctx [:context/properties :db] dissoc property-id)]
-      (write-properties-to-file! new-ctx)
-      new-ctx)))
+    (-> ctx
+        (update-in [:context/properties :db] dissoc property-id)
+        validate-and-write-to-file!)))
 
-(require '[core.context :as ctx])
+#_(require '[core.context :as ctx])
 
-(defn- migrate [property-type prop-fn]
+; now broken -> work directly on edn
+#_(defn- migrate [property-type prop-fn]
   (def validate? false)
   (let [ctx @app/state]
     (def write-to-file? false)
     (time
-     (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
+     (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))] ; TODO this fetches references, work on plain db?
        (println (:property/id prop) ", " (:property/pretty-name prop))
        (swap! app/state ctx/update! prop)))
     (def write-to-file? true)
-    (write-properties-to-file! @app/state)
+    (validate-and-write-to-file! @app/state)
     (def validate? true)
     nil))
 

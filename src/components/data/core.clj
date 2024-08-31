@@ -33,13 +33,24 @@
      :schema (apply vector :enum items)
      :items items}))
 
+; TODO schema not checking if exists
 (defcomponent :one-to-many-ids
   (component/->data [[_ property-type]]
     {:widget :one-to-many
-     :schema [:set :qualified-keyword]
+     :schema [:set [:qualified-keyword]]
      :linked-property-type property-type
-     :fetch-references (fn [ids ctx]
-                         (map #(ctx/property ctx %) ids))}))
+     :fetch-references map
+     :->edn (fn [properties]
+              (set (map :property/id properties)))}))
+
+; TODO schema not checking if exists
+(defcomponent :one-to-one
+  (component/->data [[_ property-type]]
+    {:widget :one-to-one
+     :schema [:qualified-keyword]
+     :linked-property-type property-type
+     :fetch-references get
+     :->edn :property/id}))
 
 (defcomponent :qualified-keyword
   (component/->data [schema]

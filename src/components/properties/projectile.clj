@@ -14,7 +14,7 @@
 (defcomponent :projectile/speed     {:data :pos-int})
 
 (defcomponent :projectile/piercing? {:data :boolean}
-  (component/info-text [_ ctx] "[GRAY]Piercing[]"))
+  (component/info-text [_ ctx] "[LIME]Piercing[]"))
 
 (defcomponent :properties/projectile
   (component/create [_ _ctx]
@@ -33,14 +33,15 @@
   (first (:world-unit-dimensions (:entity/image projectile-property))))
 
 (defcomponent :tx/projectile
-  (component/do! [[_ projectile-id {:keys [position direction faction]}]
-                ctx]
-    (let [{:keys [entity/image
-                  projectile/max-range
-                  projectile/speed
-                  entity-effects
-                  projectile/piercing?] :as prop} (ctx/property ctx projectile-id)
-          size (projectile-size prop)]
+  (component/do! [[_
+                   {:keys [position direction faction]}
+                   {:keys [entity/image
+                           projectile/max-range
+                           projectile/speed
+                           entity-effects
+                           projectile/piercing?] :as projectile}]
+                  ctx]
+    (let [size (projectile-size projectile)]
       [[:tx/create
         position
         {:width size
@@ -61,44 +62,37 @@
          (v/scale direction
                   (+ (:radius entity*) size 0.1))))
 
-; TODO here pass the projectile itself ... (info-text etc.)
-
 ; TODO effect/text ... shouldn't have source/target dmg stuff ....
 ; as it is just sent .....
 ; or we adjust the effect when we send it ....
-(defcomponent :effect/projectile
-  {:data [:qualified-keyword {:namespace :projectiles}]}
-  (component/info-text [[_ projectile-id] ctx]
-    (components/info-text (:entity-effects (ctx/property ctx projectile-id))
-                          ctx))
 
+(defcomponent :effect/projectile
+  {:data [:one-to-one :properties/projectile]
+   :let {:keys [entity-effects projectile/max-range] :as projectile}}
   ; TODO for npcs need target -- anyway only with direction
   (component/applicable? [_ {:keys [effect/direction]}]
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (component/useful? [[_ projectile-id] {:keys [effect/source effect/target] :as ctx}]
+  (component/useful? [_ {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (:position @source)
-          target-p (:position @target)
-          prop (ctx/property ctx projectile-id)]
+          target-p (:position @target)]
       (and (not (ctx/path-blocked? ctx ; TODO test
                                    source-p
                                    target-p
-                                   (projectile-size prop)))
+                                   (projectile-size projectile)))
            ; TODO not taking into account body sizes
            (< (v/distance source-p ; entity/distance function protocol EntityPosition
                           target-p)
-              (:projectile/max-range prop)))))
+              max-range))))
 
-  (component/do! [[_ projectile-id] {:keys [effect/source effect/direction] :as ctx}]
+  (component/do! [_ {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
-      projectile-id
-      {:position (start-point @source
-                              direction
-                              (projectile-size (ctx/property ctx projectile-id)))
+      {:position (start-point @source direction (projectile-size projectile))
        :direction direction
-       :faction (:entity/faction @source)}]]))
+       :faction (:entity/faction @source)}
+      projectile]]))
 
 (comment
  ; mass shooting

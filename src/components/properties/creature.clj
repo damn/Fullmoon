@@ -99,11 +99,8 @@
 
 ; => one to one attr!?
 (defcomponent :effect/spawn
-  {:data [:qualified-keyword {:namespace :creatures}]
-   :let creature-id}
-  (component/info-text [_ _effect-ctx]
-    (str "Spawns a " (name creature-id)))
-
+  {:data [:one-to-one :properties/creature]
+   :let {:keys [property/id]}}
   (component/applicable? [_ {:keys [effect/source effect/target-position]}]
     ; TODO line of sight ? / not blocked tile..
     ; (part of target-position make)
@@ -113,6 +110,6 @@
   (component/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
-                    :creature-id creature-id
+                    :creature-id id
                     :components #:entity {:state [:state/npc :npc-idle]
                                           :faction (:entity/faction @source)}}]]))

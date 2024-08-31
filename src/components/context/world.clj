@@ -1,6 +1,5 @@
 (ns components.context.world
-  (:require [clj-commons.pretty.repl :as p]
-            [gdx.input :as input]
+  (:require [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :refer [tile->middle]]
@@ -132,8 +131,9 @@
     (ctx/update-potential-fields ctx active-entities)
     (try (ctx/tick-entities! ctx active-entities)
          (catch Throwable t
-           (p/pretty-pst t 12)
-           (assoc ctx ::tick-error t)))))
+           (-> ctx
+               (ctx/error-window! t)
+               (assoc ::tick-error t))))))
 
 (defmulti game-loop ::game-loop-mode)
 

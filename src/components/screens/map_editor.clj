@@ -16,8 +16,7 @@
             [core.scene2d.group :refer [add-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]
             [core.scene2d.ui.label :refer [set-text!]]
-            [mapgen.module-gen :as module-gen]
-            [components.widgets.error-modal :refer [error-window!]]))
+            [mapgen.module-gen :as module-gen]))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -162,7 +161,7 @@ direction keys: move")
                                         (ctx/property ctx level-id))))]
                         [(->text-button ctx "Generate" #(try (generate % (ctx/property % level-id))
                                                              (catch Throwable t
-                                                               (error-window! % t)
+                                                               (ctx/error-window! % t)
                                                                (println t)
                                                                %)))]]
                  :pack? true}))

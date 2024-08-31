@@ -1,4 +1,4 @@
-({:app/context
+[{:app/context
   [[:context/assets
     {:folder "resources/",
      :image-file-extensions #{"png" "bmp"},
@@ -4457,4 +4457,4 @@
   :world/generator :world.generator/modules,
   :world/map-size 50,
   :world/max-area-level 6,
-  :world/spawn-rate 0.1})
+  :world/spawn-rate 0.1}]
