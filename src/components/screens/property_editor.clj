@@ -295,6 +295,7 @@
                                             (redo-rows % nil)
                                             %)))]])))
 
+; TODO DRY with one-to-many
 (defmethod ->value-widget :one-to-one [[attribute property] ctx]
   (let [table (->table ctx {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx

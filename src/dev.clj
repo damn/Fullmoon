@@ -379,7 +379,49 @@
        :stats/modifiers
        :modifier/mana))
 
+ (/ 1 0)
  (binding [*print-level* nil]
-   (clojure.repl/pst *e))
+   (with-out-str
+    (clojure.repl/pst (:components.context.world/tick-error @app/state))))
 
  )
+(comment
+ (let [ctx @app/state]
+   (:effect/projectile (:skill/effects (ctx/property ctx :skills/double-fireball)))
+   ; not a core.image.Image !
+   ;(:entity/image (ctx/property ctx :projectiles/double-fireball))
+   ; not a core.image.Image !
+   ;(:entity/image (ctx/property ctx :items/sword))
+   ; this is a core.image !
+   ;(:entity/image (get (:db (:context/properties ctx)) :items/sword))
+   )
+ )
+
+
+; stats modifiers info text broken (component/create & properties mismatch ...) @ spawn tooltip
+; just check if realized or not @ info-text
+; or ctx/property
+
+; all tooltips call components/info-text
+
+; item tooltip no title name (also duplicated image)
+
+; only 2 lvls?
+; skills/effects
+; effects/projectile
+
+; this is not good for recordings to fetch references before a tx ??
+; e.g. effect/projectile kw or effect/projectile <full-projectile-data>
+
+
+
+  ; ctx/property usage:
+  ; * audiovisual (move to tx/create & sound as entity with position ?)
+  ; * creature (move to tx/create ?? and body create component ?)
+  ; * tx/projectile (used at effect ...)
+  ; * effect/projectile => this is a reference :qualified-keyword
+  ; * property/id itself is a reference??
+
+
+; => projectile also pretty-name
+; pretty-name title of entity info widget
