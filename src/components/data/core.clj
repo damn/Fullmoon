@@ -6,7 +6,7 @@
 
 (defcomponent :boolean   {:widget :check-box  :schema :boolean :default-value true})
 (defcomponent :some      {:widget :label      :schema :some})
-(defcomponent :string    {:widget :string-text-field :schema :string})
+(defcomponent :string    {:widget :text-field :schema :string})
 (defcomponent :sound     {:widget :sound      :schema :string})
 
 (defcomponent :image
