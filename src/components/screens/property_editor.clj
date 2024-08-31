@@ -330,8 +330,9 @@
 (defn- apply-context-fn [window f]
   (fn [ctx]
     (try
-     (remove! window)
-     (f ctx)
+     (let [ctx (f ctx)]
+       (remove! window)
+       ctx)
      (catch Throwable t
        (error-window! ctx t)
        ; TODO all error in 1 place utils handle
