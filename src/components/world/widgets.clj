@@ -15,14 +15,6 @@
             [components.widgets.inventory :as inventory]
             [components.widgets.hp-mana-bars :refer [->hp-mana-bars]]))
 
-(defn- ->action-bar-table [ctx]
-  (ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)
-                             :expand? true
-                             :bottom? true}]]
-                    :id :action-bar-table
-                    :cell-defaults {:pad 2}
-                    :fill-parent? true}))
-
 (extend-type core.context.Context
   core.context/Actionbar
   (selected-skill [ctx]
@@ -34,20 +26,19 @@
   (inventory-window [ctx]
     (get (:windows (ctx/get-stage ctx)) :inventory-window)))
 
-(defn- ->windows [context widget-data]
-  (ctx/->group context {:id :windows
-                        :actors [(debug-window/create context)
-                                 (entity-info-window/create context)
-                                 (inventory/->build context widget-data)]}))
-
-(defn- ->item-on-cursor-actor [context]
-  (ctx/->actor context {:draw draw-item-on-cursor}))
-
 (defn- ->ui-actors [ctx widget-data]
-  [(->action-bar-table     ctx)
-   (->hp-mana-bars         ctx)
-   (->windows              ctx widget-data)
-   (->item-on-cursor-actor ctx)
+  [(ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)
+                              :expand? true
+                              :bottom? true}]]
+                     :id :action-bar-table
+                     :cell-defaults {:pad 2}
+                     :fill-parent? true})
+   (->hp-mana-bars ctx)
+   (ctx/->group ctx {:id :windows
+                     :actors [(debug-window/create ctx)
+                              (entity-info-window/create ctx)
+                              (inventory/->build ctx widget-data)]})
+   (ctx/->actor ctx {:draw draw-item-on-cursor})
    (component/create [:widgets/player-message] ctx)])
 
 (defn- reset-stage-actors! [ctx widget-data]
