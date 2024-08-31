@@ -1,12 +1,25 @@
 (ns components.data.core
-  (:require [core.component :as component :refer [defcomponent]]))
+  (:require [core.component :as component :refer [defcomponent]]
+            core.animation
+            core.image))
 
 (defcomponent :boolean   {:widget :check-box  :schema :boolean :default-value true})
 (defcomponent :some      {:widget :label      :schema :some})
 (defcomponent :string    {:widget :text-field :schema :string})
 (defcomponent :sound     {:widget :sound      :schema :string})
-(defcomponent :image     {:widget :image      :schema :some})
-(defcomponent :animation {:widget :animation  :schema :some})
+
+(defcomponent :image
+  {:widget :image
+   :schema :some
+   :->edn core.image/image->edn
+   :->value core.image/edn->image})
+
+(defcomponent :animation
+  {:widget :animation
+   :schema :some
+   :->edn core.animation/animation->edn
+   :->value core.animation/edn->animation})
+
 (defcomponent :number    {:widget :text-field :schema number?})
 (defcomponent :nat-int   {:widget :text-field :schema nat-int?})
 (defcomponent :int       {:widget :text-field :schema int?})

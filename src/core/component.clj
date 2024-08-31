@@ -82,14 +82,6 @@
                  ~@fn-exprs)))))
       ~k)))
 
-(defsystem edn->value [_ ctx])
-(defmethod edn->value :default [[_ v] _ctx]
-  v)
-
-(defsystem value->edn [_])
-(defmethod value->edn :default [[_ v]]
-  v)
-
 (defsystem ->data [_])
 
 ;;

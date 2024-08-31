@@ -43,6 +43,24 @@
          (catch Throwable t
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
+(defn- apply-vals [m f]
+  (into {} (for [[k v] m]
+             [k (f k v)])))
+
+(defn- edn->value [property ctx]
+  (apply-vals property
+              (fn [k v]
+                (if-let [->value (:->value (component/k->data k))]
+                  (->value v ctx)
+                  v))))
+
+(defn- value->edn [property ctx]
+  (apply-vals property
+              (fn [k v]
+                (if-let [->edn (:->edn (component/k->data k))]
+                  (->edn v)
+                  v))))
+
 (defcomponent :context/properties
   {:data :some
    :let {:keys [types file properties]}}
@@ -56,7 +74,7 @@
        :types types
        :db (mapvals #(-> %
                          (validate types)
-                         (component/apply-system component/edn->value ctx))
+                         (edn->value ctx))
                     properties)})))
 
 (defn- pprint-spit [file data]
@@ -88,7 +106,7 @@
         (->> db
              vals
              (sort-by-type types)
-             (map #(component/apply-system % component/value->edn))
+             (map value->edn)
              (map sort-map)
              (pprint-spit file)))))))
 

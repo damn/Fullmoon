@@ -10,9 +10,6 @@
   {:data :animation
    :optional? false
    :let animation}
-  (component/edn->value [_ ctx] (animation/edn->animation animation ctx))
-  (component/value->edn [_]     (animation/animation->edn animation))
-
   (component/create-e [_ eid _ctx]
     [(tx-assoc-image-current-frame eid animation)])
 
