@@ -21,7 +21,7 @@
   (component/create [[_ species] _ctx]
     (str/capitalize (name species)))
   (component/info-text [[_ species] _ctx]
-    (str "[LIGHT_GRAY]Species: " species "[]")))
+    (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defcomponent :creature/level
   {:data :pos-int
