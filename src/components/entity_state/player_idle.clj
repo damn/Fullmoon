@@ -5,7 +5,7 @@
             [gdx.input :as input]
             [gdx.input.buttons :as buttons]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [mouse-on-stage-actor? get-property inventory-window selected-skill]]
+            [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]

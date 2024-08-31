@@ -1,7 +1,7 @@
 (ns components.entity.inventory
   (:require [utils.core :refer [find-first]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :refer [get-property]]
+            [core.context :as ctx]
             [core.entity :as entity]
             [core.inventory :as inventory]))
 
@@ -85,7 +85,7 @@
 (defcomponent :entity/inventory
   {:data [:one-to-many-ids :properties/item]}
   (component/create [[_ item-ids] ctx]
-    (map #(get-property ctx %) item-ids))
+    (map #(ctx/get-property ctx %) item-ids))
 
   (component/create-e [[_ items] eid _ctx]
     (cons [:tx/assoc eid :entity/inventory inventory/empty-inventory]
