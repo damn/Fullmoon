@@ -14,6 +14,7 @@
    :creature/level
    :entity/stats
    :entity/delete-after-duration
+   :projectile/piercing?
    :entity/projectile-collision
    :maxrange
    :entity-effects])
