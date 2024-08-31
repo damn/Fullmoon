@@ -6,11 +6,10 @@
 
 (defcomponent :entity/skills
   {:data [:one-to-many-ids :properties/skill]}
-  (component/create-e [[k ids-skills] eid ctx]
-    (cons
-     [:tx/assoc eid k nil]
-     (for [skill skills]
-       [:tx/add-skill eid skill])))
+  (component/create-e [[k skills] eid ctx]
+    (cons [:tx/assoc eid k nil]
+          (for [skill skills]
+            [:tx/add-skill eid skill])))
 
   (component/info-text [[_ skills] _ctx]
     ; => recursive info-text leads to endless text wall
