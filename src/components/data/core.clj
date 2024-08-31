@@ -34,7 +34,7 @@
      :items items}))
 
 ; TODO schema not checking if exists
-(defcomponent :one-to-many-ids
+(defcomponent :one-to-many
   (component/->data [[_ property-type]]
     {:widget :one-to-many
      :schema [:set [:qualified-keyword]]
