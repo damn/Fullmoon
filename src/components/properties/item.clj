@@ -11,7 +11,7 @@
       (modifiers/info-text modifiers))))
 
 (defcomponent :item/slot
-  {:data [:qualified-keyword {:namespace :inventory.slot}]
+  {:data [:enum (keys core.inventory/empty-inventory)]
    :optional? false})
 
 (defcomponent :properties/item
