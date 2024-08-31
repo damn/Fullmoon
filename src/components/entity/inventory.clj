@@ -83,9 +83,11 @@
     (boolean (pickup-item entity* item))))
 
 (defcomponent :entity/inventory
-  {:data [:one-to-many-ids :properties/item]
-   :let item-ids}
-  (component/create-e [_ eid context]
+  {:data [:one-to-many-ids :properties/item]}
+  (component/create [[_ item-ids] ctx]
+    (map #(get-property ctx %) item-ids))
+
+  (component/create-e [[_ items] eid _ctx]
     (cons [:tx/assoc eid :entity/inventory inventory/empty-inventory]
-          (for [item-id item-ids]
-            [:tx/pickup-item eid (get-property context item-id)]))))
+          (for [item items]
+            [:tx/pickup-item eid item]))))

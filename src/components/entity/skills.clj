@@ -6,10 +6,13 @@
 
 (defcomponent :entity/skills
   {:data [:one-to-many-ids :properties/skill]}
-  (component/create-e [[k skill-ids] eid ctx]
+  (component/create [[_ skill-ids] ctx]
+    (map #(ctx/get-property ctx %) skill-ids))
+
+  (component/create-e [[k skills] eid ctx]
     (cons
      [:tx/assoc eid k nil]
-     (for [skill (map #(ctx/get-property ctx %) skill-ids)]
+     (for [skill skills]
        [:tx/add-skill eid skill])))
 
   (component/info-text [[_ skills] _ctx]
