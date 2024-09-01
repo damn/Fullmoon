@@ -49,8 +49,8 @@
                                   :explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
-  (let [ctx (-> ctx
-                (dissoc ::tick-error)
+  (let [ctx (dissoc ctx ::tick-error)
+        ctx (-> ctx
                 (merge {::game-loop-mode mode}
                        (component/create-into
                         ctx
