@@ -231,10 +231,10 @@
 
 (defn k->data [k]
   (try
-   (let [data-form (:data (safe-get attributes k))]
-     (if (vector? data-form)
-       (->data data-form)
-       (safe-get attributes data-form)))
+   (let [data (:data (safe-get attributes k))]
+     (if (vector? data)
+       (->data data)
+       (safe-get attributes data)))
    (catch Throwable t
      (throw (ex-info "" {:k k} t)))))
 
