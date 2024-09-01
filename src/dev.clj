@@ -2,10 +2,7 @@
   (:require [core.context :as ctx]))
 
 (comment
- ; TODO I want to maintain the test-map with test-items & test-skills
- ; - maybe put in the map-properties player items/skills ....
 
- ; TODO ADD TO test-MAP !!! (w. vampire)
  (gdx.app/post-runnable (fn []
                           (do
                            (learn-skill! :skills/projectile)
@@ -19,22 +16,19 @@
 
  (create-item! :items/blood-glove)
 
-
  )
 
 (defn- do-on-ctx! [tx-fn]
   (swap! app/state ctx/do! [(tx-fn @app/state)]))
 
 (defn learn-skill! [skill-id]
-  (do-on-ctx!  (fn [ctx]
-                 [:tx/add-skill
-                  (:entity/id (ctx/player-entity* ctx))
-                  (ctx/property ctx skill-id)])))
+  (do-on-ctx! (fn [ctx]
+                [:tx/add-skill
+                 (:entity/id (ctx/player-entity* ctx))
+                 (ctx/property ctx skill-id)])))
 
 (defn create-item! [item-id]
-  (do-on-ctx!  (fn [ctx]
-                 [:tx/item
-                  (:position (ctx/player-entity* ctx))
-                  (ctx/property ctx item-id)])))
-
-
+  (do-on-ctx! (fn [ctx]
+                [:tx/item
+                 (:position (ctx/player-entity* ctx))
+                 (ctx/property ctx item-id)])))
