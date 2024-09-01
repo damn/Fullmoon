@@ -238,7 +238,7 @@
                 (for [property properties]
                   (let [image-widget (->image-widget ctx ; image-button/link?
                                                      (core.property/property->image property)
-                                                     {:id property})]
+                                                     {:id (:property/id property)})]
                     (add-tooltip! image-widget #(components/info-text property %))
                     image-widget))
                 (for [{:keys [property/id]} properties]
@@ -285,7 +285,7 @@
                 [(when property
                    (let [image-widget (->image-widget ctx ; image-button/link?
                                                       (core.property/property->image property)
-                                                      {:id property})]
+                                                      {:id (:property/id property)})]
                      (add-tooltip! image-widget #(components/info-text property %))
                      image-widget))]
                 [(when property
