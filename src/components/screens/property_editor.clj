@@ -50,12 +50,12 @@
 
 ;;
 
-(defn ->edn [v]
+(defn- ->edn-str [v]
   (binding [*print-level* nil]
     (pr-str v)))
 
 (defmethod ->value-widget :label [_ v ctx]
-  (->label ctx (->edn v)))
+  (->label ctx (->edn-str v)))
 
 ;;
 
@@ -68,7 +68,7 @@
   (text-field/text widget))
 
 (defmethod ->value-widget :number-text-field [data v ctx]
-  (->value-widget data (->edn v) ctx))
+  (->value-widget data (->edn-str v) ctx))
 
 (defmethod value-widget->data :number-text-field [data widget]
   (edn/read-string (value-widget->data data widget)))
@@ -85,8 +85,8 @@
 ;;
 
 (defmethod ->value-widget :enum [data v ctx]
-  (->select-box ctx {:items (map ->edn (:items data))
-                     :selected (->edn v)}))
+  (->select-box ctx {:items (map ->edn-str (:items data))
+                     :selected (->edn-str v)}))
 
 (defmethod value-widget->data :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
