@@ -28,10 +28,6 @@
             type))
         types))
 
-(defn- validation-error-message [schema property]
-  (let [explained (m/explain schema property)]
-    (str (me/humanize explained))))
-
 (defn- validate [property types]
   (let [type (property->type types property)
         schema (:schema (type types))]
@@ -39,7 +35,7 @@
              (catch Throwable t
                (throw (ex-info "m/validate fail" {:property property :type type} t))))
       property
-      (throw (ex-info (validation-error-message schema property)
+      (throw (ex-info (str (me/humanize (m/explain schema property)))
                       {:property property})))))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
