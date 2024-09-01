@@ -46,14 +46,11 @@
   (binding [*print-level* nil]
     (pr-str v)))
 
-(defn- check-hierarchy [k]
-  (cond
-   (#{:nat-int :int :pos :pos-int} k) :number
-   (#{:components :components-ns} k) :map
-   :else k))
+(defn- data->widget [[k v]]
+  (or (:widget v) k))
 
-(defmulti ->value-widget     (fn [[k _data] _v _ctx] (check-hierarchy k)))
-(defmulti value-widget->data (fn [[k _data] _widget] (check-hierarchy k)))
+(defmulti ->value-widget     (fn [data _v _ctx] (data->widget data)))
+(defmulti value-widget->data (fn [data _widget] (data->widget data)))
 
 (defmethod ->value-widget :default [_ v ctx]
   (->label ctx (->edn-str v)))

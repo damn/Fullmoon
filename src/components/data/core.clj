@@ -20,10 +20,10 @@
    :->value core.animation/edn->animation})
 
 (defcomponent :number  {:schema number?})
-(defcomponent :nat-int {:schema nat-int?})
-(defcomponent :int     {:schema int?})
-(defcomponent :pos     {:schema pos?})
-(defcomponent :pos-int {:schema pos-int?})
+(defcomponent :nat-int {:schema nat-int? :widget :number})
+(defcomponent :int     {:schema int?     :widget :number})
+(defcomponent :pos     {:schema pos?     :widget :number})
+(defcomponent :pos-int {:schema pos-int? :widget :number})
 
 (defcomponent :enum
   (component/->data [[_ items]]
@@ -61,7 +61,8 @@
 
 (defcomponent :components
   (component/->data [[_ ks]]
-    {:schema (map-schema ks)
+    {:widget :map
+     :schema (map-schema ks)
      :components ks
      :default-value {}}))
 
