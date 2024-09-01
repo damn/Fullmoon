@@ -235,6 +235,12 @@
       (->data data)
       (safe-get attributes data))))
 
+(defn data-component [k]
+  (let [data (:data (safe-get attributes k))]
+    (if (vector? data)
+      [(first data) (->data data)]
+      [data (safe-get attributes data)])))
+
 (defn optional? [k]
   (let [optional? (get (get attributes k) :optional? :not-found)]
     (if (= optional? :not-found)

@@ -42,49 +42,55 @@
                  :rows [[(->scroll-pane-cell ctx rows)]]
                  :pack? true}))
 
-(defmulti ->value-widget     (fn [data _v _ctx] (:widget data)))
-(defmulti value-widget->data (fn [data _widget] (:widget data)))
+(defn- ->edn-str [v]
+  (binding [*print-level* nil]
+    (pr-str v)))
+
+(defn- check-hierarchy [k]
+  (cond
+   (#{:nat-int :int :pos :pos-int} k) :number
+   (#{:components :components-ns} k) :map
+   :else k))
+
+(defmulti ->value-widget     (fn [[k _data] _v _ctx] (check-hierarchy k)))
+(defmulti value-widget->data (fn [[k _data] _widget] (check-hierarchy k)))
+
+(defmethod ->value-widget :default [_ v ctx]
+  (->label ctx (->edn-str v)))
 
 (defmethod value-widget->data :default [_ widget]
   (actor/id widget))
 
 ;;
 
-(defn- ->edn-str [v]
-  (binding [*print-level* nil]
-    (pr-str v)))
-
-(defmethod ->value-widget :label [_ v ctx]
-  (->label ctx (->edn-str v)))
-
-;;
-
-(defmethod ->value-widget :text-field [data v ctx]
+(defmethod ->value-widget :string [[_ data] v ctx]
   (let [widget (->text-field ctx v {})]
     (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
     widget))
 
-(defmethod value-widget->data :text-field [_ widget]
+(defmethod value-widget->data :string [_ widget]
   (text-field/text widget))
 
-(defmethod ->value-widget :number-text-field [data v ctx]
-  (->value-widget data (->edn-str v) ctx))
+(defmethod ->value-widget :number [[_ data] v ctx]
+  (let [widget (->text-field ctx (->edn-str v) {})]
+    (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
+    widget))
 
-(defmethod value-widget->data :number-text-field [data widget]
-  (edn/read-string (value-widget->data data widget)))
+(defmethod value-widget->data :number [_ widget]
+  (edn/read-string (text-field/text widget)))
 
 ;;
 
-(defmethod ->value-widget :check-box [_ checked? ctx]
+(defmethod ->value-widget :boolean [_ checked? ctx]
   (assert (boolean? checked?))
   (->check-box ctx "" (fn [_]) checked?))
 
-(defmethod value-widget->data :check-box [_ widget]
+(defmethod value-widget->data :boolean [_ widget]
   (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
 ;;
 
-(defmethod ->value-widget :enum [data v ctx]
+(defmethod ->value-widget :enum [[_ data] v ctx]
   (->select-box ctx {:items (map ->edn-str (:items data))
                      :selected (->edn-str v)}))
 
@@ -151,7 +157,7 @@
 
 (declare ->attribute-widget-group)
 
-(defmethod ->value-widget :nested-map [data m ctx]
+(defmethod ->value-widget :map [[_ data] m ctx]
   (let [attribute-widget-group (->attribute-widget-group ctx m)]
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (->table ctx {:cell-defaults {:pad 5}
@@ -163,7 +169,7 @@
                                  [attribute-widget-group]])})))
 
 
-(defmethod value-widget->data :nested-map [_ table]
+(defmethod value-widget->data :map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
 
 ;;
@@ -233,7 +239,7 @@
                 (for [{:keys [property/id]} properties]
                   (->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
-(defmethod ->value-widget :one-to-many [data properties context]
+(defmethod ->value-widget :one-to-many [[_ data] properties context]
   (let [table (->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
@@ -283,7 +289,7 @@
                                             %)))]])))
 
 ; TODO DRY with one-to-many
-(defmethod ->value-widget :one-to-one [data property ctx]
+(defmethod ->value-widget :one-to-one [[_ data] property ctx]
   (let [table (->table ctx {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
@@ -300,7 +306,7 @@
   (let [label (->label ctx (str k))
         _ (when-let [doc (component/doc k)]
             (add-tooltip! label doc))
-        value-widget (->value-widget (component/k->data k) v ctx)
+        value-widget (->value-widget (component/data-component k) v ctx)
         table (->table ctx {:id k
                             :cell-defaults {:pad 4}})
         column (remove nil?
@@ -357,7 +363,7 @@
   (into {} (for [k (map actor/id (children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (value-widget->data (component/k->data k) value-widget)])))
+             [k (value-widget->data (component/data-component k) value-widget)])))
 
 ;;
 

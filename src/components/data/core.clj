@@ -4,40 +4,36 @@
             core.animation
             core.image))
 
-(defcomponent :boolean {:widget :check-box  :schema :boolean :default-value true})
-(defcomponent :some    {:widget :label      :schema :some})
-(defcomponent :string  {:widget :text-field :schema :string})
-(defcomponent :sound   {:widget :sound      :schema :string})
+(defcomponent :boolean {:schema :boolean :default-value true})
+(defcomponent :some    {:schema :some})
+(defcomponent :string  {:schema :string})
+(defcomponent :sound   {:schema :string})
 
 (defcomponent :image
-  {:widget :image
-   :schema :some
+  {:schema :some
    :->edn core.image/image->edn
    :->value core.image/edn->image})
 
 (defcomponent :animation
-  {:widget :animation
-   :schema :some
+  {:schema :some
    :->edn core.animation/animation->edn
    :->value core.animation/edn->animation})
 
-(defcomponent :number  {:widget :number-text-field :schema number?})
-(defcomponent :nat-int {:widget :number-text-field :schema nat-int?})
-(defcomponent :int     {:widget :number-text-field :schema int?})
-(defcomponent :pos     {:widget :number-text-field :schema pos?})
-(defcomponent :pos-int {:widget :number-text-field :schema pos-int?})
+(defcomponent :number  {:schema number?})
+(defcomponent :nat-int {:schema nat-int?})
+(defcomponent :int     {:schema int?})
+(defcomponent :pos     {:schema pos?})
+(defcomponent :pos-int {:schema pos-int?})
 
 (defcomponent :enum
   (component/->data [[_ items]]
-    {:widget :enum
-     :schema (apply vector :enum items)
+    {:schema (apply vector :enum items)
      :items items}))
 
 ; TODO schema not checking if exists
 (defcomponent :one-to-many
   (component/->data [[_ property-type]]
-    {:widget :one-to-many
-     :schema [:set [:qualified-keyword]]
+    {:schema [:set [:qualified-keyword]]
      :linked-property-type property-type
      :fetch-references map
      :->edn (fn [properties]
@@ -46,30 +42,26 @@
 ; TODO schema not checking if exists
 (defcomponent :one-to-one
   (component/->data [[_ property-type]]
-    {:widget :one-to-one
-     :schema [:qualified-keyword]
+    {:schema [:qualified-keyword]
      :linked-property-type property-type
      :fetch-references get
      :->edn :property/id}))
 
 (defcomponent :qualified-keyword
   (component/->data [schema]
-    {:widget :label
-     :schema schema}))
+    {:schema schema}))
 
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (component/attribute-schema ks)))
 
 (defcomponent :map
   (component/->data [[_ ks]]
-    {:widget :nested-map
-     :schema (map-schema ks)
+    {:schema (map-schema ks)
      :default-value (zipmap ks (map component/default-value ks))}))
 
 (defcomponent :components
   (component/->data [[_ ks]]
-    {:widget :nested-map
-     :schema (map-schema ks)
+    {:schema (map-schema ks)
      :components ks
      :default-value {}}))
 
