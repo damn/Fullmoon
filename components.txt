@@ -1,3 +1,6 @@
+Validate e.g. movement-speed at add-component (tx/assoc calls component/create ... )
+-> also validate everything anyway .... ? entity schema ?
+more _clear_
 
 ; grep str/join
 ; also used @ tooltip-text
