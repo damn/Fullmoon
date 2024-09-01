@@ -61,20 +61,19 @@
 ;;
 
 (defn- add-schema-tooltip! [widget data]
-  (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data))))))
+  (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
+  widget)
 
 (defmethod ->value-widget :string [[_ data] v ctx]
-  (let [widget (->text-field ctx v {})]
-    (add-schema-tooltip! widget data)
-    widget))
+  (add-schema-tooltip! (->text-field ctx v {})
+                       data))
 
 (defmethod value-widget->data :string [_ widget]
   (text-field/text widget))
 
 (defmethod ->value-widget :number [[_ data] v ctx]
-  (let [widget (->text-field ctx (->edn-str v) {})]
-    (add-schema-tooltip! widget data)
-    widget))
+  (add-schema-tooltip! (->text-field ctx (->edn-str v) {})
+                       data))
 
 (defmethod value-widget->data :number [_ widget]
   (edn/read-string (text-field/text widget)))
