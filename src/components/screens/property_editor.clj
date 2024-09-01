@@ -16,6 +16,12 @@
             [core.scene2d.ui.cell :refer [set-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]))
 
+(comment
+ ; edit ingame
+ ; cursor not changing becuz manual update
+ (open-property-editor-window! @app/state (:property/id (ctx/mouseover-entity* @app/state)))
+ )
+
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
 ; TODO overview table not refreshed after changes in property editor window
