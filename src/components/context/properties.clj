@@ -58,7 +58,8 @@
           (keys m)))
 
 (defn- try-data [k]
-  (try (component/k->data k) (catch Throwable t)))
+  (try (component/k->data k)
+       (catch Throwable t)))
 
 (defn- edn->value [ctx]
   (fn [k v]
