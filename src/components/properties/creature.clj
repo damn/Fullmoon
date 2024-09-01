@@ -69,7 +69,7 @@
         position
         (->body (:entity/body props))
         (-> props
-            (select-keys entity-component-attributes)
+            (select-keys (conj entity-component-attributes :property/id))
             (safe-merge components)
             (assoc :entity/destroy-audiovisual :audiovisuals/creature-die))]])))
 
