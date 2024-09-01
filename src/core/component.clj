@@ -229,17 +229,14 @@
 (defn doc [k]
   (:doc (get attributes k)))
 
-(defn k->data [k]
-  (let [data (:data (safe-get attributes k))]
-    (if (vector? data)
-      (->data data)
-      (safe-get attributes data))))
-
 (defn data-component [k]
   (let [data (:data (safe-get attributes k))]
     (if (vector? data)
       [(first data) (->data data)]
       [data (safe-get attributes data)])))
+
+(defn k->data [k]
+  (second (data-component k)))
 
 (defn optional? [k]
   (let [optional? (get (get attributes k) :optional? :not-found)]
