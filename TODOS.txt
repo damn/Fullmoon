@@ -1,4 +1,12 @@
 
+->counter can be nested sub-component recursive create-call ?
+:component/counter?
+@ temp-modifier have to call create manually
+
+-> render/tick also recursive ? can mark what is a component or has subcomponents
+for performance ....
+
+
 ; stats modifiers info text broken (component/create & properties mismatch ...) @ spawn tooltip
 ; just check if realized or not @ info-text
 ; or ctx/property

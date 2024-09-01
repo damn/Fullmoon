@@ -1840,11 +1840,11 @@
    :looping? true},
   :entity/body
   {:body/flying? false, :body/height 31/48, :body/width 5/6},
-  :entity/skills #{:skills/melee-attack},
+  :entity/skills #{:skills/slow :skills/melee-attack},
   :entity/stats
   {:stats/aggro-range 6,
    :stats/hp 8,
-   :stats/mana 11,
+   :stats/mana 50,
    :stats/movement-speed 2.4,
    :stats/reaction-time 12,
    :stats/strength 1},
@@ -4398,8 +4398,7 @@
   :skill/cost 5,
   :skill/effects
   {:effect/target-entity
-   {:entity-effects {:effect.entity/movement-speed {:op/mult -0.5}},
-    :maxrange 10}},
+   {:entity-effects {:effect.entity/spiderweb true}, :maxrange 10}},
   :skill/start-action-sound "sounds/bfxr_monkheal.wav"}
  {:entity/image
   {:file "images/skills.png", :sub-image-bounds [64 96 32 32]},
