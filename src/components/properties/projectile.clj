@@ -29,8 +29,9 @@
                 :columns 16
                 :image/scale 2}}))
 
-(defn- projectile-size [projectile-property]
-  (first (:world-unit-dimensions (:entity/image projectile-property))))
+(defn- projectile-size [projectile]
+  {:pre [(:entity/image projectile)]}
+  (first (:world-unit-dimensions (:entity/image projectile))))
 
 (defcomponent :tx/projectile
   (component/do! [[_
