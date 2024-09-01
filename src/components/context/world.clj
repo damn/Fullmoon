@@ -14,7 +14,7 @@
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
-(defn- transact-create-entities-from-tiledmap! [{:keys [world/tiled-map world/start-position] :as ctx}]
+(defn- spawn-creatures! [{:keys [world/tiled-map world/start-position] :as ctx}]
   (let [ctx (if spawn-enemies?
               (ctx/do! ctx
                        (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
@@ -64,7 +64,7 @@
                            (dispose tiled-map))
                          (-> ctx
                              (merge (->world-map tiled-level))
-                             transact-create-entities-from-tiledmap!))
+                             spawn-creatures!))
       :game-loop/replay (merge ctx (->world-map (select-keys ctx [:world/tiled-map :world/start-position]))))))
 
 (defn- start-replay-mode! [ctx]
