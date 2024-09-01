@@ -230,13 +230,10 @@
   (:doc (get attributes k)))
 
 (defn k->data [k]
-  (try
-   (let [data (:data (safe-get attributes k))]
-     (if (vector? data)
-       (->data data)
-       (safe-get attributes data)))
-   (catch Throwable t
-     (throw (ex-info "" {:k k} t)))))
+  (let [data (:data (safe-get attributes k))]
+    (if (vector? data)
+      (->data data)
+      (safe-get attributes data))))
 
 (defn optional? [k]
   (let [optional? (get (get attributes k) :optional? :not-found)]
