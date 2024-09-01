@@ -455,7 +455,7 @@
     (.row main-table)
     (.fill (.expand (.add main-table container)))
     (.row main-table)
-    (.left (.add main-table (ctx/->label ctx "[LIGHT_GRAY]Left-Shift: Back to Main Menu[]")))
+    (.pad (.left (.add main-table (ctx/->label ctx "[LIGHT_GRAY]Left-Shift: Back to Main Menu[]"))) (float 10))
     (doseq [tab-data tabs-data]
       (.add tabbed-pane (->tab tab-data)))
     main-table))
