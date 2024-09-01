@@ -76,22 +76,11 @@
                          v)]
                  (value->edn k v)))))
 
-(defn- recur-fetch-refs [property db]
-  (apply-kvs property
-             (fn [k v]
-               (let [v (if (map? v)
-                         (recur-fetch-refs v db)
-                         v)]
-                 (if-let [fetch (:fetch-references (try-data k))]
-                   (fetch db v)
-                   v)))))
-
 (defn- edn->db [properties types ctx]
-  (let [db (mapvals #(-> %
-                         (validate types)
-                         (apply-kvs (edn->value ctx)))
-                    properties)]
-    (mapvals #(recur-fetch-refs % db) db)))
+  (mapvals #(-> %
+                (validate types)
+                (apply-kvs (edn->value ctx)))
+           properties))
 
 (defn- sort-by-type [types properties]
   (sort-by #(property->type types %)
@@ -123,7 +112,7 @@
        :types types
        :db (edn->db properties types ctx)})))
 
-(defn- async-pprint-spit [ctx file data]
+(defn- async-pprint-spit! [ctx file data]
   (.start
    (Thread.
     (fn []
@@ -139,17 +128,32 @@
   (->> db
        (db->edn types)
        doall
-       (async-pprint-spit ctx file))
+       (async-pprint-spit! ctx file))
   ctx)
+
+; Fetching references at ctx/property and not immediately on db creation
+; so changes in one property will not get lost at referencing properties
+; also it broke nested fetchs like :entity/skills -> :skills/projectile -> skill/effects
+; (would need one more level of recur for collections/seqs etc.)
+(defn- fetch-refs [ctx property]
+  (apply-kvs property
+             (fn [k v]
+               (let [v (if (map? v)
+                         (fetch-refs ctx v)
+                         v)]
+                 (if-let [f (:fetch-references (try-data k))]
+                   (f ctx v)
+                   v)))))
 
 (extend-type core.context.Context
   core.context/PropertyStore
-  (property [{{:keys [db]} :context/properties} id]
-    (safe-get db id))
+  (property [{{:keys [db]} :context/properties :as ctx} id]
+    (fetch-refs ctx (safe-get db id)))
 
   (all-properties [{{:keys [db types]} :context/properties :as ctx} type]
     (->> (vals db)
-         (filter #(of-type? types % type))))
+         (filter #(of-type? types % type))
+         (map #(fetch-refs ctx %))))
 
   (overview [{{:keys [types]} :context/properties} property-type]
     (:overview (property-type types)))

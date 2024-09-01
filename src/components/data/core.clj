@@ -35,17 +35,16 @@
   (component/->data [[_ property-type]]
     {:schema [:set [:qualified-keyword]]
      :linked-property-type property-type
-     :fetch-references map
-     :value->edn (fn [properties]
-                   (set (map :property/id properties)))}))
+     :fetch-references (fn [ctx property-ids]
+                         (map (partial ctx/property ctx)
+                              property-ids))}))
 
 ; TODO schema not checking if exists
 (defcomponent :one-to-one
   (component/->data [[_ property-type]]
     {:schema [:qualified-keyword]
      :linked-property-type property-type
-     :fetch-references get
-     :value->edn :property/id}))
+     :fetch-references ctx/property}))
 
 (defcomponent :qualified-keyword
   (component/->data [schema]
