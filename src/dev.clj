@@ -7,96 +7,6 @@
             [core.entity :as entity]
             [core.scene2d.actor :as actor]
             app))
-(comment
- (defn- component-systems [component-k]
-   (for [[sys-name sys-var] defsystems
-         [k method] (methods @sys-var)
-         :when (= k component-k)]
-     sys-name))
-
- (spit "components.txt"
-       (with-out-str
-        (clojure.pprint/pprint (group-by namespace
-                                         (sort (keys attributes))))))
-
- (set! *print-level* nil)
- (spit "txs.md"
-       (with-out-str
-        (doseq [[nmsp ks] (sort-by first
-                                   (group-by namespace (sort (keys (methods component/do!)))))]
-
-          (println "\n#" nmsp)
-          (doseq [k ks
-                  :let [attr-m (get component/attributes k)]]
-            (println (str "* __" k "__ `" (get (:params attr-m) "do!") "`"))
-            (when-let [data (:data attr-m)]
-              (println (str "    * data: `" (pr-str data) "`")))
-            (let [ks (descendants k)]
-              (when (seq ks)
-                (println "    * Descendants"))
-              (doseq [k ks]
-                (println "      *" k)
-                (println (str "        * data: `" (pr-str (:data (get component/attributes k))) "`"))))
-            ;(println)
-            ))))
-
- (spit "components.md"
-       (binding [*print-level* nil]
-         (with-out-str
-          (doseq [[nmsp components] (sort-by first
-                                             (group-by namespace
-                                                       (sort (keys attributes))))]
-            (println "\n#" nmsp)
-            (doseq [k components]
-              (println "*" k
-                       (if-let [ancestrs (ancestors k)]
-                         (str "-> "(clojure.string/join "," ancestrs))
-                         "")
-                       (let [attr-map (get attributes k)]
-                         (if (seq attr-map)
-                           (pr-str (:core.component/fn-params attr-map))
-                           #_(binding [*print-level* nil]
-                               (with-out-str
-                                (clojure.pprint/pprint attr-map)))
-                           "")))
-              #_(doseq [system-name (component-systems k)]
-                  (println "  * " system-name)))))))
-
- ; & add all tx's ?
-
- ; -> only components who have a system ???
- ; -> not skill/cost or something ...
- ; and each system just add docstring
- ; and component schema
- ; then expandable and upload to wiki
-
- ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
- ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
-
- ; -> and after each 'build' I can have a bash script which uploads the components go github
- )
-
-(comment
-
- (import 'com.badlogic.gdx.graphics.g2d.TextureAtlas)
- (gdx.app/post-runnable
-  (fn []
-    (let [atlas (TextureAtlas. "images/creature_animations.atlas")
-          region (.findRegion atlas "barbarian-f-2")]
-      (println region))
-
-    ; but commenting out render-entities / render-tiled-map
-    ; didnt change FPS at all (120)
-    ; thats strange I thought texture swaps take the most time
-
-    )))
-
-(comment
- (defn- all-text-colors []
-   (let [colors (seq (.keys (com.badlogic.gdx.graphics.Colors/getColors)))]
-     (str/join "\n"
-               (for [colors (partition-all 4 colors)]
-                 (str/join " , " (map #(str "[" % "]" %) colors)))))))
 
 (import 'com.badlogic.gdx.scenes.scene2d.ui.Tree$Node)
 (import 'com.kotcrab.vis.ui.widget.VisTree)
@@ -303,20 +213,6 @@
                  [:tx/item
                   (:position (ctx/player-entity* ctx))
                   (ctx/property ctx item-id)])))
-
-
-
-(comment
-
- (require '[clojure.string :as str])
- (clojure.pprint/pprint
-  (sort
-   (filter #(and (namespace %)
-                 (str/starts-with? (namespace %) "context"))
-           (keys component/attributes))))
-
- )
-
 
 (comment
  (import 'com.kotcrab.vis.ui.widget.MenuBar)
