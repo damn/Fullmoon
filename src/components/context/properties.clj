@@ -63,13 +63,13 @@
 
 (defn- edn->value [ctx]
   (fn [k v]
-    (if-let [->value (:->value (component/k->data k))]
-      (->value v ctx)
+    (if-let [f (:edn->value (component/k->data k))]
+      (f v ctx)
       v)))
 
 (defn- value->edn [k v]
-  (if-let [->edn (:->edn (try-data k))]
-    (->edn v)
+  (if-let [f (:value->edn (try-data k))]
+    (f v)
     v))
 
 (defn- recur-value->edn [property]

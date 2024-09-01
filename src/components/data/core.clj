@@ -11,13 +11,13 @@
 
 (defcomponent :image
   {:schema :some
-   :->edn core.image/image->edn
-   :->value core.image/edn->image})
+   :value->edn core.image/image->edn
+   :edn->value core.image/edn->image})
 
 (defcomponent :animation
   {:schema :some
-   :->edn core.animation/animation->edn
-   :->value core.animation/edn->animation})
+   :value->edn core.animation/animation->edn
+   :edn->value core.animation/edn->animation})
 
 (defcomponent :number  {:schema number?})
 (defcomponent :nat-int {:schema nat-int? :widget :number})
@@ -36,8 +36,8 @@
     {:schema [:set [:qualified-keyword]]
      :linked-property-type property-type
      :fetch-references map
-     :->edn (fn [properties]
-              (set (map :property/id properties)))}))
+     :value->edn (fn [properties]
+                   (set (map :property/id properties)))}))
 
 ; TODO schema not checking if exists
 (defcomponent :one-to-one
@@ -45,7 +45,7 @@
     {:schema [:qualified-keyword]
      :linked-property-type property-type
      :fetch-references get
-     :->edn :property/id}))
+     :value->edn :property/id}))
 
 (defcomponent :qualified-keyword
   (component/->data [schema]
