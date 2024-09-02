@@ -25,7 +25,7 @@
                 log?]}}
   (component/create [_ _ctx]
     (let [manager (assets/->manager)
-          sound-files (asset-files folder sound-file-extensions)
+          sound-files   (asset-files folder sound-file-extensions)
           texture-files (asset-files folder image-file-extensions)]
       (load-assets! manager sound-files   com.badlogic.gdx.audio.Sound      log?)
       (load-assets! manager texture-files com.badlogic.gdx.graphics.Texture log?)

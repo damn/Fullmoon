@@ -33,26 +33,27 @@
   (component/create-e  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
   (component/destroy-e [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
 
+(defn- create-e-system [eid]
+  (for [component @eid]
+    (fn [ctx]
+      ; we are assuming components dont remove other ones at component/create-e
+      ; thats why we reuse component and not fetch each time again for key
+      (component/create-e component eid ctx))))
+
 (defcomponent :tx/create
   (component/do! [[_ position body components] ctx]
-    (assert (and (not (contains? components :entity/id))
+    (assert (and (not (contains? components :position))
+                 (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
-    (let [entity (atom nil)
-          body (-> body
-                   (assoc :position position)
-                   entity/->Body)
-          components (assoc components
-                            :entity/id entity
-                            :entity/uid (unique-number!))
-          components (component/create-all components ctx)
-          entity* (safe-merge body components)]
-      (reset! entity entity*)
-      [(fn create-entity [ctx]
-         (for [component @entity]
-           (fn [ctx]
-             ; we are assuming components dont remove other ones at component/create-e
-             ; thats why we reuse component and not fetch each time again for key
-             (component/create-e component entity ctx))))])))
+    (let [eid (atom nil)]
+      (reset! eid (-> body
+                      (assoc :position position)
+                      entity/->Body
+                      (safe-merge (-> components
+                                      (assoc :entity/id eid
+                                             :entity/uid (unique-number!))
+                                      (component/create-all ctx)))))
+      (create-e-system eid))))
 
 (defcomponent :tx/destroy
   (component/do! [[_ entity] ctx]

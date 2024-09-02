@@ -29,24 +29,19 @@
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
-; TODO cannot add components if they are optional, no :data  [:components ..]
-(def ^:private entity-component-attributes
-  [:property/pretty-name
-   :creature/species
-   :creature/level
-   :entity/animation
-   :entity/stats
-   :entity/inventory  ; remove
-   :entity/skills
-   :entity/modifiers])
-
 (defcomponent :properties/creature
   (component/create [_ _ctx]
     {:id-namespace "creatures"
      :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
-              (apply vector
-                     :entity/body
-                     entity-component-attributes)]
+              [:entity/body
+               :property/pretty-name
+               :creature/species
+               :creature/level
+               :entity/animation
+               :entity/stats
+               :entity/inventory
+               :entity/skills
+               :entity/modifiers]]
      :overview {:title "Creatures"
                 :columns 15
                 :image/scale 1.5
@@ -69,9 +64,9 @@
         position
         (->body (:entity/body props))
         (-> props
-            (select-keys (conj entity-component-attributes :property/id))
-            (safe-merge components)
-            (assoc :entity/destroy-audiovisual :audiovisuals/creature-die))]])))
+            (dissoc :entity/body)
+            (assoc :entity/destroy-audiovisual :audiovisuals/creature-die)
+            (safe-merge components))]])))
 
 
 ; TODO spawning on player both without error ?! => not valid position checked
