@@ -31,8 +31,7 @@
 
 (defcomponent :properties/creature
   (component/create [_ _ctx]
-    {:id-namespace "creatures"
-     :schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
+    {:schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               [:entity/body
                :property/pretty-name
                :creature/species

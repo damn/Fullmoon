@@ -4,8 +4,7 @@
 
 (defcomponent :properties/audiovisual
   (component/create [_ _ctx]
-    {:id-namespace "audiovisuals"
-     :schema [[:property/id [:qualified-keyword {:namespace :audiovisuals}]]
+    {:schema [[:property/id [:qualified-keyword {:namespace :audiovisuals}]]
               [:tx/sound
                :entity/animation]]
      :overview {:title "Audiovisuals"

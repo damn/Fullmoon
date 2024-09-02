@@ -14,22 +14,11 @@
     (assert (apply distinct? (map :property/id values)))
     (zipmap (map :property/id values) values)))
 
-(defn- of-type?
-  ([property-type {:keys [property/id]}]
-   (= (namespace id)
-      (:id-namespace property-type)))
-  ([types property type]
-   (of-type? (type types) property)))
-
-(defn- property->type [types property]
-  {:post [%]}
-  (some (fn [[type property-type]]
-          (when (of-type? property-type property)
-            type))
-        types))
+(defn- property->type [{:keys [property/id]}]
+  (keyword "properties" (namespace id)))
 
 (defn- validate [property types]
-  (let [type (property->type types property)
+  (let [type (property->type property)
         schema (:schema (type types))]
     (if (try (m/validate schema property)
              (catch Throwable t
@@ -82,10 +71,6 @@
                 (apply-kvs (edn->value ctx)))
            properties))
 
-(defn- sort-by-type [types properties]
-  (sort-by #(property->type types %)
-           properties))
-
 (defn- recur-sort-map [m]
   (into (sorted-map)
         (zipmap (keys m)
@@ -97,7 +82,7 @@
 (defn- db->edn [types db]
   (->> db
        vals
-       (sort-by-type types)
+       (sort-by property->type)
        (map recur-value->edn)
        (map #(validate % types))
        (map recur-sort-map)))
@@ -150,9 +135,9 @@
   (property [{{:keys [db]} :context/properties :as ctx} id]
     (fetch-refs ctx (safe-get db id)))
 
-  (all-properties [{{:keys [db types]} :context/properties :as ctx} type]
+  (all-properties [{{:keys [db]} :context/properties :as ctx} type]
     (->> (vals db)
-         (filter #(of-type? types % type))
+         (filter #(= type (property->type %)))
          (map #(fetch-refs ctx %))))
 
   (overview [{{:keys [types]} :context/properties} property-type]
@@ -161,7 +146,7 @@
   (property-types [{{:keys [types]} :context/properties}]
     (keys types))
 
-  (update! [{{:keys [db types]} :context/properties :as ctx} {:keys [property/id] :as property}]
+  (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
            (contains? db id)]}
     (-> ctx

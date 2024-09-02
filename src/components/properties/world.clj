@@ -20,8 +20,7 @@
 
 (defcomponent :properties/world
   (component/create [_ _ctx]
-    {:id-namespace "worlds"
-     :schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
+    {:schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
               [:world/generator
                :world/tiled-map
                :world/map-size

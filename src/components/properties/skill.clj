@@ -36,8 +36,7 @@
 
 (defcomponent :properties/skill
   (component/create [_ _ctx]
-    {:id-namespace "skills"
-     :schema [[:property/id [:qualified-keyword {:namespace :skills}]]
+    {:schema [[:property/id [:qualified-keyword {:namespace :skills}]]
               [:property/pretty-name
                :entity/image
                :skill/action-time

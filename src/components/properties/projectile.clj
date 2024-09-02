@@ -18,8 +18,7 @@
 
 (defcomponent :properties/projectile
   (component/create [_ _ctx]
-    {:id-namespace "projectiles"
-     :schema [[:property/id [:qualified-keyword {:namespace :projectiles}]]
+    {:schema [[:property/id [:qualified-keyword {:namespace :projectiles}]]
               [:entity/image
                :projectile/max-range
                :projectile/speed

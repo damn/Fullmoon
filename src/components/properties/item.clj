@@ -17,8 +17,7 @@
 
 (defcomponent :properties/item
   (component/create [_ _ctx]
-    {:id-namespace "items"
-     :schema [[:property/id [:qualified-keyword {:namespace :items}]]
+    {:schema [[:property/id [:qualified-keyword {:namespace :items}]]
               [:property/pretty-name
                :entity/image
                :item/slot
