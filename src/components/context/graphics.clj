@@ -12,10 +12,6 @@
                                  text
                                  views)))
 
-; cannot load batch, shape-drawer, gui/world-view via component/load! because no namespaced keys
-; could add the namespace 'graphics' manually
-; but then we need separate namespaces gui-view & world-view, batch, shape-drawer-texture not disposed.
-; but as batch, shape-drawer & gui-view is required for everything to work we can hide them as well.
 (defcomponent :context/graphics
   {:data :some
    :let {:keys [views default-font cursors]}}
