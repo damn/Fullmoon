@@ -36,16 +36,16 @@
 
 (defn- this [ctx] (:context/assets ctx))
 
-(defn- get-file [ctx file]
+(defn- get-asset [ctx file]
   (get (:manager (this ctx)) file))
 
 (extend-type core.context.Context
   core.context/Assets
   (play-sound! [ctx file]
-    (sound/play (get-file ctx file)))
+    (sound/play (get-asset ctx file)))
 
   (cached-texture [ctx file]
-    (get-file ctx file))
+    (get-asset ctx file))
 
   (all-sound-files   [ctx] (:sound-files   (this ctx)))
   (all-texture-files [ctx] (:texture-files (this ctx))))
