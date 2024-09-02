@@ -382,7 +382,7 @@
 
 (defn- ->property-editor-window [context id]
   (let [props (ctx/property context id)
-        window (ctx/->window context {:title ""
+        window (ctx/->window context {:title "Edit Property"
                                       :modal? true
                                       :close-button? true
                                       :center? true
