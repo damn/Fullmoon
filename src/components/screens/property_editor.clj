@@ -114,7 +114,7 @@
 (defmethod ->value-widget :image [_ image ctx]
   (ctx/->image-widget ctx image {})
   #_(ctx/->image-button ctx image
-                        #(do (ctx/add-to-stage! % (->scrollable-choose-window % (texture-rows %))) %)
+                        #(ctx/add-to-stage! % (->scrollable-choose-window % (texture-rows %)))
                         {:dimensions [96 96]})) ; x2  , not hardcoded here TODO
 
 ;;
@@ -157,8 +157,7 @@
                                                  (pack-ancestor-window! attribute-widget-group)
                                                  ctx))]))
        (pack! window)
-       (ctx/add-to-stage! ctx window))
-     ctx)))
+       (ctx/add-to-stage! ctx window)))))
 
 (declare ->attribute-widget-group)
 
@@ -196,8 +195,7 @@
                                      (actor/set-id! table sound-file)
                                      ctx))
                 (->play-sound-button ctx sound-file)])]
-    (ctx/add-to-stage! ctx (->scrollable-choose-window ctx rows)))
-  ctx)
+    (ctx/add-to-stage! ctx (->scrollable-choose-window ctx rows))))
 
 (defn- ->sound-columns [ctx table sound-file]
   [(ctx/->text-button ctx (name sound-file) #(open-sounds-window! % table))
@@ -234,8 +232,7 @@
                                                             ctx)]
                                         (add! window (->overview-table ctx property-type clicked-id-fn))
                                         (pack! window)
-                                        (ctx/add-to-stage! ctx window))
-                                      ctx))]
+                                        (ctx/add-to-stage! ctx window))))]
                 (for [property properties]
                   (let [image-widget (ctx/->image-widget ctx ; image-button/link?
                                                          (core.property/property->image property)
@@ -281,8 +278,7 @@
                                                               ctx)]
                                           (add! window (->overview-table ctx property-type clicked-id-fn))
                                           (pack! window)
-                                          (ctx/add-to-stage! ctx window))
-                                        ctx)))]
+                                          (ctx/add-to-stage! ctx window)))))]
                 [(when property
                    (let [image-widget (ctx/->image-widget ctx ; image-button/link?
                                                           (core.property/property->image property)
@@ -464,8 +460,7 @@
     main-table))
 
 (defn- open-property-editor-window! [context property-id]
-  (ctx/add-to-stage! context (->property-editor-window context property-id))
-  context)
+  (ctx/add-to-stage! context (->property-editor-window context property-id)))
 
 (defn- ->tabs-data [ctx]
   (for [property-type (ctx/property-types ctx)]

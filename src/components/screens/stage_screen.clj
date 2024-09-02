@@ -53,4 +53,5 @@
   (add-to-stage! [ctx actor]
     (-> ctx
         ctx/get-stage
-        (stage/add-actor! actor))))
+        (stage/add-actor! actor))
+    ctx))

@@ -18,7 +18,7 @@
   (error-window! [ctx throwable]
     (binding [*print-level* 5]
       (p/pretty-pst throwable 24))
-    (ctx/add-to-stage!  ctx
+    (ctx/add-to-stage! ctx
                        (ctx/->window ctx {:title "Error"
                                           :rows [[(ctx/->label ctx
                                                                (binding [*print-level* nil]
@@ -28,5 +28,4 @@
                                           :close-button? true
                                           :close-on-escape? true
                                           :center? true
-                                          :pack? true}))
-    ctx))
+                                          :pack? true}))))

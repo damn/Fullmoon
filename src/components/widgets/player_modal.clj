@@ -26,5 +26,4 @@
 
 (defcomponent :tx/player-modal
   (component/do! [[_ params] ctx]
-    (show-player-modal! ctx params)
-    ctx))
+    (show-player-modal! ctx params)))
