@@ -302,10 +302,14 @@
 
 ;;
 
+(defn- ->attribute-label [ctx k]
+  (let [label (ctx/->label ctx (str k))]
+    (when-let [doc (component/doc k)]
+      (add-tooltip! label doc))
+    label))
+
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
-  (let [label (ctx/->label ctx (str k))
-        _ (when-let [doc (component/doc k)]
-            (add-tooltip! label doc))
+  (let [label (->attribute-label ctx k)
         value-widget (->value-widget (component/data-component k) v ctx)
         table (ctx/->table ctx {:id k
                                 :cell-defaults {:pad 4}})
