@@ -8,7 +8,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
             core.property
-            [core.context :as ctx :refer [get-stage ->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window all-sound-files play-sound! ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane]]
+            [core.context :as ctx :refer [->text-button ->image-button ->label ->text-field ->image-widget ->table ->stack ->window ->vertical-group ->check-box ->select-box ->actor add-to-stage! ->scroll-pane]]
             [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-tooltip! find-ancestor-window pack-ancestor-window!]]
             [core.scene2d.group :refer [add-actor! clear-children! children]]
             [core.scene2d.ui.text-field :as text-field]
@@ -180,12 +180,12 @@
 ;;
 
 (defn- ->play-sound-button [ctx sound-file]
-  (->text-button ctx ">>>" #(do (play-sound! % sound-file) %)))
+  (->text-button ctx "play!" #(do (ctx/play-sound! % sound-file) %)))
 
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [ctx table]
-  (let [rows (for [sound-file (all-sound-files ctx)]
+  (let [rows (for [sound-file (ctx/all-sound-files ctx)]
                [(->text-button ctx (str/replace-first sound-file "sounds/" "")
                                (fn [{:keys [context/actor] :as ctx}]
                                  (clear-children! table)
