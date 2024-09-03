@@ -19,6 +19,27 @@
  (open-property-editor-window! @app/state (:property/id (ctx/mouseover-entity* @app/state)))
  )
 
+(def ^:private k-sort-order [:property/id
+                             :app/lwjgl3
+                             :entity/image
+                             :entity/animation
+                             :property/pretty-name
+                             :creature/species
+                             :creature/level
+                             :entity/body
+                             :item/slot
+                             :projectile/speed
+                             :projectile/max-range
+                             :projectile/piercing?
+                             :skill/action-time-modifier-key
+                             :skill/action-time
+                             :skill/start-action-sound
+                             :skill/cost
+                             :skill/cooldown])
+
+(defn- component-order [[k _v]]
+  (or (index-of k k-sort-order) 99))
+
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)
 ; TODO overview table not refreshed after changes in property editor window
@@ -100,30 +121,9 @@
 (defn- attribute-widget-table->value-widget [table]
   (-> table group/children last))
 
-(let [k-sort-order [:property/id
-                    :app/lwjgl3
-                    :entity/image
-                    :entity/animation
-                    :property/pretty-name
-                    :creature/species
-                    :creature/level
-                    :entity/body
-                    :item/slot
-                    :projectile/speed
-                    :projectile/max-range
-                    :projectile/piercing?
-                    :skill/action-time-modifier-key
-                    :skill/action-time
-                    :skill/start-action-sound
-                    :skill/cost
-                    :skill/cooldown]]
-  (defn- sort-attributes [props]
-    (sort-by #(or (index-of (first %) k-sort-order) 99)
-             props)))
-
 (defn- ->component-widgets [ctx props]
   (let [first-row? (atom true)]
-    (for [[k v] (sort-attributes props)
+    (for [[k v] (sort-by component-order props)
           :let [sep? (not @first-row?)
                 _ (reset! first-row? false)]]
       (->component-widget ctx [k v] :horizontal-sep? sep?))))
