@@ -16,7 +16,8 @@
             [core.scene2d.group :refer [add-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]
             [core.scene2d.ui.label :refer [set-text!]]
-            [mapgen.module-gen :as module-gen]))
+            [mapgen.module-gen :as module-gen]
+            mapgen.modules))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -61,8 +62,8 @@ direction keys: move")
           (when-not area-level-grid
             (str "Module " (mapv (comp int /)
                                  (ctx/world-mouse-position ctx)
-                                 [mapgen.module-gen/module-width
-                                  mapgen.module-gen/module-height])))
+                                 [mapgen.modules/module-width
+                                  mapgen.modules/module-height])))
           (when area-level-grid
             (str "Creature id: " (tiled/property-value tiled-map :creatures tile :id)))
           (when area-level-grid
@@ -197,7 +198,7 @@ direction keys: move")
 (defcomponent :screens/map-editor
   (component/create [_ ctx]
     {:sub-screen [::sub-screen
-                  (atom {:tiled-map (->tiled-map ctx module-gen/modules-file)
+                  (atom {:tiled-map (->tiled-map ctx mapgen.modules/modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
      :stage (ctx/->stage ctx [(->generate-map-window ctx world-id)

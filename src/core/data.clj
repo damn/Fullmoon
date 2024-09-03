@@ -18,6 +18,7 @@
 ; TODO set to preferred width/height ??? why layouting not working properly?
 ; use a tree?
 ; make example with plain data
+; FIXME this not here?
 (defn ->scroll-pane-cell [ctx rows]
   (let [table (ctx/->table ctx {:rows rows
                                 :cell-defaults {:pad 1}

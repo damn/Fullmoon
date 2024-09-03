@@ -65,7 +65,6 @@
    :thin    get-thin-adj-num    ; h�hle mit breite 1 �berall nur -> turn-ratio verringern besser
    :default get-default-adj-num}) ; etwas breiter als 1 aber immernoch zu d�nn f�r m ein game -> turn-ratio verringern besser
 
-
 ; gute ergebnisse: :wide / 500-4000 max-cells / turn-ratio 0.5
 ; besser 150x150 anstatt 100x100 w h
 ; TODO glaubich einziger unterschied noch: openpaths wird bei jeder cell neu berechnet?
