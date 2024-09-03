@@ -9,8 +9,8 @@
             [core.components :as components]
             core.property
             [core.context :as ctx]
-            [core.scene2d.actor :as actor :refer [remove! set-touchable! parent add-tooltip! find-ancestor-window pack-ancestor-window!]]
-            [core.scene2d.group :refer [add-actor! clear-children! children]]
+            [core.scene2d.actor :as actor]
+            [core.scene2d.group :as group]
             [core.scene2d.ui.text-field :as text-field]
             [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [core.scene2d.ui.cell :refer [set-actor!]]
@@ -67,7 +67,7 @@
 ;;
 
 (defn- add-schema-tooltip! [widget data]
-  (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
+  (actor/add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
   widget)
 
 (defmethod ->value-widget :string [[_ data] v ctx]
@@ -148,13 +148,13 @@
                                                       (:components data)))]
                            [(ctx/->text-button ctx (name nested-k)
                                                (fn [ctx]
-                                                 (remove! window)
-                                                 (add-actor! attribute-widget-group
-                                                             (->attribute-widget-table ctx
-                                                                                       [nested-k (component/default-value nested-k)]
-                                                                                       :horizontal-sep?
-                                                                                       (pos? (count (children attribute-widget-group)))))
-                                                 (pack-ancestor-window! attribute-widget-group)
+                                                 (actor/remove! window)
+                                                 (group/add-actor! attribute-widget-group
+                                                                   (->attribute-widget-table ctx
+                                                                                             [nested-k (component/default-value nested-k)]
+                                                                                             :horizontal-sep?
+                                                                                             (pos? (count (group/children attribute-widget-group)))))
+                                                 (actor/pack-ancestor-window! attribute-widget-group)
                                                  ctx))]))
        (pack! window)
        (ctx/add-to-stage! ctx window)))))
@@ -188,10 +188,10 @@
                [(ctx/->text-button ctx
                                    (str/replace-first sound-file "sounds/" "")
                                    (fn [{:keys [context/actor] :as ctx}]
-                                     (clear-children! table)
+                                     (group/clear-children! table)
                                      (add-rows! table [(->sound-columns ctx table sound-file)])
-                                     (remove! (find-ancestor-window actor))
-                                     (pack-ancestor-window! table)
+                                     (actor/remove! (actor/find-ancestor-window actor))
+                                     (actor/pack-ancestor-window! table)
                                      (actor/set-id! table sound-file)
                                      ctx))
                 (->play-sound-button ctx sound-file)])]
@@ -214,9 +214,9 @@
 
 (defn- add-one-to-many-rows [ctx table property-type properties]
   (let [redo-rows (fn [ctx property-ids]
-                    (clear-children! table)
+                    (group/clear-children! table)
                     (add-one-to-many-rows ctx table property-type (map #(ctx/property ctx %) property-ids))
-                    (pack-ancestor-window! table))
+                    (actor/pack-ancestor-window! table))
         property-ids (set (map :property/id properties))]
     (add-rows! table
                [[(ctx/->text-button ctx "+"
@@ -227,7 +227,7 @@
                                                                       :center? true
                                                                       :close-on-escape? true})
                                             clicked-id-fn (fn [ctx id]
-                                                            (remove! window)
+                                                            (actor/remove! window)
                                                             (redo-rows ctx (conj property-ids id))
                                                             ctx)]
                                         (add! window (->overview-table ctx property-type clicked-id-fn))
@@ -237,7 +237,7 @@
                   (let [image-widget (ctx/->image-widget ctx ; image-button/link?
                                                          (core.property/property->image property)
                                                          {:id (:property/id property)})]
-                    (add-tooltip! image-widget #(components/info-text property %))
+                    (actor/add-tooltip! image-widget #(components/info-text property %))
                     image-widget))
                 (for [{:keys [property/id]} properties]
                   (ctx/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
@@ -252,7 +252,7 @@
 
 ; TODO use id of the value-widget itself and set/change it
 (defmethod value-widget->data :one-to-many [_ widget]
-  (->> (children widget)
+  (->> (group/children widget)
        (keep actor/id)
        set))
 
@@ -260,9 +260,9 @@
 
 (defn- add-one-to-one-rows [ctx table property-type property]
   (let [redo-rows (fn [ctx id]
-                    (clear-children! table)
+                    (group/clear-children! table)
                     (add-one-to-one-rows ctx table property-type (when id (ctx/property ctx id)))
-                    (pack-ancestor-window! table))]
+                    (actor/pack-ancestor-window! table))]
     (add-rows! table
                [[(when-not property
                    (ctx/->text-button ctx "+"
@@ -273,7 +273,7 @@
                                                                         :center? true
                                                                         :close-on-escape? true})
                                               clicked-id-fn (fn [ctx id]
-                                                              (remove! window)
+                                                              (actor/remove! window)
                                                               (redo-rows ctx id)
                                                               ctx)]
                                           (add! window (->overview-table ctx property-type clicked-id-fn))
@@ -283,7 +283,7 @@
                    (let [image-widget (ctx/->image-widget ctx ; image-button/link?
                                                           (core.property/property->image property)
                                                           {:id (:property/id property)})]
-                     (add-tooltip! image-widget #(components/info-text property %))
+                     (actor/add-tooltip! image-widget #(components/info-text property %))
                      image-widget))]
                 [(when property
                    (ctx/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
@@ -298,14 +298,14 @@
     table))
 
 (defmethod value-widget->data :one-to-one [_ widget]
-  (->> (children widget) (keep actor/id) first))
+  (->> (group/children widget) (keep actor/id) first))
 
 ;;
 
 (defn- ->attribute-label [ctx k]
   (let [label (ctx/->label ctx (str k))]
     (when-let [doc (component/doc k)]
-      (add-tooltip! label doc))
+      (actor/add-tooltip! label doc))
     label))
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
@@ -316,8 +316,8 @@
         column (remove nil?
                        [(when (component/optional? k)
                           (ctx/->text-button ctx "-" (fn [ctx]
-                                                       (let [window (find-ancestor-window table)]
-                                                         (remove! table)
+                                                       (let [window (actor/find-ancestor-window table)]
+                                                         (actor/remove! table)
                                                          (pack! window))
                                                        ctx)))
                         label
@@ -330,7 +330,7 @@
     table))
 
 (defn- attribute-widget-table->value-widget [table]
-  (-> table children last))
+  (-> table group/children last))
 
 (let [k-sort-order [:property/id
                     :app/lwjgl3
@@ -364,7 +364,7 @@
   (ctx/->vertical-group ctx (->attribute-widget-tables ctx props)))
 
 (defn- attribute-widget-group->data [group]
-  (into {} (for [k (map actor/id (children group))
+  (into {} (for [k (map actor/id (group/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
              [k (value-widget->data (component/data-component k) value-widget)])))
@@ -375,7 +375,7 @@
   (fn [ctx]
     (try
      (let [ctx (f ctx)]
-       (remove! window)
+       (actor/remove! window)
        ctx)
      (catch Throwable t
        (ctx/error-window! ctx t)))))
@@ -394,9 +394,10 @@
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(ctx/->text-button context "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                       (ctx/->text-button context "Delete" delete!)]])]])
-    (add-actor! window (ctx/->actor context {:act (fn [{:keys [context/state]}]
-                                                    (when (input/key-just-pressed? input.keys/enter)
-                                                      (swap! state save!)))}))
+    (grou/add-actor! window
+                     (ctx/->actor context {:act (fn [{:keys [context/state]}]
+                                                  (when (input/key-just-pressed? input.keys/enter)
+                                                    (swap! state save!)))}))
     (pack! window)
     window))
 
@@ -410,8 +411,8 @@
         top-widget (ctx/->label ctx (or (and extra-info-text (extra-info-text props)) ""))
         stack (ctx/->stack ctx [button top-widget])]
     (do
-     (add-tooltip! button #(components/info-text props %))
-     (set-touchable! top-widget :disabled)
+     (actor/add-tooltip! button #(components/info-text props %))
+     (actor/set-touchable! top-widget :disabled)
      stack)))
 
 (defn- ->overview-table
