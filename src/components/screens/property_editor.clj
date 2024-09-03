@@ -4,7 +4,7 @@
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
-            core.property
+            [core.property :as property]
             [core.context :as ctx]
             [core.data :as data]
             [core.scene2d.actor :as actor]
@@ -92,17 +92,6 @@
       (pack! window)
       (ctx/add-to-stage! ctx window))))
 
-(comment
- (let [ctx @app/state
-       crow (ctx/property ctx :creatures/bird-crow)
-       m (:entity/stats crow)
-       optional-keys-left? (not (every? (optional-keyset (:schema (component/k->data :entity/stats))) (keys m)))
-       ]
-   [;(keys m)
-    ;(optional-keyset (:schema (component/k->data :entity/stats)))
-    optional-keys-left?]
-   ))
-
 (declare ->attribute-widget-group)
 
 (defn- optional-keyset [schema]
@@ -121,7 +110,6 @@
   (let [attribute-widget-group (->attribute-widget-group ctx (:schema data) m)
         optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
                                                  (set (keys m))))]
-    (println "optional-keys-left?" optional-keys-left?)
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (ctx/->table ctx {:cell-defaults {:pad 5}
                       :rows (remove nil?
@@ -143,20 +131,6 @@
     (when-let [doc (component/doc k)]
       (actor/add-tooltip! label doc))
     label))
-
-(comment
- (require '[malli.generator :as mg])
- (require '[malli.core :as m])
- (m/validate (:schema (component/k->data :damage/min-max))
-             [10 11]
-             )
- (:schema (component/k->data :properties/audiovisuals))
- (m/validate [:map {:closed true} [:damage/min-max nil pos?]]
-             {:damage/min-max 3}
-             )
- (mg/generate (:schema (component/k->data :effect.entity/damage)) )
-
- )
 
 (defn ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label ctx k)
@@ -181,21 +155,6 @@
 
 (defn- attribute-widget-table->value-widget [table]
   (-> table group/children last))
-
-(comment
-
- (k-properties @app/state (ctx/property @app/state :creatures/vampire))
-
- ([:property/id [:qualified-keyword {:namespace :audiovisuals}]]
-  [:tx/sound {:optional false} :string]
-  [:entity/animation {:optional false} :some])
-
- [:map {:closed true}
-  [:property/id [:qualified-keyword {:namespace :audiovisuals}]]
-  [:tx/sound {:optional false} :string]
-  [:entity/animation {:optional false} :some]]
-
- )
 
 (defn- ->component-widgets [ctx schema props]
   (let [first-row? (atom true)
@@ -225,12 +184,6 @@
      (catch Throwable t
        (ctx/error-window! ctx t)))))
 
-(defn- property->type [{:keys [property/id]}]
-  (keyword "properties" (namespace id)))
-
-(defn- props->schema [ctx props]
-  (:schema ((property->type props) (:types (:context/properties ctx)))))
-
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
 (defn- ->property-editor-window [ctx id]
   (let [props (ctx/property ctx id)
@@ -240,7 +193,7 @@
                                   :center? true
                                   :close-on-escape? true
                                   :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group ctx (props->schema ctx props) props)
+        widgets (->attribute-widget-group ctx (ctx/property->schema ctx props) props)
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
     (add-rows! window [[(data/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
@@ -257,7 +210,7 @@
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} ctx clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn % id)
-        button (if-let [image (core.property/property->image props)]
+        button (if-let [image (property/->image props)]
                  (ctx/->image-button ctx image on-clicked {:scale scale})
                  (ctx/->text-button ctx (name id) on-clicked))
         top-widget (ctx/->label ctx (or (and extra-info-text (extra-info-text props)) ""))

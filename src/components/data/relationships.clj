@@ -3,7 +3,7 @@
             [core.components :as components]
             [core.context :as ctx]
             [core.data :as data]
-            core.property
+            [core.property :as property]
             [core.scene2d.actor :as actor]
             [core.scene2d.group :as group]
             [core.scene2d.ui.table :as table]
@@ -49,7 +49,7 @@
                               (ctx/add-to-stage! ctx window))))]
       (for [property properties]
         (let [image-widget (ctx/->image-widget ctx ; image-button/link?
-                                               (core.property/property->image property)
+                                               (property/->image property)
                                                {:id (:property/id property)})]
           (actor/add-tooltip! image-widget #(components/info-text property %))
           image-widget))
@@ -94,7 +94,7 @@
                                 (ctx/add-to-stage! ctx window)))))]
       [(when property
          (let [image-widget (ctx/->image-widget ctx ; image-button/link?
-                                                (core.property/property->image property)
+                                                (property/->image property)
                                                 {:id (:property/id property)})]
            (actor/add-tooltip! image-widget #(components/info-text property %))
            image-widget))]

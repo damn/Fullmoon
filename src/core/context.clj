@@ -143,6 +143,7 @@
   (all-properties [_ type])
   (overview [_ property-type])
   (property-types [_])
+  (property->schema [_ property])
   (update! [_ property])
   (delete! [_ id]))
 

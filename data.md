@@ -26,3 +26,8 @@ https://github.com/opqdonut/malli-edn-editor
 ; damage optional ...
 
 first have to fix optional ...
+
+
+# TODO next remove :items/ and use :component/schema directly or :c/schema instead of data
+; and skip all already defined (some/boolean/string) dont need to define here as defcomponents
+; then allow ks to define directly schema see properties/app no need extra defcomponents with :data/:schema (grep :data/:schema)

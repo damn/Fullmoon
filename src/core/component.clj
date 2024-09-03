@@ -247,5 +247,5 @@
               k (if k? k (k 0))]]
     (do
      (assert (keyword? k))
-     (assert (map? properties))
-     [k properties (:schema (k->data k))])))
+     (assert (or (nil? properties) (map? properties)) (pr-str ks))
+     [k properties (:schema (k->data k))])))  ; TODO here allow to pass :schema itself but then how 2 find it ...

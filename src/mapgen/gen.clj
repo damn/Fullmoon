@@ -3,7 +3,7 @@
             [data.grid2d :as grid]
             [core.maps.tiled :as tiled]
             [core.context :as ctx :refer [->tiled-map all-properties]]
-            core.property
+            [core.property :as property]
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
             [mapgen.transitions :as transitions]
@@ -81,7 +81,7 @@
   (memoize
    (fn [{:keys [property/id] :as prop}]
      (assert id)
-     (let [image (core.property/property->image prop)
+     (let [image (property/->image prop)
            tile (->static-tiled-map-tile (:texture-region image))]
        (put! (tiled/properties tile) "id" id)
        tile))))

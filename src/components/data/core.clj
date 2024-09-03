@@ -9,12 +9,7 @@
             [core.scene2d.ui.text-field :as text-field])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox)))
 
-; TODO next remove :items/ and use :component/schema directly or :c/schema instead of data
-; and skip all already defined (some/boolean/string) dont need to define here as defcomponents
-; then allow ks to define directly schema see properties/app no need extra defcomponents with :data/:schema (grep :data/:schema)
-
 (defcomponent :some {:schema :some})
-
 (defcomponent :boolean {:schema :boolean})
 
 (defmethod data/->widget :boolean [_ checked? ctx]

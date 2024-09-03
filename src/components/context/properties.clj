@@ -4,20 +4,16 @@
             [malli.error :as me]
             [utils.core :refer [safe-get mapvals]]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]))
-
-(defcomponent :property/id {:data [:qualified-keyword {}]})
+            [core.context :as ctx]
+            [core.property :as property]))
 
 (defn load-raw-properties [file]
   (let [values (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id values)))
     (zipmap (map :property/id values) values)))
 
-(defn- property->type [{:keys [property/id]}]
-  (keyword "properties" (namespace id)))
-
 (defn- validate [property types]
-  (let [type (property->type property)
+  (let [type (property/->type property)
         schema (:schema (type types))]
     (if (try (m/validate schema property)
              (catch Throwable t
@@ -145,6 +141,13 @@
 
   (property-types [{{:keys [types]} :context/properties}]
     (keys types))
+
+  (property->schema [{{:keys [types]} :context/properties} property]
+    ; TODO return m/form ?
+    (-> property
+        property/->type
+        types
+        :schema))
 
   (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
