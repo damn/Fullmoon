@@ -7,23 +7,9 @@
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.operation :as operation]))
-
-(defn- defmodifier [k operations]
-  (defcomponent* k {:data [:components operations]}))
-
-(defn- stat-k->modifier-k [k]
-  (keyword "modifier" (name k)))
-
-(defn- defstat [k {:keys [operations] :as attr-m}]
-  (defcomponent* k attr-m)
-  (when operations
-    (defmodifier (stat-k->modifier-k k) operations)))
-
-; TODO modifiers/effects based on data? don't have to use to change aggro-range etc?
-; => but then stats/hp has different schema than its actually used?
-; modifiers and effects use directly stat ??
-; also create fns component/create move here ? (e.g. hp)
+            [core.operation :as operation]
+            [core.modifier :refer [defmodifier]]
+            [core.stat :refer [stat-k->modifier-k defstat]]))
 
 (defstat :stats/reaction-time
   {:data :pos-int
@@ -143,15 +129,6 @@
 (defstat :stats/aggro-range
   {:data :nat-int
    :optional? false})
-
-; TODO negate this value also @ use
-; so can make positiive modifeirs green , negative red....
-
-; TODO kommt aufs gleiche raus if we have +1 min damage or +1 max damage?
-; just inc/mult ?
-; or even mana/hp does it make a difference ?
-(defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
-(defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
 (extend-type core.entity.Entity
   entity/Stats

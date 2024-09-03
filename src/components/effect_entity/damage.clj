@@ -1,7 +1,13 @@
 (ns components.effect-entity.damage
   (:require [utils.random :as random]
             [core.component :as component :refer [defcomponent defcomponent*]]
-            [core.entity :as entity]))
+            [core.entity :as entity]
+            [core.modifier :refer [defmodifier]]))
+
+; TODO negate this value also @ use
+; so can make positiive modifeirs green , negative red....
+(defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
+(defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
 (defn- entity*->melee-damage [entity*]
   (let [strength (or (entity/stat entity* :stats/strength) 0)]
