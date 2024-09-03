@@ -3,7 +3,7 @@
 
 (defcomponent :property/id {:data [:qualified-keyword {}]})
 
-(defn- ->type [{:keys [property/id]}]
+(defn ->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
 (defn ->image [{:keys [entity/image entity/animation]}]

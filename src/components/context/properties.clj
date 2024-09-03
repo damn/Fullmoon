@@ -78,7 +78,7 @@
 (defn- db->edn [types db]
   (->> db
        vals
-       (sort-by property->type)
+       (sort-by property/->type)
        (map recur-value->edn)
        (map #(validate % types))
        (map recur-sort-map)))
@@ -133,7 +133,7 @@
 
   (all-properties [{{:keys [db]} :context/properties :as ctx} type]
     (->> (vals db)
-         (filter #(= type (property->type %)))
+         (filter #(= type (property/->type %)))
          (map #(fetch-refs ctx %))))
 
   (overview [{{:keys [types]} :context/properties} property-type]
@@ -143,15 +143,12 @@
     (keys types))
 
   (property->schema [{{:keys [types]} :context/properties} property]
-    ; TODO return m/form ?
-    (-> property
-        property/->type
-        types
-        :schema))
+    (-> property property/->type types :schema))
 
   (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
            (contains? db id)]}
+    ; validate only property alone first?
     (-> ctx
         (update-in [:context/properties :db] assoc id property)
         validate-and-write-to-file!))
