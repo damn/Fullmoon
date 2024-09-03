@@ -18,12 +18,12 @@
 (defstat :stats/hp
   {:data :pos-int
    :optional? false
-   :operations [:op/max-inc :op/max-mult]})
+   :modifier-operations [:op/max-inc :op/max-mult]})
 
 (defstat :stats/mana
   {:data :nat-int
    :optional? true
-   :operations [:op/max-inc :op/max-mult]})
+   :modifier-operations [:op/max-inc :op/max-mult]})
 
 (defn- effect-k->stat-k [effect-k]
   (keyword "stats" (name effect-k)))
@@ -77,7 +77,7 @@
 (defstat :stats/movement-speed
   {:data :pos;(m/form entity/movement-speed-schema)
    :optional? false
-   :operations [:op/inc :op/mult]})
+   :modifier-operations [:op/inc :op/mult]})
 
 ; TODO show the stat in different color red/green if it was permanently modified ?
 ; or an icon even on the creature
@@ -90,7 +90,7 @@
 (defstat :stats/strength
   {:data :nat-int
    :optional? false
-   :operations [:op/inc]})
+   :modifier-operations [:op/inc]})
 
 ; TODO here >0
 (let [doc "action-time divided by this stat when a skill is being used.
@@ -106,24 +106,24 @@
     {:data data
      :doc doc
      :optional? optional?
-     :operations operations})
+     :modifier-operations operations})
 
   (defstat :stats/attack-speed
     {:data data
      :doc doc
      :optional? optional?
-     :operations operations}))
+     :modifier-operations operations}))
 
 ; TODO bounds
 (defstat :stats/armor-save
   {:data :number
    :optional? true
-   :operations [:op/inc]})
+   :modifier-operations [:op/inc]})
 
 (defstat :stats/armor-pierce
   {:data :number
    :optional? true
-   :operations [:op/inc]})
+   :modifier-operations [:op/inc]})
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 (defstat :stats/aggro-range

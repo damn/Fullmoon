@@ -2,7 +2,7 @@
   (:require [utils.random :as random]
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
-            [core.modifier :refer [defmodifier]]))
+            [core.stat :refer [defmodifier]]))
 
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
