@@ -133,7 +133,7 @@
 (declare ->attribute-widget-table
          attribute-widget-group->data)
 
-(defn- ->add-nested-map-button [data attribute-widget-group ctx]
+(defn- ->add-component-button [data attribute-widget-group ctx]
   (ctx/->text-button
    ctx
    "Add component"
@@ -167,7 +167,7 @@
     (ctx/->table ctx {:cell-defaults {:pad 5}
                       :rows (remove nil?
                                     [(when (:components data)
-                                       [(->add-nested-map-button data attribute-widget-group ctx)])
+                                       [(->add-component-button data attribute-widget-group ctx)])
                                      (when (:components data)
                                        [(->horizontal-separator-cell 1)])
                                      [attribute-widget-group]])})))
