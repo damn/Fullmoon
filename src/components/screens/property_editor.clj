@@ -1,8 +1,5 @@
 (ns components.screens.property-editor
-  (:require [clojure.edn :as edn]
-            [clojure.string :as str]
-            [malli.core :as m]
-            [gdx.input :as input]
+  (:require [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
@@ -12,7 +9,6 @@
             [core.data :as data]
             [core.scene2d.actor :as actor]
             [core.scene2d.group :as group]
-            [core.scene2d.ui.text-field :as text-field]
             [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
             [core.scene2d.ui.cell :refer [set-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]))
@@ -27,65 +23,6 @@
 ; when closing (lose changes? yes no)
 ; TODO overview table not refreshed after changes in property editor window
 
-(defn- ->scroll-pane-cell [ctx rows]
-  (let [table (ctx/->table ctx {:rows rows
-                                :cell-defaults {:pad 1}
-                                :pack? true})
-        scroll-pane (ctx/->scroll-pane ctx table)]
-    {:actor scroll-pane
-     :width (- (ctx/gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)
-     :height (- (ctx/gui-viewport-height ctx) 100) })) ;(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))
-
-; TODO set to preferred width/height ??? why layouting not working properly?
-; use a tree?
-; make example with plain data
-
-(defn ->scrollable-choose-window [ctx rows]
-  (ctx/->window ctx {:title "Choose"
-                     :modal? true
-                     :close-button? true
-                     :center? true
-                     :close-on-escape? true
-                     :rows [[(->scroll-pane-cell ctx rows)]]
-                     :pack? true}))
-
-(defn- add-schema-tooltip! [widget data]
-  (actor/add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
-  widget)
-
-(defmethod data/->widget :string [[_ data] v ctx]
-  (add-schema-tooltip! (ctx/->text-field ctx v {})
-                       data))
-
-(defmethod data/widget->value :string [_ widget]
-  (text-field/text widget))
-
-(defmethod data/->widget :number [[_ data] v ctx]
-  (add-schema-tooltip! (ctx/->text-field ctx (utils/->edn-str v) {})
-                       data))
-
-(defmethod data/widget->value :number [_ widget]
-  (edn/read-string (text-field/text widget)))
-
-;;
-
-(defmethod data/->widget :boolean [_ checked? ctx]
-  (assert (boolean? checked?))
-  (ctx/->check-box ctx "" (fn [_]) checked?))
-
-(defmethod data/widget->value :boolean [_ widget]
-  (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
-
-;;
-
-(defmethod data/->widget :enum [[_ data] v ctx]
-  (ctx/->select-box ctx {:items (map utils/->edn-str (:items data))
-                         :selected (utils/->edn-str v)}))
-
-(defmethod data/widget->value :enum [_ widget]
-  (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
-
-;;
 
 ; TODO too many ! too big ! scroll ... only show files first & preview?
 ; TODO make tree view from folders, etc. .. !! all creatures animations showing...
@@ -158,38 +95,6 @@
 
 (defmethod data/widget->value :map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
-
-;;
-
-(defn- ->play-sound-button [ctx sound-file]
-  (ctx/->text-button ctx "play!" #(do (ctx/play-sound! % sound-file) %)))
-
-(declare ->sound-columns)
-
-(defn- open-sounds-window! [ctx table]
-  (let [rows (for [sound-file (ctx/all-sound-files ctx)]
-               [(ctx/->text-button ctx
-                                   (str/replace-first sound-file "sounds/" "")
-                                   (fn [{:keys [context/actor] :as ctx}]
-                                     (group/clear-children! table)
-                                     (add-rows! table [(->sound-columns ctx table sound-file)])
-                                     (actor/remove! (actor/find-ancestor-window actor))
-                                     (actor/pack-ancestor-window! table)
-                                     (actor/set-id! table sound-file)
-                                     ctx))
-                (->play-sound-button ctx sound-file)])]
-    (ctx/add-to-stage! ctx (->scrollable-choose-window ctx rows))))
-
-(defn- ->sound-columns [ctx table sound-file]
-  [(ctx/->text-button ctx (name sound-file) #(open-sounds-window! % table))
-   (->play-sound-button ctx sound-file)])
-
-(defmethod data/->widget :sound [_ sound-file ctx]
-  (let [table (ctx/->table ctx {:cell-defaults {:pad 5}})]
-    (add-rows! table [(if sound-file
-                        (->sound-columns ctx table sound-file)
-                        [(ctx/->text-button ctx "No sound" #(open-sounds-window! % table))])])
-    table))
 
 ;;
 
@@ -374,7 +279,7 @@
         widgets (->attribute-widget-group context props)
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
-    (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
+    (add-rows! window [[(data/->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(ctx/->text-button context "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                       (ctx/->text-button context "Delete" delete!)]])]])
     (group/add-actor! window

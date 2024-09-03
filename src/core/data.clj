@@ -14,3 +14,15 @@
 
 (defmethod widget->value :default [_ widget]
   (actor/id widget))
+
+; TODO set to preferred width/height ??? why layouting not working properly?
+; use a tree?
+; make example with plain data
+(defn ->scroll-pane-cell [ctx rows]
+  (let [table (ctx/->table ctx {:rows rows
+                                :cell-defaults {:pad 1}
+                                :pack? true})
+        scroll-pane (ctx/->scroll-pane ctx table)]
+    {:actor scroll-pane
+     :width (- (ctx/gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)
+     :height (- (ctx/gui-viewport-height ctx) 100)})) ;(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))
