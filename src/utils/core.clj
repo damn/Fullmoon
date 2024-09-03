@@ -123,3 +123,7 @@
     (if (= -1 idx)
       nil
       idx)))
+
+(defn ->edn-str [v]
+  (binding [*print-level* nil]
+    (pr-str v)))

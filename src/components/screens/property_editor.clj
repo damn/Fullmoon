@@ -4,11 +4,12 @@
             [malli.core :as m]
             [gdx.input :as input]
             [gdx.input.keys :as input.keys]
-            [utils.core :refer [index-of]]
+            [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
             core.property
             [core.context :as ctx]
+            [core.data :as data]
             [core.scene2d.actor :as actor]
             [core.scene2d.group :as group]
             [core.scene2d.ui.text-field :as text-field]
@@ -48,58 +49,40 @@
                      :rows [[(->scroll-pane-cell ctx rows)]]
                      :pack? true}))
 
-(defn- ->edn-str [v]
-  (binding [*print-level* nil]
-    (pr-str v)))
-
-(defn- data->widget [[k v]]
-  (or (:widget v) k))
-
-(defmulti ->value-widget     (fn [data _v _ctx] (data->widget data)))
-(defmulti value-widget->data (fn [data _widget] (data->widget data)))
-
-(defmethod ->value-widget :default [_ v ctx]
-  (ctx/->label ctx (->edn-str v)))
-
-(defmethod value-widget->data :default [_ widget]
-  (actor/id widget))
-
-;;
-
 (defn- add-schema-tooltip! [widget data]
   (actor/add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
   widget)
 
-(defmethod ->value-widget :string [[_ data] v ctx]
+(defmethod data/->widget :string [[_ data] v ctx]
   (add-schema-tooltip! (ctx/->text-field ctx v {})
                        data))
 
-(defmethod value-widget->data :string [_ widget]
+(defmethod data/widget->value :string [_ widget]
   (text-field/text widget))
 
-(defmethod ->value-widget :number [[_ data] v ctx]
-  (add-schema-tooltip! (ctx/->text-field ctx (->edn-str v) {})
+(defmethod data/->widget :number [[_ data] v ctx]
+  (add-schema-tooltip! (ctx/->text-field ctx (utils/->edn-str v) {})
                        data))
 
-(defmethod value-widget->data :number [_ widget]
+(defmethod data/widget->value :number [_ widget]
   (edn/read-string (text-field/text widget)))
 
 ;;
 
-(defmethod ->value-widget :boolean [_ checked? ctx]
+(defmethod data/->widget :boolean [_ checked? ctx]
   (assert (boolean? checked?))
   (ctx/->check-box ctx "" (fn [_]) checked?))
 
-(defmethod value-widget->data :boolean [_ widget]
+(defmethod data/widget->value :boolean [_ widget]
   (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
 ;;
 
-(defmethod ->value-widget :enum [[_ data] v ctx]
-  (ctx/->select-box ctx {:items (map ->edn-str (:items data))
-                         :selected (->edn-str v)}))
+(defmethod data/->widget :enum [[_ data] v ctx]
+  (ctx/->select-box ctx {:items (map utils/->edn-str (:items data))
+                         :selected (utils/->edn-str v)}))
 
-(defmethod value-widget->data :enum [_ widget]
+(defmethod data/widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
 ;;
@@ -111,7 +94,7 @@
     [(ctx/->image-button ctx (ctx/create-image ctx file) identity)]
     #_[(ctx/->text-button ctx file identity)]))
 
-(defmethod ->value-widget :image [_ image ctx]
+(defmethod data/->widget :image [_ image ctx]
   (ctx/->image-widget ctx image {})
   #_(ctx/->image-button ctx image
                         #(ctx/add-to-stage! % (->scrollable-choose-window % (texture-rows %)))
@@ -123,7 +106,7 @@
 ; frame-duration
 ; frames ....
 ; hidden actor act tick atom animation & set current frame image drawable
-(defmethod ->value-widget :animation [_ animation ctx]
+(defmethod data/->widget :animation [_ animation ctx]
   (ctx/->table ctx {:rows [(for [image (:frames animation)]
                              (ctx/->image-widget ctx image {}))]
                     :cell-defaults {:pad 1}}))
@@ -161,7 +144,7 @@
 
 (declare ->attribute-widget-group)
 
-(defmethod ->value-widget :map [[_ data] m ctx]
+(defmethod data/->widget :map [[_ data] m ctx]
   (let [attribute-widget-group (->attribute-widget-group ctx m)]
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (ctx/->table ctx {:cell-defaults {:pad 5}
@@ -173,7 +156,7 @@
                                      [attribute-widget-group]])})))
 
 
-(defmethod value-widget->data :map [_ table]
+(defmethod data/widget->value :map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
 
 ;;
@@ -201,7 +184,7 @@
   [(ctx/->text-button ctx (name sound-file) #(open-sounds-window! % table))
    (->play-sound-button ctx sound-file)])
 
-(defmethod ->value-widget :sound [_ sound-file ctx]
+(defmethod data/->widget :sound [_ sound-file ctx]
   (let [table (ctx/->table ctx {:cell-defaults {:pad 5}})]
     (add-rows! table [(if sound-file
                         (->sound-columns ctx table sound-file)
@@ -242,7 +225,7 @@
                 (for [{:keys [property/id]} properties]
                   (ctx/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
-(defmethod ->value-widget :one-to-many [[_ data] properties context]
+(defmethod data/->widget :one-to-many [[_ data] properties context]
   (let [table (ctx/->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
@@ -251,7 +234,7 @@
     table))
 
 ; TODO use id of the value-widget itself and set/change it
-(defmethod value-widget->data :one-to-many [_ widget]
+(defmethod data/widget->value :one-to-many [_ widget]
   (->> (group/children widget)
        (keep actor/id)
        set))
@@ -289,7 +272,7 @@
                    (ctx/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
 
 ; TODO DRY with one-to-many
-(defmethod ->value-widget :one-to-one [[_ data] property ctx]
+(defmethod data/->widget :one-to-one [[_ data] property ctx]
   (let [table (ctx/->table ctx {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
@@ -297,7 +280,7 @@
                          property)
     table))
 
-(defmethod value-widget->data :one-to-one [_ widget]
+(defmethod data/widget->value :one-to-one [_ widget]
   (->> (group/children widget) (keep actor/id) first))
 
 ;;
@@ -310,7 +293,7 @@
 
 (defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label ctx k)
-        value-widget (->value-widget (component/data-component k) v ctx)
+        value-widget (data/->widget (component/data-component k) v ctx)
         table (ctx/->table ctx {:id k
                                 :cell-defaults {:pad 4}})
         column (remove nil?
@@ -367,7 +350,7 @@
   (into {} (for [k (map actor/id (group/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (value-widget->data (component/data-component k) value-widget)])))
+             [k (data/widget->value (component/data-component k) value-widget)])))
 
 ;;
 
