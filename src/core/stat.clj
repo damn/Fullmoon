@@ -7,7 +7,7 @@
 (defn stat-k->modifier-k [k]
   (keyword "modifier" (name k)))
 
-(defn defstat [k {:keys [modifier-operations] :as attr-m}]
+(defn defstat [k {:keys [modifier-ops] :as attr-m}]
   (defcomponent* k attr-m)
-  (when modifier-operations
-    (defmodifier (stat-k->modifier-k k) modifier-operations)))
+  (when modifier-ops
+    (defmodifier (stat-k->modifier-k k) modifier-ops)))

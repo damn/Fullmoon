@@ -48,12 +48,7 @@
 (defstat :stats/hp
   {:data :pos-int
    :optional? false
-   :modifier-operations [:op/max-inc :op/max-mult]})
-
-(defstat :stats/mana
-  {:data :nat-int
-   :optional? true
-   :modifier-operations [:op/max-inc :op/max-mult]})
+   :modifier-ops [:op/max-inc :op/max-mult]})
 
 ; TODO says here 'Minimum' hp instead of just 'HP'
 ; Sets to 0 but don't kills
@@ -63,6 +58,11 @@
 (defcomponent :effect.entity/hp
   {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
 (derive :effect.entity/hp :base/stat-effect)
+
+(defstat :stats/mana
+  {:data :nat-int
+   :optional? true
+   :modifier-ops [:op/max-inc :op/max-mult]})
 
 (defcomponent :effect.entity/mana
   {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
@@ -77,7 +77,7 @@
 (defstat :stats/movement-speed
   {:data :pos;(m/form entity/movement-speed-schema)
    :optional? false
-   :modifier-operations [:op/inc :op/mult]})
+   :modifier-ops [:op/inc :op/mult]})
 
 ; TODO show the stat in different color red/green if it was permanently modified ?
 ; or an icon even on the creature
@@ -90,7 +90,7 @@
 (defstat :stats/strength
   {:data :nat-int
    :optional? false
-   :modifier-operations [:op/inc]})
+   :modifier-ops [:op/inc]})
 
 ; TODO here >0
 (let [doc "action-time divided by this stat when a skill is being used.
@@ -106,24 +106,24 @@
     {:data data
      :doc doc
      :optional? optional?
-     :modifier-operations operations})
+     :modifier-ops operations})
 
   (defstat :stats/attack-speed
     {:data data
      :doc doc
      :optional? optional?
-     :modifier-operations operations}))
+     :modifier-ops operations}))
 
 ; TODO bounds
 (defstat :stats/armor-save
   {:data :number
    :optional? true
-   :modifier-operations [:op/inc]})
+   :modifier-ops [:op/inc]})
 
 (defstat :stats/armor-pierce
   {:data :number
    :optional? true
-   :modifier-operations [:op/inc]})
+   :modifier-ops [:op/inc]})
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 (defstat :stats/aggro-range
