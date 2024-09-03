@@ -69,100 +69,6 @@
 (defmethod data/widget->value :map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
 
-;;
-
-(declare ->overview-table)
-
-(defn- add-one-to-many-rows [ctx table property-type properties]
-  (let [redo-rows (fn [ctx property-ids]
-                    (group/clear-children! table)
-                    (add-one-to-many-rows ctx table property-type (map #(ctx/property ctx %) property-ids))
-                    (actor/pack-ancestor-window! table))
-        property-ids (set (map :property/id properties))]
-    (add-rows! table
-               [[(ctx/->text-button ctx "+"
-                                    (fn [ctx]
-                                      (let [window (ctx/->window ctx {:title "Choose"
-                                                                      :modal? true
-                                                                      :close-button? true
-                                                                      :center? true
-                                                                      :close-on-escape? true})
-                                            clicked-id-fn (fn [ctx id]
-                                                            (actor/remove! window)
-                                                            (redo-rows ctx (conj property-ids id))
-                                                            ctx)]
-                                        (add! window (->overview-table ctx property-type clicked-id-fn))
-                                        (pack! window)
-                                        (ctx/add-to-stage! ctx window))))]
-                (for [property properties]
-                  (let [image-widget (ctx/->image-widget ctx ; image-button/link?
-                                                         (core.property/property->image property)
-                                                         {:id (:property/id property)})]
-                    (actor/add-tooltip! image-widget #(components/info-text property %))
-                    image-widget))
-                (for [{:keys [property/id]} properties]
-                  (ctx/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
-
-(defmethod data/->widget :one-to-many [[_ data] properties context]
-  (let [table (ctx/->table context {:cell-defaults {:pad 5}})]
-    (add-one-to-many-rows context
-                          table
-                          (:linked-property-type data)
-                          properties)
-    table))
-
-; TODO use id of the value-widget itself and set/change it
-(defmethod data/widget->value :one-to-many [_ widget]
-  (->> (group/children widget)
-       (keep actor/id)
-       set))
-
-;;
-
-(defn- add-one-to-one-rows [ctx table property-type property]
-  (let [redo-rows (fn [ctx id]
-                    (group/clear-children! table)
-                    (add-one-to-one-rows ctx table property-type (when id (ctx/property ctx id)))
-                    (actor/pack-ancestor-window! table))]
-    (add-rows! table
-               [[(when-not property
-                   (ctx/->text-button ctx "+"
-                                      (fn [ctx]
-                                        (let [window (ctx/->window ctx {:title "Choose"
-                                                                        :modal? true
-                                                                        :close-button? true
-                                                                        :center? true
-                                                                        :close-on-escape? true})
-                                              clicked-id-fn (fn [ctx id]
-                                                              (actor/remove! window)
-                                                              (redo-rows ctx id)
-                                                              ctx)]
-                                          (add! window (->overview-table ctx property-type clicked-id-fn))
-                                          (pack! window)
-                                          (ctx/add-to-stage! ctx window)))))]
-                [(when property
-                   (let [image-widget (ctx/->image-widget ctx ; image-button/link?
-                                                          (core.property/property->image property)
-                                                          {:id (:property/id property)})]
-                     (actor/add-tooltip! image-widget #(components/info-text property %))
-                     image-widget))]
-                [(when property
-                   (ctx/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
-
-; TODO DRY with one-to-many
-(defmethod data/->widget :one-to-one [[_ data] property ctx]
-  (let [table (ctx/->table ctx {:cell-defaults {:pad 5}})]
-    (add-one-to-one-rows ctx
-                         table
-                         (:linked-property-type data)
-                         property)
-    table))
-
-(defmethod data/widget->value :one-to-one [_ widget]
-  (->> (group/children widget) (keep actor/id) first))
-
-;;
-
 (defn- ->attribute-label [ctx k]
   (let [label (ctx/->label ctx (str k))]
     (when-let [doc (component/doc k)]
@@ -276,26 +182,26 @@
      (actor/set-touchable! top-widget :disabled)
      stack)))
 
-(defn- ->overview-table
-  "Creates a table with all-properties of property-type and buttons for each id
-  which on-clicked calls clicked-id-fn."
-  [ctx property-type clicked-id-fn]
-  (let [{:keys [title
-                sort-by-fn
-                extra-info-text
-                columns
-                image/scale]} (ctx/overview ctx property-type)
-        properties (ctx/all-properties ctx property-type)
-        properties (if sort-by-fn
-                     (sort-by sort-by-fn properties)
-                     properties)]
-    (ctx/->table ctx
-                 {:cell-defaults {:pad 5}
-                  :rows (for [properties (partition-all columns properties)] ; TODO can just do 1 for?
-                          (for [property properties]
-                            (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
-                                 (catch Throwable t
-                                   (throw (ex-info "" {:property property} t))))))})))
+(extend-type core.context.Context
+  core.context/PropertyEditor
+  (->overview-table [ctx property-type clicked-id-fn]
+    (let [{:keys [title
+                  sort-by-fn
+                  extra-info-text
+                  columns
+                  image/scale]} (ctx/overview ctx property-type)
+          properties (ctx/all-properties ctx property-type)
+          properties (if sort-by-fn
+                       (sort-by sort-by-fn properties)
+                       properties)]
+      (ctx/->table ctx
+                   {:cell-defaults {:pad 5}
+                    :rows (for [properties (partition-all columns properties)] ; TODO can just do 1 for?
+                            (for [property properties]
+                              (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
+                                   (catch Throwable t
+                                     (throw (ex-info "" {:property property} t))))))}))))
+
 
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)
@@ -331,7 +237,7 @@
 (defn- ->tabs-data [ctx]
   (for [property-type (ctx/property-types ctx)]
     {:title (:title (ctx/overview ctx property-type))
-     :content (->overview-table ctx property-type open-property-editor-window!)}))
+     :content (ctx/->overview-table ctx property-type open-property-editor-window!)}))
 
 (import 'com.badlogic.gdx.scenes.scene2d.InputListener)
 

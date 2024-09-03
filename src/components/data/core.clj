@@ -58,22 +58,6 @@
 (defmethod data/widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^VisSelectBox widget)))
 
-; TODO schema not checking if exists
-(defcomponent :one-to-many
-  (component/->data [[_ property-type]]
-    {:schema [:set [:qualified-keyword]]
-     :linked-property-type property-type
-     :fetch-references (fn [ctx property-ids]
-                         (map (partial ctx/property ctx)
-                              property-ids))}))
-
-; TODO schema not checking if exists
-(defcomponent :one-to-one
-  (component/->data [[_ property-type]]
-    {:schema [:qualified-keyword]
-     :linked-property-type property-type
-     :fetch-references ctx/property}))
-
 (defcomponent :qualified-keyword
   (component/->data [schema]
     {:schema schema}))

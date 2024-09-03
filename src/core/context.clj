@@ -174,3 +174,7 @@
 
 (defprotocol ErrorWindow
   (error-window! [_ throwable]))
+
+(defprotocol PropertyEditor
+  (->overview-table [_ property-type clicked-id-fn]
+   "Creates a table with all-properties of property-type and buttons for each id which on-clicked calls clicked-id-fn."))
