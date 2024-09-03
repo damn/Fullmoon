@@ -18,7 +18,7 @@
                                               :world.generator/uf-caves]]
                                 :optional? false})
 
-(defcomponent :properties/world
+(defcomponent :properties/worlds
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
               [:world/generator

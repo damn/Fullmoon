@@ -29,7 +29,7 @@
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
-(defcomponent :properties/creature
+(defcomponent :properties/creatures
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
               [:entity/body
@@ -93,7 +93,7 @@
 
 ; => one to one attr!?
 (defcomponent :effect/spawn
-  {:data [:one-to-one :properties/creature]
+  {:data [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
   (component/applicable? [_ {:keys [effect/source effect/target-position]}]
     ; TODO line of sight ? / not blocked tile..

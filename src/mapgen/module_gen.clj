@@ -212,7 +212,7 @@
 
 (defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
   (let [layer (add-layer! tiled-map :name "creatures" :visible true)
-        creature-properties (all-properties context :properties/creature)]
+        creature-properties (all-properties context :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
               :let [area-level (get area-level-grid position)]
@@ -307,7 +307,7 @@
 
 (defn- uf-place-creatures! [context spawn-rate tiled-map spawn-positions]
   (let [layer (add-layer! tiled-map :name "creatures" :visible true)
-        creatures (all-properties context :properties/creature)
+        creatures (all-properties context :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
     ;(println "Level: " level)

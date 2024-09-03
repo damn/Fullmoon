@@ -16,7 +16,7 @@
 (defcomponent :projectile/piercing? {:data :boolean}
   (component/info-text [_ ctx] "[LIME]Piercing[]"))
 
-(defcomponent :properties/projectile
+(defcomponent :properties/projectiles
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :projectiles}]]
               [:entity/image
@@ -67,7 +67,7 @@
 ; or we adjust the effect when we send it ....
 
 (defcomponent :effect/projectile
-  {:data [:one-to-one :properties/projectile]
+  {:data [:one-to-one :properties/projectiles]
    :let {:keys [entity-effects projectile/max-range] :as projectile}}
   ; TODO for npcs need target -- anyway only with direction
   (component/applicable? [_ {:keys [effect/direction]}]

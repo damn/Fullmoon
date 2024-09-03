@@ -15,7 +15,7 @@
   {:data [:enum (keys inventory/empty-inventory)]
    :optional? false})
 
-(defcomponent :properties/item
+(defcomponent :properties/items
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :items}]]
               [:property/pretty-name

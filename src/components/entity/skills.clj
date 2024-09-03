@@ -5,7 +5,7 @@
             [core.entity :as entity]))
 
 (defcomponent :entity/skills
-  {:data [:one-to-many :properties/skill]}
+  {:data [:one-to-many :properties/skills]}
   (component/create-e [[k skills] eid ctx]
     (cons [:tx/assoc eid k nil]
           (for [skill skills]

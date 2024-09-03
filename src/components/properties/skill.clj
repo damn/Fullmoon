@@ -34,7 +34,7 @@
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))
 
-(defcomponent :properties/skill
+(defcomponent :properties/skills
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :skills}]]
               [:property/pretty-name

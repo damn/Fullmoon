@@ -16,7 +16,7 @@
   (ctx/->table
    ctx
    {:rows (remove nil? (concat
-                         (for [{:keys [property/id]} (ctx/all-properties ctx :properties/world)]
+                         (for [{:keys [property/id]} (ctx/all-properties ctx :properties/worlds)]
                            [(ctx/->text-button ctx (str "Start " id) (start-game! id))])
                          [(when (safe-get config :map-editor?)
                             [(ctx/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])

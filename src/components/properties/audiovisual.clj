@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
 
-(defcomponent :properties/audiovisual
+(defcomponent :properties/audiovisuals
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :audiovisuals}]]
               [:tx/sound

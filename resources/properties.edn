@@ -45,12 +45,12 @@
    [:context/properties
     {:types
      [:properties/app
-      :properties/audiovisual
-      :properties/creature
-      :properties/item
-      :properties/projectile
-      :properties/skill
-      :properties/world]}]
+      :properties/audiovisuals
+      :properties/creatures
+      :properties/items
+      :properties/projectiles
+      :properties/skills
+      :properties/worlds]}]
    [:context/vis-ui :skin-scale/x1]
    [:context/screens
     [:screens/main-menu
