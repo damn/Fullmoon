@@ -1,5 +1,9 @@
 (ns core.stat
-  (:require [core.component :refer [defcomponent*]]))
+  (:require [clojure.string :as str]
+            [utils.core :as utils]
+            [core.component :as component :refer [defcomponent defcomponent*]]
+            [core.entity :as entity]
+            [core.operation :as operation]))
 
 (defn defmodifier [k operations]
   (defcomponent* k {:data [:components operations]}))
@@ -7,7 +11,43 @@
 (defn stat-k->modifier-k [k]
   (keyword "modifier" (name k)))
 
-(defn defstat [k {:keys [modifier-ops] :as attr-m}]
+(defn stat-k->effect-k [k]
+  (keyword "effect.entity" (name k)))
+
+(defn- effect-k->stat-k [effect-k]
+  (keyword "stats" (name effect-k)))
+
+; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
+; for :skill/effects
+(defcomponent :base/stat-effect
+  (component/info-text [[k operations] _effect-ctx]
+    (str/join "\n"
+              (for [operation operations]
+                (str (operation/info-text operation) " " (utils/k->pretty-name k)))))
+
+  (component/applicable? [[k _] {:keys [effect/target]}]
+    (and target
+         (entity/stat @target (effect-k->stat-k k))))
+
+  (component/useful? [_ _effect-ctx]
+    true)
+
+  (component/do! [[effect-k operations] {:keys [effect/target]}]
+    (let [stat-k (effect-k->stat-k effect-k)]
+      (when-let [effective-value (entity/stat @target stat-k)]
+        [[:tx/assoc-in target [:entity/stats stat-k]
+          ; TODO similar to components.entity.modifiers/->modified-value
+          ; but operations not sort-by component/order ??
+          ; component/apply reuse fn over operations to get effectiv value
+          (reduce (fn [value operation] (component/apply operation value))
+                  effective-value
+                  operations)]]))))
+
+(defn defstat [k {:keys [modifier-ops effect-ops] :as attr-m}]
   (defcomponent* k attr-m)
   (when modifier-ops
-    (defmodifier (stat-k->modifier-k k) modifier-ops)))
+    (defmodifier (stat-k->modifier-k k) modifier-ops))
+  (when effect-ops
+    (let [effect-k (stat-k->effect-k k)]
+      (defcomponent* effect-k {:data [:components effect-ops]})
+      (derive effect-k :base/stat-effect))))

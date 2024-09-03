@@ -1,3 +1,6 @@
+TODO effect-entity mana has not triggered alert on wizard !!!
+
+
 
 ->counter can be nested sub-component recursive create-call ?
 :component/counter?

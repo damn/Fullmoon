@@ -7,66 +7,29 @@
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.operation :as operation]
-            [core.stat :refer [defmodifier stat-k->modifier-k defstat]]))
-
-(defn- effect-k->stat-k [effect-k]
-  (keyword "stats" (name effect-k)))
-
-; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
-; for :skill/effects
-; => supply :effect-operations for each stat (or get from data)
-; => and here make like defmodifier ...
-(defcomponent :base/stat-effect
-  (component/info-text [[k operations] _effect-ctx]
-    (str/join "\n"
-              (for [operation operations]
-                (str (operation/info-text operation) " " (k->pretty-name k)))))
-
-  (component/applicable? [[k _] {:keys [effect/target]}]
-    (and target
-         (entity/stat @target (effect-k->stat-k k))))
-
-  (component/useful? [_ _effect-ctx]
-    true)
-
-  (component/do! [[effect-k operations] {:keys [effect/target]}]
-    (let [stat-k (effect-k->stat-k effect-k)]
-      (when-let [effective-value (entity/stat @target stat-k)]
-        [[:tx/assoc-in target [:entity/stats stat-k]
-          ; TODO similar to components.entity.modifiers/->modified-value
-          ; but operations not sort-by component/order ??
-          ; component/apply reuse fn over operations to get effectiv value
-          (reduce (fn [value operation] (component/apply operation value))
-                  effective-value
-                  operations)]]))))
+            [core.stat :refer [stat-k->modifier-k defstat]]))
 
 (defstat :stats/reaction-time
   {:data :pos-int
    :optional? false})
 
-(defstat :stats/hp
-  {:data :pos-int
-   :optional? false
-   :modifier-ops [:op/max-inc :op/max-mult]})
-
-; TODO says here 'Minimum' hp instead of just 'HP'
+; TODO
+; @ hp says here 'Minimum' hp instead of just 'HP'
 ; Sets to 0 but don't kills
 ; Could even set to a specific value ->
 ; op/set-to-ratio 0.5 ....
 ; sets the hp to 50%...
-(defcomponent :effect.entity/hp
-  {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
-(derive :effect.entity/hp :base/stat-effect)
+(defstat :stats/hp
+  {:data :pos-int
+   :optional? false
+   :modifier-ops [:op/max-inc :op/max-mult]
+   :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
 (defstat :stats/mana
   {:data :nat-int
    :optional? true
-   :modifier-ops [:op/max-inc :op/max-mult]})
-
-(defcomponent :effect.entity/mana
-  {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
-(derive :effect.entity/mana :base/stat-effect)
+   :modifier-ops [:op/max-inc :op/max-mult]
+   :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
 ; * just don't create movement-speed increases too much?
