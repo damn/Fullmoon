@@ -21,8 +21,7 @@
 (def ^:private duration 5)
 
 (defcomponent :effect.entity/spiderweb
-  {:data :some
-   :default-value true}
+  {:data :some}
   (component/info-text [_ _effect-ctx]
     "Spiderweb slows 50% for 5 seconds."
     ; modifiers same like item/modifiers has info-text

@@ -244,5 +244,3 @@
               properties (if k? nil (k 1))
               k (if k? k (k 0))]]
     [k properties (:schema (k->data k))]))
-
-(def default-value (comp :default-value k->data))

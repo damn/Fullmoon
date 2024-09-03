@@ -11,7 +11,7 @@
 
 (defcomponent :some {:schema :some})
 
-(defcomponent :boolean {:schema :boolean :default-value true})
+(defcomponent :boolean {:schema :boolean})
 
 (defmethod data/->widget :boolean [_ checked? ctx]
   (assert (boolean? checked?))
@@ -72,18 +72,13 @@
 
 (defcomponent :map
   (component/->data [[_ ks]]
-    {:schema (map-schema ks)
-     ;:default-value (zipmap ks (map component/default-value ks))
-
-     }))
+    {:schema (map-schema ks)}))
 
 ; TODO use :map
 (defcomponent :components
   (component/->data [[_ ks]]
     {:widget :map
-     :schema (map-schema (map (fn [k] [k {:optional true}]) ks))
-     :components ks ; TODO if vector take first
-     :default-value {}}))
+     :schema (map-schema (map (fn [k] [k {:optional true}]) ks))}))
 
 (defcomponent :components-ns
   (component/->data [[_ k]]

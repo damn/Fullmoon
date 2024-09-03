@@ -59,6 +59,12 @@
     (for [[k m? _schema] ks]
       k)))
 
+(require '[malli.generator :as mg])
+
+(defn- k->default-value [k]
+  (mg/generate (:schema (component/k->data k))
+               {:size 3}))
+
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
     (let [k-props (k-properties (:schema data))
@@ -78,8 +84,7 @@
                                                 (actor/remove! window)
                                                 (group/add-actor! attribute-widget-group
                                                                   (->component-widget ctx
-                                                                                      ; TODO default-value for maps ...
-                                                                                      [k (get k-props k) (component/default-value k)]
+                                                                                      [k (get k-props k) (k->default-value k)]
                                                                                       :horizontal-sep?
                                                                                       (pos? (count (group/children attribute-widget-group)))))
                                                 (actor/pack-ancestor-window! attribute-widget-group)

@@ -34,20 +34,6 @@
          (catch Throwable t
            (throw (ex-info "" {:schema-form schema-form} t))))))
 
-(comment
-
-  (m/validate
-   (map-attribute-schema
-    [[:property/id [:qualified-keyword {:namespace :items}]]
-     [:property/pretty-name
-      :entity/image
-      :item/slot
-      [:item/modifiers {:optional true}]]])
-   {:property/id :items/foo
-    :property/pretty-name "Foo"
-    :entity/image :some
-    :item/slot :inventory.slot/cloak}))
-
 (defn- apply-kvs
   "Calls for every key in map (f k v) to calculate new value at k."
   [m f]

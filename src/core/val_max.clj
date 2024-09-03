@@ -85,4 +85,4 @@
   (= (component/apply [:op/max-mult -0.9] [5 10]) [0 0]))
  )
 
-(defcomponent :val-max {:widget :number-text-field :schema (m/form val-max-schema)})
+(defcomponent :val-max {:widget :number :schema (m/form val-max-schema)})

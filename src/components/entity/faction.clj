@@ -19,8 +19,7 @@
     faction))
 
 (defcomponent :effect.entity/convert
-  {:data :some
-   :default-value true}
+  {:data :some}
   (component/info-text [_ _effect-ctx]
     "Converts target to your side.")
 
