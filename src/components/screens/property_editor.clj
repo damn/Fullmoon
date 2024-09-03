@@ -26,41 +26,42 @@
 (declare ->component-widget
          attribute-widget-group->data)
 
-(defn- ->add-component-button [data attribute-widget-group ctx]
-  (ctx/->text-button
-   ctx
-   "Add component"
-   (fn [ctx]
-     (let [window (ctx/->window ctx {:title "Choose"
-                                     :modal? true
-                                     :close-button? true
-                                     :center? true
-                                     :close-on-escape? true
-                                     :cell-defaults {:pad 5}})]
-       (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                                      (:components data)))]
-                           [(ctx/->text-button ctx (name nested-k)
-                                               (fn [ctx]
-                                                 (actor/remove! window)
-                                                 (group/add-actor! attribute-widget-group
-                                                                   (->component-widget ctx
-                                                                                       [nested-k (component/default-value nested-k)]
-                                                                                       :horizontal-sep?
-                                                                                       (pos? (count (group/children attribute-widget-group)))))
-                                                 (actor/pack-ancestor-window! attribute-widget-group)
-                                                 ctx))]))
-       (pack! window)
-       (ctx/add-to-stage! ctx window)))))
+(defn- ->choose-component-window [data attribute-widget-group]
+  (fn [ctx]
+    (let [window (ctx/->window ctx {:title "Choose"
+                                    :modal? true
+                                    :close-button? true
+                                    :center? true
+                                    :close-on-escape? true
+                                    :cell-defaults {:pad 5}})]
+      (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
+                                                     (:components data)))]
+                          [(ctx/->text-button ctx (name nested-k)
+                                              (fn [ctx]
+                                                (actor/remove! window)
+                                                (group/add-actor! attribute-widget-group
+                                                                  (->component-widget ctx
+                                                                                      [nested-k (component/default-value nested-k)]
+                                                                                      :horizontal-sep?
+                                                                                      (pos? (count (group/children attribute-widget-group)))))
+                                                (actor/pack-ancestor-window! attribute-widget-group)
+                                                ctx))]))
+      (pack! window)
+      (ctx/add-to-stage! ctx window))))
 
 (declare ->attribute-widget-group)
 
+; * don't show button if no components to add anymore.
 (defmethod data/->widget :map [[_ data] m ctx]
   (let [attribute-widget-group (->attribute-widget-group ctx m)]
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (ctx/->table ctx {:cell-defaults {:pad 5}
                       :rows (remove nil?
                                     [(when (:components data)
-                                       [(->add-component-button data attribute-widget-group ctx)])
+                                       [(ctx/->text-button
+                                         ctx
+                                         "Add component"
+                                         (->choose-component-window data attribute-widget-group))])
                                      (when (:components data)
                                        [(->horizontal-separator-cell 1)])
                                      [attribute-widget-group]])})))
