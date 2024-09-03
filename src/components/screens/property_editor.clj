@@ -23,7 +23,7 @@
 ; when closing (lose changes? yes no)
 ; TODO overview table not refreshed after changes in property editor window
 
-(declare ->attribute-widget-table
+(declare ->component-widget
          attribute-widget-group->data)
 
 (defn- ->add-component-button [data attribute-widget-group ctx]
@@ -43,10 +43,10 @@
                                                (fn [ctx]
                                                  (actor/remove! window)
                                                  (group/add-actor! attribute-widget-group
-                                                                   (->attribute-widget-table ctx
-                                                                                             [nested-k (component/default-value nested-k)]
-                                                                                             :horizontal-sep?
-                                                                                             (pos? (count (group/children attribute-widget-group)))))
+                                                                   (->component-widget ctx
+                                                                                       [nested-k (component/default-value nested-k)]
+                                                                                       :horizontal-sep?
+                                                                                       (pos? (count (group/children attribute-widget-group)))))
                                                  (actor/pack-ancestor-window! attribute-widget-group)
                                                  ctx))]))
        (pack! window)
@@ -75,7 +75,7 @@
       (actor/add-tooltip! label doc))
     label))
 
-(defn ->attribute-widget-table [ctx [k v] & {:keys [horizontal-sep?]}]
+(defn ->component-widget [ctx [k v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label ctx k)
         value-widget (data/->widget (component/data-component k) v ctx)
         table (ctx/->table ctx {:id k
@@ -120,15 +120,15 @@
     (sort-by #(or (index-of (first %) k-sort-order) 99)
              props)))
 
-(defn- ->attribute-widget-tables [ctx props]
+(defn- ->component-widgets [ctx props]
   (let [first-row? (atom true)]
     (for [[k v] (sort-attributes props)
           :let [sep? (not @first-row?)
                 _ (reset! first-row? false)]]
-      (->attribute-widget-table ctx [k v] :horizontal-sep? sep?))))
+      (->component-widget ctx [k v] :horizontal-sep? sep?))))
 
 (defn- ->attribute-widget-group [ctx props]
-  (ctx/->vertical-group ctx (->attribute-widget-tables ctx props)))
+  (ctx/->vertical-group ctx (->component-widgets ctx props)))
 
 (defn- attribute-widget-group->data [group]
   (into {} (for [k (map actor/id (group/children group))
