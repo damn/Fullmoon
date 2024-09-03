@@ -6,7 +6,7 @@
             [core.operation :as operation]))
 
 (defn defmodifier [k operations]
-  (defcomponent* k {:data [:components operations]}))
+  (defcomponent* k {:data [:map-optional operations]}))
 
 (defn stat-k->modifier-k [k]
   (keyword "modifier" (name k)))
@@ -49,5 +49,5 @@
     (defmodifier (stat-k->modifier-k k) modifier-ops))
   (when effect-ops
     (let [effect-k (stat-k->effect-k k)]
-      (defcomponent* effect-k {:data [:components effect-ops]})
+      (defcomponent* effect-k {:data [:map-optional effect-ops]})
       (derive effect-k :base/stat-effect))))

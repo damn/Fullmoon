@@ -9,6 +9,10 @@
             [core.scene2d.ui.text-field :as text-field])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox)))
 
+; TODO next remove :items/ and use :component/schema directly or :c/schema instead of data
+; and skip all already defined (some/boolean/string) dont need to define here as defcomponents
+; then allow ks to define directly schema see properties/app no need extra defcomponents with :data/:schema (grep :data/:schema)
+
 (defcomponent :some {:schema :some})
 
 (defcomponent :boolean {:schema :boolean})
@@ -65,22 +69,19 @@
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (component/attribute-schema ks)))
 
-; component/attribute schema used @ properties themself
-; :data :map
-; :data :components
-; & :data :components-ns
-
 (defcomponent :map
   (component/->data [[_ ks]]
     {:schema (map-schema ks)}))
 
-; TODO use :map
-(defcomponent :components
+(defcomponent :map-optional
   (component/->data [[_ ks]]
     {:widget :map
      :schema (map-schema (map (fn [k] [k {:optional true}]) ks))}))
 
+(defn- namespaced-ks [ns-name-k]
+  (filter #(= (name ns-name-k) (namespace %))
+          (keys component/attributes)))
+
 (defcomponent :components-ns
-  (component/->data [[_ k]]
-    (let [ks (filter #(= (name k) (namespace %)) (keys component/attributes))]
-      (component/->data [:components ks]))))
+  (component/->data [[_ ns-name-k]]
+    (component/->data [:map-optional (namespaced-ks ns-name-k)])))

@@ -10,6 +10,7 @@
             [core.stat :refer [stat-k->modifier-k defstat]]))
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
+; and no need at created player (npc controller component?)
 (defstat :stats/aggro-range   {:data :nat-int})
 (defstat :stats/reaction-time {:data :pos-int})
 
@@ -43,7 +44,7 @@
 ; or an icon even on the creature
 ; also we want audiovisuals always ...
 (defcomponent :effect.entity/movement-speed
-  {:data [:components [:op/mult]]})
+  {:data [:map [:op/mult]]})
 (derive :effect.entity/movement-speed :base/stat-effect)
 
 ; TODO clamp into ->pos-int
@@ -126,14 +127,14 @@
 (defcomponent :entity/stats
   {:data [:map [:stats/hp
                 :stats/movement-speed
-                [:stats/mana {:optional true}]
-                [:stats/strength  {:optional true}]
-                [:stats/cast-speed  {:optional true}]
-                [:stats/attack-speed  {:optional true}]
-                [:stats/armor-save  {:optional true}]
-                [:stats/armor-pierce {:optional true}]
                 :stats/aggro-range
-                :stats/reaction-time]]
+                :stats/reaction-time
+                [:stats/mana          {:optional true}]
+                [:stats/strength      {:optional true}]
+                [:stats/cast-speed    {:optional true}]
+                [:stats/attack-speed  {:optional true}]
+                [:stats/armor-save    {:optional true}]
+                [:stats/armor-pierce  {:optional true}]]]
    :let stats}
   (component/create [_ _ctx]
     (-> stats

@@ -238,9 +238,14 @@
 (defn k->data [k]
   (second (data-component k)))
 
-(defn attribute-schema [ks]
+(defn attribute-schema
+  "Can define keys as just keywords or for example [:foo {:optional true}]."
+  [ks]
   (for [k ks
         :let [k? (keyword? k)
               properties (if k? nil (k 1))
               k (if k? k (k 0))]]
-    [k properties (:schema (k->data k))]))
+    (do
+     (assert (keyword? k))
+     (assert (map? properties))
+     [k properties (:schema (k->data k))])))

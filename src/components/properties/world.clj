@@ -9,7 +9,7 @@
 
 (defcomponent :world/tiled-map {:data :string})
 
-(defcomponent :world/components {:data [:components []]})
+(defcomponent :world/components {:data [:map []]})
 
 (defcomponent :world/generator {:data [:enum [:world.generator/tiled-map
                                               :world.generator/modules

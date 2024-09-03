@@ -85,4 +85,5 @@
   (= (component/apply [:op/max-mult -0.9] [5 10]) [0 0]))
  )
 
+; TODO gets lost here ....
 (defcomponent :val-max {:widget :number :schema (m/form val-max-schema)})

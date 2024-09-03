@@ -112,6 +112,8 @@
 
 (require '[clojure.set :as set])
 
+; TODO now move the whole :map code into ->attribute-widget-group .... just passing schema
+
 ; * don't show button if no components to add anymore (use remaining-ks)
 ; * what is missing to remove the button once the last optional key was added (not so important)
 ; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
