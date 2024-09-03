@@ -1,7 +1,7 @@
 (ns components.properties.world
   (:require [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            mapgen.module-gen))
+            mapgen.gen))
 
 (defcomponent :world/map-size {:data :pos-int})
 (defcomponent :world/max-area-level {:data :pos-int}) ; TODO <= map-size !?
@@ -36,10 +36,10 @@
    :start-position [32 71]})
 
 (defmethod generate :world.generator/modules [ctx world]
-  (mapgen.module-gen/generate ctx world))
+  (mapgen.gen/generate ctx world))
 
 (defmethod generate :world.generator/uf-caves [ctx world]
-  (mapgen.module-gen/uf-caves ctx world))
+  (mapgen.gen/uf-caves ctx world))
 
 (extend-type core.context.Context
  core.context/WorldGenerator

@@ -16,7 +16,7 @@
             [core.scene2d.group :refer [add-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]
             [core.scene2d.ui.label :refer [set-text!]]
-            [mapgen.module-gen :as module-gen]
+            mapgen.gen
             mapgen.modules))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
@@ -143,7 +143,7 @@ direction keys: move")
 (def ^:private world-id :worlds/modules)
 
 (defn- generate [context properties]
-  (let [;{:keys [tiled-map area-level-grid start-position]} (module-gen/generate context properties)
+  (let [;{:keys [tiled-map area-level-grid start-position]} (mapgen.gen/generate context properties)
         {:keys [tiled-map start-position]} (ctx/->world context world-id)
         atom-data (current-data context)]
     (dispose (:tiled-map @atom-data))
