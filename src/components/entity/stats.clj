@@ -8,34 +8,15 @@
             [core.entity :as entity]
             [core.graphics :as g]
             [core.operation :as operation]
-            [core.modifier :refer [defmodifier]]
-            [core.stat :refer [stat-k->modifier-k defstat]]))
-
-(defstat :stats/reaction-time
-  {:data :pos-int
-   :optional? false})
-
-(defstat :stats/hp
-  {:data :pos-int
-   :optional? false
-   :modifier-operations [:op/max-inc :op/max-mult]})
-
-(defstat :stats/mana
-  {:data :nat-int
-   :optional? true
-   :modifier-operations [:op/max-inc :op/max-mult]})
+            [core.stat :refer [defmodifier stat-k->modifier-k defstat]]))
 
 (defn- effect-k->stat-k [effect-k]
   (keyword "stats" (name effect-k)))
 
-; TODO says here 'Minimum' hp instead of just 'HP'
-; Sets to 0 but don't kills
-; Could even set to a specific value ->
-; op/set-to-ratio 0.5 ....
-; sets the hp to 50%...
-
-; is called :base/stat-effect so it doesn't show up in (data/namespace-components :effect) list in editor
+; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
+; => supply :effect-operations for each stat (or get from data)
+; => and here make like defmodifier ...
 (defcomponent :base/stat-effect
   (component/info-text [[k operations] _effect-ctx]
     (str/join "\n"
@@ -53,13 +34,32 @@
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx/assoc-in target [:entity/stats stat-k]
-          ; TODO similar to ->effective-value
+          ; TODO similar to components.entity.modifiers/->modified-value
           ; but operations not sort-by component/order ??
           ; component/apply reuse fn over operations to get effectiv value
           (reduce (fn [value operation] (component/apply operation value))
                   effective-value
                   operations)]]))))
 
+(defstat :stats/reaction-time
+  {:data :pos-int
+   :optional? false})
+
+(defstat :stats/hp
+  {:data :pos-int
+   :optional? false
+   :modifier-operations [:op/max-inc :op/max-mult]})
+
+(defstat :stats/mana
+  {:data :nat-int
+   :optional? true
+   :modifier-operations [:op/max-inc :op/max-mult]})
+
+; TODO says here 'Minimum' hp instead of just 'HP'
+; Sets to 0 but don't kills
+; Could even set to a specific value ->
+; op/set-to-ratio 0.5 ....
+; sets the hp to 50%...
 (defcomponent :effect.entity/hp
   {:data [:components [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]]})
 (derive :effect.entity/hp :base/stat-effect)

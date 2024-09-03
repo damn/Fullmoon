@@ -1,6 +1,5 @@
 (ns core.stat
-  (:require [core.component :refer [defcomponent*]]
-            [core.modifier :refer [defmodifier]]))
+  (:require [core.component :refer [defcomponent*]]))
 
 (defn defmodifier [k operations]
   (defcomponent* k {:data [:components operations]}))
