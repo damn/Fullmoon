@@ -16,10 +16,6 @@
 (defn- property->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
-(comment
- (let [type (property->type (ctx/property ))
-       schema (:schema (type types))]))
-
 (defn- validate [property types]
   (let [type (property->type property)
         schema (:schema (type types))]
@@ -27,14 +23,13 @@
              (catch Throwable t
                (throw (ex-info "m/validate fail" {:property property :type type} t))))
       property
-      (do
-       (clojure.pprint/pprint (m/form schema))
-       (throw (ex-info (str (me/humanize (m/explain schema property)))
-                       {:property property
-                        :schema (m/form schema)}))))))
+      (throw (ex-info (str (me/humanize (m/explain schema property)))
+                      {:property property
+                       :schema (m/form schema)})))))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
-  (let [schema-form (apply vector :map {:closed true} id-attribute (component/attribute-schema attr-ks))]
+  (let [schema-form (apply vector :map {:closed true} id-attribute
+                           (component/attribute-schema attr-ks))]
     (try (m/schema schema-form)
          (catch Throwable t
            (throw (ex-info "" {:schema-form schema-form} t))))))
