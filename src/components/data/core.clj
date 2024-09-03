@@ -6,9 +6,7 @@
             [core.context :as ctx]
             [core.data :as data]
             [core.scene2d.actor :as actor]
-            [core.scene2d.ui.text-field :as text-field]
-            core.animation
-            core.image)
+            [core.scene2d.ui.text-field :as text-field])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox)))
 
 (defcomponent :some {:schema :some})
@@ -59,18 +57,6 @@
 
 (defmethod data/widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^VisSelectBox widget)))
-
-(defcomponent :image
-  {:schema :some
-   :value->edn core.image/image->edn
-   :edn->value core.image/edn->image})
-
-(defcomponent :animation
-  {:schema :some
-   :value->edn core.animation/animation->edn
-   :edn->value core.animation/edn->animation})
-
-
 
 ; TODO schema not checking if exists
 (defcomponent :one-to-many
