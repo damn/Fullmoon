@@ -107,8 +107,8 @@
 ; TODO too many ! too big ! scroll ... only show files first & preview?
 ; TODO make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
-  (for [file (sort (core.context/all-texture-files ctx))]
-    [(ctx/->image-button ctx (core.context/create-image ctx file) identity)]
+  (for [file (sort (ctx/all-texture-files ctx))]
+    [(ctx/->image-button ctx (ctx/create-image ctx file) identity)]
     #_[(ctx/->text-button ctx file identity)]))
 
 (defmethod ->value-widget :image [_ image ctx]
@@ -389,8 +389,8 @@
                                       :close-on-escape? true
                                       :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group context props)
-        save!   (apply-context-fn window #(core.context/update! % (attribute-widget-group->data widgets)))
-        delete! (apply-context-fn window #(core.context/delete! % id))]
+        save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window #(ctx/delete! % id))]
     (add-rows! window [[(->scroll-pane-cell context [[{:actor widgets :colspan 2}]
                                                      [(ctx/->text-button context "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                       (ctx/->text-button context "Delete" delete!)]])]])
@@ -422,7 +422,7 @@
                 sort-by-fn
                 extra-info-text
                 columns
-                image/scale]} (core.context/overview ctx property-type)
+                image/scale]} (ctx/overview ctx property-type)
         properties (ctx/all-properties ctx property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
@@ -468,7 +468,7 @@
 
 (defn- ->tabs-data [ctx]
   (for [property-type (ctx/property-types ctx)]
-    {:title (:title (core.context/overview ctx property-type))
+    {:title (:title (ctx/overview ctx property-type))
      :content (->overview-table ctx property-type open-property-editor-window!)}))
 
 (import 'com.badlogic.gdx.scenes.scene2d.InputListener)
