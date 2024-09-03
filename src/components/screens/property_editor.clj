@@ -47,22 +47,39 @@
 (declare ->component-widget
          attribute-widget-group->data)
 
+(require '[malli.core :as m])
+
+(defn- k-properties [schema]
+  (let [[_m _p & ks] (m/form schema)]
+    (into {} (for [[k m? _schema] ks]
+               [k (if (map? m?) m?)]))))
+
+(defn- map-keys [schema]
+  (let [[_m _p & ks] (m/form schema)]
+    (for [[k m? _schema] ks]
+      k)))
+
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
-    (let [window (ctx/->window ctx {:title "Choose"
+    (let [k-props (k-properties (:schema data))
+          window (ctx/->window ctx {:title "Choose"
                                     :modal? true
                                     :close-button? true
                                     :center? true
                                     :close-on-escape? true
-                                    :cell-defaults {:pad 5}})]
-      (add-rows! window (for [nested-k (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                                     (:components data)))]
-                          [(ctx/->text-button ctx (name nested-k)
+                                    :cell-defaults {:pad 5}})
+          ; TODO this is ofcourse only optional ones .. ?
+          remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
+                                              (map-keys (:schema data))))]
+      (add-rows! window (for [k remaining-ks]
+                          [(ctx/->text-button ctx
+                                              (name k)
                                               (fn [ctx]
                                                 (actor/remove! window)
                                                 (group/add-actor! attribute-widget-group
                                                                   (->component-widget ctx
-                                                                                      [nested-k (component/default-value nested-k)]
+                                                                                      ; TODO default-value for maps ...
+                                                                                      [k (get k-props k) (component/default-value k)]
                                                                                       :horizontal-sep?
                                                                                       (pos? (count (group/children attribute-widget-group)))))
                                                 (actor/pack-ancestor-window! attribute-widget-group)
@@ -70,20 +87,43 @@
       (pack! window)
       (ctx/add-to-stage! ctx window))))
 
+(comment
+ (let [ctx @app/state
+       crow (ctx/property ctx :creatures/bird-crow)
+       m (:entity/stats crow)
+       optional-keys-left? (not (every? (optional-keyset (:schema (component/k->data :entity/stats))) (keys m)))
+       ]
+   [;(keys m)
+    ;(optional-keyset (:schema (component/k->data :entity/stats)))
+    optional-keys-left?]
+   ))
+
 (declare ->attribute-widget-group)
 
-; * don't show button if no components to add anymore.
+(defn- optional-keyset [schema]
+  (set (map first
+            (filter (fn [[k prop-m]] (:optional prop-m))
+                    (k-properties schema)))))
+
+(require '[clojure.set :as set])
+
+; * don't show button if no components to add anymore (use remaining-ks)
+; * what is missing to remove the button once the last optional key was added (not so important)
+; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
 (defmethod data/->widget :map [[_ data] m ctx]
-  (let [attribute-widget-group (->attribute-widget-group ctx m)]
+  (let [attribute-widget-group (->attribute-widget-group ctx (:schema data) m)
+        optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
+                                                 (set (keys m))))]
+    (println "optional-keys-left?" optional-keys-left?)
     (actor/set-id! attribute-widget-group :attribute-widget-group)
     (ctx/->table ctx {:cell-defaults {:pad 5}
                       :rows (remove nil?
-                                    [(when (:components data)
+                                    [(when optional-keys-left?
                                        [(ctx/->text-button
                                          ctx
                                          "Add component"
                                          (->choose-component-window data attribute-widget-group))])
-                                     (when (:components data)
+                                     (when optional-keys-left?
                                        [(->horizontal-separator-cell 1)])
                                      [attribute-widget-group]])})))
 
@@ -97,13 +137,27 @@
       (actor/add-tooltip! label doc))
     label))
 
-(defn ->component-widget [ctx [k v] & {:keys [horizontal-sep?]}]
+(comment
+ (require '[malli.generator :as mg])
+ (require '[malli.core :as m])
+ (m/validate (:schema (component/k->data :damage/min-max))
+             [10 11]
+             )
+ (:schema (component/k->data :properties/audiovisuals))
+ (m/validate [:map {:closed true} [:damage/min-max nil pos?]]
+             {:damage/min-max 3}
+             )
+ (mg/generate (:schema (component/k->data :effect.entity/damage)) )
+
+ )
+
+(defn ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label ctx k)
         value-widget (data/->widget (component/data-component k) v ctx)
         table (ctx/->table ctx {:id k
                                 :cell-defaults {:pad 4}})
         column (remove nil?
-                       [(when (component/optional? k)
+                       [(when (:optional k-props)
                           (ctx/->text-button ctx "-" (fn [ctx]
                                                        (let [window (actor/find-ancestor-window table)]
                                                          (actor/remove! table)
@@ -121,15 +175,31 @@
 (defn- attribute-widget-table->value-widget [table]
   (-> table group/children last))
 
-(defn- ->component-widgets [ctx props]
-  (let [first-row? (atom true)]
+(comment
+
+ (k-properties @app/state (ctx/property @app/state :creatures/vampire))
+
+ ([:property/id [:qualified-keyword {:namespace :audiovisuals}]]
+  [:tx/sound {:optional false} :string]
+  [:entity/animation {:optional false} :some])
+
+ [:map {:closed true}
+  [:property/id [:qualified-keyword {:namespace :audiovisuals}]]
+  [:tx/sound {:optional false} :string]
+  [:entity/animation {:optional false} :some]]
+
+ )
+
+(defn- ->component-widgets [ctx schema props]
+  (let [first-row? (atom true)
+        k-props (k-properties schema)]
     (for [[k v] (sort-by component-order props)
           :let [sep? (not @first-row?)
                 _ (reset! first-row? false)]]
-      (->component-widget ctx [k v] :horizontal-sep? sep?))))
+      (->component-widget ctx [k (get k-props k) v] :horizontal-sep? sep?))))
 
-(defn- ->attribute-widget-group [ctx props]
-  (ctx/->vertical-group ctx (->component-widgets ctx props)))
+(defn- ->attribute-widget-group [ctx schema props]
+  (ctx/->vertical-group ctx (->component-widgets ctx schema props)))
 
 (defn- attribute-widget-group->data [group]
   (into {} (for [k (map actor/id (group/children group))
@@ -148,24 +218,31 @@
      (catch Throwable t
        (ctx/error-window! ctx t)))))
 
-(defn- ->property-editor-window [context id]
-  (let [props (ctx/property context id)
-        window (ctx/->window context {:title "Edit Property"
-                                      :modal? true
-                                      :close-button? true
-                                      :center? true
-                                      :close-on-escape? true
-                                      :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group context props)
+(defn- property->type [{:keys [property/id]}]
+  (keyword "properties" (namespace id)))
+
+(defn- props->schema [ctx props]
+  (:schema ((property->type props) (:types (:context/properties ctx)))))
+
+; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
+(defn- ->property-editor-window [ctx id]
+  (let [props (ctx/property ctx id)
+        window (ctx/->window ctx {:title "Edit Property"
+                                  :modal? true
+                                  :close-button? true
+                                  :center? true
+                                  :close-on-escape? true
+                                  :cell-defaults {:pad 5}})
+        widgets (->attribute-widget-group ctx (props->schema ctx props) props)
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
-    (add-rows! window [[(data/->scroll-pane-cell context [[{:actor widgets :colspan 2}]
-                                                     [(ctx/->text-button context "Save [LIGHT_GRAY](ENTER)[]" save!)
-                                                      (ctx/->text-button context "Delete" delete!)]])]])
+    (add-rows! window [[(data/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
+                                                      [(ctx/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
+                                                       (ctx/->text-button ctx "Delete" delete!)]])]])
     (group/add-actor! window
-                      (ctx/->actor context {:act (fn [{:keys [context/state]}]
-                                                   (when (input/key-just-pressed? input.keys/enter)
-                                                     (swap! state save!)))}))
+                      (ctx/->actor ctx {:act (fn [{:keys [context/state]}]
+                                               (when (input/key-just-pressed? input.keys/enter)
+                                                 (swap! state save!)))}))
     (pack! window)
     window))
 

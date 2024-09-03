@@ -50,7 +50,6 @@
 
 (defcomponent :entity/modifiers
   {:data [:components-ns :modifier]
-   :optional? true
    :let modifiers}
   (component/create [_ _ctx]
     (into {} (for [[modifier-k operations] modifiers]

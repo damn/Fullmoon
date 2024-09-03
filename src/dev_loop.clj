@@ -35,6 +35,11 @@
 
 (def ^:private thrown (atom false))
 
+(defn- handle-throwable! [t]
+  (binding [*print-level* nil]
+    (p/pretty-pst t 24))
+  (reset! thrown true))
+
 (defn restart!
   "Calls refresh on all namespaces with file changes and restarts the application.
   (has to be started with `lein run -m dev`)"
@@ -48,11 +53,6 @@
     (println "\n Application still running! Cannot restart.")))
 
 (declare ^:private refresh-error)
-
-(defn- handle-throwable! [t]
-  (binding [*print-level* 10]
-    (p/pretty-pst t 24))
-  (reset! thrown true))
 
 (defn dev-loop []
   (try (start-app)

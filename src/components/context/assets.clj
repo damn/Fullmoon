@@ -52,7 +52,6 @@
 
 (defcomponent :tx/sound
   {:data :sound
-   :optional? false
    :let file}
   (component/do! [_ ctx]
     (ctx/play-sound! ctx file)

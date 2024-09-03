@@ -7,25 +7,23 @@
 (defcomponent :world/max-area-level {:data :pos-int}) ; TODO <= map-size !?
 (defcomponent :world/spawn-rate {:data :pos}) ; TODO <1 !
 
-(defcomponent :world/tiled-map {:data :string
-                                :optional? true})
+(defcomponent :world/tiled-map {:data :string})
 
-(defcomponent :world/components {:data [:components
-                                        []]})
+(defcomponent :world/components {:data [:components []]})
 
 (defcomponent :world/generator {:data [:enum [:world.generator/tiled-map
                                               :world.generator/modules
-                                              :world.generator/uf-caves]]
-                                :optional? false})
+                                              :world.generator/uf-caves]]})
 
 (defcomponent :properties/worlds
   (component/create [_ _ctx]
     {:schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
+              ; TODO optional
               [:world/generator
-               :world/tiled-map
-               :world/map-size
-               :world/max-area-level
-               :world/spawn-rate]]
+               [:world/tiled-map {:optional true}]
+               [:world/map-size {:optional true}]
+               [:world/max-area-level {:optional true}]
+               [:world/spawn-rate {:optional true}]]]
      :overview {:title "Worlds"
                 :columns 10}}))
 

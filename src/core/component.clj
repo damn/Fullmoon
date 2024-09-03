@@ -238,14 +238,11 @@
 (defn k->data [k]
   (second (data-component k)))
 
-(defn optional? [k]
-  (let [optional? (get (get attributes k) :optional? :not-found)]
-    (if (= optional? :not-found)
-      true
-      optional?)))
-
 (defn attribute-schema [ks]
-  (for [k ks]
-    [k {:optional (optional? k)} (:schema (k->data k))]))
+  (for [k ks
+        :let [k? (keyword? k)
+              properties (if k? nil (k 1))
+              k (if k? k (k 0))]]
+    [k properties (:schema (k->data k))]))
 
 (def default-value (comp :default-value k->data))

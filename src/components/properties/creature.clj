@@ -7,25 +7,24 @@
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
-(defcomponent :body/width   {:data :pos     :optional? false})
-(defcomponent :body/height  {:data :pos     :optional? false})
-(defcomponent :body/flying? {:data :boolean :optional? false})
+(defcomponent :body/width   {:data :pos})
+(defcomponent :body/height  {:data :pos})
+(defcomponent :body/flying? {:data :boolean})
 
 (defcomponent :entity/body
-  {:data [:map [:body/width :body/height :body/flying?]]
-   :optional? false})
+  {:data [:map [:body/width
+                :body/height
+                :body/flying?]]})
 
 (defcomponent :creature/species
-  {:data [:qualified-keyword {:namespace :species}]
-   :optional? false}
+  {:data [:qualified-keyword {:namespace :species}]}
   (component/create [[_ species] _ctx]
     (str/capitalize (name species)))
   (component/info-text [[_ species] _ctx]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defcomponent :creature/level
-  {:data :pos-int
-   :optional? false}
+  {:data :pos-int}
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
@@ -38,9 +37,9 @@
                :creature/level
                :entity/animation
                :entity/stats
-               :entity/inventory
                :entity/skills
-               :entity/modifiers]]
+               [:entity/modifiers {:optional true}]
+               [:entity/inventory {:optional true}]]]
      :overview {:title "Creatures"
                 :columns 15
                 :image/scale 1.5

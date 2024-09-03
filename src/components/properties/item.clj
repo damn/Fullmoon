@@ -12,8 +12,7 @@
       (modifiers/info-text modifiers))))
 
 (defcomponent :item/slot
-  {:data [:enum (keys inventory/empty-inventory)]
-   :optional? false})
+  {:data [:enum (keys inventory/empty-inventory)]})
 
 (defcomponent :properties/items
   (component/create [_ _ctx]
@@ -21,7 +20,7 @@
               [:property/pretty-name
                :entity/image
                :item/slot
-               :item/modifiers]]
+               [:item/modifiers {:optional true}]]]
      :overview {:title "Items"
                 :columns 20
                 :image/scale 1.1

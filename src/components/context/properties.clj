@@ -6,8 +6,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]))
 
-(defcomponent :property/id {:data [:qualified-keyword {}]
-                            :optional? false})
+(defcomponent :property/id {:data [:qualified-keyword {}]})
 
 (defn load-raw-properties [file]
   (let [values (-> file slurp edn/read-string)]
@@ -17,6 +16,10 @@
 (defn- property->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
+(comment
+ (let [type (property->type (ctx/property ))
+       schema (:schema (type types))]))
+
 (defn- validate [property types]
   (let [type (property->type property)
         schema (:schema (type types))]
@@ -24,15 +27,31 @@
              (catch Throwable t
                (throw (ex-info "m/validate fail" {:property property :type type} t))))
       property
-      (throw (ex-info (str (me/humanize (m/explain schema property)))
-                      {:property property})))))
+      (do
+       (clojure.pprint/pprint (m/form schema))
+       (throw (ex-info (str (me/humanize (m/explain schema property)))
+                       {:property property
+                        :schema (m/form schema)}))))))
 
 (defn- map-attribute-schema [[id-attribute attr-ks]]
-  (let [schema-form (apply vector :map {:closed true} id-attribute
-                           (component/attribute-schema attr-ks))]
+  (let [schema-form (apply vector :map {:closed true} id-attribute (component/attribute-schema attr-ks))]
     (try (m/schema schema-form)
          (catch Throwable t
            (throw (ex-info "" {:schema-form schema-form} t))))))
+
+(comment
+
+  (m/validate
+   (map-attribute-schema
+    [[:property/id [:qualified-keyword {:namespace :items}]]
+     [:property/pretty-name
+      :entity/image
+      :item/slot
+      [:item/modifiers {:optional true}]]])
+   {:property/id :items/foo
+    :property/pretty-name "Foo"
+    :entity/image :some
+    :item/slot :inventory.slot/cloak}))
 
 (defn- apply-kvs
   "Calls for every key in map (f k v) to calculate new value at k."

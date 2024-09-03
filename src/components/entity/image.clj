@@ -4,7 +4,6 @@
 
 (defcomponent :entity/image
   {:data :image
-   :optional? false
    :let image}
   (component/render-default [_ entity* g _ctx]
     (g/draw-rotated-centered-image g

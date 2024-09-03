@@ -65,16 +65,24 @@
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (component/attribute-schema ks)))
 
+; component/attribute schema used @ properties themself
+; :data :map
+; :data :components
+; & :data :components-ns
+
 (defcomponent :map
   (component/->data [[_ ks]]
     {:schema (map-schema ks)
-     :default-value (zipmap ks (map component/default-value ks))}))
+     ;:default-value (zipmap ks (map component/default-value ks))
 
+     }))
+
+; TODO use :map
 (defcomponent :components
   (component/->data [[_ ks]]
     {:widget :map
-     :schema (map-schema ks)
-     :components ks
+     :schema (map-schema (map (fn [k] [k {:optional true}]) ks))
+     :components ks ; TODO if vector take first
      :default-value {}}))
 
 (defcomponent :components-ns

@@ -9,9 +9,9 @@
             [core.graphics :as g]
             [core.stat :refer [stat-k->modifier-k defstat]]))
 
-(defstat :stats/reaction-time
-  {:data :pos-int
-   :optional? false})
+; TODO needs to be there for each npc - make non-removable (added to all creatures)
+(defstat :stats/aggro-range   {:data :nat-int})
+(defstat :stats/reaction-time {:data :pos-int})
 
 ; TODO
 ; @ hp says here 'Minimum' hp instead of just 'HP'
@@ -21,13 +21,11 @@
 ; sets the hp to 50%...
 (defstat :stats/hp
   {:data :pos-int
-   :optional? false
    :modifier-ops [:op/max-inc :op/max-mult]
    :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
 (defstat :stats/mana
   {:data :nat-int
-   :optional? true
    :modifier-ops [:op/max-inc :op/max-mult]
    :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
@@ -39,7 +37,6 @@
 ; TODO clamp between 0 and max-speed ( same as movement-speed-schema )
 (defstat :stats/movement-speed
   {:data :pos;(m/form entity/movement-speed-schema)
-   :optional? false
    :modifier-ops [:op/inc :op/mult]})
 
 ; TODO show the stat in different color red/green if it was permanently modified ?
@@ -52,7 +49,6 @@
 ; TODO clamp into ->pos-int
 (defstat :stats/strength
   {:data :nat-int
-   :optional? false
    :modifier-ops [:op/inc]})
 
 ; TODO here >0
@@ -62,36 +58,26 @@
           For example:
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
       data :pos
-      operations [:op/inc]
-      optional? true
-      ]
+      operations [:op/inc]]
   (defstat :stats/cast-speed
     {:data data
      :doc doc
-     :optional? optional?
      :modifier-ops operations})
 
   (defstat :stats/attack-speed
     {:data data
      :doc doc
-     :optional? optional?
      :modifier-ops operations}))
 
 ; TODO bounds
 (defstat :stats/armor-save
   {:data :number
-   :optional? true
    :modifier-ops [:op/inc]})
 
 (defstat :stats/armor-pierce
   {:data :number
-   :optional? true
    :modifier-ops [:op/inc]})
 
-; TODO needs to be there for each npc - make non-removable (added to all creatures)
-(defstat :stats/aggro-range
-  {:data :nat-int
-   :optional? false})
 
 (extend-type core.entity.Entity
   entity/Stats
@@ -124,7 +110,6 @@
                    :stats/cast-speed
                    :stats/attack-speed
                    :stats/armor-save
-                   :stats/damage-receive
                    ;:stats/armor-pierce
                    ;:stats/aggro-range
                    ;:stats/reaction-time
@@ -136,9 +121,19 @@
                     :when value]
                 (str (k->pretty-name stat-k) ": " value)))))
 
+; TODO mana optional? / armor-save / armor-pierce (anyway wrong here)
+; cast/attack-speed optional ?
 (defcomponent :entity/stats
-  {:data [:components-ns :stats]
-   :optional? false
+  {:data [:map [:stats/hp
+                :stats/movement-speed
+                [:stats/mana {:optional true}]
+                [:stats/strength  {:optional true}]
+                [:stats/cast-speed  {:optional true}]
+                [:stats/attack-speed  {:optional true}]
+                [:stats/armor-save  {:optional true}]
+                [:stats/armor-pierce {:optional true}]
+                :stats/aggro-range
+                :stats/reaction-time]]
    :let stats}
   (component/create [_ _ctx]
     (-> stats

@@ -10,7 +10,6 @@
 
 (defcomponent :property/pretty-name
   {:data :string
-   :optional? false
    :let value}
   (component/info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
