@@ -59,12 +59,11 @@
     (for [[k m? _schema] ks]
       k)))
 
-; breaks for item modifiers damage-receive
-(defn- data->default-value [k]
+(defn- k->default-value [k]
   (let [[data-type {:keys [schema]}] (component/data-component k)]
     (cond
      (#{:one-to-one :one-to-many} data-type) nil
-     ;(#{:map} data-type) {}
+     ;(#{:map} data-type) {} ; cannot have empty for required keys, then no Add Component button
      :else (mg/generate schema {:size 3}))))
 
 (defn- ->choose-component-window [data attribute-widget-group]
@@ -85,7 +84,7 @@
                                                 (actor/remove! window)
                                                 (group/add-actor! attribute-widget-group
                                                                   (->component-widget ctx
-                                                                                      [k (get k-props k) (data->default-value k)]
+                                                                                      [k (get k-props k) (k->default-value k)]
                                                                                       :horizontal-sep?
                                                                                       (pos? (count (group/children attribute-widget-group)))))
                                                 (actor/pack-ancestor-window! attribute-widget-group)
