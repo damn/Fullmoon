@@ -17,13 +17,11 @@
 
 (defcomponent :properties/worlds
   (component/create [_ _ctx]
-    {:schema [[:property/id [:qualified-keyword {:namespace :worlds}]]
-              ; TODO optional
-              [:world/generator
-               [:world/tiled-map {:optional true}]
-               [:world/map-size {:optional true}]
-               [:world/max-area-level {:optional true}]
-               [:world/spawn-rate {:optional true}]]]
+    {:schema [:world/generator
+              [:world/tiled-map {:optional true}]
+              [:world/map-size {:optional true}]
+              [:world/max-area-level {:optional true}]
+              [:world/spawn-rate {:optional true}]]
      :overview {:title "Worlds"
                 :columns 10}}))
 

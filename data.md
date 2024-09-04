@@ -1,3 +1,6 @@
+# (:schema (k->data k) or component/data-component DRY
+
+
 # Optimize _only_ for happyness
 programmer happyness
 whatever

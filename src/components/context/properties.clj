@@ -7,6 +7,8 @@
             [core.context :as ctx]
             [core.property :as property]))
 
+(defcomponent :property/id {:data [:qualified-keyword {}]})
+
 (defn load-raw-properties [file]
   (let [values (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id values)))
@@ -24,14 +26,6 @@
       (throw (ex-info (str (me/humanize (m/explain schema property)))
                       {:property property
                        :schema (m/form schema)})))))
-
-(defn- map-attribute-schema [[id-attribute attr-ks]]
-  (let [schema-form (apply vector :map {:closed true} id-attribute
-                           (component/attribute-schema attr-ks))]
-    (try (m/schema schema-form)
-         (catch Throwable t
-           (throw (ex-info "" {:schema-form schema-form} t))))))
-
 (defn- apply-kvs
   "Calls for every key in map (f k v) to calculate new value at k."
   [m f]
@@ -39,6 +33,19 @@
             (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
           m
           (keys m)))
+
+(defn- map-attribute-schema [id-ns-k attr-ks]
+  (let [schema-form (apply vector :map {:closed true}
+                           [:property/id [:qualified-keyword {:namespace id-ns-k}]]
+                           (component/attribute-schema attr-ks))]
+    (try (m/schema schema-form)
+         (catch Throwable t
+           (throw (ex-info "" {:schema-form schema-form} t))))))
+
+(defn create-types [types]
+  (apply-kvs (component/ks->create-all types {})
+             (fn [k v]
+               (update v :schema #(map-attribute-schema (keyword (name k)) %)))))
 
 (defn- try-data [k]
   (try (component/k->data k)
@@ -89,8 +96,7 @@
   {:data :some
    :let {:keys [types file properties]}}
   (component/create [_ ctx]
-    (let [types (component/ks->create-all types {})
-          types (mapvals #(update % :schema map-attribute-schema) types)]
+    (let [types (create-types types)]
       {:file file
        :types types
        :db (edn->db properties types ctx)})))

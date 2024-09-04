@@ -17,8 +17,7 @@
 
 (defcomponent :properties/app
   (component/create [_ _ctx]
-    {:schema [[:property/id [:qualified-keyword {:namespace :app}]]
-              [:app/lwjgl3
-               :app/context]]
+    {:schema [:app/lwjgl3
+              :app/context]
      :overview {:title "Apps"
                 :columns 10}}))

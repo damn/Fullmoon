@@ -1,7 +1,4 @@
-(ns core.property
-  (:require [core.component :refer [defcomponent]]))
-
-(defcomponent :property/id {:data [:qualified-keyword {}]})
+(ns core.property)
 
 (defn ->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))

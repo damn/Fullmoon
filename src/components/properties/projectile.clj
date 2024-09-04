@@ -18,12 +18,11 @@
 
 (defcomponent :properties/projectiles
   (component/create [_ _ctx]
-    {:schema [[:property/id [:qualified-keyword {:namespace :projectiles}]]
-              [:entity/image
-               :projectile/max-range
-               :projectile/speed
-               :projectile/piercing?
-               :entity-effects]]
+    {:schema [:entity/image
+              :projectile/max-range
+              :projectile/speed
+              :projectile/piercing?
+              :entity-effects]
      :overview {:title "Projectiles"
                 :columns 16
                 :image/scale 2}}))

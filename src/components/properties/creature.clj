@@ -30,16 +30,15 @@
 
 (defcomponent :properties/creatures
   (component/create [_ _ctx]
-    {:schema [[:property/id [:qualified-keyword {:namespace :creatures}]]
-              [:entity/body
-               :property/pretty-name
-               :creature/species
-               :creature/level
-               :entity/animation
-               :entity/stats
-               :entity/skills
-               [:entity/modifiers {:optional true}]
-               [:entity/inventory {:optional true}]]]
+    {:schema [:entity/body
+              :property/pretty-name
+              :creature/species
+              :creature/level
+              :entity/animation
+              :entity/stats
+              :entity/skills
+              [:entity/modifiers {:optional true}]
+              [:entity/inventory {:optional true}]]
      :overview {:title "Creatures"
                 :columns 15
                 :image/scale 1.5

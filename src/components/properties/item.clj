@@ -16,11 +16,10 @@
 
 (defcomponent :properties/items
   (component/create [_ _ctx]
-    {:schema [[:property/id [:qualified-keyword {:namespace :items}]]
-              [:property/pretty-name
-               :entity/image
-               :item/slot
-               [:item/modifiers {:optional true}]]]
+    {:schema [:property/pretty-name
+              :entity/image
+              :item/slot
+              [:item/modifiers {:optional true}]]
      :overview {:title "Items"
                 :columns 20
                 :image/scale 1.1
