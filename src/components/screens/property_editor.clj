@@ -60,7 +60,12 @@
       k)))
 
 (defn- k->default-value [k]
-  (mg/generate (:schema (component/k->data k)) {:size 3}))
+  (let [data (component/data-component k)
+        data-type (data 0)]
+    (cond
+     (#{:one-to-one :one-to-many} data-type) nil
+     ;(#{:map} data-type) {}
+     :else (mg/generate (:schema (data 1)) {:size 3}))))
 
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
