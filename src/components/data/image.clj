@@ -6,12 +6,17 @@
             core.image))
 
 (defcomponent :image
-  {:schema :some
+  {:schema [:map {:closed true}
+            [:file :string]
+            [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]]
    :value->edn core.image/image->edn
    :edn->value core.image/edn->image})
 
 (defcomponent :animation
-  {:schema :some
+  {:schema [:map {:closed true}
+            [:frames :some]
+            [:frame-duration pos?]
+            [:looping? :boolean]]
    :value->edn core.animation/animation->edn
    :edn->value core.animation/edn->animation})
 
