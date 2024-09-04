@@ -14,16 +14,18 @@
 (defcomponent :one-to-many
   (component/->data [[_ property-type]]
     {:schema [:set [:qualified-keyword]]
-     :linked-property-type property-type
-     :fetch-references (fn [ctx property-ids]
-                         (map (partial ctx/property ctx)
-                              property-ids))}))
+     :linked-property-type property-type}))
+
+(defmethod data/edn->value :one-to-many [_ property-ids ctx]
+  (map (partial ctx/property ctx) property-ids))
 
 (defcomponent :one-to-one
   (component/->data [[_ property-type]]
     {:schema [:qualified-keyword]
-     :linked-property-type property-type
-     :fetch-references ctx/property}))
+     :linked-property-type property-type}))
+
+(defmethod data/edn->value :one-to-one [_ property-id ctx]
+  (ctx/property ctx property-id))
 
 (defn- add-one-to-many-rows [ctx table property-type property-ids]
   (let [redo-rows (fn [ctx property-ids]

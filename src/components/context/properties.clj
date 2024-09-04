@@ -91,22 +91,14 @@
    :file
    :sub-image-bounds})
 
-(defn- fetch-refs [ctx property]
+(defn- build-property [ctx property]
   (apply-kvs property
              (fn [k v]
-               (let [v (if (map? v)
-                         (fetch-refs ctx v)
-                         v)]
-                 (if-let [f (:fetch-references (try (component/k->data k) ; some nested ks have no data defined
-                                                    (catch Throwable t
-                                                      (swap! undefined-data-ks conj k))))]
-                   (f ctx v)
-                   v)))))
-
-(defn- build-property [ctx property]
-  (apply-kvs (fetch-refs ctx property)
-             (fn [k v]
-               (data/edn->value (component/data-component k) v ctx))))
+               (data/edn->value (try (component/data-component k)
+                                     (catch Throwable t
+                                       (swap! undefined-data-ks conj k)))
+                                (if (map? v) (build-property ctx v) v)
+                                ctx))))
 
 (extend-type core.context.Context
   core.context/PropertyStore

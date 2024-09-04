@@ -3,7 +3,7 @@
             [core.context :as ctx]
             [core.scene2d.actor :as actor]))
 
-(defmulti edn->value (fn [data v ctx] (data 0)))
+(defmulti edn->value (fn [data v ctx] (if data (data 0))))
 (defmethod edn->value :default [_data v _ctx]
   v)
 
