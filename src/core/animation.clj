@@ -38,8 +38,3 @@
   (create (map #(image/edn->image % ctx) frames)
           :frame-duration frame-duration
           :looping? looping?))
-
-(defn animation->edn [animation]
-  (-> animation
-      (update :frames (fn [frames] (map #(image/image->edn %) frames)))
-      (select-keys [:frames :frame-duration :looping?])))

@@ -12,11 +12,11 @@
   (-> property property/->type types :schema))
 
 (defn- validate [property types]
-  (let [schema (property->schema types property)]
-    (if (try (m/validate schema property)
-             (catch Throwable t
-               (throw (ex-info "m/validate fail" {:property property} t))))
-      property
+  (let [schema (property->schema types property)
+        valid? (try (m/validate schema property)
+                    (catch Throwable t
+                      (throw (ex-info "m/validate fail" {:property property} t))))]
+    (when-not valid?
       (throw (ex-info (str (me/humanize (m/explain schema property)))
                       {:property property
                        :schema (m/form schema)})))))
@@ -41,59 +41,15 @@
              (fn [k v]
                (update v :schema #(map-attribute-schema (keyword (name k)) %)))))
 
-(defn- try-data [k]
-  (try (component/k->data k)
-       (catch Throwable t)))
-
-(defn- edn->value [ctx]
-  (fn [k v]
-    (if-let [f (:edn->value (component/k->data k))]
-      (f v ctx)
-      v)))
-
-(defn- value->edn [k v]
-  (if-let [f (:value->edn (try-data k))]
-    (f v)
-    v))
-
-(defn- recur-value->edn [property]
-  (apply-kvs property
-             (fn [k v]
-               (let [v (if (map? v)
-                         (recur-value->edn v)
-                         v)]
-                 (value->edn k v)))))
-
-(defn- edn->db [properties types ctx]
-  (mapvals #(-> %
-                (validate types)
-                (apply-kvs (edn->value ctx)))
-           properties))
-
-(defn- recur-sort-map [m]
-  (into (sorted-map)
-        (zipmap (keys m)
-                (map #(if (map? %)
-                        (recur-sort-map %)
-                        %)
-                     (vals m)))))
-
-(defn- db->edn [types db]
-  (->> db
-       vals
-       (sort-by property/->type)
-       (map recur-value->edn)
-       (map #(validate % types))
-       (map recur-sort-map)))
-
 (defcomponent :context/properties
   {:data :some
    :let {:keys [types file properties]}}
   (component/create [_ ctx]
     (let [types (create-types types)]
+      (doseq [[_ property] properties] (validate property types))
       {:file file
        :types types
-       :db (edn->db properties types ctx)})))
+       :db properties})))
 
 (defn- async-pprint-spit! [ctx file data]
   (.start
@@ -107,12 +63,26 @@
            (catch Throwable t
              (ctx/error-window! ctx t)))))))
 
-(defn- validate-and-write-to-file! [{{:keys [types db file]} :context/properties :as ctx}]
+(defn- recur-sort-map [m]
+  (into (sorted-map)
+        (zipmap (keys m)
+                (map #(if (map? %)
+                        (recur-sort-map %)
+                        %)
+                     (vals m)))))
+
+(defn- async-write-to-file! [{{:keys [db file]} :context/properties :as ctx}]
   (->> db
-       (db->edn types)
+       vals
+       (sort-by property/->type)
+       (map recur-sort-map)
        doall
        (async-pprint-spit! ctx file))
   ctx)
+
+(defn- try-data [k]
+  (try (component/k->data k)
+       (catch Throwable t)))
 
 ; Fetching references at ctx/property and not immediately on db creation
 ; so changes in one property will not get lost at referencing properties
@@ -128,15 +98,25 @@
                    (f ctx v)
                    v)))))
 
+(defn- edn->value [ctx]
+  (fn [k v]
+    (if-let [f (:edn->value (component/k->data k))]
+      (f v ctx)
+      v)))
+
+(defn- build-property [ctx property]
+  (apply-kvs (fetch-refs ctx property)
+             (edn->value ctx)))
+
 (extend-type core.context.Context
   core.context/PropertyStore
   (property [{{:keys [db]} :context/properties :as ctx} id]
-    (fetch-refs ctx (safe-get db id)))
+    (build-property ctx (safe-get db id)))
 
   (all-properties [{{:keys [db]} :context/properties :as ctx} type]
     (->> (vals db)
          (filter #(= type (property/->type %)))
-         (map #(fetch-refs ctx %))))
+         (map #(build-property ctx %))))
 
   (overview [{{:keys [types]} :context/properties} property-type]
     (:overview (property-type types)))
@@ -147,32 +127,30 @@
   (property->schema [{{:keys [types]} :context/properties} property]
     (property->schema types property))
 
-  (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
+  (update! [{{:keys [db types]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
            (contains? db id)]}
+    (validate property types)
     (-> ctx
         (update-in [:context/properties :db] assoc id property)
-        validate-and-write-to-file!))
+        async-write-to-file!))
 
   (delete! [{{:keys [db]} :context/properties :as ctx} property-id]
     {:pre [(contains? db property-id)]}
     (-> ctx
         (update-in [:context/properties :db] dissoc property-id)
-        validate-and-write-to-file!)))
+        async-write-to-file!)))
 
 
 (comment
-
- ; now broken -> work directly on edn
- #_(require '[core.context :as ctx])
-
- #_(defn- migrate [property-type prop-fn]
+ (defn- migrate [property-type prop-fn]
      (let [ctx @app/state]
        (time
+        ; TODO work directly on edn, no ctx/all-properties, use :db
         (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
           (println (:property/id prop) ", " (:property/pretty-name prop))
           (swap! app/state ctx/update! prop)))
-       (validate-and-write-to-file! @app/state)
+       (async-write-to-file! @app/state)
        nil))
 
  (migrate :properties/creature

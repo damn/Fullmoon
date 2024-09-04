@@ -59,11 +59,13 @@
     (for [[k m? _schema] ks]
       k)))
 
-(defn- data->default-value [[data-type {:keys [schema]}]]
-  (cond
-   (#{:one-to-one :one-to-many} data-type) nil
-   ;(#{:map} data-type) {}
-   :else (mg/generate schema {:size 3})))
+; breaks for item modifiers damage-receive
+(defn- data->default-value [k]
+  (let [[data-type {:keys [schema]}] (component/data-component k)]
+    (cond
+     (#{:one-to-one :one-to-many} data-type) nil
+     ;(#{:map} data-type) {}
+     :else (mg/generate schema {:size 3}))))
 
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
@@ -83,7 +85,7 @@
                                                 (actor/remove! window)
                                                 (group/add-actor! attribute-widget-group
                                                                   (->component-widget ctx
-                                                                                      [k (get k-props k) (data->default-value data)]
+                                                                                      [k (get k-props k) (data->default-value k)]
                                                                                       :horizontal-sep?
                                                                                       (pos? (count (group/children attribute-widget-group)))))
                                                 (actor/pack-ancestor-window! attribute-widget-group)
@@ -177,7 +179,7 @@
        (ctx/error-window! ctx t)))))
 
 (defn- ->property-editor-window [ctx id]
-  (let [props (ctx/property ctx id)
+  (let [props (utils/safe-get (:db (:context/properties ctx)) id)
         window (ctx/->window ctx {:title "Edit Property"
                                   :modal? true
                                   :close-button? true

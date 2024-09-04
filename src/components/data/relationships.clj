@@ -9,7 +9,8 @@
             [core.scene2d.ui.table :as table]
             [core.scene2d.ui.widget-group :refer [pack!]]))
 
-; TODO schema not checking if exists
+; TODO schemas not checking if exists
+
 (defcomponent :one-to-many
   (component/->data [[_ property-type]]
     {:schema [:set [:qualified-keyword]]
@@ -18,19 +19,17 @@
                          (map (partial ctx/property ctx)
                               property-ids))}))
 
-; TODO schema not checking if exists
 (defcomponent :one-to-one
   (component/->data [[_ property-type]]
     {:schema [:qualified-keyword]
      :linked-property-type property-type
      :fetch-references ctx/property}))
 
-(defn- add-one-to-many-rows [ctx table property-type properties]
+(defn- add-one-to-many-rows [ctx table property-type property-ids]
   (let [redo-rows (fn [ctx property-ids]
                     (group/clear-children! table)
-                    (add-one-to-many-rows ctx table property-type (map #(ctx/property ctx %) property-ids))
-                    (actor/pack-ancestor-window! table))
-        property-ids (set (map :property/id properties))]
+                    (add-one-to-many-rows ctx table property-type property-ids)
+                    (actor/pack-ancestor-window! table))]
     (table/add-rows!
      table
      [[(ctx/->text-button ctx "+"
@@ -47,37 +46,37 @@
                               (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
                               (pack! window)
                               (ctx/add-to-stage! ctx window))))]
-      (for [property properties]
-        (let [image-widget (ctx/->image-widget ctx ; image-button/link?
+      (for [property-id property-ids]
+        (let [property (ctx/property ctx property-id)
+              image-widget (ctx/->image-widget ctx
                                                (property/->image property)
-                                               {:id (:property/id property)})]
+                                               {:id property-id})]
           (actor/add-tooltip! image-widget #(components/info-text property %))
           image-widget))
-      (for [{:keys [property/id]} properties]
+      (for [id property-ids]
         (ctx/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
-(defmethod data/->widget :one-to-many [[_ data] properties context]
+(defmethod data/->widget :one-to-many [[_ data] property-ids context]
   (let [table (ctx/->table context {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
                           (:linked-property-type data)
-                          properties)
+                          property-ids)
     table))
 
-; TODO use id of the value-widget itself and set/change it
 (defmethod data/widget->value :one-to-many [_ widget]
   (->> (group/children widget)
        (keep actor/id)
        set))
 
-(defn- add-one-to-one-rows [ctx table property-type property]
+(defn- add-one-to-one-rows [ctx table property-type property-id]
   (let [redo-rows (fn [ctx id]
                     (group/clear-children! table)
-                    (add-one-to-one-rows ctx table property-type (when id (ctx/property ctx id)))
+                    (add-one-to-one-rows ctx table property-type id)
                     (actor/pack-ancestor-window! table))]
     (table/add-rows!
      table
-     [[(when-not property
+     [[(when-not property-id
          (ctx/->text-button ctx "+"
                             (fn [ctx]
                               (let [window (ctx/->window ctx {:title "Choose"
@@ -92,22 +91,22 @@
                                 (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
                                 (pack! window)
                                 (ctx/add-to-stage! ctx window)))))]
-      [(when property
-         (let [image-widget (ctx/->image-widget ctx ; image-button/link?
+      [(when property-id
+         (let [property (ctx/property ctx property-id)
+               image-widget (ctx/->image-widget ctx
                                                 (property/->image property)
-                                                {:id (:property/id property)})]
+                                                {:id property-id})]
            (actor/add-tooltip! image-widget #(components/info-text property %))
            image-widget))]
-      [(when property
+      [(when property-id
          (ctx/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
 
-; TODO DRY with one-to-many
-(defmethod data/->widget :one-to-one [[_ data] property ctx]
+(defmethod data/->widget :one-to-one [[_ data] property-id ctx]
   (let [table (ctx/->table ctx {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
                          (:linked-property-type data)
-                         property)
+                         property-id)
     table))
 
 (defmethod data/widget->value :one-to-one [_ widget]
