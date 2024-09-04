@@ -1,5 +1,6 @@
 (ns app
-  (:require [clojure.string :as str]
+  (:require [clojure.edn :as edn]
+            [clojure.string :as str]
             [utils.files :as files]
             [utils.core :refer [safe-merge safe-get]]
             [gdx.app :refer [->application-listener]]
@@ -7,8 +8,7 @@
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
-            [core.context :as ctx]
-            [components.context.properties :as properties]))
+            [core.context :as ctx]))
 
 (def state (atom nil))
 
@@ -50,8 +50,13 @@
       [k (safe-merge (component 1) value)]
       component)))
 
+(defn- load-raw-properties [file]
+  (let [values (-> file slurp edn/read-string)]
+    (assert (apply distinct? (map :property/id values)))
+    (zipmap (map :property/id values) values)))
+
 (defn -main [& [file]]
-  (let [properties (properties/load-raw-properties file)
+  (let [properties (load-raw-properties file)
         {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
         context (inject context :context/properties {:file file
                                                      :properties properties})]
