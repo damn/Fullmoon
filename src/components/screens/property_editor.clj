@@ -59,13 +59,11 @@
     (for [[k m? _schema] ks]
       k)))
 
-(defn- k->default-value [k]
-  (let [data (component/data-component k)
-        data-type (data 0)]
-    (cond
-     (#{:one-to-one :one-to-many} data-type) nil
-     ;(#{:map} data-type) {}
-     :else (mg/generate (:schema (data 1)) {:size 3}))))
+(defn- data->default-value [[data-type {:keys [schema]}]]
+  (cond
+   (#{:one-to-one :one-to-many} data-type) nil
+   ;(#{:map} data-type) {}
+   :else (mg/generate schema {:size 3})))
 
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
@@ -85,7 +83,7 @@
                                                 (actor/remove! window)
                                                 (group/add-actor! attribute-widget-group
                                                                   (->component-widget ctx
-                                                                                      [k (get k-props k) (k->default-value k)]
+                                                                                      [k (get k-props k) (data->default-value data)]
                                                                                       :horizontal-sep?
                                                                                       (pos? (count (group/children attribute-widget-group)))))
                                                 (actor/pack-ancestor-window! attribute-widget-group)
