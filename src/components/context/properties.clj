@@ -46,7 +46,8 @@
    :let {:keys [types file properties]}}
   (component/create [_ ctx]
     (let [types (create-types types)]
-      (doseq [[_ property] properties] (validate property types))
+      (doseq [[_ property] properties]
+        (validate property types))
       {:file file
        :types types
        :db properties})))
@@ -98,15 +99,10 @@
                    (f ctx v)
                    v)))))
 
-(defn- edn->value [ctx]
-  (fn [k v]
-    (if-let [f (:edn->value (component/k->data k))]
-      (f v ctx)
-      v)))
-
 (defn- build-property [ctx property]
   (apply-kvs (fetch-refs ctx property)
-             (edn->value ctx)))
+             (fn [k v]
+               (data/edn->value (component/data-component k) v ctx))))
 
 (extend-type core.context.Context
   core.context/PropertyStore

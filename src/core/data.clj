@@ -3,6 +3,10 @@
             [core.context :as ctx]
             [core.scene2d.actor :as actor]))
 
+(defmulti edn->value (fn [data v ctx] (data 0)))
+(defmethod edn->value :default [_data v _ctx]
+  v)
+
 (defn- data->widget [[k v]]
   (or (:widget v) k))
 

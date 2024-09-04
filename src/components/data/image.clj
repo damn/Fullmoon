@@ -8,15 +8,19 @@
 (defcomponent :image
   {:schema [:map {:closed true}
             [:file :string]
-            [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]]
-   :edn->value core.image/edn->image})
+            [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]]})
+
+(defmethod data/edn->value :image [_ image ctx]
+  (core.image/edn->image image ctx))
 
 (defcomponent :animation
   {:schema [:map {:closed true}
             [:frames :some]
             [:frame-duration pos?]
-            [:looping? :boolean]]
-   :edn->value core.animation/edn->animation})
+            [:looping? :boolean]]})
+
+(defmethod data/edn->value :animation [_ animation ctx]
+  (core.animation/edn->animation animation ctx))
 
 ; TODO too many ! too big ! scroll ... only show files first & preview?
 ; TODO make tree view from folders, etc. .. !! all creatures animations showing...
