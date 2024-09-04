@@ -148,7 +148,6 @@
   (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
            (contains? db id)]}
-    ; validate only property alone first?
     (-> ctx
         (update-in [:context/properties :db] assoc id property)
         validate-and-write-to-file!))

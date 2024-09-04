@@ -1,5 +1,8 @@
 (ns components.screens.property-editor
-  (:require [gdx.input :as input]
+  (:require [clojure.set :as set]
+            [malli.core :as m]
+            [malli.generator :as mg]
+            [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
@@ -13,12 +16,15 @@
             [core.scene2d.ui.cell :refer [set-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]))
 
-(comment
- ; edit ingame
- ; cursor not changing becuz manual update
- (open-property-editor-window! @app/state (:property/id (ctx/mouseover-entity* @app/state)))
- )
+; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
+; TODO save button show if changes made, otherwise disabled?
+; when closing (lose changes? yes no)
+; TODO overview table not refreshed after changes in property editor window
+; * don't show button if no components to add anymore (use remaining-ks)
+; * what is missing to remove the button once the last optional key was added (not so important)
+; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
 
+; put together with core.components info-text-order ?
 (def ^:private k-sort-order [:property/id
                              :app/lwjgl3
                              :entity/image
@@ -40,14 +46,8 @@
 (defn- component-order [[k _v]]
   (or (index-of k k-sort-order) 99))
 
-; TODO save button show if changes made, otherwise disabled?
-; when closing (lose changes? yes no)
-; TODO overview table not refreshed after changes in property editor window
-
 (declare ->component-widget
          attribute-widget-group->data)
-
-(require '[malli.core :as m])
 
 (defn- k-properties [schema]
   (let [[_m _p & ks] (m/form schema)]
@@ -59,11 +59,8 @@
     (for [[k m? _schema] ks]
       k)))
 
-(require '[malli.generator :as mg])
-
 (defn- k->default-value [k]
-  (mg/generate (:schema (component/k->data k))
-               {:size 3}))
+  (mg/generate (:schema (component/k->data k)) {:size 3}))
 
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
@@ -74,7 +71,6 @@
                                     :center? true
                                     :close-on-escape? true
                                     :cell-defaults {:pad 5}})
-          ; TODO this is ofcourse only optional ones .. ?
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
                                               (map-keys (:schema data))))]
       (add-rows! window (for [k remaining-ks]
@@ -99,13 +95,6 @@
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(require '[clojure.set :as set])
-
-; TODO now move the whole :map code into ->attribute-widget-group .... just passing schema
-
-; * don't show button if no components to add anymore (use remaining-ks)
-; * what is missing to remove the button once the last optional key was added (not so important)
-; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
 (defmethod data/->widget :map [[_ data] m ctx]
   (let [attribute-widget-group (->attribute-widget-group ctx (:schema data) m)
         optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
@@ -184,7 +173,6 @@
      (catch Throwable t
        (ctx/error-window! ctx t)))))
 
-; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
 (defn- ->property-editor-window [ctx id]
   (let [props (ctx/property ctx id)
         window (ctx/->window ctx {:title "Edit Property"
@@ -205,8 +193,6 @@
                                                  (swap! state save!)))}))
     (pack! window)
     window))
-
-;;
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} ctx clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn % id)
@@ -234,12 +220,11 @@
                        properties)]
       (ctx/->table ctx
                    {:cell-defaults {:pad 5}
-                    :rows (for [properties (partition-all columns properties)] ; TODO can just do 1 for?
+                    :rows (for [properties (partition-all columns properties)]
                             (for [property properties]
                               (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
                                    (catch Throwable t
                                      (throw (ex-info "" {:property property} t))))))}))))
-
 
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)

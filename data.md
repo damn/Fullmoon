@@ -1,3 +1,32 @@
+# Optimize _only_ for happyness
+programmer happyness
+whatever
+
+
+maybe malli dependencies even put into
+a core namespace - interface on it ?
+
+# ingame rightclick window/context-menu on an entity
+=> opens editor or other tools ....
+(comment
+ ; edit ingame
+ ; cursor not changing becuz manual update
+ (open-property-editor-window! @app/state (:property/id (ctx/mouseover-entity* @app/state)))
+ )
+
+# TODO comments in code // commented out // dead code
+not findable
+going crazy
+no more comments -> only link w. tickets or delete.
+
+like big TODO @ stats / actionbar / ?
+src/components/entity/temp_modifier.clj
+context/world passed vampire value,...
+dead-code minimap/skill-window/replay-mode.
+
+@ attribute-schema
+ ; TODO here allow to pass :schema itself but then how 2 find it ...
+ (make map schemas in 1 form )
 
 # Make stuff greppable
  * #:component {:doc :schema :data :etc.}
