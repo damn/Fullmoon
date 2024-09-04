@@ -4,6 +4,7 @@
             [utils.core :refer [safe-get mapvals]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.data :as data]
             [core.property :as property]))
 
 (defcomponent :property/id {:data [:qualified-keyword {}]})
@@ -81,21 +82,24 @@
        (async-pprint-spit! ctx file))
   ctx)
 
-(defn- try-data [k]
-  (try (component/k->data k)
-       (catch Throwable t)))
+(def ^:private undefined-data-ks (atom #{}))
 
-; Fetching references at ctx/property and not immediately on db creation
-; so changes in one property will not get lost at referencing properties
-; also it broke nested fetchs like :entity/skills -> :skills/projectile -> skill/effects
-; (would need one more level of recur for collections/seqs etc.)
+(comment
+ #{:frames
+   :looping?
+   :frame-duration
+   :file
+   :sub-image-bounds})
+
 (defn- fetch-refs [ctx property]
   (apply-kvs property
              (fn [k v]
                (let [v (if (map? v)
                          (fetch-refs ctx v)
                          v)]
-                 (if-let [f (:fetch-references (try-data k))]
+                 (if-let [f (:fetch-references (try (component/k->data k) ; some nested ks have no data defined
+                                                    (catch Throwable t
+                                                      (swap! undefined-data-ks conj k))))]
                    (f ctx v)
                    v)))))
 
