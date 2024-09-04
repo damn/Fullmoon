@@ -26,10 +26,10 @@
 
 ; put together with core.components info-text-order ?
 (def ^:private k-sort-order [:property/id
+                             :property/pretty-name
                              :app/lwjgl3
                              :entity/image
                              :entity/animation
-                             :property/pretty-name
                              :creature/species
                              :creature/level
                              :entity/body
