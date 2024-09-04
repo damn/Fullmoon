@@ -47,11 +47,10 @@
 
 (defcomponent :enum
   (component/->data [[_ items]]
-    {:schema (apply vector :enum items)
-     :items items}))
+    {:schema (apply vector :enum items)}))
 
 (defmethod data/->widget :enum [[_ data] v ctx]
-  (ctx/->select-box ctx {:items (map utils/->edn-str (:items data))
+  (ctx/->select-box ctx {:items (map utils/->edn-str (rest (:schema data)))
                          :selected (utils/->edn-str v)}))
 
 (defmethod data/widget->value :enum [_ widget]
