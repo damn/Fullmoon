@@ -12,12 +12,14 @@
     (assert (apply distinct? (map :property/id values)))
     (zipmap (map :property/id values) values)))
 
+(defn- property->schema [types property]
+  (-> property property/->type types :schema))
+
 (defn- validate [property types]
-  (let [type (property/->type property)
-        schema (:schema (type types))]
+  (let [schema (property->schema types property)]
     (if (try (m/validate schema property)
              (catch Throwable t
-               (throw (ex-info "m/validate fail" {:property property :type type} t))))
+               (throw (ex-info "m/validate fail" {:property property} t))))
       property
       (throw (ex-info (str (me/humanize (m/explain schema property)))
                       {:property property
@@ -143,7 +145,7 @@
     (keys types))
 
   (property->schema [{{:keys [types]} :context/properties} property]
-    (-> property property/->type types :schema))
+    (property->schema types property))
 
   (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
