@@ -235,9 +235,6 @@
       [(first data) (->data data)]
       [data (safe-get attributes data)])))
 
-(defn k->data [k]
-  (second (data-component k)))
-
 (defn attribute-schema
   "Can define keys as just keywords or for example [:foo {:optional true}]."
   [ks]
@@ -248,4 +245,4 @@
     (do
      (assert (keyword? k))
      (assert (or (nil? properties) (map? properties)) (pr-str ks))
-     [k properties (:schema (k->data k))])))
+     [k properties (:schema ((data-component k) 1))])))
