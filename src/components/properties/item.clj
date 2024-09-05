@@ -28,13 +28,16 @@
                                        "")
                                      (name (:property/id %)))}}))
 
-; TODO use image w. shadows spritesheet
+; TODO
+; * use image w. shadows spritesheet
+; * center sprites (staff not centered for example)
+; * body dimensions proper?
 (defcomponent :tx/item
   (component/do! [[_ position item] _ctx]
     (assert (:entity/image item))
     [[:tx/create
       position
-      {:width 0.5 ; TODO use item-body-dimensions
+      {:width 0.5
        :height 0.5
        :z-order :z-order/on-ground}
       #:entity {:image (:entity/image item)
