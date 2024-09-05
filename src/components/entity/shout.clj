@@ -1,27 +1,34 @@
 (ns components.entity.shout
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [world-grid line-of-sight? stopped?]]
-            [core.world.grid :refer [circle->entities]]))
+            [core.context :as ctx]
+            [core.world.grid :as grid]))
 
-(def ^:private shout-range 3)
+(def ^:private shout-radius 3)
 
-; TODO gets itself also
-  ; == faction/friendly? e1 e2 ( entity*/friendly? e*1 e*2) ?
-(defn- get-friendly-entities-in-line-of-sight [context entity* radius]
+; why in line-of-sight?
+; sounds don't go through walls ??
+; also not triggering for any other fighting sounds
+; or remove totally sleeping ?
+
+; gets itself also
+; == faction/friendly? e1 e2 ( entity*/friendly? e*1 e*2) ?
+(defn- friendlies-in-los [ctx entity*]
   (->> {:position (:position entity*)
-        :radius radius}
-       (circle->entities (world-grid context))
+        :radius shout-radius}
+       (grid/circle->entities (ctx/world-grid ctx))
        (map deref)
        (filter #(and (= (:entity/faction %) (:entity/faction entity*))
-                     (line-of-sight? context entity* %)))))
+                     (ctx/line-of-sight? ctx entity* %)))
+       (map :entity/id)))
 
 (defcomponent :entity/shout
-  (component/tick [[_ counter] entity context]
-    (when (stopped? context counter)
+  (component/tick [[_ counter] entity ctx]
+    (when (ctx/stopped? ctx counter)
       (cons [:tx/destroy entity]
-            (for [{:keys [entity/id]} (get-friendly-entities-in-line-of-sight context @entity shout-range)]
-              [:tx/event entity :alert])))))
+            (for [eid (friendlies-in-los ctx @entity)]
+              [:tx/event eid :alert])))))
 
+; this is actually an entity without body ... just delay do after x...
 (defcomponent :tx/shout
   (component/do! [[_ position faction delay-seconds] ctx]
     [[:tx/create
@@ -29,5 +36,5 @@
       {:width 0.5
        :height 0.5
        :z-order :z-order/effect}
-      #:entity {:faction faction
+      #:entity {:faction faction ; causes potential field? FIXME
                 :shout (ctx/->counter ctx delay-seconds)}]]))

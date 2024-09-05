@@ -17,7 +17,7 @@
 
 (defn- valid-position? [grid body]
   {:pre [(:collides? body)]}
-  (let [{:keys [entity/id z-order collides?]} body
+  (let [{:keys [entity/id z-order _collides?]} body
         cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
     (and (not-any? #(cell/blocked? % z-order) cells*)
          (->> cells*
