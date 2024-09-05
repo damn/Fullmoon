@@ -8,7 +8,6 @@
 ![foo](screenshots/inventory.png)
 ![foo](screenshots/vampire.png)
 
-
 # How to start
 
 Start normally
@@ -20,10 +19,6 @@ Start dev loop
 ```
 lein dev
 ```
-
-
-## On Mac set ...
-
 
 # License
 
