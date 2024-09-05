@@ -1,9 +1,6 @@
 (ns utils.random
   (:import java.util.Random))
 
-; TODO seed the whole game -> set thread bound var?
-; or set once -> all calls to rand/etc. will give same.
-
 ;; Seed
 
 ;; rename to 'shuffle', rand and rand-int without the 's'-> just use with require :as.

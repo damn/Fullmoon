@@ -9,7 +9,8 @@
             [core.scene2d.ui.table :as table]
             [core.scene2d.ui.widget-group :refer [pack!]]))
 
-; TODO schemas not checking if exists
+; TODO schemas not checking if that property exists in db...
+; https://github.com/damn/core/issues/59
 
 (defcomponent :one-to-many
   (component/->data [[_ property-type]]

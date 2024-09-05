@@ -14,11 +14,7 @@
                         :necklace [1 1]
                         :rings    [2 1]}
        (map (fn [[slot [width height]]]
-              [slot
-               ; simple hashmap grid instead?
-               (grid2d/create-grid width
-                                   height
-                                   (constantly nil))]))
+              [slot (grid2d/create-grid width height (constantly nil))]))
        (into {})))
 
 (defn cells-and-items [inventory slot]

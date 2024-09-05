@@ -33,7 +33,8 @@
                                                        :clickable {:type :clickable/player}
                                                        :click-distance-tiles 1.5}}]])))
 
-; TODO (check-not-allowed-diagonals grid)
+; TODO https://github.com/damn/core/issues/57
+; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
   (component/create-into #:world {:tiled-map tiled-map
@@ -91,7 +92,7 @@
 (defcomponent :tx/add-to-world
   (component/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
-    ; hmm
+    ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (world-grid/add-entity! (ctx/world-grid ctx) entity)
     ctx))
