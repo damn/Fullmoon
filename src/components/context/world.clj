@@ -164,7 +164,7 @@
 
 (comment
 
- ; #32
+ ; https://github.com/damn/core/issues/32
  ; grep :game-loop/replay
  ; unused code & not working
  ; record only top-lvl txs or save world state every x minutes/seconds
