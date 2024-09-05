@@ -13,7 +13,7 @@
 
 (defcomponent :one-to-many
   (component/->data [[_ property-type]]
-    {:schema [:set [:qualified-keyword]]
+    {:schema [:set [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]]
      :linked-property-type property-type}))
 
 (defmethod data/edn->value :one-to-many [_ property-ids ctx]
@@ -21,7 +21,7 @@
 
 (defcomponent :one-to-one
   (component/->data [[_ property-type]]
-    {:schema [:qualified-keyword]
+    {:schema [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]
      :linked-property-type property-type}))
 
 (defmethod data/edn->value :one-to-one [_ property-id ctx]

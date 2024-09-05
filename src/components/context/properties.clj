@@ -40,7 +40,7 @@
 (defn create-types [types]
   (apply-kvs (component/ks->create-all types {})
              (fn [k v]
-               (update v :schema #(map-attribute-schema (keyword (name k)) %)))))
+               (update v :schema #(map-attribute-schema (property/property-type->id-namespace k) %)))))
 
 (defcomponent :context/properties
   {:data :some
