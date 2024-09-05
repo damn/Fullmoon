@@ -1,5 +1,7 @@
 # core
 
+# #1 Optimize for programmer happyness
+
 # Screenshots
 
 ![foo](screenshots/main.png)
@@ -30,3 +32,11 @@ iDK about licenses
 * 2d array faster than grid2d? But not 'immutable'!
 * entity valAt → move accessors into protocol fns e.g. position and use .position entity or only non-ns keyword
 * lightmap calculations
+
+# Glossary
+
+table 'ctx' 'eid' entity*, entity, body, ...
+
+# Coding Guidlines
+
+* Greppable => don't use #: keyword for entity/world? & global used names grep if unique first before introducing.
