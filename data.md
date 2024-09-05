@@ -1,31 +1,24 @@
-# (:schema (k->data k) or component/data-component DRY
+# Actually component :data is not the schema of the value in game
+but in properties.edn !
+maybe :edn-schema key ? or :edn ?
+mismatch!
 
 
 # Optimize _only_ for happyness
 programmer happyness
 whatever
 
-
-maybe malli dependencies even put into
-a core namespace - interface on it ?
-
-# ingame rightclick window/context-menu on an entity
-=> opens editor or other tools ....
-(comment
- ; edit ingame
- ; cursor not changing becuz manual update
- (open-property-editor-window! @app/state (:property/id (ctx/mouseover-entity* @app/state)))
- )
-
+_ CLEANING _ ORGANIZING ACTION ! _
 # TODO comments in code // commented out // dead code
+;\|#_\|comment\|TODO\|FIXME
 not findable
 going crazy
 no more comments -> only link w. tickets or delete.
 
 like big TODO @ stats / actionbar / ?
 src/components/entity/temp_modifier.clj
-context/world passed vampire value,...
-dead-code minimap/skill-window/replay-mode.
+context/world passed vampire value,... (checklist no values passed, components, etc. )
+dead-code minimap/skill-window/replay-mode. (
 
 @ attribute-schema
  ; TODO here allow to pass :schema itself but then how 2 find it ...
