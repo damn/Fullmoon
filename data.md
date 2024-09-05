@@ -1,58 +1,56 @@
-# Actually component :data is not the schema of the value in game
-but in properties.edn !
-maybe :edn-schema key ? or :edn ?
-mismatch!
+Also move bookmarks, dropbox, everything into github
+just share all the stuff
+
+Main:
+* stats
+* core.stat similar to modifiers just not sorted
+* target-all/target-entity lots of TODOs
+* mapgen/cavgen most TODO's
+
+* components.entity.temp-modifier
+
+* potential-fields
+* :entity/projectile-collision
+* shout
+* damage/armor-pierce
+* components.entity-state.active-skill ?
+* player idle todos/else-cases/etc.
+* item on cursor place item on water/out-of-sight (ticket is there)
+* src/components/graphics/views.clj clamping TODOs
+* player doesn;t need aggro-range/reaction-time
+* order files by # comments/TODOs?
+* armor at damage no audiovisual
+* creature spawn comments
+* properties item comments
+* properties projectilev ery rawy
+
+* debug window -> ctx info component?!
+* line of sight !! world-view .... also explored tiles foobar ...
+* untested create-double-ray-endpositions
 
 
-# Optimize _only_ for happyness
-programmer happyness
-whatever
-
-_ CLEANING _ ORGANIZING ACTION ! _
-# TODO comments in code // commented out // dead code
-;\|#_\|comment\|TODO\|FIXME
-not findable
-going crazy
-no more comments -> only link w. tickets or delete.
-
-like big TODO @ stats / actionbar / ?
+* Here TODO txts
+* Dropbox ramblings
+* Review code manually (checklist, move values out, clj-kondo also)
+e.g.
 src/components/entity/temp_modifier.clj
 context/world passed vampire value,... (checklist no values passed, components, etc. )
 dead-code minimap/skill-window/replay-mode. (
 
-@ attribute-schema
- ; TODO here allow to pass :schema itself but then how 2 find it ...
- (make map schemas in 1 form )
+* Also : use this-component-key and don't access data directly? e.g. :context/properties everywhere?
 
-# Make stuff greppable
- * #:component {:doc :schema :data :etc.}
+* components clear what they do if added to an entity (faction? )
+=> actually faction doesn't do anything but npc-moving & potential field does .... interesting
+that part needs to be clearer.
 
-# Use malli schema directly map
- * optional defined in map
+move /dev into dev/ and rest into core
+lose gdx ?
 
-# Components is just a map with optional stuff
+* app-values-tree (colors, potential-field cache, sizes, etc. global data )
+* namespace tree fix dependencies
 
-# Reuse at property-editor :map schema for property itself
+=> all DONE or in gh-issues
 
-# Programmer Happyness #1 !
+=> also untested stuff like contentfields,path-ray-blocked? ...
 
-# b/src/components/context/properties.clj
-apply-vs == component/apply-system
-
-https://github.com/opqdonut/malli-edn-editor
-
-# Attr-m = component definition itself
-
-(comment
- (require '[malli.generator :as mg])
- (mg/generate (:schema (component/k->data :effect.entity/damage)))
- )
-
-; damage optional ...
-
-first have to fix optional ...
-
-
-# TODO next remove :items/ and use :component/schema directly or :c/schema instead of data
-; and skip all already defined (some/boolean/string) dont need to define here as defcomponents
-; then allow ks to define directly schema see properties/app no need extra defcomponents with :data/:schema (grep :data/:schema)
+=> overview ? whats going on , what is unfinished, what is untested, ... ?
