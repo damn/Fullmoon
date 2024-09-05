@@ -54,7 +54,6 @@
   (world-camera          [_])
   (world-viewport-width  [_])
   (world-viewport-height [_])
-  (fix-viewport-update [_])
   (update-viewports [_ w h]))
 
 (defprotocol Stage

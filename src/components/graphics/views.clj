@@ -40,10 +40,6 @@
 (defn- gui-viewport   [g] (-> g :gui-view   :viewport))
 (defn- world-viewport [g] (-> g :world-view :viewport))
 
-(defn- viewport-fix-required? [{g :context/graphics}]
-  (or (not= (viewport/screen-width  (gui-viewport g)) (graphics/width))
-      (not= (viewport/screen-height (gui-viewport g)) (graphics/height))))
-
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
 
@@ -83,9 +79,4 @@
   (update-viewports [{g :context/graphics} w h]
     (viewport/update (gui-viewport g) w h true)
     ; Do not center the camera on world-viewport. We set the position there manually.
-    (viewport/update (world-viewport g) w h false))
-
-  ; on mac osx, when resizing window, make bug report /  fix it in libgdx
-  (fix-viewport-update [context]
-    (when (viewport-fix-required? context)
-      (ctx/update-viewports context (graphics/width) (graphics/height)))))
+    (viewport/update (world-viewport g) w h false)))

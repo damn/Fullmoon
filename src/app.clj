@@ -35,7 +35,6 @@
               (run! component/destroy @state))
 
    :render (fn []
-             (ctx/fix-viewport-update @state)
              (screen-utils/clear color/black)
              (-> @state
                  ctx/current-screen
