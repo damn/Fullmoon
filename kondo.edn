@@ -1,0 +1,5 @@
+{:linters
+  {:unresolved-symbol
+   {:level :off}}}
+
+; clj-kondo --lint src --config kondo.edn
