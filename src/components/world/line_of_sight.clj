@@ -2,6 +2,8 @@
   (:require [gdx.graphics.camera :as camera]
             [core.context :as ctx]))
 
+; does not take into account zoom - but zoom is only for debug ???
+; vision range?
 (defn- on-screen? [entity* ctx]
   (let [[x y] (:position entity*)
         x (float x)
@@ -19,9 +21,10 @@
 
 (extend-type core.context.Context
   core.context/WorldLineOfSight
+  ; does not take into account size of entity ...
   (line-of-sight? [context source* target*]
-    (and (:z-order target*)  ; is even an entity which renders something
+    (and (:z-order target*)  ; is even an entity which renders something TODO still necessary??
          (or (not (:entity/player? source*))
              (on-screen? target* context))
-         (not (and los-checks?
+         (not (and los-checks? ; TODO at wrong point
                    (ctx/ray-blocked? context (:position source*) (:position target*)))))))
