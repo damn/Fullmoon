@@ -46,7 +46,7 @@ Code checklist:
 * Component ns dependencies
 * use this-component-key and don't access data directly? e.g. :context/properties everywhere?
     (even entity/faction instead of kw, so can change where it is ... part of creature or whatev )
-* greppability
+* greppability ( no #:entity / #:world ?? )
 => also untested stuff like contentfields,path-ray-blocked? ...
 * components clear what they do if added to an entity (faction? - where used grep & document? )
 => actually faction doesn't do anything but npc-moving & potential field does .... interesting
