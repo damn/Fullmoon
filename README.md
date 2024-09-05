@@ -3,10 +3,6 @@
 # Screenshots
 
 ![foo](screenshots/main.png)
-![foo](screenshots/caves.png)
-![foo](screenshots/editor.png)
-![foo](screenshots/inventory.png)
-![foo](screenshots/vampire.png)
 
 # How to start
 
