@@ -229,6 +229,8 @@
 (defn doc [k]
   (:doc (get attributes k)))
 
+; TODO all use cases of :data move to core.data,
+; make data-component private ...
 (defn data-component [k]
   (try (let [data (:data (safe-get attributes k))]
          (if (vector? data)

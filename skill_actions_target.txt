@@ -42,3 +42,5 @@ so pass whole effect-ctx? instead of merging? as value ?
 [k value effect-ctx ] ??
 
 => small steps...
+
+And maybe its action/source, action/target & not effect/?

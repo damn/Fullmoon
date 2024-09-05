@@ -217,6 +217,7 @@
                                 sprite-size])
              movement))
 
+; TODO unused
 (def ^:private ground-sprites [1 (range 5 11)])
 
 (def ^:private uf-grounds

@@ -12,8 +12,40 @@
                                  text
                                  views)))
 
+(defcomponent :data/graphics
+  {:widget :map
+   :schema [:map {:closed true}
+            [:cursors :some]
+            [:default-font [:map {:closed true}
+                            [:file :string]
+                            [:quality-scaling pos-int?]
+                            [:size pos-int?]]]
+            [:views [:map {:closed true}
+                     [:gui-view [:map {:closed true}
+                                 [:world-width pos-int?]
+                                 [:world-height pos-int?]]]
+                     [:world-view [:map {:closed true}
+                                   [:tile-size pos-int?]
+                                   [:world-width pos-int?]
+                                   [:world-height pos-int?]]]]]]})
+
+(defcomponent :world-width {:data :pos-int})
+(defcomponent :world-height {:data :pos-int})
+(defcomponent :tile-size {:data :pos-int})
+(defcomponent :world-view {:data [:map [:tile-size :world-width :world-height]]})
+(defcomponent :gui-view {:data [:map [:world-width :world-height]]})
+
+(defcomponent :views {:data [:map [:gui-view :world-view]]})
+
+(defcomponent :file {:data :string})
+(defcomponent :quality-scaling {:data :pos-int})
+(defcomponent :size {:data :pos-int})
+
+(defcomponent :default-font {:data [:map [:file :quality-scaling :size]]})
+(defcomponent :cursors {:data :some})
+
 (defcomponent :context/graphics
-  {:data :some
+  {:data [:map [:cursors :default-font :views]]
    :let {:keys [views default-font cursors]}}
   (component/create [_ _ctx]
     (core.graphics/map->Graphics

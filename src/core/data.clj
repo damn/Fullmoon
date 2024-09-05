@@ -13,8 +13,13 @@
 (defmulti ->widget      (fn [data _v _ctx] (data->widget data)))
 (defmulti widget->value (fn [data _widget] (data->widget data)))
 
+(defn- truncate [s limit]
+  (if (> (count s) limit)
+    (str (subs s 0 limit) "...")
+    s))
+
 (defmethod ->widget :default [_ v ctx]
-  (ctx/->label ctx (utils/->edn-str v)))
+  (ctx/->label ctx (truncate (utils/->edn-str v) 60)))
 
 (defmethod widget->value :default [_ widget]
   (actor/id widget))
