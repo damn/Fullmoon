@@ -10,20 +10,11 @@
      :first-screen (first screen-ks)})
 
   (component/destroy [_]
-    ; TODO dispose all screen stages ....
-    ; call dispose ?
-    ; is it doing anything? because has batch right ? but stuff ... idk
-    ; that means we automatically add a stage-screen to each screen??
-    ; _ why not! _ ?
-    ; does stage even need disposing? batch is passed as arg ..
-    ; what is there to dispose ?
-    ; i think I checked this before ...
+    ; TODO screens not disposed https://github.com/damn/core/issues/41
     ))
 
-; TODO make some of these fns private ?
 (extend-type core.context.Context
   core.context/ApplicationScreens
-  ; only called if checking is worldscreen
   (current-screen-key [{{:keys [current-screen]} :context/screens}]
     current-screen)
 

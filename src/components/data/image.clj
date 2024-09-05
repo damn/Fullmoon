@@ -22,8 +22,8 @@
 (defmethod data/edn->value :animation [_ animation ctx]
   (core.animation/edn->animation animation ctx))
 
-; TODO too many ! too big ! scroll ... only show files first & preview?
-; TODO make tree view from folders, etc. .. !! all creatures animations showing...
+; too many ! too big ! scroll ... only show files first & preview?
+; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
   (for [file (sort (ctx/all-texture-files ctx))]
     [(ctx/->image-button ctx (ctx/create-image ctx file) identity)]
@@ -33,7 +33,7 @@
   (ctx/->image-widget ctx (core.image/edn->image image ctx) {})
   #_(ctx/->image-button ctx image
                         #(ctx/add-to-stage! % (->scrollable-choose-window % (texture-rows %)))
-                        {:dimensions [96 96]})) ; x2  , not hardcoded here TODO
+                        {:dimensions [96 96]})) ; x2  , not hardcoded here
 
 ; looping? - click on widget restart
 ; frame-duration

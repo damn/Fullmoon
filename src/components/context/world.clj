@@ -23,7 +23,7 @@
                                         :components #:entity {:state [:state/npc :npc-sleeping]
                                                               :faction :evil}}]))
               ctx)]
-    (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible
+    (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible (move somewhere else)
     (ctx/do! ctx [[:tx/creature {:position (tile->middle start-position)
                                  :creature-id :creatures/vampire
                                  :components #:entity {:state [:state/player :player-idle]
