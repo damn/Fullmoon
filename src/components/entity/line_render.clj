@@ -14,7 +14,7 @@
   (component/do! [[_ {:keys [start end duration color thick?]}] _ctx]
     [[:tx/create
       start
-      {:width 0.5
+      {:width 0.5 ; TODO ??? always rendered? :render-always? true ? otherwise don't see
        :height 0.5
        :z-order :z-order/effect}
       #:entity {:line-render {:thick? thick? :end end :color color}
