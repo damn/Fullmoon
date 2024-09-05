@@ -42,7 +42,7 @@
     false
     )
 
-  (component/do! [_ {:keys [effect/source effect/target] :as ctx}]
+  (component/do! [_ {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (apply concat
              (for [target (all-targets ctx)]
@@ -59,7 +59,7 @@
                 ; find a way to pass ctx / effect-ctx separate ?
                 [:tx/effect {:effect/source source :effect/target target} entity-effects]]))))
 
-  (component/render [_ g {:keys [effect/source effect/target] :as ctx}]
+  (component/render [_ g {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (doseq [target* (map deref (all-targets ctx))]
         (g/draw-line g
