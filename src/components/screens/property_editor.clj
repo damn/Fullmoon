@@ -12,8 +12,7 @@
             [core.data :as data]
             [core.scene2d.actor :as actor]
             [core.scene2d.group :as group]
-            [core.scene2d.ui.table :refer [add! add-rows! cells ->horizontal-separator-cell ->vertical-separator-cell]]
-            [core.scene2d.ui.cell :refer [set-actor!]]
+            [core.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
             [core.scene2d.ui.widget-group :refer [pack!]]))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
@@ -205,16 +204,14 @@
                  (ctx/->text-button ctx (name id) on-clicked))
         top-widget (ctx/->label ctx (or (and extra-info-text (extra-info-text props)) ""))
         stack (ctx/->stack ctx [button top-widget])]
-    (do
-     (actor/add-tooltip! button #(components/info-text props %))
-     (actor/set-touchable! top-widget :disabled)
-     stack)))
+    (actor/add-tooltip! button #(components/info-text props %))
+    (actor/set-touchable! top-widget :disabled)
+    stack))
 
 (extend-type core.context.Context
   core.context/PropertyEditor
   (->overview-table [ctx property-type clicked-id-fn]
-    (let [{:keys [title
-                  sort-by-fn
+    (let [{:keys [sort-by-fn
                   extra-info-text
                   columns
                   image/scale]} (ctx/overview ctx property-type)

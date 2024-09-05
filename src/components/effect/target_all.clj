@@ -1,9 +1,7 @@
 (ns components.effect.target-all
-  (:require [math.vector :as v]
-            [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
-            [core.context :as ctx]
-            [core.entity :as entity]))
+            [core.context :as ctx]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
 

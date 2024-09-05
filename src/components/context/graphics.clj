@@ -30,7 +30,7 @@
     (dispose default-font)
     (run! dispose (vals cursors))))
 
-(defn- render-view [{{:keys [batch shape-drawer] :as g} :context/graphics}
+(defn- render-view [{{:keys [batch] :as g} :context/graphics}
                     view-key
                     draw-fn]
   (let [{:keys [viewport unit-scale]} (view-key g)]

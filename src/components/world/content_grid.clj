@@ -1,7 +1,6 @@
 (ns components.world.content-grid
   (:require [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]
-            [core.entity :as entity]
             core.world.content-grid))
 
 (defrecord ContentGrid [grid cell-w cell-h]

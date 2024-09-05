@@ -1,6 +1,5 @@
 (ns utils.core
-  (:require (clojure [pprint :refer (pprint)]
-                     [string :as str]
+  (:require (clojure [string :as str]
                      set)))
 
 (defn- indexed ; from clojure.contrib.seq-utils (discontinued in 1.3)

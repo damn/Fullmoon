@@ -1,6 +1,6 @@
 (ns components.effect-entity.damage
   (:require [utils.random :as random]
-            [core.component :as component :refer [defcomponent defcomponent*]]
+            [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.stat :refer [defmodifier]]))
 

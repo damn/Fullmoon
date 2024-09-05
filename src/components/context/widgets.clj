@@ -8,7 +8,7 @@
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group)
-           (com.badlogic.gdx.scenes.scene2d.ui Image Button Label Table WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
+           (com.badlogic.gdx.scenes.scene2d.ui Image Button Table WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui.widget VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane)))
 
@@ -105,7 +105,7 @@
       (.addListener button (->change-listener context on-clicked))
       button))
 
-  (->check-box [context text on-clicked checked?]
+  (->check-box [_ctx text on-clicked checked?]
     (let [^Button button (VisCheckBox. ^String text)]
       (.setChecked button checked?)
       (.addListener button

@@ -25,7 +25,7 @@
      :overview {:title "Worlds"
                 :columns 10}}))
 
-(defmulti generate (fn [ctx world] (:world/generator world)))
+(defmulti generate (fn [_ctx world] (:world/generator world)))
 
 (defmethod generate :world.generator/tiled-map [ctx world]
   {:tiled-map (ctx/->tiled-map ctx (:world/tiled-map world))

@@ -5,7 +5,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.graphics :as g]
-            [core.entity :as entity :refer [map->Entity]]))
+            [core.entity :as entity]))
 
 (def ^:private this :world/ecs)
 

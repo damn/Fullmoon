@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
-            [core.components :as components]
             [core.context :as ctx]
             [core.entity :as entity]))
 

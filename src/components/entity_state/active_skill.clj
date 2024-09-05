@@ -37,7 +37,7 @@
                                           (ctx/line-of-sight? ctx @source @target))
                                  target))))
 
-(defn- applicable? [{:keys [effect/source effect/target] :as ctx} effects]
+(defn- applicable? [ctx effects]
   (-> ctx
       check-remove-target
       (ctx/effect-applicable? effects)))

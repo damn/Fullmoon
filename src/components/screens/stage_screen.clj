@@ -1,11 +1,10 @@
 (ns components.screens.stage-screen
   (:require [gdx.input :as input]
-            [core.scene2d.actor :as actor]
             [gdx.scene2d.stage :as stage]
             [core.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx])
-  (:import (com.badlogic.gdx.scenes.scene2d Group Stage)))
+  (:import com.badlogic.gdx.scenes.scene2d.Stage))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage-screen
