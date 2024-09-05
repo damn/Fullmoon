@@ -65,43 +65,29 @@
             (assoc :entity/destroy-audiovisual :audiovisuals/creature-die)
             (safe-merge components))]])))
 
-
-; TODO spawning on player both without error ?! => not valid position checked
+; TODO https://github.com/damn/core/issues/29
+; spawning on player both without error ?! => not valid position checked
 ; also what if someone moves on the target posi ? find nearby valid cell ?
-
 ; BLOCKING PLAYER MOVEMENT ! (summons no-clip with player ?)
-; check not blocked position // line of sight.
+; check not blocked position // line of sight. (part of target-position make)
 ; limit max. spawns
 ; animation/sound
 ; proper icon (grayscaled ?)
 ; keep in player movement range priority ( follow player if too far, otherwise going for enemies)
 ; => so they follow you around
-
 ; not try-spawn, but check valid-params & then spawn !
-
 ; new UI -> show creature body & then place
 ; >> but what if it is blocked the area during action-time ?? <<
-
-; Also: to make a complete game takes so many creatures, items, skills, balance, ui changes, testing
-; is it even possible ?
-
-(comment
- ; keys: :faction(:source)/:target-position/:creature-id
- )
-
-; => one to one attr!?
 (defcomponent :effect/spawn
   {:data [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
   (component/applicable? [_ {:keys [effect/source effect/target-position]}]
-    ; TODO line of sight ? / not blocked tile..
-    ; (part of target-position make)
     (and (:entity/faction @source)
          target-position))
 
   (component/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
-                    :creature-id id
+                    :creature-id id ; already ctx/property called through one-to-one, now called again.
                     :components #:entity {:state [:state/npc :npc-idle]
                                           :faction (:entity/faction @source)}}]]))
