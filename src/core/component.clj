@@ -230,10 +230,12 @@
   (:doc (get attributes k)))
 
 (defn data-component [k]
-  (let [data (:data (safe-get attributes k))]
-    (if (vector? data)
-      [(first data) (->data data)]
-      [data (safe-get attributes data)])))
+  (try (let [data (:data (safe-get attributes k))]
+         (if (vector? data)
+           [(first data) (->data data)]
+           [data (safe-get attributes data)]))
+       (catch Throwable t
+         (throw (ex-info "" {:k k} t)))))
 
 (defn attribute-schema
   "Can define keys as just keywords or for example [:foo {:optional true}]."

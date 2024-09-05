@@ -13,7 +13,16 @@
 ; screens require vis-ui / properties (map-editor, property editor uses properties)
 ; properties requires graphics (image)
 ; so cannot be [:components-ns :context] map but has to be a vector
-(defcomponent :app/context {:data :some})
+;= > cannot change anything then VISUI not loaded.. then VISUI not loaded..
+(defcomponent :app/context {:data [:map
+                                   [:context/assets
+                                    :context/background-image
+                                    :context/config
+                                    :context/graphics
+                                    :context/properties
+                                    :context/screens
+                                    [:context/vis-ui {:optional true}]
+                                    [:context/tiled-map-renderer {:optional true}]]]})
 
 (defcomponent :properties/app
   (component/create [_ _ctx]

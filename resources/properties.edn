@@ -1,11 +1,11 @@
 ({:app/context
-  [[:context/assets
+  {:context/assets
     {:folder "resources/",
      :image-file-extensions #{"png" "bmp"},
      :log? false,
-     :sound-file-extensions #{"wav"}}]
-   [:context/background-image "images/moon_background.png"]
-   [:context/config
+     :sound-file-extensions #{"wav"}}
+   :context/background-image "images/moon_background.png"
+   :context/config
     {:configs
      {:dev
       {:debug-options? true,
@@ -17,8 +17,8 @@
        :debug-window? false,
        :map-editor? false,
        :property-editor? false}},
-     :tag :dev}]
-   [:context/graphics
+     :tag :dev}
+   :context/graphics
     {:cursors
      {:cursors/bag ["bag001" [0 0]],
       :cursors/default ["default" [0 0]],
@@ -41,8 +41,8 @@
      :views
      {:gui-view {:world-height 900, :world-width 1440},
       :world-view
-      {:tile-size 48, :world-height 900, :world-width 1440}}}]
-   [:context/properties
+      {:tile-size 48, :world-height 900, :world-width 1440}}}
+   :context/properties
     {:types
      [:properties/app
       :properties/audiovisuals
@@ -50,15 +50,15 @@
       :properties/items
       :properties/projectiles
       :properties/skills
-      :properties/worlds]}]
-   [:context/vis-ui :skin-scale/x1]
-   [:context/screens
+      :properties/worlds]}
+   :context/vis-ui :skin-scale/x1
+   :context/screens
     [:screens/main-menu
      :screens/map-editor
      :screens/options-menu
      :screens/property-editor
-     :screens/world]]
-   [:context/tiled-map-renderer true]],
+     :screens/world]
+   :context/tiled-map-renderer true},
   :app/lwjgl3
   {:fps 60,
    :full-screen? false,
