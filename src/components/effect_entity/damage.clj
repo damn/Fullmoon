@@ -55,19 +55,19 @@
                            (->source {:modifier/damage-deal {:op/val-inc [1 5 10]
                                                             :op/val-mult [0.2 0.3]
                                                             :op/max-mult [1]}}))
-       #:damage{:min-max [31 62]})
+       {:damage/min-max [31 62]})
 
     (= (->effective-damage {:damage/min-max [5 10]}
                            (->source {:modifier/damage-deal {:op/val-inc [1]}}))
-       #:damage{:min-max [6 10]})
+       {:damage/min-max [6 10]})
 
     (= (->effective-damage {:damage/min-max [5 10]}
                            (->source {:modifier/damage-deal {:op/max-mult [2]}}))
-       #:damage{:min-max [5 30]})
+       {:damage/min-max [5 30]})
 
     (= (->effective-damage {:damage/min-max [5 10]}
                            (->source nil))
-       #:damage{:min-max [5 10]}))))
+       {:damage/min-max [5 10]}))))
 
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))

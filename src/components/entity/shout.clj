@@ -36,5 +36,5 @@
       {:width 0.5
        :height 0.5
        :z-order :z-order/effect}
-      #:entity {:faction faction ; causes potential field? FIXME
-                :shout (ctx/->counter ctx delay-seconds)}]]))
+      {:entity/faction faction ; causes potential field? FIXME
+       :entity/shout (ctx/->counter ctx delay-seconds)}]]))

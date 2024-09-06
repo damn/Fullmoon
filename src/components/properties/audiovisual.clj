@@ -20,5 +20,5 @@
         {:width 0.5
          :height 0.5
          :z-order :z-order/effect}
-        #:entity {:animation animation
-                  :delete-after-animation-stopped? true}]])))
+        {:entity/animation animation
+         :entity/delete-after-animation-stopped? true}]])))

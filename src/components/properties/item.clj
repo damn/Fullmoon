@@ -40,7 +40,7 @@
       {:width 0.5
        :height 0.5
        :z-order :z-order/on-ground}
-      #:entity {:image (:entity/image item)
-                :item item
-                :clickable {:type :clickable/item
-                            :text (:property/pretty-name item)}}]]))
+      {:entity/image (:entity/image item)
+       :entity/item item
+       :entity/clickable {:type :clickable/item
+                          :text (:property/pretty-name item)}}]]))

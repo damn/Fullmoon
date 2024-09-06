@@ -89,5 +89,5 @@
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
                     :creature-id id ; already ctx/property called through one-to-one, now called again.
-                    :components #:entity {:state [:state/npc :npc-idle]
-                                          :faction (:entity/faction @source)}}]]))
+                    :components {:entity/state [:state/npc :npc-idle]
+                                 :entity/faction (:entity/faction @source)}}]]))

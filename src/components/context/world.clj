@@ -20,45 +20,44 @@
                        (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
                          [:tx/creature {:position (tile->middle posi)
                                         :creature-id (keyword creature-id)
-                                        :components #:entity {:state [:state/npc :npc-sleeping]
-                                                              :faction :evil}}]))
+                                        :components {:entity/state [:state/npc :npc-sleeping]
+                                                     :entity/faction :evil}}]))
               ctx)]
     (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible (move somewhere else)
     (ctx/do! ctx [[:tx/creature {:position (tile->middle start-position)
                                  :creature-id :creatures/vampire
-                                 :components #:entity {:state [:state/player :player-idle]
-                                                       :faction :good
-                                                       :player? true
-                                                       :free-skill-points 3
-                                                       :clickable {:type :clickable/player}
-                                                       :click-distance-tiles 1.5}}]])))
+                                 :components {:entity/state [:state/player :player-idle]
+                                              :entity/faction :good
+                                              :entity/player? true
+                                              :entity/free-skill-points 3
+                                              :entity/clickable {:type :clickable/player}
+                                              :entity/click-distance-tiles 1.5}}]])))
 
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
 (defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
-  (component/create-into #:world {:tiled-map tiled-map
-                                  :start-position start-position}
-                         #:world {:grid [(tiled/width tiled-map)
-                                         (tiled/height tiled-map)
-                                         #(case (tiled/movement-property tiled-map %)
-                                            "none" :none
-                                            "air"  :air
-                                            "all"  :all)]
-                                  :raycaster #(cell/blocked? % :z-order/flying)
-                                  :content-grid [16 16]
-                                  :explored-tile-corners true}))
+  (component/create-into {:world/tiled-map tiled-map
+                          :world/start-position start-position}
+                         {:world/grid [(tiled/width tiled-map)
+                                       (tiled/height tiled-map)
+                                       #(case (tiled/movement-property tiled-map %)
+                                          "none" :none
+                                          "air"  :air
+                                          "all"  :all)]
+                          :world/raycaster #(cell/blocked? % :z-order/flying)
+                          :world/content-grid [16 16]
+                          :world/explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (let [ctx (dissoc ctx ::tick-error)
         ctx (-> ctx
                 (merge {::game-loop-mode mode}
-                       (component/create-into
-                        ctx
-                        #:world {:ecs true
-                                 :time true
-                                 :widgets true
-                                 :effect-handler [mode record-transactions?]})))]
+                       (component/create-into ctx
+                                              {:world/ecs true
+                                               :world/time true
+                                               :world/widgets true
+                                               :world/effect-handler [mode record-transactions?]})))]
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:world/tiled-map ctx)]

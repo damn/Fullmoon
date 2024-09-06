@@ -46,14 +46,14 @@
          :height size
          :z-order :z-order/flying
          :rotation-angle (v/get-angle-from-vector direction)}
-        #:entity {:movement {:direction direction
-                             :speed speed}
-                  :image image
-                  :faction faction
-                  :delete-after-duration (/ max-range speed)
-                  :destroy-audiovisual :audiovisuals/hit-wall
-                  :projectile-collision {:entity-effects entity-effects
-                                         :piercing? piercing?}}]])))
+        {:entity/movement {:direction direction
+                           :speed speed}
+         :entity/image image
+         :entity/faction faction
+         :entity/delete-after-duration (/ max-range speed)
+         :entity/destroy-audiovisual :audiovisuals/hit-wall
+         :entity/projectile-collision {:entity-effects entity-effects
+                                       :piercing? piercing?}}]])))
 
 (defn- start-point [entity* direction size]
   (v/add (:position entity*)
