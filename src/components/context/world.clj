@@ -45,7 +45,7 @@
                                           "none" :none
                                           "air"  :air
                                           "all"  :all)]
-                          :world/raycaster #(cell/blocked? % :z-order/flying)
+                          :world/raycaster cell/blocks-vision?
                           :world/content-grid [16 16]
                           :world/explored-tile-corners true}))
 

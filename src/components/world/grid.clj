@@ -134,6 +134,9 @@
              :z-order/ground true)
       :all false))
 
+  (blocks-vision? [_]
+    (= movement :none))
+
   (occupied-by-other? [_ entity]
     (some #(not= % entity) occupied)) ; contains? faster?
 
