@@ -1,12 +1,7 @@
-(ns components.context.background-image
-  (:require [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]))
+(ns components.widgets.background-image
+  (:require [core.context :as ctx]))
 
-(defcomponent :context/background-image
-  {:data :some}
-  (component/create [[_ file] _ctx]
-    (def ^:private image-file file)
-    nil))
+(def ^:private image-file "images/moon_background.png")
 
 (extend-type core.context.Context
   core.context/BackgroundImage

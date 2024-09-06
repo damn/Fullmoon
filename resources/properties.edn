@@ -4,7 +4,6 @@
      :image-file-extensions #{"png" "bmp"},
      :log? false,
      :sound-file-extensions #{"wav"}}]
-   [:context/background-image "images/moon_background.png"]
    [:context/config
     {:configs
      {:dev

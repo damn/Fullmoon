@@ -19,7 +19,6 @@
   {:data :some
    #_[:map
       [:context/assets ; no deps
-       :context/background-image ; graphics for image
        :context/config ; no deps
        :context/graphics ; no deps
        :context/properties ; no deps
