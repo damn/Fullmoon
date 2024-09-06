@@ -152,6 +152,7 @@ direction keys: move")
            ;:area-level-grid area-level-grid
            :start-position start-position)
     (show-whole-map! (ctx/world-camera context) tiled-map)
+    (.setVisible (tiled/get-layer tiled-map "creatures") true)
     context))
 
 (defn ->generate-map-window [ctx level-id]

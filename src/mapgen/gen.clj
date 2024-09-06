@@ -89,7 +89,7 @@
 (def ^:private spawn-creatures? true)
 
 (defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
-  (let [layer (add-layer! tiled-map :name "creatures" :visible true)
+  (let [layer (add-layer! tiled-map :name "creatures" :visible false)
         creature-properties (all-properties context :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
