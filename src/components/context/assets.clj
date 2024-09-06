@@ -5,7 +5,7 @@
             [gdx.audio.sound :as sound]
             [utils.files :as files]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]))
+            core.context))
 
 (defn- load-assets! [manager files ^Class class log?]
   (doseq [file files]
@@ -49,10 +49,3 @@
 
   (all-sound-files   [ctx] (:sound-files   (this ctx)))
   (all-texture-files [ctx] (:texture-files (this ctx))))
-
-(defcomponent :tx/sound
-  {:data :sound
-   :let file}
-  (component/do! [_ ctx]
-    (ctx/play-sound! ctx file)
-    ctx))
