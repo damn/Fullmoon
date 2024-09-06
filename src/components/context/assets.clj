@@ -17,7 +17,9 @@
   (map #(str/replace-first % folder "")
        (files/recursively-search folder file-extensions)))
 
-(defcomponent :context/assets
+(def ^:private this :context/assets)
+
+(defcomponent this
   {:data :some
    :let {:keys [folder
                 sound-file-extensions
@@ -33,8 +35,6 @@
       {:manager manager
        :sound-files sound-files
        :texture-files texture-files})))
-
-(defn- this [ctx] (:context/assets ctx))
 
 (defn- get-asset [ctx file]
   (get (:manager (this ctx)) file))
