@@ -26,6 +26,8 @@ iDK about licenses
 
 * Use sampler not profiler @ JVIsualVM
 * Do not limit max FPS, set to 300+
+    (also swapbuffer taking 50% of CPU time - see glfw docs, maybe vsync is on? )
+    https://www.reddit.com/r/opengl/comments/zerwxm/glfwswapbuffers_taking_almost_60_my_programs_cpu/
 * Lazy seqs hide evaluation & slower (e.g. main loop filter this, etc) ! use transducers (also hide steps in the into...)
 * boxed math ! *unchecked-math* :warn-on-boxed
 * in production set *assert* to false? @ cell grid lots of checks add/remove entity
