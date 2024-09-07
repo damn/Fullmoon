@@ -8,7 +8,8 @@
 (defcomponent :height {:data :nat-int})
 (defcomponent :title {:data :string})
 
-(defcomponent :app/lwjgl3 {:data [:map [:fps :full-screen? :width :height :title]]})
+; TODO just use sort-by-order and define context-order
+; e.g. just screens after the rest...
 
 ; screens require vis-ui / properties (map-editor, property editor uses properties)
 ; properties requires graphics (image)

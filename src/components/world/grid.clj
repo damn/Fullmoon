@@ -128,11 +128,11 @@
 
   (blocked? [_ z-order]
     (case movement
-      :none true
-      :air (case z-order
+      :none true ; wall
+      :air (case z-order ; water/doodads
              :z-order/flying false
              :z-order/ground true)
-      :all false))
+      :all false)) ; ground/floor
 
   (blocks-vision? [_]
     (= movement :none))
