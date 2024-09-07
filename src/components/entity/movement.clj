@@ -15,10 +15,9 @@
       (update :position    move-position movement)
       (update :left-bottom move-position movement)))
 
-(defn- valid-position? [grid body]
-  {:pre [(:collides? body)]}
-  (let [{:keys [entity/id z-order _collides?]} body
-        cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
+(defn- valid-position? [grid {:keys [entity/id z-order collides?] :as body}]
+  {:pre [collides?]}
+  (let [cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
     (and (not-any? #(cell/blocked? % z-order) cells*)
          (->> cells*
               cell/cells->entities
