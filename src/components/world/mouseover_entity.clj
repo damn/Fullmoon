@@ -6,9 +6,7 @@
 
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (ctx/player-entity* context)
-        hits (filter #(and (:z-order %)
-                           (not= (:z-order %)
-                                 :z-order/effect))
+        hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities (world-grid context)
                                            (ctx/world-mouse-position context))))]
