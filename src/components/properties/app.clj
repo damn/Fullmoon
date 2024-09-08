@@ -1,6 +1,5 @@
 (ns components.properties.app
-  (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]))
+  (:require [core.component :as component :refer [defcomponent]]))
 
 (defcomponent :fps          {:data :nat-int})
 (defcomponent :full-screen? {:data :boolean})
