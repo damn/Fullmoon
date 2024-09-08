@@ -17,7 +17,9 @@ The whole game state is stored in one atom: `app/state` and entities are again a
 # How to start developing
 
 * Starts an NREPL-Server
-* On application close (ESC in the main menu), clojure.tools.namespace will do a refresh on any changed files and restart the app.
+* On application close (ESC in the main menu), clojure.tools.namespace will do  refresh on any changed files and restart the app.
+* On any error the JVM does not have to be restarted, you can fix the error and call `dev-loop/restart!' I have bound it on my VIM to F5 with:
+  `nmap <F5> :Eval (do (in-ns 'dev-loop)(restart!))`
 ```
 lein dev
 ```
