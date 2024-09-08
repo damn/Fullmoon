@@ -14,8 +14,6 @@
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
-; TODO cannot play goblin as no mana -> hpmanabar breaks.
-
 (def ^:private player-components {:entity/state [:state/player :player-idle]
                                   :entity/faction :good
                                   :entity/player? true
@@ -87,7 +85,6 @@
 (extend-type core.context.Context
   core.context/World
   (start-new-game [ctx tiled-level]
-    (println "start-new-game with tiled-level: " tiled-level)
     (init-game-context ctx
                        :mode :game-loop/normal
                        :record-transactions? false ; TODO top level flag ?
