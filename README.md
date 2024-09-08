@@ -8,6 +8,8 @@ Side effects in the game are just components like `[:tx/foo param]` named 'tx=tr
 
 The whole game state is stored in one atom: `app/state` and entities are again atoms inside the main atom (like in our universe).
 
+Everything (including the game context itself, is stored in resources/properties.edn and uses malli-schemas to validate it and can be edited inside the engine).
+
 # Screenshots
 
 <img width="1680" alt="screenshot" src="https://github.com/user-attachments/assets/1c7451d0-57f0-48c9-bee3-8eedf332910f">
