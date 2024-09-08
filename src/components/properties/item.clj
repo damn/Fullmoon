@@ -28,19 +28,14 @@
                                        "")
                                      (name (:property/id %)))}}))
 
-; TODO
-; * use image w. shadows spritesheet
-; * center sprites (staff not centered for example)
-; * body dimensions proper?
+(def ^:private body-props
+  {:width 0.75
+   :height 0.75
+   :z-order :z-order/on-ground})
+
 (defcomponent :tx/item
   (component/do! [[_ position item] _ctx]
-    (assert (:entity/image item))
-    [[:tx/create
-      position
-      {:width 0.5
-       :height 0.5
-       :z-order :z-order/on-ground}
-      {:entity/image (:entity/image item)
-       :entity/item item
-       :entity/clickable {:type :clickable/item
-                          :text (:property/pretty-name item)}}]]))
+    [[:tx/create position body-props {:entity/image (:entity/image item)
+                                      :entity/item item
+                                      :entity/clickable {:type :clickable/item
+                                                         :text (:property/pretty-name item)}}]]))
