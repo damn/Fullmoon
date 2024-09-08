@@ -1,12 +1,12 @@
 # core
 
-RPG Maker&Engine for Clojure and much more. Core is an experimental new&simpler way to write videogames. Based on plain clojure data structures.
+Core is an experimental new&simpler way to write videogames. Based on plain clojure data structures.
 
 It uses a simple component system, where components are just clojure vectors of `[keyword value]` and the different entities are clojure maps.
 
 Side effects in the game are just components like `[:tx/foo param]` named 'tx=transaction' similar to the datomic structure.
 
-The whole game state is stored in one atom: `app/state` and entities are again atoms inside the main atom.
+The whole game state is stored in one atom: `app/state` and entities are again atoms inside the main atom (like in our universe).
 
 # Screenshots
 
