@@ -1,6 +1,6 @@
 # core
 
-Core is an experimental new&simpler way to write videogames. Based on plain clojure data structures.
+Core is an experimental new way to write videogames. 
 
 It uses a simple component system, where components are just clojure vectors of `[keyword value]` and the different entities are clojure maps.
 
