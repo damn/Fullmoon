@@ -8,19 +8,16 @@
             [components.context.world :as world]))
 
 (defn- render-world! [ctx]
-  (let [player-entity* (ctx/player-entity* ctx)]
-    (camera/set-position! (ctx/world-camera ctx) (:position player-entity*))
-    (ctx/render-map ctx (camera/position (ctx/world-camera ctx)))
-    (ctx/render-world-view ctx
-                           (fn [g]
-                             (ctx/debug-render-before-entities ctx g)
-                             (ctx/render-entities! ctx
-                                                   g
-                                                   (->> (ctx/active-entities ctx)
-                                                        (map deref)
-                                                        (filter :z-order)
-                                                        (filter #(ctx/line-of-sight? ctx player-entity* %))))
-                             (ctx/debug-render-after-entities ctx g)))))
+  (camera/set-position! (ctx/world-camera ctx) (:position (ctx/player-entity* ctx)))
+  (ctx/render-map ctx (camera/position (ctx/world-camera ctx)))
+  (ctx/render-world-view ctx
+                         (fn [g]
+                           (ctx/debug-render-before-entities ctx g)
+                           (ctx/render-entities! ctx
+                                                 g
+                                                 (->> (ctx/active-entities ctx)
+                                                      (map deref)))
+                           (ctx/debug-render-after-entities ctx g))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))

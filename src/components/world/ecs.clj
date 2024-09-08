@@ -76,7 +76,7 @@
 
 (defn- tick-system [ctx entity]
   (try
-   (reduce (fn [ctx k]
+   (reduce (fn do-tick-component [ctx k]
              ; precaution in case a component gets removed by another component
              ; the question is do we still want to update nil components ?
              ; should be contains? check ?
@@ -103,14 +103,16 @@
   (tick-entities! [ctx entities]
     (reduce tick-system ctx entities))
 
-  (render-entities! [context g entities*]
-    (doseq [entities* (map second
-                           (sort-by-order (group-by :z-order entities*)
-                                          first
-                                          entity/render-order))
-            system component/render-systems
-            entity* entities*]
-      (render-entity* system entity* g context)))
+  (render-entities! [ctx g entities*]
+    (let [player-entity* (ctx/player-entity* ctx)]
+      (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
+                                                 first
+                                                 entity/render-order)
+              system component/render-systems
+              entity* entities*
+              :when (or (= z-order :z-order/effect)
+                        (ctx/line-of-sight? ctx player-entity* entity*))]
+        (render-entity* system entity* g ctx))))
 
   (remove-destroyed-entities! [ctx]
     (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))

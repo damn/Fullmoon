@@ -1,6 +1,7 @@
 (ns components.properties.audiovisual
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.entity :as entity]))
 
 (defcomponent :properties/audiovisuals
   (component/create [_ _ctx]
@@ -17,8 +18,6 @@
       [[:tx/sound sound]
        [:tx/create
         position
-        {:width 0.5
-         :height 0.5
-         :z-order :z-order/effect}
+        entity/effect-body-props
         {:entity/animation animation
          :entity/delete-after-animation-stopped? true}]])))

@@ -17,14 +17,16 @@
      (<= xdist (inc (/ (float (ctx/world-viewport-width ctx))  2)))
      (<= ydist (inc (/ (float (ctx/world-viewport-height ctx)) 2))))))
 
+; TODO at wrong point , this affects targeting logic of npcs
+; move the debug flag to either render or mouseover or lets see
 (def ^:private ^:dbg-flag los-checks? true)
 
 (extend-type core.context.Context
   core.context/WorldLineOfSight
   ; does not take into account size of entity ...
+  ; => assert bodies <1 width then
   (line-of-sight? [context source* target*]
-    (and (:z-order target*)  ; is even an entity which renders something TODO still necessary??
-         (or (not (:entity/player? source*))
+    (and (or (not (:entity/player? source*))
              (on-screen? target* context))
-         (not (and los-checks? ; TODO at wrong point
+         (not (and los-checks?
                    (ctx/ray-blocked? context (:position source*) (:position target*)))))))

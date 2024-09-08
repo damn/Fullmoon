@@ -12,16 +12,6 @@
 ; TODO assert at properties load
 (def ^:private min-solid-body-size 0.39) ; == spider smallest creature size.
 
-; # :z-order/flying has no effect for now
-
-; * entities with :z-order/flying are not flying over water,etc. (movement/air)
-; because using potential-field for z-order/ground
-; -> would have to add one more potential-field for each faction for z-order/flying
-; * they would also (maybe) need a separate occupied-cells if they don't collide with other
-; * they could also go over ground units and not collide with them
-; ( a test showed then flying OVER player entity )
-; -> so no flying units for now
-
 ; set max speed so small entities are not skipped by projectiles
 ; could set faster than max-speed if I just do multiple smaller movement steps in one frame
 (def ^:private max-speed (/ min-solid-body-size max-delta-time)) ; need to make var because m/schema would fail later if divide / is inside the schema-form
@@ -76,6 +66,13 @@
     :collides? collides?
     :z-order z-order
     :rotation-angle (or rotation-angle 0)}))
+
+
+(def ^{:doc "For effects just to have a mouseover body size for debugging purposes."}
+  effect-body-props
+  {:width 0.5
+   :height 0.5
+   :z-order :z-order/effect})
 
 (defn tile [entity*]
   (utils/->tile (:position entity*)))

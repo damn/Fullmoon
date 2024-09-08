@@ -1,40 +1,32 @@
 (ns components.entity.shout
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
+            [core.entity :as entity]
             [core.world.grid :as grid]))
 
-(def ^:private shout-radius 3)
+(def ^:private shout-radius 4)
 
-; why in line-of-sight?
-; sounds don't go through walls ??
-; also not triggering for any other fighting sounds
-; or remove totally sleeping ?
-
-; gets itself also
-; == faction/friendly? e1 e2 ( entity*/friendly? e*1 e*2) ?
-(defn- friendlies-in-los [ctx entity*]
-  (->> {:position (:position entity*)
+(defn- friendlies-in-radius [ctx position faction]
+  (->> {:position position
         :radius shout-radius}
        (grid/circle->entities (ctx/world-grid ctx))
        (map deref)
-       (filter #(and (= (:entity/faction %) (:entity/faction entity*))
-                     (ctx/line-of-sight? ctx entity* %)))
+       (filter #(and (= (:entity/faction %) faction)))
        (map :entity/id)))
 
-(defcomponent :entity/shout
-  (component/tick [[_ counter] entity ctx]
+(defcomponent ::alert-friendlies-after-duration
+  {:let {:keys [counter faction]}}
+  (component/tick [_ eid ctx]
     (when (ctx/stopped? ctx counter)
-      (cons [:tx/destroy entity]
-            (for [eid (friendlies-in-los ctx @entity)]
-              [:tx/event eid :alert])))))
+      (cons [:tx/destroy eid]
+            (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
+              [:tx/event friendly-eid :alert])))))
 
-; this is actually an entity without body ... just delay do after x...
 (defcomponent :tx/shout
   (component/do! [[_ position faction delay-seconds] ctx]
     [[:tx/create
       position
-      {:width 0.5
-       :height 0.5
-       :z-order :z-order/effect}
-      {:entity/faction faction ; causes potential field? FIXME
-       :entity/shout (ctx/->counter ctx delay-seconds)}]]))
+      entity/effect-body-props
+      {::alert-friendlies-after-duration
+       {:counter (ctx/->counter ctx delay-seconds)
+        :faction faction}}]]))
