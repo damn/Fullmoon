@@ -9,7 +9,7 @@
 ; same code as in render entities on world view screens/world
 (defn- all-targets [ctx]
   (->> (ctx/active-entities ctx)
-       (filter #(:z-order @%)) ; all have anyway ? all have body now ?
+       (filter #(:creature/species @%))
        (filter #(ctx/line-of-sight? ctx (ctx/player-entity* ctx) @%))
        (remove #(:entity/player? @%))))
 
