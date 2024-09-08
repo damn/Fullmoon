@@ -12,3 +12,7 @@
 * lightmap calculations
 
 * Switch Texture @ shape-drawer => use common entity texture white pixel, not create separate!
+
+```clojure
+ (gdx.app/post-runnable #(.setVSync com.badlogic.gdx.Gdx/graphics false))
+```
