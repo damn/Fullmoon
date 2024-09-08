@@ -15,6 +15,14 @@
             [core.world.grid :refer [cached-adjacent-cells rectangle->cells]]
             [core.world.cell :as cell]))
 
+(def ^:private cache (atom nil))
+
+(def ^:private factions-iterations {:good 15
+                                    :evil 5})
+
+(defn- cell-blocked? [cell*]
+  (cell/blocked? cell* :z-order/ground))
+
 ; FIXME assert @ mapload no NAD's and @ potential field init & remove from
 ; potential-field-following the removal of NAD's.
 
@@ -78,9 +86,6 @@
 (defn- remove-field-data! [cell faction]
   (swap! cell assoc faction nil)) ; don't dissoc - will lose the Cell record type
 
-(defn- cell-blocked? [cell*]
-  (cell/blocked? cell* :z-order/ground))
-
 ; TODO performance
 ; * cached-adjacent-non-blocked-cells ? -> no need for cell blocked check?
 ; * sorted-set-by ?
@@ -130,8 +135,6 @@
     (zipmap (map #(entity/tile @%) entities)
             entities)))
 
-(def ^:private cache (atom nil)) ; TODO move to context?
-
 (defn- update-faction-potential-field [grid faction entities max-iterations]
   (let [tiles->entities (tiles->entities entities faction)
         last-state   [faction :tiles->entities]
@@ -145,11 +148,6 @@
                                           faction
                                           tiles->entities
                                           max-iterations)))))
-
-; TODO main potential field context component create-component params
-; !!
-(def ^:private factions-iterations {:good 15
-                                    :evil 5})
 
 ;; MOVEMENT AI
 
