@@ -4,7 +4,8 @@ RPG Maker&Engine for Clojure.
 
 # Screenshots
 
-![beeholder-caves-world](Screenshot 2024-09-08 at 11.41.11 PM)
+<img width="1680" alt="screenshot" src="https://github.com/user-attachments/assets/1c7451d0-57f0-48c9-bee3-8eedf332910f">
+
 
 # How to start developing
 
