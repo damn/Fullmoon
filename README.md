@@ -2,7 +2,7 @@
 
 RPG Maker&Engine for Clojure.
 
-It uses an extremely innovating new component system, where components are just [k v] clojure vectors.
+It uses an extremely innovating new component system, where components are just clojure vectors of `[keyword value]`.
 
 Side effects in the game are just components like `[:tx/foo param]` named 'tx=transaction' similar to the datomic structure.
 
