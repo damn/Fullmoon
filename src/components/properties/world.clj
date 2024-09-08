@@ -3,6 +3,8 @@
             [core.context :as ctx]
             mapgen.gen))
 
+(defcomponent :world/player-creature {:data [:one-to-one :properties/creatures]})
+
 (defcomponent :world/map-size {:data :pos-int})
 (defcomponent :world/max-area-level {:data :pos-int}) ; TODO <= map-size !?
 (defcomponent :world/spawn-rate {:data :pos}) ; TODO <1 !
@@ -18,6 +20,7 @@
 (defcomponent :properties/worlds
   (component/create [_ _ctx]
     {:schema [:world/generator
+              :world/player-creature
               [:world/tiled-map {:optional true}]
               [:world/map-size {:optional true}]
               [:world/max-area-level {:optional true}]
@@ -40,4 +43,6 @@
 (extend-type core.context.Context
  core.context/WorldGenerator
  (->world [ctx world-id]
-   (generate ctx (ctx/property ctx world-id))))
+   (let [prop (ctx/property ctx world-id)]
+     (assoc (generate ctx prop)
+            :world/player-creature (:world/player-creature prop)))))

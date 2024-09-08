@@ -14,32 +14,45 @@
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
-(defn- spawn-creatures! [{:keys [world/tiled-map world/start-position] :as ctx}]
-  (let [ctx (if spawn-enemies?
-              (ctx/do! ctx
-                       (for [[posi creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
-                         [:tx/creature {:position (tile->middle posi)
-                                        :creature-id (keyword creature-id)
-                                        :components {:entity/state [:state/npc :npc-sleeping]
-                                                     :entity/faction :evil}}]))
-              ctx)]
-    (tiled/remove-layer! tiled-map :creatures)  ; otherwise will be rendered, is visible (move somewhere else)
-    (ctx/do! ctx [[:tx/creature {:position (tile->middle start-position)
-                                 :creature-id :creatures/vampire
-                                 :components {:entity/state [:state/player :player-idle]
-                                              :entity/faction :good
-                                              :entity/player? true
-                                              :entity/free-skill-points 3
-                                              :entity/clickable {:type :clickable/player}
-                                              :entity/click-distance-tiles 1.5}}]])))
+; TODO cannot play goblin as no mana -> hpmanabar breaks.
+
+(def ^:private player-components {:entity/state [:state/player :player-idle]
+                                  :entity/faction :good
+                                  :entity/player? true
+                                  :entity/free-skill-points 3
+                                  :entity/clickable {:type :clickable/player}
+                                  :entity/click-distance-tiles 1.5})
+
+(def ^:private npc-components {:entity/state [:state/npc :npc-sleeping]
+                               :entity/faction :evil})
+
+(defn- world->player-creature [{:keys [world/start-position
+                                       world/player-creature]}]
+  {:position start-position
+   :creature-id (:property/id player-creature)
+   :components player-components})
+
+(defn- world->enemy-creatures [{:keys [world/tiled-map]}]
+  (for [[position creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
+    {:position position
+     :creature-id (keyword creature-id)
+     :components npc-components}))
+
+(defn- spawn-creatures! [ctx]
+  (ctx/do! ctx
+           (for [creature (cons (world->player-creature ctx)
+                                (when spawn-enemies?
+                                  (world->enemy-creatures ctx)))]
+             [:tx/creature (update creature :position tile->middle)])))
 
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
-(defn- ->world-map [{:keys [tiled-map start-position] :as world-map}]
+(defn- ->world-map [{:keys [tiled-map start-position world/player-creature] :as world-map}]
   (component/create-into {:world/tiled-map tiled-map
-                          :world/start-position start-position}
-                         {:world/grid [(tiled/width tiled-map)
+                          :world/start-position start-position
+                          :world/player-creature player-creature}
+                         {:world/grid [(tiled/width  tiled-map)
                                        (tiled/height tiled-map)
                                        #(case (tiled/movement-property tiled-map %)
                                           "none" :none
@@ -74,6 +87,7 @@
 (extend-type core.context.Context
   core.context/World
   (start-new-game [ctx tiled-level]
+    (println "start-new-game with tiled-level: " tiled-level)
     (init-game-context ctx
                        :mode :game-loop/normal
                        :record-transactions? false ; TODO top level flag ?
