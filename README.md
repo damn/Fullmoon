@@ -6,6 +6,7 @@ RPG Maker&Engine for Clojure.
 
 <img width="1680" alt="screenshot" src="https://github.com/user-attachments/assets/1c7451d0-57f0-48c9-bee3-8eedf332910f">
 
+<img width="1432" alt="Screenshot 2024-09-08 at 11 53 59 PM" src="https://github.com/user-attachments/assets/aee42c1d-4b34-4efc-b40a-21fd0fd9e3c9">
 
 # How to start developing
 
