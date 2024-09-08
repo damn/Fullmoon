@@ -22,11 +22,16 @@
     (when-not (find-ns ns)
       (require ns))))
 
+; screens require vis-ui / properties (map-editor, property editor uses properties)
+(defn- context-create-order [[k _]]
+  (if (= k :context/screens) 1 0))
+
 (defn- ->application [context]
   (->application-listener
    :create (fn []
              (require-all-components!)
              (->> context
+                  (sort-by context-create-order)
                   (component/create-into (assoc (ctx/->Context) :context/state state))
                   ctx/init-first-screen
                   (reset! state)))
@@ -43,12 +48,6 @@
    :resize (fn [w h]
              (ctx/update-viewports @state w h))))
 
-(defn- inject [components k value]
-  (for [component components]
-    (if (= (first component) k)
-      [k (safe-merge (component 1) value)]
-      component)))
-
 (defn- load-raw-properties [file]
   (let [values (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id values)))
@@ -57,7 +56,10 @@
 (defn -main [& [file]]
   (let [properties (load-raw-properties file)
         {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
-        context (inject context :context/properties {:file file
-                                                     :properties properties})]
+        context (update context
+                        :context/properties
+                        safe-merge
+                        {:file file
+                         :properties properties})]
     (lwjgl3/->application (->application context)
                           (lwjgl3/->configuration lwjgl3))))
