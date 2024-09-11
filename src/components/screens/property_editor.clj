@@ -45,6 +45,17 @@
 (defn- component-order [[k _v]]
   (or (index-of k k-sort-order) 99))
 
+(defn- truncate [s limit]
+  (if (> (count s) limit)
+    (str (subs s 0 limit) "...")
+    s))
+
+(defmethod data/->widget :default [_ v ctx]
+  (ctx/->label ctx (truncate (utils/->edn-str v) 60)))
+
+(defmethod data/widget->value :default [_ widget]
+  (actor/id widget))
+
 (declare ->component-widget
          attribute-widget-group->data)
 

@@ -17,7 +17,6 @@
   {:data [:map [:context/assets
                 :context/config
                 :context/graphics
-                :context/properties
                 :context/screens
                 [:context/vis-ui {:optional true}]
                 [:context/tiled-map-renderer {:optional true}]]]})

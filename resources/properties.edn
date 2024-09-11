@@ -41,15 +41,6 @@
     {:gui-view {:world-height 900, :world-width 1440},
      :world-view
      {:tile-size 48, :world-height 900, :world-width 1440}}},
-   :context/properties
-   {:types
-    [:properties/app
-     :properties/audiovisuals
-     :properties/creatures
-     :properties/items
-     :properties/projectiles
-     :properties/skills
-     :properties/worlds]},
    :context/screens
    [:screens/main-menu
     :screens/map-editor

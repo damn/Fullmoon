@@ -1,5 +1,6 @@
 (ns components.context.properties
-  (:require clojure.pprint
+  (:require [clojure.edn :as edn]
+            clojure.pprint
             [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get]]
@@ -43,16 +44,16 @@
              (fn [k v]
                (update v :schema #(map-attribute-schema (property/property-type->id-namespace k) %)))))
 
-(defcomponent :context/properties
-  {:data :some
-   :let {:keys [types file properties]}}
-  (component/create [_ _ctx]
-    (let [types (create-types types)]
-      (doseq [[_ property] properties]
-        (validate property types))
-      {:file file
-       :types types
-       :db properties})))
+(defn create [{:keys [file types]}]
+  (let [values (-> file slurp edn/read-string)
+        _ (assert (apply distinct? (map :property/id values)))
+        db (zipmap (map :property/id values) values)
+        types (create-types types)]
+    (doseq [[_ property] db]
+      (validate property types))
+    {:file file
+     :types types
+     :db db}))
 
 (defn- async-pprint-spit! [ctx file data]
   (.start

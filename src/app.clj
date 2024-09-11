@@ -1,6 +1,5 @@
 (ns app
-  (:require [clojure.edn :as edn]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             clojure.java.io
             [utils.core :refer [safe-merge safe-get]]
             [gdx.app :refer [->application-listener]]
@@ -8,7 +7,8 @@
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [components.context.properties :as properties]))
 
 (def state (atom nil))
 
@@ -21,7 +21,7 @@
    :create (fn []
              (->> context
                   (sort-by context-create-order)
-                  (component/create-into (assoc (ctx/->Context) :context/state state))
+                  (component/create-into (assoc context :context/state state))
                   ctx/init-first-screen
                   (reset! state)))
 
@@ -36,11 +36,6 @@
 
    :resize (fn [w h]
              (ctx/update-viewports @state w h))))
-
-(defn- load-raw-properties [file]
-  (let [values (-> file slurp edn/read-string)]
-    (assert (apply distinct? (map :property/id values)))
-    (zipmap (map :property/id values) values)))
 
 (defn- component-namespaces []
   (filter #(str/ends-with? % ".clj")
@@ -59,12 +54,16 @@
 
 (defn -main [& [file]]
   (require-all-components!)
-  (let [properties (load-raw-properties file)
-        {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
-        context (update context
-                        :context/properties
-                        safe-merge
-                        {:file file
-                         :properties properties})]
-    (lwjgl3/->application (->application context)
-                          (lwjgl3/->configuration lwjgl3))))
+  (let [ctx (assoc (ctx/->Context)
+                   :context/properties
+                   (properties/create {:file file
+                                       :types [:properties/app
+                                               :properties/audiovisuals
+                                               :properties/creatures
+                                               :properties/items
+                                               :properties/projectiles
+                                               :properties/skills
+                                               :properties/worlds]}))
+        app (ctx/property ctx :app/core)]
+    (lwjgl3/->application (->application (safe-merge ctx (:app/context app)))
+                          (lwjgl3/->configuration (:app/lwjgl3 app)))))
