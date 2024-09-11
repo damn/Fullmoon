@@ -16,7 +16,13 @@ The whole content of the application is stored in one `resources/properties.edn`
 
 <img width="1432" alt="Screenshot 2024-09-08 at 11 53 59 PM" src="https://github.com/user-attachments/assets/aee42c1d-4b34-4efc-b40a-21fd0fd9e3c9">
 
-# How to start developing
+# How to start
+
+```
+lein run -m app "resources/properties.edn"
+```
+
+# How to start interactive dev-loop
 Just type:
 ```
 lein dev

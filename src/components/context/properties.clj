@@ -1,5 +1,6 @@
 (ns components.context.properties
-  (:require [malli.core :as m]
+  (:require clojure.pprint
+            [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
