@@ -46,7 +46,7 @@
 (defcomponent :context/properties
   {:data :some
    :let {:keys [types file properties]}}
-  (component/create [_ ctx]
+  (component/create [_ _ctx]
     (let [types (create-types types)]
       (doseq [[_ property] properties]
         (validate property types))
