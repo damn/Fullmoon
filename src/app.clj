@@ -1,7 +1,7 @@
 (ns app
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
-            [utils.files :as files]
+            clojure.java.io
             [utils.core :refer [safe-merge safe-get]]
             [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
@@ -12,16 +12,6 @@
 
 (def state (atom nil))
 
-(defn- require-all-components! []
-  (doseq [file (files/recursively-search "src/components/" #{"clj"})
-          :let [ns (-> file
-                       (str/replace "src/" "")
-                       (str/replace ".clj" "")
-                       (str/replace "/" ".")
-                       symbol)]]
-    (when-not (find-ns ns)
-      (require ns))))
-
 ; screens require vis-ui / properties (map-editor, property editor uses properties)
 (defn- context-create-order [[k _]]
   (if (= k :context/screens) 1 0))
@@ -29,7 +19,6 @@
 (defn- ->application [context]
   (->application-listener
    :create (fn []
-             (require-all-components!)
              (->> context
                   (sort-by context-create-order)
                   (component/create-into (assoc (ctx/->Context) :context/state state))
@@ -53,7 +42,23 @@
     (assert (apply distinct? (map :property/id values)))
     (zipmap (map :property/id values) values)))
 
+(defn- component-namespaces []
+  (filter #(str/ends-with? % ".clj")
+          (map (memfn getPath)
+               (file-seq (clojure.java.io/file "src/components/")))))
+
+(defn- require-all-components! []
+  (doseq [file (component-namespaces)
+          :let [ns (-> file
+                       (str/replace "src/" "")
+                       (str/replace ".clj" "")
+                       (str/replace "/" ".")
+                       symbol)]]
+    (when-not (find-ns ns)
+      (require ns))))
+
 (defn -main [& [file]]
+  (require-all-components!)
   (let [properties (load-raw-properties file)
         {:keys [app/context app/lwjgl3]} (safe-get properties :app/core)
         context (update context
