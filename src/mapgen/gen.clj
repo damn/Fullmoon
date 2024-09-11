@@ -186,7 +186,7 @@
 ; can use different algorithms(e.g. cave, module-gen-uf-terrain, room-gen? , differnt cave algorithm ...)
 
 (defn- uf-place-creatures! [context spawn-rate tiled-map spawn-positions]
-  (let [layer (add-layer! tiled-map :name "creatures" :visible true)
+  (let [layer (add-layer! tiled-map :name "creatures" :visible false)
         creatures (all-properties context :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
