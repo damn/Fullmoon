@@ -3,13 +3,19 @@
 
 (comment
 
+ ; TODO items dont refresh on clicking tab -!
+
+ (post-tx! [:tx/msg-to-player "Sigma"])
+ (post-tx! [:tx/msg-to-player "Sonali"])
+ (post-tx! [:tx/msg-to-player "Sanya"])
+
  ; * Test
  ; * if z-order/effect renders behind wall
  ; * => graphics txs?
- (post-txs! [[:tx/line-render {:start [38 64]
-                               :end [40 70]
-                               :color [1 1 1]
-                               :duration 2}]])
+ (post-tx! [:tx/line-render {:start [68 38]
+                             :end [70 30]
+                             :color [1 1 1]
+                             :duration 2}])
 
  (do
   (learn-skill! :skills/projectile)
@@ -21,23 +27,38 @@
   (learn-skill! :skills/slow)
   (learn-skill! :skills/double-fireball))
 
+ ; FIXME
+ ; first says inventory is full
+ ; ok! beholder doesn't have inventory !
+ ; => tests...
  (create-item! :items/blood-glove)
+
+ (require '[clojure.string :as str])
+ (spit "item_tags.txt"
+       (with-out-str
+        (clojure.pprint/pprint
+         (distinct
+          (sort
+           (mapcat
+            (comp #(str/split % #"-")
+                  name
+                  :property/id)
+            (ctx/all-properties @app/state :properties/items)))))))
 
  )
 
 
-(defn- post-txs! [txs]
-  (gdx.app/post-runnable
-   #(swap! app/state ctx/do! txs)))
+(defn- post-tx! [tx]
+  (gdx.app/post-runnable #(swap! app/state ctx/do! [tx])))
 
 (defn learn-skill! [skill-id]
-  (post-txs! (fn [ctx]
-               [[:tx/add-skill
-                 (:entity/id (ctx/player-entity* ctx))
-                 (ctx/property ctx skill-id)]])))
+  (post-tx! (fn [ctx]
+              [[:tx/add-skill
+                (:entity/id (ctx/player-entity* ctx))
+                (ctx/property ctx skill-id)]])))
 
 (defn create-item! [item-id]
-  (post-txs! (fn [ctx]
-               [[:tx/item
-                 (:position (ctx/player-entity* ctx))
-                 (ctx/property ctx item-id)]])))
+  (post-tx! (fn [ctx]
+              [[:tx/item
+                (:position (ctx/player-entity* ctx))
+                (ctx/property ctx item-id)]])))
