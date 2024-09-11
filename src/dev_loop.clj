@@ -36,9 +36,9 @@
 (def ^:private thrown (atom false))
 
 (defn- handle-throwable! [t]
-  (binding [*print-level* nil]
+  (binding [*print-level* 3]
     (p/pretty-pst t 24))
-  (reset! thrown true))
+  (reset! thrown t))
 
 (defn restart!
   "Calls refresh on all namespaces with file changes and restarts the application.

@@ -21,7 +21,7 @@
     (ctx/add-to-stage! ctx
                        (ctx/->window ctx {:title "Error"
                                           :rows [[(ctx/->label ctx
-                                                               (binding [*print-level* nil]
+                                                               (binding [*print-level* 3]
                                                                  (with-err-str
                                                                   (clojure.repl/pst throwable))))]]
                                           :modal? true
