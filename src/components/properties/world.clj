@@ -3,7 +3,9 @@
             [core.context :as ctx]
             mapgen.gen))
 
-(defcomponent :world/player-creature {:data [:one-to-one :properties/creatures]})
+; player-creature needs mana & inventory
+; till then hardcode :creatures/vampire
+(defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})
 
 (defcomponent :world/map-size {:data :pos-int})
 (defcomponent :world/max-area-level {:data :pos-int}) ; TODO <= map-size !?
