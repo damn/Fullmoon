@@ -16,3 +16,5 @@
 ```clojure
  (gdx.app/post-runnable #(.setVSync com.badlogic.gdx.Gdx/graphics false))
 ```
+
+https://libgdx.com/wiki/graphics/profiling
