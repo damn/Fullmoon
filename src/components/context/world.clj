@@ -24,10 +24,12 @@
 (def ^:private npc-components {:entity/state [:state/npc :npc-sleeping]
                                :entity/faction :evil})
 
+; player-creature needs mana & inventory
+; till then hardcode :creatures/vampire
 (defn- world->player-creature [{:keys [world/start-position
                                        world/player-creature]}]
   {:position start-position
-   :creature-id (:property/id player-creature)
+   :creature-id :creatures/vampire #_(:property/id player-creature)
    :components player-components})
 
 (defn- world->enemy-creatures [{:keys [world/tiled-map]}]
