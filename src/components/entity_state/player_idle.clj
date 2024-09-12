@@ -7,7 +7,6 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
             [core.entity :as entity]
-            [core.graphics :as g]
             [core.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.scene2d.ui.button :refer [button?]]
             [core.scene2d.ui.window :refer [window-title-bar?]]))
@@ -52,9 +51,8 @@
     :clickable/player :cursors/bag))
 
 (defn- ->clickable-mouseover-entity-interaction [ctx player-entity* mouseover-entity*]
-  (if (and (< (v/distance (:position player-entity*)
-                          (:position mouseover-entity*))
-              (:entity/click-distance-tiles player-entity*)))
+  (if (< (v/distance (:position player-entity*) (:position mouseover-entity*))
+         (:entity/click-distance-tiles player-entity*))
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
 

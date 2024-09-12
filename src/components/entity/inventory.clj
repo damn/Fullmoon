@@ -59,11 +59,11 @@
 (defn- try-put-item-in [entity* slot item]
   (let [inventory (:entity/inventory entity*)
         cells-items (inventory/cells-and-items inventory slot)
-        [cell cell-item] (find-first (fn [[cell cell-item]] (inventory/stackable? item cell-item))
-                                     cells-items)]
+        [cell _cell-item] (find-first (fn [[_cell cell-item]] (inventory/stackable? item cell-item))
+                                      cells-items)]
     (if cell
       (stack-item entity* cell item)
-      (when-let [[empty-cell] (find-first (fn [[cell item]] (nil? item))
+      (when-let [[empty-cell] (find-first (fn [[_cell item]] (nil? item))
                                           cells-items)]
         (set-item entity* empty-cell item)))))
 

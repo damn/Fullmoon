@@ -1,10 +1,10 @@
 (ns components.entity.stats
   (:require [clojure.string :as str]
-            [malli.core :as m]
+            #_[malli.core :as m]
             [gdx.graphics.color :as color]
-            [utils.core :refer [k->pretty-name readable-number]]
+            [utils.core :refer [k->pretty-name]]
             [core.val-max :refer [val-max-ratio]]
-            [core.component :as component :refer [defcomponent defcomponent*]]
+            [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.stat :refer [stat-k->modifier-k defstat]]))
@@ -115,7 +115,7 @@
                    ;:stats/aggro-range
                    ;:stats/reaction-time
                    ]]
-  (defn- stats-info-texts [entity* stats]
+  (defn- stats-info-texts [entity*]
     (str/join "\n"
               (for [stat-k stats-order
                     :let [value (entity/stat entity* stat-k)]
@@ -142,7 +142,7 @@
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
   (component/info-text [_ {:keys [info-text/entity*]}]
-    (stats-info-texts entity* stats))
+    (stats-info-texts entity*))
 
   (component/render-info [_ entity* g _ctx]
     (when-let [hp (entity/stat entity* :stats/hp)]

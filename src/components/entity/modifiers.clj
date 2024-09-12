@@ -23,7 +23,7 @@
                          {:modifier/hp {:op/max-inc 5
                                         :op/max-mult 0.3}
                           :modifier/movement-speed {:op/mult 0.1}}
-                         (fn [value] :fn))
+                         (fn [_value] :fn))
     [[:tx/update-in :entity [:entity/modifiers :modifier/hp :op/max-inc] :fn]
      [:tx/update-in :entity [:entity/modifiers :modifier/hp :op/max-mult] :fn]
      [:tx/update-in :entity [:entity/modifiers :modifier/movement-speed :op/mult] :fn]])

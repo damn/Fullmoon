@@ -1,6 +1,6 @@
 (ns components.properties.creature
   (:require [clojure.string :as str]
-            [utils.core :refer [readable-number safe-merge]]
+            [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
 

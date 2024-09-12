@@ -11,7 +11,7 @@
         :radius shout-radius}
        (grid/circle->entities (ctx/world-grid ctx))
        (map deref)
-       (filter #(and (= (:entity/faction %) faction)))
+       (filter #(= (:entity/faction %) faction))
        (map :entity/id)))
 
 (defcomponent ::alert-friendlies-after-duration

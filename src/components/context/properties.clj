@@ -97,7 +97,7 @@
   (apply-kvs property
              (fn [k v]
                (data/edn->value (try (component/data-component k)
-                                     (catch Throwable t
+                                     (catch Throwable _t
                                        (swap! undefined-data-ks conj k)))
                                 (if (map? v) (build-property ctx v) v)
                                 ctx))))
@@ -138,14 +138,14 @@
 
 (comment
  (defn- migrate [property-type prop-fn]
-     (let [ctx @app/state]
-       (time
-        ; TODO work directly on edn, no ctx/all-properties, use :db
-        (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
-          (println (:property/id prop) ", " (:property/pretty-name prop))
-          (swap! app/state ctx/update! prop)))
-       (async-write-to-file! @app/state)
-       nil))
+   (let [ctx @app/state]
+     (time
+      ; TODO work directly on edn, no ctx/all-properties, use :db
+      (doseq [prop (map prop-fn (ctx/all-properties ctx property-type))]
+        (println (:property/id prop) ", " (:property/pretty-name prop))
+        (swap! app/state ctx/update! prop)))
+     (async-write-to-file! @app/state)
+     nil))
 
  (migrate :properties/creature
           (fn [prop]

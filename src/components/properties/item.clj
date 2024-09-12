@@ -1,6 +1,5 @@
 (ns components.properties.item
-  (:require [clojure.string :as str]
-            [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.inventory :as inventory]
             [core.modifiers :as modifiers]))
 

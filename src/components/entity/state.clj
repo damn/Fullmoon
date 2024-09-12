@@ -122,7 +122,7 @@
               new-state-obj [new-state-k (component/create [new-state-k eid params] ctx)]]
           [#(component/exit old-state-obj %)
            #(component/enter new-state-obj %)
-           (if (:entity/player? @eid)
+           (when (:entity/player? @eid)
              (fn [_ctx] (component/player-enter new-state-obj)))
            [:tx/assoc eid :entity/state new-fsm]
            [:tx/dissoc eid old-state-k]

@@ -1,5 +1,5 @@
 (ns components.entity.skills
-  (:require [clojure.string :as str]
+  (:require #_[clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]))

@@ -1,7 +1,7 @@
 (ns app
   (:require [clojure.string :as str]
             clojure.java.io
-            [utils.core :refer [safe-merge safe-get]]
+            [utils.core :refer [safe-merge]]
             [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]

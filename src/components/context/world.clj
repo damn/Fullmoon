@@ -4,9 +4,7 @@
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :refer [tile->middle]]
             [core.component :as component :refer [defcomponent]]
-            [data.grid2d :as grid2d]
             [core.context :as ctx]
-            [core.entity :as entity]
             [core.maps.tiled :as tiled]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
@@ -48,7 +46,7 @@
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
-(defn- ->world-map [{:keys [tiled-map start-position world/player-creature] :as world-map}]
+(defn- ->world-map [{:keys [tiled-map start-position world/player-creature]}]
   (component/create-into {:world/tiled-map tiled-map
                           :world/start-position start-position
                           :world/player-creature player-creature}

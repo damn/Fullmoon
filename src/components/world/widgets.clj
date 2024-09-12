@@ -54,12 +54,11 @@
       (reset-stage-actors! ctx widget-data)
       widget-data)))
 
-(defn- hotkey->window-id [{:keys [context/config] :as ctx}]
-  (merge
-   {input.keys/i :inventory-window
-    input.keys/e :entity-info-window}
-   (when (utils/safe-get config :debug-window?)
-     {input.keys/z :debug-window})))
+(defn- hotkey->window-id [{:keys [context/config]}]
+  (merge {input.keys/i :inventory-window
+          input.keys/e :entity-info-window}
+         (when (utils/safe-get config :debug-window?)
+           {input.keys/z :debug-window})))
 
 (extend-type core.context.Context
   core.context/IngameWindows

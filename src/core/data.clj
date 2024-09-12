@@ -1,6 +1,5 @@
 (ns core.data
-  (:require [utils.core :as utils]
-            [core.context :as ctx]))
+  (:require [core.context :as ctx]))
 
 (defmulti edn->value (fn [data v ctx] (if data (data 0))))
 (defmethod edn->value :default [_data v _ctx]

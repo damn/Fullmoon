@@ -1,6 +1,5 @@
 (ns components.properties.projectile
-  (:require [clojure.string :as str]
-            [math.vector :as v]
+  (:require [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.entity :as entity]))
