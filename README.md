@@ -1,6 +1,31 @@
+<p align="center">
 
-<img width="1437" alt="Screenshot 2024-09-11 at 10 59 32 PM" src="https://github.com/user-attachments/assets/9e47fb6e-709b-49a1-9fe5-0cc1e936b0d1">
+![core](https://github.com/user-attachments/assets/274f2c3c-0375-4e67-ac5a-196f64744f10)
 
+
+</p>
+
+# What is core?
+
+* An action-RPG roguelike game 
+* A GUI-Tool for editing the game itself
+* A framework for writing such games
+* A modular engine which can be used as a library too
+
+Please note that it is very experimental and work-in-progress at the moment. 
+I would appreciate very much any feedback!
+
+# Screenshots
+<details>
+  <summary>Ingame</summary>
+<img width="1437" alt="Screenshot 2024-09-11 at 10 59 32 PM" src="https://github.com/user-attachments/assets/19c2a342-0e70-4925-a203-2e8c229e4ea0">
+
+</details>
+<details>
+  <summary>Editor</summary>
+  <img width="1432" alt="Screenshot 2024-09-08 at 11 53 59 PM" src="https://github.com/user-attachments/assets/87c9edc0-5aab-4642-ae4d-f08291ec7970">
+
+</details>
 
 # How to start
 
