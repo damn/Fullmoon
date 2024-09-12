@@ -229,8 +229,6 @@
 (defn doc [k]
   (:doc (get attributes k)))
 
-; TODO all use cases of :data move to core.data,
-; make data-component private ...
 (defn data-component [k]
   (try (let [data (:data (safe-get attributes k))]
          (if (vector? data)
@@ -240,7 +238,7 @@
          (throw (ex-info "" {:k k} t)))))
 
 (defn attribute-schema
-  "Can define keys as just keywords or for example [:foo {:optional true}]."
+  "Can define keys as just keywords or with properties like [:foo {:optional true}]."
   [ks]
   (for [k ks
         :let [k? (keyword? k)
