@@ -1,5 +1,8 @@
 <p align="center">
-<img width="640" alt="logo" src="https://github.com/user-attachments/assets/433a5485-71ce-4b15-b672-3e8ce93d0d31">
+
+![core](https://github.com/user-attachments/assets/274f2c3c-0375-4e67-ac5a-196f64744f10)
+
+
 </p>
 
 # What is core?
