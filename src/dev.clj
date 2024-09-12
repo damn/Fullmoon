@@ -5,10 +5,6 @@
 
  ; TODO items dont refresh on clicking tab -!
 
- (post-tx! [:tx/msg-to-player "Sigma"])
- (post-tx! [:tx/msg-to-player "Sonali"])
- (post-tx! [:tx/msg-to-player "Sanya"])
-
  ; * Test
  ; * if z-order/effect renders behind wall
  ; * => graphics txs?

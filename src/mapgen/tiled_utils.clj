@@ -82,9 +82,7 @@
     (put! properties "height" (grid/height grid))
     (put! properties "tilewidth" 48)
     (put! properties "tileheight" 48)
-    (let [layer (add-layer! tiled-map
-                            :name "ground"
-                            :visible true)
+    (let [layer (add-layer! tiled-map :name "ground" :visible true)
           properties (tiled/properties layer)]
       (put! properties "movement-properties" true)
       (doseq [position (grid/posis grid)
