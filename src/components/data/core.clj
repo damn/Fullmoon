@@ -60,8 +60,20 @@
   (component/->data [schema]
     {:schema schema}))
 
+(defn- attribute-schema
+  "Can define keys as just keywords or with properties like [:foo {:optional true}]."
+  [ks]
+  (for [k ks
+        :let [k? (keyword? k)
+              properties (if k? nil (k 1))
+              k (if k? k (k 0))]]
+    (do
+     (assert (keyword? k))
+     (assert (or (nil? properties) (map? properties)) (pr-str ks))
+     [k properties (:schema ((component/data-component k) 1))])))
+
 (defn- map-schema [ks]
-  (apply vector :map {:closed true} (component/attribute-schema ks)))
+  (apply vector :map {:closed true} (attribute-schema ks)))
 
 (defcomponent :map
   (component/->data [[_ ks]]

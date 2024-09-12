@@ -1,7 +1,8 @@
 (ns components.properties.item
   (:require [core.component :as component :refer [defcomponent]]
             [core.inventory :as inventory]
-            [core.modifiers :as modifiers]))
+            [core.modifiers :as modifiers]
+            [core.property :refer [def-property-type]]))
 
 (defcomponent :item/modifiers
   {:data [:components-ns :modifier]
@@ -13,19 +14,18 @@
 (defcomponent :item/slot
   {:data [:enum (keys inventory/empty-inventory)]})
 
-(defcomponent :properties/items
-  (component/create [_ _ctx]
-    {:schema [:property/pretty-name
-              :entity/image
-              :item/slot
-              [:item/modifiers {:optional true}]]
-     :overview {:title "Items"
-                :columns 20
-                :image/scale 1.1
-                :sort-by-fn #(vector (if-let [slot (:item/slot %)]
-                                       (name slot)
-                                       "")
-                                     (name (:property/id %)))}}))
+(def-property-type :properties/items
+  {:attributes [:property/pretty-name
+                :entity/image
+                :item/slot
+                [:item/modifiers {:optional true}]]
+   :overview {:title "Items"
+              :columns 20
+              :image/scale 1.1
+              :sort-by-fn #(vector (if-let [slot (:item/slot %)]
+                                     (name slot)
+                                     "")
+                             (name (:property/id %)))}})
 
 (def ^:private body-props
   {:width 0.75

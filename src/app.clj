@@ -54,16 +54,7 @@
 
 (defn -main [& [file]]
   (require-all-components!)
-  (let [ctx (assoc (ctx/->Context)
-                   :context/properties
-                   (properties/create {:file file
-                                       :types [:properties/app
-                                               :properties/audiovisuals
-                                               :properties/creatures
-                                               :properties/items
-                                               :properties/projectiles
-                                               :properties/skills
-                                               :properties/worlds]}))
+  (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create file))
         app (ctx/property ctx :app/core)]
     (lwjgl3/->application (->application (safe-merge ctx (:app/context app)))
                           (lwjgl3/->configuration (:app/lwjgl3 app)))))

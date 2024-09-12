@@ -195,7 +195,13 @@
                                   :center? true
                                   :close-on-escape? true
                                   :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group ctx (ctx/property->schema ctx props) props)
+
+        ; TODO here just use :map ?
+        ; then properties are just same like :map data-component?
+        widgets (->attribute-widget-group ctx (property/schema props) props)
+
+
+
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
     (add-rows! window [[(data/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
@@ -225,7 +231,7 @@
     (let [{:keys [sort-by-fn
                   extra-info-text
                   columns
-                  image/scale]} (ctx/overview ctx property-type)
+                  image/scale]} (property/overview property-type)
           properties (ctx/all-properties ctx property-type)
           properties (if sort-by-fn
                        (sort-by sort-by-fn properties)
@@ -270,8 +276,8 @@
   (ctx/add-to-stage! context (->property-editor-window context property-id)))
 
 (defn- ->tabs-data [ctx]
-  (for [property-type (ctx/property-types ctx)]
-    {:title (:title (ctx/overview ctx property-type))
+  (for [property-type (sort (property/types))]
+    {:title (:title (property/overview property-type))
      :content (ctx/->overview-table ctx property-type open-property-editor-window!)}))
 
 (import 'com.badlogic.gdx.scenes.scene2d.InputListener)

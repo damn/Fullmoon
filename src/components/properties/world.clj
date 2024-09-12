@@ -1,6 +1,7 @@
 (ns components.properties.world
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
+            [core.property :refer [def-property-type]]
             mapgen.gen))
 
 (defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})
@@ -17,16 +18,15 @@
                                               :world.generator/modules
                                               :world.generator/uf-caves]]})
 
-(defcomponent :properties/worlds
-  (component/create [_ _ctx]
-    {:schema [:world/generator
-              :world/player-creature
-              [:world/tiled-map {:optional true}]
-              [:world/map-size {:optional true}]
-              [:world/max-area-level {:optional true}]
-              [:world/spawn-rate {:optional true}]]
-     :overview {:title "Worlds"
-                :columns 10}}))
+(def-property-type :properties/worlds
+  {:attributes [:world/generator
+                :world/player-creature
+                [:world/tiled-map {:optional true}]
+                [:world/map-size {:optional true}]
+                [:world/max-area-level {:optional true}]
+                [:world/spawn-rate {:optional true}]]
+   :overview {:title "Worlds"
+              :columns 10}})
 
 (defmulti generate (fn [_ctx world] (:world/generator world)))
 

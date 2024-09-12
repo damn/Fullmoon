@@ -1,5 +1,6 @@
 (ns components.properties.app
-  (:require [core.component :as component :refer [defcomponent]]))
+  (:require [core.component :refer [defcomponent]]
+            [core.property :refer [def-property-type]]))
 
 (defcomponent :fps          {:data :nat-int})
 (defcomponent :full-screen? {:data :boolean})
@@ -21,9 +22,8 @@
                 [:context/vis-ui {:optional true}]
                 [:context/tiled-map-renderer {:optional true}]]]})
 
-(defcomponent :properties/app
-  (component/create [_ _ctx]
-    {:schema [:app/lwjgl3
-              :app/context]
-     :overview {:title "Apps"
-                :columns 10}}))
+(def-property-type :properties/app
+  {:attributes [:app/lwjgl3
+                :app/context]
+   :overview {:title "Apps"
+              :columns 10}})

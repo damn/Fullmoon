@@ -2,7 +2,8 @@
   (:require [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.entity :as entity]))
+            [core.entity :as entity]
+            [core.property :refer [def-property-type]]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 
@@ -14,16 +15,15 @@
 (defcomponent :projectile/piercing? {:data :boolean}
   (component/info-text [_ ctx] "[LIME]Piercing[]"))
 
-(defcomponent :properties/projectiles
-  (component/create [_ _ctx]
-    {:schema [:entity/image
-              :projectile/max-range
-              :projectile/speed
-              :projectile/piercing?
-              :entity-effects]
-     :overview {:title "Projectiles"
-                :columns 16
-                :image/scale 2}}))
+(def-property-type :properties/projectiles
+  {:attributes [:entity/image
+                :projectile/max-range
+                :projectile/speed
+                :projectile/piercing?
+                :entity-effects]
+   :overview {:title "Projectiles"
+              :columns 16
+              :image/scale 2}})
 
 (defn- projectile-size [projectile]
   {:pre [(:entity/image projectile)]}

@@ -1,6 +1,7 @@
 (ns components.properties.skill
   (:require [utils.core :refer [readable-number]]
-            [core.component :refer [defcomponent] :as component]))
+            [core.component :refer [defcomponent] :as component]
+            [core.property :refer [def-property-type]]))
 
 (defcomponent :skill/action-time {:data :pos}
   (component/info-text [[_ v] _ctx]
@@ -28,16 +29,15 @@
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))
 
-(defcomponent :properties/skills
-  (component/create [_ _ctx]
-    {:schema [:entity/image
-              :property/pretty-name
-              :skill/action-time-modifier-key
-              :skill/action-time
-              :skill/start-action-sound
-              :skill/effects
-              [:skill/cooldown {:optional true}]
-              [:skill/cost {:optional true}]]
-     :overview {:title "Skills"
-                :columns 16
-                :image/scale 2}}))
+(def-property-type :properties/skills
+  {:attributes [:entity/image
+                :property/pretty-name
+                :skill/action-time-modifier-key
+                :skill/action-time
+                :skill/start-action-sound
+                :skill/effects
+                [:skill/cooldown {:optional true}]
+                [:skill/cost {:optional true}]]
+   :overview {:title "Skills"
+              :columns 16
+              :image/scale 2}})

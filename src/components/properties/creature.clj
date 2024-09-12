@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.property :refer [def-property-type]]))
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
@@ -28,24 +29,23 @@
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
-(defcomponent :properties/creatures
-  (component/create [_ _ctx]
-    {:schema [:entity/body
-              :property/pretty-name
-              :creature/species
-              :creature/level
-              :entity/animation
-              :entity/stats
-              :entity/skills
-              [:entity/modifiers {:optional true}]
-              [:entity/inventory {:optional true}]]
-     :overview {:title "Creatures"
-                :columns 15
-                :image/scale 1.5
-                :sort-by-fn #(vector (:creature/level %)
-                                     (name (:creature/species %))
-                                     (name (:property/id %)))
-                :extra-info-text #(str (:creature/level %))}}))
+(def-property-type :properties/creatures
+  {:attributes [:entity/body
+                :property/pretty-name
+                :creature/species
+                :creature/level
+                :entity/animation
+                :entity/stats
+                :entity/skills
+                [:entity/modifiers {:optional true}]
+                [:entity/inventory {:optional true}]]
+   :overview {:title "Creatures"
+              :columns 15
+              :image/scale 1.5
+              :sort-by-fn #(vector (:creature/level %)
+                             (name (:creature/species %))
+                             (name (:property/id %)))
+              :extra-info-text #(str (:creature/level %))}})
 
 ; # :z-order/flying has no effect for now
 ; * entities with :z-order/flying are not flying over water,etc. (movement/air)

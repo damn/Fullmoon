@@ -4,18 +4,15 @@
             [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get]]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component  :refer [defcomponent]]
             [core.context :as ctx]
             [core.data :as data]
             [core.property :as property]))
 
 (defcomponent :property/id {:data [:qualified-keyword {}]})
 
-(defn- property->schema [types property]
-  (-> property property/->type types :schema))
-
-(defn- validate [property types]
-  (let [schema (property->schema types property)
+(defn- validate [property]
+  (let [schema (property/schema property)
         valid? (try (m/validate schema property)
                     (catch Throwable t
                       (throw (ex-info "m/validate fail" {:property property} t))))]
@@ -23,37 +20,13 @@
       (throw (ex-info (str (me/humanize (m/explain schema property)))
                       {:property property
                        :schema (m/form schema)})))))
-(defn- apply-kvs
-  "Calls for every key in map (f k v) to calculate new value at k."
-  [m f]
-  (reduce (fn [m k]
-            (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
-          m
-          (keys m)))
 
-(defn- map-attribute-schema [id-ns-k attr-ks]
-  (let [schema-form (apply vector :map {:closed true}
-                           [:property/id [:qualified-keyword {:namespace id-ns-k}]]
-                           (component/attribute-schema attr-ks))]
-    (try (m/schema schema-form)
-         (catch Throwable t
-           (throw (ex-info "" {:schema-form schema-form} t))))))
-
-(defn create-types [types]
-  (apply-kvs (component/ks->create-all types {})
-             (fn [k v]
-               (update v :schema #(map-attribute-schema (property/property-type->id-namespace k) %)))))
-
-(defn create [{:keys [file types]}]
-  (let [values (-> file slurp edn/read-string)
-        _ (assert (apply distinct? (map :property/id values)))
-        db (zipmap (map :property/id values) values)
-        types (create-types types)]
-    (doseq [[_ property] db]
-      (validate property types))
+(defn validate-and-create [file]
+  (let [properties (-> file slurp edn/read-string)]
+    (assert (apply distinct? (map :property/id properties)))
+    (run! validate properties)
     {:file file
-     :types types
-     :db db}))
+     :db (zipmap (map :property/id properties) properties)}))
 
 (defn- async-pprint-spit! [ctx file data]
   (.start
@@ -93,6 +66,14 @@
    :file
    :sub-image-bounds})
 
+(defn- apply-kvs
+  "Calls for every key in map (f k v) to calculate new value at k."
+  [m f]
+  (reduce (fn [m k]
+            (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
+          m
+          (keys m)))
+
 (defn- build-property [ctx property]
   (apply-kvs property
              (fn [k v]
@@ -112,19 +93,10 @@
          (filter #(= type (property/->type %)))
          (map #(build-property ctx %))))
 
-  (overview [{{:keys [types]} :context/properties} property-type]
-    (:overview (property-type types)))
-
-  (property-types [{{:keys [types]} :context/properties}]
-    (keys types))
-
-  (property->schema [{{:keys [types]} :context/properties} property]
-    (property->schema types property))
-
-  (update! [{{:keys [db types]} :context/properties :as ctx} {:keys [property/id] :as property}]
+  (update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
     {:pre [(contains? property :property/id)
            (contains? db id)]}
-    (validate property types)
+    (validate property)
     (-> ctx
         (update-in [:context/properties :db] assoc id property)
         async-write-to-file!))

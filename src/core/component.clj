@@ -236,15 +236,3 @@
            [data (safe-get attributes data)]))
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
-
-(defn attribute-schema
-  "Can define keys as just keywords or with properties like [:foo {:optional true}]."
-  [ks]
-  (for [k ks
-        :let [k? (keyword? k)
-              properties (if k? nil (k 1))
-              k (if k? k (k 0))]]
-    (do
-     (assert (keyword? k))
-     (assert (or (nil? properties) (map? properties)) (pr-str ks))
-     [k properties (:schema ((data-component k) 1))])))
