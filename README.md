@@ -1,5 +1,6 @@
-
+<p align="center">
 <img width="640" alt="logo" src="https://github.com/user-attachments/assets/433a5485-71ce-4b15-b672-3e8ce93d0d31">
+</p>
 
 # What is core?
 
