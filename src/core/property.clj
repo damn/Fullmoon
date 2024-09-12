@@ -26,12 +26,9 @@
       :schema
       m/schema))
 
-; doesn't work because getting attribute-schema from defined :property/id ...
-; cannot have different schemas for same property/id
-#_(defn- type->property-id-schema [k]
-    [:property/id [:qualified-keyword {:namespace (property-type->id-namespace k)}]])
+(defcomponent :property/id {:data [:qualified-keyword]})
 
-(defn def-property-type [k {:keys [attributes overview]}]
+(defn def-property-type [k {:keys [schema overview]}]
   (defcomponent k
-    {:data [:map (conj attributes :property/id)]
+    {:data [:map (conj schema :property/id)]
      :overview overview}))
