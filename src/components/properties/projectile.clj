@@ -16,11 +16,11 @@
   (component/info-text [_ ctx] "[LIME]Piercing[]"))
 
 (def-property-type :properties/projectiles
-  {:attributes [:entity/image
-                :projectile/max-range
-                :projectile/speed
-                :projectile/piercing?
-                :entity-effects]
+  {:schema [:entity/image
+            :projectile/max-range
+            :projectile/speed
+            :projectile/piercing?
+            :entity-effects]
    :overview {:title "Projectiles"
               :columns 16
               :image/scale 2}})

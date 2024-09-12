@@ -4,7 +4,7 @@
             [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get]]
-            [core.component :as component  :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.data :as data]
             [core.property :as property]))

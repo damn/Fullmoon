@@ -5,8 +5,8 @@
             [core.property :refer [def-property-type]]))
 
 (def-property-type :properties/audiovisuals
-  {:attributes [:tx/sound
-                :entity/animation]
+  {:schema [:tx/sound
+            :entity/animation]
    :overview {:title "Audiovisuals"
               :columns 10
               :image/scale 2}})

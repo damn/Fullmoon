@@ -23,7 +23,7 @@
                 [:context/tiled-map-renderer {:optional true}]]]})
 
 (def-property-type :properties/app
-  {:attributes [:app/lwjgl3
-                :app/context]
+  {:schema [:app/lwjgl3
+            :app/context]
    :overview {:title "Apps"
               :columns 10}})

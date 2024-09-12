@@ -19,12 +19,12 @@
                                               :world.generator/uf-caves]]})
 
 (def-property-type :properties/worlds
-  {:attributes [:world/generator
-                :world/player-creature
-                [:world/tiled-map {:optional true}]
-                [:world/map-size {:optional true}]
-                [:world/max-area-level {:optional true}]
-                [:world/spawn-rate {:optional true}]]
+  {:schema [:world/generator
+            :world/player-creature
+            [:world/tiled-map {:optional true}]
+            [:world/map-size {:optional true}]
+            [:world/max-area-level {:optional true}]
+            [:world/spawn-rate {:optional true}]]
    :overview {:title "Worlds"
               :columns 10}})
 
