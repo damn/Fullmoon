@@ -1,6 +1,13 @@
 
 ![moon_core](https://github.com/user-attachments/assets/04d721fa-85ad-4e60-beb6-310eae7fe107)
 
+# What is core?
+
+* An action-RPG roguelike game in development
+* A GUI-Tool for editing the game itself
+* A framework for writing such games
+* A modular engine which should be able to be used as a library also.
+
 # Screenshots
 <details>
   <summary>Ingame</summary>
@@ -12,8 +19,6 @@
   <img width="1432" alt="Screenshot 2024-09-08 at 11 53 59 PM" src="https://github.com/user-attachments/assets/87c9edc0-5aab-4642-ae4d-f08291ec7970">
 
 </details>
-
-
 
 # How to start
 
