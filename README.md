@@ -3,7 +3,7 @@
 
 # What is core?
 
-* An action-RPG roguelike game in development
+* An action-RPG roguelike game 
 * A GUI-Tool for editing the game itself
 * A framework for writing such games
 * A modular engine which should be able to be used as a library also.
