@@ -195,13 +195,7 @@
                                   :center? true
                                   :close-on-escape? true
                                   :cell-defaults {:pad 5}})
-
-        ; TODO here just use :map ?
-        ; then properties are just same like :map data-component?
         widgets (->attribute-widget-group ctx (property/schema props) props)
-
-
-
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
     (add-rows! window [[(data/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
