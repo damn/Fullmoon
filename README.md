@@ -1,6 +1,7 @@
-![moon_core](https://github.com/user-attachments/assets/6ba48390-e625-4136-9a1f-522218c8ded6)
 
-# What is core?.
+<img width="640" alt="logo" src="https://github.com/user-attachments/assets/433a5485-71ce-4b15-b672-3e8ce93d0d31">
+
+# What is core?
 
 * An action-RPG roguelike game 
 * A GUI-Tool for editing the game itself
