@@ -35,6 +35,7 @@
              "-Dcom.sun.management.jmxremote.ssl=false"
              "-Dcom.sun.management.jmxremote.authenticate=false"
              ]
+  :codox {:namespaces #_[#"^gdx\."] [#"^components\."]}
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :global-vars {;*warn-on-reflection* true
