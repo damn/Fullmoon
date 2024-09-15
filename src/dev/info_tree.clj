@@ -1,5 +1,6 @@
 (ns dev.info-tree
   (:require [gdx.scene2d.stage :as stage]
+            [core.app :as app]
             [core.context :as ctx]
             [core.scene2d.group :as group])
   (:import com.badlogic.gdx.Gdx

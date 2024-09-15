@@ -28,7 +28,7 @@
 (defn- tile-debug [g ctx]
   (let [grid (world-grid ctx)
         world-camera (ctx/world-camera ctx)
-        [left-x right-x bottom-y top-y] (camera/frustum world-camera)]
+        [left-x right-x bottom-y top-y] (.frustum world-camera)]
 
     (when tile-grid?
       (g/draw-grid g (int left-x) (int bottom-y)

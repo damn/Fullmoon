@@ -1,6 +1,5 @@
 (ns components.context.graphics
-  (:require [gdx.graphics.camera :as camera]
-            [gdx.utils.disposable :refer [dispose]]
+  (:require [gdx.utils.disposable :refer [dispose]]
             [gdx.utils.viewport.viewport :as viewport]
             [core.component :refer [defcomponent] :as component]
             [core.graphics :as g]

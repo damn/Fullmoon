@@ -22,8 +22,8 @@
 
 (defn- start-app []
   (eval `(do ; old namespace/var bindings are unloaded with refresh-all so always evaluate them fresh
-          (require (quote app))
-          (app/-main ~app-edn-file))))
+          (require (quote core.app))
+          (core.app/-main ~app-edn-file))))
 
 (def ^:private ^Object obj (Object.))
 

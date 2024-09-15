@@ -1,5 +1,6 @@
 (ns dev
-  (:require [core.context :as ctx])
+  (:require [core.app :as app]
+            [core.context :as ctx])
   (:import com.badlogic.gdx.Gdx))
 
 (comment

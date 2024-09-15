@@ -1,17 +1,17 @@
 (ns components.graphics.views
   (:require [gdx.graphics :as graphics]
             [gdx.input :as input]
-            [gdx.utils.viewport :refer [->fit-viewport]]
             [gdx.utils.viewport.viewport :as viewport]
             [core.context :as ctx]
             [core.graphics :as g])
-  (:import [com.badlogic.gdx.math MathUtils Vector2]))
+  (:import [com.badlogic.gdx.math MathUtils Vector2]
+           com.badlogic.gdx.utils.viewport.FitViewport))
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
-   :viewport (->fit-viewport world-width
-                             world-height
-                             (graphics/->orthographic-camera))})
+   :viewport (FitViewport. world-width
+                           world-height
+                           (graphics/->orthographic-camera))})
 
 (defn- ->world-view [{:keys [world-width world-height tile-size]}]
   (let [unit-scale (/ tile-size)]
@@ -21,9 +21,7 @@
                      camera (graphics/->orthographic-camera)
                      y-down? false]
                  (.setToOrtho camera y-down? world-width world-height)
-                 (->fit-viewport world-width
-                                 world-height
-                                 camera))}))
+                 (FitViewport. world-width world-height camera))}))
 
 (defn ->build [{:keys [gui-view world-view]}]
   {:gui-view (->gui-view gui-view)

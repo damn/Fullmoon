@@ -2,14 +2,14 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
+            [core.app :as app]
             [core.component :as component :refer [defcomponent]]
             [core.components :as components]
             [core.context :as ctx :refer [spritesheet get-sprite ->table ->window ->texture-region-drawable ->stack ->image-widget]]
             [core.graphics :as g]
             [core.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.entity :as entity]
-            [core.inventory :as inventory]
-            app)
+            [core.inventory :as inventory])
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable

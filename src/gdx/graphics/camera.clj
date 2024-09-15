@@ -1,25 +1,18 @@
 (ns gdx.graphics.camera
-  (:refer-clojure :exclude [update])
   (:import com.badlogic.gdx.graphics.Camera))
 
-; TODO include always ?
-(defn update [^Camera camera]
-  (.update camera))
+(defn position
+  "Returns camera position as [x y] vector."
+  [^Camera camera]
+  [(.x (.position camera))
+   (.y (.position camera))])
 
-(defn set-position! [^Camera camera [x y]]
+(defn set-position!
+  "Sets x and y and calls update on the camera."
+  [^Camera camera [x y]]
   (set! (.x (.position camera)) (float x))
   (set! (.y (.position camera)) (float y))
   (.update camera))
 
-(defn frustum [^Camera camera]
-  (.frustum camera))
-
-(defn position [^Camera camera]
-  [(.x (.position camera))
-   (.y (.position camera))])
-
 (defn viewport-width  [^Camera camera] (.viewportWidth  camera))
 (defn viewport-height [^Camera camera] (.viewportHeight camera))
-
-(defn combined [^Camera camera]
-  (.combined camera))

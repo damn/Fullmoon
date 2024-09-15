@@ -1,4 +1,5 @@
-(ns core.context)
+(ns core.context
+  (:import com.badlogic.gdx.graphics.OrthographicCamera))
 
 (defrecord Context [])
 
@@ -51,7 +52,7 @@
   (gui-viewport-width   [_])
   (gui-viewport-height  [_])
   (world-mouse-position  [_])
-  (world-camera          [_])
+  (^OrthographicCamera world-camera [_])
   (world-viewport-width  [_])
   (world-viewport-height [_])
   (update-viewports [_ w h]))

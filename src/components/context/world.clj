@@ -197,10 +197,8 @@
  ; set nil for non idle/item in hand states .
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
- (require 'app)
- (require 'gdx.app)
  (.postRunnable com.badlogic.gdx.Gdx/app
   (fn []
-    (swap! app/state start-replay-mode!)))
+    (swap! core.app/state start-replay-mode!)))
 
  )
