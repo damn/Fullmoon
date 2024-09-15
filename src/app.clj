@@ -2,13 +2,15 @@
   (:require [clojure.string :as str]
             clojure.java.io
             [utils.core :refer [safe-merge]]
-            [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
             [core.component :as component]
             [core.context :as ctx]
             [components.context.properties :as properties])
-  (:import com.badlogic.gdx.ApplicationAdapter
-           com.badlogic.gdx.utils.ScreenUtils))
+  (:import org.lwjgl.system.Configuration
+           com.badlogic.gdx.ApplicationAdapter
+           (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)
+           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
+           #_com.badlogic.gdx.graphics.glutils.HdpiMode))
 
 (def state (atom nil))
 
@@ -52,9 +54,35 @@
     (when-not (find-ns ns)
       (require ns))))
 
+; https://github.com/libgdx/libgdx/pull/7361
+; Maybe can delete this when using that new libgdx version
+; which includes this PR.
+(defn- fix-mac! []
+  (when (SharedLibraryLoader/isMac)
+    (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set Configuration/GLFW_CHECK_THREAD0 false)))
+
+(defn ->configuration [{:keys [title width height full-screen? fps]}]
+  {:pre [title
+         width
+         height
+         (boolean? full-screen?)
+         (or (nil? fps) (int? fps))]}
+  (let [config (doto (Lwjgl3ApplicationConfiguration.)
+                 (.setTitle title)
+                 (.setForegroundFPS (or fps 60)))]
+    (if full-screen?
+      (.setFullscreenMode config (Lwjgl3ApplicationConfiguration/getDisplayMode))
+      (.setWindowedMode config width height))
+    ; See https://libgdx.com/wiki/graphics/querying-and-configuring-graphics
+    ; but makes no difference
+    #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
+    config))
+
 (defn -main [& [file]]
   (require-all-components!)
+  (fix-mac!)
   (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create file))
         app (ctx/property ctx :app/core)]
-    (lwjgl3/->application (->application (safe-merge ctx (:app/context app)))
-                          (lwjgl3/->configuration (:app/lwjgl3 app)))))
+    (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
+                        (lwjgl3/->configuration (:app/lwjgl3 app)))))
