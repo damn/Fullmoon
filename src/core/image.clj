@@ -1,7 +1,7 @@
 (ns core.image
-  (:require [gdx.graphics.g2d.texture-region :as texture-region]
-            [core.context :as ctx]
-            [core.graphics :as g]))
+  (:require [core.context :as ctx]
+            [core.graphics :as g])
+  (:import com.badlogic.gdx.graphics.g2d.TextureRegion))
 
 (defrecord Image [texture-region
                   pixel-dimensions
@@ -16,6 +16,10 @@
 (defn- scale-dimensions [dimensions scale]
   (mapv (comp float (partial * scale)) dimensions))
 
+(defn- texture-region-dimensions [^TextureRegion texture-region]
+  [(.getRegionWidth  texture-region)
+   (.getRegionHeight texture-region)])
+
 (defn- assoc-dimensions
   "scale can be a number for multiplying the texture-region-dimensions or [w h]."
   [{:keys [texture-region] :as image} g scale]
@@ -24,7 +28,7 @@
                   (number? (scale 0))
                   (number? (scale 1))))]}
   (let [pixel-dimensions (if (number? scale)
-                           (scale-dimensions (texture-region/dimensions texture-region) scale)
+                           (scale-dimensions (texture-region-dimensions texture-region) scale)
                            scale)]
     (assoc image
            :pixel-dimensions pixel-dimensions
