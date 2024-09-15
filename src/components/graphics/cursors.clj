@@ -1,13 +1,13 @@
 (ns components.graphics.cursors
-  (:require [gdx.files :as files]
-            [gdx.graphics :as graphics]
+  (:require [gdx.graphics :as graphics]
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :as utils :refer [mapvals]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]))
+            [core.context :as ctx])
+  (:import com.badlogic.gdx.Gdx))
 
 (defn- ->cursor [file hotspot]
-  (let [pixmap (graphics/->pixmap (files/internal file))
+  (let [pixmap (graphics/->pixmap (.internal Gdx/files file))
         cursor (graphics/->cursor pixmap hotspot)]
     (dispose pixmap)
     cursor))

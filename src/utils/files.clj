@@ -1,9 +1,9 @@
 (ns utils.files
-  (:require [gdx.files :as files]
-            [gdx.files.file-handle :as file-handle]))
+  (:require [gdx.files.file-handle :as file-handle])
+  (:import com.badlogic.gdx.Gdx))
 
 (defn recursively-search [folder extensions]
-  (loop [[file & remaining] (file-handle/list (files/internal folder))
+  (loop [[file & remaining] (file-handle/list (.internal Gdx/files file))
          result []]
     (cond (nil? file)
           result
