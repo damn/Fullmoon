@@ -8,7 +8,8 @@
             [core.component :as component]
             [core.context :as ctx]
             [components.context.properties :as properties])
-  (:import com.badlogic.gdx.ApplicationAdapter))
+  (:import com.badlogic.gdx.ApplicationAdapter
+           com.badlogic.gdx.utils.ScreenUtils))
 
 (def state (atom nil))
 
@@ -29,7 +30,7 @@
       (run! component/destroy @state))
 
     (render []
-      (screen-utils/clear color/black)
+      (ScreenUtils/clear color/black)
       (-> @state
           ctx/current-screen
           (component/render! state)))
