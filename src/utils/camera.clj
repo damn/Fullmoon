@@ -1,8 +1,9 @@
 (ns utils.camera
   (:require [gdx.graphics.camera :as camera])
-  (:import com.badlogic.gdx.math.Vector3))
+  (:import com.badlogic.gdx.graphics.Camera
+           com.badlogic.gdx.math.Vector3))
 
-(defn frustum [camera]
+(defn frustum [^Camera camera]
   (let [frustum-points (for [^Vector3 point (take 4 (.planePoints (.frustum camera)))
                              :let [x (.x point)
                                    y (.y point)]]

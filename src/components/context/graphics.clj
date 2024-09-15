@@ -7,7 +7,7 @@
                                  shape-drawer
                                  text
                                  views))
-  (:import com.badlogic.gdx.graphics.Color
+  (:import (com.badlogic.gdx.graphics Camera Color)
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)))
 
 (defcomponent :data/graphics
@@ -65,7 +65,7 @@
                     draw-fn]
   (let [{:keys [viewport unit-scale]} (view-key g)]
     (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-    (.setProjectionMatrix batch (.combined (viewport/camera viewport)))
+    (.setProjectionMatrix batch (.combined ^Camera (viewport/camera viewport)))
     (.begin batch)
     (g/with-shape-line-width g
                              unit-scale
