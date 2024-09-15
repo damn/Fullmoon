@@ -1,8 +1,5 @@
 (ns components.context.graphics
   (:require [gdx.graphics.camera :as camera]
-            [gdx.graphics.color :as color]
-            [gdx.graphics.g2d :as g2d]
-            [gdx.graphics.g2d.batch :as batch]
             [gdx.utils.disposable :refer [dispose]]
             [gdx.utils.viewport.viewport :as viewport]
             [core.component :refer [defcomponent] :as component]
@@ -10,7 +7,9 @@
             (components.graphics cursors
                                  shape-drawer
                                  text
-                                 views)))
+                                 views))
+  (:import com.badlogic.gdx.graphics.Color
+           (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)))
 
 (defcomponent :data/graphics
   {:widget :map
@@ -49,7 +48,7 @@
    :let {:keys [views default-font cursors]}}
   (component/create [_ _ctx]
     (core.graphics/map->Graphics
-     (let [batch (g2d/->sprite-batch)]
+     (let [batch (SpriteBatch.)]
        (merge {:batch batch}
               (components.graphics.shape-drawer/->build batch)
               (components.graphics.text/->build default-font)
@@ -62,17 +61,17 @@
     (dispose default-font)
     (run! dispose (vals cursors))))
 
-(defn- render-view [{{:keys [batch] :as g} :context/graphics}
+(defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
                     view-key
                     draw-fn]
   (let [{:keys [viewport unit-scale]} (view-key g)]
-    (batch/set-color batch color/white) ; fix scene2d.ui.tooltip flickering
-    (batch/set-projection-matrix batch (camera/combined (viewport/camera viewport)))
-    (batch/begin batch)
+    (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
+    (.setProjectionMatrix batch (camera/combined (viewport/camera viewport)))
+    (.begin batch)
     (g/with-shape-line-width g
                              unit-scale
                              #(draw-fn (assoc g :unit-scale unit-scale)))
-    (batch/end batch)))
+    (.end batch)))
 
 (extend-type core.context.Context
   core.context/Graphics
