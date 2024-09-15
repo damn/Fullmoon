@@ -11,31 +11,11 @@
            com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)))
 
-; actor tooltip requires state, so define before require component-namespaces.
-(def state (atom nil))
-
-(let [component-namespaces (->> "src/components/"
-                                io/file
-                                file-seq
-                                (map #(.getPath ^java.io.File %))
-                                (filter #(str/ends-with? % ".clj"))
-                                (map #(-> %
-                                          (str/replace "src/" "")
-                                          (str/replace ".clj" "")
-                                          (str/replace "/" ".")
-                                          symbol)))]
-  (run! require component-namespaces))
-
-; https://github.com/libgdx/libgdx/pull/7361
-; Maybe can delete this when using that new libgdx version
-; which includes this PR.
-(when (SharedLibraryLoader/isMac)
-  (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
-  (.set Configuration/GLFW_CHECK_THREAD0 false))
-
 ; screens require vis-ui / properties (map-editor, property editor uses properties)
 (defn- context-create-order [[k _]]
   (if (= k :context/screens) 1 0))
+
+(def state (atom nil))
 
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []
@@ -78,7 +58,31 @@
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
 
+(defn- require-all-components! []
+  (let [component-namespaces (->> "src/components/"
+                                  io/file
+                                  file-seq
+                                  (map #(.getPath ^java.io.File %))
+                                  (filter #(str/ends-with? % ".clj"))
+                                  (map #(-> %
+                                            (str/replace "src/" "")
+                                            (str/replace ".clj" "")
+                                            (str/replace "/" ".")
+                                            symbol)))]
+    (run! require component-namespaces)))
+
+; https://github.com/libgdx/libgdx/pull/7361
+; Maybe can delete this when using that new libgdx version
+; which includes this PR.
+(when (SharedLibraryLoader/isMac)
+  (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
+  (.set Configuration/GLFW_CHECK_THREAD0 false))
+
 (defn -main [& [file]]
+  ; require in -main here and not top-level
+  ; otherwise some problem with core.scene2d.actor/add-tooltip! (cyclic dependency)
+  ; which requires state
+  (require-all-components!)
   (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create file))
         app (ctx/property ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
