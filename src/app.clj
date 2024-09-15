@@ -62,7 +62,7 @@
     (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
     (.set Configuration/GLFW_CHECK_THREAD0 false)))
 
-(defn ->configuration [{:keys [title width height full-screen? fps]}]
+(defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
   {:pre [title
          width
          height
@@ -85,4 +85,4 @@
   (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create file))
         app (ctx/property ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
-                        (lwjgl3/->configuration (:app/lwjgl3 app)))))
+                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
