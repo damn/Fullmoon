@@ -117,7 +117,7 @@
 (defn k->pretty-name [k]
   (str/capitalize (name k)))
 
-(defn index-of [k v]
+(defn index-of [k ^clojure.lang.PersistentVector v]
   (let [idx (.indexOf v k)]
     (if (= -1 idx)
       nil

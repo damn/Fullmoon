@@ -7,9 +7,9 @@
             [components.context.properties :as properties])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
+           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.graphics.Color
-           (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)
-           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
+           (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)))
 
 ; actor tooltip requires state, so define before require component-namespaces.
 (def state (atom nil))
@@ -17,7 +17,7 @@
 (let [component-namespaces (->> "src/components/"
                                 io/file
                                 file-seq
-                                (map (memfn getPath))
+                                (map #(.getPath ^java.io.File %))
                                 (filter #(str/ends-with? % ".clj"))
                                 (map #(-> %
                                           (str/replace "src/" "")
