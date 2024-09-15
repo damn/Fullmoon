@@ -1,12 +1,17 @@
 (ns components.context.assets
   (:require [clojure.string :as str]
-            [gdx.assets :as assets]
-            [gdx.assets.manager :as manager]
-            [gdx.audio.sound :as sound]
             [core.component :refer [defcomponent] :as component]
             core.context)
   (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.files.FileHandle))
+           com.badlogic.gdx.audio.Sound
+           com.badlogic.gdx.assets.AssetManager
+           com.badlogic.gdx.files.FileHandle
+           com.badlogic.gdx.graphics.Texture))
+
+(defn- ->asset-manager ^AssetManager []
+  (proxy [AssetManager clojure.lang.ILookup] []
+    (valAt [file]
+      (.get ^AssetManager this ^String file))))
 
 (defn- recursively-search [folder extensions]
   (loop [[^FileHandle file & remaining] (.list (.internal Gdx/files folder))
@@ -27,7 +32,7 @@
   (doseq [file files]
     (when log?
       (println "load-assets" (str "[" (.getSimpleName class) "] - [" file "]")))
-    (manager/load manager file class)))
+    (.load ^AssetManager manager ^String file class)))
 
 (defn- asset-files [folder file-extensions]
   (map #(str/replace-first % folder "")
@@ -42,12 +47,12 @@
                 image-file-extensions
                 log?]}}
   (component/create [_ _ctx]
-    (let [manager (assets/->manager)
+    (let [manager (->asset-manager)
           sound-files   (asset-files folder sound-file-extensions)
           texture-files (asset-files folder image-file-extensions)]
-      (load-assets! manager sound-files   com.badlogic.gdx.audio.Sound      log?)
-      (load-assets! manager texture-files com.badlogic.gdx.graphics.Texture log?)
-      (manager/finish-loading manager)
+      (load-assets! manager sound-files   Sound   log?)
+      (load-assets! manager texture-files Texture log?)
+      (.finishLoading manager)
       {:manager manager
        :sound-files sound-files
        :texture-files texture-files})))
@@ -58,7 +63,7 @@
 (extend-type core.context.Context
   core.context/Assets
   (play-sound! [ctx file]
-    (sound/play (get-asset ctx file)))
+    (.play ^Sound (get-asset ctx file)))
 
   (cached-texture [ctx file]
     (get-asset ctx file))
