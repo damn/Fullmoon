@@ -1,10 +1,10 @@
 (ns components.screens.main-menu
   (:require [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx])
-  (:import com.badlogic.gdx.Gdx))
+  (:import com.badlogic.gdx.Gdx
+           com.badlogic.gdx.Input$Keys))
 
 (defn- start-game! [world-id]
   (fn [ctx]
@@ -35,7 +35,7 @@
   [(ctx/->background-image ctx)
    (->buttons ctx)
    (ctx/->actor ctx {:act (fn [_ctx]
-                            (when (input/key-just-pressed? input.keys/escape)
+                            (when (input/key-just-pressed? Input$Keys/ESCAPE)
                               (.exit Gdx/app)))})])
 
 (derive :screens/main-menu :screens/stage-screen)

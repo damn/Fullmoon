@@ -3,7 +3,6 @@
             [malli.core :as m]
             [malli.generator :as mg]
             [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
@@ -13,7 +12,8 @@
             [core.scene2d.actor :as actor]
             [core.scene2d.group :as group]
             [core.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
-            [core.scene2d.ui.widget-group :refer [pack!]]))
+            [core.scene2d.ui.widget-group :refer [pack!]])
+  (:import com.badlogic.gdx.Input$Keys))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
 ; TODO save button show if changes made, otherwise disabled?
@@ -203,7 +203,7 @@
                                                        (ctx/->text-button ctx "Delete" delete!)]])]])
     (group/add-actor! window
                       (ctx/->actor ctx {:act (fn [{:keys [context/state]}]
-                                               (when (input/key-just-pressed? input.keys/enter)
+                                               (when (input/key-just-pressed? Input$Keys/ENTER)
                                                  (swap! state save!)))}))
     (pack! window)
     window))
@@ -243,7 +243,7 @@
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter)
 (import 'com.kotcrab.vis.ui.widget.VisTable)
 
-(defn- ->tab [{:keys [title content savable?  closable-by-user?]}]
+(defn- ->tab [{:keys [title content savable? closable-by-user?]}]
   (proxy [Tab] [(boolean savable?) (boolean closable-by-user?)]
     (getTabTitle [] title)
     (getContentTable [] content)))
@@ -254,7 +254,7 @@
         tabbed-pane (TabbedPane.)]
     (.addListener tabbed-pane
                   (proxy [TabbedPaneAdapter] []
-                    (switchedTab [tab]
+                    (switchedTab [^Tab tab]
                       (.clearChildren container)
                       (.fill (.expand (.add container (.getContentTable tab)))))))
     (.fillX (.expandX (.add main-table (.getTable tabbed-pane))))
@@ -284,7 +284,7 @@
                           (->tabbed-pane ctx (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
-                                      (if (= keycode gdx.input.keys/shift-left)
+                                      (if (= keycode Input$Keys/SHIFT_LEFT)
                                         (do
                                          (swap! state ctx/change-screen :screens/main-menu)
                                          true)

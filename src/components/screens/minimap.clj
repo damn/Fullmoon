@@ -1,13 +1,13 @@
 (ns components.screens.minimap
-  (:require [gdx.graphics.color :as color]
-            [gdx.graphics.orthographic-camera :as orthographic-camera]
+  (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.graphics.camera :as camera]
             [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
             utils.camera
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
-            [core.graphics :as g]))
+            [core.graphics :as g])
+  (:import com.badlogic.gdx.Input$Keys
+           com.badlogic.gdx.graphics.Color))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -36,8 +36,8 @@
 (defn- ->tile-corner-color-setter [explored?]
   (fn tile-corner-color-setter [color x y]
     (if (get explored? [x y])
-      color/white
-      color/black)))
+      Color/WHITE
+      Color/BLACK)))
 
 #_(deftype Screen []
   (show [_ ctx]
@@ -56,9 +56,9 @@
                              (g/draw-filled-circle g
                                                    (camera/position (ctx/world-camera context))
                                                    0.5
-                                                   color/green)))
-    (if (or (input/key-just-pressed? input.keys/tab)
-            (input/key-just-pressed? input.keys/escape))
+                                                   Color/GREEN)))
+    (if (or (input/key-just-pressed? Input$Keys/TAB)
+            (input/key-just-pressed? Input$Keys/ESCAPE))
       (ctx/change-screen context :screens/world)
       context)))
 

@@ -1,11 +1,11 @@
 (ns components.world.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [safe-merge sort-by-order]]
-            [gdx.graphics.color :as color]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.graphics :as g]
-            [core.entity :as entity]))
+            [core.entity :as entity])
+  (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private this :world/ecs)
 
@@ -68,10 +68,10 @@
 (defn- render-entity* [system entity* g ctx]
   (try
    (when show-body-bounds
-     (draw-body-rect g entity* (if (:collides? entity*) color/white color/gray)))
+     (draw-body-rect g entity* (if (:collides? entity*) Color/WHITE Color/GRAY)))
    (run! #(system % entity* g ctx) entity*)
    (catch Throwable t
-     (draw-body-rect g entity* color/red)
+     (draw-body-rect g entity* Color/RED)
      (p/pretty-pst t 12))))
 
 (defn- tick-system [ctx entity]

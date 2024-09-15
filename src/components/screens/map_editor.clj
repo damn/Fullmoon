@@ -1,8 +1,6 @@
 (ns components.screens.map-editor
   (:require [clojure.string :as str]
             [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
-            [gdx.graphics.color :as color]
             [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.utils.disposable :refer [dispose]]
@@ -17,7 +15,9 @@
             [core.scene2d.ui.widget-group :refer [pack!]]
             [core.scene2d.ui.label :refer [set-text!]]
             mapgen.gen
-            mapgen.modules))
+            mapgen.modules)
+  (:import com.badlogic.gdx.Input$Keys
+           com.badlogic.gdx.graphics.Color))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -95,19 +95,19 @@ direction keys: move")
 ; TODO textfield takes control !
 ; TODO PLUS symbol shift & = symbol on keyboard not registered
 (defn- camera-controls [context camera]
-  (when (input/key-pressed? input.keys/shift-left)
+  (when (input/key-pressed? Input$Keys/SHIFT_LEFT)
     (adjust-zoom camera    zoom-speed))
-  (when (input/key-pressed? input.keys/minus)
+  (when (input/key-pressed? Input$Keys/MINUS)
     (adjust-zoom camera (- zoom-speed)))
   (let [apply-position (fn [idx f]
                          (camera/set-position! camera
                                                (update (camera/position camera)
                                                        idx
                                                        #(f % camera-movement-speed))))]
-    (if (input/key-pressed? input.keys/left)  (apply-position 0 -))
-    (if (input/key-pressed? input.keys/right) (apply-position 0 +))
-    (if (input/key-pressed? input.keys/up)    (apply-position 1 +))
-    (if (input/key-pressed? input.keys/down)  (apply-position 1 -))))
+    (if (input/key-pressed? Input$Keys/LEFT)  (apply-position 0 -))
+    (if (input/key-pressed? Input$Keys/RIGHT) (apply-position 0 +))
+    (if (input/key-pressed? Input$Keys/UP)    (apply-position 1 +))
+    (if (input/key-pressed? Input$Keys/DOWN)  (apply-position 1 -))))
 
 #_(def ^:private show-area-level-colors true)
 ; TODO unused
@@ -121,7 +121,7 @@ direction keys: move")
                 show-grid-lines]} @(current-data ctx)
         visible-tiles (utils.camera/visible-tiles (ctx/world-camera ctx))
         [x y] (->tile (ctx/world-mouse-position ctx))]
-    (g/draw-rectangle g x y 1 1 color/white)
+    (g/draw-rectangle g x y 1 1 Color/WHITE)
     (when start-position
       (g/draw-filled-rectangle g (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
     ; TODO move down to other doseq and make button
@@ -130,13 +130,13 @@ direction keys: move")
               :let [movement-property (tiled/movement-property tiled-map [x y])]]
         (g/draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
                               0.08
-                              color/black)
+                              Color/BLACK)
         (g/draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
                               0.05
                               (case movement-property
-                                "all"   color/green
-                                "air"   color/orange
-                                "none"  color/red))))
+                                "all"   Color/GREEN
+                                "air"   Color/ORANGE
+                                "none"  Color/RED))))
     (when show-grid-lines
       (g/draw-grid g 0 0 (tiled/width  tiled-map) (tiled/height tiled-map) 1 1 [1 1 1 0.5]))))
 
@@ -184,14 +184,14 @@ direction keys: move")
   (component/render-ctx [_ context]
     (ctx/render-tiled-map context
                           (:tiled-map @current-data)
-                          (constantly color/white))
+                          (constantly Color/WHITE))
     (ctx/render-world-view context #(render-on-map % context))
-    (if (input/key-just-pressed? input.keys/l)
+    (if (input/key-just-pressed? Input$Keys/L)
       (swap! current-data update :show-grid-lines not))
-    (if (input/key-just-pressed? input.keys/m)
+    (if (input/key-just-pressed? Input$Keys/M)
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (ctx/world-camera context))
-    (if (input/key-just-pressed? input.keys/escape)
+    (if (input/key-just-pressed? Input$Keys/ESCAPE)
       (ctx/change-screen context :screens/main-menu)
       context)))
 

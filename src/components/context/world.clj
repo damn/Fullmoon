@@ -1,6 +1,5 @@
 (ns components.context.world
   (:require [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
             [gdx.utils.disposable :refer [dispose]]
             [utils.core :refer [tile->middle]]
             [core.component :as component :refer [defcomponent]]
@@ -8,7 +7,8 @@
             [core.maps.tiled :as tiled]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
-            [core.world.cell :as cell]))
+            [core.world.cell :as cell])
+  (:import com.badlogic.gdx.Input$Keys))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -122,8 +122,8 @@
 (def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
-  (or (input/key-just-pressed? input.keys/p)
-      (input/key-pressed?      input.keys/space)))
+  (or (input/key-just-pressed? Input$Keys/P)
+      (input/key-pressed?      Input$Keys/SPACE)))
 
 (defn- update-game-paused [ctx]
   (assoc ctx ::paused? (or (::tick-error ctx)

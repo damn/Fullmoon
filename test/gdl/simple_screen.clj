@@ -1,8 +1,8 @@
 #_(ns gdl.simple-screen
   (:require [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.graphics :as g]
-            [gdx.graphics.color :as color]))
+            [core.graphics :as g])
+  (:import com.badlogic.gdx.graphics.Color))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
   (let [[wx wy] (map #(format "%.2f" %) (ctx/world-mouse-position g))
@@ -12,7 +12,7 @@
                      "GUI x " gx "\n"
                      "GUI y " gy "\n")]
     (g/draw-centered-image g logo [gx (+ gy 230)])
-    (g/draw-circle g [gx gy] 170 color/white)
+    (g/draw-circle g [gx gy] 170 Color/WHITE)
     (g/draw-text g
                  {:text (str "default-font\n" the-str)
                   :x gx,:y gy,:h-align nil,:up? true})

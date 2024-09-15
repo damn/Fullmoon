@@ -1,9 +1,9 @@
 (ns components.world.render
   (:require [gdx.graphics :as graphics]
-            [gdx.graphics.color :as color]
             [utils.core :refer [->tile]]
             [core.context :as ctx]
-            [components.world.raycaster :as raycaster]))
+            [components.world.raycaster :as raycaster])
+  (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private explored-tile-color
   (graphics/->color 0.5 0.5 0.5 1))
@@ -28,7 +28,7 @@
   (fn tile-color-setter [_color x y]
     (let [position [(int x) (int y)]
           explored? (get @explored-tile-corners position) ; TODO needs int call ?
-          base-color (if explored? explored-tile-color color/black)
+          base-color (if explored? explored-tile-color Color/BLACK)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
                      (let [blocked? (raycaster/ray-blocked? raycaster light-position position)]
@@ -38,10 +38,10 @@
       #_(when @do-once
           (swap! ray-positions conj position))
       (if blocked?
-        (if see-all-tiles? color/white base-color)
+        (if see-all-tiles? Color/WHITE base-color)
         (do (when-not explored?
               (swap! explored-tile-corners assoc (->tile position) true))
-            color/white)))))
+            Color/WHITE)))))
 
 (extend-type core.context.Context
   core.context/WorldTiledMap

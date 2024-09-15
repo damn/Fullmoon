@@ -1,13 +1,13 @@
 (ns components.entity.stats
   (:require [clojure.string :as str]
             #_[malli.core :as m]
-            [gdx.graphics.color :as color]
             [utils.core :refer [k->pretty-name]]
             [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.stat :refer [stat-k->modifier-k defstat]]))
+            [core.stat :refer [stat-k->modifier-k defstat]])
+  (:import com.badlogic.gdx.graphics.Color))
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 ; and no need at created player (npc controller component?)
@@ -86,7 +86,6 @@
     (when-let [base-value (stat-k (:entity/stats entity*))]
       (entity/->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
 
-; TODO remove vector shaboink -> gdx.graphics.color/->color use.
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
    :darkgreen [0 0.5 0]
@@ -154,7 +153,7 @@
                 y (+ y half-height)
                 height (g/pixels->world-units g entity/hpbar-height-px)
                 border (g/pixels->world-units g borders-px)]
-            (g/draw-filled-rectangle g x y width height color/black)
+            (g/draw-filled-rectangle g x y width height Color/BLACK)
             (g/draw-filled-rectangle g
                                      (+ x border)
                                      (+ y border)

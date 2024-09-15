@@ -13,6 +13,3 @@
   (set! (.x (.position camera)) (float x))
   (set! (.y (.position camera)) (float y))
   (.update camera))
-
-(defn viewport-width  [^Camera camera] (.viewportWidth  camera))
-(defn viewport-height [^Camera camera] (.viewportHeight camera))

@@ -1,6 +1,5 @@
 (ns components.world.debug-render
-  (:require [gdx.graphics.color :as color]
-            [utils.core :refer [->tile]]
+  (:require [utils.core :refer [->tile]]
             [utils.camera :as camera]
             [math.geom :as geom]
             [core.context :as ctx :refer [world-grid]]

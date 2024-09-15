@@ -1,11 +1,11 @@
 (ns core.modifiers
   (:require [clojure.string :as str]
-            [gdx.graphics.color :as color]
             [utils.core :refer [k->pretty-name]]
-            [core.operation :as operation]))
+            [core.operation :as operation])
+  (:import com.badlogic.gdx.graphics.Color))
 
 (com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
-                                      color/cyan
+                                      Color/CYAN
                                       ; maybe can be used in tooltip background is darker (from D2 copied color)
                                       #_(com.badlogic.gdx.graphics.Color. (float 0.48)
                                                                           (float 0.57)

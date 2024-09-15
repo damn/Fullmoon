@@ -1,12 +1,12 @@
 (ns components.entity-state.player-item-on-cursor
   (:require [gdx.input :as input]
-            [gdx.input.buttons :as buttons]
             [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.inventory :as inventory]))
+            [core.inventory :as inventory])
+  (:import com.badlogic.gdx.Input$Buttons))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)
@@ -69,7 +69,7 @@
     true)
 
   (component/manual-tick [_ ctx]
-    (when (and (input/button-just-pressed? buttons/left)
+    (when (and (input/button-just-pressed? Input$Buttons/LEFT)
                (world-item? ctx))
       [[:tx/event eid :drop-item]]))
 

@@ -1,10 +1,10 @@
 (ns components.screens.options-menu
   (:require [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             utils.ns
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx :refer [->text-button ->check-box ->table]]))
+            [core.context :as ctx :refer [->text-button ->check-box ->table]])
+  (:import com.badlogic.gdx.Input$Keys))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -59,7 +59,7 @@
 
 (defcomponent ::sub-screen
   (component/render-ctx [_ ctx]
-    (if (input/key-just-pressed? input.keys/escape)
+    (if (input/key-just-pressed? Input$Keys/ESCAPE)
       (ctx/change-screen ctx :screens/world)
       ctx)))
 

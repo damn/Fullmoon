@@ -41,7 +41,6 @@
 
 (comment
 
- ;[gdx.input.keys :as input.keys]
  (comment
   (def sword-button (.getChecked button-group))
   (.setChecked sword-button false)

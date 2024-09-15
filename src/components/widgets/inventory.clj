@@ -1,6 +1,5 @@
 (ns components.widgets.inventory
   (:require [gdx.graphics :as graphics]
-            [gdx.graphics.color :as color]
             [data.grid2d :as grid]
             [core.component :as component :refer [defcomponent]]
             [core.components :as components]
@@ -9,7 +8,8 @@
             [core.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.entity :as entity]
             [core.inventory :as inventory])
-  (:import com.badlogic.gdx.scenes.scene2d.Actor
+  (:import com.badlogic.gdx.graphics.Color
+           com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
            com.badlogic.gdx.scenes.scene2d.utils.ClickListener
@@ -24,7 +24,7 @@
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
 (defn- draw-cell-rect [g player-entity* x y mouseover? cell]
-  (g/draw-rectangle g x y cell-size cell-size color/gray)
+  (g/draw-rectangle g x y cell-size cell-size Color/GRAY)
   (when (and mouseover?
              (= :player-item-on-cursor (entity/state player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)

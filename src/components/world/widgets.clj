@@ -1,6 +1,5 @@
 (ns components.world.widgets
   (:require [gdx.input :as input]
-            [gdx.input.keys :as input.keys]
             [gdx.scene2d.stage :as stage]
             [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
@@ -13,7 +12,8 @@
             [components.widgets.debug-window :as debug-window]
             [components.widgets.entity-info-window :as entity-info-window]
             [components.widgets.inventory :as inventory]
-            [components.widgets.hp-mana-bars :refer [->hp-mana-bars]]))
+            [components.widgets.hp-mana-bars :refer [->hp-mana-bars]])
+  (:import com.badlogic.gdx.Input$Keys))
 
 (extend-type core.context.Context
   core.context/Actionbar
@@ -55,10 +55,10 @@
       widget-data)))
 
 (defn- hotkey->window-id [{:keys [context/config]}]
-  (merge {input.keys/i :inventory-window
-          input.keys/e :entity-info-window}
+  (merge {Input$Keys/I :inventory-window
+          Input$Keys/E :entity-info-window}
          (when (utils/safe-get config :debug-window?)
-           {input.keys/z :debug-window})))
+           {Input$Keys/Z :debug-window})))
 
 (extend-type core.context.Context
   core.context/IngameWindows
