@@ -59,6 +59,8 @@
       (ctx/update-viewports @state w h))))
 
 (defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
+  ; can remove :pre, we are having a schema now
+  ; move schema here too ?
   {:pre [title
          width
          height
