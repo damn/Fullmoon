@@ -4,7 +4,6 @@
             [utils.core :refer [safe-merge]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
-            [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
             [core.context :as ctx]
             [components.context.properties :as properties])
