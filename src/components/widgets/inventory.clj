@@ -2,7 +2,6 @@
   (:require [gdx.graphics :as graphics]
             [gdx.graphics.color :as color]
             [data.grid2d :as grid]
-            [core.app :as app]
             [core.component :as component :refer [defcomponent]]
             [core.components :as components]
             [core.context :as ctx :refer [spritesheet get-sprite ->table ->window ->texture-region-drawable ->stack ->image-widget]]
@@ -41,10 +40,10 @@
 ; TODO why do I need to call getX ?
 ; is not layouted automatically to cell , use 0/0 ??
 ; (maybe (.setTransform stack true) ? , but docs say it should work anyway
-(defn- draw-rect-actor ^Widget []
+(defn- draw-rect-actor ^Widget [app-state]
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{g :context/graphics :as ctx} @app/state
+      (let [{g :context/graphics :as ctx} @app-state
             g (assoc g :unit-scale 1)
             player-entity* (ctx/player-entity* ctx)
             ^Widget this this]
@@ -58,7 +57,7 @@
 (defn- ->cell [{:keys [context/state] :as ctx} slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
         image-widget (->image-widget ctx (slot->background slot) {:id :image})
-        stack (->stack ctx [(draw-rect-actor)
+        stack (->stack ctx [(draw-rect-actor state)
                             image-widget])]
     (set-name! stack "inventory-cell")
     (set-id! stack cell)
