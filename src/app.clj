@@ -12,19 +12,17 @@
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            #_com.badlogic.gdx.graphics.glutils.HdpiMode))
 
-(def ^:private component-namespaces
-  (->> "src/components/"
-       io/file
-       file-seq
-       (map (memfn getPath))
-       (filter #(str/ends-with? % ".clj"))
-       (map #(-> %
-                (str/replace "src/" "")
-                (str/replace ".clj" "")
-                (str/replace "/" ".")
-                symbol))))
-
-(run! require component-namespaces)
+(let [component-namespaces (->> "src/components/"
+                                io/file
+                                file-seq
+                                (map (memfn getPath))
+                                (filter #(str/ends-with? % ".clj"))
+                                (map #(-> %
+                                          (str/replace "src/" "")
+                                          (str/replace ".clj" "")
+                                          (str/replace "/" ".")
+                                          symbol)))]
+  (run! require component-namespaces))
 
 ; https://github.com/libgdx/libgdx/pull/7361
 ; Maybe can delete this when using that new libgdx version
