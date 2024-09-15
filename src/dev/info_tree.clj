@@ -2,12 +2,13 @@
   (:require [gdx.scene2d.stage :as stage]
             [core.context :as ctx]
             [core.scene2d.group :as group])
-  (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
+  (:import com.badlogic.gdx.Gdx
+           com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
 
 (comment
 
- (gdx.app/post-runnable (fn [] (show-tree-view! :ctx)))
+ (.postRunnable Gdx/app (fn [] (show-tree-view! :ctx)))
  (show-tree-view! :entity)
  (show-tree-view! :tile)
 

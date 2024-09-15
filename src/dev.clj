@@ -1,5 +1,6 @@
 (ns dev
-  (:require [core.context :as ctx]))
+  (:require [core.context :as ctx])
+  (:import com.badlogic.gdx.Gdx))
 
 (comment
 
@@ -45,7 +46,7 @@
 
 
 (defn- post-tx! [tx]
-  (gdx.app/post-runnable #(swap! app/state ctx/do! [tx])))
+  (.postRunnable Gdx/app #(swap! app/state ctx/do! [tx])))
 
 (defn learn-skill! [skill-id]
   (post-tx! (fn [ctx]

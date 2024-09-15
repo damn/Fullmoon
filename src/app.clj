@@ -2,13 +2,13 @@
   (:require [clojure.string :as str]
             clojure.java.io
             [utils.core :refer [safe-merge]]
-            [gdx.app :refer [->application-listener]]
             [gdx.backends.lwjgl3 :as lwjgl3]
             [gdx.graphics.color :as color]
             [gdx.utils.screen-utils :as screen-utils]
             [core.component :as component]
             [core.context :as ctx]
-            [components.context.properties :as properties]))
+            [components.context.properties :as properties])
+  (:import com.badlogic.gdx.ApplicationAdapter))
 
 (def state (atom nil))
 
@@ -17,25 +17,25 @@
   (if (= k :context/screens) 1 0))
 
 (defn- ->application [context]
-  (->application-listener
-   :create (fn []
-             (->> context
-                  (sort-by context-create-order)
-                  (component/create-into (assoc context :context/state state))
-                  ctx/init-first-screen
-                  (reset! state)))
+  (proxy [ApplicationAdapter] []
+    (create []
+      (->> context
+           (sort-by context-create-order)
+           (component/create-into (assoc context :context/state state))
+           ctx/init-first-screen
+           (reset! state)))
 
-   :dispose (fn []
-              (run! component/destroy @state))
+    (dispose []
+      (run! component/destroy @state))
 
-   :render (fn []
-             (screen-utils/clear color/black)
-             (-> @state
-                 ctx/current-screen
-                 (component/render! state)))
+    (render []
+      (screen-utils/clear color/black)
+      (-> @state
+          ctx/current-screen
+          (component/render! state)))
 
-   :resize (fn [w h]
-             (ctx/update-viewports @state w h))))
+    (resize [w h]
+      (ctx/update-viewports @state w h))))
 
 (defn- component-namespaces []
   (filter #(str/ends-with? % ".clj")

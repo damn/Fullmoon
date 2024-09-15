@@ -1,10 +1,10 @@
 (ns components.screens.main-menu
-  (:require [gdx.app :as app]
-            [gdx.input :as input]
+  (:require [gdx.input :as input]
             [gdx.input.keys :as input.keys]
             [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]))
+            [core.context :as ctx])
+  (:import com.badlogic.gdx.Gdx))
 
 (defn- start-game! [world-id]
   (fn [ctx]
@@ -22,7 +22,7 @@
                             [(ctx/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])
                           (when (safe-get config :property-editor?)
                             [(ctx/->text-button ctx "Property editor" #(ctx/change-screen % :screens/property-editor))])
-                          [(ctx/->text-button ctx "Exit" (fn [ctx] (app/exit) ctx))]]))
+                          [(ctx/->text-button ctx "Exit" (fn [ctx] (.exit Gdx/app) ctx))]]))
     :cell-defaults {:pad-bottom 25}
     :fill-parent? true}))
 
@@ -36,7 +36,7 @@
    (->buttons ctx)
    (ctx/->actor ctx {:act (fn [_ctx]
                             (when (input/key-just-pressed? input.keys/escape)
-                              (app/exit)))})])
+                              (.exit Gdx/app)))})])
 
 (derive :screens/main-menu :screens/stage-screen)
 (defcomponent :screens/main-menu

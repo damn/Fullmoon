@@ -199,7 +199,7 @@
 
  (require 'app)
  (require 'gdx.app)
- (gdx.app/post-runnable
+ (.postRunnable com.badlogic.gdx.Gdx/app
   (fn []
     (swap! app/state start-replay-mode!)))
 
