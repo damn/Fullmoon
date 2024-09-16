@@ -2,6 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.property :refer [def-property-type]]
+            [core.maps.tiled :as tiled]
             mapgen.gen))
 
 (defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})
@@ -31,7 +32,7 @@
 (defmulti generate (fn [_ctx world] (:world/generator world)))
 
 (defmethod generate :world.generator/tiled-map [ctx world]
-  {:tiled-map (ctx/->tiled-map ctx (:world/tiled-map world))
+  {:tiled-map (tiled/load-map (:world/tiled-map world))
    :start-position [32 71]})
 
 (defmethod generate :world.generator/modules [ctx world]

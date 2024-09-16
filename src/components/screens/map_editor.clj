@@ -3,7 +3,7 @@
             [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
-            [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen]]
+            [core.context :as ctx :refer [->label ->window ->actor ->text-button current-screen]]
             [core.graphics :as g]
             [core.maps.tiled :as tiled]
             [core.scene2d.actor :refer [set-position!]]
@@ -196,7 +196,7 @@ direction keys: move")
 (defcomponent :screens/map-editor
   (component/create [_ ctx]
     {:sub-screen [::sub-screen
-                  (atom {:tiled-map (->tiled-map ctx mapgen.modules/modules-file)
+                  (atom {:tiled-map (tiled/load-map mapgen.modules/modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
      :stage (ctx/->stage ctx [(->generate-map-window ctx world-id)

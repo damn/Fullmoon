@@ -1,7 +1,6 @@
 (ns components.context.tiled-map-renderer
   (:require [gdx.maps.renderer :as map-renderer]
             [gdx.maps.layer :as map-layer]
-            [gdx.maps.tiled.tmx-map-loader :refer [->tmx-map-loader] :as tmx-map-loader]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.graphics :as g]
@@ -27,10 +26,7 @@
     (memoize map-renderer-for)))
 
 (extend-type core.context.Context
-  core.context/TiledMapLoader
-  (->tiled-map [_ file]
-    (tmx-map-loader/load (->tmx-map-loader) file))
-
+  core.context/TiledMapDrawer
   (render-tiled-map [{g :context/graphics
                       cached-map-renderer :context/tiled-map-renderer
                       :as ctx}

@@ -2,7 +2,7 @@
   (:require [utils.core :refer [assoc-ks]]
             [data.grid2d :as grid]
             [core.maps.tiled :as tiled]
-            [core.context :as ctx :refer [->tiled-map all-properties]]
+            [core.context :as ctx :refer [all-properties]]
             [core.property :as property]
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
@@ -119,7 +119,7 @@
         scale mapgen.modules/scale
         scaled-grid (scale-grid grid scale)
         tiled-map (mapgen.modules/place-modules
-                   (->tiled-map context mapgen.modules/modules-file)
+                   (tiled/load-map mapgen.modules/modules-file)
                    scaled-grid
                    grid
                    (filter #(= :ground     (get grid %)) (grid/posis grid))

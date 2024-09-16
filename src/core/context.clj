@@ -86,8 +86,7 @@
   (->button-group [_ {:keys [max-check-count min-check-count]}])
   (->scroll-pane [_ actor]))
 
-(defprotocol TiledMapLoader
-  (->tiled-map [_ file] "Needs to be disposed.")
+(defprotocol TiledMapDrawer
   (render-tiled-map [_ tiled-map color-setter]
                     "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
                     Color-setter is a gdl.ColorSetter which is called for every tile-corner to set the color.

@@ -1,8 +1,14 @@
 (ns core.maps.tiled
   (:require [gdx.maps.properties :as properties]
             [gdx.maps.layers :as map-layers])
-  (:import com.badlogic.gdx.maps.MapLayer
+  (:import com.badlogic.gdx.maps.tiled.TmxMapLoader
+           com.badlogic.gdx.maps.MapLayer
            [com.badlogic.gdx.maps.tiled TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
+
+(defn load-map
+  "Has to be disposed."
+  [file]
+  (.load (TmxMapLoader.) file))
 
 ; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer
 (defprotocol HasProperties
