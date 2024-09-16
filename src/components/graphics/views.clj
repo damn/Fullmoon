@@ -2,9 +2,10 @@
   (:require [gdx.utils.viewport.viewport :as viewport]
             [core.context :as ctx]
             [core.graphics :as g])
-  (:import (com.badlogic.gdx Gdx OrthographicCamera)
+  (:import com.badlogic.gdx.Gdx
+           com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.math MathUtils Vector2]
-           com.badlogic.gdx.utils.viewport.FitViewport))
+           (com.badlogic.gdx.utils.viewport Viewport FitViewport)))
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
@@ -34,22 +35,22 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (g/world-unit-scale g))))
 
-(defn- gui-viewport   [g] (-> g :gui-view   :viewport))
-(defn- world-viewport [g] (-> g :world-view :viewport))
+(defn- gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
+(defn- world-viewport ^Viewport [g] (-> g :world-view :viewport))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
 
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
-(defn- unproject-mouse-posi [viewport]
+(defn- unproject-mouse-posi [^Viewport viewport]
   (let [mouse-x (clamp (.getX Gdx/input)
                        (viewport/left-gutter-width viewport)
                        (viewport/right-gutter-x viewport))
         mouse-y (clamp (.getY Gdx/input)
                        (viewport/top-gutter-height viewport)
                        (viewport/top-gutter-y viewport))
-        coords (viewport/unproject viewport (Vector2. mouse-x mouse-y))]
+        coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
 (defn- gui-mouse-position [g]
@@ -74,6 +75,6 @@
   (world-viewport-height [ctx] (viewport/world-height (world-viewport (gr ctx))))
 
   (update-viewports [{g :context/graphics} w h]
-    (viewport/update (gui-viewport g) w h true)
+    (.update (gui-viewport g) w h true)
     ; Do not center the camera on world-viewport. We set the position there manually.
-    (viewport/update (world-viewport g) w h false)))
+    (.update (world-viewport g) w h false)))
