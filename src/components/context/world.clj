@@ -78,10 +78,6 @@
                              spawn-creatures!))
       :game-loop/replay (merge ctx (->world-map (select-keys ctx [:world/tiled-map :world/start-position]))))))
 
-(defn- start-replay-mode! [ctx]
-  (input/set-processor! nil)
-  (init-game-context ctx :mode :game-loop/replay))
-
 (extend-type core.context.Context
   core.context/World
   (start-new-game [ctx tiled-level]
@@ -196,6 +192,10 @@
  ; => all hotkeys etc part of stage input processor make.
  ; set nil for non idle/item in hand states .
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
+
+ (defn- start-replay-mode! [ctx]
+   (input/set-processor! nil)
+   (init-game-context ctx :mode :game-loop/replay))
 
  (.postRunnable com.badlogic.gdx.Gdx/app
   (fn []
