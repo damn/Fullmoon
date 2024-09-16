@@ -10,12 +10,6 @@
   []
   (.getDeltaTime Gdx/graphics))
 
-(defn width []
-  (.getWidth Gdx/graphics))
-
-(defn height []
-  (.getHeight Gdx/graphics))
-
 (defn ->cursor [pixmap [hotspot-x hotspot-y]]
   (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y))
 
