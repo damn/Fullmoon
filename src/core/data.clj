@@ -1,5 +1,17 @@
 (ns core.data
-  (:require [core.context :as ctx]))
+  (:require [utils.core :refer [safe-get]]
+            [core.component :refer [defsystem] :as component]
+            [core.context :as ctx]))
+
+(defsystem ->value [_])
+
+(defn component [k]
+  (try (let [data (:data (safe-get component/attributes k))]
+         (if (vector? data)
+           [(first data) (->value data)]
+           [data (safe-get component/attributes data)]))
+       (catch Throwable t
+         (throw (ex-info "" {:k k} t)))))
 
 (defmulti edn->value (fn [data v ctx] (if data (data 0))))
 (defmethod edn->value :default [_data v _ctx]

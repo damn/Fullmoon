@@ -1,5 +1,5 @@
 (ns components.data.relationships
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
             [core.components :as components]
             [core.context :as ctx]
             [core.data :as data]
@@ -13,7 +13,7 @@
 ; https://github.com/damn/core/issues/59
 
 (defcomponent :one-to-many
-  (component/->data [[_ property-type]]
+  (data/->value [[_ property-type]]
     {:schema [:set [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]]
      :linked-property-type property-type}))
 
@@ -21,7 +21,7 @@
   (map (partial ctx/property ctx) property-ids))
 
 (defcomponent :one-to-one
-  (component/->data [[_ property-type]]
+  (data/->value [[_ property-type]]
     {:schema [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]
      :linked-property-type property-type}))
 

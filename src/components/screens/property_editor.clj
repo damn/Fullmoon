@@ -69,7 +69,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [[data-type {:keys [schema]}] (component/data-component k)]
+  (let [[data-type {:keys [schema]}] (data/component k)]
     (cond
      (#{:one-to-one :one-to-many} data-type) nil
      ;(#{:map} data-type) {} ; cannot have empty for required keys, then no Add Component button
@@ -136,7 +136,7 @@
 
 (defn ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label ctx k)
-        value-widget (data/->widget (component/data-component k) v ctx)
+        value-widget (data/->widget (data/component k) v ctx)
         table (ctx/->table ctx {:id k
                                 :cell-defaults {:pad 4}})
         column (remove nil?
@@ -173,7 +173,7 @@
   (into {} (for [k (map actor/id (group/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (data/widget->value (component/data-component k) value-widget)])))
+             [k (data/widget->value (data/component k) value-widget)])))
 
 ;;
 

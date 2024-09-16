@@ -1,6 +1,7 @@
 (ns core.property
   (:require [malli.core :as m]
-            [core.component :as component :refer [defcomponent]]))
+            [core.component :as component :refer [defcomponent]]
+            [core.data :as data]))
 
 (defn property-type->id-namespace [property-type]
   (keyword (name property-type)))
@@ -21,7 +22,7 @@
 (defn schema [property]
   (-> property
       ->type
-      component/data-component
+      data/component
       (get 1)
       :schema
       m/schema))

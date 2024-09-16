@@ -1,6 +1,5 @@
 (ns core.component
-  (:refer-clojure :exclude [apply])
-  (:require [utils.core :refer [safe-get]]))
+  (:refer-clojure :exclude [apply]))
 
 ; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override? true)
@@ -81,10 +80,6 @@
                      ~fn-params params#]
                  ~@fn-exprs)))))
       ~k)))
-
-(defsystem ->data [_])
-
-;;
 
 (defsystem create [_ ctx])
 (defmethod create :default [[_ v] _ctx]
@@ -228,11 +223,3 @@
 
 (defn doc [k]
   (:doc (get attributes k)))
-
-(defn data-component [k]
-  (try (let [data (:data (safe-get attributes k))]
-         (if (vector? data)
-           [(first data) (->data data)]
-           [data (safe-get attributes data)]))
-       (catch Throwable t
-         (throw (ex-info "" {:k k} t)))))

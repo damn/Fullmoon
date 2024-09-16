@@ -46,7 +46,7 @@
   (edn/read-string (text-field/text widget)))
 
 (defcomponent :enum
-  (component/->data [[_ items]]
+  (data/->value [[_ items]]
     {:schema (apply vector :enum items)}))
 
 (defmethod data/->widget :enum [[_ data] v ctx]
@@ -57,7 +57,7 @@
   (edn/read-string (.getSelected ^VisSelectBox widget)))
 
 (defcomponent :qualified-keyword
-  (component/->data [schema]
+  (data/->value [schema]
     {:schema schema}))
 
 (defn- attribute-schema
@@ -70,17 +70,17 @@
     (do
      (assert (keyword? k))
      (assert (or (nil? properties) (map? properties)) (pr-str ks))
-     [k properties (:schema ((component/data-component k) 1))])))
+     [k properties (:schema ((data/component k) 1))])))
 
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (attribute-schema ks)))
 
 (defcomponent :map
-  (component/->data [[_ ks]]
+  (data/->value [[_ ks]]
     {:schema (map-schema ks)}))
 
 (defcomponent :map-optional
-  (component/->data [[_ ks]]
+  (data/->value [[_ ks]]
     {:widget :map
      :schema (map-schema (map (fn [k] [k {:optional true}]) ks))}))
 
@@ -89,5 +89,5 @@
           (keys component/attributes)))
 
 (defcomponent :components-ns
-  (component/->data [[_ ns-name-k]]
-    (component/->data [:map-optional (namespaced-ks ns-name-k)])))
+  (data/->value [[_ ns-name-k]]
+    (data/->value [:map-optional (namespaced-ks ns-name-k)])))
