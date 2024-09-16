@@ -10,11 +10,6 @@
   []
   (.getDeltaTime Gdx/graphics))
 
-(defn frames-per-second
-  "The average number of frames per second"
-  []
-  (.getFramesPerSecond Gdx/graphics))
-
 (defn width []
   (.getWidth Gdx/graphics))
 

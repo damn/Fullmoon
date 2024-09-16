@@ -1,12 +1,12 @@
 (ns components.widgets.debug-window
-  (:require [gdx.graphics :as graphics]
-            [gdx.graphics.orthographic-camera :as orthographic-camera]
+  (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
             utils.core
             [core.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
             [core.graphics :as g]
             [core.scene2d.group :refer [add-actor!]]
             [core.scene2d.ui.label :refer [set-text!]]
-            [core.scene2d.ui.widget-group :refer [pack!]]))
+            [core.scene2d.ui.widget-group :refer [pack!]])
+  (:import com.badlogic.gdx.Gdx))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -19,7 +19,7 @@
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
      "logic-frame: " (ctx/logic-frame ctx) "\n"
-     "FPS: " (graphics/frames-per-second)  "\n"
+     "FPS: " (.getFramesPerSecond Gdx/graphics)  "\n"
      "Zoom: " (orthographic-camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
