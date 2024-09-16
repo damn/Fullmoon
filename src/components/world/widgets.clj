@@ -4,7 +4,6 @@
             [core.context :as ctx]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
-            gdx.scene2d.ui.button-group
             [components.entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [components.widgets.action-bar :as action-bar]
             [components.widgets.debug-window :as debug-window]
@@ -12,13 +11,14 @@
             [components.widgets.inventory :as inventory]
             [components.widgets.hp-mana-bars :refer [->hp-mana-bars]])
   (:import (com.badlogic.gdx Gdx Input$Keys)
-           com.badlogic.gdx.scenes.scene2d.Stage))
+           com.badlogic.gdx.scenes.scene2d.Stage
+           com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
 (extend-type core.context.Context
   core.context/Actionbar
   (selected-skill [ctx]
     (let [button-group (:action-bar (:world/widgets ctx))]
-      (when-let [skill-button (gdx.scene2d.ui.button-group/checked button-group)]
+      (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
         (actor/id skill-button))))
 
   core.context/InventoryWindow

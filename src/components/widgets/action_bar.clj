@@ -3,8 +3,8 @@
             [core.components :as components]
             [core.context :as ctx :refer [->image-button]]
             [gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
-            [gdx.scene2d.group :refer [clear-children! add-actor!]]
-            [gdx.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
+            [gdx.scene2d.group :refer [clear-children! add-actor!]])
+  (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 (def ^:private image-scale 2)
 
@@ -28,7 +28,7 @@
       (actor/set-id! button id)
       (add-tooltip! button #(components/info-text skill (assoc % :effect/source (ctx/player-entity %))))
       (add-actor! horizontal-group button)
-      (add! button-group button)
+      (.add ^ButtonGroup button-group ^Button button)
       ctx)))
 
 (defcomponent :tx.context.action-bar/remove-skill
@@ -36,7 +36,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
       (remove! button)
-      (button-group/remove! button-group button)
+      (.remove ^ButtonGroup button-group ^Button button)
       ctx)))
 
 (comment
