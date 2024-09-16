@@ -2,7 +2,6 @@
   (:require [clojure.set :as set]
             [malli.core :as m]
             [malli.generator :as mg]
-            [gdx.input :as input]
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.components :as components]
@@ -13,7 +12,7 @@
             [core.scene2d.group :as group]
             [core.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
             [core.scene2d.ui.widget-group :refer [pack!]])
-  (:import com.badlogic.gdx.Input$Keys))
+  (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
 ; TODO save button show if changes made, otherwise disabled?
@@ -203,7 +202,7 @@
                                                        (ctx/->text-button ctx "Delete" delete!)]])]])
     (group/add-actor! window
                       (ctx/->actor ctx {:act (fn [{:keys [context/state]}]
-                                               (when (input/key-just-pressed? Input$Keys/ENTER)
+                                               (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
                                                  (swap! state save!)))}))
     (pack! window)
     window))

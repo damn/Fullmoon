@@ -1,6 +1,5 @@
 (ns components.screens.map-editor
   (:require [clojure.string :as str]
-            [gdx.input :as input]
             [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.utils.disposable :refer [dispose]]
@@ -16,7 +15,7 @@
             [core.scene2d.ui.label :refer [set-text!]]
             mapgen.gen
             mapgen.modules)
-  (:import com.badlogic.gdx.Input$Keys
+  (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
@@ -95,19 +94,19 @@ direction keys: move")
 ; TODO textfield takes control !
 ; TODO PLUS symbol shift & = symbol on keyboard not registered
 (defn- camera-controls [context camera]
-  (when (input/key-pressed? Input$Keys/SHIFT_LEFT)
+  (when (.isKeyPressed Gdx/input Input$Keys/SHIFT_LEFT)
     (adjust-zoom camera    zoom-speed))
-  (when (input/key-pressed? Input$Keys/MINUS)
+  (when (.isKeyPressed Gdx/input Input$Keys/MINUS)
     (adjust-zoom camera (- zoom-speed)))
   (let [apply-position (fn [idx f]
                          (camera/set-position! camera
                                                (update (camera/position camera)
                                                        idx
                                                        #(f % camera-movement-speed))))]
-    (if (input/key-pressed? Input$Keys/LEFT)  (apply-position 0 -))
-    (if (input/key-pressed? Input$Keys/RIGHT) (apply-position 0 +))
-    (if (input/key-pressed? Input$Keys/UP)    (apply-position 1 +))
-    (if (input/key-pressed? Input$Keys/DOWN)  (apply-position 1 -))))
+    (if (.isKeyPressed Gdx/input Input$Keys/LEFT)  (apply-position 0 -))
+    (if (.isKeyPressed Gdx/input Input$Keys/RIGHT) (apply-position 0 +))
+    (if (.isKeyPressed Gdx/input Input$Keys/UP)    (apply-position 1 +))
+    (if (.isKeyPressed Gdx/input Input$Keys/DOWN)  (apply-position 1 -))))
 
 #_(def ^:private show-area-level-colors true)
 ; TODO unused
@@ -186,12 +185,12 @@ direction keys: move")
                           (:tiled-map @current-data)
                           (constantly Color/WHITE))
     (ctx/render-world-view context #(render-on-map % context))
-    (if (input/key-just-pressed? Input$Keys/L)
+    (if (.isKeyJustPressed Gdx/input Input$Keys/L)
       (swap! current-data update :show-grid-lines not))
-    (if (input/key-just-pressed? Input$Keys/M)
+    (if (.isKeyJustPressed Gdx/input Input$Keys/M)
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (ctx/world-camera context))
-    (if (input/key-just-pressed? Input$Keys/ESCAPE)
+    (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
       (ctx/change-screen context :screens/main-menu)
       context)))
 

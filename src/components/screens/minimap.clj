@@ -1,12 +1,11 @@
 (ns components.screens.minimap
   (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.graphics.camera :as camera]
-            [gdx.input :as input]
             utils.camera
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
             [core.graphics :as g])
-  (:import com.badlogic.gdx.Input$Keys
+  (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
 
 ; 28.4 viewportwidth
@@ -57,8 +56,8 @@
                                                    (camera/position (ctx/world-camera context))
                                                    0.5
                                                    Color/GREEN)))
-    (if (or (input/key-just-pressed? Input$Keys/TAB)
-            (input/key-just-pressed? Input$Keys/ESCAPE))
+    (if (or (.isKeyJustPressed Gdx/input Input$Keys/TAB)
+            (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE))
       (ctx/change-screen context :screens/world)
       context)))
 

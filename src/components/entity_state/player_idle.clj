@@ -2,14 +2,13 @@
   (:require [utils.core :refer [safe-merge]]
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [math.vector :as v]
-            [gdx.input :as input]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
             [core.entity :as entity]
             [core.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.scene2d.ui.button :refer [button?]]
             [core.scene2d.ui.window :refer [window-title-bar?]])
-  (:import com.badlogic.gdx.Input$Buttons))
+  (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -135,7 +134,7 @@
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state ctx @eid)]
         (cons [:tx.context.cursor/set cursor]
-              (when (input/button-just-pressed? Input$Buttons/LEFT)
+              (when (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
                 (on-click))))))
 
   (component/clicked-inventory-cell [_ cell]

@@ -54,7 +54,7 @@
  (defn up-skill-hotkeys []
    #_(doseq [slot slot-keys
              :let [skill-id (slot @slot->skill-id)]
-             :when (and (input//key-just-pressed? (number-str->input-key (name slot)))
+             :when (and (.isKeyJustPressed Gdx/input (number-str->input-key (name slot)))
                         skill-id)]
        (.setChecked ^Button (.findActor horizontal-group (str skill-id)) true)))
 

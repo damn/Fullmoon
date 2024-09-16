@@ -1,6 +1,5 @@
 (ns components.world.widgets
-  (:require [gdx.input :as input]
-            [gdx.scene2d.stage :as stage]
+  (:require [gdx.scene2d.stage :as stage]
             [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
@@ -13,7 +12,7 @@
             [components.widgets.entity-info-window :as entity-info-window]
             [components.widgets.inventory :as inventory]
             [components.widgets.hp-mana-bars :refer [->hp-mana-bars]])
-  (:import com.badlogic.gdx.Input$Keys))
+  (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (extend-type core.context.Context
   core.context/Actionbar
@@ -64,7 +63,7 @@
   core.context/IngameWindows
   (check-window-hotkeys [ctx]
     (doseq [[hotkey window-id] (hotkey->window-id ctx)
-            :when (input/key-just-pressed? hotkey)]
+            :when (.isKeyJustPressed Gdx/input hotkey)]
       (actor/toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
 
   (close-windows? [context]

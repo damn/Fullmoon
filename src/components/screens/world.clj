@@ -1,11 +1,10 @@
 (ns components.screens.world
   (:require [gdx.graphics.camera :as camera]
             [gdx.graphics.orthographic-camera :as orthographic-camera]
-            [gdx.input :as input]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [components.context.world :as world])
-  (:import com.badlogic.gdx.Input$Keys))
+  (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defn- render-world! [ctx]
   (camera/set-position! (ctx/world-camera ctx) (:position (ctx/player-entity* ctx)))
@@ -26,19 +25,19 @@
 
 (defn- check-zoom-keys [ctx]
   (let [camera (ctx/world-camera ctx)]
-    (when (input/key-pressed? Input$Keys/MINUS)  (adjust-zoom camera    zoom-speed))
-    (when (input/key-pressed? Input$Keys/EQUALS) (adjust-zoom camera (- zoom-speed)))))
+    (when (.isKeyPressed Gdx/input Input$Keys/MINUS)  (adjust-zoom camera    zoom-speed))
+    (when (.isKeyPressed Gdx/input Input$Keys/EQUALS) (adjust-zoom camera (- zoom-speed)))))
 
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
   (check-zoom-keys ctx)
   (ctx/check-window-hotkeys ctx)
-  (cond (and (input/key-just-pressed? Input$Keys/ESCAPE)
+  (cond (and (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
              (not (ctx/close-windows? ctx)))
         (ctx/change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen/render!
-        #_(input/key-just-pressed? Input$Keys/TAB)
+        #_(.isKeyJustPressed Gdx/input Input$Keys/TAB)
         #_(ctx/change-screen ctx :screens/minimap)
 
         :else

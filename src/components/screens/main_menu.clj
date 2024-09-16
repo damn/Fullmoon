@@ -1,6 +1,5 @@
 (ns components.screens.main-menu
-  (:require [gdx.input :as input]
-            [utils.core :refer [safe-get]]
+  (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx])
   (:import com.badlogic.gdx.Gdx
@@ -35,7 +34,7 @@
   [(ctx/->background-image ctx)
    (->buttons ctx)
    (ctx/->actor ctx {:act (fn [_ctx]
-                            (when (input/key-just-pressed? Input$Keys/ESCAPE)
+                            (when (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
                               (.exit Gdx/app)))})])
 
 (derive :screens/main-menu :screens/stage-screen)

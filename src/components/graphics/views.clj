@@ -1,10 +1,10 @@
 (ns components.graphics.views
   (:require [gdx.graphics :as graphics]
-            [gdx.input :as input]
             [gdx.utils.viewport.viewport :as viewport]
             [core.context :as ctx]
             [core.graphics :as g])
-  (:import [com.badlogic.gdx.math MathUtils Vector2]
+  (:import com.badlogic.gdx.Gdx
+           [com.badlogic.gdx.math MathUtils Vector2]
            com.badlogic.gdx.utils.viewport.FitViewport))
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
@@ -44,10 +44,10 @@
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [viewport]
-  (let [mouse-x (clamp (input/x)
+  (let [mouse-x (clamp (.getX Gdx/input)
                        (viewport/left-gutter-width viewport)
                        (viewport/right-gutter-x viewport))
-        mouse-y (clamp (input/y)
+        mouse-y (clamp (.getY Gdx/input)
                        (viewport/top-gutter-height viewport)
                        (viewport/top-gutter-y viewport))
         coords (viewport/unproject viewport (Vector2. mouse-x mouse-y))]

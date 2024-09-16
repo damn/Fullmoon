@@ -1,6 +1,5 @@
 (ns components.context.world
-  (:require [gdx.input :as input]
-            [gdx.utils.disposable :refer [dispose]]
+  (:require [gdx.utils.disposable :refer [dispose]]
             [utils.core :refer [tile->middle]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
@@ -8,7 +7,7 @@
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell])
-  (:import com.badlogic.gdx.Input$Keys))
+  (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -118,8 +117,8 @@
 (def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
-  (or (input/key-just-pressed? Input$Keys/P)
-      (input/key-pressed?      Input$Keys/SPACE)))
+  (or (.isKeyJustPressed Gdx/input Input$Keys/P)
+      (.isKeyPressed     Gdx/input Input$Keys/SPACE)))
 
 (defn- update-game-paused [ctx]
   (assoc ctx ::paused? (or (::tick-error ctx)
@@ -194,7 +193,7 @@
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
  (defn- start-replay-mode! [ctx]
-   (input/set-processor! nil)
+   (.setInputProcessor Gdx/input nil)
    (init-game-context ctx :mode :game-loop/replay))
 
  (.postRunnable com.badlogic.gdx.Gdx/app
