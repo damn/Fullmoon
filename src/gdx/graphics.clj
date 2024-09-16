@@ -5,11 +5,6 @@
                                       OrthographicCamera
                                       Pixmap)))
 
-(defn delta-time
-  "The time span between the current frame and the last frame in seconds."
-  []
-  (.getDeltaTime Gdx/graphics))
-
 (defn ->cursor [pixmap [hotspot-x hotspot-y]]
   (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y))
 

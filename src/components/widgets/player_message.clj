@@ -1,8 +1,8 @@
 (ns components.widgets.player-message
-  (:require [gdx.graphics :as graphics]
-            [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [->actor]]
-            [core.graphics :as g]))
+            [core.graphics :as g])
+  (:import com.badlogic.gdx.Gdx))
 
 (defcomponent :tx/msg-to-player
   (component/do! [[_ message] ctx]
@@ -20,7 +20,7 @@
 
 (defn- check-remove-message [{:keys [context/state] :as ctx}]
   (when-let [{:keys [counter]} (::msg ctx)]
-    (swap! state update ::msg update :counter + (graphics/delta-time))
+    (swap! state update ::msg update :counter + (.getDeltaTime Gdx/graphics))
     (when (>= counter duration-seconds)
       (swap! state assoc ::msg nil))))
 
