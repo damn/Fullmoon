@@ -1,6 +1,6 @@
 (ns components.world.debug-render
   (:require [utils.core :refer [->tile]]
-            [utils.camera :as camera]
+            [gdx.graphics.camera :as camera]
             [math.geom :as geom]
             [core.context :as ctx :refer [world-grid]]
             [core.graphics :as g]

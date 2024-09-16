@@ -1,7 +1,6 @@
 (ns components.screens.minimap
   (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.graphics.camera :as camera]
-            utils.camera
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
             [core.graphics :as g])
@@ -26,11 +25,11 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (utils.camera/calculate-zoom (ctx/world-camera ctx)
-                                 :left left
-                                 :top top
-                                 :right right
-                                 :bottom bottom)))
+    (camera/calculate-zoom (ctx/world-camera ctx)
+                           :left left
+                           :top top
+                           :right right
+                           :bottom bottom)))
 
 (defn- ->tile-corner-color-setter [explored?]
   (fn tile-corner-color-setter [color x y]

@@ -5,7 +5,6 @@
             [gdx.utils.disposable :refer [dispose]]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
-            utils.camera
             [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen]]
             [core.graphics :as g]
             [core.maps.tiled :as tiled]
@@ -32,11 +31,11 @@
                         [(/ (tiled/width  tiled-map) 2)
                          (/ (tiled/height tiled-map) 2)])
   (orthographic-camera/set-zoom! camera
-                                 (utils.camera/calculate-zoom camera
-                                                              :left [0 0]
-                                                              :top [0 (tiled/height tiled-map)]
-                                                              :right [(tiled/width tiled-map) 0]
-                                                              :bottom [0 0])))
+                                 (camera/calculate-zoom camera
+                                                        :left [0 0]
+                                                        :top [0 (tiled/height tiled-map)]
+                                                        :right [(tiled/width tiled-map) 0]
+                                                        :bottom [0 0])))
 
 (defn- current-data [ctx]
   (-> ctx
@@ -118,7 +117,7 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (utils.camera/visible-tiles (ctx/world-camera ctx))
+        visible-tiles (camera/visible-tiles (ctx/world-camera ctx))
         [x y] (->tile (ctx/world-mouse-position ctx))]
     (g/draw-rectangle g x y 1 1 Color/WHITE)
     (when start-position
