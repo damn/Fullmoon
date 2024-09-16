@@ -1,9 +1,6 @@
-(ns core.maps.tiled
-  (:require [gdx.maps.properties :as properties]
-            [gdx.maps.layers :as map-layers])
-  (:import com.badlogic.gdx.maps.tiled.TmxMapLoader
-           com.badlogic.gdx.maps.MapLayer
-           [com.badlogic.gdx.maps.tiled TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
+(ns gdx.maps.tiled
+  (:import (com.badlogic.gdx.maps MapLayer MapLayers MapProperties)
+           [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
 
 (defn load-map
   "Has to be disposed."
@@ -12,13 +9,13 @@
 
 ; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer
 (defprotocol HasProperties
-  (properties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
+  (properties ^MapProperties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
   (get-property [_ key] "Pass keyword key, looks up in properties."))
 
 (defprotocol TMap
   (width [_])
   (height [_])
-  (layers [_] "Returns instance of com.badlogic.gdx.maps.MapLayers of the tiledmap")
+  (layers ^MapLayers [_] "Returns instance of com.badlogic.gdx.maps.MapLayers of the tiledmap")
   (layer-index [_ layer]
                "Returns nil or the integer index of the layer.
                Layer can be keyword or an instance of TiledMapTileLayer.")
@@ -53,7 +50,7 @@
  )
 
 (defn- lookup [has-properties key]
-  (properties/get (properties has-properties) (name key)))
+  (.get (properties has-properties) (name key)))
 
 (extend-protocol HasProperties
   TiledMap
@@ -77,15 +74,16 @@
     (.getLayers tiled-map))
 
   (layer-index [tiled-map layer]
-    (map-layers/index (layers tiled-map)
-                      (layer-name layer)))
+    (let [idx (.getIndex (layers tiled-map) (layer-name layer))]
+      (when-not (= idx -1)
+        idx)))
 
   (get-layer [tiled-map layer-name]
-    (map-layers/get (layers tiled-map) layer-name))
+    (.get (layers tiled-map) ^String layer-name))
 
   (remove-layer! [tiled-map layer]
-    (map-layers/remove! (layers tiled-map)
-                        (layer-index tiled-map layer)))
+    (.remove (layers tiled-map)
+             (int (layer-index tiled-map layer))))
 
   (cell-at [tiled-map layer [x y]]
     (when-let [layer (get-layer tiled-map (layer-name layer))]

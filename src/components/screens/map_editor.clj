@@ -1,11 +1,11 @@
 (ns components.screens.map-editor
   (:require [clojure.string :as str]
             [gdx.graphics.camera :as camera]
+            [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
             [core.context :as ctx :refer [->label ->window ->actor ->text-button current-screen]]
             [core.graphics :as g]
-            [core.maps.tiled :as tiled]
             [core.scene2d.actor :refer [set-position!]]
             [core.scene2d.group :refer [add-actor!]]
             [core.scene2d.ui.widget-group :refer [pack!]]

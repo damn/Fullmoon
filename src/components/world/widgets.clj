@@ -11,7 +11,8 @@
             [components.widgets.entity-info-window :as entity-info-window]
             [components.widgets.inventory :as inventory]
             [components.widgets.hp-mana-bars :refer [->hp-mana-bars]])
-  (:import (com.badlogic.gdx Gdx Input$Keys)))
+  (:import (com.badlogic.gdx Gdx Input$Keys)
+           com.badlogic.gdx.scenes.scene2d.Stage))
 
 (extend-type core.context.Context
   core.context/Actionbar

@@ -1,7 +1,7 @@
 (ns mapgen.gen
   (:require [utils.core :refer [assoc-ks]]
             [data.grid2d :as grid]
-            [core.maps.tiled :as tiled]
+            [gdx.maps.tiled :as tiled]
             [core.context :as ctx :refer [all-properties]]
             [core.property :as property]
             [mapgen.utils :refer [printgrid scale-grid]]

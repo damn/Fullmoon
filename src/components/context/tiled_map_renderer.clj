@@ -1,11 +1,10 @@
 (ns components.context.tiled-map-renderer
-  (:require [gdx.maps.renderer :as map-renderer]
-            [gdx.maps.layer :as map-layer]
+  (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.graphics :as g]
-            [core.maps.tiled :as tiled])
-  (:import [gdl OrthogonalTiledMapRenderer ColorSetter]))
+            [core.graphics :as g])
+  (:import com.badlogic.gdx.maps.MapLayer
+           [gdl OrthogonalTiledMapRenderer ColorSetter]))
 
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
 ; and when a batch is passed to the constructor
@@ -32,12 +31,13 @@
                       :as ctx}
                      tiled-map
                      color-setter]
-    (let [map-renderer (cached-map-renderer g tiled-map)
+    (let [^OrthogonalTiledMapRenderer map-renderer (cached-map-renderer g tiled-map)
           world-camera (ctx/world-camera ctx)]
       (set-color-setter! map-renderer color-setter)
-      (map-renderer/set-view! map-renderer world-camera)
+      (.setView map-renderer world-camera)
       (->> tiled-map
            tiled/layers
-           (filter map-layer/visible?)
+           (filter #(.isVisible ^MapLayer %))
            (map (partial tiled/layer-index tiled-map))
-           (map-renderer/render map-renderer)))))
+           int-array
+           (.render map-renderer)))))

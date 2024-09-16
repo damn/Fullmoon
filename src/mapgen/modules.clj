@@ -1,5 +1,5 @@
 (ns mapgen.modules
-  (:require [core.maps.tiled :as tiled]
+  (:require [gdx.maps.tiled :as tiled]
             [mapgen.transitions :as transitions]
             [mapgen.tiled-utils :refer [grid->tiled-map]]))
 

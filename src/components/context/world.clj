@@ -1,8 +1,8 @@
 (ns components.context.world
   (:require [utils.core :refer [tile->middle]]
+            [gdx.maps.tiled :as tiled]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.maps.tiled :as tiled]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell])

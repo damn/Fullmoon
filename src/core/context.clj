@@ -58,8 +58,8 @@
   (update-viewports [_ w h]))
 
 (defprotocol StageScreen
-  (->stage [_ actors])
-  (get-stage ^Stage [_] "Stage implements clojure.lang.ILookup (get) on actor id.")
+  (->stage [_ actors] "Stage implements clojure.lang.ILookup (get) on actor id.")
+  (get-stage ^Stage [_])
   (mouse-on-stage-actor? [_])
   (add-to-stage! [_ actor]))
 
