@@ -1,14 +1,14 @@
 (ns components.context.graphics
   (:require [gdx.utils.disposable :refer [dispose]]
-            [gdx.utils.viewport :as viewport]
             [core.component :refer [defcomponent] :as component]
             [core.graphics :as g]
             (components.graphics cursors
                                  shape-drawer
                                  text
                                  views))
-  (:import (com.badlogic.gdx.graphics Camera Color)
-           (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)))
+  (:import com.badlogic.gdx.graphics.Color
+           (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)
+           com.badlogic.gdx.utils.viewport.Viewport))
 
 (defcomponent :data/graphics
   {:widget :map
@@ -63,9 +63,9 @@
 (defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
                     view-key
                     draw-fn]
-  (let [{:keys [viewport unit-scale]} (view-key g)]
+  (let [{:keys [^Viewport viewport unit-scale]} (view-key g)]
     (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-    (.setProjectionMatrix batch (.combined ^Camera (viewport/camera viewport)))
+    (.setProjectionMatrix batch (.combined (.getCamera viewport)))
     (.begin batch)
     (g/with-shape-line-width g
                              unit-scale

@@ -1,6 +1,5 @@
 (ns components.graphics.views
-  (:require [gdx.utils.viewport :as viewport]
-            [core.context :as ctx]
+  (:require [core.context :as ctx]
             [core.graphics :as g])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.OrthographicCamera
@@ -45,11 +44,11 @@
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [^Viewport viewport]
   (let [mouse-x (clamp (.getX Gdx/input)
-                       (viewport/left-gutter-width viewport)
-                       (viewport/right-gutter-x viewport))
+                       (.getLeftGutterWidth viewport)
+                       (.getRightGutterX viewport))
         mouse-y (clamp (.getY Gdx/input)
-                       (viewport/top-gutter-height viewport)
-                       (viewport/top-gutter-y viewport))
+                       (.getTopGutterHeight viewport)
+                       (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
@@ -68,11 +67,11 @@
   core.context/Views
   (gui-mouse-position    [ctx] (gui-mouse-position   (gr ctx)))
   (world-mouse-position  [ctx] (world-mouse-position (gr ctx)))
-  (gui-viewport-width    [ctx] (viewport/world-width  (gui-viewport   (gr ctx))))
-  (gui-viewport-height   [ctx] (viewport/world-height (gui-viewport   (gr ctx))))
-  (world-camera          [ctx] (viewport/camera       (world-viewport (gr ctx))))
-  (world-viewport-width  [ctx] (viewport/world-width  (world-viewport (gr ctx))))
-  (world-viewport-height [ctx] (viewport/world-height (world-viewport (gr ctx))))
+  (gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
+  (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
+  (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
+  (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
+  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))
 
   (update-viewports [{g :context/graphics} w h]
     (.update (gui-viewport g) w h true)
