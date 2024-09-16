@@ -1,7 +1,7 @@
 (ns components.widgets.skill-window
   (:require [core.components :as components]
             [core.context :as ctx :refer [->window ->image-button]]
-            [core.scene2d.actor :refer [add-tooltip!]]))
+            [gdx.scene2d.actor :refer [add-tooltip!]]))
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))

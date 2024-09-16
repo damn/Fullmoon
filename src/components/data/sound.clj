@@ -3,9 +3,9 @@
             [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.data :as data]
-            [core.scene2d.actor :as actor]
-            [core.scene2d.group :as group]
-            [core.scene2d.ui.table :as table]))
+            [gdx.scene2d.actor :as actor]
+            [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui.table :as table]))
 
 (defcomponent :sound {:schema :string})
 

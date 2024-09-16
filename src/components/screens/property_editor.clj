@@ -8,10 +8,10 @@
             [core.property :as property]
             [core.context :as ctx]
             [core.data :as data]
-            [core.scene2d.actor :as actor]
-            [core.scene2d.group :as group]
-            [core.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
-            [core.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.actor :as actor]
+            [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
+            [gdx.scene2d.ui.widget-group :refer [pack!]])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)

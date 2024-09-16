@@ -3,9 +3,9 @@
             utils.core
             [core.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
             [core.graphics :as g]
-            [core.scene2d.group :refer [add-actor!]]
-            [core.scene2d.ui.label :refer [set-text!]]
-            [core.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.group :refer [add-actor!]]
+            [gdx.scene2d.ui.label :refer [set-text!]]
+            [gdx.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.Gdx))
 
 (defn- skill-info [{:keys [entity/skills]}]
@@ -33,7 +33,7 @@
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-stage-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (core.scene2d.actor/id actor)
+              "id: " (gdx.scene2d.actor/id actor)
               )))))
 
 (defn create [context]

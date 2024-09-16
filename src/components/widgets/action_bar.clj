@@ -2,9 +2,9 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.components :as components]
             [core.context :as ctx :refer [->image-button]]
-            [core.scene2d.actor :as actor :refer [remove! add-tooltip!]]
-            [core.scene2d.group :refer [clear-children! add-actor!]]
-            [core.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
+            [gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
+            [gdx.scene2d.group :refer [clear-children! add-actor!]]
+            [gdx.scene2d.ui.button-group :refer [clear! add! checked] :as button-group]))
 
 (def ^:private image-scale 2)
 

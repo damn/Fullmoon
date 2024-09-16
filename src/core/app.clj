@@ -80,7 +80,7 @@
 
 (defn -main [& [file]]
   ; require in -main here and not top-level
-  ; otherwise some problem with core.scene2d.actor/add-tooltip! (cyclic dependency)
+  ; otherwise some problem with gdx.scene2d.actor/add-tooltip! (cyclic dependency)
   ; which requires state
   (require-all-components!)
   (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create file))

@@ -1,7 +1,7 @@
-(ns core.scene2d.actor
+(ns gdx.scene2d.actor
   (:refer-clojure :exclude [name])
   (:require [core.app :as app]
-            [core.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.utils.Align
            (com.badlogic.gdx.scenes.scene2d Actor Touchable)
            com.badlogic.gdx.scenes.scene2d.ui.Window

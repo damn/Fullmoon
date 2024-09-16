@@ -1,9 +1,9 @@
 (ns components.widgets.entity-info-window
   (:require [core.components :as components]
             [core.context :as ctx :refer [->actor ->window ->label]]
-            [core.scene2d.ui.label :refer [set-text!]]
-            [core.scene2d.group :refer [add-actor!]]
-            [core.scene2d.ui.widget-group :refer [pack!]]))
+            [gdx.scene2d.ui.label :refer [set-text!]]
+            [gdx.scene2d.group :refer [add-actor!]]
+            [gdx.scene2d.ui.widget-group :refer [pack!]]))
 
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state

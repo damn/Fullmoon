@@ -1,4 +1,4 @@
-(ns core.scene2d.ui.table
+(ns gdx.scene2d.ui.table
   (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Table Cell)
            com.kotcrab.vis.ui.widget.Separator))

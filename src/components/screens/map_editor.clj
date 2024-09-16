@@ -6,10 +6,10 @@
             [utils.core :refer [->tile]]
             [core.context :as ctx :refer [->label ->window ->actor ->text-button current-screen]]
             [core.graphics :as g]
-            [core.scene2d.actor :refer [set-position!]]
-            [core.scene2d.group :refer [add-actor!]]
-            [core.scene2d.ui.widget-group :refer [pack!]]
-            [core.scene2d.ui.label :refer [set-text!]]
+            [gdx.scene2d.actor :refer [set-position!]]
+            [gdx.scene2d.group :refer [add-actor!]]
+            [gdx.scene2d.ui.widget-group :refer [pack!]]
+            [gdx.scene2d.ui.label :refer [set-text!]]
             mapgen.gen
             mapgen.modules)
   (:import (com.badlogic.gdx Gdx Input$Keys)

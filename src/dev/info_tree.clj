@@ -1,7 +1,7 @@
 (ns dev.info-tree
   (:require [core.app :as app]
             [core.context :as ctx]
-            [core.scene2d.group :as group])
+            [gdx.scene2d.group :as group])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))

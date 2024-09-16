@@ -5,7 +5,7 @@
             [core.components :as components]
             [core.context :as ctx :refer [spritesheet get-sprite ->table ->window ->texture-region-drawable ->stack ->image-widget]]
             [core.graphics :as g]
-            [core.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
+            [gdx.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.entity :as entity]
             [core.inventory :as inventory])
   (:import com.badlogic.gdx.graphics.Color

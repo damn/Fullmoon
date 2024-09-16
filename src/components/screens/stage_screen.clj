@@ -1,5 +1,5 @@
 (ns components.screens.stage-screen
-  (:require [core.scene2d.group :as group]
+  (:require [gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx])
   (:import com.badlogic.gdx.Gdx

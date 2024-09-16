@@ -4,10 +4,10 @@
             [core.context :as ctx]
             [core.data :as data]
             [core.property :as property]
-            [core.scene2d.actor :as actor]
-            [core.scene2d.group :as group]
-            [core.scene2d.ui.table :as table]
-            [core.scene2d.ui.widget-group :refer [pack!]]))
+            [gdx.scene2d.actor :as actor]
+            [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui.table :as table]
+            [gdx.scene2d.ui.widget-group :refer [pack!]]))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59

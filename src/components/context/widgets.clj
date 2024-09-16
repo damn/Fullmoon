@@ -1,10 +1,10 @@
 (ns components.context.widgets
   (:require core.image
             core.context
-            [core.scene2d.actor :as actor]
-            [core.scene2d.group :as group]
-            [core.scene2d.ui.table :as table]
-            [core.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.actor :as actor]
+            [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui.table :as table]
+            [gdx.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group)
