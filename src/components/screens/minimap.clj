@@ -1,6 +1,5 @@
 (ns components.screens.minimap
-  (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
-            [gdx.graphics.camera :as camera]
+  (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
             [core.graphics :as g])
@@ -39,10 +38,10 @@
 
 #_(deftype Screen []
   (show [_ ctx]
-    (orthographic-camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
+    (camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
 
   (hide [_ ctx]
-    (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
+    (camera/reset-zoom! (ctx/world-camera ctx)))
 
   ; TODO fixme not subscreen
   (render [_ {:keys [world/tiled-map world/explored-tile-corners] :as context}]

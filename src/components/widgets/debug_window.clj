@@ -1,5 +1,5 @@
 (ns components.widgets.debug-window
-  (:require [gdx.graphics.orthographic-camera :as orthographic-camera]
+  (:require [gdx.graphics.camera :as camera]
             utils.core
             [core.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
             [core.graphics :as g]
@@ -20,7 +20,7 @@
     (str
      "logic-frame: " (ctx/logic-frame ctx) "\n"
      "FPS: " (.getFramesPerSecond Gdx/graphics)  "\n"
-     "Zoom: " (orthographic-camera/zoom (ctx/world-camera ctx)) "\n"
+     "Zoom: " (camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"

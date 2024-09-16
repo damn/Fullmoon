@@ -1,5 +1,5 @@
 (ns gdx.graphics.camera
-  (:import com.badlogic.gdx.graphics.Camera
+  (:import (com.badlogic.gdx.graphics Camera OrthographicCamera)
            com.badlogic.gdx.math.Vector3))
 
 (defn position
@@ -50,3 +50,17 @@
         vp-ratio-h (/ (* y-diff 2) viewport-height)
         new-zoom (max vp-ratio-w vp-ratio-h)]
     new-zoom))
+
+(defn zoom [^OrthographicCamera camera]
+  (.zoom camera))
+
+(defn set-zoom!
+  "Sets the zoom value and updates."
+  [^OrthographicCamera camera amount]
+  (set! (.zoom camera) amount)
+  (.update camera))
+
+(defn reset-zoom!
+  "Sets the zoom value to 1."
+  [camera]
+  (set-zoom! camera 1))

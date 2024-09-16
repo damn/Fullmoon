@@ -1,7 +1,6 @@
 (ns components.screens.map-editor
   (:require [clojure.string :as str]
             [gdx.graphics.camera :as camera]
-            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [gdx.utils.disposable :refer [dispose]]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
@@ -30,12 +29,12 @@
   (camera/set-position! camera
                         [(/ (tiled/width  tiled-map) 2)
                          (/ (tiled/height tiled-map) 2)])
-  (orthographic-camera/set-zoom! camera
-                                 (camera/calculate-zoom camera
-                                                        :left [0 0]
-                                                        :top [0 (tiled/height tiled-map)]
-                                                        :right [(tiled/width tiled-map) 0]
-                                                        :bottom [0 0])))
+  (camera/set-zoom! camera
+                    (camera/calculate-zoom camera
+                                           :left [0 0]
+                                           :top [0 (tiled/height tiled-map)]
+                                           :right [(tiled/width tiled-map) 0]
+                                           :bottom [0 0])))
 
 (defn- current-data [ctx]
   (-> ctx
@@ -84,7 +83,7 @@ direction keys: move")
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
-  (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
+  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
 
 ; TODO movement-speed scales with zoom value for big maps useful
 (def ^:private camera-movement-speed 1)
@@ -177,7 +176,7 @@ direction keys: move")
     (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
 
   (component/exit [_ ctx]
-    (orthographic-camera/reset-zoom! (ctx/world-camera ctx)))
+    (camera/reset-zoom! (ctx/world-camera ctx)))
 
   (component/render-ctx [_ context]
     (ctx/render-tiled-map context

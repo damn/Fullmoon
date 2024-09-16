@@ -1,6 +1,5 @@
 (ns components.screens.world
   (:require [gdx.graphics.camera :as camera]
-            [gdx.graphics.orthographic-camera :as orthographic-camera]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [components.context.world :as world])
@@ -19,7 +18,7 @@
                            (ctx/debug-render-after-entities ctx g))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
-  (orthographic-camera/set-zoom! camera (max 0.1 (+ (orthographic-camera/zoom camera) by))))
+  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
 
 (def ^:private zoom-speed 0.05)
 
