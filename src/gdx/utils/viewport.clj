@@ -1,4 +1,4 @@
-(ns gdx.utils.viewport.viewport
+(ns gdx.utils.viewport
   (:import com.badlogic.gdx.utils.viewport.Viewport))
 
 (defn screen-width      [^Viewport viewport] (.getScreenWidth     viewport))

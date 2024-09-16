@@ -1,5 +1,5 @@
 (ns components.graphics.views
-  (:require [gdx.utils.viewport.viewport :as viewport]
+  (:require [gdx.utils.viewport :as viewport]
             [core.context :as ctx]
             [core.graphics :as g])
   (:import com.badlogic.gdx.Gdx
