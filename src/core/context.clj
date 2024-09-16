@@ -1,4 +1,5 @@
-(ns core.context)
+(ns core.context
+  (:import com.badlogic.gdx.scenes.scene2d.Stage))
 
 (defrecord Context [])
 
@@ -56,9 +57,9 @@
   (world-viewport-height [_])
   (update-viewports [_ w h]))
 
-(defprotocol Stage
+(defprotocol StageScreen
   (->stage [_ actors])
-  (get-stage [_] "Stage implements clojure.lang.ILookup (get) on actor id.")
+  (get-stage ^Stage [_] "Stage implements clojure.lang.ILookup (get) on actor id.")
   (mouse-on-stage-actor? [_])
   (add-to-stage! [_ actor]))
 

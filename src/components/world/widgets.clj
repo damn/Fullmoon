@@ -1,6 +1,5 @@
 (ns components.world.widgets
-  (:require [gdx.scene2d.stage :as stage]
-            [utils.core :as utils]
+  (:require [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.scene2d.actor :as actor]
@@ -40,17 +39,14 @@
    (ctx/->actor ctx {:draw draw-item-on-cursor})
    (component/create [:widgets/player-message] ctx)])
 
-(defn- reset-stage-actors! [ctx widget-data]
-  (assert (= :screens/world (ctx/current-screen-key ctx)))
-  (doto (ctx/get-stage ctx)
-    stage/clear!
-    (stage/add-actors! (->ui-actors ctx widget-data))))
-
 (defcomponent :world/widgets
   (component/create [_ ctx]
+    (assert (= :screens/world (ctx/current-screen-key ctx)))
     (let [widget-data {:action-bar (action-bar/->button-group ctx)
-                       :slot->background (inventory/->data ctx)}]
-      (reset-stage-actors! ctx widget-data)
+                       :slot->background (inventory/->data ctx)}
+          stage (ctx/get-stage ctx)]
+      (.clear stage)
+      (run! #(.addActor stage %) (->ui-actors ctx widget-data))
       widget-data)))
 
 (defn- hotkey->window-id [{:keys [context/config]}]

@@ -1,6 +1,5 @@
 (ns dev.info-tree
-  (:require [gdx.scene2d.stage :as stage]
-            [core.app :as app]
+  (:require [core.app :as app]
             [core.context :as ctx]
             [core.scene2d.group :as group])
   (:import com.badlogic.gdx.Gdx
@@ -63,14 +62,14 @@
     (add-elements! ctx node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! ctx node (children->str-map (group/children (stage/root v))) level))
+    (add-map-nodes! ctx node (children->str-map (group/children (.getRoot v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
     (add-map-nodes! ctx node (children->str-map (group/children v)) level))
   )
 
 (comment
- (let [vis-image (first (group/children (stage/root (ctx/get-stage @app/state))))]
+ (let [vis-image (first (group/children (.getRoot (ctx/get-stage @app/state))))]
    (supers (class vis-image))
    (str vis-image)
    )
