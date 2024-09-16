@@ -1,6 +1,5 @@
 (ns components.context.graphics
-  (:require [gdx.utils.disposable :refer [dispose]]
-            [core.component :refer [defcomponent] :as component]
+  (:require [core.component :refer [defcomponent] :as component]
             [core.graphics :as g]
             (components.graphics cursors
                                  shape-drawer
@@ -8,6 +7,7 @@
                                  views))
   (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)
+           com.badlogic.gdx.utils.Disposable
            com.badlogic.gdx.utils.viewport.Viewport))
 
 (defcomponent :data/graphics
@@ -55,10 +55,10 @@
               (components.graphics.cursors/->build cursors)))))
 
   (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
-    (dispose batch)
-    (dispose shape-drawer-texture)
-    (dispose default-font)
-    (run! dispose (vals cursors))))
+    (.dispose ^Disposable batch)
+    (.dispose ^Disposable shape-drawer-texture)
+    (.dispose ^Disposable default-font)
+    (run! #(.dispose ^Disposable %) (vals cursors))))
 
 (defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
                     view-key

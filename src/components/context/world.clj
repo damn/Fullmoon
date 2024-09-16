@@ -1,13 +1,13 @@
 (ns components.context.world
-  (:require [gdx.utils.disposable :refer [dispose]]
-            [utils.core :refer [tile->middle]]
+  (:require [utils.core :refer [tile->middle]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.maps.tiled :as tiled]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell])
-  (:import (com.badlogic.gdx Gdx Input$Keys)))
+  (:import (com.badlogic.gdx Gdx Input$Keys)
+           com.badlogic.gdx.utils.Disposable))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -71,7 +71,7 @@
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:world/tiled-map ctx)]
-                           (dispose tiled-map))
+                           (.dispose ^Disposable tiled-map))
                          (-> ctx
                              (merge (->world-map tiled-level))
                              spawn-creatures!))

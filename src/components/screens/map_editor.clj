@@ -1,7 +1,6 @@
 (ns components.screens.map-editor
   (:require [clojure.string :as str]
             [gdx.graphics.camera :as camera]
-            [gdx.utils.disposable :refer [dispose]]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
             [core.context :as ctx :refer [->label ->window ->actor ->tiled-map ->text-button current-screen]]
@@ -14,7 +13,8 @@
             mapgen.gen
             mapgen.modules)
   (:import (com.badlogic.gdx Gdx Input$Keys)
-           com.badlogic.gdx.graphics.Color))
+           com.badlogic.gdx.graphics.Color
+           com.badlogic.gdx.utils.Disposable))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -143,7 +143,7 @@ direction keys: move")
   (let [;{:keys [tiled-map area-level-grid start-position]} (mapgen.gen/generate context properties)
         {:keys [tiled-map start-position]} (ctx/->world context world-id)
         atom-data (current-data context)]
-    (dispose (:tiled-map @atom-data))
+    (.dispose ^Disposable (:tiled-map @atom-data))
     (swap! atom-data assoc
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
