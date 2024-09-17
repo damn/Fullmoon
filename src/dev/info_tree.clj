@@ -21,9 +21,6 @@
 (defn- ->node [actor]
   (proxy [Tree$Node] [actor]))
 
-(defn- ->tree []
-  (VisTree.))
-
 (defn ->v-str [v]
   (cond
    (number? v) v
@@ -55,18 +52,18 @@
   (zipmap (map str children)
           children))
 
-(defn- ->nested-nodes [ctx node level v]
+(defn- ->nested-nodes [node level v]
   (when (map? v)
-    (add-map-nodes! ctx node v (inc level)))
+    (add-map-nodes! node v (inc level)))
 
   (when (and (vector? v) (>= (count v) 3))
     (add-elements! node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! ctx node (children->str-map (group/children (.getRoot v))) level))
+    (add-map-nodes! node (children->str-map (group/children (.getRoot v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
-    (add-map-nodes! ctx node (children->str-map (group/children v)) level))
+    (add-map-nodes! node (children->str-map (group/children v)) level))
   )
 
 (comment
@@ -76,8 +73,7 @@
    )
  )
 
-; TODO remove ctx args here
-(defn add-map-nodes! [ctx parent-node m level]
+(defn add-map-nodes! [parent-node m level]
   ;(println "Level: " level " - go deeper? " (< level 4))
   (when (< level 2)
     (doseq [[k v] (into (sorted-map) m)]
@@ -86,17 +82,17 @@
        (let [node (->node (ui/->label (->labelstr k v)))]
          (.add parent-node node)
          #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
-           (->nested-nodes ctx node level @v))
-         (->nested-nodes ctx node level v))
+           (->nested-nodes node level @v))
+         (->nested-nodes node level v))
        (catch Throwable t
          (throw (ex-info "" {:k k :v v} t))
          #_(.add parent-node (->node (ui/->label (str "[RED] "k " - " t))))
 
          )))))
 
-(defn- ->prop-tree [ctx prop]
-  (let [tree (->tree)]
-    (add-map-nodes! ctx tree prop 0)
+(defn- ->prop-tree [prop]
+  (let [tree (VisTree.)]
+    (add-map-nodes! tree prop 0)
     tree))
 
 (defn- ->scroll-pane-cell [ctx rows]
@@ -121,5 +117,5 @@
                                      :close-button? true
                                      :close-on-escape? true
                                      :center? true
-                                     :rows [[(->scroll-pane-cell ctx [[(->prop-tree ctx (into (sorted-map) object))]])]]
+                                     :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
                                      :pack? true}))))

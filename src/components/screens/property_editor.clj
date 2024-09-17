@@ -11,8 +11,7 @@
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
-            [gdx.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
@@ -99,7 +98,7 @@
                                                                                      (pos? (count (group/children attribute-widget-group)))))
                                                (actor/pack-ancestor-window! attribute-widget-group)
                                                ctx))]))
-      (pack! window)
+      (.pack window)
       (ctx/add-to-stage! ctx window))))
 
 (declare ->attribute-widget-group)
@@ -145,7 +144,7 @@
                           (ui/->text-button ctx "-" (fn [ctx]
                                                       (let [window (actor/find-ancestor-window table)]
                                                         (actor/remove! table)
-                                                        (pack! window))
+                                                        (.pack window))
                                                       ctx)))
                         label
                         (->vertical-separator-cell)
@@ -205,7 +204,7 @@
                       (ui/->actor ctx {:act (fn [{:keys [context/state]}]
                                               (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
                                                 (swap! state save!)))}))
-    (pack! window)
+    (.pack window)
     window))
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} ctx clicked-id-fn extra-info-text scale]

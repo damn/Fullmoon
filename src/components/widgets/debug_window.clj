@@ -4,9 +4,7 @@
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.graphics :as g]
             [gdx.scene2d.group :refer [add-actor!]]
-            [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.label :refer [set-text!]]
-            [gdx.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
 
 (defn- skill-info [{:keys [entity/skills]}]
@@ -16,7 +14,7 @@
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
 ; TODO component to info-text move to the component itself.....
-(defn- debug-infos [ctx]
+(defn- debug-infos ^String [ctx]
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
      "logic-frame: " (ctx/logic-frame ctx) "\n"
@@ -45,6 +43,6 @@
                              :position [0 (ctx/gui-viewport-height context)]
                              :rows [[label]]})]
     (add-actor! window (ui/->actor context {:act #(do
-                                                   (set-text! label (debug-infos %))
-                                                   (pack! window))}))
+                                                   (.setText label (debug-infos %))
+                                                   (.pack window))}))
     window))

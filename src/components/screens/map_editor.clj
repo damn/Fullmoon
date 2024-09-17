@@ -9,8 +9,6 @@
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.widget-group :refer [pack!]]
-            [gdx.scene2d.ui.label :refer [set-text!]]
             mapgen.gen
             mapgen.modules)
   (:import (com.badlogic.gdx Gdx Input$Keys)
@@ -51,7 +49,7 @@ zoom: shift-left,minus
 ESCAPE: leave
 direction keys: move")
 
-(defn- debug-infos [ctx]
+(defn- debug-infos ^String [ctx]
   (let [tile (->tile (ctx/world-mouse-position ctx))
         {:keys [tiled-map
                 area-level-grid]} @(current-data ctx)]
@@ -78,8 +76,8 @@ direction keys: move")
   (let [label (ui/->label "")
         window (ui/->window {:title "Info" :rows [[label]]})]
     (add-actor! window (ui/->actor ctx {:act #(do
-                                               (set-text! label (debug-infos %))
-                                               (pack! window))}))
+                                               (.setText label (debug-infos %))
+                                               (.pack window))}))
     (set-position! window 0 (ctx/gui-viewport-height ctx))
     window))
 

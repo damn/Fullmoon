@@ -1,7 +1,6 @@
 (ns gdx.scene2d.actor
   (:refer-clojure :exclude [name])
-  (:require [core.app :as app]
-            [gdx.scene2d.ui.widget-group :refer [pack!]])
+  (:require [core.app :as app])
   (:import com.badlogic.gdx.utils.Align
            (com.badlogic.gdx.scenes.scene2d Actor Touchable)
            com.badlogic.gdx.scenes.scene2d.ui.Window
@@ -89,7 +88,7 @@
 (defn remove-tooltip! [^Actor actor]
   (Tooltip/removeTooltip actor))
 
-(defn find-ancestor-window [^Actor actor]
+(defn find-ancestor-window ^Window [^Actor actor]
   (if-let [p (parent actor)]
     (if (instance? Window p)
       p
@@ -97,4 +96,4 @@
     (throw (Error. (str "Actor has no parent window " actor)))))
 
 (defn pack-ancestor-window! [^Actor actor]
-  (pack! (find-ancestor-window actor)))
+  (.pack (find-ancestor-window actor)))

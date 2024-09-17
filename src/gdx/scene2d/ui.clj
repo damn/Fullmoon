@@ -3,8 +3,7 @@
             [core.context :as ctx]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
-            [gdx.scene2d.ui.table :as table]
-            [gdx.scene2d.ui.widget-group :refer [pack!]])
+            [gdx.scene2d.ui.table :as table])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group)
@@ -40,7 +39,7 @@
 (defn- set-widget-group-opts [^WidgetGroup widget-group {:keys [fill-parent? pack?]}]
   (.setFillParent widget-group (boolean fill-parent?)) ; <- actor? TODO
   (when pack?
-    (pack! widget-group))
+    (.pack widget-group))
   widget-group)
 
 (defn- set-opts [actor opts]
@@ -103,7 +102,9 @@
     (.addListener button (->change-listener context on-clicked))
     button))
 
-(defn ->check-box [text on-clicked checked?]
+(defn ->check-box
+  "on-clicked is a fn of one arg, taking the current isChecked state"
+  [text on-clicked checked?]
   (let [^Button button (VisCheckBox. ^String text)]
     (.setChecked button checked?)
     (.addListener button
@@ -136,7 +137,7 @@
   (-> (group/proxy-ILookup VisTable [])
       (set-opts opts)))
 
-(defn ->window [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
+(defn ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
   (-> (let [window (doto (group/proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
                      (.setModal (boolean modal?)))]
         (when close-button?    (.addCloseButton window))
@@ -145,7 +146,7 @@
         window)
       (set-opts opts)))
 
-(defn ->label [text]
+(defn ->label ^VisLabel [text]
   (VisLabel. ^CharSequence text))
 
 (defn ->text-field [^String text opts]
@@ -163,7 +164,9 @@
   (group/proxy-ILookup Stack [(into-array Actor actors)]))
 
 ; TODO widget also make, for fill parent
-(defn ->image-widget [object {:keys [scaling align fill-parent?] :as opts}]
+(defn ->image-widget
+  "Takes either an image or drawable. Opts are :scaling, :align and actor opts."
+  [object {:keys [scaling align fill-parent?] :as opts}]
   (-> (let [^Image image (->vis-image object)]
         (when (= :center align) (.setAlign image Align/center))
         (when (= :fill scaling) (.setScaling image Scaling/fill))

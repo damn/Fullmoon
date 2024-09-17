@@ -7,8 +7,7 @@
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.table :as table]
-            [gdx.scene2d.ui.widget-group :refer [pack!]]))
+            [gdx.scene2d.ui.table :as table]))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59
@@ -48,7 +47,7 @@
                                                  (redo-rows ctx (conj property-ids id))
                                                  ctx)]
                              (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
-                             (pack! window)
+                             (.pack window)
                              (ctx/add-to-stage! ctx window))))]
       (for [property-id property-ids]
         (let [property (ctx/property ctx property-id)
@@ -92,7 +91,7 @@
                                                    (redo-rows ctx id)
                                                    ctx)]
                                (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
-                               (pack! window)
+                               (.pack window)
                                (ctx/add-to-stage! ctx window)))))]
       [(when property-id
          (let [property (ctx/property ctx property-id)

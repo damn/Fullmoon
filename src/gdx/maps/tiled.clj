@@ -36,7 +36,7 @@
                            "If the layer (keyword or layer object) does not exist returns nil.
                            Otherwise returns a sequence of [[x y] value] for all tiles who have property-key."))
 
-(defn layer-name [layer]
+(defn layer-name ^String [layer]
   (if (keyword? layer)
     (name layer)
     (.getName ^MapLayer layer)))

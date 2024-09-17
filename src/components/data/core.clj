@@ -3,12 +3,10 @@
             [malli.core :as m]
             [utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.data :as data]
             [gdx.scene2d.actor :as actor]
-            [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.text-field :as text-field])
-  (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox)))
+            [gdx.scene2d.ui :as ui])
+  (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))
 
 (defcomponent :some {:schema :some})
 (defcomponent :boolean {:schema :boolean})
@@ -26,12 +24,12 @@
   (actor/add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
   widget)
 
-(defmethod data/->widget :string [[_ data] v ctx]
+(defmethod data/->widget :string [[_ data] v _ctx]
   (add-schema-tooltip! (ui/->text-field v {})
                        data))
 
 (defmethod data/widget->value :string [_ widget]
-  (text-field/text widget))
+  (.getText ^VisTextField widget))
 
 (defcomponent :number  {:schema number?})
 (defcomponent :nat-int {:schema nat-int? :widget :number})
@@ -39,18 +37,18 @@
 (defcomponent :pos     {:schema pos?     :widget :number})
 (defcomponent :pos-int {:schema pos-int? :widget :number})
 
-(defmethod data/->widget :number [[_ data] v ctx]
+(defmethod data/->widget :number [[_ data] v _ctx]
   (add-schema-tooltip! (ui/->text-field (utils/->edn-str v) {})
                        data))
 
 (defmethod data/widget->value :number [_ widget]
-  (edn/read-string (text-field/text widget)))
+  (edn/read-string (.getText ^VisTextField widget)))
 
 (defcomponent :enum
   (data/->value [[_ items]]
     {:schema (apply vector :enum items)}))
 
-(defmethod data/->widget :enum [[_ data] v ctx]
+(defmethod data/->widget :enum [[_ data] v _ctx]
   (ui/->select-box {:items (map utils/->edn-str (rest (:schema data)))
                     :selected (utils/->edn-str v)}))
 
