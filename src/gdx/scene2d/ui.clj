@@ -7,7 +7,7 @@
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group)
-           (com.badlogic.gdx.scenes.scene2d.ui Image Button Table WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
+           (com.badlogic.gdx.scenes.scene2d.ui Label Image Button Table WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui.widget VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane)))
 
@@ -195,3 +195,22 @@
     {:actor scroll-pane
      :width (- (ctx/gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)
      :height (- (ctx/gui-viewport-height ctx) 100)})) ;(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))
+
+(defn- button-class? [actor]
+  (some #(= Button %) (supers (class actor))))
+
+(defn button?
+  "Returns true if the actor or its parent is a button."
+  [actor]
+  (or (button-class? actor)
+      (and (actor/parent actor)
+           (button-class? (actor/parent actor)))))
+
+(defn window-title-bar?
+  "Returns true if the actor is a window title bar."
+  [actor]
+  (when (instance? Label actor)
+    (when-let [parent (actor/parent actor)]
+      (when-let [parent (actor/parent parent)]
+        (and (instance? VisWindow parent)
+             (= (.getTitleLabel ^Window parent) actor))))))
