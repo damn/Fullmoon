@@ -32,11 +32,11 @@
     (assert (not (entity/has-skill? @entity skill)))
     [[:tx/assoc-in entity [:entity/skills id] skill]
      (when (:entity/player? @entity)
-       [:tx.context.action-bar/add-skill skill])]))
+       [:tx.action-bar/add skill])]))
 
 (defcomponent :tx/remove-skill
   (component/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
     (assert (entity/has-skill? @entity skill))
     [[:tx/dissoc-in entity [:entity/skills id]]
      (when (:entity/player? @entity)
-       [:tx.context.action-bar/remove-skill skill])]))
+       [:tx.action-bar/remove skill])]))
