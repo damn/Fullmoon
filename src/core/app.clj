@@ -62,7 +62,7 @@
   (let [component-namespaces (->> "src/components/"
                                   io/file
                                   file-seq
-                                  (map #(.getPath ^java.io.File %))
+                                  (map java.io.File/.getPath)
                                   (filter #(str/ends-with? % ".clj"))
                                   (map #(-> %
                                             (str/replace "src/" "")

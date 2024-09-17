@@ -37,7 +37,7 @@
       (.setView map-renderer world-camera)
       (->> tiled-map
            tiled/layers
-           (filter #(.isVisible ^MapLayer %))
+           (filter MapLayer/.isVisible)
            (map (partial tiled/layer-index tiled-map))
            int-array
            (.render map-renderer)))))

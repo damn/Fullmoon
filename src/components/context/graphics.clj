@@ -58,7 +58,7 @@
     (.dispose ^Disposable batch)
     (.dispose ^Disposable shape-drawer-texture)
     (.dispose ^Disposable default-font)
-    (run! #(.dispose ^Disposable %) (vals cursors))))
+    (run! Disposable/.dispose (vals cursors))))
 
 (defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
                     view-key
