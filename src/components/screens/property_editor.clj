@@ -10,6 +10,7 @@
             [core.data :as data]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]]
             [gdx.scene2d.ui.widget-group :refer [pack!]])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
@@ -49,8 +50,8 @@
     (str (subs s 0 limit) "...")
     s))
 
-(defmethod data/->widget :default [_ v ctx]
-  (ctx/->label ctx (truncate (utils/->edn-str v) 60)))
+(defmethod data/->widget :default [_ v _ctx]
+  (ui/->label (truncate (utils/->edn-str v) 60)))
 
 (defmethod data/widget->value :default [_ widget]
   (actor/id widget))
@@ -78,26 +79,26 @@
 (defn- ->choose-component-window [data attribute-widget-group]
   (fn [ctx]
     (let [k-props (k-properties (:schema data))
-          window (ctx/->window ctx {:title "Choose"
-                                    :modal? true
-                                    :close-button? true
-                                    :center? true
-                                    :close-on-escape? true
-                                    :cell-defaults {:pad 5}})
+          window (ui/->window {:title "Choose"
+                               :modal? true
+                               :close-button? true
+                               :center? true
+                               :close-on-escape? true
+                               :cell-defaults {:pad 5}})
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                              (map-keys (:schema data))))]
+                                     (map-keys (:schema data))))]
       (add-rows! window (for [k remaining-ks]
-                          [(ctx/->text-button ctx
-                                              (name k)
-                                              (fn [ctx]
-                                                (actor/remove! window)
-                                                (group/add-actor! attribute-widget-group
-                                                                  (->component-widget ctx
-                                                                                      [k (get k-props k) (k->default-value k)]
-                                                                                      :horizontal-sep?
-                                                                                      (pos? (count (group/children attribute-widget-group)))))
-                                                (actor/pack-ancestor-window! attribute-widget-group)
-                                                ctx))]))
+                          [(ui/->text-button ctx
+                                             (name k)
+                                             (fn [ctx]
+                                               (actor/remove! window)
+                                               (group/add-actor! attribute-widget-group
+                                                                 (->component-widget ctx
+                                                                                     [k (get k-props k) (k->default-value k)]
+                                                                                     :horizontal-sep?
+                                                                                     (pos? (count (group/children attribute-widget-group)))))
+                                               (actor/pack-ancestor-window! attribute-widget-group)
+                                               ctx))]))
       (pack! window)
       (ctx/add-to-stage! ctx window))))
 
@@ -113,39 +114,39 @@
         optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
                                                  (set (keys m))))]
     (actor/set-id! attribute-widget-group :attribute-widget-group)
-    (ctx/->table ctx {:cell-defaults {:pad 5}
-                      :rows (remove nil?
-                                    [(when optional-keys-left?
-                                       [(ctx/->text-button
-                                         ctx
-                                         "Add component"
-                                         (->choose-component-window data attribute-widget-group))])
-                                     (when optional-keys-left?
-                                       [(->horizontal-separator-cell 1)])
-                                     [attribute-widget-group]])})))
+    (ui/->table {:cell-defaults {:pad 5}
+                 :rows (remove nil?
+                               [(when optional-keys-left?
+                                  [(ui/->text-button
+                                    ctx
+                                    "Add component"
+                                    (->choose-component-window data attribute-widget-group))])
+                                (when optional-keys-left?
+                                  [(->horizontal-separator-cell 1)])
+                                [attribute-widget-group]])})))
 
 
 (defmethod data/widget->value :map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
 
-(defn- ->attribute-label [ctx k]
-  (let [label (ctx/->label ctx (str k))]
+(defn- ->attribute-label [k]
+  (let [label (ui/->label (str k))]
     (when-let [doc (component/doc k)]
       (actor/add-tooltip! label doc))
     label))
 
 (defn ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
-  (let [label (->attribute-label ctx k)
+  (let [label (->attribute-label k)
         value-widget (data/->widget (data/component k) v ctx)
-        table (ctx/->table ctx {:id k
-                                :cell-defaults {:pad 4}})
+        table (ui/->table {:id k
+                           :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
-                          (ctx/->text-button ctx "-" (fn [ctx]
-                                                       (let [window (actor/find-ancestor-window table)]
-                                                         (actor/remove! table)
-                                                         (pack! window))
-                                                       ctx)))
+                          (ui/->text-button ctx "-" (fn [ctx]
+                                                      (let [window (actor/find-ancestor-window table)]
+                                                        (actor/remove! table)
+                                                        (pack! window))
+                                                      ctx)))
                         label
                         (->vertical-separator-cell)
                         value-widget])
@@ -167,7 +168,7 @@
       (->component-widget ctx [k (get k-props k) v] :horizontal-sep? sep?))))
 
 (defn- ->attribute-widget-group [ctx schema props]
-  (ctx/->vertical-group ctx (->component-widgets ctx schema props)))
+  (ui/->vertical-group (->component-widgets ctx schema props)))
 
 (defn- attribute-widget-group->data [group]
   (into {} (for [k (map actor/id (group/children group))
@@ -188,32 +189,32 @@
 
 (defn- ->property-editor-window [ctx id]
   (let [props (utils/safe-get (:db (:context/properties ctx)) id)
-        window (ctx/->window ctx {:title "Edit Property"
-                                  :modal? true
-                                  :close-button? true
-                                  :center? true
-                                  :close-on-escape? true
-                                  :cell-defaults {:pad 5}})
+        window (ui/->window {:title "Edit Property"
+                             :modal? true
+                             :close-button? true
+                             :center? true
+                             :close-on-escape? true
+                             :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group ctx (property/schema props) props)
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
-    (add-rows! window [[(data/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
-                                                      [(ctx/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
-                                                       (ctx/->text-button ctx "Delete" delete!)]])]])
+    (add-rows! window [[(ui/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
+                                                    [(ui/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
+                                                     (ui/->text-button ctx "Delete" delete!)]])]])
     (group/add-actor! window
-                      (ctx/->actor ctx {:act (fn [{:keys [context/state]}]
-                                               (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
-                                                 (swap! state save!)))}))
+                      (ui/->actor ctx {:act (fn [{:keys [context/state]}]
+                                              (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
+                                                (swap! state save!)))}))
     (pack! window)
     window))
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} ctx clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn % id)
         button (if-let [image (property/->image props)]
-                 (ctx/->image-button ctx image on-clicked {:scale scale})
-                 (ctx/->text-button ctx (name id) on-clicked))
-        top-widget (ctx/->label ctx (or (and extra-info-text (extra-info-text props)) ""))
-        stack (ctx/->stack ctx [button top-widget])]
+                 (ui/->image-button ctx image on-clicked {:scale scale})
+                 (ui/->text-button ctx (name id) on-clicked))
+        top-widget (ui/->label (or (and extra-info-text (extra-info-text props)) ""))
+        stack (ui/->stack [button top-widget])]
     (actor/add-tooltip! button #(components/info-text props %))
     (actor/set-touchable! top-widget :disabled)
     stack))
@@ -229,13 +230,13 @@
           properties (if sort-by-fn
                        (sort-by sort-by-fn properties)
                        properties)]
-      (ctx/->table ctx
-                   {:cell-defaults {:pad 5}
-                    :rows (for [properties (partition-all columns properties)]
-                            (for [property properties]
-                              (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
-                                   (catch Throwable t
-                                     (throw (ex-info "" {:property property} t))))))}))))
+      (ui/->table
+       {:cell-defaults {:pad 5}
+        :rows (for [properties (partition-all columns properties)]
+                (for [property properties]
+                  (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
+                       (catch Throwable t
+                         (throw (ex-info "" {:property property} t))))))}))))
 
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)
@@ -247,8 +248,8 @@
     (getTabTitle [] title)
     (getContentTable [] content)))
 
-(defn- ->tabbed-pane [ctx tabs-data]
-  (let [main-table (ctx/->table ctx {:fill-parent? true})
+(defn- ->tabbed-pane [tabs-data]
+  (let [main-table (ui/->table {:fill-parent? true})
         container (VisTable.)
         tabbed-pane (TabbedPane.)]
     (.addListener tabbed-pane
@@ -260,7 +261,7 @@
     (.row main-table)
     (.fill (.expand (.add main-table container)))
     (.row main-table)
-    (.pad (.left (.add main-table (ctx/->label ctx "[LIGHT_GRAY]Left-Shift: Back to Main Menu[]"))) (float 10))
+    (.pad (.left (.add main-table (ui/->label "[LIGHT_GRAY]Left-Shift: Back to Main Menu[]"))) (float 10))
     (doseq [tab-data tabs-data]
       (.add tabbed-pane (->tab tab-data)))
     main-table))
@@ -280,7 +281,7 @@
   (component/create [_ {:keys [context/state] :as ctx}]
     {:stage (let [stage (ctx/->stage ctx
                          [(ctx/->background-image ctx)
-                          (->tabbed-pane ctx (->tabs-data ctx))])]
+                          (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)

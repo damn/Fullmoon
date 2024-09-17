@@ -4,6 +4,7 @@
             [core.context :as ctx]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui :as ui]
             [components.entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [components.widgets.action-bar :as action-bar]
             [components.widgets.debug-window :as debug-window]
@@ -26,24 +27,24 @@
     (get (:windows (ctx/get-stage ctx)) :inventory-window)))
 
 (defn- ->ui-actors [ctx widget-data]
-  [(ctx/->table ctx {:rows [[{:actor (action-bar/->build ctx)
-                              :expand? true
-                              :bottom? true}]]
-                     :id :action-bar-table
-                     :cell-defaults {:pad 2}
-                     :fill-parent? true})
+  [(ui/->table {:rows [[{:actor (action-bar/->build)
+                         :expand? true
+                         :bottom? true}]]
+                :id :action-bar-table
+                :cell-defaults {:pad 2}
+                :fill-parent? true})
    (->hp-mana-bars ctx)
-   (ctx/->group ctx {:id :windows
-                     :actors [(debug-window/create ctx)
-                              (entity-info-window/create ctx)
-                              (inventory/->build ctx widget-data)]})
-   (ctx/->actor ctx {:draw draw-item-on-cursor})
+   (ui/->group {:id :windows
+                :actors [(debug-window/create ctx)
+                         (entity-info-window/create ctx)
+                         (inventory/->build ctx widget-data)]})
+   (ui/->actor ctx {:draw draw-item-on-cursor})
    (component/create [:widgets/player-message] ctx)])
 
 (defcomponent :world/widgets
   (component/create [_ ctx]
     (assert (= :screens/world (ctx/current-screen-key ctx)))
-    (let [widget-data {:action-bar (action-bar/->button-group ctx)
+    (let [widget-data {:action-bar (action-bar/->button-group)
                        :slot->background (inventory/->data ctx)}
           stage (ctx/get-stage ctx)]
       (.clear stage)

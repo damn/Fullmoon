@@ -6,15 +6,16 @@
             [core.context :as ctx]
             [core.data :as data]
             [gdx.scene2d.actor :as actor]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.ui.text-field :as text-field])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox)))
 
 (defcomponent :some {:schema :some})
 (defcomponent :boolean {:schema :boolean})
 
-(defmethod data/->widget :boolean [_ checked? ctx]
+(defmethod data/->widget :boolean [_ checked? _ctx]
   (assert (boolean? checked?))
-  (ctx/->check-box ctx "" (fn [_]) checked?))
+  (ui/->check-box "" (fn [_]) checked?))
 
 (defmethod data/widget->value :boolean [_ widget]
   (.isChecked ^VisCheckBox widget))
@@ -26,7 +27,7 @@
   widget)
 
 (defmethod data/->widget :string [[_ data] v ctx]
-  (add-schema-tooltip! (ctx/->text-field ctx v {})
+  (add-schema-tooltip! (ui/->text-field v {})
                        data))
 
 (defmethod data/widget->value :string [_ widget]
@@ -39,7 +40,7 @@
 (defcomponent :pos-int {:schema pos-int? :widget :number})
 
 (defmethod data/->widget :number [[_ data] v ctx]
-  (add-schema-tooltip! (ctx/->text-field ctx (utils/->edn-str v) {})
+  (add-schema-tooltip! (ui/->text-field (utils/->edn-str v) {})
                        data))
 
 (defmethod data/widget->value :number [_ widget]
@@ -50,8 +51,8 @@
     {:schema (apply vector :enum items)}))
 
 (defmethod data/->widget :enum [[_ data] v ctx]
-  (ctx/->select-box ctx {:items (map utils/->edn-str (rest (:schema data)))
-                         :selected (utils/->edn-str v)}))
+  (ui/->select-box {:items (map utils/->edn-str (rest (:schema data)))
+                    :selected (utils/->edn-str v)}))
 
 (defmethod data/widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^VisSelectBox widget)))

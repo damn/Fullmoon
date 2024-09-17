@@ -1,5 +1,6 @@
 (ns components.widgets.error-modal
   (:require [clj-commons.pretty.repl :as p]
+            [gdx.scene2d.ui :as ui]
             [core.context :as ctx]))
 
 (defmacro with-err-str
@@ -19,13 +20,12 @@
     (binding [*print-level* 5]
       (p/pretty-pst throwable 24))
     (ctx/add-to-stage! ctx
-                       (ctx/->window ctx {:title "Error"
-                                          :rows [[(ctx/->label ctx
-                                                               (binding [*print-level* 3]
-                                                                 (with-err-str
-                                                                  (clojure.repl/pst throwable))))]]
-                                          :modal? true
-                                          :close-button? true
-                                          :close-on-escape? true
-                                          :center? true
-                                          :pack? true}))))
+                       (ui/->window {:title "Error"
+                                     :rows [[(ui/->label (binding [*print-level* 3]
+                                                           (with-err-str
+                                                             (clojure.repl/pst throwable))))]]
+                                     :modal? true
+                                     :close-button? true
+                                     :close-on-escape? true
+                                     :center? true
+                                     :pack? true}))))

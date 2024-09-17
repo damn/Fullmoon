@@ -1,8 +1,9 @@
 (ns components.screens.options-menu
   (:require [utils.core :refer [safe-get]]
             utils.ns
+            [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx :refer [->text-button ->check-box ->table]])
+            [core.context :as ctx])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defprotocol StatusCheckBox
@@ -35,26 +36,24 @@
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
 
 (defn- create-table [{:keys [context/config] :as ctx}]
-  (->table ctx
-           {:rows (concat
-                   [[(ctx/->label ctx key-help-text)]]
+  (ui/->table {:rows (concat
+                      [[(ui/->label key-help-text)]]
 
-                   (when (safe-get config :debug-window?)
-                     [[(ctx/->label ctx "[Z] - Debug window")]])
+                      (when (safe-get config :debug-window?)
+                        [[(ui/->label "[Z] - Debug window")]])
 
-                   (when (safe-get config :debug-options?)
-                     (for [check-box debug-flags]
-                       [(->check-box ctx
-                                     (get-text check-box)
-                                     (partial set-state check-box)
-                                     (boolean (get-state check-box)))]))
+                      (when (safe-get config :debug-options?)
+                        (for [check-box debug-flags]
+                          [(ui/->check-box (get-text check-box)
+                                           (partial set-state check-box)
+                                           (boolean (get-state check-box)))]))
 
-                   [[(->text-button ctx "Resume" #(ctx/change-screen % :screens/world))]
+                      [[(ui/->text-button ctx "Resume" #(ctx/change-screen % :screens/world))]
 
-                    [(->text-button ctx "Exit" #(ctx/change-screen % :screens/main-menu))]])
+                       [(ui/->text-button ctx "Exit" #(ctx/change-screen % :screens/main-menu))]])
 
-            :fill-parent? true
-            :cell-defaults {:pad-bottom 10}}))
+               :fill-parent? true
+               :cell-defaults {:pad-bottom 10}}))
 
 (defcomponent ::sub-screen
   (component/render-ctx [_ ctx]

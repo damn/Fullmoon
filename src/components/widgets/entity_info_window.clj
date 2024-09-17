@@ -1,6 +1,7 @@
 (ns components.widgets.entity-info-window
   (:require [core.components :as components]
-            [core.context :as ctx :refer [->actor ->window ->label]]
+            [core.context :as ctx]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.ui.label :refer [set-text!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui.widget-group :refer [pack!]]))
@@ -11,25 +12,25 @@
                                 :active-skill])
 
 (defn create [context]
-  (let [label (->label context "")
-        window (->window context {:title "Info"
-                                  :id :entity-info-window
-                                  :visible? false
-                                  :position [(ctx/gui-viewport-width context) 0]
-                                  :rows [[{:actor label :expand? true}]]})]
+  (let [label (ui/->label "")
+        window (ui/->window {:title "Info"
+                             :id :entity-info-window
+                             :visible? false
+                             :position [(ctx/gui-viewport-width context) 0]
+                             :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
-    (add-actor! window (->actor context {:act (fn update-label-text [ctx]
-                                                ; items then have 2x pretty-name
-                                                #_(set-text! (.getTitleLabel window)
-                                                           (if-let [entity* (ctx/mouseover-entity* ctx)]
-                                                             (core.component/info-text [:property/pretty-name (:property/pretty-name entity*)])
-                                                             "Entity Info"))
-                                                (set-text! label
-                                                           (when-let [entity* (ctx/mouseover-entity* ctx)]
-                                                             (components/info-text
-                                                              ; don't use select-keys as it loses core.entity.Entity record type
-                                                              (apply dissoc entity* disallowed-keys)
-                                                              ctx)))
-                                                (pack! window))}))
+    (add-actor! window (ui/->actor context {:act (fn update-label-text [ctx]
+                                                   ; items then have 2x pretty-name
+                                                   #_(set-text! (.getTitleLabel window)
+                                                                (if-let [entity* (ctx/mouseover-entity* ctx)]
+                                                                  (core.component/info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                                  "Entity Info"))
+                                                   (set-text! label
+                                                              (when-let [entity* (ctx/mouseover-entity* ctx)]
+                                                                (components/info-text
+                                                                 ; don't use select-keys as it loses core.entity.Entity record type
+                                                                 (apply dissoc entity* disallowed-keys)
+                                                                 ctx)))
+                                                   (pack! window))}))
     window))

@@ -1,7 +1,8 @@
 (ns components.widgets.player-message
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [->actor]]
-            [core.graphics :as g])
+            [core.context :as ctx]
+            [core.graphics :as g]
+            [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
 
 (defcomponent :tx/msg-to-player
@@ -26,5 +27,5 @@
 
 (defcomponent :widgets/player-message
   (component/create [_ ctx]
-    (->actor ctx {:draw draw-player-message
-                  :act check-remove-message})))
+    (ui/->actor ctx {:draw draw-player-message
+                     :act check-remove-message})))

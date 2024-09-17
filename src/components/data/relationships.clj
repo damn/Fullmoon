@@ -6,6 +6,7 @@
             [core.property :as property]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.ui.table :as table]
             [gdx.scene2d.ui.widget-group :refer [pack!]]))
 
@@ -35,32 +36,31 @@
                     (actor/pack-ancestor-window! table))]
     (table/add-rows!
      table
-     [[(ctx/->text-button ctx "+"
-                          (fn [ctx]
-                            (let [window (ctx/->window ctx {:title "Choose"
-                                                            :modal? true
-                                                            :close-button? true
-                                                            :center? true
-                                                            :close-on-escape? true})
-                                  clicked-id-fn (fn [ctx id]
-                                                  (actor/remove! window)
-                                                  (redo-rows ctx (conj property-ids id))
-                                                  ctx)]
-                              (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
-                              (pack! window)
-                              (ctx/add-to-stage! ctx window))))]
+     [[(ui/->text-button ctx "+"
+                         (fn [ctx]
+                           (let [window (ui/->window {:title "Choose"
+                                                      :modal? true
+                                                      :close-button? true
+                                                      :center? true
+                                                      :close-on-escape? true})
+                                 clicked-id-fn (fn [ctx id]
+                                                 (actor/remove! window)
+                                                 (redo-rows ctx (conj property-ids id))
+                                                 ctx)]
+                             (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
+                             (pack! window)
+                             (ctx/add-to-stage! ctx window))))]
       (for [property-id property-ids]
         (let [property (ctx/property ctx property-id)
-              image-widget (ctx/->image-widget ctx
-                                               (property/->image property)
-                                               {:id property-id})]
+              image-widget (ui/->image-widget (property/->image property)
+                                              {:id property-id})]
           (actor/add-tooltip! image-widget #(components/info-text property %))
           image-widget))
       (for [id property-ids]
-        (ctx/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
+        (ui/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
 (defmethod data/->widget :one-to-many [[_ data] property-ids context]
-  (let [table (ctx/->table context {:cell-defaults {:pad 5}})]
+  (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
                           (:linked-property-type data)
@@ -80,32 +80,31 @@
     (table/add-rows!
      table
      [[(when-not property-id
-         (ctx/->text-button ctx "+"
-                            (fn [ctx]
-                              (let [window (ctx/->window ctx {:title "Choose"
-                                                              :modal? true
-                                                              :close-button? true
-                                                              :center? true
-                                                              :close-on-escape? true})
-                                    clicked-id-fn (fn [ctx id]
-                                                    (actor/remove! window)
-                                                    (redo-rows ctx id)
-                                                    ctx)]
-                                (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
-                                (pack! window)
-                                (ctx/add-to-stage! ctx window)))))]
+         (ui/->text-button ctx "+"
+                           (fn [ctx]
+                             (let [window (ui/->window {:title "Choose"
+                                                        :modal? true
+                                                        :close-button? true
+                                                        :center? true
+                                                        :close-on-escape? true})
+                                   clicked-id-fn (fn [ctx id]
+                                                   (actor/remove! window)
+                                                   (redo-rows ctx id)
+                                                   ctx)]
+                               (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
+                               (pack! window)
+                               (ctx/add-to-stage! ctx window)))))]
       [(when property-id
          (let [property (ctx/property ctx property-id)
-               image-widget (ctx/->image-widget ctx
-                                                (property/->image property)
-                                                {:id property-id})]
+               image-widget (ui/->image-widget (property/->image property)
+                                               {:id property-id})]
            (actor/add-tooltip! image-widget #(components/info-text property %))
            image-widget))]
       [(when property-id
-         (ctx/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
+         (ui/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
 
 (defmethod data/->widget :one-to-one [[_ data] property-id ctx]
-  (let [table (ctx/->table ctx {:cell-defaults {:pad 5}})]
+  (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
                          (:linked-property-type data)

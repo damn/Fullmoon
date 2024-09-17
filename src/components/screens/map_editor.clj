@@ -4,10 +4,11 @@
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
-            [core.context :as ctx :refer [->label ->window ->actor ->text-button current-screen]]
+            [core.context :as ctx :refer [current-screen]]
             [core.graphics :as g]
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.ui.widget-group :refer [pack!]]
             [gdx.scene2d.ui.label :refer [set-text!]]
             mapgen.gen
@@ -74,11 +75,11 @@ direction keys: move")
 
 ; same as debug-window
 (defn- ->info-window [ctx]
-  (let [label (->label ctx "")
-        window (->window ctx {:title "Info" :rows [[label]]})]
-    (add-actor! window (->actor ctx {:act #(do
-                                            (set-text! label (debug-infos %))
-                                            (pack! window))}))
+  (let [label (ui/->label "")
+        window (ui/->window {:title "Info" :rows [[label]]})]
+    (add-actor! window (ui/->actor ctx {:act #(do
+                                               (set-text! label (debug-infos %))
+                                               (pack! window))}))
     (set-position! window 0 (ctx/gui-viewport-height ctx))
     window))
 
@@ -153,17 +154,17 @@ direction keys: move")
     context))
 
 (defn ->generate-map-window [ctx level-id]
-  (->window ctx {:title "Properties"
-                 :cell-defaults {:pad 10}
-                 :rows [[(->label ctx (with-out-str
-                                       (clojure.pprint/pprint
-                                        (ctx/property ctx level-id))))]
-                        [(->text-button ctx "Generate" #(try (generate % (ctx/property % level-id))
-                                                             (catch Throwable t
-                                                               (ctx/error-window! % t)
-                                                               (println t)
-                                                               %)))]]
-                 :pack? true}))
+  (ui/->window {:title "Properties"
+                :cell-defaults {:pad 10}
+                :rows [[(ui/->label (with-out-str
+                                     (clojure.pprint/pprint
+                                      (ctx/property ctx level-id))))]
+                       [(ui/->text-button ctx "Generate" #(try (generate % (ctx/property % level-id))
+                                                               (catch Throwable t
+                                                                 (ctx/error-window! % t)
+                                                                 (println t)
+                                                                 %)))]]
+                :pack? true}))
 
 (defcomponent ::sub-screen
   {:let current-data}

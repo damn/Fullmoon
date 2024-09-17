@@ -63,29 +63,6 @@
   (mouse-on-stage-actor? [_])
   (add-to-stage! [_ actor]))
 
-(defprotocol Widgets
-  (->actor [_ {:keys [draw act]}])
-  (->group [_ {:keys [actors] :as opts}])
-  (->text-button [_ text on-clicked])
-  (->check-box [_ text on-clicked checked?] "on-clicked is a fn of one arg, taking the current isChecked state")
-  (->select-box [_ {:keys [items selected]}])
-  (->image-button [_ image on-clicked]
-                  [_ image on-clicked {:keys [scale]}])
-  (->table [_ opts])
-  (->window [_ {:keys [title modal? close-button? center?] :as opts}])
-  (->label [_ text])
-  (->text-field [_ text opts])
-  (->split-pane [_ {:keys [first-widget
-                           second-widget
-                           vertical?] :as opts}])
-  (->stack [_ actors])
-  (->image-widget [_ object opts] "Takes either an image or drawable. Opts are :scaling, :align and actor opts.")
-  (->texture-region-drawable [_ texture-region])
-  (->horizontal-group [_ {:keys [space pad]}])
-  (->vertical-group [_ actors])
-  (->button-group [_ {:keys [max-check-count min-check-count]}])
-  (->scroll-pane [_ actor]))
-
 (defprotocol TiledMapDrawer
   (render-tiled-map [_ tiled-map color-setter]
                     "Renders tiled-map using world-view at world-camera position and with world-unit-scale.

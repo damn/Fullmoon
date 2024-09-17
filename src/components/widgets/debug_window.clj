@@ -1,9 +1,10 @@
 (ns components.widgets.debug-window
   (:require [gdx.graphics.camera :as camera]
             utils.core
-            [core.context :as ctx :refer [mouse-on-stage-actor? ->actor ->window ->label]]
+            [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.graphics :as g]
             [gdx.scene2d.group :refer [add-actor!]]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.ui.label :refer [set-text!]]
             [gdx.scene2d.ui.widget-group :refer [pack!]])
   (:import com.badlogic.gdx.Gdx))
@@ -37,13 +38,13 @@
               )))))
 
 (defn create [context]
-  (let [label (->label context "")
-        window (->window context {:title "Debug"
-                                  :id :debug-window
-                                  :visible? false
-                                  :position [0 (ctx/gui-viewport-height context)]
-                                  :rows [[label]]})]
-    (add-actor! window (->actor context {:act #(do
-                                                (set-text! label (debug-infos %))
-                                                (pack! window))}))
+  (let [label (ui/->label "")
+        window (ui/->window {:title "Debug"
+                             :id :debug-window
+                             :visible? false
+                             :position [0 (ctx/gui-viewport-height context)]
+                             :rows [[label]]})]
+    (add-actor! window (ui/->actor context {:act #(do
+                                                   (set-text! label (debug-infos %))
+                                                   (pack! window))}))
     window))

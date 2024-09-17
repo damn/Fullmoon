@@ -1,21 +1,22 @@
 (ns components.widgets.action-bar
   (:require [core.component :as component :refer [defcomponent]]
             [core.components :as components]
-            [core.context :as ctx :refer [->image-button]]
+            [core.context :as ctx]
+            [gdx.scene2d.ui :as ui]
             [gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [gdx.scene2d.group :refer [clear-children! add-actor!]])
   (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 (def ^:private image-scale 2)
 
-(defn ->build [ctx]
-  (let [group (ctx/->horizontal-group ctx {:pad 2 :space 2})]
+(defn ->build []
+  (let [group (ui/->horizontal-group {:pad 2 :space 2})]
     (actor/set-id! group ::action-bar)
     group))
 
-(defn ->button-group [ctx]
-  (ctx/->button-group ctx {:max-check-count 1
-                           :min-check-count 0}))
+(defn ->button-group []
+  (ui/->button-group {:max-check-count 1
+                      :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
   {:horizontal-group (::action-bar (:action-bar-table (ctx/get-stage ctx)))
@@ -24,7 +25,7 @@
 (defcomponent :tx.action-bar/add
   (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-          button (->image-button ctx image identity {:scale image-scale})]
+          button (ui/->image-button ctx image identity {:scale image-scale})]
       (actor/set-id! button id)
       (add-tooltip! button #(components/info-text skill (assoc % :effect/source (ctx/player-entity %))))
       (add-actor! horizontal-group button)
