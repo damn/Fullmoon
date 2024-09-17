@@ -6,8 +6,7 @@
             [core.property :as property]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
-            [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.table :as table]))
+            [gdx.scene2d.ui :as ui]))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59
@@ -33,7 +32,7 @@
                     (group/clear-children! table)
                     (add-one-to-many-rows ctx table property-type property-ids)
                     (actor/pack-ancestor-window! table))]
-    (table/add-rows!
+    (ui/add-rows!
      table
      [[(ui/->text-button ctx "+"
                          (fn [ctx]
@@ -46,7 +45,7 @@
                                                  (actor/remove! window)
                                                  (redo-rows ctx (conj property-ids id))
                                                  ctx)]
-                             (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
+                             (ui/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
                              (.pack window)
                              (ctx/add-to-stage! ctx window))))]
       (for [property-id property-ids]
@@ -76,7 +75,7 @@
                     (group/clear-children! table)
                     (add-one-to-one-rows ctx table property-type id)
                     (actor/pack-ancestor-window! table))]
-    (table/add-rows!
+    (ui/add-rows!
      table
      [[(when-not property-id
          (ui/->text-button ctx "+"
@@ -90,7 +89,7 @@
                                                    (actor/remove! window)
                                                    (redo-rows ctx id)
                                                    ctx)]
-                               (table/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
+                               (ui/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
                                (.pack window)
                                (ctx/add-to-stage! ctx window)))))]
       [(when property-id

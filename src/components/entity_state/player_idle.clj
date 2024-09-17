@@ -5,7 +5,8 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
             [core.entity :as entity]
-            [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor])
+            [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
+            [gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- denied [text]

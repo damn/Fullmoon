@@ -10,8 +10,7 @@
             [core.data :as data]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
-            [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.ui.table :refer [add-rows! ->horizontal-separator-cell ->vertical-separator-cell]])
+            [gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
@@ -86,18 +85,18 @@
                                :cell-defaults {:pad 5}})
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
                                      (map-keys (:schema data))))]
-      (add-rows! window (for [k remaining-ks]
-                          [(ui/->text-button ctx
-                                             (name k)
-                                             (fn [ctx]
-                                               (actor/remove! window)
-                                               (group/add-actor! attribute-widget-group
-                                                                 (->component-widget ctx
-                                                                                     [k (get k-props k) (k->default-value k)]
-                                                                                     :horizontal-sep?
-                                                                                     (pos? (count (group/children attribute-widget-group)))))
-                                               (actor/pack-ancestor-window! attribute-widget-group)
-                                               ctx))]))
+      (ui/add-rows! window (for [k remaining-ks]
+                             [(ui/->text-button ctx
+                                                (name k)
+                                                (fn [ctx]
+                                                  (actor/remove! window)
+                                                  (group/add-actor! attribute-widget-group
+                                                                    (->component-widget ctx
+                                                                                        [k (get k-props k) (k->default-value k)]
+                                                                                        :horizontal-sep?
+                                                                                        (pos? (count (group/children attribute-widget-group)))))
+                                                  (actor/pack-ancestor-window! attribute-widget-group)
+                                                  ctx))]))
       (.pack window)
       (ctx/add-to-stage! ctx window))))
 
@@ -121,7 +120,7 @@
                                     "Add component"
                                     (->choose-component-window data attribute-widget-group))])
                                 (when optional-keys-left?
-                                  [(->horizontal-separator-cell 1)])
+                                  [(ui/->horizontal-separator-cell 1)])
                                 [attribute-widget-group]])})))
 
 
@@ -147,12 +146,12 @@
                                                         (.pack window))
                                                       ctx)))
                         label
-                        (->vertical-separator-cell)
+                        (ui/->vertical-separator-cell)
                         value-widget])
-        rows [(when horizontal-sep? [(->horizontal-separator-cell (count column))])
+        rows [(when horizontal-sep? [(ui/->horizontal-separator-cell (count column))])
               column]]
     (actor/set-id! value-widget v)
-    (add-rows! table (remove nil? rows))
+    (ui/add-rows! table (remove nil? rows))
     table))
 
 (defn- attribute-widget-table->value-widget [table]
@@ -197,9 +196,9 @@
         widgets (->attribute-widget-group ctx (property/schema props) props)
         save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(ctx/delete! % id))]
-    (add-rows! window [[(ui/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
-                                                    [(ui/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
-                                                     (ui/->text-button ctx "Delete" delete!)]])]])
+    (ui/add-rows! window [[(ui/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
+                                                       [(ui/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
+                                                        (ui/->text-button ctx "Delete" delete!)]])]])
     (group/add-actor! window
                       (ui/->actor ctx {:act (fn [{:keys [context/state]}]
                                               (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
