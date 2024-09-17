@@ -133,7 +133,7 @@
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state ctx @eid)]
-        (cons [:tx.context.cursor/set cursor]
+        (cons [:tx/cursor cursor]
               (when (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
                 (on-click))))))
 

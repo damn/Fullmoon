@@ -10,7 +10,7 @@
      :counter (->counter ctx duration)})
 
   (component/player-enter [_]
-    [[:tx.context.cursor/set :cursors/denied]])
+    [[:tx/cursor :cursors/denied]])
 
   (component/pause-game? [_]
     false)

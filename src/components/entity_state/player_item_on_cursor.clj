@@ -76,7 +76,7 @@
     (clicked-cell @eid cell))
 
   (component/enter [_ _ctx]
-    [[:tx.context.cursor/set :cursors/hand-grab]
+    [[:tx/cursor :cursors/hand-grab]
      [:tx/assoc eid :entity/item-on-cursor item]])
 
   (component/exit [_ ctx]

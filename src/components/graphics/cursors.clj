@@ -21,7 +21,7 @@
   (set-cursor! [{g :context/graphics} cursor-key]
     (.setCursor Gdx/graphics (utils/safe-get (:cursors g) cursor-key))))
 
-(defcomponent :tx.context.cursor/set
+(defcomponent :tx/cursor
   (component/do! [[_ cursor-key] ctx]
     (ctx/set-cursor! ctx cursor-key)
     ctx))

@@ -10,7 +10,7 @@
      :movement-vector movement-vector})
 
   (component/player-enter [_]
-    [[:tx.context.cursor/set :cursors/walking]])
+    [[:tx/cursor :cursors/walking]])
 
   (component/pause-game? [_]
     false)

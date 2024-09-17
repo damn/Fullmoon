@@ -99,7 +99,7 @@
                    (->counter ctx))})
 
   (component/player-enter [_]
-    [[:tx.context.cursor/set :cursors/sandclock]])
+    [[:tx/cursor :cursors/sandclock]])
 
   (component/pause-game? [_]
     false)

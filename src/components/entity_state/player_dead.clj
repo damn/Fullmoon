@@ -4,7 +4,7 @@
 
 (defcomponent :player-dead
   (component/player-enter [_]
-    [[:tx.context.cursor/set :cursors/black-x]])
+    [[:tx/cursor :cursors/black-x]])
 
   (component/pause-game? [_]
     true)
