@@ -1,7 +1,8 @@
 (ns components.screens.stage-screen
   (:require [gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx])
+            [core.context :as ctx]
+            [core.screen :as screen])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.Stage))
 
@@ -16,12 +17,12 @@
     (.setInputProcessor Gdx/input nil)
     (component/exit sub-screen context))
 
-  (component/render! [_ app-state]
+  (screen/render! [_ app-state]
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
     (.act stage)
-    (swap! app-state #(component/render-ctx sub-screen %))
+    (swap! app-state #(screen/render sub-screen %))
     (.draw stage)))
 
 (defn- ->stage ^Stage [viewport batch]

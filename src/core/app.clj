@@ -4,6 +4,7 @@
             [utils.core :refer [safe-merge]]
             [core.component :as component]
             [core.context :as ctx]
+            [core.screen :as screen]
             [components.context.properties :as properties])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
@@ -33,7 +34,7 @@
       (ScreenUtils/clear Color/BLACK)
       (-> @state
           ctx/current-screen
-          (component/render! state)))
+          (screen/render! state)))
 
     (resize [w h]
       (ctx/update-viewports @state w h))))

@@ -91,14 +91,6 @@
 (defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-;; Screen
-
-(defsystem render! [_ app-state])
-
-(defsystem render-ctx [_ ctx])
-(defmethod render-ctx :default [_ ctx]
-  ctx)
-
 ;; TX
 
 ; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded

@@ -3,7 +3,8 @@
             utils.ns
             [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx])
+            [core.context :as ctx]
+            [core.screen :as screen])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defprotocol StatusCheckBox
@@ -56,7 +57,7 @@
                :cell-defaults {:pad-bottom 10}}))
 
 (defcomponent ::sub-screen
-  (component/render-ctx [_ ctx]
+  (screen/render [_ ctx]
     (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
       (ctx/change-screen ctx :screens/world)
       ctx)))

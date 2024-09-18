@@ -2,6 +2,7 @@
   (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.screen :as screen]
             [components.context.world :as world])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
@@ -46,7 +47,7 @@
   (component/exit [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
 
-  (component/render-ctx [_ ctx]
+  (screen/render [_ ctx]
     (render-world! ctx)
     (-> ctx
         world/game-loop

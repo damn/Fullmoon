@@ -6,6 +6,7 @@
             [utils.core :refer [->tile]]
             [core.context :as ctx :refer [current-screen]]
             [core.graphics :as g]
+            [core.screen :as screen]
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
@@ -177,7 +178,7 @@ direction keys: move")
   (component/exit [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
-  (component/render-ctx [_ context]
+  (screen/render [_ context]
     (ctx/render-tiled-map context
                           (:tiled-map @current-data)
                           (constantly Color/WHITE))
