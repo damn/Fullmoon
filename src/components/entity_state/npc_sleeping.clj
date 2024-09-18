@@ -14,14 +14,14 @@
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
-  (component/tick [_ eid context]
+  (entity/tick [_ eid context]
     (let [entity* @eid
           cell ((ctx/world-grid context) (entity/tile entity*))]
       (when-let [distance (cell/nearest-entity-distance @cell (entity/enemy-faction entity*))]
         (when (<= distance (entity/stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 
-  (component/render-above [_ entity* g _ctx]
+  (entity/render-above [_ entity* g _ctx]
     (let [[x y] (:position entity*)]
       (g/draw-text g
                    {:text "zzz"

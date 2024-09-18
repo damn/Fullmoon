@@ -90,7 +90,7 @@
          [:tx/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
          [:tx/dissoc eid :entity/item-on-cursor]])))
 
-  (component/render-below [_ entity* g ctx]
+  (entity/render-below [_ entity* g ctx]
     (when (world-item? ctx)
       (g/draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 

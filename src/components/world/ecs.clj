@@ -17,11 +17,11 @@
 
 (defcomponent :entity/uid
   {:let uid}
-  (component/create-e [_ entity ctx]
+  (entity/create [_ entity ctx]
     (assert (number? uid))
     (update ctx this assoc uid entity))
 
-  (component/destroy-e [_ _entity ctx]
+  (entity/destroy [_ _entity ctx]
     (assert (contains? (entities ctx) uid))
     (update ctx this dissoc uid)))
 
@@ -30,15 +30,15 @@
     (swap! cnt inc)))
 
 (defcomponent :entity/id
-  (component/create-e  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
-  (component/destroy-e [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
+  (entity/create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
+  (entity/destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
 
 (defn- create-e-system [eid]
   (for [component @eid]
     (fn [ctx]
-      ; we are assuming components dont remove other ones at component/create-e
+      ; we are assuming components dont remove other ones at entity/create
       ; thats why we reuse component and not fetch each time again for key
-      (component/create-e component eid ctx))))
+      (entity/create component eid ctx))))
 
 (defcomponent :tx/create
   (component/do! [[_ position body components] ctx]
@@ -84,7 +84,7 @@
              ; should be moved together?
              (if-let [v (k @entity)]
                (let [component [k v]]
-                 (ctx/do! ctx (component/tick component entity ctx)))
+                 (ctx/do! ctx (entity/tick component entity ctx)))
                ctx))
            ctx
            (keys @entity))
@@ -108,7 +108,7 @@
       (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
                                                  first
                                                  entity/render-order)
-              system component/render-systems
+              system entity/render-systems
               entity* entities*
               :when (or (= z-order :z-order/effect)
                         (ctx/line-of-sight? ctx player-entity* entity*))]
@@ -118,7 +118,7 @@
     (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
           component @entity]
       (fn [ctx]
-        (component/destroy-e component entity ctx)))))
+        (entity/destroy component entity ctx)))))
 
 (defcomponent :tx/assoc
   (component/do! [[_ entity k v] ctx]

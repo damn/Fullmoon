@@ -16,7 +16,7 @@
 
 (defcomponent ::alert-friendlies-after-duration
   {:let {:keys [counter faction]}}
-  (component/tick [_ eid ctx]
+  (entity/tick [_ eid ctx]
     (when (ctx/stopped? ctx counter)
       (cons [:tx/destroy eid]
             (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]

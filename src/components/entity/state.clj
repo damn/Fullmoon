@@ -96,7 +96,7 @@
             :state/player player-fsm
             :state/npc npc-fsm)})
 
-  (component/create-e [[k {:keys [fsm initial-state]}] eid ctx]
+  (entity/create [[k {:keys [fsm initial-state]}] eid ctx]
     [[:tx/assoc eid k (->init-fsm fsm initial-state)]
      [:tx/assoc eid initial-state (component/create [initial-state eid] ctx)]])
 

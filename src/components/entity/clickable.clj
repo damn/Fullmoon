@@ -1,12 +1,13 @@
 (ns components.entity.clickable
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
+            [core.entity :as entity]
             [core.graphics :as g]))
 
 (defcomponent :entity/clickable
-  (component/render-default [[_ {:keys [text]}]
-                             {:keys [entity/mouseover?] :as entity*}
-                             g
-                             _ctx]
+  (entity/render [[_ {:keys [text]}]
+                  {:keys [entity/mouseover?] :as entity*}
+                  g
+                  _ctx]
     (when (and mouseover? text)
       (let [[x y] (:position entity*)]
         (g/draw-text g

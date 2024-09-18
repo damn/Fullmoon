@@ -22,7 +22,7 @@
   (component/exit [_ _ctx]
     [[:tx/set-movement eid nil]])
 
-  (component/tick [_ eid context]
+  (entity/tick [_ eid context]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/set-movement eid {:direction movement-vector
                               :speed (entity/stat @eid :stats/movement-speed)}]]

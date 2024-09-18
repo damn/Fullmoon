@@ -6,7 +6,7 @@
 
 (defcomponent :entity/skills
   {:data [:one-to-many :properties/skills]}
-  (component/create-e [[k skills] eid ctx]
+  (entity/create [[k skills] eid ctx]
     (cons [:tx/assoc eid k nil]
           (for [skill skills]
             [:tx/add-skill eid skill])))
@@ -16,7 +16,7 @@
     #_(when (seq skills)
         (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
 
-  (component/tick [[k skills] eid ctx]
+  (entity/tick [[k skills] eid ctx]
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
                      (ctx/stopped? ctx cooling-down?))]

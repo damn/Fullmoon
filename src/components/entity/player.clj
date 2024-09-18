@@ -4,7 +4,7 @@
             [core.entity :as entity]))
 
 (defcomponent :entity/player?
-  (component/create-e [_ eid ctx]
+  (entity/create [_ eid ctx]
     (assoc ctx ::eid eid)))
 
 (defn- state-obj [ctx]

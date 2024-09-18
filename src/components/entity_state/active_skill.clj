@@ -111,7 +111,7 @@
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (component/tick [_ eid context]
+  (entity/tick [_ eid context]
     (cond
      (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
@@ -122,7 +122,7 @@
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (component/render-info [_ entity* g ctx]
+  (entity/render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
       (run! #(component/render % g (merge ctx effect-ctx)) effects))))

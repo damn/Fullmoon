@@ -143,7 +143,7 @@
   (component/info-text [_ {:keys [info-text/entity*]}]
     (stats-info-texts entity*))
 
-  (component/render-info [_ entity* g _ctx]
+  (entity/render-info [_ entity* g _ctx]
     (when-let [hp (entity/stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
             {:keys [position width half-width half-height entity/mouseover?]} entity*

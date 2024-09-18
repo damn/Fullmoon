@@ -54,7 +54,7 @@
   (component/create [[_ eid] _ctx]
     {:eid eid})
 
-  (component/tick [_ eid ctx]
+  (entity/tick [_ eid ctx]
     (let [entity* @eid
           effect-ctx (->effect-ctx ctx entity*)]
       (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]

@@ -12,7 +12,7 @@
     (assoc v :already-hit-bodies #{}))
 
   ; TODO probably belongs to body
-  (component/tick [[k _] entity ctx]
+  (entity/tick [[k _] entity ctx]
     ; TODO this could be called from body on collision
     ; for non-solid
     ; means non colliding with other entities

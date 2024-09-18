@@ -45,7 +45,7 @@
 
 (defcomponent :entity/movement
   {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
-  (component/tick [_ eid ctx]
+  (entity/tick [_ eid ctx]
     (assert (m/validate entity/movement-speed-schema speed))
     (assert (or (zero? (v/length direction))
                 (v/normalised? direction)))

@@ -5,11 +5,11 @@
             [core.context :refer [->counter stopped? reset]]))
 
 (defcomponent :entity/string-effect
-  (component/tick [[k {:keys [counter]}] eid context]
+  (entity/tick [[k {:keys [counter]}] eid context]
     (when (stopped? context counter)
       [[:tx/dissoc eid k]]))
 
-  (component/render-above [[_ {:keys [text]}] entity* g _ctx]
+  (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
     (let [[x y] (:position entity*)]
       (g/draw-text g
                    {:text text

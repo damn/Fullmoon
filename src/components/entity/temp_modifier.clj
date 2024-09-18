@@ -2,6 +2,7 @@
   (:require [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
+            [core.entity :as entity]
             [core.graphics :as g]))
 
 (defcomponent :entity/temp-modifier
@@ -9,12 +10,12 @@
   (component/info-text [_ ctx]
     (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (ctx/finished-ratio ctx counter)) "/1[]"))
 
-  (component/tick [[k _] eid ctx]
+  (entity/tick [[k _] eid ctx]
     (when (ctx/stopped? ctx counter)
       [[:tx/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
-  (component/render-above [_ entity* g ctx]
+  (entity/render-above [_ entity* g ctx]
     (g/draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
 (def ^:private modifiers {:modifier/movement-speed {:op/mult -0.5}})

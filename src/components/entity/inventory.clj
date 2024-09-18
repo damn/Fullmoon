@@ -83,7 +83,7 @@
 
 (defcomponent :entity/inventory
   {:data [:one-to-many :properties/items]}
-  (component/create-e [[_ items] eid _ctx]
+  (entity/create [[_ items] eid _ctx]
     (cons [:tx/assoc eid :entity/inventory inventory/empty-inventory]
           (for [item items]
             [:tx/pickup-item eid item]))))

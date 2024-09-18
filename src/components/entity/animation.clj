@@ -1,8 +1,9 @@
 (ns components.entity.animation
   (:require [gdx.scene2d.ui :as ui]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.data :as data]
+            [core.entity :as entity]
             [core.image :as image]))
 
 (defprotocol Animation
@@ -67,17 +68,17 @@
 (defcomponent :entity/animation
   {:data :data/animation
    :let animation}
-  (component/create-e [_ eid _ctx]
+  (entity/create [_ eid _ctx]
     [(tx-assoc-image-current-frame eid animation)])
 
-  (component/tick [[k _] eid ctx]
+  (entity/tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
      [:tx/assoc eid k (tick animation (ctx/delta-time ctx))]]))
 
 (defcomponent :entity/delete-after-animation-stopped?
-  (component/create-e [_ entity _ctx]
+  (entity/create [_ entity _ctx]
     (-> @entity :entity/animation :looping? not assert))
 
-  (component/tick [_ entity _ctx]
+  (entity/tick [_ entity _ctx]
     (when (stopped? (:entity/animation @entity))
       [[:tx/destroy entity]])))

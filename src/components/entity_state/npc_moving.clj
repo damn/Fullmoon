@@ -20,6 +20,6 @@
   (component/exit [_ _ctx]
     [[:tx/set-movement eid nil]])
 
-  (component/tick [_ eid ctx]
+  (entity/tick [_ eid ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :timer-finished]])))
