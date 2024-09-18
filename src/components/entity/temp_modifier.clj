@@ -3,6 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
+            [core.effect :as effect]
             [core.graphics :as g]
             [core.tx :as tx]))
 
@@ -30,7 +31,7 @@
     ; counter ?
     )
 
-  (component/applicable? [_ {:keys [effect/source effect/target]}]
+  (effect/applicable? [_ {:keys [effect/source effect/target]}]
     ; ?
     true)
 

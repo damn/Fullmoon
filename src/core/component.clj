@@ -1,6 +1,5 @@
 (ns core.component)
 
-; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override? true)
 
 (def defsystems {})
@@ -18,7 +17,7 @@
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def attributes {}) ; call 'components'?
+(def attributes {})
 
 (def ^:private warn-name-ns-mismatch? false)
 
@@ -46,33 +45,24 @@
     `(do
       (when ~attr-map?
         (defcomponent* ~k ~attr-map) :warn-on-override? warn-on-override?)
-
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
                     sys-params (:params (meta sys-var))
                     fn-params (first fn-body)
                     fn-exprs (rest fn-body)]]
           (do
-
-           ; TODO throw stuff in separate functions
-
            (when-not sys-var
              (throw (IllegalArgumentException. (str sys " does not exist."))))
-
            (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
              (throw (IllegalArgumentException.
                      (str sys-var " requires " (count sys-params) " args: " sys-params "."
                           " Given " (count fn-params)  " args: " fn-params))))
-
            `(do
              (assert (keyword? ~k) (pr-str ~k))
-
              (alter-var-root #'attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
-
              (when (and warn-on-override?
                         (get (methods @~sys-var) ~k))
                (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
-
              (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
                [& params#]
                (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
@@ -90,22 +80,10 @@
 (defsystem info-text [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-;; Effect
-
-(defsystem applicable? [_ ctx])
-
-(defsystem useful? [_ ctx])
-(defmethod useful? :default [_ ctx] true)
-
-(defsystem render [_ g ctx])
-(defmethod render :default [_ g ctx])
-
-;;
-
 (defn apply-system [components system & args]
   (reduce (fn [m [k v]]
             (assoc m k (apply system [k v] args)))
-          {} ; hae?
+          {} ; hae? ..
           components))
 
 (defn create-all [components ctx]

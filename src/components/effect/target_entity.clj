@@ -1,9 +1,10 @@
 (ns components.effect.target-entity
   (:require [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
-            [core.graphics :as g]
             [core.context :as ctx]
+            [core.effect :as effect]
             [core.entity :as entity]
+            [core.graphics :as g]
             [core.tx :as tx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
@@ -34,11 +35,11 @@
    :doc "Applies entity-effects to a target if they are inside max-range & in line of sight.
         Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
 
-  (component/applicable? [_ {:keys [effect/target] :as ctx}]
+  (effect/applicable? [_ {:keys [effect/target] :as ctx}]
     (and target
          (ctx/effect-applicable? ctx entity-effects)))
 
-  (component/useful? [_ {:keys [effect/source effect/target]}]
+  (effect/useful? [_ {:keys [effect/source effect/target]}]
     (assert source)
     (assert target)
     (in-range? @source @target maxrange))
@@ -64,7 +65,7 @@
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (component/render [_ g {:keys [effect/source effect/target]}]
+  (effect/render [_ g {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (g/draw-line g

@@ -3,8 +3,9 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [core.entity :as entity]
-            [core.state :as state]
+            [core.effect :as effect]
             [core.graphics :as g]
+            [core.state :as state]
             [core.tx :as tx]))
 
 ; SCHEMA effect-ctx
@@ -21,7 +22,7 @@
   (tx/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (ctx/do! (filter #(component/applicable? % effect-ctx) effects))
+        (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?
@@ -127,4 +128,4 @@
   (entity/render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
-      (run! #(component/render % g (merge ctx effect-ctx)) effects))))
+      (run! #(effect/render % g (merge ctx effect-ctx)) effects))))

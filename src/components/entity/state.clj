@@ -3,6 +3,7 @@
             [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
+            [core.effect :as effect]
             [core.state :as state]
             [core.tx :as tx]))
 
@@ -66,7 +67,7 @@
   (component/info-text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (component/applicable? [_ {:keys [effect/target]}]
+  (effect/applicable? [_ {:keys [effect/target]}]
     (and target
          (:entity/state @target)))
 
@@ -78,7 +79,7 @@
   (component/info-text [_ _effect-ctx]
     "Kills target")
 
-  (component/applicable? [_ {:keys [effect/source effect/target]}]
+  (effect/applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (:entity/state @target)))
 

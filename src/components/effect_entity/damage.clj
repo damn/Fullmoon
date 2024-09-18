@@ -2,6 +2,7 @@
   (:require [utils.random :as random]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
+            [core.effect :as effect]
             [core.stat :refer [defmodifier]]
             [core.tx :as tx]))
 
@@ -25,8 +26,8 @@
            (str "\n" (component/info-text (damage-effect effect-ctx)
                                           effect-ctx)))))
 
-  (component/applicable? [_ effect-ctx]
-    (component/applicable? (damage-effect effect-ctx) effect-ctx))
+  (effect/applicable? [_ effect-ctx]
+    (effect/applicable? (damage-effect effect-ctx) effect-ctx))
 
   (tx/do! [_ ctx]
     [(damage-effect ctx)]))
@@ -86,7 +87,7 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (component/applicable? [_ {:keys [effect/target]}]
+  (effect/applicable? [_ {:keys [effect/target]}]
     (and target
          (entity/stat @target :stats/hp)))
 

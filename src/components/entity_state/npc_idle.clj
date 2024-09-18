@@ -3,6 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
             [core.entity :as entity]
+            [core.effect :as effect]
             [core.world.cell :as cell]))
 
 (defn- nearest-enemy [ctx entity*]
@@ -25,9 +26,9 @@
 ; usable?
 (defn- useful? [ctx effects]
   ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter #(component/applicable? % ctx) effects)
+  (let [applicable-effects (filter #(effect/applicable? % ctx) effects)
         ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some #(component/useful? % ctx) applicable-effects)]
+        useful-effect (some #(effect/useful? % ctx) applicable-effects)]
     ;(println "Useful: " useful-effect)
     useful-effect))
 

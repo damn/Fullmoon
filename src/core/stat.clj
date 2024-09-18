@@ -3,6 +3,7 @@
             [utils.core :as utils]
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
+            [core.effect :as effect]
             [core.operation :as operation]
             [core.tx :as tx]))
 
@@ -26,11 +27,11 @@
               (for [operation operations]
                 (str (operation/info-text operation) " " (utils/k->pretty-name k)))))
 
-  (component/applicable? [[k _] {:keys [effect/target]}]
+  (effect/applicable? [[k _] {:keys [effect/target]}]
     (and target
          (entity/stat @target (effect-k->stat-k k))))
 
-  (component/useful? [_ _effect-ctx]
+  (effect/useful? [_ _effect-ctx]
     true)
 
   (tx/do! [[effect-k operations] {:keys [effect/target]}]

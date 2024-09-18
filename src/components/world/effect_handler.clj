@@ -2,6 +2,7 @@
   (:require core.image
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
+            [core.effect :as effect]
             [core.tx :as tx]))
 
 (def ^:private record-txs? false)
@@ -92,4 +93,4 @@
     (@frame->txs frame-number))
 
   (effect-applicable? [ctx effects]
-    (some #(component/applicable? % ctx) effects)))
+    (some #(effect/applicable? % ctx) effects)))
