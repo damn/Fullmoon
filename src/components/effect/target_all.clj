@@ -7,7 +7,7 @@
 
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
-(defn- all-targets [ctx]
+(defn- creatures-in-los-of-player [ctx]
   (->> (ctx/active-entities ctx)
        (filter #(:creature/species @%))
        (filter #(ctx/line-of-sight? ctx (ctx/player-entity* ctx) @%))
@@ -20,7 +20,7 @@
  ; maybe world view port is cut
  ; not quite showing correctly.
  (let [ctx @app/state
-       targets (all-targets ctx)]
+       targets (creatures-in-los-of-player ctx)]
    (count targets)
    #_(sort-by #(% 1) (map #(vector (:entity.creature/name @%)
                                    (:position @%)) targets)))
@@ -45,7 +45,7 @@
   (component/do! [_ {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (apply concat
-             (for [target (all-targets ctx)]
+             (for [target (creatures-in-los-of-player ctx)]
                [[:tx/line-render {:start (:position source*) #_(start-point source* target*)
                                   :end (:position @target)
                                   :duration 0.05
@@ -61,7 +61,7 @@
 
   (component/render [_ g {:keys [effect/source] :as ctx}]
     (let [source* @source]
-      (doseq [target* (map deref (all-targets ctx))]
+      (doseq [target* (map deref (creatures-in-los-of-player ctx))]
         (g/draw-line g
                      (:position source*) #_(start-point source* target*)
                      (:position target*)
