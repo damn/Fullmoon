@@ -45,6 +45,8 @@ It will start the application and also:
 * On any error the JVM does not have to be restarted, you can fix the error and call `dev-loop/restart!` I have bound it on my VIM to F5 with:
   `nmap <F5> :Eval (do (in-ns 'dev-loop)(restart!))`
 
+# [API Docs](https://damn.github.io/core/)
+
 # Code Licensed under MIT License.
 
 # Asset license
