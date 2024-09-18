@@ -1,10 +1,17 @@
-(ns core.component)
+(ns core.component
+  "We define a component as vector of [keyword value].
+The two macros defsystem and defcomponent allow us to define behaviour and metadata for different components.")
 
 (def warn-on-override? true)
 
-(def defsystems {})
+(def ^{:doc "Map of all systems as key of name-string to var."} defsystems {})
 
-(defmacro defsystem [sys-name params]
+(defmacro defsystem
+  "A system is a multimethod which dispatches on ffirst.
+So for a component [k v] it dispatches on the component-keyword k.
+
+Prints a warning on override."
+  [sys-name params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
   (when warn-on-override?
@@ -17,7 +24,7 @@
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def attributes {})
+(def ^{:doc "Map of component-keys to component metadata."} attributes {})
 
 (def ^:private warn-name-ns-mismatch? false)
 
@@ -30,12 +37,21 @@
              (not= (k->component-ns k) (ns-name *ns*)))
     (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
 
-(defn defcomponent* [k attr-map & {:keys [warn-on-override?]}]
+(defn defcomponent*
+  "Defines a component without behaviour/systems, so only to set metadata.
+Warns on override."
+  [k attr-map & {:keys [warn-on-override?]}]
   (when (and warn-on-override? (get attributes k))
     (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'attributes assoc k attr-map))
 
-(defmacro defcomponent [k & sys-impls]
+(defmacro defcomponent
+  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations.
+
+attr-map may contain :let binding which is let over the value part of a component [k value].
+
+The key :doc allows us to add component documentation."
+  [k & sys-impls]
   (check-warn-ns-name-mismatch k)
   (let [attr-map? (not (list? (first sys-impls)))
         attr-map  (if attr-map? (first sys-impls) {})

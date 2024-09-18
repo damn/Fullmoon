@@ -1,4 +1,5 @@
 (ns core.app
+  "Application starting point."
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [utils.core :refer [safe-merge]]
@@ -16,7 +17,8 @@
 (defn- context-create-order [[k _]]
   (if (= k :context/screens) 1 0))
 
-(def state (atom nil))
+(def ^{:doc "Holds the application state in an atom. Only use by ui-callbacks or for development/debugging."}
+  state (atom nil))
 
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []
