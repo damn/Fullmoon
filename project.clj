@@ -46,7 +46,8 @@
                 }
   :aliases {"dev"        ["run" "-m" "dev-loop"]
             ;"gdl.simple" ["run" "-m" "dev-loop" "gdl.simple" "app"]
-            })
+            }
+  :main core.app)
 
 ; * Notes
 

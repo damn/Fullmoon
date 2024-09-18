@@ -30,7 +30,7 @@ I would appreciate very much any feedback!
 # How to start
 
 ```
-lein run -m core.app
+lein run
 ```
 
 # How to start interactive dev-loop
