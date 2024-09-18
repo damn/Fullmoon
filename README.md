@@ -7,12 +7,12 @@
 
 # What is core?
 
-* An action-RPG roguelike game 
+* An action-RPG roguelike game
 * A GUI-Tool for editing the game itself
 * A framework for writing such games
 * A modular engine which can be used as a library too
 
-Please note that it is very experimental and work-in-progress at the moment. 
+Please note that it is very experimental and work-in-progress at the moment.
 I would appreciate very much any feedback!
 
 # Screenshots
@@ -30,7 +30,7 @@ I would appreciate very much any feedback!
 # How to start
 
 ```
-lein run -m app "resources/properties.edn"
+lein run -m core.app
 ```
 
 # How to start interactive dev-loop

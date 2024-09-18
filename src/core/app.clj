@@ -79,12 +79,16 @@
   (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
   (.set Configuration/GLFW_CHECK_THREAD0 false))
 
-(defn -main [& [file]]
+(def ^:private properties-edn-file "resources/properties.edn")
+
+(defn -main
+  "Starts the application."
+  []
   ; require in -main here and not top-level
   ; otherwise some problem with gdx.scene2d.actor/add-tooltip! (cyclic dependency)
   ; which requires state
   (require-all-components!)
-  (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create file))
+  (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create properties-edn-file))
         app (ctx/property ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))

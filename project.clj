@@ -44,8 +44,9 @@
                 ;*assert* false
                 *print-level* 3
                 }
-  :aliases {"dev"        ["run" "-m" "dev-loop" "resources/properties.edn"]
-            "gdl.simple" ["run" "-m" "dev-loop" "gdl.simple" "app"]})
+  :aliases {"dev"        ["run" "-m" "dev-loop"]
+            ;"gdl.simple" ["run" "-m" "dev-loop" "gdl.simple" "app"]
+            })
 
 ; * Notes
 

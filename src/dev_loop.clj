@@ -18,12 +18,10 @@
 
 (disable-reload!) ; keep same connection/nrepl-server up throughout refreshs
 
-(declare ^:private app-edn-file)
-
 (defn- start-app []
   (eval `(do ; old namespace/var bindings are unloaded with refresh-all so always evaluate them fresh
           (require (quote core.app))
-          (core.app/-main ~app-edn-file))))
+          (core.app/-main))))
 
 (def ^:private ^Object obj (Object.))
 
@@ -81,8 +79,7 @@
 
 (declare ^:private nrepl-server)
 
-(defn -main [& [app-edn-file]]
-  (.bindRoot #'app-edn-file app-edn-file)
+(defn -main []
   (.bindRoot #'nrepl-server (start-server))
   (save-port-file nrepl-server)
   (println "Started nrepl server on port" (:port nrepl-server))
