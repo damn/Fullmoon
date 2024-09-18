@@ -1,6 +1,5 @@
 (ns components.world.effect-handler
   (:require core.image
-            core.animation
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]))
 
@@ -43,7 +42,6 @@
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
                   (instance? core.image.Image %) "<Image>"
-                  (instance? core.animation.ImmutableAnimation %) "<Animation>"
                   (instance? core.context.Context %) "<Context>"
                   :else %)
                 tx)))

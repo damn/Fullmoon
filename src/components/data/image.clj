@@ -3,7 +3,6 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.data :as data]
-            core.animation
             core.image))
 
 (defcomponent :image
@@ -13,15 +12,6 @@
 
 (defmethod data/edn->value :image [_ image ctx]
   (core.image/edn->image image ctx))
-
-(defcomponent :animation
-  {:schema [:map {:closed true}
-            [:frames :some]
-            [:frame-duration pos?]
-            [:looping? :boolean]]})
-
-(defmethod data/edn->value :animation [_ animation ctx]
-  (core.animation/edn->animation animation ctx))
 
 ; too many ! too big ! scroll ... only show files first & preview?
 ; make tree view from folders, etc. .. !! all creatures animations showing...
@@ -35,12 +25,3 @@
   #_(ui/->image-button ctx image
                         #(ctx/add-to-stage! % (->scrollable-choose-window % (texture-rows %)))
                         {:dimensions [96 96]})) ; x2  , not hardcoded here
-
-; looping? - click on widget restart
-; frame-duration
-; frames ....
-; hidden actor act tick atom animation & set current frame image drawable
-(defmethod data/->widget :animation [_ animation ctx]
-  (ui/->table {:rows [(for [image (:frames animation)]
-                        (ui/->image-widget (core.image/edn->image image ctx) {}))]
-               :cell-defaults {:pad 1}}))
