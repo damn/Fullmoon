@@ -3,6 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [core.entity :as entity]
+            [core.state :as state]
             [core.graphics :as g]))
 
 ; SCHEMA effect-ctx
@@ -98,13 +99,13 @@
                    (apply-action-speed-modifier @eid skill)
                    (->counter ctx))})
 
-  (component/player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
 
-  (component/pause-game? [_]
+  (state/pause-game? [_]
     false)
 
-  (component/enter [_ ctx]
+  (state/enter [_ ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
        [:tx/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])

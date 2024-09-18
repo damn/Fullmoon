@@ -4,6 +4,7 @@
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
             [core.graphics :as g]
+            [core.state :as state]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
@@ -64,22 +65,22 @@
     {:eid eid
      :item item})
 
-  (component/pause-game? [_]
+  (state/pause-game? [_]
     true)
 
-  (component/manual-tick [_ ctx]
+  (state/manual-tick [_ ctx]
     (when (and (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
                (world-item? ctx))
       [[:tx/event eid :drop-item]]))
 
-  (component/clicked-inventory-cell [_ cell]
+  (state/clicked-inventory-cell [_ cell]
     (clicked-cell @eid cell))
 
-  (component/enter [_ _ctx]
+  (state/enter [_ _ctx]
     [[:tx/cursor :cursors/hand-grab]
      [:tx/assoc eid :entity/item-on-cursor item]])
 
-  (component/exit [_ ctx]
+  (state/exit [_ ctx]
     ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item

@@ -2,6 +2,7 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.state :as state]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.Input$Keys))
@@ -26,7 +27,7 @@
 
 
 (defcomponent ::sub-screen
-  (component/enter [_ ctx]
+  (state/enter [_ ctx]
     (ctx/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]

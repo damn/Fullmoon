@@ -1,6 +1,7 @@
 (ns components.context.screens
   (:require [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.state :as state]))
 
 (defcomponent :context/screens
   {:data :some
@@ -25,12 +26,12 @@
                   new-screen-key]
     (when-let [screen-v (and current-screen
                              (current-screen screens))]
-      (component/exit [current-screen screen-v] context))
+      (state/exit [current-screen screen-v] context))
 
     (let [screen-v (new-screen-key screens)
           _ (assert screen-v (str "Cannot find screen with key: " new-screen-key))
           new-context (assoc-in context [:context/screens :current-screen] new-screen-key)]
-      (component/enter [new-screen-key screen-v] new-context)
+      (state/enter [new-screen-key screen-v] new-context)
       new-context))
 
   (init-first-screen [context]

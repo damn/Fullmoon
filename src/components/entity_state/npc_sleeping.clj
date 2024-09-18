@@ -3,6 +3,7 @@
             [core.context :as ctx]
             [core.entity :as entity]
             [core.graphics :as g]
+            [core.state :as state]
             [core.world.cell :as cell]))
 
 (defcomponent :npc-sleeping
@@ -10,7 +11,7 @@
   (component/create [[_ eid] _ctx]
     {:eid eid})
 
-  (component/exit [_ ctx]
+  (state/exit [_ ctx]
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 

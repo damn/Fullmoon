@@ -5,6 +5,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
             [core.entity :as entity]
+            [core.state :as state]
             [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
@@ -125,10 +126,10 @@
   (component/create [[_ eid] _ctx]
     {:eid eid})
 
-  (component/pause-game? [_]
+  (state/pause-game? [_]
     true)
 
-  (component/manual-tick [_ ctx]
+  (state/manual-tick [_ ctx]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state ctx @eid)]
@@ -136,14 +137,14 @@
               (when (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
                 (on-click))))))
 
-  (component/clicked-inventory-cell [_ cell]
+  (state/clicked-inventory-cell [_ cell]
     ; TODO no else case
     (when-let [item (get-in (:entity/inventory @eid) cell)]
       [[:tx/sound "sounds/bfxr_takeit.wav"]
        [:tx/event eid :pickup-item item]
        [:tx/remove-item eid cell]]))
 
-  (component/clicked-skillmenu-skill [_ skill]
+  (state/clicked-skillmenu-skill [_ skill]
     (let [free-skill-points (:entity/free-skill-points @eid)]
       ; TODO no else case, no visible free-skill-points
       (when (and (pos? free-skill-points)

@@ -1,7 +1,8 @@
 (ns components.entity-state.player-moving
   (:require [utils.wasd-movement :refer [WASD-movement-vector]]
             [core.component :as component :refer [defcomponent]]
-            [core.entity :as entity]))
+            [core.entity :as entity]
+            [core.state :as state]))
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
@@ -9,17 +10,17 @@
     {:eid eid
      :movement-vector movement-vector})
 
-  (component/player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/walking]])
 
-  (component/pause-game? [_]
+  (state/pause-game? [_]
     false)
 
-  (component/enter [_ _ctx]
+  (state/enter [_ _ctx]
     [[:tx/set-movement eid {:direction movement-vector
                             :speed (entity/stat @eid :stats/movement-speed)}]])
 
-  (component/exit [_ _ctx]
+  (state/exit [_ _ctx]
     [[:tx/set-movement eid nil]])
 
   (entity/tick [_ eid context]

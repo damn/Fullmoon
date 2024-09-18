@@ -2,6 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]
+            [core.state :as state]
             [core.graphics :as g]))
 
 (defcomponent :stunned
@@ -10,10 +11,10 @@
     {:eid eid
      :counter (->counter ctx duration)})
 
-  (component/player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/denied]])
 
-  (component/pause-game? [_]
+  (state/pause-game? [_]
     false)
 
   (entity/tick [_ eid ctx]

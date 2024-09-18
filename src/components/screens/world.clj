@@ -3,6 +3,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.screen :as screen]
+            [core.state :as state]
             [components.context.world :as world])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
@@ -44,7 +45,7 @@
         ctx))
 
 (defcomponent ::sub-screen
-  (component/exit [_ ctx]
+  (state/exit [_ ctx]
     (ctx/set-cursor! ctx :cursors/default))
 
   (screen/render [_ ctx]

@@ -7,6 +7,7 @@
             [core.context :as ctx :refer [current-screen]]
             [core.graphics :as g]
             [core.screen :as screen]
+            [core.state :as state]
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
@@ -172,10 +173,10 @@ direction keys: move")
   #_(dispose [_]
     (dispose (:tiled-map @current-data)))
 
-  (component/enter [_ ctx]
+  (state/enter [_ ctx]
     (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
 
-  (component/exit [_ ctx]
+  (state/exit [_ ctx]
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
   (screen/render [_ context]
