@@ -35,7 +35,8 @@
              "-Dcom.sun.management.jmxremote.ssl=false"
              "-Dcom.sun.management.jmxremote.authenticate=false"
              ]
-  :codox {:namespaces #_[#"^gdx\."] [#"^components\."]}
+  :codox {:namespaces [#"^core|^dev|^gdx|^mapgen|^math|^utils"]
+          :source-uri "https://github.com/damn/core/blob/main/{filepath}#L{line}"}
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :global-vars {*warn-on-reflection* true
