@@ -20,12 +20,12 @@
 
 (def attributes {}) ; call 'components'?
 
-(def warn-name-ns-mismatch? false)
+(def ^:private warn-name-ns-mismatch? false)
 
 (defn- k->component-ns [k]
   (symbol (str "components." (name (namespace k)) "." (name k))))
 
-(defn check-warn-ns-name-mismatch [k]
+(defn- check-warn-ns-name-mismatch [k]
   (when (and warn-name-ns-mismatch?
              (namespace k)
              (not= (k->component-ns k) (ns-name *ns*)))
