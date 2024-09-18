@@ -9,7 +9,3 @@ git add docs
 git commit -m 'Update docs'
 git push
 git checkout main
-
-
-# TODO deploy script also do namespace graph
-# and check hello world example commit hash @ README.md
