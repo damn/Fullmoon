@@ -37,9 +37,9 @@
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx/assoc-in target [:entity/stats stat-k]
           ; TODO similar to components.entity.modifiers/->modified-value
-          ; but operations not sort-by component/order ??
-          ; component/apply reuse fn over operations to get effectiv value
-          (reduce (fn [value operation] (component/apply operation value))
+          ; but operations not sort-by operation/order ??
+          ; operation/apply reuse fn over operations to get effectiv value
+          (reduce (fn [value operation] (operation/apply operation value))
                   effective-value
                   operations)]]))))
 

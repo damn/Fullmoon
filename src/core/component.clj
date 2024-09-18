@@ -1,5 +1,4 @@
-(ns core.component
-  (:refer-clojure :exclude [apply]))
+(ns core.component)
 
 ; TODO line number for overwrite warnings or ns at least....
 (def warn-on-override? true)
@@ -142,12 +141,6 @@
 (defsystem clicked-skillmenu-skill [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
-;; Operation
-
-(defsystem value-text [_])
-(defsystem apply [_ base-value])
-(defsystem order [_])
-
 ;; Entity
 
 (defsystem create-e [_ entity ctx])
@@ -190,7 +183,7 @@
 
 (defn apply-system [components system & args]
   (reduce (fn [m [k v]]
-            (assoc m k (clojure.core/apply system [k v] args)))
+            (assoc m k (apply system [k v] args)))
           {}
           components))
 

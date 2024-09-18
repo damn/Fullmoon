@@ -2,6 +2,7 @@
   (:require [utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
             core.entity
+            [core.operation :as operation]
             [core.modifiers :as modifiers]))
 
 (defn- txs-update-modifiers [entity modifiers f]
@@ -67,9 +68,9 @@
     {:pre [(= "modifier" (namespace modifier-k))]}
     (->> modifiers
          modifier-k
-         (sort-by component/order)
+         (sort-by operation/order)
          (reduce (fn [base-value [operation-k values]]
-                   (component/apply [operation-k (apply + values)] base-value))
+                   (operation/apply [operation-k (apply + values)] base-value))
                  base-value))))
 
 (comment
