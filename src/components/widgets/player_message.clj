@@ -2,11 +2,12 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.graphics :as g]
-            [gdx.scene2d.ui :as ui])
+            [gdx.scene2d.ui :as ui]
+            [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))
 
 (defcomponent :tx/msg-to-player
-  (component/do! [[_ message] ctx]
+  (tx/do! [[_ message] ctx]
     (assoc ctx ::msg {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)

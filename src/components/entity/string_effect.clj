@@ -1,8 +1,9 @@
 (ns components.entity.string-effect
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.context :refer [->counter stopped? reset]]))
+            [core.context :refer [->counter stopped? reset]]
+            [core.tx :as tx]))
 
 (defcomponent :entity/string-effect
   (entity/tick [[k {:keys [counter]}] eid context]
@@ -19,7 +20,7 @@
                     :up? true}))))
 
 (defcomponent :tx/add-text-effect
-  (component/do! [[_ entity text] ctx]
+  (tx/do! [[_ entity text] ctx]
     [[:tx/assoc
       entity
       :entity/string-effect

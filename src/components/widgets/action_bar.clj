@@ -1,10 +1,11 @@
 (ns components.widgets.action-bar
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
             [core.components :as components]
             [core.context :as ctx]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
-            [gdx.scene2d.group :refer [clear-children! add-actor!]])
+            [gdx.scene2d.group :refer [clear-children! add-actor!]]
+            [core.tx :as tx])
   (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 (def ^:private image-scale 2)
@@ -23,7 +24,7 @@
    :button-group (:action-bar (:world/widgets ctx))})
 
 (defcomponent :tx.action-bar/add
-  (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
+  (tx/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (ui/->image-button ctx image identity {:scale image-scale})]
       (actor/set-id! button id)
@@ -33,7 +34,7 @@
       ctx)))
 
 (defcomponent :tx.action-bar/remove
-  (component/do! [[_ {:keys [property/id]}] ctx]
+  (tx/do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
       (remove! button)

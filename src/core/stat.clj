@@ -3,7 +3,8 @@
             [utils.core :as utils]
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
-            [core.operation :as operation]))
+            [core.operation :as operation]
+            [core.tx :as tx]))
 
 (defn defmodifier [k operations]
   (defcomponent* k {:data [:map-optional operations]}))
@@ -32,7 +33,7 @@
   (component/useful? [_ _effect-ctx]
     true)
 
-  (component/do! [[effect-k operations] {:keys [effect/target]}]
+  (tx/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:tx/assoc-in target [:entity/stats stat-k]

@@ -4,7 +4,8 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.graphics :as g]
-            [core.entity :as entity])
+            [core.entity :as entity]
+            [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private this :world/ecs)
@@ -41,7 +42,7 @@
       (entity/create component eid ctx))))
 
 (defcomponent :tx/create
-  (component/do! [[_ position body components] ctx]
+  (tx/do! [[_ position body components] ctx]
     (assert (and (not (contains? components :position))
                  (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
@@ -56,7 +57,7 @@
       (create-e-system eid))))
 
 (defcomponent :tx/destroy
-  (component/do! [[_ entity] ctx]
+  (tx/do! [[_ entity] ctx]
     [[:tx/assoc entity :entity/destroyed? true]]))
 
 (def ^:private ^:dbg-flag show-body-bounds false)
@@ -121,29 +122,29 @@
         (entity/destroy component entity ctx)))))
 
 (defcomponent :tx/assoc
-  (component/do! [[_ entity k v] ctx]
+  (tx/do! [[_ entity k v] ctx]
     (assert (keyword? k))
     (swap! entity assoc k v)
     ctx))
 
 (defcomponent :tx/assoc-in
-  (component/do! [[_ entity ks v] ctx]
+  (tx/do! [[_ entity ks v] ctx]
     (swap! entity assoc-in ks v)
     ctx))
 
 (defcomponent :tx/dissoc
-  (component/do! [[_ entity k] ctx]
+  (tx/do! [[_ entity k] ctx]
     (assert (keyword? k))
     (swap! entity dissoc k)
     ctx))
 
 (defcomponent :tx/dissoc-in
-  (component/do! [[_ entity ks] ctx]
+  (tx/do! [[_ entity ks] ctx]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     ctx))
 
 (defcomponent :tx/update-in
-  (component/do! [[_ entity ks f] ctx]
+  (tx/do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))

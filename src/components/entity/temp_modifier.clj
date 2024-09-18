@@ -3,7 +3,8 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.graphics :as g]))
+            [core.graphics :as g]
+            [core.tx :as tx]))
 
 (defcomponent :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
@@ -34,7 +35,7 @@
     true)
 
   ; TODO stacking? (if already has k ?) or reset counter ? (see string-effect too)
-  (component/do! [_ {:keys [effect/source effect/target] :as ctx}]
+  (tx/do! [_ {:keys [effect/source effect/target] :as ctx}]
     (when-not (:entity/temp-modifier @target)
       [[:tx/apply-modifiers target modifiers]
        [:tx/assoc target :entity/temp-modifier {:modifiers modifiers

@@ -3,7 +3,8 @@
             [core.component :as component :refer [defcomponent]]
             core.entity
             [core.operation :as operation]
-            [core.modifiers :as modifiers]))
+            [core.modifiers :as modifiers]
+            [core.tx :as tx]))
 
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers
@@ -31,11 +32,11 @@
  )
 
 (defcomponent :tx/apply-modifiers
-  (component/do! [[_ entity modifiers] _ctx]
+  (tx/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers conj-value)))
 
 (defcomponent :tx/reverse-modifiers
-  (component/do! [[_ entity modifiers] _ctx]
+  (tx/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
 ; DRY ->effective-value (summing)

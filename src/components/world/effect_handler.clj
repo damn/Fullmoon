@@ -1,7 +1,8 @@
 (ns components.world.effect-handler
   (:require core.image
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.tx :as tx]))
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -60,7 +61,7 @@
 (defn- handle-tx! [ctx tx]
   (let [result (if (fn? tx)
                  (tx ctx)
-                 (component/do! tx ctx))]
+                 (tx/do! tx ctx))]
     (if (map? result) ; probably faster than (instance? core.context.Context result)
       (do
        (tx-happened! tx ctx)

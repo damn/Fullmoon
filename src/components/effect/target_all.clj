@@ -1,7 +1,8 @@
 (ns components.effect.target-all
   (:require [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.tx :as tx]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
 
@@ -42,7 +43,7 @@
     false
     )
 
-  (component/do! [_ {:keys [effect/source] :as ctx}]
+  (tx/do! [_ {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (apply concat
              (for [target (creatures-in-los-of-player ctx)]

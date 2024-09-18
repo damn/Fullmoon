@@ -1,8 +1,9 @@
 (ns components.properties.audiovisual
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.property :refer [def-property-type]]))
+            [core.property :refer [def-property-type]]
+            [core.tx :as tx]))
 
 (def-property-type :properties/audiovisuals
   {:schema [:tx/sound
@@ -12,7 +13,7 @@
               :image/scale 2}})
 
 (defcomponent :tx/audiovisual
-  (component/do! [[_ position id] ctx]
+  (tx/do! [[_ position id] ctx]
     (let [{:keys [tx/sound
                   entity/animation]} (ctx/property ctx id)]
       [[:tx/sound sound]

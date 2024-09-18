@@ -1,11 +1,12 @@
 (ns components.entity.movement
   (:require [malli.core :as m]
             [math.vector :as v]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
             [core.world.cell :as cell]
-            [core.world.grid :as world-grid]))
+            [core.world.grid :as world-grid]
+            [core.tx :as tx]))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
@@ -64,7 +65,7 @@
            [:tx/position-changed eid]])))))
 
 (defcomponent :tx/set-movement
-  (component/do! [[_ entity movement] ctx]
+  (tx/do! [[_ entity movement] ctx]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...

@@ -1,7 +1,8 @@
 (ns components.context.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
-            core.context)
+            [core.context :as ctx]
+            [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
@@ -70,3 +71,10 @@
 
   (all-sound-files   [ctx] (:sound-files   (this ctx)))
   (all-texture-files [ctx] (:texture-files (this ctx))))
+
+(defcomponent :tx/sound
+  {:data :sound
+   :let file}
+  (tx/do! [_ ctx]
+    (ctx/play-sound! ctx file)
+    ctx))

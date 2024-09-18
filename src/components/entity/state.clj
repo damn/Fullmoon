@@ -3,7 +3,8 @@
             [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.state :as state]))
+            [core.state :as state]
+            [core.tx :as tx]))
 
 (comment
  ; graphviz required in path
@@ -69,7 +70,7 @@
     (and target
          (:entity/state @target)))
 
-  (component/do! [_ {:keys [effect/target]}]
+  (tx/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect.entity/kill
@@ -81,7 +82,7 @@
     (and target
          (:entity/state @target)))
 
-  (component/do! [_ {:keys [effect/target]}]
+  (tx/do! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))
 
 
@@ -130,5 +131,5 @@
            [:tx/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defcomponent :tx/event
-  (component/do! [[_ eid event params] ctx]
+  (tx/do! [[_ eid event params] ctx]
     (send-event! ctx eid event params)))

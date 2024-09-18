@@ -1,5 +1,6 @@
 (ns dev.components
-  (:require [core.component :as component]))
+  (:require [core.component :as component]
+            [core.tx :as tx]))
 
  ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
  ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
@@ -15,7 +16,7 @@
         (binding [*print-level* nil]
           (with-out-str
            (doseq [[nmsp ks] (sort-by first
-                                      (group-by namespace (sort (keys (methods component/do!)))))]
+                                      (group-by namespace (sort (keys (methods tx/do!)))))]
 
              (println "\n#" nmsp)
              (doseq [k ks

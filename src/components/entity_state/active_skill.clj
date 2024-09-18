@@ -4,7 +4,8 @@
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [core.entity :as entity]
             [core.state :as state]
-            [core.graphics :as g]))
+            [core.graphics :as g]
+            [core.tx :as tx]))
 
 ; SCHEMA effect-ctx
 ; * source = always available
@@ -17,7 +18,7 @@
 ;  * direction  = always available (from mouse world position)
 
 (defcomponent :tx/effect
-  (component/do! [[_ effect-ctx effects] ctx]
+  (tx/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
         (ctx/do! (filter #(component/applicable? % effect-ctx) effects))

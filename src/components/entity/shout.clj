@@ -1,7 +1,8 @@
 (ns components.entity.shout
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
+            [core.tx :as tx]
             [core.world.grid :as grid]))
 
 (def ^:private shout-radius 4)
@@ -23,7 +24,7 @@
               [:tx/event friendly-eid :alert])))))
 
 (defcomponent :tx/shout
-  (component/do! [[_ position faction delay-seconds] ctx]
+  (tx/do! [[_ position faction delay-seconds] ctx]
     [[:tx/create
       position
       entity/effect-body-props

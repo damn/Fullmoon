@@ -1,8 +1,9 @@
 (ns components.entity.inventory
   (:require [utils.core :refer [find-first]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.inventory :as inventory]))
+            [core.inventory :as inventory]
+            [core.tx :as tx]))
 
 (defn- set-item [{:keys [entity/id] :as entity*} cell item]
   (let [inventory (:entity/inventory entity*)]
@@ -24,11 +25,11 @@
        [:tx/remove-item-from-widget cell])]))
 
 (defcomponent :tx/set-item
-  (component/do! [[_ entity cell item] _ctx]
+  (tx/do! [[_ entity cell item] _ctx]
     (set-item @entity cell item)))
 
 (defcomponent :tx/remove-item
-  (component/do! [[_ entity cell] _ctx]
+  (tx/do! [[_ entity cell] _ctx]
     (remove-item @entity cell)))
 
 ; TODO doesnt exist, stackable, usable items with action/skillbar thingy
@@ -53,7 +54,7 @@
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
 (defcomponent :tx/stack-item
-  (component/do! [[_ entity cell item] _ctx]
+  (tx/do! [[_ entity cell item] _ctx]
     (stack-item @entity cell item)))
 
 (defn- try-put-item-in [entity* slot item]
@@ -73,7 +74,7 @@
    (try-put-item-in entity* :inventory.slot/bag item)))
 
 (defcomponent :tx/pickup-item
-  (component/do! [[_ entity item] _ctx]
+  (tx/do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
 (extend-type core.entity.Entity

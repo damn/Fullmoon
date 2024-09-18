@@ -3,7 +3,8 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.property :refer [def-property-type]]))
+            [core.property :refer [def-property-type]]
+            [core.tx :as tx]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 
@@ -30,14 +31,14 @@
   (first (:world-unit-dimensions (:entity/image projectile))))
 
 (defcomponent :tx/projectile
-  (component/do! [[_
-                   {:keys [position direction faction]}
-                   {:keys [entity/image
-                           projectile/max-range
-                           projectile/speed
-                           entity-effects
-                           projectile/piercing?] :as projectile}]
-                  ctx]
+  (tx/do! [[_
+            {:keys [position direction faction]}
+            {:keys [entity/image
+                    projectile/max-range
+                    projectile/speed
+                    entity-effects
+                    projectile/piercing?] :as projectile}]
+           ctx]
     (let [size (projectile-size projectile)]
       [[:tx/create
         position
@@ -83,7 +84,7 @@
                           target-p)
               max-range))))
 
-  (component/do! [_ {:keys [effect/source effect/direction] :as ctx}]
+  (tx/do! [_ {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
       {:position (start-point @source direction (projectile-size projectile))

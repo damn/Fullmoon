@@ -3,6 +3,7 @@
             [gdx.maps.tiled :as tiled]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
+            [core.tx :as tx]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell])
@@ -95,7 +96,7 @@
   (world-grid [ctx] (:world/grid ctx)))
 
 (defcomponent :tx/add-to-world
-  (component/do! [[_ entity] ctx]
+  (tx/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
@@ -103,13 +104,13 @@
     ctx))
 
 (defcomponent :tx/remove-from-world
-  (component/do! [[_ entity] ctx]
+  (tx/do! [[_ entity] ctx]
     (content-grid/remove-entity! (ctx/content-grid ctx) entity)
     (world-grid/remove-entity! (ctx/world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/position-changed
-  (component/do! [[_ entity] ctx]
+  (tx/do! [[_ entity] ctx]
     (content-grid/update-entity! (ctx/content-grid ctx) entity)
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))

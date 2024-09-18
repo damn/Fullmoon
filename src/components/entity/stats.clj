@@ -6,7 +6,8 @@
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.stat :refer [stat-k->modifier-k defstat]])
+            [core.stat :refer [stat-k->modifier-k defstat]]
+            [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
@@ -162,7 +163,7 @@
                                      (hpbar-color ratio))))))))
 
 (defcomponent :tx.entity.stats/pay-mana-cost
-  (component/do! [[_ entity cost] _ctx]
+  (tx/do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
       [[:tx/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
@@ -172,6 +173,6 @@
        entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
-   (= (component/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+   (= (tx/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:tx/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
