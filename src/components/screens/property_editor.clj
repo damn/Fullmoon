@@ -133,7 +133,7 @@
       (actor/add-tooltip! label doc))
     label))
 
-(defn ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
+(defn- ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
         value-widget (data/->widget (data/component k) v ctx)
         table (ui/->table {:id k

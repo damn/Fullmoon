@@ -21,7 +21,7 @@
 (defn- ->node [actor]
   (proxy [Tree$Node] [actor]))
 
-(defn ->v-str [v]
+(defn- ->v-str [v]
   (cond
    (number? v) v
    (keyword? v) v
@@ -33,7 +33,7 @@
    (vector? v) (str "Vector "(count v))
    :else (str "[GRAY]" (str v) "[]")))
 
-(defn ->labelstr [k v]
+(defn- ->labelstr [k v]
   (str "[LIGHT_GRAY]:"
        (if (keyword? k)
          (str
@@ -73,7 +73,7 @@
    )
  )
 
-(defn add-map-nodes! [parent-node m level]
+(defn- add-map-nodes! [parent-node m level]
   ;(println "Level: " level " - go deeper? " (< level 4))
   (when (< level 2)
     (doseq [[k v] (into (sorted-map) m)]

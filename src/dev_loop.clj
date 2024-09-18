@@ -54,7 +54,7 @@
 
 (declare ^:private refresh-error)
 
-(defn dev-loop []
+(defn ^:no-doc dev-loop []
   (try (start-app)
        (catch Throwable t
          (handle-throwable! t)))
