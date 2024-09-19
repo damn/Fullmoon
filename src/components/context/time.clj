@@ -1,10 +1,10 @@
-(ns components.world.time
+(ns components.context.time
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity])
   (:import com.badlogic.gdx.Gdx))
 
-(defcomponent :world/time
+(defcomponent :context/time
   (component/create [_ _ctx]
     {:elapsed 0
      :logic-frame 0}))
@@ -15,14 +15,14 @@
   core.context/Time
   (update-time [ctx]
     (let [delta (min (.getDeltaTime Gdx/graphics) entity/max-delta-time)]
-      (update ctx :world/time #(-> %
-                                   (assoc :delta-time delta)
-                                   (update :elapsed + delta)
-                                   (update :logic-frame inc)))))
+      (update ctx :context/time #(-> %
+                                     (assoc :delta-time delta)
+                                     (update :elapsed + delta)
+                                     (update :logic-frame inc)))))
 
-  (delta-time   [ctx] (:delta-time  (:world/time ctx)))
-  (elapsed-time [ctx] (:elapsed     (:world/time ctx)))
-  (logic-frame  [ctx] (:logic-frame (:world/time ctx)))
+  (delta-time   [ctx] (:delta-time  (:context/time ctx)))
+  (elapsed-time [ctx] (:elapsed     (:context/time ctx)))
+  (logic-frame  [ctx] (:logic-frame (:context/time ctx)))
 
   (->counter [ctx duration]
     {:pre [(>= duration 0)]}

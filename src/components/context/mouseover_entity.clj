@@ -1,4 +1,4 @@
-(ns components.world.mouseover-entity
+(ns components.context.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
             [core.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [core.entity :as entity]
@@ -17,7 +17,7 @@
          first
          :entity/id)))
 
-(def ^:private this-k :world/mouseover-entity)
+(def ^:private this-k :context/mouseover-entity)
 
 (extend-type core.context.Context
   core.context/MouseOverEntity

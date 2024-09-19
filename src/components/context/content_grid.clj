@@ -1,4 +1,4 @@
-(ns components.world.content-grid
+(ns components.context.content-grid
   (:require [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]
             core.world.content-grid))
@@ -32,7 +32,7 @@
 
 (defcomponent :context/content-grid
   {:let [cell-w cell-h]}
-  (component/create [_ {:keys [world/grid]}]
+  (component/create [_ {:keys [context/grid]}]
     (->ContentGrid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
                                        (inc (int (/ (grid2d/height grid) cell-h)))
                                        (fn [idx]

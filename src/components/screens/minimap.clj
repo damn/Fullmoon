@@ -15,7 +15,7 @@
 
 ; we want min/max explored tiles X / Y and show the whole explored area....
 
-(defn- calculate-zoom [{:keys [world/explored-tile-corners] :as ctx}]
+(defn- calculate-zoom [{:keys [context/explored-tile-corners] :as ctx}]
   (let [positions-explored (map first
                                 (remove (fn [[position value]]
                                           (false? value))
@@ -44,7 +44,7 @@
     (camera/reset-zoom! (ctx/world-camera ctx)))
 
   ; TODO fixme not subscreen
-  (render [_ {:keys [world/tiled-map world/explored-tile-corners] :as context}]
+  (render [_ {:keys [context/tiled-map context/explored-tile-corners] :as context}]
     (ctx/render-tiled-map context
                           tiled-map
                           (->tile-corner-color-setter @explored-tile-corners))

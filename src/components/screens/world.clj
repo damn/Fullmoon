@@ -10,8 +10,8 @@
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell]
-            [components.world.render :as world-render]
-            [components.world.debug-render :as debug-render])
+            [components.context.render :as world-render]
+           [components.context.debug-render :as debug-render])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.utils.Disposable))
 
@@ -29,21 +29,21 @@
 
 ; player-creature needs mana & inventory
 ; till then hardcode :creatures/vampire
-(defn- world->player-creature [{:keys [world/start-position
-                                       world/player-creature]}]
+(defn- world->player-creature [{:keys [context/start-position]}
+                               {:keys [world/player-creature]}]
   {:position start-position
    :creature-id :creatures/vampire #_(:property/id player-creature)
    :components player-components})
 
-(defn- world->enemy-creatures [{:keys [world/tiled-map]}]
+(defn- world->enemy-creatures [{:keys [context/tiled-map]}]
   (for [[position creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
     {:position position
      :creature-id (keyword creature-id)
      :components npc-components}))
 
-(defn- spawn-creatures! [ctx]
+(defn- spawn-creatures! [ctx tiled-level]
   (ctx/do! ctx
-           (for [creature (cons (world->player-creature ctx)
+           (for [creature (cons (world->player-creature ctx tiled-level)
                                 (when spawn-enemies?
                                   (world->enemy-creatures ctx)))]
              [:tx/creature (update creature :position tile->middle)])))
@@ -51,37 +51,37 @@
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
-(defn- ->world-map [{:keys [tiled-map start-position world/player-creature]}]
-  (component/create-into {:world/tiled-map tiled-map
-                          :world/start-position start-position
-                          :world/player-creature player-creature}
-                         {:world/grid [(tiled/width  tiled-map)
-                                       (tiled/height tiled-map)
+(defn- ->world-map [{:keys [tiled-map start-position]}]
+  (component/create-into {:context/tiled-map tiled-map
+                          :context/start-position start-position}
+                         {:context/grid [(tiled/width  tiled-map)
+                                         (tiled/height tiled-map)
                                        #(case (tiled/movement-property tiled-map %)
                                           "none" :none
                                           "air"  :air
                                           "all"  :all)]
-                          :world/raycaster cell/blocks-vision?
+                          :context/raycaster cell/blocks-vision?
                           :context/content-grid [16 16]
-                          :world/explored-tile-corners true}))
+                          :context/explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
-  (let [ctx (dissoc ctx ::tick-error)
+  (let [ctx (dissoc ctx :context/entity-tick-error)
         ctx (-> ctx
-                (merge {::game-loop-mode mode}
+                (merge {:context/game-loop-mode mode}
                        (component/create-into ctx
                                               {:context/ecs true
-                                               :world/time true
-                                               :world/widgets true
-                                               :world/effect-handler [mode record-transactions?]})))]
+                                               :context/time true
+                                               :context/widgets true
+                                               :context/effect-handler [mode record-transactions?]})))]
     (case mode
       :game-loop/normal (do
-                         (when-let [tiled-map (:world/tiled-map ctx)]
+                         (when-let [tiled-map (:context/tiled-map ctx)]
                            (.dispose ^Disposable tiled-map))
                          (-> ctx
                              (merge (->world-map tiled-level))
-                             spawn-creatures!))
-      :game-loop/replay (merge ctx (->world-map (select-keys ctx [:world/tiled-map :world/start-position]))))))
+                             (spawn-creatures! tiled-level)))
+      :game-loop/replay (merge ctx (->world-map (select-keys ctx [:context/tiled-map
+                                                                  :context/start-position]))))))
 
 (extend-type core.context.Context
   core.context/World
@@ -98,7 +98,7 @@
     (content-grid/active-entities (ctx/content-grid ctx)
                                   (ctx/player-entity* ctx)))
 
-  (world-grid [ctx] (:world/grid ctx)))
+  (world-grid [ctx] (:context/grid ctx)))
 
 (defcomponent :tx/add-to-world
   (tx/do! [[_ entity] ctx]
@@ -127,10 +127,10 @@
       (.isKeyPressed     Gdx/input Input$Keys/SPACE)))
 
 (defn- update-game-paused [ctx]
-  (assoc ctx :world/paused? (or (::tick-error ctx)
-                                (and pausing?
-                                     (ctx/player-state-pause-game? ctx)
-                                     (not (player-unpaused?))))))
+  (assoc ctx :context/paused? (or (:context/entity-tick-error ctx)
+                                  (and pausing?
+                                       (ctx/player-state-pause-game? ctx)
+                                       (not (player-unpaused?))))))
 
 (defn- update-world [ctx]
   (let [ctx (ctx/update-time ctx)
@@ -140,15 +140,15 @@
          (catch Throwable t
            (-> ctx
                (ctx/error-window! t)
-               (assoc ::tick-error t))))))
+               (assoc :context/entity-tick-error t))))))
 
-(defmulti ^:private game-loop ::game-loop-mode)
+(defmulti ^:private game-loop :context/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
   (ctx/do! ctx [ctx/player-update-state
                 ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
-                #(if (:world/paused? %)
+                #(if (:context/paused? %)
                    %
                    (update-world %))
                 ctx/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.

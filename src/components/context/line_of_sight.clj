@@ -1,4 +1,4 @@
-(ns components.world.line-of-sight
+(ns components.context.line-of-sight
   (:require [gdx.graphics.camera :as camera]
             [core.context :as ctx]))
 

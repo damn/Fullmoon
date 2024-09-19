@@ -13,6 +13,8 @@
  (show-tree-view! :entity)
  (show-tree-view! :tile)
 
+ ; if we remove ns we can remove it at tree view !!
+
  )
 
 ; TODO expand only on click ... save bandwidth ....

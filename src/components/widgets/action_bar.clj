@@ -21,7 +21,7 @@
 
 (defn- get-action-bar [ctx]
   {:horizontal-group (::action-bar (:action-bar-table (ctx/get-stage ctx)))
-   :button-group (:action-bar (:world/widgets ctx))})
+   :button-group (:action-bar (:context/widgets ctx))})
 
 (defcomponent :tx.action-bar/add
   (tx/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]

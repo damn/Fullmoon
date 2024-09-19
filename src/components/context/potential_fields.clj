@@ -1,4 +1,4 @@
-(ns components.world.potential-fields
+(ns components.context.potential-fields
   "Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
   adjacent cells are walls and blocked.
   (important for wavefront-expansion and field-following)

@@ -1,4 +1,4 @@
-(ns components.world.effect-handler
+(ns components.context.effect-handler
   (:require core.image
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
@@ -11,7 +11,7 @@
 (defn- clear-recorded-txs! []
   (reset! frame->txs {}))
 
-(defcomponent :world/effect-handler
+(defcomponent :context/effect-handler
   (component/create [[_ [game-loop-mode record-transactions?]] _ctx]
     (case game-loop-mode
       :game-loop/normal (when record-transactions?

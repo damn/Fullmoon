@@ -1,11 +1,11 @@
-(ns components.world.debug-render
+(ns components.context.debug-render
   (:require [utils.core :refer [->tile]]
             [gdx.graphics.camera :as camera]
             [math.geom :as geom]
             [core.context :as ctx :refer [world-grid]]
             [core.graphics :as g]
             [core.world.grid :refer [circle->cells]]
-            [components.world.potential-fields :as potential-field]))
+            [components.context.potential-fields :as potential-field]))
 
 (defn- geom-test [g ctx]
   (let [position (ctx/world-mouse-position g)

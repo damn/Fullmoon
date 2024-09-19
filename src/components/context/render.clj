@@ -1,8 +1,8 @@
-(ns components.world.render
+(ns components.context.render
   (:require [gdx.graphics :as graphics]
             [utils.core :refer [->tile]]
             [core.context :as ctx]
-            [components.world.raycaster :as raycaster])
+            [components.context.raycaster :as raycaster])
   (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private explored-tile-color
@@ -43,11 +43,11 @@
               (swap! explored-tile-corners assoc (->tile position) true))
             Color/WHITE)))))
 
-(defn render-map [{:keys [world/tiled-map] :as ctx} light-position]
+(defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
   (ctx/render-tiled-map ctx
                         tiled-map
                         (->tile-color-setter (atom nil)
                                              light-position
-                                             (:world/raycaster ctx)
-                                             (:world/explored-tile-corners ctx)))
+                                             (:context/raycaster ctx)
+                                             (:context/explored-tile-corners ctx)))
   #_(reset! do-once false))

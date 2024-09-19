@@ -1,4 +1,4 @@
-(ns components.world.raycaster
+(ns components.context.raycaster
   (:require [math.raycaster :as raycaster]
             [math.vector :as v]
             [data.grid2d :as grid2d]
@@ -17,8 +17,8 @@
   (let [[x y] (:position cell*)]
     (aset arr x y (boolean (cell*->blocked? cell*)))))
 
-(defcomponent :world/raycaster
-  (component/create [[_ position->blocked?] {:keys [world/grid]}]
+(defcomponent :context/raycaster
+  (component/create [[_ position->blocked?] {:keys [context/grid]}]
     (let [width (grid2d/width grid)
           height (grid2d/height grid)
           arr (make-array Boolean/TYPE width height)]
@@ -47,10 +47,10 @@
 
 (extend-type core.context.Context
   core.context/WorldRaycaster
-  (ray-blocked? [{:keys [world/raycaster]} start target]
+  (ray-blocked? [{:keys [context/raycaster]} start target]
     (ray-blocked? raycaster start target))
 
-  (path-blocked? [{:keys [world/raycaster]} start target path-w]
+  (path-blocked? [{:keys [context/raycaster]} start target path-w]
     (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
       (or
        (ray-blocked? raycaster start1 target1)

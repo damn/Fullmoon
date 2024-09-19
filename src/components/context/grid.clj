@@ -1,4 +1,4 @@
-(ns components.world.grid
+(ns components.context.grid
   (:require [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
@@ -143,7 +143,7 @@
     :entities #{}
     :occupied #{}}))
 
-(defcomponent :world/grid
+(defcomponent :context/grid
   (component/create [[_ [width height position->value]] _world]
     (grid2d/create-grid width
                         height

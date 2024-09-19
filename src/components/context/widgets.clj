@@ -1,4 +1,4 @@
-(ns components.world.widgets
+(ns components.context.widgets
   (:require [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
@@ -18,7 +18,7 @@
 (extend-type core.context.Context
   core.context/Actionbar
   (selected-skill [ctx]
-    (let [button-group (:action-bar (:world/widgets ctx))]
+    (let [button-group (:action-bar (:context/widgets ctx))]
       (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
         (actor/id skill-button))))
 
@@ -41,7 +41,7 @@
    (ui/->actor ctx {:draw draw-item-on-cursor})
    (component/create [:widgets/player-message] ctx)])
 
-(defcomponent :world/widgets
+(defcomponent :context/widgets
   (component/create [_ ctx]
     (assert (= :screens/world (ctx/current-screen-key ctx)))
     (let [widget-data {:action-bar (action-bar/->button-group)
