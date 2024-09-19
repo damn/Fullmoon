@@ -4,7 +4,7 @@
             [gdx.scene2d.ui :as ui]
             [gdx.graphics :as graphics]
             [core.component :refer [defcomponent]]
-            [core.components :as components]
+            [core.info :as info]
             [core.context :as ctx :refer [spritesheet get-sprite]]
             [core.graphics :as g]
             [core.entity :as entity]
@@ -139,7 +139,7 @@
           drawable (ui/->texture-region-drawable (:texture-region (:entity/image item)))]
       (.setMinSize drawable (float cell-size) (float cell-size))
       (.setDrawable image-widget drawable)
-      (add-tooltip! cell-widget #(components/info-text item %))
+      (add-tooltip! cell-widget #(info/->text item %))
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget

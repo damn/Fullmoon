@@ -1,5 +1,5 @@
 (ns components.widgets.entity-info-window
-  (:require [core.components :as components]
+  (:require [core.info :as info]
             [core.context :as ctx]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.group :refer [add-actor!]]))
@@ -26,7 +26,7 @@
                                                                  "Entity Info"))
                                                    (.setText label
                                                              (str (when-let [entity* (ctx/mouseover-entity* ctx)]
-                                                                    (components/info-text
+                                                                    (info/->text
                                                                      ; don't use select-keys as it loses core.entity.Entity record type
                                                                      (apply dissoc entity* disallowed-keys)
                                                                      ctx))))

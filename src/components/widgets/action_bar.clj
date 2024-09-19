@@ -1,6 +1,6 @@
 (ns components.widgets.action-bar
   (:require [core.component :refer [defcomponent]]
-            [core.components :as components]
+            [core.info :as info]
             [core.context :as ctx]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
@@ -28,7 +28,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (ui/->image-button ctx image identity {:scale image-scale})]
       (actor/set-id! button id)
-      (add-tooltip! button #(components/info-text skill (assoc % :effect/source (ctx/player-entity %))))
+      (add-tooltip! button #(info/->text skill (assoc % :effect/source (ctx/player-entity %))))
       (add-actor! horizontal-group button)
       (.add ^ButtonGroup button-group ^Button button)
       ctx)))

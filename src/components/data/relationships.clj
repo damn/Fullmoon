@@ -1,6 +1,6 @@
 (ns components.data.relationships
   (:require [core.component :refer [defcomponent]]
-            [core.components :as components]
+            [core.info :as info]
             [core.context :as ctx]
             [core.data :as data]
             [core.property :as property]
@@ -52,7 +52,7 @@
         (let [property (ctx/property ctx property-id)
               image-widget (ui/->image-widget (property/->image property)
                                               {:id property-id})]
-          (actor/add-tooltip! image-widget #(components/info-text property %))
+          (actor/add-tooltip! image-widget #(info/->text property %))
           image-widget))
       (for [id property-ids]
         (ui/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
@@ -96,7 +96,7 @@
          (let [property (ctx/property ctx property-id)
                image-widget (ui/->image-widget (property/->image property)
                                                {:id property-id})]
-           (actor/add-tooltip! image-widget #(components/info-text property %))
+           (actor/add-tooltip! image-widget #(info/->text property %))
            image-widget))]
       [(when property-id
          (ui/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))

@@ -1,4 +1,4 @@
-(ns core.components
+(ns core.info
   (:require [clojure.string :as str]
             [utils.core :refer [index-of]]
             [core.component :as component]))
@@ -32,7 +32,9 @@
       s
       (remove-newlines new-s))))
 
-(defn info-text [components ctx]
+(defn ->text
+  "Recursively generates info-text via [[core.component/info-text]]."
+  [components ctx]
   (->> components
        sort-by-order
        (keep (fn [{v 1 :as component}]
@@ -43,6 +45,6 @@
                            ; and info-text might break
                            (pr-str component)))
                     (when (map? v)
-                      (str "\n" (info-text v ctx))))))
+                      (str "\n" (->text v ctx))))))
        (str/join "\n")
        remove-newlines))

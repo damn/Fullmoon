@@ -1,5 +1,5 @@
 (ns components.widgets.skill-window
-  (:require [core.components :as components]
+  (:require [core.info :as info]
             [core.context :as ctx]
             [gdx.scene2d.actor :refer [add-tooltip!]]
             [gdx.scene2d.ui :as ui]))
@@ -22,6 +22,6 @@
                                                              (fn [ctx]
                                                                (ctx/do! ctx (ctx/player-clicked-skillmenu ctx (ctx/property ctx id)))))]]
                          (do
-                          (add-tooltip! button #(components/info-text (ctx/property % id) %)) ; TODO no player modifiers applied (see actionbar)
+                          (add-tooltip! button #(info/->text (ctx/property % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))

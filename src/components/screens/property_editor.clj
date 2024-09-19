@@ -4,7 +4,7 @@
             [malli.generator :as mg]
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
-            [core.components :as components]
+            [core.info :as info]
             [core.property :as property]
             [core.context :as ctx]
             [core.data :as data]
@@ -213,7 +213,7 @@
                  (ui/->text-button ctx (name id) on-clicked))
         top-widget (ui/->label (or (and extra-info-text (extra-info-text props)) ""))
         stack (ui/->stack [button top-widget])]
-    (actor/add-tooltip! button #(components/info-text props %))
+    (actor/add-tooltip! button #(info/->text props %))
     (actor/set-touchable! top-widget :disabled)
     stack))
 
