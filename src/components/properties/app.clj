@@ -1,12 +1,14 @@
 (ns components.properties.app
   (:require [core.component :refer [defcomponent]]
+            [core.data :as data]
             [core.property :refer [def-property-type]]))
 
-(defcomponent :fps          {:data :nat-int})
-(defcomponent :full-screen? {:data :boolean})
-(defcomponent :width        {:data :nat-int})
-(defcomponent :height       {:data :nat-int})
-(defcomponent :title        {:data :string})
+(data/def-attributes
+  :fps          :nat-int
+  :full-screen? :boolean
+  :width        :nat-int
+  :height       :nat-int
+  :title        :string)
 
 (defcomponent :app/lwjgl3 {:data [:map [:fps
                                         :full-screen?

@@ -1,9 +1,10 @@
 (ns components.context.config
-  (:require [core.component :refer [defcomponent] :as component]))
+  (:require [core.component :refer [defcomponent] :as component]
+            [core.data :as data]))
 
-(defcomponent :tag {:data [:enum [:dev :prod]]})
-
-(defcomponent :configs {:data :some})
+(data/def-attributes
+  :tag [:enum [:dev :prod]]
+  :configs :some)
 
 (defcomponent :context/config
   {:data [:map [:tag :configs]]

@@ -3,6 +3,7 @@
             [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
+            [core.data :as data]
             [core.effect :as effect]
             [core.property :refer [def-property-type]]
             [core.tx :as tx]))
@@ -10,9 +11,11 @@
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
-(defcomponent :body/width   {:data :pos})
-(defcomponent :body/height  {:data :pos})
-(defcomponent :body/flying? {:data :boolean})
+
+(data/def-attributes
+  :body/width   :pos
+  :body/height  :pos
+  :body/flying? :boolean)
 
 (defcomponent :entity/body
   {:data [:map [:body/width

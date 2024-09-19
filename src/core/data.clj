@@ -1,6 +1,6 @@
 (ns core.data
   (:require [utils.core :refer [safe-get]]
-            [core.component :refer [defsystem] :as component]))
+            [core.component :refer [defsystem defcomponent*] :as component]))
 
 (defsystem ->value "Returns the data value. Required system, no default." [_])
 
@@ -21,3 +21,8 @@
 
 (defmulti ->widget      (fn [data _v _ctx] (data->widget data)))
 (defmulti widget->value (fn [data _widget] (data->widget data)))
+
+(defn def-attributes [& attributes-data]
+  {:pre [(even? (count attributes-data))]}
+  (doseq [[k data] (partition 2 attributes-data)]
+    (defcomponent* k {:data data})))
