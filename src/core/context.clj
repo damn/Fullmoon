@@ -130,10 +130,6 @@
 (defprotocol WorldGenerator
   (->world [ctx world-id]))
 
-(defprotocol DebugRender
- (debug-render-before-entities [_ g])
- (debug-render-after-entities  [_ g]))
-
 (defprotocol IngameWindows
   (check-window-hotkeys [_])
   (close-windows? [_]))

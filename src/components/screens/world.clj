@@ -4,7 +4,8 @@
             [core.context :as ctx]
             [core.screen :as screen]
             [core.state :as state]
-            [components.context.world :as world])
+            [components.context.world :as world]
+            [components.world.debug-render :as debug-render])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defn- render-world! [ctx]
@@ -12,12 +13,12 @@
   (ctx/render-map ctx (camera/position (ctx/world-camera ctx)))
   (ctx/render-world-view ctx
                          (fn [g]
-                           (ctx/debug-render-before-entities ctx g)
+                           (debug-render/before-entities ctx g)
                            (ctx/render-entities! ctx
                                                  g
                                                  (->> (ctx/active-entities ctx)
                                                       (map deref)))
-                           (ctx/debug-render-after-entities ctx g))))
+                           (debug-render/after-entities ctx g))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))

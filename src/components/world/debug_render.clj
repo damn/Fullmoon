@@ -65,12 +65,10 @@
                             :air  [1 1 0 0.5]
                             :none [1 0 0 0.5]))))))
 
-(extend-type core.context.Context
-  core.context/DebugRender
-  (debug-render-before-entities [ctx g]
-    (tile-debug g ctx))
+(defn before-entities [ctx g]
+  (tile-debug g ctx))
 
-  (debug-render-after-entities [ctx g]
-    #_(geom-test g ctx)
-    (highlight-mouseover-tile g ctx)))
+(defn after-entities [ctx g]
+  #_(geom-test g ctx)
+  (highlight-mouseover-tile g ctx))
 
