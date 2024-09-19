@@ -32,10 +32,10 @@
   (.getText ^VisTextField widget))
 
 (defcomponent :number  {:schema number?})
-(defcomponent :nat-int {:schema nat-int? :widget :number})
-(defcomponent :int     {:schema int?     :widget :number})
-(defcomponent :pos     {:schema pos?     :widget :number})
-(defcomponent :pos-int {:schema pos-int? :widget :number})
+(defcomponent :nat-int {:schema nat-int?})
+(defcomponent :int     {:schema int?})
+(defcomponent :pos     {:schema pos?})
+(defcomponent :pos-int {:schema pos-int?})
 
 (defmethod data/->widget :number [[_ data] v _ctx]
   (add-schema-tooltip! (ui/->text-field (utils/->edn-str v) {})
@@ -80,8 +80,7 @@
 
 (defcomponent :map-optional
   (data/->value [[_ ks]]
-    {:widget :map
-     :schema (map-schema (map (fn [k] [k {:optional true}]) ks))}))
+    {:schema (map-schema (map (fn [k] [k {:optional true}]) ks))}))
 
 (defn- namespaced-ks [ns-name-k]
   (filter #(= (name ns-name-k) (namespace %))

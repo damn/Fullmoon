@@ -39,13 +39,13 @@
      sys-name))
 
 (defn data-components []
-  (concat
-   (keys (methods core.data/->value))
-   (map first
-        (filter (fn [[k attr-m]]
-                  (or (:widget attr-m)
-                      (:schema attr-m)))
-                component/attributes))))
+  (sort
+   (concat
+    (keys (methods core.data/->value))
+    (map first
+         (filter (fn [[k attr-m]]
+                   (:schema attr-m))
+                 component/attributes)))))
 
 (defn- print-components* [ks]
   (doseq [k ks]

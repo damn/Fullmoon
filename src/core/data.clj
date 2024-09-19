@@ -2,7 +2,8 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defsystem defcomponent*] :as component]))
 
-(defsystem ->value "Returns the data value. Required system, no default." [_])
+(defsystem ->value "Creates component attr-m"
+  [_])
 
 (defn component [k]
   (try (let [data (:data (safe-get component/attributes k))]
@@ -16,11 +17,14 @@
 (defmethod edn->value :default [_data v _ctx]
   v)
 
-(defn- data->widget [[k v]]
-  (or (:widget v) k))
+(defn- k->widget [k]
+  (cond
+   (#{:map-optional :components-ns} k) :map
+   (#{:number :nat-int :int :pos :pos-int :val-max} k) :number
+   :else k))
 
-(defmulti ->widget      (fn [data _v _ctx] (data->widget data)))
-(defmulti widget->value (fn [data _widget] (data->widget data)))
+(defmulti ->widget      (fn [[k _] _v _ctx] (k->widget k)))
+(defmulti widget->value (fn [[k _] _widget] (k->widget k)))
 
 (defn def-attributes [& attributes-data]
   {:pre [(even? (count attributes-data))]}
