@@ -71,4 +71,3 @@
 (defn after-entities [ctx g]
   #_(geom-test g ctx)
   (highlight-mouseover-tile g ctx))
-

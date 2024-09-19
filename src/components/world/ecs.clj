@@ -8,7 +8,7 @@
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))
 
-(def ^:private this :world/ecs)
+(def ^:private this :context/ecs)
 
 (defcomponent this
   (component/create [_ _ctx]

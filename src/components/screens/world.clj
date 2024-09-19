@@ -70,7 +70,7 @@
         ctx (-> ctx
                 (merge {::game-loop-mode mode}
                        (component/create-into ctx
-                                              {:world/ecs true
+                                              {:context/ecs true
                                                :world/time true
                                                :world/widgets true
                                                :world/effect-handler [mode record-transactions?]})))]
