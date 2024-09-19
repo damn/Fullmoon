@@ -54,7 +54,7 @@
               (components.graphics.views/->build views)
               (components.graphics.cursors/->build cursors)))))
 
-  (component/destroy [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
+  (component/destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
     (.dispose ^Disposable batch)
     (.dispose ^Disposable shape-drawer-texture)
     (.dispose ^Disposable default-font)

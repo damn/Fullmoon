@@ -30,7 +30,7 @@
            (reset! state)))
 
     (dispose []
-      (run! component/destroy @state))
+      (run! component/destroy! @state))
 
     (render []
       (ScreenUtils/clear Color/BLACK)

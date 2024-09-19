@@ -111,10 +111,10 @@ Example:
 (defmethod create :default [[_ v] _ctx]
   v)
 
-(defsystem destroy "Side effect destroy resources. Default do nothing."
+(defsystem destroy! "Side effect destroy resources. Default do nothing."
   [_])
 
-(defmethod destroy :default [_])
+(defmethod destroy! :default [_])
 
 (defsystem info-text "Return info-string (for tooltips,etc.). Default nil."
   [_ ctx])

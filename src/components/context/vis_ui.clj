@@ -36,5 +36,5 @@
     (set-tooltip-config!)
     true)
 
-  (component/destroy [_]
+  (component/destroy! [_]
     (VisUI/dispose)))

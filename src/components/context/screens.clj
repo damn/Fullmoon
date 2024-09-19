@@ -10,7 +10,7 @@
     {:screens (component/ks->create-all screen-ks ctx)
      :first-screen (first screen-ks)})
 
-  (component/destroy [_]
+  (component/destroy! [_]
     ; TODO screens not disposed https://github.com/damn/core/issues/41
     ))
 
