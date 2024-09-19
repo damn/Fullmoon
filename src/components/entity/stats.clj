@@ -63,12 +63,12 @@
       operations [:op/inc]]
   (defstat :stats/cast-speed
     {:data data
-     :doc doc
+     :editor/doc doc
      :modifier-ops operations})
 
   (defstat :stats/attack-speed
     {:data data
-     :doc doc
+     :editor/doc doc
      :modifier-ops operations}))
 
 ; TODO bounds

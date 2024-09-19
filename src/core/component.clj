@@ -55,15 +55,12 @@ Warns on override."
 
 attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
 
-The key `:doc` allows us to add component documentation.
-
 Example:
 ```
 (defsystem foo \"foo docstring.\" [_])
 
 (defcomponent :foo/bar
-  {:doc \"foo-bars a lot\"
-   :let {:keys [a b]}}
+  {:let {:keys [a b]}}
   (foo [_]
     (+ a b)))
 
@@ -130,6 +127,3 @@ Example:
               ctx))
           ctx
           components))
-
-(defn doc [k]
-  (:doc (get attributes k)))
