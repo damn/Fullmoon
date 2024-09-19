@@ -29,11 +29,13 @@
     (assert (not-any? nil? cells))
     (swap! entity assoc ::touched-cells cells)
     (doseq [cell cells]
-      (swap! cell cell/add-entity entity))))
+      (assert (not (get (:entities @cell) entity)))
+      (swap! cell update :entities conj entity))))
 
 (defn- remove-from-cells! [entity]
   (doseq [cell (::touched-cells @entity)]
-    (swap! cell cell/remove-entity entity)))
+    (assert (get (:entities @cell) entity))
+    (swap! cell update :entities disj entity)))
 
 ; could use inside tiles only for >1 tile bodies (for example size 4.5 use 4x4 tiles for occupied)
 ; => only now there are no >1 tile entities anyway
@@ -47,12 +49,14 @@
 (defn- set-occupied-cells! [grid entity]
   (let [cells (rectangle->occupied-cells grid @entity)]
     (doseq [cell cells]
-      (swap! cell cell/add-occupying-entity entity))
+      (assert (not (get (:occupied @cell) entity)))
+      (swap! cell update :occupied conj entity))
     (swap! entity assoc ::occupied-cells cells)))
 
 (defn- remove-from-occupied-cells! [entity]
   (doseq [cell (::occupied-cells @entity)]
-    (swap! cell cell/remove-occupying-entity entity)))
+    (assert (get (:occupied @cell) entity))
+    (swap! cell update :occupied disj entity)))
 
 ; TODO LAZY SEQ @ grid2d/get-8-neighbour-positions !!
 ; https://github.com/damn/grid2d/blob/master/src/data/grid2d.clj#L126
@@ -110,22 +114,6 @@
                  good
                  evil]
   core.world.cell/Cell
-  (add-entity [this entity]
-    (assert (not (get entities entity)))
-    (update this :entities conj entity))
-
-  (remove-entity [this entity]
-    (assert (get entities entity))
-    (update this :entities disj entity))
-
-  (add-occupying-entity [this entity]
-    (assert (not (get occupied entity)))
-    (update this :occupied conj entity))
-
-  (remove-occupying-entity [this entity]
-    (assert (get occupied entity))
-    (update this :occupied disj entity))
-
   (blocked? [_ z-order]
     (case movement
       :none true ; wall

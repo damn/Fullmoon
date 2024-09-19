@@ -1,10 +1,6 @@
 (ns core.world.cell)
 
 (defprotocol Cell
-  (add-entity [_ entity])
-  (remove-entity [_ entity])
-  (add-occupying-entity [_ entity])
-  (remove-occupying-entity [_ entity])
   (blocked? [_ z-order])
   (blocks-vision? [_])
   (occupied-by-other? [_ entity]
