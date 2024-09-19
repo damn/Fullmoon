@@ -73,9 +73,7 @@
 
 (defprotocol Assets
   (play-sound! [_ file] "Sound is already loaded from file, this will perform only a lookup for the sound and play it.")
-  (cached-texture [_ file])
-  (all-sound-files   [_])
-  (all-texture-files [_]))
+  (cached-texture [_ file]))
 
 (defprotocol EffectHandler
   (do! [_ txs])

@@ -67,10 +67,7 @@
     (.play ^Sound (get-asset ctx file)))
 
   (cached-texture [ctx file]
-    (get-asset ctx file))
-
-  (all-sound-files   [ctx] (:sound-files   (this ctx)))
-  (all-texture-files [ctx] (:texture-files (this ctx))))
+    (get-asset ctx file)))
 
 (defcomponent :tx/sound
   {:data :sound
