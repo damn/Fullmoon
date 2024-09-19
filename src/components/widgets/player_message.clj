@@ -6,14 +6,16 @@
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))
 
+(def ^:private this :context/msg-to-player)
+
 (defcomponent :tx/msg-to-player
   (tx/do! [[_ message] ctx]
-    (assoc ctx ::msg {:message message :counter 0})))
+    (assoc ctx this {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)
 
 (defn- draw-player-message [g ctx]
-  (when-let [{:keys [message]} (::msg ctx)]
+  (when-let [{:keys [message]} (this ctx)]
     (g/draw-text g {:x (/ (ctx/gui-viewport-width ctx) 2)
                     :y (+ (/ (ctx/gui-viewport-height ctx) 2) 200)
                     :text message
@@ -21,10 +23,10 @@
                     :up? true})))
 
 (defn- check-remove-message [{:keys [context/state] :as ctx}]
-  (when-let [{:keys [counter]} (::msg ctx)]
-    (swap! state update ::msg update :counter + (.getDeltaTime Gdx/graphics))
+  (when-let [{:keys [counter]} (this ctx)]
+    (swap! state update this update :counter + (.getDeltaTime Gdx/graphics))
     (when (>= counter duration-seconds)
-      (swap! state assoc ::msg nil))))
+      (swap! state assoc this nil))))
 
 (defcomponent :widgets/player-message
   (component/create [_ ctx]
