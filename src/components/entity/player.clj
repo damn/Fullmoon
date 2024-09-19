@@ -6,7 +6,7 @@
 
 (defcomponent :entity/player?
   (entity/create [_ eid ctx]
-    (assoc ctx ::eid eid)))
+    (assoc ctx :context/player-entity eid)))
 
 (defn- state-obj [ctx]
   (-> ctx
@@ -16,7 +16,7 @@
 (extend-type core.context.Context
   core.context/PlayerEntity
   (player-entity [ctx]
-    (::eid ctx))
+    (:context/player-entity ctx))
 
   (player-entity* [ctx]
     @(ctx/player-entity ctx))
