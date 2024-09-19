@@ -62,7 +62,7 @@
                                           "air"  :air
                                           "all"  :all)]
                           :world/raycaster cell/blocks-vision?
-                          :world/content-grid [16 16]
+                          :context/content-grid [16 16]
                           :world/explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
@@ -92,7 +92,7 @@
                        :tiled-level tiled-level))
 
   ; TODO these two what to do ?
-  (content-grid [ctx] (:world/content-grid ctx))
+  (content-grid [ctx] (:context/content-grid ctx))
 
   (active-entities [ctx]
     (content-grid/active-entities (ctx/content-grid ctx)
