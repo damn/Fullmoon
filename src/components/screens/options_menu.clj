@@ -26,7 +26,7 @@
 
 (defn- debug-flags []
   (apply concat
-         (for [nmspace (utils.ns/get-namespaces #{"components"})]
+         (for [nmspace (utils.ns/get-namespaces #{"components"})] ; DRY in core.component check ns-name & core.app require all ... core.components
            (utils.ns/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
 
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED

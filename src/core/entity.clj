@@ -104,7 +104,6 @@
     :z-order z-order
     :rotation-angle (or rotation-angle 0)}))
 
-
 (def ^{:doc "For effects just to have a mouseover body size for debugging purposes."}
   effect-body-props
   {:width 0.5
