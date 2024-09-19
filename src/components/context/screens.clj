@@ -7,7 +7,7 @@
   {:data :some
    :let screen-ks}
   (component/create [_ ctx]
-    {:screens (component/ks->create-all screen-ks ctx)
+    {:screens (component/create-all (zipmap screen-ks (repeat nil)) ctx)
      :first-screen (first screen-ks)})
 
   (component/destroy! [_]

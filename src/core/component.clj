@@ -1,7 +1,7 @@
 (ns core.component
   "We define a component as vector of `[keyword value]`.
 
-The two macros defsystem and defcomponent allow us to define behaviour and metadata for different components.")
+The two macros [[defsystem]] and [[defcomponent]] allow us to define behaviour and metadata for different components.")
 
 (def warn-on-override? true)
 
@@ -59,12 +59,13 @@ The key `:doc` allows us to add component documentation.
 
 Example:
 ```
-(defsystem foo \"foo-docstring\" [_])
+(defsystem foo \"foo docstring.\" [_])
 
 (defcomponent :foo/bar
   {:doc \"foo-bars a lot\"
    :let {:keys [a b]}}
-  (foo [_] (+ a b)))
+  (foo [_]
+    (+ a b)))
 
 (foo [:foo/bar {:a 1 :b 2}])
 => 3
@@ -104,45 +105,23 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
-(defsystem create
-  "Create component value. Default returns v."
-  [_ ctx])
+(defsystem create "Create component value. Default returns v." [_ ctx])
+(defmethod create :default [[_ v] _ctx] v)
 
-(defmethod create :default [[_ v] _ctx]
-  v)
-
-(defsystem destroy! "Side effect destroy resources. Default do nothing."
-  [_])
-
+(defsystem destroy! "Side effect destroy resources. Default do nothing." [_])
 (defmethod destroy! :default [_])
 
-(defsystem info-text "Return info-string (for tooltips,etc.). Default nil."
-  [_ ctx])
+(defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-(defn- apply-system [components system & args]
+(defn create-all
+  "Creates a map for every component with map entries `[k (core.component/create [k v] ctx)]`."
+  [components ctx]
   (reduce (fn [m [k v]]
-            (assoc m k (apply system [k v] args)))
-          {} ; hae? ..
+            (assoc m k (create [k v] ctx)))
+          {}
           components))
 
-; only called @ entity
-(defn create-all
-  "Creates a map for every component of `[k (core.component/create [k v] ctx)]`."
-  [components ctx]
-  (assert (map? ctx))
-  (apply-system components create ctx))
-
-(defn- ks->components [ks]
-  (zipmap ks (repeat nil)))
-
-; only called @ screens
-(defn ks->create-all
-  "Calls [[create-all]] after converting keywords ks into a map of `[k nil]`."
-  [ks ctx]
-  (create-all (ks->components ks) ctx))
-
-; world & application called
 (defn create-into [ctx components]
   (assert (map? ctx))
   (reduce (fn [ctx [k v]]
