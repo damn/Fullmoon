@@ -122,15 +122,10 @@
       (.isKeyPressed     Gdx/input Input$Keys/SPACE)))
 
 (defn- update-game-paused [ctx]
-  (assoc ctx ::paused? (or (::tick-error ctx)
-                           (and pausing?
-                                (ctx/player-state-pause-game? ctx)
-                                (not (player-unpaused?))))))
-
-(extend-type core.context.Context
-  core.context/Game
-  (game-paused? [ctx]
-    (::paused? ctx)))
+  (assoc ctx :world/paused? (or (::tick-error ctx)
+                                (and pausing?
+                                     (ctx/player-state-pause-game? ctx)
+                                     (not (player-unpaused?))))))
 
 (defn- update-world [ctx]
   (let [ctx (ctx/update-time ctx)
@@ -148,7 +143,7 @@
   (ctx/do! ctx [ctx/player-update-state
                 ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
-                #(if (ctx/game-paused? %)
+                #(if (:world/paused? %)
                    %
                    (update-world %))
                 ctx/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
