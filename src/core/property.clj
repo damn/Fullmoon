@@ -6,6 +6,9 @@
 (defn property-type->id-namespace [property-type]
   (keyword (name property-type)))
 
+(defn ns-k->property-type [ns-k]
+  (keyword "properties" (name ns-k)))
+
 (defn ->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 

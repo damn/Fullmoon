@@ -13,16 +13,30 @@
 
 (defcomponent :one-to-many
   (data/->value [[_ property-type]]
-    {:schema [:set [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]]
-     :linked-property-type property-type}))
+    {:schema [:set [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]]}))
+
+(defn one-to-many-schema->linked-property-type [[_set [_qualif_kw {:keys [namespace]}]]]
+  (property/ns-k->property-type namespace))
+
+(comment
+ (= (one-to-many-schema->linked-property-type [:set [:qualified-keyword {:namespace :items}]])
+    :properties/items)
+ )
 
 (defmethod data/edn->value :one-to-many [_ property-ids ctx]
   (map (partial ctx/property ctx) property-ids))
 
 (defcomponent :one-to-one
   (data/->value [[_ property-type]]
-    {:schema [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]
-     :linked-property-type property-type}))
+    {:schema [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]}))
+
+(defn one-to-one-schema->linked-property-type [[_qualif_kw {:keys [namespace]}]]
+  (property/ns-k->property-type namespace))
+
+(comment
+ (= (one-to-one-schema->linked-property-type [:qualified-keyword {:namespace :creatures}])
+    :properties/creatuers)
+ )
 
 (defmethod data/edn->value :one-to-one [_ property-id ctx]
   (ctx/property ctx property-id))
@@ -61,7 +75,7 @@
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
-                          (:linked-property-type data)
+                          (one-to-many-schema->linked-property-type (:schema data))
                           property-ids)
     table))
 
@@ -105,7 +119,7 @@
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
-                         (:linked-property-type data)
+                         (one-to-one-schema->linked-property-type (:schema data))
                          property-id)
     table))
 

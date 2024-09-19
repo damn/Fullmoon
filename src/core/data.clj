@@ -2,8 +2,7 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defsystem defcomponent*] :as component]))
 
-(defsystem ->value "Creates component attr-m"
-  [_])
+(defsystem ->value "..." [_])
 
 (defn component [k]
   (try (let [data (:data (safe-get component/attributes k))]
