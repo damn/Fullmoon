@@ -5,12 +5,13 @@
             [core.screen :as screen]
             [core.state :as state]
             [components.context.world :as world]
+            [components.world.render :as world-render]
             [components.world.debug-render :as debug-render])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defn- render-world! [ctx]
   (camera/set-position! (ctx/world-camera ctx) (:position (ctx/player-entity* ctx)))
-  (ctx/render-map ctx (camera/position (ctx/world-camera ctx)))
+  (world-render/render-map ctx (camera/position (ctx/world-camera ctx)))
   (ctx/render-world-view ctx
                          (fn [g]
                            (debug-render/before-entities ctx g)

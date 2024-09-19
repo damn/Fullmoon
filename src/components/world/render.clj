@@ -43,13 +43,11 @@
               (swap! explored-tile-corners assoc (->tile position) true))
             Color/WHITE)))))
 
-(extend-type core.context.Context
-  core.context/WorldTiledMap
-  (render-map [{:keys [world/tiled-map] :as ctx} light-position]
-    (ctx/render-tiled-map ctx
-                          tiled-map
-                          (->tile-color-setter (atom nil)
-                                               light-position
-                                               (:world/raycaster ctx)
-                                               (:world/explored-tile-corners ctx)))
-    #_(reset! do-once false)))
+(defn render-map [{:keys [world/tiled-map] :as ctx} light-position]
+  (ctx/render-tiled-map ctx
+                        tiled-map
+                        (->tile-color-setter (atom nil)
+                                             light-position
+                                             (:world/raycaster ctx)
+                                             (:world/explored-tile-corners ctx)))
+  #_(reset! do-once false))
