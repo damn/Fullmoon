@@ -15,10 +15,22 @@
 Please note that it is very experimental and work-in-progress at the moment.
 I would appreciate very much any feedback!
 
+# Data Architecture
+
+The whole application state is stored in one clojure record `core.context/Context`.
+
 # Screenshots
 <details>
   <summary>Ingame</summary>
 <img width="1437" alt="Screenshot 2024-09-11 at 10 59 32 PM" src="https://github.com/user-attachments/assets/19c2a342-0e70-4925-a203-2e8c229e4ea0">
+
+</details>
+
+<details>
+  <summary>Context Inspector</summary>
+
+  <img width="1425" alt="Screenshot 2024-09-19 at 10 42 45 PM" src="https://github.com/user-attachments/assets/4819dd7f-93eb-4096-b392-aec8e39c6905">
+
 
 </details>
 <details>
