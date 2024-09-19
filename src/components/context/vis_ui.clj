@@ -34,7 +34,7 @@
                   :skin-scale/x2 VisUI$SkinScale/X2))
     (font-enable-markup!)
     (set-tooltip-config!)
-    true)
+    :loaded)
 
   (component/destroy! [_]
     (VisUI/dispose)))
