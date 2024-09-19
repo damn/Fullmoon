@@ -1,25 +1,25 @@
 (ns core.state
   (:require [core.component :refer [defsystem]]))
 
-(defsystem enter [_ ctx])
+(defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 
-(defsystem exit  [_ ctx])
+(defsystem exit  "FIXME" [_ ctx])
 (defmethod exit :default  [_ ctx])
 
 ;; Player-State
 
-(defsystem player-enter [_])
+(defsystem player-enter "FIXME" [_])
 (defmethod player-enter :default [_])
 
-(defsystem pause-game? [_])
+(defsystem pause-game? "FIXME" [_])
 (defmethod pause-game? :default [_])
 
-(defsystem manual-tick [_ ctx])
+(defsystem manual-tick "FIXME" [_ ctx])
 (defmethod manual-tick :default [_ ctx])
 
-(defsystem clicked-inventory-cell [_ cell])
+(defsystem clicked-inventory-cell "FIXME" [_ cell])
 (defmethod clicked-inventory-cell :default [_ cell])
 
-(defsystem clicked-skillmenu-skill [_ skill])
+(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])

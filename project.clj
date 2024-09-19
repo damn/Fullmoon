@@ -30,13 +30,14 @@
              "-Dvisualvm.display.name=CDQ"
              "-XX:-OmitStackTraceInFastThrow" ; disappeared stacktraces
              ; for visualvm profiling
-             "-Dcom.sun.management.jmxremote=true"
-             "-Dcom.sun.management.jmxremote.port=20000"
-             "-Dcom.sun.management.jmxremote.ssl=false"
-             "-Dcom.sun.management.jmxremote.authenticate=false"
+             ;"-Dcom.sun.management.jmxremote=true"
+             ;"-Dcom.sun.management.jmxremote.port=20000"
+             ;"-Dcom.sun.management.jmxremote.ssl=false"
+             ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
   :codox {:namespaces [#"^core|^dev|^gdx|^mapgen|^math|^utils"]
-          :source-uri "https://github.com/damn/core/blob/main/{filepath}#L{line}"}
+          :source-uri "https://github.com/damn/core/blob/main/{filepath}#L{line}"
+          :metadata {:doc/format :markdown}}
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :global-vars {*warn-on-reflection* true

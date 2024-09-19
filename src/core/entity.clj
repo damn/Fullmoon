@@ -5,13 +5,14 @@
             [utils.core :as utils]
             [core.component :refer [defsystem]]))
 
-(defsystem create [_ entity ctx])
+(defsystem create "Create entity with eid for txs side-effects. Default nil."
+  [_ entity ctx])
 (defmethod create :default [_ entity ctx])
 
-(defsystem destroy [_ entity ctx])
+(defsystem destroy "FIXME" [_ entity ctx])
 (defmethod destroy :default [_ entity ctx])
 
-(defsystem tick [_ entity ctx])
+(defsystem tick "FIXME" [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
 ; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
@@ -24,16 +25,16 @@
 ; then fetch all components which implement render-below
 ; and have parent-id in entity-ids, etc.
 
-(defsystem render-below [_ entity* g ctx])
+(defsystem render-below "FIXME" [_ entity* g ctx])
 (defmethod render-below :default [_ entity* g ctx])
 
-(defsystem render [_ entity* g ctx])
+(defsystem render "FIXME" [_ entity* g ctx])
 (defmethod render :default [_ entity* g ctx])
 
-(defsystem render-above [_ entity* g ctx])
+(defsystem render-above "FIXME" [_ entity* g ctx])
 (defmethod render-above :default [_ entity* g ctx])
 
-(defsystem render-info [_ entity* g ctx])
+(defsystem render-info "FIXME" [_ entity* g ctx])
 (defmethod render-info :default [_ entity* g ctx])
 
 (def render-systems [render-below

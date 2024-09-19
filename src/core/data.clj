@@ -2,7 +2,7 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defsystem] :as component]))
 
-(defsystem ->value [_])
+(defsystem ->value "Returns the data value. Required system, no default." [_])
 
 (defn component [k]
   (try (let [data (:data (safe-get component/attributes k))]

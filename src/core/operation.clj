@@ -2,9 +2,9 @@
   (:require [clojure.math :as math]
             [core.component :as component :refer [defsystem]]))
 
-(defsystem value-text [_])
-(defsystem apply [_ base-value])
-(defsystem order [_])
+(defsystem value-text "FIXME" [_])
+(defsystem apply "FIXME" [_ base-value])
+(defsystem order "FIXME" [_])
 
 (defn- +? [n]
   (case (math/signum n)

@@ -1,24 +1,29 @@
 (ns core.component
-  "We define a component as vector of [keyword value].
+  "We define a component as vector of `[keyword value]`.
+
 The two macros defsystem and defcomponent allow us to define behaviour and metadata for different components.")
 
 (def warn-on-override? true)
 
-(def ^{:doc "Map of all systems as key of name-string to var."} defsystems {})
+(def ^{:doc "Map of all systems as key of name-string to var."}
+  defsystems {})
 
 (defmacro defsystem
   "A system is a multimethod which dispatches on ffirst.
-So for a component [k v] it dispatches on the component-keyword k.
+So for a component `[k v]` it dispatches on the component-keyword `k`.
 
 Prints a warning on override."
-  [sys-name params]
+  [sys-name docstring params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
   (when warn-on-override?
     (when-let [avar (resolve sys-name)]
       (println "WARNING: Overwriting defsystem:" avar)))
   `(do
-    (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
+    (defmulti ~(vary-meta sys-name
+                          assoc
+                          :params (list 'quote params)
+                          :doc (str "**defsystem** `" params "`\n" docstring))
       (fn ~(symbol (str (name sys-name))) [& args#]
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
@@ -48,9 +53,22 @@ Warns on override."
 (defmacro defcomponent
   "Defines a component with keyword k and optional metadata attribute-map followed by system implementations.
 
-attr-map may contain :let binding which is let over the value part of a component [k value].
+attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
 
-The key :doc allows us to add component documentation."
+The key `:doc` allows us to add component documentation.
+
+Example:
+```
+(defsystem foo \"foo-docstring\" [_])
+
+(defcomponent :foo/bar
+  {:doc \"foo-bars a lot\"
+   :let {:keys [a b]}}
+  (foo [_] (+ a b)))
+
+(foo [:foo/bar {:a 1 :b 2}])
+=> 3
+```"
   [k & sys-impls]
   (check-warn-ns-name-mismatch k)
   (let [attr-map? (not (list? (first sys-impls)))
@@ -86,32 +104,45 @@ The key :doc allows us to add component documentation."
                  ~@fn-exprs)))))
       ~k)))
 
-(defsystem create [_ ctx])
+(defsystem create
+  "Create component value. Default returns v."
+  [_ ctx])
+
 (defmethod create :default [[_ v] _ctx]
   v)
 
-(defsystem destroy [_])
+(defsystem destroy "Side effect destroy resources. Default do nothing."
+  [_])
+
 (defmethod destroy :default [_])
 
-(defsystem info-text [_ ctx])
+(defsystem info-text "Return info-string (for tooltips,etc.). Default nil."
+  [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-(defn apply-system [components system & args]
+(defn- apply-system [components system & args]
   (reduce (fn [m [k v]]
             (assoc m k (apply system [k v] args)))
           {} ; hae? ..
           components))
 
-(defn create-all [components ctx]
+; only called @ entity
+(defn create-all
+  "Creates a map for every component of `[k (core.component/create [k v] ctx)]`."
+  [components ctx]
   (assert (map? ctx))
   (apply-system components create ctx))
 
 (defn- ks->components [ks]
   (zipmap ks (repeat nil)))
 
-(defn ks->create-all [ks ctx]
+; only called @ screens
+(defn ks->create-all
+  "Calls [[create-all]] after converting keywords ks into a map of `[k nil]`."
+  [ks ctx]
   (create-all (ks->components ks) ctx))
 
+; world & application called
 (defn create-into [ctx components]
   (assert (map? ctx))
   (reduce (fn [ctx [k v]]
