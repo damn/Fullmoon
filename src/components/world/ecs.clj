@@ -53,7 +53,7 @@
                       (safe-merge (-> components
                                       (assoc :entity/id eid
                                              :entity/uid (unique-number!))
-                                      (component/create-all ctx)))))
+                                      (component/create-vs ctx)))))
       (create-e-system eid))))
 
 (defcomponent :tx/destroy

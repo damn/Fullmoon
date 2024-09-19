@@ -3,16 +3,15 @@
 
 The two macros [[defsystem]] and [[defcomponent]] allow us to define behaviour and metadata for different components.")
 
-(def warn-on-override? true)
+(def ^{:doc "For defsystem and defcomponent"}
+  warn-on-override? true)
 
 (def ^{:doc "Map of all systems as key of name-string to var."}
   defsystems {})
 
 (defmacro defsystem
   "A system is a multimethod which dispatches on ffirst.
-So for a component `[k v]` it dispatches on the component-keyword `k`.
-
-Prints a warning on override."
+So for a component `[k v]` it dispatches on the component-keyword `k`."
   [sys-name docstring params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
@@ -29,7 +28,8 @@ Prints a warning on override."
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def ^{:doc "Map of component-keys to component metadata."} attributes {})
+(def ^{:doc "Map of component-keys to component metadata."}
+  attributes {})
 
 (def ^:private warn-name-ns-mismatch? false)
 
@@ -43,15 +43,14 @@ Prints a warning on override."
     (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
 
 (defn defcomponent*
-  "Defines a component without behaviour/systems, so only to set metadata.
-Warns on override."
+  "Defines a component without systems methods, so only to set metadata."
   [k attr-map & {:keys [warn-on-override?]}]
   (when (and warn-on-override? (get attributes k))
     (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'attributes assoc k attr-map))
 
 (defmacro defcomponent
-  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations.
+  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
 
 attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
 
@@ -76,7 +75,7 @@ Example:
         attr-map (dissoc attr-map :let)]
     `(do
       (when ~attr-map?
-        (defcomponent* ~k ~attr-map) :warn-on-override? warn-on-override?)
+        (defcomponent* ~k ~attr-map :warn-on-override? warn-on-override?))
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
                     sys-params (:params (meta sys-var))
@@ -111,7 +110,7 @@ Example:
 (defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-(defn create-all
+(defn create-vs
   "Creates a map for every component with map entries `[k (core.component/create [k v] ctx)]`."
   [components ctx]
   (reduce (fn [m [k v]]
@@ -119,7 +118,10 @@ Example:
           {}
           components))
 
-(defn create-into [ctx components]
+(defn create-into
+  "For every component `[k v]`  `(core.component/create [k v] ctx)` is non-nil
+  or false, assoc's at ctx k v"
+  [ctx components]
   (assert (map? ctx))
   (reduce (fn [ctx [k v]]
             (if-let [v (create [k v] ctx)]
