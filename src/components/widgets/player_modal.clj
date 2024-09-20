@@ -15,7 +15,8 @@
   (add-to-stage! ctx
                  (ui/->window {:title title
                                :rows [[(ui/->label text)]
-                                      [(ui/->text-button button-text
+                                      [(ui/->text-button ctx
+                                                         button-text
                                                          (fn [ctx]
                                                            (remove! (::modal (get-stage ctx)))
                                                            (on-click ctx)))]]
