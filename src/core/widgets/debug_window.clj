@@ -2,6 +2,7 @@
   (:require [gdx.graphics.camera :as camera]
             utils.core
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
+            [core.entity.player :as player]
             [core.g :as g]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui])
@@ -26,7 +27,7 @@
      "GUI: " (ctx/gui-mouse-position ctx) "\n"
      "paused? " (:context/paused? ctx) "\n"
      "elapsed-time " (utils.core/readable-number (ctx/elapsed-time ctx)) " seconds \n"
-     (skill-info (ctx/player-entity* ctx))
+     (skill-info (player/entity* ctx))
      (when-let [entity* (ctx/mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"

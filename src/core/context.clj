@@ -3,7 +3,6 @@
 
 (defrecord Context [])
 
-; direct data acess? or :timer ?
 (defprotocol Time
   (update-time [_])
   (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
@@ -13,15 +12,6 @@
   (stopped?       [_ counter])
   (reset          [_ counter])
   (finished-ratio [_ counter]))
-
-; [entity.player :as player]
-(defprotocol PlayerEntity
-  (player-entity [_])
-  (player-entity* [_])
-  (player-update-state [_])
-  (player-state-pause-game? [_])
-  (player-clicked-inventory [_ cell])
-  (player-clicked-skillmenu [_ skill]))
 
 (defprotocol Graphics
   (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")

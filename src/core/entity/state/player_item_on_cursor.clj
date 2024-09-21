@@ -3,6 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
+            [core.entity.player :as player]
             [core.g :as g]
             [core.state :as state]
             [core.inventory :as inventory])
@@ -96,7 +97,7 @@
       (g/draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
 (defn draw-item-on-cursor [g ctx]
-  (let [player-entity* (ctx/player-entity* ctx)]
+  (let [player-entity* (player/entity* ctx)]
     (when (and (= :player-item-on-cursor (entity/state player-entity*))
                (not (world-item? ctx)))
       (g/draw-centered-image g

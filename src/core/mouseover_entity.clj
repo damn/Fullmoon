@@ -2,10 +2,11 @@
   (:require [utils.core :refer [sort-by-order]]
             [core.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [core.entity :as entity]
+            [core.entity.player :as player]
             [core.world.grid :refer [point->entities]]))
 
 (defn- calculate-mouseover-entity [context]
-  (let [player-entity* (ctx/player-entity* context)
+  (let [player-entity* (player/entity* context)
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities (world-grid context)

@@ -3,6 +3,7 @@
             [core.val-max :refer [val-max-ratio]]
             [core.context :as ctx]
             [core.entity :as entity]
+            [core.entity.player :as player]
             [core.g :as g]
             [gdx.scene2d.ui :as ui]))
 
@@ -28,7 +29,7 @@
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/->actor context
                 {:draw (fn [g ctx]
-                         (let [player-entity* (ctx/player-entity* ctx)
+                         (let [player-entity* (player/entity* ctx)
                                x (- x (/ rahmenw 2))]
                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
                            (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))

@@ -5,6 +5,7 @@
             [core.context :as ctx]
             [core.g :as g]
             [core.entity :as entity]
+            [core.entity.player :as player]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))
 
@@ -107,7 +108,7 @@
 (defn render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [ctx g entities*]
-  (let [player-entity* (ctx/player-entity* ctx)]
+  (let [player-entity* (player/entity* ctx)]
     (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
                                                first
                                                entity/render-order)

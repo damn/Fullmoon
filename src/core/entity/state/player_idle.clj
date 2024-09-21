@@ -5,6 +5,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
+            [core.entity.player :as player]
             [core.state :as state]
             [core.effect.core :refer [->player-effect-ctx]]
             [core.widgets :as widgets]
@@ -22,7 +23,7 @@
 
 (defmethod on-clicked :clickable/item
   [context clicked-entity*]
-  (let [player-entity* (ctx/player-entity* context)
+  (let [player-entity* (player/entity* context)
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
@@ -61,7 +62,7 @@
 (defn- inventory-cell-with-item? [ctx actor]
   (and (parent actor)
        (= "inventory-cell" (actor/name (parent actor)))
-       (get-in (:entity/inventory (ctx/player-entity* ctx))
+       (get-in (:entity/inventory (player/entity* ctx))
                (actor/id (parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]

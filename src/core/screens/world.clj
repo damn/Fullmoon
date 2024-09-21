@@ -6,6 +6,7 @@
             [core.context :as ctx]
             [core.content-grid :as content-grid]
             [core.ecs :as ecs]
+            [core.entity.player :as player]
             [core.screens :as screens]
             [core.widgets :as widgets]
             [core.screen :as screen]
@@ -99,7 +100,7 @@
   core.context/World
   (active-entities [ctx]
     (content-grid/active-entities (content-grid ctx)
-                                  (ctx/player-entity* ctx)))
+                                  (player/entity* ctx)))
 
   (world-grid [ctx] (:context/grid ctx)))
 
@@ -132,7 +133,7 @@
 (defn- update-game-paused [ctx]
   (assoc ctx :context/paused? (or (:context/entity-tick-error ctx)
                                   (and pausing?
-                                       (ctx/player-state-pause-game? ctx)
+                                       (player/state-pause-game? ctx)
                                        (not (player-unpaused?))))))
 
 (defn- update-world [ctx]
@@ -148,7 +149,7 @@
 (defmulti ^:private game-loop :context/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
-  (ctx/do! ctx [ctx/player-update-state
+  (ctx/do! ctx [player/update-state
                 ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (:context/paused? %)
@@ -173,7 +174,7 @@
           (range replay-speed)))
 
 (defn- render-world! [ctx]
-  (camera/set-position! (ctx/world-camera ctx) (:position (ctx/player-entity* ctx)))
+  (camera/set-position! (ctx/world-camera ctx) (:position (player/entity* ctx)))
   (world-render/render-map ctx (camera/position (ctx/world-camera ctx)))
   (ctx/render-world-view ctx
                          (fn [g]

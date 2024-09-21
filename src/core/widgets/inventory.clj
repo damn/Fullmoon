@@ -8,6 +8,7 @@
             [core.context :as ctx :refer [spritesheet get-sprite]]
             [core.g :as g]
             [core.entity :as entity]
+            [core.entity.player :as player]
             [core.inventory :as inventory]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color
@@ -47,7 +48,7 @@
     (draw [_batch _parent-alpha]
       (let [{g :context/graphics :as ctx} @app-state
             g (assoc g :unit-scale 1)
-            player-entity* (ctx/player-entity* ctx)
+            player-entity* (player/entity* ctx)
             ^Widget this this]
         (draw-cell-rect g
                         player-entity*
@@ -64,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! state #(ctx/do! % (ctx/player-clicked-inventory % cell))))))
+                             (swap! state #(ctx/do! % (player/clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]
