@@ -1,10 +1,11 @@
 (ns core.screens.minimap
   (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx :refer [explored?]]
+            [core.context :refer [explored?]]
             [core.screens :as screens]
             [core.graphics :as graphics]
             [core.graphics.views :refer [world-camera]]
+            [core.tiled-map-renderer :as tiled-map-renderer]
             [core.g :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
@@ -48,9 +49,9 @@
 
   ; TODO fixme not subscreen
   (render [_ {:keys [context/tiled-map context/explored-tile-corners] :as context}]
-    (ctx/render-tiled-map context
-                          tiled-map
-                          (->tile-corner-color-setter @explored-tile-corners))
+    (tiled-map-renderer/render! context
+                                tiled-map
+                                (->tile-corner-color-setter @explored-tile-corners))
     (graphics/render-world-view context
                                 (fn [g]
                                   (g/draw-filled-circle g

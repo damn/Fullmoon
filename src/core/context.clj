@@ -2,14 +2,6 @@
 
 (defrecord Context [])
 
-(defprotocol TiledMapDrawer
-  (render-tiled-map [_ tiled-map color-setter]
-                    "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
-                    Color-setter is a gdl.ColorSetter which is called for every tile-corner to set the color.
-                    Can be used for lights & shadows.
-                    The map-renderers are created and cached internally.
-                    Renders only visible layers."))
-
 (defprotocol EffectHandler
   (do! [_ txs])
   (summarize-txs [_ txs])

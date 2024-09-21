@@ -1,7 +1,7 @@
 (ns core.render
   (:require [gdx.graphics :as graphics]
             [utils.core :refer [->tile]]
-            [core.context :as ctx]
+            [core.tiled-map-renderer :as tiled-map-renderer]
             [core.raycaster :as raycaster])
   (:import com.badlogic.gdx.graphics.Color))
 
@@ -44,10 +44,10 @@
             Color/WHITE)))))
 
 (defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
-  (ctx/render-tiled-map ctx
-                        tiled-map
-                        (->tile-color-setter (atom nil)
-                                             light-position
-                                             (:context/raycaster ctx)
-                                             (:context/explored-tile-corners ctx)))
+  (tiled-map-renderer/render! ctx
+                              tiled-map
+                              (->tile-color-setter (atom nil)
+                                                   light-position
+                                                   (:context/raycaster ctx)
+                                                   (:context/explored-tile-corners ctx)))
   #_(reset! do-once false))
