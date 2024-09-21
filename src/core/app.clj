@@ -5,9 +5,9 @@
             [utils.core :refer [safe-merge]]
             [core.component :as component]
             [core.context :as ctx]
-            [core.context.graphics :as graphics]
-            [core.context.screens :as screens]
-            [core.context.properties :as properties])
+            [core.graphics :as graphics]
+            [core.screens :as screens]
+            [core.properties :as properties])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
