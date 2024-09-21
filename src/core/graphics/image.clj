@@ -1,6 +1,7 @@
 (ns core.graphics.image
   (:require [gdx.graphics.g2d :as g2d]
             [core.image :as image]
+            [core.assets :as assets]
             [core.context :as ctx]
             [core.g :as g])
   (:import com.badlogic.gdx.graphics.Color
@@ -54,7 +55,7 @@
 (extend-type core.context.Context
   core.context/Images
   (create-image [{g :context/graphics :as ctx} file]
-    (image/->image g (g2d/->texture-region (ctx/cached-texture ctx file))))
+    (image/->image g (g2d/->texture-region (assets/texture ctx file))))
 
   (get-sub-image [{g :context/graphics} {:keys [texture-region]} bounds]
     (image/->image g (g2d/->texture-region texture-region bounds)))

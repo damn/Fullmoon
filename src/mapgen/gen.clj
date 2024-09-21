@@ -2,7 +2,8 @@
   (:require [utils.core :refer [assoc-ks]]
             [data.grid2d :as grid]
             [gdx.maps.tiled :as tiled]
-            [core.context :as ctx :refer [all-properties]]
+            [core.assets :as assets]
+            [core.context :refer [all-properties]]
             [core.property :as property]
             [mapgen.utils :refer [printgrid scale-grid]]
             [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
@@ -207,7 +208,7 @@
 (def ^:private sprite-size 48)
 
 (defn- terrain-texture-region [ctx]
-  (->texture-region (ctx/cached-texture ctx "maps/uf_terrain.png")))
+  (->texture-region (assets/texture ctx "maps/uf_terrain.png")))
 
 (defn- ->uf-tile [ctx & {:keys [sprite-x sprite-y movement]}]
   (->tm-tile (->texture-region (terrain-texture-region ctx)

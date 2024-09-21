@@ -1,7 +1,6 @@
 (ns core.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.audio.Sound
@@ -61,17 +60,17 @@
 (defn- get-asset [ctx file]
   (get (:manager (this ctx)) file))
 
-(extend-type core.context.Context
-  core.context/Assets
-  (play-sound! [ctx file]
-    (.play ^Sound (get-asset ctx file)))
+(defn play-sound!
+  "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
+  Returns ctx."
+  [ctx file]
+  (.play ^Sound (get-asset ctx file))
+  ctx)
 
-  (cached-texture [ctx file]
-    (get-asset ctx file)))
+(defn texture "Already loaded." [ctx file]
+  (get-asset ctx file))
 
 (defcomponent :tx/sound
-  {:data :sound
-   :let file}
-  (tx/do! [_ ctx]
-    (ctx/play-sound! ctx file)
-    ctx))
+  {:data :sound}
+  (tx/do! [[_ file] ctx]
+    (play-sound! ctx file)))

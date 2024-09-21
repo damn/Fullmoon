@@ -59,10 +59,6 @@
                     The map-renderers are created and cached internally.
                     Renders only visible layers."))
 
-(defprotocol Assets
-  (play-sound! [_ file] "Sound is already loaded from file, this will perform only a lookup for the sound and play it.")
-  (cached-texture [_ file]))
-
 (defprotocol EffectHandler
   (do! [_ txs])
   (summarize-txs [_ txs])
