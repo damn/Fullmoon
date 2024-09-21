@@ -6,7 +6,7 @@
             [core.component :as component]
             [core.context :as ctx]
             [core.screen :as screen]
-            [components.context.properties :as properties])
+            [core.context.properties :as properties])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -62,7 +62,7 @@
     config))
 
 (defn- require-all-components! []
-  (let [component-namespaces (->> "src/components/"
+  (let [component-namespaces (->> "src/core/"
                                   io/file
                                   file-seq
                                   (map java.io.File/.getPath)
