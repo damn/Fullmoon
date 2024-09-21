@@ -2,6 +2,9 @@
   "An implementation of Bresenham line drawing algorithm for casting rays on a two dimensional array."
   (:import gdl.RayCaster))
 
+(defprotocol RayCaster
+  (ray-blocked? [_ start target]))
+
 ; boolean array used because 10x faster than access to clojure grid data structure
 
 ; this was a serious performance bottleneck -> alength is counting the whole array?
@@ -9,14 +12,16 @@
 ;(def ^:private height (comp alength first))
 
 ; does not show warning on reflection, but shows cast-double a lot.
-(defn ray-blocked? [boolean-2d-array width height [start-x start-y] [target-x target-y]]
-  (RayCaster/rayBlocked (double start-x)
-                        (double start-y)
-                        (double target-x)
-                        (double target-y)
-                        width ;(width boolean-2d-array)
-                        height ;(height boolean-2d-array)
-                        boolean-2d-array))
+(defrecord RayCasterArray [arr width height]
+  RayCaster
+  (ray-blocked? [_ [start-x start-y] [target-x target-y]]
+    (RayCaster/rayBlocked (double start-x)
+                          (double start-y)
+                          (double target-x)
+                          (double target-y)
+                          width ;(width boolean-2d-array)
+                          height ;(height boolean-2d-array)
+                          arr)))
 
 #_(defn ray-steplist [boolean-2d-array [start-x start-y] [target-x target-y]]
   (seq

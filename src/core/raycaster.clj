@@ -2,16 +2,7 @@
   (:require [math.raycaster :as raycaster]
             [math.vector :as v]
             [data.grid2d :as grid2d]
-            [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]))
-
-(defprotocol RayCaster
-  (ray-blocked? [_ start target]))
-
-(defrecord RayCasterArray [arr width height]
-  RayCaster
-  (ray-blocked? [_ start target]
-    (raycaster/ray-blocked? arr width height start target)))
+            [core.component :as component :refer [defcomponent]]))
 
 (defn- set-arr [arr cell* cell*->blocked?]
   (let [[x y] (:position cell*)]
@@ -24,9 +15,9 @@
           arr (make-array Boolean/TYPE width height)]
       (doseq [cell (grid2d/cells grid)]
         (set-arr arr @cell position->blocked?))
-      (map->RayCasterArray {:arr arr
-                            :width width
-                            :height height}))))
+      (raycaster/map->RayCasterArray {:arr arr
+                                      :width width
+                                      :height height}))))
 
 ; TO math.... // not tested
 (defn- create-double-ray-endpositions
@@ -45,13 +36,13 @@
         target2 (v/add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
-(extend-type core.context.Context
-  core.context/WorldRaycaster
-  (ray-blocked? [{:keys [context/raycaster]} start target]
-    (ray-blocked? raycaster start target))
+(defn ray-blocked? [{:keys [context/raycaster]} start target]
+  (raycaster/ray-blocked? raycaster start target))
 
-  (path-blocked? [{:keys [context/raycaster]} start target path-w]
-    (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
-      (or
-       (ray-blocked? raycaster start1 target1)
-       (ray-blocked? raycaster start2 target2)))))
+(defn path-blocked?
+  "path-w in tiles. casts two rays."
+  [{:keys [context/raycaster]} start target path-w]
+  (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
+    (or
+     (raycaster/ray-blocked? raycaster start1 target1)
+     (raycaster/ray-blocked? raycaster start2 target2))))

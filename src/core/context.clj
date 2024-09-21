@@ -2,10 +2,6 @@
 
 (defrecord Context [])
 
-(defprotocol WorldRaycaster
-  (ray-blocked?  [_ start target])
-  (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays."))
-
 (defprotocol WorldLineOfSight
   (line-of-sight? [_ source* target*]))
 

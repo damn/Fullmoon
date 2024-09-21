@@ -1,8 +1,8 @@
 (ns core.render
-  (:require [gdx.graphics :as graphics]
+  (:require [math.raycaster :as raycaster]
+            [gdx.graphics :as graphics]
             [utils.core :refer [->tile]]
-            [core.tiled-map-renderer :as tiled-map-renderer]
-            [core.raycaster :as raycaster])
+            [core.tiled-map-renderer :as tiled-map-renderer])
   (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private explored-tile-color

@@ -1,7 +1,8 @@
 (ns core.line-of-sight
   (:require [gdx.graphics.camera :as camera]
             [core.context :as ctx]
-            [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]))
+            [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]
+            [core.raycaster :refer [ray-blocked?]]))
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?
@@ -30,4 +31,4 @@
     (and (or (not (:entity/player? source*))
              (on-screen? target* context))
          (not (and los-checks?
-                   (ctx/ray-blocked? context (:position source*) (:position target*)))))))
+                   (ray-blocked? context (:position source*) (:position target*)))))))

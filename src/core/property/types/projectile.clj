@@ -1,10 +1,10 @@
 (ns core.property.types.projectile
   (:require [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
             [core.property :as property]
+            [core.raycaster :refer [path-blocked?]]
             [core.tx :as tx]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
@@ -76,10 +76,10 @@
   (effect/useful? [_ {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (:position @source)
           target-p (:position @target)]
-      (and (not (ctx/path-blocked? ctx ; TODO test
-                                   source-p
-                                   target-p
-                                   (projectile-size projectile)))
+      (and (not (path-blocked? ctx ; TODO test
+                               source-p
+                               target-p
+                               (projectile-size projectile)))
            ; TODO not taking into account body sizes
            (< (v/distance source-p ; entity/distance function protocol EntityPosition
                           target-p)
