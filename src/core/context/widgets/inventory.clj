@@ -6,7 +6,7 @@
             [core.component :refer [defcomponent]]
             [core.info :as info]
             [core.context :as ctx :refer [spritesheet get-sprite]]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.entity :as entity]
             [core.inventory :as inventory]
             [core.tx :as tx])

@@ -4,7 +4,7 @@
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.state :as state]
             [core.tx :as tx]))
 

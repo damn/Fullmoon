@@ -2,7 +2,7 @@
   (:require [gdx.graphics.camera :as camera]
             utils.core
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
-            [core.graphics :as g]
+            [core.g :as g]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))

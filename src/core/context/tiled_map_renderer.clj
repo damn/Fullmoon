@@ -2,7 +2,7 @@
   (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.graphics :as g])
+            [core.g :as g])
   (:import com.badlogic.gdx.maps.MapLayer
            [gdl OrthogonalTiledMapRenderer ColorSetter]))
 

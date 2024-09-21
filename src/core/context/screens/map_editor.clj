@@ -6,7 +6,7 @@
             [utils.core :refer [->tile]]
             [core.context :as ctx]
             [core.context.screens :as screens]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.screen :as screen]
             [core.state :as state]
             [gdx.scene2d.actor :refer [set-position!]]

@@ -3,7 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.state :as state]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))

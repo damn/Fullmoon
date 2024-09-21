@@ -4,7 +4,7 @@
             [core.context :as ctx]
             [core.effect :as effect]
             [core.entity :as entity]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.tx :as tx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?

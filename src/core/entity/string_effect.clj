@@ -1,7 +1,7 @@
 (ns core.entity.string-effect
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.context :refer [->counter stopped? reset]]
             [core.tx :as tx]))
 

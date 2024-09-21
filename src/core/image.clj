@@ -1,6 +1,6 @@
 (ns core.image
   (:require [core.context :as ctx]
-            [core.graphics :as g])
+            [core.g :as g])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion))
 
 (defrecord Image [texture-region

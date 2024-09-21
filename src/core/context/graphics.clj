@@ -1,7 +1,7 @@
 (ns core.context.graphics
   (:require [core.component :refer [defcomponent] :as component]
             [core.property :as property]
-            [core.graphics :as g]
+            [core.g :as g]
             (core.context.graphics cursors
                                    shape-drawer
                                    text
@@ -28,7 +28,7 @@
   {:data [:map [:cursors :default-font :views]]
    :let {:keys [views default-font cursors]}}
   (component/create [_ _ctx]
-    (core.graphics/map->Graphics
+    (core.g/map->Graphics
      (let [batch (SpriteBatch.)]
        (merge {:batch batch}
               (core.context.graphics.shape-drawer/->build batch)

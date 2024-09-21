@@ -3,7 +3,7 @@
             [core.val-max :refer [val-max-ratio]]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.graphics :as g]
+            [core.g :as g]
             [gdx.scene2d.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]

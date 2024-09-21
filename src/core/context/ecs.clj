@@ -3,7 +3,7 @@
             [utils.core :refer [safe-merge sort-by-order]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.entity :as entity]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))

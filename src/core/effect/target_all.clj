@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.effect :as effect]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.tx :as tx]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})

@@ -3,7 +3,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
             [core.context.screens :as screens]
-            [core.graphics :as g])
+            [core.g :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
 

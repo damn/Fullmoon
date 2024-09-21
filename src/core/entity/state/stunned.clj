@@ -3,7 +3,7 @@
             [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]
             [core.state :as state]
-            [core.graphics :as g]))
+            [core.g :as g]))
 
 (defcomponent :stunned
   {:let {:keys [eid counter]}}

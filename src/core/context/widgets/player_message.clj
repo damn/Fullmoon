@@ -1,7 +1,7 @@
 (ns core.context.widgets.player-message
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.graphics :as g]
+            [core.g :as g]
             [gdx.scene2d.ui :as ui]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))

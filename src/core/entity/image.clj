@@ -1,7 +1,7 @@
 (ns core.entity.image
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.graphics :as g]))
+            [core.g :as g]))
 
 (defcomponent :entity/image
   {:data :image

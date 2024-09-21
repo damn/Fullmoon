@@ -4,7 +4,7 @@
             [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.tx :as tx]))
 
 (defcomponent :entity/temp-modifier

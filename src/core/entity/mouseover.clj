@@ -1,7 +1,7 @@
 (ns core.entity.mouseover
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.graphics :as g]
+            [core.g :as g]
             [core.entity :as entity]))
 
 (def ^:private outline-alpha 0.4)
