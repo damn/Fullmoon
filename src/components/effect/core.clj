@@ -8,7 +8,7 @@
   (cell/nearest-entity @((ctx/world-grid ctx) (entity/tile entity*))
                        (entity/enemy-faction entity*)))
 
-(defn- ->npc-effect-ctx [ctx entity*]
+(defn ->npc-effect-ctx [ctx entity*]
   (let [target (nearest-enemy ctx entity*)
         target (when (and target (ctx/line-of-sight? ctx entity* @target))
                  target)]
