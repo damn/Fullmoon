@@ -5,6 +5,7 @@
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.g :as g]
+            [core.graphics.image :as image]
             [gdx.scene2d.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
@@ -14,9 +15,9 @@
                   :up? true}))
 
 (defn ->hp-mana-bars [context]
-  (let [rahmen      (ctx/create-image context "images/rahmen.png")
-        hpcontent   (ctx/create-image context "images/hp.png")
-        manacontent (ctx/create-image context "images/mana.png")
+  (let [rahmen      (image/create context "images/rahmen.png")
+        hpcontent   (image/create context "images/hp.png")
+        manacontent (image/create context "images/mana.png")
         x (/ (ctx/gui-viewport-width context) 2)
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         y-mana 80 ; action-bar-icon-size
@@ -24,7 +25,7 @@
         render-hpmana-bar (fn [g ctx x y contentimg minmaxval name]
                             (g/draw-image g rahmen [x y])
                             (g/draw-image g
-                                          (ctx/get-sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                                          (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                           [x y])
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/->actor context

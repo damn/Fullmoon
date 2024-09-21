@@ -1,5 +1,5 @@
 (ns gdx.scene2d.ui
-  (:require core.image
+  (:require core.graphics.image
             [core.context :as ctx]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group])
@@ -118,7 +118,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image core.image.Image
+(defmethod ->vis-image core.graphics.image.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 

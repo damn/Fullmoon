@@ -3,12 +3,6 @@
 
 (defrecord Context [])
 
-(defprotocol Images
-  (create-image [_ file])
-  (get-sub-image [_ image [x y w h]])
-  (spritesheet [_ file tilew tileh])
-  (get-sprite [_ spritesheet [x y]] "x,y index starting top-left"))
-
 (defprotocol Cursors
   (set-cursor! [_ cursor-key]))
 

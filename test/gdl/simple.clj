@@ -1,12 +1,13 @@
 #_(ns gdl.simple
   (:require [core.component :refer [defcomponent] :as component]
             [app.start :as app]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.graphics.image :as image]))
 
 #_(defcomponent :gdl/simple
   (component/create [[_ {:keys [font logo]}] ctx]
     {:special-font (ctx/generate-ttf ctx font)
-     :logo (ctx/create-image ctx logo)}))
+     :logo (image/create ctx logo)}))
 
 #_(defn app []
   (app/start {:app {:title "gdl demo"

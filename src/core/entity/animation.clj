@@ -3,7 +3,7 @@
             [core.component :refer [defcomponent]]
             [core.property :as property]
             [core.entity :as entity]
-            [core.image :as image]
+            [core.graphics.image :as image]
             [core.time :as time]))
 
 (defprotocol Animation

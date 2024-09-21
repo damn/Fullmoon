@@ -1,6 +1,5 @@
 (ns core.effect-handler
-  (:require core.image
-            [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.tx :as tx]
             [core.time :as time]))
@@ -43,7 +42,6 @@
 (defn- debug-print-tx [tx]
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
-                  (instance? core.image.Image %) "<Image>"
                   (instance? core.context.Context %) "<Context>"
                   :else %)
                 tx)))
