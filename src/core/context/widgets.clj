@@ -56,16 +56,14 @@
          (when (utils/safe-get config :debug-window?)
            {Input$Keys/Z :debug-window})))
 
-(extend-type core.context.Context
-  core.context/IngameWindows
-  (check-window-hotkeys [ctx]
-    (doseq [[hotkey window-id] (hotkey->window-id ctx)
-            :when (.isKeyJustPressed Gdx/input hotkey)]
-      (actor/toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
+(defn check-window-hotkeys [ctx]
+  (doseq [[hotkey window-id] (hotkey->window-id ctx)
+          :when (.isKeyJustPressed Gdx/input hotkey)]
+    (actor/toggle-visible! (get (:windows (ctx/get-stage ctx)) window-id))))
 
-  (close-windows? [context]
-    (let [windows (group/children (:windows (ctx/get-stage context)))]
-      (if (some actor/visible? windows)
-        (do
-         (run! #(actor/set-visible! % false) windows)
-         true)))))
+(defn close-windows? [context]
+  (let [windows (group/children (:windows (ctx/get-stage context)))]
+    (if (some actor/visible? windows)
+      (do
+       (run! #(actor/set-visible! % false) windows)
+       true))))

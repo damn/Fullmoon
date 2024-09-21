@@ -5,6 +5,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.context.screens :as screens]
+            [core.context.widgets :as widgets]
             [core.screen :as screen]
             [core.state :as state]
             [core.tx :as tx]
@@ -195,9 +196,9 @@
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
   (check-zoom-keys ctx)
-  (ctx/check-window-hotkeys ctx)
+  (widgets/check-window-hotkeys ctx)
   (cond (and (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
-             (not (ctx/close-windows? ctx)))
+             (not (widgets/close-windows? ctx)))
         (screens/change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen/render!

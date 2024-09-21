@@ -118,10 +118,6 @@
 (defprotocol WorldGenerator
   (->world [ctx world-id]))
 
-(defprotocol IngameWindows
-  (check-window-hotkeys [_])
-  (close-windows? [_]))
-
 (defprotocol ErrorWindow
   (error-window! [_ throwable]))
 
