@@ -6,6 +6,7 @@
             [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
             [core.entity :as entity]
             [core.state :as state]
+            [components.effect.core :refer [->player-effect-ctx]]
             [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
@@ -70,16 +71,6 @@
      (ui/button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn- ->effect-context [ctx entity*]
-  (let [target* (ctx/mouseover-entity* ctx)
-        target-position (or (and target* (:position target*))
-                            (ctx/world-mouse-position ctx))]
-    (ctx/map->Context
-     {:effect/source (:entity/id entity*)
-      :effect/target (:entity/id target*)
-      :effect/target-position target-position
-      :effect/direction (v/direction (:position entity*) target-position)})))
-
 (defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (ctx/mouseover-entity* context)]
     (cond
@@ -95,7 +86,7 @@
      :else
      (if-let [skill-id (selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
-             effect-ctx (->effect-context context entity*)
+             effect-ctx (->player-effect-ctx context entity*)
              state (ctx/skill-usable-state (safe-merge context effect-ctx)
                                            entity*
                                            skill)]

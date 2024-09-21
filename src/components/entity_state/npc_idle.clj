@@ -1,23 +1,10 @@
 (ns components.entity-state.npc-idle
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [world-grid potential-field-follow-to-enemy]]
+            [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.world.cell :as cell]))
-
-(defn- nearest-enemy [ctx entity*]
-  (cell/nearest-entity @((world-grid ctx) (entity/tile entity*))
-                       (entity/enemy-faction entity*)))
-
-(defn- ->effect-ctx [ctx entity*]
-  (let [target (nearest-enemy ctx entity*)
-        target (when (and target (ctx/line-of-sight? ctx entity* @target))
-                 target)]
-    (ctx/map->Context
-     {:effect/source (:entity/id entity*)
-      :effect/target target
-      :effect/direction (when target (entity/direction entity* @target))})))
+            [components.effect.core :refer [->npc-effect-ctx]]))
 
 ; TODO
 ; split it into 3 parts
@@ -46,7 +33,7 @@
  (let [uid 76
        ctx @app/state
        entity* @(core.context/get-entity ctx uid)
-       effect-ctx (->effect-context ctx entity*)]
+       effect-ctx (->npc-effect-ctx ctx entity*)]
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )
 
@@ -57,7 +44,7 @@
 
   (entity/tick [_ eid ctx]
     (let [entity* @eid
-          effect-ctx (->effect-ctx ctx entity*)]
+          effect-ctx (->npc-effect-ctx ctx entity*)]
       (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (potential-field-follow-to-enemy ctx eid)]]))))
+        [[:tx/event eid :movement-direction (ctx/potential-field-follow-to-enemy ctx eid)]]))))
