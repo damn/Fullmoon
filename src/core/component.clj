@@ -22,7 +22,7 @@ So for a component `[k v]` it dispatches on the component-keyword `k`."
     (defmulti ~(vary-meta sys-name
                           assoc
                           :params (list 'quote params)
-                          :doc (str "**defsystem** `" params "`\n" docstring))
+                          :doc (str "[[core.component/defsystem]] with params: `" params "` \n\n " docstring))
       (fn ~(symbol (str (name sys-name))) [& args#]
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
