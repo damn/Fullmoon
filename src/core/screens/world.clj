@@ -93,7 +93,7 @@
                      :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
-(defn- content-grid :context/content-grid)
+(def ^:private content-grid :context/content-grid)
 
 (extend-type core.context.Context
   core.context/World
