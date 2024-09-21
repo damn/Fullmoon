@@ -252,15 +252,13 @@
        (when-not (inside-cell? grid @entity target-cell)
          (v/direction position (:middle @target-cell)))))))
 
-(extend-type core.context.Context
-  core.context/PotentialField
-  (update-potential-fields [ctx entities]
-    (let [world-grid (ctx/world-grid ctx)]
-      (doseq [[faction max-iterations] factions-iterations]
-        (update-faction-potential-field world-grid faction entities max-iterations))))
+(defn update! [ctx entities]
+  (let [world-grid (ctx/world-grid ctx)]
+    (doseq [[faction max-iterations] factions-iterations]
+      (update-faction-potential-field world-grid faction entities max-iterations))))
 
-  (potential-field-follow-to-enemy [ctx entity]
-    (potential-field-follow-to-enemy (ctx/world-grid ctx) entity)))
+(defn follow-to-enemy [ctx entity]
+  (potential-field-follow-to-enemy (ctx/world-grid ctx) entity))
 
 ;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
 

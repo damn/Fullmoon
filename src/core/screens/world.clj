@@ -10,6 +10,7 @@
             [core.screen :as screen]
             [core.state :as state]
             [core.tx :as tx]
+            [core.potential-fields :as potential-fields]
             [core.world.grid :as world-grid]
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell]
@@ -138,7 +139,7 @@
 (defn- update-world [ctx]
   (let [ctx (ctx/update-time ctx)
         active-entities (ctx/active-entities ctx)]
-    (ctx/update-potential-fields ctx active-entities)
+    (potential-fields/update! ctx active-entities)
     (try (ecs/tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx

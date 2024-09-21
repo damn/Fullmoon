@@ -72,10 +72,6 @@
   (ray-blocked?  [_ start target])
   (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays."))
 
-(defprotocol PotentialField
-  (update-potential-fields [ctx entities])
-  (potential-field-follow-to-enemy [_ entity]))
-
 (defprotocol WorldLineOfSight
   (line-of-sight? [_ source* target*]))
 

@@ -4,7 +4,8 @@
             [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.effect.core :refer [->npc-effect-ctx]]))
+            [core.effect.core :refer [->npc-effect-ctx]]
+            [core.potential-fields :as potential-fields]))
 
 ; TODO
 ; split it into 3 parts
@@ -47,4 +48,4 @@
           effect-ctx (->npc-effect-ctx ctx entity*)]
       (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (ctx/potential-field-follow-to-enemy ctx eid)]]))))
+        [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy ctx eid)]]))))
