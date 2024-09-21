@@ -1,4 +1,4 @@
-(ns core.screens.main-menu
+(ns core.context.screens.main-menu
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]

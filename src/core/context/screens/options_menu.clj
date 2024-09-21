@@ -1,4 +1,4 @@
-(ns core.screens.options-menu
+(ns core.context.screens.options-menu
   (:require [utils.core :refer [safe-get]]
             utils.ns
             [gdx.scene2d.ui :as ui]

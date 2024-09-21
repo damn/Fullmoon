@@ -1,4 +1,4 @@
-(ns core.screens.stage-screen
+(ns core.context.screens.stage-screen
   (:require [gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]

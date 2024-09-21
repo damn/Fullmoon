@@ -1,4 +1,4 @@
-(ns core.screens.minimap
+(ns core.context.screens.minimap
   (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]

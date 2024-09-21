@@ -1,4 +1,4 @@
-(ns core.screens.world
+(ns core.context.screens.world
   (:require [utils.core :refer [tile->middle]]
             [gdx.graphics.camera :as camera]
             [gdx.maps.tiled :as tiled]
@@ -12,7 +12,7 @@
             [core.world.content-grid :as content-grid]
             [core.world.cell :as cell]
             [core.context.render :as world-render]
-           [core.context.debug-render :as debug-render])
+            [core.context.debug-render :as debug-render])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.utils.Disposable))
 
