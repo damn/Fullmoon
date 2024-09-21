@@ -1,4 +1,4 @@
-(ns core.properties.app
+(ns core.property.types.app
   (:require [core.component :refer [defcomponent]]
             [core.property :as property]))
 

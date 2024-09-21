@@ -1,4 +1,4 @@
-(ns core.properties.skill
+(ns core.property.types.skill
   (:require [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]
             [core.property :as property]))

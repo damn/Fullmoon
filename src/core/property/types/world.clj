@@ -1,4 +1,4 @@
-(ns core.properties.world
+(ns core.property.types.world
   (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent]]
             [core.context :as ctx]

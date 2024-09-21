@@ -1,4 +1,4 @@
-(ns core.properties.projectile
+(ns core.property.types.projectile
   (:require [math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]

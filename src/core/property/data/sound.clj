@@ -1,4 +1,4 @@
-(ns core.data.sound
+(ns core.property.data.sound
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [core.context :as ctx]

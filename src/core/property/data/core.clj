@@ -1,4 +1,4 @@
-(ns core.data.core
+(ns core.property.data.core
   (:require [clojure.edn :as edn]
             [malli.core :as m]
             [utils.core :as utils]

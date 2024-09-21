@@ -1,4 +1,4 @@
-(ns core.data.relationships
+(ns core.property.data.relationships
   (:require [core.component :refer [defcomponent]]
             [core.info :as info]
             [core.context :as ctx]

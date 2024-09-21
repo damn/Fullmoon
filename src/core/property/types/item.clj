@@ -1,4 +1,4 @@
-(ns core.properties.item
+(ns core.property.types.item
   (:require [core.component :as component :refer [defcomponent]]
             [core.inventory :as inventory]
             [core.modifiers :as modifiers]
