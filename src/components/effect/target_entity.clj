@@ -37,7 +37,7 @@
 
   (effect/applicable? [_ {:keys [effect/target] :as ctx}]
     (and target
-         (ctx/effect-applicable? ctx entity-effects)))
+         (some #(effect/applicable? % ctx) entity-effects)))
 
   (effect/useful? [_ {:keys [effect/source effect/target]}]
     (assert source)

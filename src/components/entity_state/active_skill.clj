@@ -43,7 +43,7 @@
 (defn- applicable? [ctx effects]
   (-> ctx
       check-remove-target
-      (ctx/effect-applicable? effects)))
+      (some #(effect/applicable? % ctx) effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]
