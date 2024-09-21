@@ -2,11 +2,6 @@
 
 (defrecord Context [])
 
-(defprotocol EffectHandler
-  (do! [_ txs])
-  (summarize-txs [_ txs])
-  (frame->txs [_ frame-number]))
-
 (defprotocol MouseOverEntity
   (update-mouseover-entity [_])
   (mouseover-entity* [_]))

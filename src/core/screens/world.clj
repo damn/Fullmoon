@@ -53,11 +53,11 @@
      :components npc-components}))
 
 (defn- spawn-creatures! [ctx tiled-level]
-  (ctx/do! ctx
-           (for [creature (cons (world->player-creature ctx tiled-level)
-                                (when spawn-enemies?
-                                  (world->enemy-creatures ctx)))]
-             [:tx/creature (update creature :position tile->middle)])))
+  (tx/do-all ctx
+             (for [creature (cons (world->player-creature ctx tiled-level)
+                                  (when spawn-enemies?
+                                    (world->enemy-creatures ctx)))]
+               [:tx/creature (update creature :position tile->middle)])))
 
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
@@ -155,21 +155,21 @@
 (defmulti ^:private game-loop :context/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
-  (ctx/do! ctx [player/update-state
-                ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
-                update-game-paused
-                #(if (:context/paused? %)
-                   %
-                   (update-world %))
-                ecs/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
-                ]))
+  (tx/do-all ctx [player/update-state
+                  ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
+                  update-game-paused
+                  #(if (:context/paused? %)
+                     %
+                     (update-world %))
+                  ecs/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                  ]))
 
 (defn- replay-frame! [ctx]
   (let [frame-number (time/logic-frame ctx)
-        txs (ctx/frame->txs ctx frame-number)]
+        txs [:foo]#_(ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx
-        (ctx/do! txs)
+        (tx/do-all txs)
         #_(update :world.time/logic-frame inc))))  ; this is probably broken now (also frame->txs contains already time, so no need to inc ?)
 
 (def ^:private replay-speed 2)

@@ -23,7 +23,7 @@
   (tx/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (ctx/do! (filter #(effect/applicable? % effect-ctx) effects))
+        (tx/do-all (filter #(effect/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?

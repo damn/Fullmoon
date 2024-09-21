@@ -3,6 +3,7 @@
             [core.context :as ctx]
             [core.property :as property]
             [core.entity.player :as player]
+            [core.tx :as tx]
             [gdx.scene2d.actor :refer [add-tooltip!]]
             [gdx.scene2d.ui :as ui]))
 
@@ -22,7 +23,7 @@
                                                              (:entity/image (property/build context id)) ; TODO here anyway taken
                                                              ; => should probably build this window @ game start
                                                              (fn [ctx]
-                                                               (ctx/do! ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
+                                                               (tx/do-all ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
                          (do
                           (add-tooltip! button #(info/->text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]

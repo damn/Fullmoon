@@ -2,7 +2,8 @@
   (:require [core.app :as app]
             [core.context :as ctx]
             [core.entity.player :as player]
-            [core.property :as property])
+            [core.property :as property]
+            [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))
 
 (comment
@@ -49,7 +50,7 @@
 
 
 (defn- post-tx! [tx]
-  (.postRunnable Gdx/app #(swap! app/state ctx/do! [tx])))
+  (.postRunnable Gdx/app #(swap! app/state tx/do-all [tx])))
 
 (defn learn-skill! [skill-id]
   (post-tx! (fn [ctx]
