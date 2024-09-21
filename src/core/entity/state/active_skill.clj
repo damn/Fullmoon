@@ -1,4 +1,4 @@
-(ns core.entity-state.active-skill
+(ns core.entity.state.active-skill
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [stopped? finished-ratio ->counter]]

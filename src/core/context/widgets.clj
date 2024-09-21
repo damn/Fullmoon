@@ -5,7 +5,7 @@
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]
-            [core.entity-state.player-item-on-cursor :refer [draw-item-on-cursor]]
+            [core.entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [core.widgets.action-bar :as action-bar]
             [core.widgets.debug-window :as debug-window]
             [core.widgets.entity-info-window :as entity-info-window]

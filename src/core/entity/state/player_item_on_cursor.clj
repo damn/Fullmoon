@@ -1,4 +1,4 @@
-(ns core.entity-state.player-item-on-cursor
+(ns core.entity.state.player-item-on-cursor
   (:require [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx :refer [mouse-on-stage-actor?]]

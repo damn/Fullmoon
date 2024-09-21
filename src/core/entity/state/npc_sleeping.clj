@@ -1,4 +1,4 @@
-(ns core.entity-state.npc-sleeping
+(ns core.entity.state.npc-sleeping
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]

@@ -1,4 +1,4 @@
-(ns core.entity-state.stunned
+(ns core.entity.state.stunned
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]

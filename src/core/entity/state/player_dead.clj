@@ -1,4 +1,4 @@
-(ns core.entity-state.player-dead
+(ns core.entity.state.player-dead
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.state :as state]))

@@ -1,4 +1,4 @@
-(ns core.entity-state.npc-idle
+(ns core.entity.state.npc-idle
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]

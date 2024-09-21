@@ -1,4 +1,4 @@
-(ns core.entity-state.npc-moving
+(ns core.entity.state.npc-moving
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]
