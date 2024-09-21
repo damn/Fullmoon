@@ -1,4 +1,4 @@
-(ns core.effect-entity.damage
+(ns core.effect.entity.damage
   (:require [utils.random :as random]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
