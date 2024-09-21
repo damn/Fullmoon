@@ -105,14 +105,6 @@
   (update! [_ property])
   (delete! [_ id]))
 
-; widgets/inventory-window
-(defprotocol InventoryWindow
-  (inventory-window [_]))
-
-; widgets/selected-skill-id
-(defprotocol Actionbar
-  (selected-skill [_]))
-
 (defprotocol BackgroundImage
   (->background-image [_]))
 

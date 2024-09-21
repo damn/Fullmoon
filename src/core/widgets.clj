@@ -15,16 +15,13 @@
            com.badlogic.gdx.scenes.scene2d.Stage
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
-(extend-type core.context.Context
-  core.context/Actionbar
-  (selected-skill [ctx]
-    (let [button-group (:action-bar (:context/widgets ctx))]
-      (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
-        (actor/id skill-button))))
+(defn selected-skill [ctx]
+  (let [button-group (:action-bar (:context/widgets ctx))]
+    (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
+      (actor/id skill-button))))
 
-  core.context/InventoryWindow
-  (inventory-window [ctx]
-    (get (:windows (ctx/get-stage ctx)) :inventory-window)))
+(defn inventory-window [ctx]
+  (get (:windows (ctx/get-stage ctx)) :inventory-window))
 
 (defn- ->ui-actors [ctx widget-data]
   [(ui/->table {:rows [[{:actor (action-bar/->build)

@@ -3,10 +3,11 @@
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [mouse-on-stage-actor? inventory-window selected-skill]]
+            [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
             [core.state :as state]
             [core.effect.core :refer [->player-effect-ctx]]
+            [core.widgets :as widgets]
             [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
@@ -25,7 +26,7 @@
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
-     (visible? (inventory-window context))
+     (visible? (widgets/inventory-window context))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:tx/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
@@ -41,7 +42,7 @@
 
 (defmethod on-clicked :clickable/player
   [ctx _clicked-entity*]
-  (toggle-visible! (inventory-window ctx))) ; TODO no tx
+  (toggle-visible! (widgets/inventory-window ctx))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
@@ -84,7 +85,7 @@
      (->clickable-mouseover-entity-interaction context entity* mouseover-entity*)
 
      :else
-     (if-let [skill-id (selected-skill context)]
+     (if-let [skill-id (widgets/selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->player-effect-ctx context entity*)
              state (ctx/skill-usable-state (safe-merge context effect-ctx)
