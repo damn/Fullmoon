@@ -3,10 +3,11 @@
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [mouse-on-stage-actor?]]
+            [core.context :as ctx]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.state :as state]
+            [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx]]
             [core.widgets :as widgets]
             [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
@@ -66,7 +67,7 @@
                (actor/id (parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]
-  (let [actor (mouse-on-stage-actor? ctx)]
+  (let [actor (stage/mouse-on-actor? ctx)]
     (cond
      (inventory-cell-with-item? ctx actor) :cursors/hand-before-grab
      (ui/window-title-bar? actor) :cursors/move-window
@@ -76,7 +77,7 @@
 (defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (ctx/mouseover-entity* context)]
     (cond
-     (mouse-on-stage-actor? context)
+     (stage/mouse-on-actor? context)
      [(mouseover-actor->cursor context)
       (fn []
         nil)] ; handled by actors themself, they check player state

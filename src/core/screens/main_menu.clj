@@ -4,6 +4,7 @@
             [core.context :as ctx]
             [core.graphics.cursors :as cursors]
             [core.screens :as screens]
+            [core.screens.stage :as stage]
             [core.state :as state]
             [core.property :as property]
             core.screens.world
@@ -41,8 +42,8 @@
                            (when (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
                              (.exit Gdx/app)))})])
 
-(derive :screens/main-menu :screens/stage-screen)
+(derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu
   (component/create [[k _] ctx]
     {:sub-screen [::sub-screen]
-     :stage (ctx/->stage ctx (->actors ctx))}))
+     :stage (stage/create ctx (->actors ctx))}))

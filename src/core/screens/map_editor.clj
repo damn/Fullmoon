@@ -11,6 +11,7 @@
             [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
             [core.state :as state]
+            [core.screens.stage :as stage]
             [core.property :as property]
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
@@ -197,12 +198,12 @@ direction keys: move")
       (screens/change-screen context :screens/main-menu)
       context)))
 
-(derive :screens/map-editor :screens/stage-screen)
+(derive :screens/map-editor :screens/stage)
 (defcomponent :screens/map-editor
   (component/create [_ ctx]
     {:sub-screen [::sub-screen
                   (atom {:tiled-map (tiled/load-map mapgen.modules/modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
-     :stage (ctx/->stage ctx [(->generate-map-window ctx world-id)
+     :stage (stage/create ctx [(->generate-map-window ctx world-id)
                               (->info-window ctx)])}))

@@ -1,13 +1,6 @@
-(ns core.context
-  (:import com.badlogic.gdx.scenes.scene2d.Stage))
+(ns core.context)
 
 (defrecord Context [])
-
-(defprotocol StageScreen
-  (->stage [_ actors] "Stage implements clojure.lang.ILookup (get) on actor id.")
-  (get-stage ^Stage [_])
-  (mouse-on-stage-actor? [_])
-  (add-to-stage! [_ actor]))
 
 (defprotocol TiledMapDrawer
   (render-tiled-map [_ tiled-map color-setter]

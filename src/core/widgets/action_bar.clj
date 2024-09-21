@@ -3,6 +3,7 @@
             [core.info :as info]
             [core.context :as ctx]
             [core.entity.player :as player]
+            [core.screens.stage :as stage]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
             [gdx.scene2d.group :refer [clear-children! add-actor!]]
@@ -21,7 +22,7 @@
                       :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
-  {:horizontal-group (::action-bar (:action-bar-table (ctx/get-stage ctx)))
+  {:horizontal-group (::action-bar (:action-bar-table (stage/get ctx)))
    :button-group (:action-bar (:context/widgets ctx))})
 
 (defcomponent :tx.action-bar/add

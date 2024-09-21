@@ -1,12 +1,12 @@
 (ns core.entity.state.player-item-on-cursor
   (:require [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
-            [core.context :refer [mouse-on-stage-actor?]]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position gui-mouse-position]]
             [core.state :as state]
+            [core.screens.stage :as stage]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
@@ -59,7 +59,7 @@
                    (- (:entity/click-distance-tiles entity*) 0.1)))
 
 (defn- world-item? [ctx]
-  (not (mouse-on-stage-actor? ctx)))
+  (not (stage/mouse-on-actor? ctx)))
 
 (defcomponent :player-item-on-cursor
   {:let {:keys [eid item]}}

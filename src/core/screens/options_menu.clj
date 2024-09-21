@@ -5,6 +5,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
             [core.screens :as screens]
+            [core.screens.stage :as stage]
             [core.screen :as screen])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
@@ -64,10 +65,10 @@
       (screens/change-screen ctx :screens/world)
       ctx)))
 
-(derive :screens/options-menu :screens/stage-screen)
+(derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
   (component/create [_ ctx]
-    {:stage (ctx/->stage ctx
-                         [(ctx/->background-image ctx)
-                          (create-table ctx)])
+    {:stage (stage/create ctx
+                          [(ctx/->background-image ctx)
+                           (create-table ctx)])
      :sub-screen [::sub-screen]}))

@@ -3,6 +3,7 @@
             [core.info :as info]
             [core.context :as ctx]
             [core.property :as property]
+            [core.screens.stage :as stage]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]))
@@ -60,7 +61,7 @@
                                                  ctx)]
                              (ui/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
                              (.pack window)
-                             (ctx/add-to-stage! ctx window))))]
+                             (stage/add-actor! ctx window))))]
       (for [property-id property-ids]
         (let [property (property/build ctx property-id)
               image-widget (ui/->image-widget (property/->image property)
@@ -104,7 +105,7 @@
                                                    ctx)]
                                (ui/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
                                (.pack window)
-                               (ctx/add-to-stage! ctx window)))))]
+                               (stage/add-actor! ctx window)))))]
       [(when property-id
          (let [property (property/build ctx property-id)
                image-widget (ui/->image-widget (property/->image property)

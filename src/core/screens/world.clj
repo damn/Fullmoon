@@ -14,6 +14,7 @@
             [core.screens :as screens]
             [core.widgets :as widgets]
             [core.screen :as screen]
+            [core.screens.stage :as stage]
             [core.state :as state]
             [core.tx :as tx]
             [core.time :as time]
@@ -225,10 +226,10 @@
         game-loop
         check-key-input)))
 
-(derive :screens/world :screens/stage-screen)
+(derive :screens/world :screens/stage)
 (defcomponent :screens/world
   (component/create [_ ctx]
-    {:stage (ctx/->stage ctx [])
+    {:stage (stage/create ctx [])
      :sub-screen [::sub-screen]}))
 
 (comment

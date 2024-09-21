@@ -4,6 +4,7 @@
             [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.property :as property]
+            [core.screens.stage :as stage]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]))
@@ -36,7 +37,7 @@
                                     (actor/set-id! table sound-file)
                                     ctx))
                 (->play-sound-button ctx sound-file)])]
-    (ctx/add-to-stage! ctx (->scrollable-choose-window ctx rows))))
+    (stage/add-actor! ctx (->scrollable-choose-window ctx rows))))
 
 (defn- ->sound-columns [ctx table sound-file]
   [(ui/->text-button ctx (name sound-file) #(open-sounds-window! % table))

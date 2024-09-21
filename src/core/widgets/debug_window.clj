@@ -1,10 +1,11 @@
 (ns core.widgets.debug-window
   (:require [gdx.graphics.camera :as camera]
             utils.core
-            [core.context :as ctx :refer [mouse-on-stage-actor?]]
+            [core.context :as ctx]
             [core.entity.player :as player]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]
+            [core.screens.stage :as stage]
             [core.time :as time]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui])
@@ -33,7 +34,7 @@
      (when-let [entity* (ctx/mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
-     #_(when-let [actor (mouse-on-stage-actor? ctx)]
+     #_(when-let [actor (stage/mouse-on-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
               "id: " (gdx.scene2d.actor/id actor)
               )))))

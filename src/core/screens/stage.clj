@@ -1,7 +1,7 @@
-(ns core.screens.stage-screen
+(ns core.screens.stage
+  (:refer-clojure :exclude [get])
   (:require [gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.graphics.views :refer [gui-mouse-position]]
             [core.screens :as screens]
             [core.screen :as screen]
@@ -10,7 +10,7 @@
            com.badlogic.gdx.scenes.scene2d.Stage))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
-(defcomponent :screens/stage-screen
+(defcomponent :screens/stage
   {:let {:keys [^Stage stage sub-screen]}}
   (state/enter [_ context]
     (.setInputProcessor Gdx/input stage)
@@ -37,23 +37,21 @@
        (or (group/find-actor-with-id (.getRoot ^Stage this) id)
            not-found)))))
 
-(extend-type core.context.Context
-  core.context/StageScreen
-  (->stage [{{:keys [gui-view batch]} :context/graphics} actors]
-    (let [stage (->stage (:viewport gui-view) batch)]
-      (run! #(.addActor stage %) actors)
-      stage))
+(defn create
+  "Stage implements clojure.lang.ILookup (get) on actor id."
+  [{{:keys [gui-view batch]} :context/graphics} actors]
+  (let [stage (->stage (:viewport gui-view) batch)]
+    (run! #(.addActor stage %) actors)
+    stage))
 
-  (get-stage [context]
-    (:stage ((screens/current-screen context) 1)))
+(defn get ^Stage [context]
+  (:stage ((screens/current-screen context) 1)))
 
-  (mouse-on-stage-actor? [context]
-    (let [[x y] (gui-mouse-position context)
-          touchable? true]
-      (.hit (ctx/get-stage context) x y touchable?)))
+(defn mouse-on-actor? [context]
+  (let [[x y] (gui-mouse-position context)
+        touchable? true]
+    (.hit (get context) x y touchable?)))
 
-  (add-to-stage! [ctx actor]
-    (-> ctx
-        ctx/get-stage
-        (.addActor actor))
-    ctx))
+(defn add-actor! [ctx actor]
+  (-> ctx get (.addActor actor))
+  ctx)

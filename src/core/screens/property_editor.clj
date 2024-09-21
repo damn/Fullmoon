@@ -8,6 +8,7 @@
             [core.property :as property]
             [core.context :as ctx]
             [core.screens :as screens]
+            [core.screens.stage :as stage]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui])
@@ -98,7 +99,7 @@
                                                   (actor/pack-ancestor-window! attribute-widget-group)
                                                   ctx))]))
       (.pack window)
-      (ctx/add-to-stage! ctx window))))
+      (stage/add-actor! ctx window))))
 
 (declare ->attribute-widget-group)
 
@@ -265,7 +266,7 @@
     main-table))
 
 (defn- open-property-editor-window! [context property-id]
-  (ctx/add-to-stage! context (->property-editor-window context property-id)))
+  (stage/add-actor! context (->property-editor-window context property-id)))
 
 (defn- ->tabs-data [ctx]
   (for [property-type (sort (property/types))]
@@ -274,12 +275,12 @@
 
 (import 'com.badlogic.gdx.scenes.scene2d.InputListener)
 
-(derive :screens/property-editor :screens/stage-screen)
+(derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
   (component/create [_ {:keys [context/state] :as ctx}]
-    {:stage (let [stage (ctx/->stage ctx
-                         [(ctx/->background-image ctx)
-                          (->tabbed-pane (->tabs-data ctx))])]
+    {:stage (let [stage (stage/create ctx
+                                      [(ctx/->background-image ctx)
+                                       (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)

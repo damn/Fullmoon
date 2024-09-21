@@ -11,6 +11,7 @@
             [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
             [core.entity :as entity]
             [core.entity.player :as player]
+            [core.screens.stage :as stage]
             [core.inventory :as inventory]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color
@@ -131,7 +132,7 @@
   (slot->background ctx))
 
 (defn- get-inventory [ctx]
-  {:table (::table (get (:windows (ctx/get-stage ctx)) :inventory-window))
+  {:table (::table (get (:windows (stage/get ctx)) :inventory-window))
    :slot->background (:slot->background (:context/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget

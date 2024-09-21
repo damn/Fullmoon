@@ -1,9 +1,10 @@
 (ns core.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
-            [core.context :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
+            [core.context :refer [world-grid line-of-sight?]]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.graphics.views :refer [world-mouse-position]]
+            [core.screens.stage :as stage]
             [core.world.grid :refer [point->entities]]))
 
 (defn- calculate-mouseover-entity [context]
@@ -28,7 +29,7 @@
       @entity))
 
   (update-mouseover-entity [ctx]
-    (let [entity (if (mouse-on-stage-actor? ctx)
+    (let [entity (if (stage/mouse-on-actor? ctx)
                    nil
                    (calculate-mouseover-entity ctx))]
       [(when-let [old-entity (this-k ctx)]

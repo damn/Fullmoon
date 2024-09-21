@@ -3,7 +3,8 @@
             [gdx.scene2d.group :as group]
             [core.app :as app]
             [core.context :as ctx]
-            [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]])
+            [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
+            [core.screens.stage :as stage])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
@@ -70,7 +71,7 @@
   )
 
 (comment
- (let [vis-image (first (group/children (.getRoot (ctx/get-stage @app/state))))]
+ (let [vis-image (first (group/children (.getRoot (stage/get @app/state))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -115,10 +116,10 @@
                  :ctx ctx
                  :entity (ctx/mouseover-entity* ctx)
                  :tile @(get (ctx/world-grid ctx) (mapv int (world-mouse-position ctx))))]
-    (ctx/add-to-stage! ctx
-                       (ui/->window {:title "Tree View"
-                                     :close-button? true
-                                     :close-on-escape? true
-                                     :center? true
-                                     :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
-                                     :pack? true}))))
+    (stage/add-actor! ctx
+                      (ui/->window {:title "Tree View"
+                                    :close-button? true
+                                    :close-on-escape? true
+                                    :center? true
+                                    :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
+                                    :pack? true}))))
