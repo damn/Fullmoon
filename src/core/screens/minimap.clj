@@ -3,6 +3,7 @@
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
             [core.screens :as screens]
+            [core.graphics :as graphics]
             [core.g :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
@@ -49,12 +50,12 @@
     (ctx/render-tiled-map context
                           tiled-map
                           (->tile-corner-color-setter @explored-tile-corners))
-    (ctx/render-world-view context
-                           (fn [g]
-                             (g/draw-filled-circle g
-                                                   (camera/position (ctx/world-camera context))
-                                                   0.5
-                                                   Color/GREEN)))
+    (graphics/render-world-view context
+                                (fn [g]
+                                  (g/draw-filled-circle g
+                                                        (camera/position (ctx/world-camera context))
+                                                        0.5
+                                                        Color/GREEN)))
     (if (or (.isKeyJustPressed Gdx/input Input$Keys/TAB)
             (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE))
       (screens/change-screen context :screens/world)

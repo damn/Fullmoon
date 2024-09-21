@@ -7,6 +7,7 @@
             [core.context :as ctx]
             [core.screens :as screens]
             [core.g :as g]
+            [core.graphics :as graphics]
             [core.screen :as screen]
             [core.state :as state]
             [core.property :as property]
@@ -173,7 +174,7 @@ direction keys: move")
   ; TODO ?
   ;com.badlogic.gdx.utils.Disposable
   #_(dispose [_]
-    (dispose (:tiled-map @current-data)))
+      (dispose (:tiled-map @current-data)))
 
   (state/enter [_ ctx]
     (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
@@ -185,7 +186,7 @@ direction keys: move")
     (ctx/render-tiled-map context
                           (:tiled-map @current-data)
                           (constantly Color/WHITE))
-    (ctx/render-world-view context #(render-on-map % context))
+    (graphics/render-world-view context #(render-on-map % context))
     (if (.isKeyJustPressed Gdx/input Input$Keys/L)
       (swap! current-data update :show-grid-lines not))
     (if (.isKeyJustPressed Gdx/input Input$Keys/M)

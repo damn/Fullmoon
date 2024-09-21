@@ -3,9 +3,9 @@
             [core.property :as property]
             [core.g :as g]
             (core.graphics cursors
-                                   shape-drawer
-                                   text
-                                   [views :as views]))
+                           shape-drawer
+                           text
+                           [views :as views]))
   (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)
            com.badlogic.gdx.utils.Disposable
@@ -54,10 +54,15 @@
                              #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
-(extend-type core.context.Context
-  core.context/Graphics
-  (render-gui-view   [ctx render-fn] (render-view ctx :gui-view   render-fn))
-  (render-world-view [ctx render-fn] (render-view ctx :world-view render-fn)))
+(defn render-gui-view
+  "render-fn is a function of param 'g', graphics context."
+  [ctx render-fn]
+  (render-view ctx :gui-view render-fn))
+
+(defn render-world-view
+  "render-fn is a function of param 'g', graphics context."
+  [ctx render-fn]
+  (render-view ctx :world-view render-fn))
 
 (defn on-resize [{g :context/graphics} w h]
   (.update (views/gui-viewport g) w h true)

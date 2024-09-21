@@ -3,10 +3,6 @@
 
 (defrecord Context [])
 
-(defprotocol Graphics
-  (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
-  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context."))
-
 (defprotocol Images
   (create-image [_ file])
   (get-sub-image [_ image [x y w h]])
