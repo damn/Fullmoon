@@ -6,12 +6,14 @@
             [core.context :as ctx]
             [core.content-grid :as content-grid]
             [core.ecs :as ecs]
+            [core.entity :as entity]
             [core.entity.player :as player]
             [core.screens :as screens]
             [core.widgets :as widgets]
             [core.screen :as screen]
             [core.state :as state]
             [core.tx :as tx]
+            [core.time :as time]
             [core.potential-fields :as potential-fields]
             [core.world.grid :as world-grid]
             [core.world.cell :as cell]
@@ -137,7 +139,7 @@
                                        (not (player-unpaused?))))))
 
 (defn- update-world [ctx]
-  (let [ctx (ctx/update-time ctx)
+  (let [ctx (time/update-time ctx (min (.getDeltaTime Gdx/graphics) entity/max-delta-time))
         active-entities (ctx/active-entities ctx)]
     (potential-fields/update! ctx active-entities)
     (try (ecs/tick-entities! ctx active-entities)
@@ -159,7 +161,7 @@
                 ]))
 
 (defn- replay-frame! [ctx]
-  (let [frame-number (ctx/logic-frame ctx)
+  (let [frame-number (time/logic-frame ctx)
         txs (ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx

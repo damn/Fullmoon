@@ -2,12 +2,12 @@
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.g :as g]
-            [core.context :refer [->counter stopped? reset]]
+            [core.time :as time]
             [core.tx :as tx]))
 
 (defcomponent :entity/string-effect
   (entity/tick [[k {:keys [counter]}] eid context]
-    (when (stopped? context counter)
+    (when (time/stopped? context counter)
       [[:tx/dissoc eid k]]))
 
   (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
@@ -27,6 +27,6 @@
       (if-let [string-effect (:entity/string-effect @entity)]
         (-> string-effect
             (update :text str "\n" text)
-            (update :counter #(reset ctx %)))
+            (update :counter #(time/reset ctx %)))
         {:text text
-         :counter (->counter ctx 0.4)})]]))
+         :counter (time/->counter ctx 0.4)})]]))

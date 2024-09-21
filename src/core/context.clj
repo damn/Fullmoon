@@ -3,16 +3,6 @@
 
 (defrecord Context [])
 
-(defprotocol Time
-  (update-time [_])
-  (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
-  (elapsed-time [_] "The elapsed in-game-time (not counting when game is paused).")
-  (logic-frame [_] "The game-logic frame number, starting with 1. (not counting when game is paused)")
-  (->counter [_ duration])
-  (stopped?       [_ counter])
-  (reset          [_ counter])
-  (finished-ratio [_ counter]))
-
 (defprotocol Graphics
   (render-gui-view   [_ render-fn] "render-fn is a function of param 'g', graphics context.")
   (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context."))

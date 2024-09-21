@@ -6,6 +6,7 @@
             [core.entity :as entity]
             [core.world.cell :as cell]
             [core.world.grid :as world-grid]
+            [core.time :as time]
             [core.tx :as tx]))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
@@ -53,7 +54,7 @@
     (when-not (or (zero? (v/length direction))
                   (nil? speed)
                   (zero? speed))
-      (let [movement (assoc movement :delta-time (ctx/delta-time ctx))
+      (let [movement (assoc movement :delta-time (time/delta-time ctx))
             body @eid]
         (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
                           (try-move-solid-body (ctx/world-grid ctx) body movement)

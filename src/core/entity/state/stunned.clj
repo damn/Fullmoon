@@ -1,15 +1,15 @@
 (ns core.entity.state.stunned
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]
             [core.state :as state]
-            [core.g :as g]))
+            [core.g :as g]
+            [core.time :as time]  ))
 
 (defcomponent :stunned
   {:let {:keys [eid counter]}}
   (component/create [[_ eid duration] ctx]
     {:eid eid
-     :counter (->counter ctx duration)})
+     :counter (time/->counter ctx duration)})
 
   (state/player-enter [_]
     [[:tx/cursor :cursors/denied]])
@@ -18,7 +18,7 @@
     false)
 
   (entity/tick [_ eid ctx]
-    (when (stopped? ctx counter)
+    (when (time/stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))
 
   (entity/render-below [_ entity* g _ctx]

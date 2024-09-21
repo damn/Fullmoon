@@ -2,6 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
+            [core.time :as time]
             [core.tx :as tx]
             [core.world.grid :as grid]))
 
@@ -18,7 +19,7 @@
 (defcomponent ::alert-friendlies-after-duration
   {:let {:keys [counter faction]}}
   (entity/tick [_ eid ctx]
-    (when (ctx/stopped? ctx counter)
+    (when (time/stopped? ctx counter)
       (cons [:tx/destroy eid]
             (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
               [:tx/event friendly-eid :alert])))))
@@ -29,5 +30,5 @@
       position
       entity/effect-body-props
       {::alert-friendlies-after-duration
-       {:counter (ctx/->counter ctx delay-seconds)
+       {:counter (time/->counter ctx delay-seconds)
         :faction faction}}]]))

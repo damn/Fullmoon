@@ -2,7 +2,8 @@
   (:require core.image
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.tx :as tx]))
+            [core.tx :as tx]
+            [core.time :as time]))
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -51,7 +52,7 @@
   (when (and
          (not (fn? tx))
          (not= :tx/cursor (first tx)))
-    (let [logic-frame (ctx/logic-frame ctx)] ; only if debug or record deref this?
+    (let [logic-frame (time/logic-frame ctx)] ; only if debug or record deref this?
       (when debug-print-txs?
         (println logic-frame "." (debug-print-tx tx)))
       (when (and record-txs?

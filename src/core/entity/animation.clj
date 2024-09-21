@@ -1,10 +1,10 @@
 (ns core.entity.animation
   (:require [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.property :as property]
             [core.entity :as entity]
-            [core.image :as image]))
+            [core.image :as image]
+            [core.time :as time]))
 
 (defprotocol Animation
   (tick [_ delta])
@@ -73,7 +73,7 @@
 
   (entity/tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
-     [:tx/assoc eid k (tick animation (ctx/delta-time ctx))]]))
+     [:tx/assoc eid k (tick animation (time/delta-time ctx))]]))
 
 (defcomponent :entity/delete-after-animation-stopped?
   (entity/create [_ entity _ctx]

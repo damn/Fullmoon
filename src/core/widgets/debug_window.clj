@@ -4,6 +4,7 @@
             [core.context :as ctx :refer [mouse-on-stage-actor?]]
             [core.entity.player :as player]
             [core.g :as g]
+            [core.time :as time]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
@@ -18,7 +19,7 @@
 (defn- debug-infos ^String [ctx]
   (let [world-mouse (ctx/world-mouse-position ctx)]
     (str
-     "logic-frame: " (ctx/logic-frame ctx) "\n"
+     "logic-frame: " (time/logic-frame ctx) "\n"
      "FPS: " (.getFramesPerSecond Gdx/graphics)  "\n"
      "Zoom: " (camera/zoom (ctx/world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
@@ -26,7 +27,7 @@
      "Y:" (world-mouse 1) "\n"
      "GUI: " (ctx/gui-mouse-position ctx) "\n"
      "paused? " (:context/paused? ctx) "\n"
-     "elapsed-time " (utils.core/readable-number (ctx/elapsed-time ctx)) " seconds \n"
+     "elapsed-time " (utils.core/readable-number (time/elapsed-time ctx)) " seconds \n"
      (skill-info (player/entity* ctx))
      (when-let [entity* (ctx/mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))

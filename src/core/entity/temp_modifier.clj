@@ -1,19 +1,19 @@
 (ns core.entity.temp-modifier
   (:require [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
             [core.g :as g]
+            [core.time :as time]
             [core.tx :as tx]))
 
 (defcomponent :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
   (component/info-text [_ ctx]
-    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (ctx/finished-ratio ctx counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (time/finished-ratio ctx counter)) "/1[]"))
 
   (entity/tick [[k _] eid ctx]
-    (when (ctx/stopped? ctx counter)
+    (when (time/stopped? ctx counter)
       [[:tx/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
@@ -40,4 +40,4 @@
     (when-not (:entity/temp-modifier @target)
       [[:tx/apply-modifiers target modifiers]
        [:tx/assoc target :entity/temp-modifier {:modifiers modifiers
-                                                :counter (ctx/->counter ctx duration)}]])))
+                                                :counter (time/->counter ctx duration)}]])))

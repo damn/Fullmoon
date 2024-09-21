@@ -1,8 +1,8 @@
 (ns core.entity.skills
   (:require #_[clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
+            [core.time :as time]
             [core.tx :as tx]))
 
 (defcomponent :entity/skills
@@ -20,7 +20,7 @@
   (entity/tick [[k skills] eid ctx]
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
-                     (ctx/stopped? ctx cooling-down?))]
+                     (time/stopped? ctx cooling-down?))]
       [:tx/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
 (extend-type core.entity.Entity

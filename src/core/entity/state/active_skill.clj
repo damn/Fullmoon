@@ -1,11 +1,12 @@
 (ns core.entity.state.active-skill
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx :refer [stopped? finished-ratio ->counter]]
+            [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
             [core.g :as g]
             [core.state :as state]
+            [core.time :as time]
             [core.tx :as tx]))
 
 ; SCHEMA effect-ctx
@@ -98,7 +99,7 @@
      :counter (->> skill
                    :skill/action-time
                    (apply-action-speed-modifier @eid skill)
-                   (->counter ctx))})
+                   (time/->counter ctx))})
 
   (state/player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
@@ -109,7 +110,7 @@
   (state/enter [_ ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
-       [:tx/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
+       [:tx/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (time/->counter ctx (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
@@ -120,11 +121,11 @@
       ; TODO some sound ?
       ]
 
-     (stopped? context counter)
+     (time/stopped? context counter)
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
   (entity/render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
-      (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
+      (draw-skill-icon g image entity* (:position entity*) (time/finished-ratio ctx counter))
       (run! #(effect/render % g (merge ctx effect-ctx)) effects))))

@@ -1,8 +1,8 @@
 (ns core.entity.state.npc-moving
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :refer [stopped? ->counter]]
             [core.entity :as entity]
-            [core.state :as state]))
+            [core.state :as state]
+            [core.time :as time]  ))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
 ; pathfinding/usable skills every frame
@@ -12,7 +12,7 @@
   (component/create [[_ eid movement-vector] ctx]
     {:eid eid
      :movement-vector movement-vector
-     :counter (->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
+     :counter (time/->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
 
   (state/enter [_ _ctx]
     [[:tx/set-movement eid {:direction movement-vector
@@ -22,5 +22,5 @@
     [[:tx/set-movement eid nil]])
 
   (entity/tick [_ eid ctx]
-    (when (stopped? ctx counter)
+    (when (time/stopped? ctx counter)
       [[:tx/event eid :timer-finished]])))

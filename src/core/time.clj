@@ -1,42 +1,49 @@
 (ns core.time
-  (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
-            [core.entity :as entity])
-  (:import com.badlogic.gdx.Gdx))
+  (:require [core.component :as component :refer [defcomponent]]))
 
-(defcomponent :context/time
+(def ^:private this :context/time)
+
+(defcomponent this
   (component/create [_ _ctx]
     {:elapsed 0
      :logic-frame 0}))
 
+(defn update-time [ctx delta]
+  (update ctx this #(-> %
+                        (assoc :delta-time delta)
+                        (update :elapsed + delta)
+                        (update :logic-frame inc))))
+
+(defn delta-time
+  "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
+  [ctx]
+  (:delta-time (this ctx)))
+
+(defn elapsed-time
+  "The elapsed in-game-time (not counting when game is paused)."
+  [ctx]
+  (:elapsed (this ctx)))
+
+(defn logic-frame
+  "The game-logic frame number, starting with 1. (not counting when game is paused)"
+  [ctx]
+  (:logic-frame (this ctx)))
+
 (defrecord Counter [duration stop-time])
 
-(extend-type core.context.Context
-  core.context/Time
-  (update-time [ctx]
-    (let [delta (min (.getDeltaTime Gdx/graphics) entity/max-delta-time)]
-      (update ctx :context/time #(-> %
-                                     (assoc :delta-time delta)
-                                     (update :elapsed + delta)
-                                     (update :logic-frame inc)))))
+(defn ->counter [ctx duration]
+  {:pre [(>= duration 0)]}
+  (->Counter duration (+ (elapsed-time ctx) duration)))
 
-  (delta-time   [ctx] (:delta-time  (:context/time ctx)))
-  (elapsed-time [ctx] (:elapsed     (:context/time ctx)))
-  (logic-frame  [ctx] (:logic-frame (:context/time ctx)))
+(defn stopped? [ctx {:keys [stop-time]}]
+  (>= (elapsed-time ctx) stop-time))
 
-  (->counter [ctx duration]
-    {:pre [(>= duration 0)]}
-    (->Counter duration (+ (ctx/elapsed-time ctx) duration)))
+(defn reset [ctx {:keys [duration] :as counter}]
+  (assoc counter :stop-time (+ (elapsed-time ctx) duration)))
 
-  (stopped? [ctx {:keys [stop-time]}]
-    (>= (ctx/elapsed-time ctx) stop-time))
-
-  (reset [ctx {:keys [duration] :as counter}]
-    (assoc counter :stop-time (+ (ctx/elapsed-time ctx) duration)))
-
-  (finished-ratio [ctx {:keys [duration stop-time] :as counter}]
-    {:post [(<= 0 % 1)]}
-    (if (ctx/stopped? ctx counter)
-      0
-      ; min 1 because floating point math inaccuracies
-      (min 1 (/ (- stop-time (ctx/elapsed-time ctx)) duration)))) )
+(defn finished-ratio [ctx {:keys [duration stop-time] :as counter}]
+  {:post [(<= 0 % 1)]}
+  (if (stopped? ctx counter)
+    0
+    ; min 1 because floating point math inaccuracies
+    (min 1 (/ (- stop-time (elapsed-time ctx)) duration))))

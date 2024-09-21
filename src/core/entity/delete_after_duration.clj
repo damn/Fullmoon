@@ -1,17 +1,17 @@
 (ns core.entity.delete-after-duration
   (:require [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
-            [core.entity :as entity]))
+            [core.entity :as entity]
+            [core.time :as time]))
 
 (defcomponent :entity/delete-after-duration
   {:let counter}
   (component/create [[_ duration] ctx]
-    (ctx/->counter ctx duration))
+    (time/->counter ctx duration))
 
   (component/info-text [_ ctx]
-    (str "[LIGHT_GRAY]Remaining: " (readable-number (ctx/finished-ratio ctx counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Remaining: " (readable-number (time/finished-ratio ctx counter)) "/1[]"))
 
   (entity/tick [_ eid ctx]
-    (when (ctx/stopped? ctx counter)
+    (when (time/stopped? ctx counter)
       [[:tx/destroy eid]])))
