@@ -4,6 +4,7 @@
             [core.context :as ctx]
             [core.screens :as screens]
             [core.state :as state]
+            [core.property :as property]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.Input$Keys))
@@ -16,7 +17,7 @@
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat
-                                   (for [{:keys [property/id]} (ctx/all-properties ctx :properties/worlds)]
+                                   (for [{:keys [property/id]} (property/all-properties ctx :properties/worlds)]
                                      [(ui/->text-button ctx (str "Start " id) (start-game! id))])
                                    [(when (safe-get config :map-editor?)
                                       [(ui/->text-button ctx "Map editor" #(screens/change-screen % :screens/map-editor))])

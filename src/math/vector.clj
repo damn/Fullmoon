@@ -1,5 +1,5 @@
 (ns math.vector
-  "API for using com.badlogic.gdx.math.Vector2 with clojure [x y] vectors."
+  "API for [x y] vectors."
   (:import [com.badlogic.gdx.math Vector2 MathUtils]))
 
 ; TODO not important badlogic, using clojure vectors

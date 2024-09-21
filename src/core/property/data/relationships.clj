@@ -23,7 +23,7 @@
  )
 
 (defmethod property/edn->value :one-to-many [_ property-ids ctx]
-  (map (partial ctx/property ctx) property-ids))
+  (map (partial property/build ctx) property-ids))
 
 (defcomponent :one-to-one
   (property/->value [[_ property-type]]
@@ -38,7 +38,7 @@
  )
 
 (defmethod property/edn->value :one-to-one [_ property-id ctx]
-  (ctx/property ctx property-id))
+  (property/build ctx property-id))
 
 (defn- add-one-to-many-rows [ctx table property-type property-ids]
   (let [redo-rows (fn [ctx property-ids]
@@ -62,7 +62,7 @@
                              (.pack window)
                              (ctx/add-to-stage! ctx window))))]
       (for [property-id property-ids]
-        (let [property (ctx/property ctx property-id)
+        (let [property (property/build ctx property-id)
               image-widget (ui/->image-widget (property/->image property)
                                               {:id property-id})]
           (actor/add-tooltip! image-widget #(info/->text property %))
@@ -106,7 +106,7 @@
                                (.pack window)
                                (ctx/add-to-stage! ctx window)))))]
       [(when property-id
-         (let [property (ctx/property ctx property-id)
+         (let [property (property/build ctx property-id)
                image-widget (ui/->image-widget (property/->image property)
                                                {:id property-id})]
            (actor/add-tooltip! image-widget #(info/->text property %))

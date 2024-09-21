@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.property :as property]
             [core.effect :as effect]
             [core.tx :as tx]))
@@ -68,7 +67,7 @@
 (defcomponent :tx/creature
   {:let {:keys [position creature-id components]}}
   (tx/do! [_ ctx]
-    (let [props (ctx/property ctx creature-id)]
+    (let [props (property/build ctx creature-id)]
       [[:tx/create
         position
         (->body (:entity/body props))
@@ -100,6 +99,6 @@
   (tx/do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
-                    :creature-id id ; already ctx/property called through one-to-one, now called again.
+                    :creature-id id ; already properties/get called through one-to-one, now called again.
                     :components {:entity/state [:state/npc :npc-idle]
                                  :entity/faction (:entity/faction @source)}}]]))

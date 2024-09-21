@@ -9,6 +9,7 @@
             [core.g :as g]
             [core.screen :as screen]
             [core.state :as state]
+            [core.property :as property]
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
@@ -159,8 +160,8 @@ direction keys: move")
                 :cell-defaults {:pad 10}
                 :rows [[(ui/->label (with-out-str
                                      (clojure.pprint/pprint
-                                      (ctx/property ctx level-id))))]
-                       [(ui/->text-button ctx "Generate" #(try (generate % (ctx/property % level-id))
+                                      (property/build ctx level-id))))]
+                       [(ui/->text-button ctx "Generate" #(try (generate % (property/build % level-id))
                                                                (catch Throwable t
                                                                  (ctx/error-window! % t)
                                                                  (println t)

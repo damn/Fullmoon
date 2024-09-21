@@ -4,6 +4,7 @@
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.content-grid :as content-grid]
             [core.ecs :as ecs]
             [core.screens :as screens]
             [core.widgets :as widgets]
@@ -12,7 +13,6 @@
             [core.tx :as tx]
             [core.potential-fields :as potential-fields]
             [core.world.grid :as world-grid]
-            [core.world.content-grid :as content-grid]
             [core.world.cell :as cell]
             [core.render :as world-render]
             [core.debug-render :as debug-render])

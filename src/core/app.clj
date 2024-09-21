@@ -7,7 +7,7 @@
             [core.context :as ctx]
             [core.graphics :as graphics]
             [core.screens :as screens]
-            [core.properties :as properties])
+            [core.property :as property])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -86,7 +86,7 @@
   ; otherwise some problem with gdx.scene2d.actor/add-tooltip! (cyclic dependency)
   ; which requires state
   (require-all-components!)
-  (let [ctx (assoc (ctx/->Context) :context/properties (properties/validate-and-create properties-edn-file))
-        app (ctx/property ctx :app/core)]
+  (let [ctx (assoc (ctx/->Context) :context/properties (property/validate-and-create properties-edn-file))
+        app (property/build ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))

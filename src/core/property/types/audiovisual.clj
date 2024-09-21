@@ -1,6 +1,5 @@
 (ns core.property.types.audiovisual
   (:require [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.property :as property]
             [core.tx :as tx]))
@@ -15,7 +14,7 @@
 (defcomponent :tx/audiovisual
   (tx/do! [[_ position id] ctx]
     (let [{:keys [tx/sound
-                  entity/animation]} (ctx/property ctx id)]
+                  entity/animation]} (property/build ctx id)]
       [[:tx/sound sound]
        [:tx/create
         position

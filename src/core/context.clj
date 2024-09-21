@@ -84,15 +84,10 @@
   (active-entities [_])
   (world-grid [_]))
 
-(defprotocol PropertyStore
-  (property [_ id])
-  (all-properties [_ type])
-  (update! [_ property])
-  (delete! [_ id]))
-
 (defprotocol BackgroundImage
   (->background-image [_]))
 
+; skills & effects together = 'core.action' ?
 (defprotocol ActiveSkill
   (skill-usable-state [ctx entity* skill]))
 

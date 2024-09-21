@@ -1,6 +1,7 @@
 (ns dev
   (:require [core.app :as app]
-            [core.context :as ctx])
+            [core.context :as ctx]
+            [core.property :as property])
   (:import com.badlogic.gdx.Gdx))
 
 (comment
@@ -41,7 +42,7 @@
             (comp #(str/split % #"-")
                   name
                   :property/id)
-            (ctx/all-properties @app/state :properties/items)))))))
+            (property/all-properties @app/state :properties/items)))))))
 
  )
 
@@ -53,10 +54,10 @@
   (post-tx! (fn [ctx]
               [[:tx/add-skill
                 (:entity/id (ctx/player-entity* ctx))
-                (ctx/property ctx skill-id)]])))
+                (property/build ctx skill-id)]])))
 
 (defn create-item! [item-id]
   (post-tx! (fn [ctx]
               [[:tx/item
                 (:position (ctx/player-entity* ctx))
-                (ctx/property ctx item-id)]])))
+                (property/build ctx item-id)]])))

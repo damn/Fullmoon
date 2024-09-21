@@ -193,9 +193,9 @@
                              :center? true
                              :close-on-escape? true
                              :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group ctx (property/schema props) props)
-        save!   (apply-context-fn window #(ctx/update! % (attribute-widget-group->data widgets)))
-        delete! (apply-context-fn window #(ctx/delete! % id))]
+        widgets (->attribute-widget-group ctx (property/->schema props) props)
+        save!   (apply-context-fn window #(property/update! % (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window #(property/delete! % id))]
     (ui/add-rows! window [[(ui/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
                                                        [(ui/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                         (ui/->text-button ctx "Delete" delete!)]])]])
@@ -224,7 +224,7 @@
                   extra-info-text
                   columns
                   image/scale]} (property/overview property-type)
-          properties (ctx/all-properties ctx property-type)
+          properties (property/all-properties ctx property-type)
           properties (if sort-by-fn
                        (sort-by sort-by-fn properties)
                        properties)]
