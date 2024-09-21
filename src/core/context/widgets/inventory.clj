@@ -1,4 +1,4 @@
-(ns core.widgets.inventory
+(ns core.context.widgets.inventory
   (:require [data.grid2d :as grid]
             [gdx.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [gdx.scene2d.ui :as ui]

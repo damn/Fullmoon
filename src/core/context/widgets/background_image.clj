@@ -1,4 +1,4 @@
-(ns core.widgets.background-image
+(ns core.context.widgets.background-image
   (:require [gdx.scene2d.ui :as ui]
             [core.context :as ctx]))
 

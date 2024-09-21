@@ -1,4 +1,4 @@
-(ns core.widgets.player-message
+(ns core.context.widgets.player-message
   (:require [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
             [core.graphics :as g]

@@ -1,4 +1,4 @@
-(ns core.widgets.action-bar
+(ns core.context.widgets.action-bar
   (:require [core.component :refer [defcomponent]]
             [core.info :as info]
             [core.context :as ctx]

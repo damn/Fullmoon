@@ -6,11 +6,11 @@
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]
             [core.entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]
-            [core.widgets.action-bar :as action-bar]
-            [core.widgets.debug-window :as debug-window]
-            [core.widgets.entity-info-window :as entity-info-window]
-            [core.widgets.inventory :as inventory]
-            [core.widgets.hp-mana-bars :refer [->hp-mana-bars]])
+            [core.context.widgets.action-bar :as action-bar]
+            [core.context.widgets.debug-window :as debug-window]
+            [core.context.widgets.entity-info-window :as entity-info-window]
+            [core.context.widgets.hp-mana-bars :refer [->hp-mana-bars]]
+            [core.context.widgets.inventory :as inventory])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.scenes.scene2d.Stage
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))

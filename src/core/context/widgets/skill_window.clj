@@ -1,4 +1,4 @@
-(ns core.widgets.skill-window
+(ns core.context.widgets.skill-window
   (:require [core.info :as info]
             [core.context :as ctx]
             [gdx.scene2d.actor :refer [add-tooltip!]]

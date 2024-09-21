@@ -1,4 +1,4 @@
-(ns core.widgets.entity-info-window
+(ns core.context.widgets.entity-info-window
   (:require [core.info :as info]
             [core.context :as ctx]
             [gdx.scene2d.ui :as ui]

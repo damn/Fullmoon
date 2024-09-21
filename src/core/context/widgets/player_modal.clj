@@ -1,4 +1,4 @@
-(ns core.widgets.player-modal
+(ns core.context.widgets.player-modal
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx :refer [get-stage add-to-stage!]]
             [gdx.scene2d.ui :as ui]

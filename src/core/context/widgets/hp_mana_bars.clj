@@ -1,4 +1,4 @@
-(ns core.widgets.hp-mana-bars
+(ns core.context.widgets.hp-mana-bars
   (:require [utils.core :as utils]
             [core.val-max :refer [val-max-ratio]]
             [core.context :as ctx]

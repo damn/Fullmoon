@@ -1,4 +1,4 @@
-(ns core.widgets.debug-window
+(ns core.context.widgets.debug-window
   (:require [gdx.graphics.camera :as camera]
             utils.core
             [core.context :as ctx :refer [mouse-on-stage-actor?]]

@@ -1,4 +1,4 @@
-(ns core.widgets.error-modal
+(ns core.context.widgets.error-modal
   (:require [clj-commons.pretty.repl :as p]
             [gdx.scene2d.ui :as ui]
             [core.context :as ctx]))
