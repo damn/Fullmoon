@@ -1,4 +1,4 @@
-(ns core.graphics.cursors
+(ns core.context.graphics.cursors
   (:require [utils.core :as utils :refer [mapvals]]
             [core.component :refer [defcomponent]]
             [core.context :as ctx]

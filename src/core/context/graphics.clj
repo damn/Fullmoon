@@ -2,10 +2,10 @@
   (:require [core.component :refer [defcomponent] :as component]
             [core.property :as property]
             [core.graphics :as g]
-            (core.graphics cursors
-                           shape-drawer
-                           text
-                           views))
+            (core.context.graphics cursors
+                                   shape-drawer
+                                   text
+                                   views))
   (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)
            com.badlogic.gdx.utils.Disposable
@@ -31,10 +31,10 @@
     (core.graphics/map->Graphics
      (let [batch (SpriteBatch.)]
        (merge {:batch batch}
-              (core.graphics.shape-drawer/->build batch)
-              (core.graphics.text/->build default-font)
-              (core.graphics.views/->build views)
-              (core.graphics.cursors/->build cursors)))))
+              (core.context.graphics.shape-drawer/->build batch)
+              (core.context.graphics.text/->build default-font)
+              (core.context.graphics.views/->build views)
+              (core.context.graphics.cursors/->build cursors)))))
 
   (component/destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
     (.dispose ^Disposable batch)

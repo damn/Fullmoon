@@ -1,4 +1,4 @@
-(ns core.graphics.image
+(ns core.context.graphics.image
   (:require [gdx.graphics.g2d :as g2d]
             [core.image :as image]
             [core.context :as ctx]

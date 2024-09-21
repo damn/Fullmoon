@@ -1,4 +1,4 @@
-(ns core.graphics.shape-drawer
+(ns core.context.graphics.shape-drawer
   (:require [gdx.graphics :as graphics]
             [core.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils

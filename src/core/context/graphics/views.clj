@@ -1,4 +1,4 @@
-(ns core.graphics.views
+(ns core.context.graphics.views
   (:require [core.context :as ctx]
             [core.graphics :as g])
   (:import com.badlogic.gdx.Gdx

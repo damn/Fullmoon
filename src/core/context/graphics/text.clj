@@ -1,4 +1,4 @@
-(ns core.graphics.text
+(ns core.context.graphics.text
   (:require [clojure.string :as str]
             core.graphics)
   (:import com.badlogic.gdx.Gdx
