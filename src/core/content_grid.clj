@@ -1,10 +1,14 @@
 (ns core.content-grid
   (:require [data.grid2d :as grid2d]
-            [core.component :as component :refer [defcomponent]]
-            core.world.content-grid))
+            [core.component :as component :refer [defcomponent]]))
 
-(defrecord ContentGrid [grid cell-w cell-h]
-  core.world.content-grid/ContentGrid
+(defprotocol ContentGrid
+  (update-entity! [_ entity])
+  (remove-entity! [_ entity])
+  (active-entities [_ center-entity]))
+
+(defrecord RContentGrid [grid cell-w cell-h]
+  ContentGrid
   (update-entity! [_ entity]
     (let [{::keys [content-cell] :as entity*} @entity
           [x y] (:position entity*)
@@ -33,7 +37,7 @@
 (defcomponent :context/content-grid
   {:let [cell-w cell-h]}
   (component/create [_ {:keys [context/grid]}]
-    (->ContentGrid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
+    (->RContentGrid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
                                        (inc (int (/ (grid2d/height grid) cell-h)))
                                        (fn [idx]
                                          (atom {:idx idx,
