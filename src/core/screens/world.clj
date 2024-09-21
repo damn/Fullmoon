@@ -4,6 +4,7 @@
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.ecs :as ecs]
             [core.screens :as screens]
             [core.widgets :as widgets]
             [core.screen :as screen]
@@ -138,7 +139,7 @@
   (let [ctx (ctx/update-time ctx)
         active-entities (ctx/active-entities ctx)]
     (ctx/update-potential-fields ctx active-entities)
-    (try (ctx/tick-entities! ctx active-entities)
+    (try (ecs/tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx
                (ctx/error-window! t)
@@ -153,7 +154,7 @@
                 #(if (:context/paused? %)
                    %
                    (update-world %))
-                ctx/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                ecs/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ]))
 
 (defn- replay-frame! [ctx]
@@ -177,7 +178,7 @@
   (ctx/render-world-view ctx
                          (fn [g]
                            (debug-render/before-entities ctx g)
-                           (ctx/render-entities! ctx
+                           (ecs/render-entities! ctx
                                                  g
                                                  (->> (ctx/active-entities ctx)
                                                       (map deref)))

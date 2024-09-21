@@ -32,7 +32,7 @@
 (comment
  (let [uid 76
        ctx @app/state
-       entity* @(core.context/get-entity ctx uid)
+       entity* @(core.ecs/get-entity ctx uid)
        effect-ctx (->npc-effect-ctx ctx entity*)]
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )

@@ -64,13 +64,6 @@
   (summarize-txs [_ txs])
   (frame->txs [_ frame-number]))
 
-(defprotocol EntityComponentSystem
-  (all-entities [_])
-  (get-entity [_ uid])
-  (tick-entities!   [_ entities*] "Calls tick system on all components of entities.")
-  (render-entities! [_ g entities*] "Draws entities* in the correct z-order and in the order of render-systems for each z-order.")
-  (remove-destroyed-entities! [_] "Calls destroy on all entities which are marked with ':tx/destroy'"))
-
 (defprotocol MouseOverEntity
   (update-mouseover-entity [_])
   (mouseover-entity* [_]))

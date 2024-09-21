@@ -93,33 +93,37 @@
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(extend-type core.context.Context
-  core.context/EntityComponentSystem
-  (all-entities [ctx]
-    (vals (entities ctx)))
+(defn all-entities [ctx]
+  (vals (entities ctx)))
 
-  (get-entity [ctx uid]
-    (get (entities ctx) uid))
+(defn get-entity [ctx uid]
+  (get (entities ctx) uid))
 
-  (tick-entities! [ctx entities]
-    (reduce tick-system ctx entities))
+(defn tick-entities!
+  "Calls tick system on all components of entities."
+  [ctx entities]
+  (reduce tick-system ctx entities))
 
-  (render-entities! [ctx g entities*]
-    (let [player-entity* (ctx/player-entity* ctx)]
-      (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
-                                                 first
-                                                 entity/render-order)
-              system entity/render-systems
-              entity* entities*
-              :when (or (= z-order :z-order/effect)
-                        (ctx/line-of-sight? ctx player-entity* entity*))]
-        (render-entity* system entity* g ctx))))
+(defn render-entities!
+  "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
+  [ctx g entities*]
+  (let [player-entity* (ctx/player-entity* ctx)]
+    (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
+                                               first
+                                               entity/render-order)
+            system entity/render-systems
+            entity* entities*
+            :when (or (= z-order :z-order/effect)
+                      (ctx/line-of-sight? ctx player-entity* entity*))]
+      (render-entity* system entity* g ctx))))
 
-  (remove-destroyed-entities! [ctx]
-    (for [entity (filter (comp :entity/destroyed? deref) (ctx/all-entities ctx))
-          component @entity]
-      (fn [ctx]
-        (entity/destroy component entity ctx)))))
+(defn remove-destroyed-entities!
+  "Calls destroy on all entities which are marked with ':tx/destroy'"
+  [ctx]
+  (for [entity (filter (comp :entity/destroyed? deref) (all-entities ctx))
+        component @entity]
+    (fn [ctx]
+      (entity/destroy component entity ctx))))
 
 (defcomponent :tx/assoc
   (tx/do! [[_ entity k v] ctx]
