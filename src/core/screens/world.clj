@@ -9,6 +9,7 @@
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.graphics :as graphics]
+            [core.graphics.cursors :as cursors]
             [core.screens :as screens]
             [core.widgets :as widgets]
             [core.screen :as screen]
@@ -215,7 +216,7 @@
 
 (defcomponent ::sub-screen
   (state/exit [_ ctx]
-    (ctx/set-cursor! ctx :cursors/default))
+    (cursors/set-cursor! ctx :cursors/default))
 
   (screen/render [_ ctx]
     (render-world! ctx)

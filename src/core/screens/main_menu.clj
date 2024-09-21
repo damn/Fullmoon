@@ -2,6 +2,7 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.graphics.cursors :as cursors]
             [core.screens :as screens]
             [core.state :as state]
             [core.property :as property]
@@ -31,7 +32,7 @@
 
 (defcomponent ::sub-screen
   (state/enter [_ ctx]
-    (ctx/set-cursor! ctx :cursors/default)))
+    (cursors/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]
   [(ctx/->background-image ctx)

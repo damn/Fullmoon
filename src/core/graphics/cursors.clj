@@ -1,7 +1,6 @@
 (ns core.graphics.cursors
   (:require [utils.core :as utils :refer [mapvals]]
             [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Pixmap))
@@ -17,12 +16,10 @@
                        (->cursor (str "cursors/" file ".png") hotspot))
                      cursors)})
 
-(extend-type core.context.Context
-  core.context/Cursors
-  (set-cursor! [{g :context/graphics} cursor-key]
-    (.setCursor Gdx/graphics (utils/safe-get (:cursors g) cursor-key))))
+(defn set-cursor! [{g :context/graphics} cursor-key]
+  (.setCursor Gdx/graphics (utils/safe-get (:cursors g) cursor-key)))
 
 (defcomponent :tx/cursor
   (tx/do! [[_ cursor-key] ctx]
-    (ctx/set-cursor! ctx cursor-key)
+    (set-cursor! ctx cursor-key)
     ctx))

@@ -3,9 +3,6 @@
 
 (defrecord Context [])
 
-(defprotocol Cursors
-  (set-cursor! [_ cursor-key]))
-
 (defprotocol Views
   (gui-mouse-position   [_])
   (gui-viewport-width   [_])
