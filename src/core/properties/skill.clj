@@ -1,7 +1,7 @@
 (ns core.properties.skill
   (:require [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]
-            [core.property :refer [def-property-type]]))
+            [core.property :as property]))
 
 (defcomponent :skill/action-time {:data :pos}
   (component/info-text [[_ v] _ctx]
@@ -29,7 +29,7 @@
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))
 
-(def-property-type :properties/skills
+(property/def-type :properties/skills
   {:schema [:entity/image
             :property/pretty-name
             :skill/action-time-modifier-key

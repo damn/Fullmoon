@@ -3,16 +3,15 @@
             [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.data :as data]
+            [core.property :as property]
             [core.effect :as effect]
-            [core.property :refer [def-property-type]]
             [core.tx :as tx]))
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
 
-(data/def-attributes
+(property/def-attributes
   :body/width   :pos
   :body/height  :pos
   :body/flying? :boolean)
@@ -34,7 +33,7 @@
   (component/info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
-(def-property-type :properties/creatures
+(property/def-type :properties/creatures
   {:schema [:entity/body
             :property/pretty-name
             :creature/species

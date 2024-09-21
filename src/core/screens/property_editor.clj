@@ -7,7 +7,6 @@
             [core.info :as info]
             [core.property :as property]
             [core.context :as ctx]
-            [core.data :as data]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui])
@@ -48,10 +47,10 @@
     (str (subs s 0 limit) "...")
     s))
 
-(defmethod data/->widget :default [_ v _ctx]
+(defmethod property/->widget :default [_ v _ctx]
   (ui/->label (truncate (utils/->edn-str v) 60)))
 
-(defmethod data/widget->value :default [_ widget]
+(defmethod property/widget->value :default [_ widget]
   (actor/id widget))
 
 (declare ->component-widget
@@ -68,7 +67,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [[data-type {:keys [schema]}] (data/component k)]
+  (let [[data-type {:keys [schema]}] (property/data-component k)]
     (cond
      (#{:one-to-one :one-to-many} data-type) nil
      ;(#{:map} data-type) {} ; cannot have empty for required keys, then no Add Component button
@@ -107,7 +106,7 @@
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(defmethod data/->widget :map [[_ data] m ctx]
+(defmethod property/->widget :map [[_ data] m ctx]
   (let [attribute-widget-group (->attribute-widget-group ctx (:schema data) m)
         optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
                                                  (set (keys m))))]
@@ -124,7 +123,7 @@
                                 [attribute-widget-group]])})))
 
 
-(defmethod data/widget->value :map [_ table]
+(defmethod property/widget->value :map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
 
 (defn- ->attribute-label [k]
@@ -135,7 +134,7 @@
 
 (defn- ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (data/->widget (data/component k) v ctx)
+        value-widget (property/->widget (property/data-component k) v ctx)
         table (ui/->table {:id k
                            :cell-defaults {:pad 4}})
         column (remove nil?
@@ -172,7 +171,7 @@
   (into {} (for [k (map actor/id (group/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (data/widget->value (data/component k) value-widget)])))
+             [k (property/widget->value (property/data-component k) value-widget)])))
 
 ;;
 

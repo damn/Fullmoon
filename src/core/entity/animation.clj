@@ -2,7 +2,7 @@
   (:require [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.data :as data]
+            [core.property :as property]
             [core.entity :as entity]
             [core.image :as image]))
 
@@ -50,14 +50,14 @@
             [:frame-duration pos?]
             [:looping? :boolean]]})
 
-(defmethod data/edn->value :data/animation [_ animation ctx]
+(defmethod property/edn->value :data/animation [_ animation ctx]
   (edn->animation animation ctx))
 
 ; looping? - click on widget restart
 ; frame-duration
 ; frames ....
 ; hidden actor act tick atom animation & set current frame image drawable
-(defmethod data/->widget :data/animation [_ animation ctx]
+(defmethod property/->widget :data/animation [_ animation ctx]
   (ui/->table {:rows [(for [image (:frames animation)]
                         (ui/->image-widget (image/edn->image image ctx) {}))]
                :cell-defaults {:pad 1}}))

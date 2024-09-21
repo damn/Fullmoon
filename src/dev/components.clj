@@ -41,7 +41,7 @@
 (defn data-components []
   (sort
    (concat
-    (keys (methods core.data/->value))
+    (keys (methods core.property/->value))
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))

@@ -1,9 +1,8 @@
 (ns core.properties.app
   (:require [core.component :refer [defcomponent]]
-            [core.data :as data]
-            [core.property :refer [def-property-type]]))
+            [core.property :as property]))
 
-(data/def-attributes
+(property/def-attributes
   :fps          :nat-int
   :full-screen? :boolean
   :width        :nat-int
@@ -24,7 +23,7 @@
                 [:context/vis-ui {:optional true}]
                 [:context/tiled-map-renderer {:optional true}]]]})
 
-(def-property-type :properties/app
+(property/def-type :properties/app
   {:schema [:app/lwjgl3
             :app/context]
    :overview {:title "Apps"

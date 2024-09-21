@@ -2,7 +2,7 @@
   (:require [gdx.scene2d.ui :as ui]
             [core.component :as component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.data :as data]
+            [core.property :as property]
             core.image))
 
 (defcomponent :image
@@ -10,7 +10,7 @@
             [:file :string]
             [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]]})
 
-(defmethod data/edn->value :image [_ image ctx]
+(defmethod property/edn->value :image [_ image ctx]
   (core.image/edn->image image ctx))
 
 ; too many ! too big ! scroll ... only show files first & preview?
@@ -20,7 +20,7 @@
     [(ui/->image-button ctx (ctx/create-image ctx file) identity)]
     #_[(ui/->text-button ctx file identity)]))
 
-(defmethod data/->widget :image [_ image ctx]
+(defmethod property/->widget :image [_ image ctx]
   (ui/->image-widget (core.image/edn->image image ctx) {})
   #_(ui/->image-button ctx image
                         #(ctx/add-to-stage! % (->scrollable-choose-window % (texture-rows %)))

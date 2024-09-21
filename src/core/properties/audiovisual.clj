@@ -2,10 +2,10 @@
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx]
             [core.entity :as entity]
-            [core.property :refer [def-property-type]]
+            [core.property :as property]
             [core.tx :as tx]))
 
-(def-property-type :properties/audiovisuals
+(property/def-type :properties/audiovisuals
   {:schema [:tx/sound
             :entity/animation]
    :overview {:title "Audiovisuals"

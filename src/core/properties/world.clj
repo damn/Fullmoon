@@ -2,7 +2,7 @@
   (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.property :refer [def-property-type]]
+            [core.property :as property]
             mapgen.gen))
 
 (defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})
@@ -19,7 +19,7 @@
                                               :world.generator/modules
                                               :world.generator/uf-caves]]})
 
-(def-property-type :properties/worlds
+(property/def-type :properties/worlds
   {:schema [:world/generator
             :world/player-creature
             [:world/tiled-map {:optional true}]

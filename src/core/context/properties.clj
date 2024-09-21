@@ -5,7 +5,6 @@
             [malli.error :as me]
             [utils.core :refer [safe-get]]
             [core.context :as ctx]
-            [core.data :as data]
             [core.property :as property]))
 
 (defn- validate [property]
@@ -74,11 +73,11 @@
 (defn- build-property [ctx property]
   (apply-kvs property
              (fn [k v]
-               (data/edn->value (try (data/component k)
-                                     (catch Throwable _t
-                                       (swap! undefined-data-ks conj k)))
-                                (if (map? v) (build-property ctx v) v)
-                                ctx))))
+               (property/edn->value (try (property/data-component k)
+                                         (catch Throwable _t
+                                           (swap! undefined-data-ks conj k)))
+                                    (if (map? v) (build-property ctx v) v)
+                                    ctx))))
 
 (extend-type core.context.Context
   core.context/PropertyStore

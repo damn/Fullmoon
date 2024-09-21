@@ -1,8 +1,8 @@
 (ns core.context.config
   (:require [core.component :refer [defcomponent] :as component]
-            [core.data :as data]))
+            [core.property :as property]))
 
-(data/def-attributes
+(property/def-attributes
   :tag [:enum [:dev :prod]]
   :configs :some)
 

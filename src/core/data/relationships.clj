@@ -2,7 +2,6 @@
   (:require [core.component :refer [defcomponent]]
             [core.info :as info]
             [core.context :as ctx]
-            [core.data :as data]
             [core.property :as property]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
@@ -12,7 +11,7 @@
 ; https://github.com/damn/core/issues/59
 
 (defcomponent :one-to-many
-  (data/->value [[_ property-type]]
+  (property/->value [[_ property-type]]
     {:schema [:set [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]]}))
 
 (defn one-to-many-schema->linked-property-type [[_set [_qualif_kw {:keys [namespace]}]]]
@@ -23,11 +22,11 @@
     :properties/items)
  )
 
-(defmethod data/edn->value :one-to-many [_ property-ids ctx]
+(defmethod property/edn->value :one-to-many [_ property-ids ctx]
   (map (partial ctx/property ctx) property-ids))
 
 (defcomponent :one-to-one
-  (data/->value [[_ property-type]]
+  (property/->value [[_ property-type]]
     {:schema [:qualified-keyword {:namespace (property/property-type->id-namespace property-type)}]}))
 
 (defn one-to-one-schema->linked-property-type [[_qualif_kw {:keys [namespace]}]]
@@ -38,7 +37,7 @@
     :properties/creatuers)
  )
 
-(defmethod data/edn->value :one-to-one [_ property-id ctx]
+(defmethod property/edn->value :one-to-one [_ property-id ctx]
   (ctx/property ctx property-id))
 
 (defn- add-one-to-many-rows [ctx table property-type property-ids]
@@ -71,7 +70,7 @@
       (for [id property-ids]
         (ui/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
-(defmethod data/->widget :one-to-many [[_ data] property-ids context]
+(defmethod property/->widget :one-to-many [[_ data] property-ids context]
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows context
                           table
@@ -79,7 +78,7 @@
                           property-ids)
     table))
 
-(defmethod data/widget->value :one-to-many [_ widget]
+(defmethod property/widget->value :one-to-many [_ widget]
   (->> (group/children widget)
        (keep actor/id)
        set))
@@ -115,7 +114,7 @@
       [(when property-id
          (ui/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
 
-(defmethod data/->widget :one-to-one [[_ data] property-id ctx]
+(defmethod property/->widget :one-to-one [[_ data] property-id ctx]
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows ctx
                          table
@@ -123,5 +122,5 @@
                          property-id)
     table))
 
-(defmethod data/widget->value :one-to-one [_ widget]
+(defmethod property/widget->value :one-to-one [_ widget]
   (->> (group/children widget) (keep actor/id) first))

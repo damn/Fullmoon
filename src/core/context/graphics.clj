@@ -1,6 +1,6 @@
 (ns core.context.graphics
   (:require [core.component :refer [defcomponent] :as component]
-            [core.data :as data]
+            [core.property :as property]
             [core.graphics :as g]
             (core.graphics cursors
                            shape-drawer
@@ -11,7 +11,7 @@
            com.badlogic.gdx.utils.Disposable
            com.badlogic.gdx.utils.viewport.Viewport))
 
-(data/def-attributes
+(property/def-attributes
   :views [:map [:gui-view :world-view]]
   :gui-view [:map [:world-width :world-height]]
   :world-view [:map [:tile-size :world-width :world-height]]

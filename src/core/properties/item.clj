@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.inventory :as inventory]
             [core.modifiers :as modifiers]
-            [core.property :refer [def-property-type]]
+            [core.property :as property]
             [core.tx :as tx]))
 
 (defcomponent :item/modifiers
@@ -15,7 +15,7 @@
 (defcomponent :item/slot
   {:data [:enum (keys inventory/empty-inventory)]})
 
-(def-property-type :properties/items
+(property/def-type :properties/items
   {:schema [:property/pretty-name
             :entity/image
             :item/slot

@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent]]
             [core.context :as ctx]
-            [core.data :as data]
+            [core.property :as property]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]))
@@ -41,7 +41,7 @@
   [(ui/->text-button ctx (name sound-file) #(open-sounds-window! % table))
    (->play-sound-button ctx sound-file)])
 
-(defmethod data/->widget :sound [_ sound-file ctx]
+(defmethod property/->widget :sound [_ sound-file ctx]
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (ui/add-rows! table [(if sound-file
                            (->sound-columns ctx table sound-file)
