@@ -4,7 +4,8 @@
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
-            [core.context :as ctx :refer [current-screen]]
+            [core.context :as ctx]
+            [core.context.screens :as screens]
             [core.graphics :as g]
             [core.screen :as screen]
             [core.state :as state]
@@ -39,10 +40,10 @@
 
 (defn- current-data [ctx]
   (-> ctx
-    current-screen
-    (get 1)
-    :sub-screen
-    (get 1)))
+      screens/current-screen
+      (get 1)
+      :sub-screen
+      (get 1)))
 
 (def ^:private infotext
   "L: grid lines
@@ -190,7 +191,7 @@ direction keys: move")
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (ctx/world-camera context))
     (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
-      (ctx/change-screen context :screens/main-menu)
+      (screens/change-screen context :screens/main-menu)
       context)))
 
 (derive :screens/map-editor :screens/stage-screen)

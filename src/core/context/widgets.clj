@@ -43,7 +43,6 @@
 
 (defcomponent :context/widgets
   (component/create [_ ctx]
-    (assert (= :screens/world (ctx/current-screen-key ctx)))
     (let [widget-data {:action-bar (action-bar/->button-group)
                        :slot->background (inventory/->data ctx)}
           stage (ctx/get-stage ctx)]

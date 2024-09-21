@@ -2,6 +2,7 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.context.screens :as screens]
             [core.state :as state]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
@@ -10,7 +11,7 @@
 (defn- start-game! [world-id]
   (fn [ctx]
     (-> ctx
-        (ctx/change-screen :screens/world)
+        (screens/change-screen :screens/world)
         (ctx/start-new-game (ctx/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
@@ -18,9 +19,9 @@
                                    (for [{:keys [property/id]} (ctx/all-properties ctx :properties/worlds)]
                                      [(ui/->text-button ctx (str "Start " id) (start-game! id))])
                                    [(when (safe-get config :map-editor?)
-                                      [(ui/->text-button ctx "Map editor" #(ctx/change-screen % :screens/map-editor))])
+                                      [(ui/->text-button ctx "Map editor" #(screens/change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
-                                      [(ui/->text-button ctx "Property editor" #(ctx/change-screen % :screens/property-editor))])
+                                      [(ui/->text-button ctx "Property editor" #(screens/change-screen % :screens/property-editor))])
                                     [(ui/->text-button ctx "Exit" (fn [ctx] (.exit Gdx/app) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))

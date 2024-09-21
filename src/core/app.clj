@@ -5,17 +5,13 @@
             [utils.core :refer [safe-merge]]
             [core.component :as component]
             [core.context :as ctx]
-            [core.screen :as screen]
+            [core.context.screens :as screens]
             [core.context.properties :as properties])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)))
-
-; screens require vis-ui / properties (map-editor, property editor uses properties)
-(defn- context-create-order [[k _]]
-  (if (= k :context/screens) 1 0))
 
 (def ^{:doc "Holds the application state in an atom. Only use by ui-callbacks or for development/debugging."}
   state (atom nil))
@@ -24,9 +20,10 @@
   (proxy [ApplicationAdapter] []
     (create []
       (->> context
-           (sort-by context-create-order)
+           ; screens require vis-ui / properties (map-editor, property editor uses properties)
+           (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
            (component/create-into (assoc context :context/state state))
-           ctx/init-first-screen
+           screens/set-first-screen
            (reset! state)))
 
     (dispose []
@@ -34,9 +31,7 @@
 
     (render []
       (ScreenUtils/clear Color/BLACK)
-      (-> @state
-          ctx/current-screen
-          (screen/render! state)))
+      (screens/render! state))
 
     (resize [w h]
       (ctx/update-viewports @state w h))))

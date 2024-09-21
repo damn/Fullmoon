@@ -4,6 +4,7 @@
             [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.context.screens :as screens]
             [core.screen :as screen])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
@@ -50,9 +51,9 @@
                                            (partial set-state check-box)
                                            (boolean (get-state check-box)))]))
 
-                      [[(ui/->text-button ctx "Resume" #(ctx/change-screen % :screens/world))]
+                      [[(ui/->text-button ctx "Resume" #(screens/change-screen % :screens/world))]
 
-                       [(ui/->text-button ctx "Exit" #(ctx/change-screen % :screens/main-menu))]])
+                       [(ui/->text-button ctx "Exit" #(screens/change-screen % :screens/main-menu))]])
 
                :fill-parent? true
                :cell-defaults {:pad-bottom 10}}))
@@ -60,7 +61,7 @@
 (defcomponent ::sub-screen
   (screen/render [_ ctx]
     (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
-      (ctx/change-screen ctx :screens/world)
+      (screens/change-screen ctx :screens/world)
       ctx)))
 
 (derive :screens/options-menu :screens/stage-screen)

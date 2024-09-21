@@ -4,6 +4,7 @@
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.context.screens :as screens]
             [core.screen :as screen]
             [core.state :as state]
             [core.tx :as tx]
@@ -197,11 +198,11 @@
   (ctx/check-window-hotkeys ctx)
   (cond (and (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
              (not (ctx/close-windows? ctx)))
-        (ctx/change-screen ctx :screens/options-menu)
+        (screens/change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen/render!
         #_(.isKeyJustPressed Gdx/input Input$Keys/TAB)
-        #_(ctx/change-screen ctx :screens/minimap)
+        #_(screens/change-screen ctx :screens/minimap)
 
         :else
         ctx))

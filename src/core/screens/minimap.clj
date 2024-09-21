@@ -2,6 +2,7 @@
   (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx :refer [explored?]]
+            [core.context.screens :as screens]
             [core.graphics :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
@@ -56,7 +57,7 @@
                                                    Color/GREEN)))
     (if (or (.isKeyJustPressed Gdx/input Input$Keys/TAB)
             (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE))
-      (ctx/change-screen context :screens/world)
+      (screens/change-screen context :screens/world)
       context)))
 
 #_(defcomponent :screens/minimap

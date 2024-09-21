@@ -1,6 +1,6 @@
 (ns core.entity.state.player-dead
   (:require [core.component :refer [defcomponent]]
-            [core.context :as ctx]
+            [core.context.screens :as screens]
             [core.state :as state]))
 
 (defcomponent :player-dead
@@ -15,4 +15,4 @@
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
                         :button-text ":("
-                        :on-click #(ctx/change-screen % :screens/main-menu)}]]))
+                        :on-click #(screens/change-screen % :screens/main-menu)}]]))

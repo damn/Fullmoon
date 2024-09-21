@@ -7,6 +7,7 @@
             [core.info :as info]
             [core.property :as property]
             [core.context :as ctx]
+            [core.context.screens :as screens]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui])
@@ -283,7 +284,7 @@
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)
                                         (do
-                                         (swap! state ctx/change-screen :screens/main-menu)
+                                         (swap! state screens/change-screen :screens/main-menu)
                                          true)
                                         false))))
               stage)}))
