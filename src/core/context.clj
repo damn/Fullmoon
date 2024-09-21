@@ -3,6 +3,7 @@
 
 (defrecord Context [])
 
+; direct data acess? or :timer ?
 (defprotocol Time
   (update-time [_])
   (delta-time [_] "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed.")
@@ -13,6 +14,7 @@
   (reset          [_ counter])
   (finished-ratio [_ counter]))
 
+; [entity.player :as player]
 (defprotocol PlayerEntity
   (player-entity [_])
   (player-entity* [_])
@@ -103,9 +105,11 @@
   (update! [_ property])
   (delete! [_ id]))
 
+; widgets/inventory-window
 (defprotocol InventoryWindow
   (inventory-window [_]))
 
+; widgets/selected-skill-id
 (defprotocol Actionbar
   (selected-skill [_]))
 
@@ -115,6 +119,7 @@
 (defprotocol ActiveSkill
   (skill-usable-state [ctx entity* skill]))
 
+; core.property.types.world ?
 (defprotocol WorldGenerator
   (->world [ctx world-id]))
 
