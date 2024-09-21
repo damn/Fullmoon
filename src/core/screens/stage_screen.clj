@@ -2,6 +2,7 @@
   (:require [gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
             [core.context :as ctx]
+            [core.graphics.views :refer [gui-mouse-position]]
             [core.screens :as screens]
             [core.screen :as screen]
             [core.state :as state])
@@ -47,7 +48,7 @@
     (:stage ((screens/current-screen context) 1)))
 
   (mouse-on-stage-actor? [context]
-    (let [[x y] (ctx/gui-mouse-position context)
+    (let [[x y] (gui-mouse-position context)
           touchable? true]
       (.hit (ctx/get-stage context) x y touchable?)))
 

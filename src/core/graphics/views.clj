@@ -1,6 +1,5 @@
 (ns core.graphics.views
-  (:require [core.context :as ctx]
-            [core.g :as g])
+  (:require [core.g :as g])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.math MathUtils Vector2]
@@ -52,23 +51,21 @@
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
-(defn- gui-mouse-position [g]
+(defn- gui-mouse-position* [g]
   ; TODO mapv int needed?
   (mapv int (unproject-mouse-posi (gui-viewport g))))
 
-(defn- world-mouse-position [g]
+(defn- world-mouse-position* [g]
   ; TODO clamping only works for gui-viewport ? check. comment if true
   ; TODO ? "Can be negative coordinates, undefined cells."
   (unproject-mouse-posi (world-viewport g)))
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(extend-type core.context.Context
-  core.context/Views
-  (gui-mouse-position    [ctx] (gui-mouse-position   (gr ctx)))
-  (world-mouse-position  [ctx] (world-mouse-position (gr ctx)))
-  (gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
-  (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
-  (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
-  (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx)))))
+(defn gui-mouse-position    [ctx] (gui-mouse-position*   (gr ctx)))
+(defn world-mouse-position  [ctx] (world-mouse-position* (gr ctx)))
+(defn gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
+(defn gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
+(defn world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
+(defn world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
+(defn world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))

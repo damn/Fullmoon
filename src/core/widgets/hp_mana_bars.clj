@@ -6,6 +6,7 @@
             [core.entity.player :as player]
             [core.g :as g]
             [core.graphics.image :as image]
+            [core.graphics.views :refer [gui-viewport-width]]
             [gdx.scene2d.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
@@ -18,7 +19,7 @@
   (let [rahmen      (image/create context "images/rahmen.png")
         hpcontent   (image/create context "images/hp.png")
         manacontent (image/create context "images/mana.png")
-        x (/ (ctx/gui-viewport-width context) 2)
+        x (/ (gui-viewport-width context) 2)
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         y-mana 80 ; action-bar-icon-size
         y-hp (+ y-mana rahmenh)

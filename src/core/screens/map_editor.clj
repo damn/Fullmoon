@@ -8,6 +8,7 @@
             [core.screens :as screens]
             [core.g :as g]
             [core.graphics :as graphics]
+            [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
             [core.state :as state]
             [core.property :as property]
@@ -55,14 +56,14 @@ ESCAPE: leave
 direction keys: move")
 
 (defn- debug-infos ^String [ctx]
-  (let [tile (->tile (ctx/world-mouse-position ctx))
+  (let [tile (->tile (world-mouse-position ctx))
         {:keys [tiled-map
                 area-level-grid]} @(current-data ctx)]
     (->> [infotext
           (str "Tile " tile)
           (when-not area-level-grid
             (str "Module " (mapv (comp int /)
-                                 (ctx/world-mouse-position ctx)
+                                 (world-mouse-position ctx)
                                  [mapgen.modules/module-width
                                   mapgen.modules/module-height])))
           (when area-level-grid
@@ -83,7 +84,7 @@ direction keys: move")
     (add-actor! window (ui/->actor ctx {:act #(do
                                                (.setText label (debug-infos %))
                                                (.pack window))}))
-    (set-position! window 0 (ctx/gui-viewport-height ctx))
+    (set-position! window 0 (gui-viewport-height ctx))
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
@@ -120,8 +121,8 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (camera/visible-tiles (ctx/world-camera ctx))
-        [x y] (->tile (ctx/world-mouse-position ctx))]
+        visible-tiles (camera/visible-tiles (world-camera ctx))
+        [x y] (->tile (world-mouse-position ctx))]
     (g/draw-rectangle g x y 1 1 Color/WHITE)
     (when start-position
       (g/draw-filled-rectangle g (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
@@ -152,7 +153,7 @@ direction keys: move")
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
            :start-position start-position)
-    (show-whole-map! (ctx/world-camera context) tiled-map)
+    (show-whole-map! (world-camera context) tiled-map)
     (.setVisible (tiled/get-layer tiled-map "creatures") true)
     context))
 
@@ -177,10 +178,10 @@ direction keys: move")
       (dispose (:tiled-map @current-data)))
 
   (state/enter [_ ctx]
-    (show-whole-map! (ctx/world-camera ctx) (:tiled-map @current-data)))
+    (show-whole-map! (world-camera ctx) (:tiled-map @current-data)))
 
   (state/exit [_ ctx]
-    (camera/reset-zoom! (ctx/world-camera ctx)))
+    (camera/reset-zoom! (world-camera ctx)))
 
   (screen/render [_ context]
     (ctx/render-tiled-map context
@@ -191,7 +192,7 @@ direction keys: move")
       (swap! current-data update :show-grid-lines not))
     (if (.isKeyJustPressed Gdx/input Input$Keys/M)
       (swap! current-data update :show-movement-properties not))
-    (camera-controls context (ctx/world-camera context))
+    (camera-controls context (world-camera context))
     (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
       (screens/change-screen context :screens/main-menu)
       context)))

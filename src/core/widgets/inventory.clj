@@ -8,6 +8,7 @@
             [core.context :as ctx]
             [core.g :as g]
             [core.graphics.image :as image]
+            [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.inventory :as inventory]
@@ -55,7 +56,7 @@
                         player-entity*
                         (.getX this)
                         (.getY this)
-                        (mouseover? this (ctx/gui-mouse-position ctx))
+                        (mouseover? this (gui-mouse-position ctx))
                         (actor/id (actor/parent this)))))))
 
 (defn- ->cell [{:keys [context/state] :as ctx} slot->background slot & {:keys [position]}]
@@ -122,8 +123,8 @@
                   :id :inventory-window
                   :visible? false
                   :pack? true
-                  :position [(ctx/gui-viewport-width ctx)
-                             (ctx/gui-viewport-height ctx)]
+                  :position [(gui-viewport-width ctx)
+                             (gui-viewport-height ctx)]
                   :rows [[{:actor table :pad 4}]]})))
 
 (defn ->data [ctx]

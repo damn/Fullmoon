@@ -1,6 +1,7 @@
 (ns core.widgets.player-modal
   (:require [core.component :refer [defcomponent]]
             [core.context :as ctx :refer [get-stage add-to-stage!]]
+            [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.actor :refer [remove!]]
             [core.tx :as tx]))
@@ -22,8 +23,8 @@
                                                            (on-click ctx)))]]
                                :id ::modal
                                :modal? true
-                               :center-position [(/ (ctx/gui-viewport-width ctx) 2)
-                                                 (* (ctx/gui-viewport-height ctx) (/ 3 4))]
+                               :center-position [(/ (gui-viewport-width ctx) 2)
+                                                 (* (gui-viewport-height ctx) (/ 3 4))]
                                :pack? true})))
 
 (defcomponent :tx/player-modal

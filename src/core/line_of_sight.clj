@@ -1,6 +1,7 @@
 (ns core.line-of-sight
   (:require [gdx.graphics.camera :as camera]
-            [core.context :as ctx]))
+            [core.context :as ctx]
+            [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]))
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?
@@ -8,14 +9,14 @@
   (let [[x y] (:position entity*)
         x (float x)
         y (float y)
-        [cx cy] (camera/position (ctx/world-camera ctx))
+        [cx cy] (camera/position (world-camera ctx))
         px (float cx)
         py (float cy)
         xdist (Math/abs (- x px))
         ydist (Math/abs (- y py))]
     (and
-     (<= xdist (inc (/ (float (ctx/world-viewport-width ctx))  2)))
-     (<= ydist (inc (/ (float (ctx/world-viewport-height ctx)) 2))))))
+     (<= xdist (inc (/ (float (world-viewport-width ctx))  2)))
+     (<= ydist (inc (/ (float (world-viewport-height ctx)) 2))))))
 
 ; TODO at wrong point , this affects targeting logic of npcs
 ; move the debug flag to either render or mouseover or lets see

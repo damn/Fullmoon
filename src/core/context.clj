@@ -3,15 +3,6 @@
 
 (defrecord Context [])
 
-(defprotocol Views
-  (gui-mouse-position   [_])
-  (gui-viewport-width   [_])
-  (gui-viewport-height  [_])
-  (world-mouse-position  [_])
-  (world-camera [_])
-  (world-viewport-width  [_])
-  (world-viewport-height [_]))
-
 (defprotocol StageScreen
   (->stage [_ actors] "Stage implements clojure.lang.ILookup (get) on actor id.")
   (get-stage ^Stage [_])

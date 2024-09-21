@@ -1,6 +1,6 @@
 (ns gdx.scene2d.ui
   (:require core.graphics.image
-            [core.context :as ctx]
+            [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -251,8 +251,8 @@
                         :pack? true})
         scroll-pane (->scroll-pane table)]
     {:actor scroll-pane
-     :width (- (ctx/gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)
-     :height (- (ctx/gui-viewport-height ctx) 100)})) ;(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))
+     :width (- (gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)
+     :height (- (gui-viewport-height ctx) 100)})) ;(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))
 
 (defn- button-class? [actor]
   (some #(= Button %) (supers (class actor))))

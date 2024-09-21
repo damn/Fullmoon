@@ -1,7 +1,7 @@
 (ns core.widgets.player-message
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.g :as g]
+            [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [gdx.scene2d.ui :as ui]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))
@@ -16,8 +16,8 @@
 
 (defn- draw-player-message [g ctx]
   (when-let [{:keys [message]} (this ctx)]
-    (g/draw-text g {:x (/ (ctx/gui-viewport-width ctx) 2)
-                    :y (+ (/ (ctx/gui-viewport-height ctx) 2) 200)
+    (g/draw-text g {:x (/ (gui-viewport-width ctx) 2)
+                    :y (+ (/ (gui-viewport-height ctx) 2) 200)
                     :text message
                     :scale 2.5
                     :up? true})))

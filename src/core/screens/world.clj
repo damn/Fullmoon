@@ -10,6 +10,7 @@
             [core.entity.player :as player]
             [core.graphics :as graphics]
             [core.graphics.cursors :as cursors]
+            [core.graphics.views :refer [world-camera]]
             [core.screens :as screens]
             [core.widgets :as widgets]
             [core.screen :as screen]
@@ -178,8 +179,8 @@
           (range replay-speed)))
 
 (defn- render-world! [ctx]
-  (camera/set-position! (ctx/world-camera ctx) (:position (player/entity* ctx)))
-  (world-render/render-map ctx (camera/position (ctx/world-camera ctx)))
+  (camera/set-position! (world-camera ctx) (:position (player/entity* ctx)))
+  (world-render/render-map ctx (camera/position (world-camera ctx)))
   (graphics/render-world-view ctx
                               (fn [g]
                                 (debug-render/before-entities ctx g)
@@ -195,7 +196,7 @@
 (def ^:private zoom-speed 0.05)
 
 (defn- check-zoom-keys [ctx]
-  (let [camera (ctx/world-camera ctx)]
+  (let [camera (world-camera ctx)]
     (when (.isKeyPressed Gdx/input Input$Keys/MINUS)  (adjust-zoom camera    zoom-speed))
     (when (.isKeyPressed Gdx/input Input$Keys/EQUALS) (adjust-zoom camera (- zoom-speed)))))
 

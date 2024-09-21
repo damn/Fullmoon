@@ -2,7 +2,8 @@
   (:require [gdx.scene2d.ui :as ui]
             [gdx.scene2d.group :as group]
             [core.app :as app]
-            [core.context :as ctx])
+            [core.context :as ctx]
+            [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
@@ -103,17 +104,17 @@
                            :pack? true})
         scroll-pane (ui/->scroll-pane table)]
     {:actor scroll-pane
-     :width (/ (ctx/gui-viewport-width ctx) 2)
+     :width (/ (gui-viewport-width ctx) 2)
      :height
-     (- (ctx/gui-viewport-height ctx) 50)
-     #_(min (- (ctx/gui-viewport-height ctx) 50) (actor/height table))}))
+     (- (gui-viewport-height ctx) 50)
+     #_(min (- (gui-viewport-height ctx) 50) (actor/height table))}))
 
 (defn show-tree-view! [obj]
   (let [ctx @app/state
         object (case obj
                  :ctx ctx
                  :entity (ctx/mouseover-entity* ctx)
-                 :tile @(get (ctx/world-grid ctx) (mapv int (ctx/world-mouse-position ctx))))]
+                 :tile @(get (ctx/world-grid ctx) (mapv int (world-mouse-position ctx))))]
     (ctx/add-to-stage! ctx
                        (ui/->window {:title "Tree View"
                                      :close-button? true

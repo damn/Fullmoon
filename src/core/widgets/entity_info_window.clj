@@ -1,6 +1,7 @@
 (ns core.widgets.entity-info-window
   (:require [core.info :as info]
             [core.context :as ctx]
+            [core.graphics.views :refer [gui-viewport-width]]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.group :refer [add-actor!]]))
 
@@ -14,7 +15,7 @@
         window (ui/->window {:title "Info"
                              :id :entity-info-window
                              :visible? false
-                             :position [(ctx/gui-viewport-width context) 0]
+                             :position [(gui-viewport-width context) 0]
                              :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.

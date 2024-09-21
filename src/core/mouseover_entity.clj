@@ -1,8 +1,9 @@
 (ns core.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
-            [core.context :as ctx :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
+            [core.context :refer [mouse-on-stage-actor? world-grid line-of-sight?]]
             [core.entity :as entity]
             [core.entity.player :as player]
+            [core.graphics.views :refer [world-mouse-position]]
             [core.world.grid :refer [point->entities]]))
 
 (defn- calculate-mouseover-entity [context]
@@ -10,7 +11,7 @@
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities (world-grid context)
-                                           (ctx/world-mouse-position context))))]
+                                           (world-mouse-position context))))]
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse

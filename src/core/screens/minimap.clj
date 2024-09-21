@@ -4,6 +4,7 @@
             [core.context :as ctx :refer [explored?]]
             [core.screens :as screens]
             [core.graphics :as graphics]
+            [core.graphics.views :refer [world-camera]]
             [core.g :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
@@ -26,7 +27,7 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (camera/calculate-zoom (ctx/world-camera ctx)
+    (camera/calculate-zoom (world-camera ctx)
                            :left left
                            :top top
                            :right right
@@ -40,10 +41,10 @@
 
 #_(deftype Screen []
   (show [_ ctx]
-    (camera/set-zoom! (ctx/world-camera ctx) (calculate-zoom ctx)))
+    (camera/set-zoom! (world-camera ctx) (calculate-zoom ctx)))
 
   (hide [_ ctx]
-    (camera/reset-zoom! (ctx/world-camera ctx)))
+    (camera/reset-zoom! (world-camera ctx)))
 
   ; TODO fixme not subscreen
   (render [_ {:keys [context/tiled-map context/explored-tile-corners] :as context}]
@@ -53,7 +54,7 @@
     (graphics/render-world-view context
                                 (fn [g]
                                   (g/draw-filled-circle g
-                                                        (camera/position (ctx/world-camera context))
+                                                        (camera/position (world-camera context))
                                                         0.5
                                                         Color/GREEN)))
     (if (or (.isKeyJustPressed Gdx/input Input$Keys/TAB)
