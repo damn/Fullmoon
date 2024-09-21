@@ -7,6 +7,7 @@
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]
             [core.screens.stage :as stage]
             [core.time :as time]
+            [core.mouseover-entity :as mouseover]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
@@ -31,7 +32,7 @@
      "paused? " (:context/paused? ctx) "\n"
      "elapsed-time " (utils.core/readable-number (time/elapsed-time ctx)) " seconds \n"
      (skill-info (player/entity* ctx))
-     (when-let [entity* (ctx/mouseover-entity* ctx)]
+     (when-let [entity* (mouseover/entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (stage/mouse-on-actor? ctx)]

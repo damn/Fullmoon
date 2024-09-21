@@ -9,6 +9,7 @@
             [core.state :as state]
             [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx]]
+            [core.mouseover-entity :as mouseover]
             [core.widgets :as widgets]
             [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [gdx.scene2d.ui :as ui])
@@ -75,7 +76,7 @@
      :else :cursors/default)))
 
 (defn- ->interaction-state [context entity*]
-  (let [mouseover-entity* (ctx/mouseover-entity* context)]
+  (let [mouseover-entity* (mouseover/entity* context)]
     (cond
      (stage/mouse-on-actor? context)
      [(mouseover-actor->cursor context)

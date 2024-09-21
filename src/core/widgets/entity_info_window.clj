@@ -1,7 +1,7 @@
 (ns core.widgets.entity-info-window
   (:require [core.info :as info]
-            [core.context :as ctx]
             [core.graphics.views :refer [gui-viewport-width]]
+            [core.mouseover-entity :as mouseover]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.group :refer [add-actor!]]))
 
@@ -22,11 +22,11 @@
     (add-actor! window (ui/->actor context {:act (fn update-label-text [ctx]
                                                    ; items then have 2x pretty-name
                                                    #_(.setText (.getTitleLabel window)
-                                                               (if-let [entity* (ctx/mouseover-entity* ctx)]
+                                                               (if-let [entity* (mouseover/entity* ctx)]
                                                                  (core.component/info-text [:property/pretty-name (:property/pretty-name entity*)])
                                                                  "Entity Info"))
                                                    (.setText label
-                                                             (str (when-let [entity* (ctx/mouseover-entity* ctx)]
+                                                             (str (when-let [entity* (mouseover/entity* ctx)]
                                                                     (info/->text
                                                                      ; don't use select-keys as it loses core.entity.Entity record type
                                                                      (apply dissoc entity* disallowed-keys)

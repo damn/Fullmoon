@@ -1,9 +1,9 @@
 (ns core.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
             [core.context :refer [world-grid line-of-sight?]]
+            [core.graphics.views :refer [world-mouse-position]]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.graphics.views :refer [world-mouse-position]]
             [core.screens.stage :as stage]
             [core.world.grid :refer [point->entities]]))
 
@@ -22,19 +22,17 @@
 
 (def ^:private this-k :context/mouseover-entity)
 
-(extend-type core.context.Context
-  core.context/MouseOverEntity
-  (mouseover-entity* [ctx]
-    (when-let [entity (this-k ctx)]
-      @entity))
+(defn entity* [ctx]
+  (when-let [entity (this-k ctx)]
+    @entity))
 
-  (update-mouseover-entity [ctx]
-    (let [entity (if (stage/mouse-on-actor? ctx)
-                   nil
-                   (calculate-mouseover-entity ctx))]
-      [(when-let [old-entity (this-k ctx)]
-         [:tx/dissoc old-entity :entity/mouseover?])
-       (when entity
-         [:tx/assoc entity :entity/mouseover? true])
-       (fn [ctx]
-         (assoc ctx this-k entity))])))
+(defn update-mouseover-entity [ctx]
+  (let [entity (if (stage/mouse-on-actor? ctx)
+                 nil
+                 (calculate-mouseover-entity ctx))]
+    [(when-let [old-entity (this-k ctx)]
+       [:tx/dissoc old-entity :entity/mouseover?])
+     (when entity
+       [:tx/assoc entity :entity/mouseover? true])
+     (fn [ctx]
+       (assoc ctx this-k entity))]))

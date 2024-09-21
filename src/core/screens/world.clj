@@ -16,6 +16,7 @@
             [core.screen :as screen]
             [core.screens.stage :as stage]
             [core.state :as state]
+            [core.mouseover-entity :refer [update-mouseover-entity]]
             [core.tx :as tx]
             [core.time :as time]
             [core.potential-fields :as potential-fields]
@@ -156,7 +157,7 @@
 
 (defmethod game-loop :game-loop/normal [ctx]
   (tx/do-all ctx [player/update-state
-                  ctx/update-mouseover-entity ; this do always so can get debug info even when game not running
+                  update-mouseover-entity ; this do always so can get debug info even when game not running
                   update-game-paused
                   #(if (:context/paused? %)
                      %

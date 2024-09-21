@@ -2,10 +2,6 @@
 
 (defrecord Context [])
 
-(defprotocol MouseOverEntity
-  (update-mouseover-entity [_])
-  (mouseover-entity* [_]))
-
 (defprotocol WorldRaycaster
   (ray-blocked?  [_ start target])
   (path-blocked? [_ start target path-w] "path-w in tiles. casts two rays."))
