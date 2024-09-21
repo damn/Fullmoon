@@ -10,14 +10,14 @@
 
 (defcomponent :context/raycaster
   (component/create [[_ position->blocked?] {:keys [context/grid]}]
-    (let [width (grid2d/width grid)
+    (let [width  (grid2d/width  grid)
           height (grid2d/height grid)
           arr (make-array Boolean/TYPE width height)]
       (doseq [cell (grid2d/cells grid)]
         (set-arr arr @cell position->blocked?))
-      (raycaster/map->RayCasterArray {:arr arr
-                                      :width width
-                                      :height height}))))
+      (raycaster/map->ArrRayCaster {:arr arr
+                                    :width width
+                                    :height height}))))
 
 ; TO math.... // not tested
 (defn- create-double-ray-endpositions

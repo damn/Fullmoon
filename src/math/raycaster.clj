@@ -2,7 +2,7 @@
   "An implementation of Bresenham line drawing algorithm for casting rays on a two dimensional array."
   (:import gdl.RayCaster))
 
-(defprotocol RayCaster
+(defprotocol PRayCaster
   (ray-blocked? [_ start target]))
 
 ; boolean array used because 10x faster than access to clojure grid data structure
@@ -12,8 +12,8 @@
 ;(def ^:private height (comp alength first))
 
 ; does not show warning on reflection, but shows cast-double a lot.
-(defrecord RayCasterArray [arr width height]
-  RayCaster
+(defrecord ArrRayCaster [arr width height]
+  PRayCaster
   (ray-blocked? [_ [start-x start-y] [target-x target-y]]
     (RayCaster/rayBlocked (double start-x)
                           (double start-y)
