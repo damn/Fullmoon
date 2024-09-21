@@ -2,9 +2,6 @@
 
 (defrecord Context [])
 
-(defprotocol WorldLineOfSight
-  (line-of-sight? [_ source* target*]))
-
 (defprotocol ExploredTileCorners
   (explored? [_ position]))
 

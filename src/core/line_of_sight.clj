@@ -1,6 +1,5 @@
 (ns core.line-of-sight
   (:require [gdx.graphics.camera :as camera]
-            [core.context :as ctx]
             [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]
             [core.raycaster :refer [ray-blocked?]]))
 
@@ -23,12 +22,10 @@
 ; move the debug flag to either render or mouseover or lets see
 (def ^:private ^:dbg-flag los-checks? true)
 
-(extend-type core.context.Context
-  core.context/WorldLineOfSight
-  ; does not take into account size of entity ...
-  ; => assert bodies <1 width then
-  (line-of-sight? [context source* target*]
-    (and (or (not (:entity/player? source*))
-             (on-screen? target* context))
-         (not (and los-checks?
-                   (ray-blocked? context (:position source*) (:position target*)))))))
+; does not take into account size of entity ...
+; => assert bodies <1 width then
+(defn line-of-sight? [context source* target*]
+  (and (or (not (:entity/player? source*))
+           (on-screen? target* context))
+       (not (and los-checks?
+                 (ray-blocked? context (:position source*) (:position target*))))))

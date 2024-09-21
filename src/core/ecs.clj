@@ -6,6 +6,7 @@
             [core.g :as g]
             [core.entity :as entity]
             [core.entity.player :as player]
+            [core.line-of-sight :refer [line-of-sight?]]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))
 
@@ -115,7 +116,7 @@
             system entity/render-systems
             entity* entities*
             :when (or (= z-order :z-order/effect)
-                      (ctx/line-of-sight? ctx player-entity* entity*))]
+                      (line-of-sight? ctx player-entity* entity*))]
       (render-entity* system entity* g ctx))))
 
 (defn remove-destroyed-entities!
