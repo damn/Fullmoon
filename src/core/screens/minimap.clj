@@ -1,7 +1,7 @@
 (ns core.screens.minimap
   (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
-            [core.context :refer [explored?]]
+            [core.explored-tile-corners :refer [explored?]]
             [core.screens :as screens]
             [core.graphics :as graphics]
             [core.graphics.views :refer [world-camera]]

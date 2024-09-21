@@ -2,9 +2,6 @@
 
 (defrecord Context [])
 
-(defprotocol ExploredTileCorners
-  (explored? [_ position]))
-
 (defprotocol World
   (active-entities [_])
   (world-grid [_]))
