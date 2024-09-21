@@ -76,6 +76,7 @@ Example:
     `(do
       (when ~attr-map?
         (defcomponent* ~k ~attr-map :warn-on-override? warn-on-override?))
+      (alter-meta! *ns* #(update % :doc str "\n* defcomponent `" ~k "`"))
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
                     sys-params (:params (meta sys-var))
