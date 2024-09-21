@@ -5,7 +5,7 @@
             (core.context.graphics cursors
                                    shape-drawer
                                    text
-                                   views))
+                                   [views :as views]))
   (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)
            com.badlogic.gdx.utils.Disposable
@@ -58,3 +58,8 @@
   core.context/Graphics
   (render-gui-view   [ctx render-fn] (render-view ctx :gui-view   render-fn))
   (render-world-view [ctx render-fn] (render-view ctx :world-view render-fn)))
+
+(defn on-resize [{g :context/graphics} w h]
+  (.update (views/gui-viewport g) w h true)
+  ; Do not center the camera on world-viewport. We set the position there manually.
+  (.update (views/world-viewport g) w h false))

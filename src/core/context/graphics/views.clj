@@ -34,8 +34,8 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (g/world-unit-scale g))))
 
-(defn- gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
-(defn- world-viewport ^Viewport [g] (-> g :world-view :viewport))
+(defn gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
+(defn world-viewport ^Viewport [g] (-> g :world-view :viewport))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
@@ -71,9 +71,4 @@
   (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
   (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
   (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))
-
-  (update-viewports [{g :context/graphics} w h]
-    (.update (gui-viewport g) w h true)
-    ; Do not center the camera on world-viewport. We set the position there manually.
-    (.update (world-viewport g) w h false)))
+  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx)))))

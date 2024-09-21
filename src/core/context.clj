@@ -41,8 +41,7 @@
   (world-mouse-position  [_])
   (world-camera [_])
   (world-viewport-width  [_])
-  (world-viewport-height [_])
-  (update-viewports [_ w h]))
+  (world-viewport-height [_]))
 
 (defprotocol StageScreen
   (->stage [_ actors] "Stage implements clojure.lang.ILookup (get) on actor id.")

@@ -5,6 +5,7 @@
             [utils.core :refer [safe-merge]]
             [core.component :as component]
             [core.context :as ctx]
+            [core.context.graphics :as graphics]
             [core.context.screens :as screens]
             [core.context.properties :as properties])
   (:import org.lwjgl.system.Configuration
@@ -34,7 +35,7 @@
       (screens/render! state))
 
     (resize [w h]
-      (ctx/update-viewports @state w h))))
+      (graphics/on-resize @state w h))))
 
 (defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
   ; can remove :pre, we are having a schema now
