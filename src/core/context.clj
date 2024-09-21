@@ -79,8 +79,6 @@
   (explored? [_ position]))
 
 (defprotocol World
-  (start-new-game [_ lvl])
-  (content-grid [_])
   (active-entities [_])
   (world-grid [_]))
 

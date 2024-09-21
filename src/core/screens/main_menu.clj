@@ -5,6 +5,7 @@
             [core.screens :as screens]
             [core.state :as state]
             [core.property :as property]
+            core.screens.world
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.Input$Keys))
@@ -13,7 +14,7 @@
   (fn [ctx]
     (-> ctx
         (screens/change-screen :screens/world)
-        (ctx/start-new-game (ctx/->world ctx world-id)))))
+        (core.screens.world/start-new-game (ctx/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat

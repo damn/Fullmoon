@@ -87,26 +87,25 @@
       :game-loop/replay (merge ctx (->world-map (select-keys ctx [:context/tiled-map
                                                                   :context/start-position]))))))
 
+(defn start-new-game [ctx tiled-level]
+  (init-game-context ctx
+                     :mode :game-loop/normal
+                     :record-transactions? false ; TODO top level flag ?
+                     :tiled-level tiled-level))
+
+(defn- content-grid :context/content-grid)
+
 (extend-type core.context.Context
   core.context/World
-  (start-new-game [ctx tiled-level]
-    (init-game-context ctx
-                       :mode :game-loop/normal
-                       :record-transactions? false ; TODO top level flag ?
-                       :tiled-level tiled-level))
-
-  ; TODO these two what to do ?
-  (content-grid [ctx] (:context/content-grid ctx))
-
   (active-entities [ctx]
-    (content-grid/active-entities (ctx/content-grid ctx)
+    (content-grid/active-entities (content-grid ctx)
                                   (ctx/player-entity* ctx)))
 
   (world-grid [ctx] (:context/grid ctx)))
 
 (defcomponent :tx/add-to-world
   (tx/do! [[_ entity] ctx]
-    (content-grid/update-entity! (ctx/content-grid ctx) entity)
+    (content-grid/update-entity! (content-grid ctx) entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (world-grid/add-entity! (ctx/world-grid ctx) entity)
@@ -114,13 +113,13 @@
 
 (defcomponent :tx/remove-from-world
   (tx/do! [[_ entity] ctx]
-    (content-grid/remove-entity! (ctx/content-grid ctx) entity)
+    (content-grid/remove-entity! (content-grid ctx) entity)
     (world-grid/remove-entity! (ctx/world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/position-changed
   (tx/do! [[_ entity] ctx]
-    (content-grid/update-entity! (ctx/content-grid ctx) entity)
+    (content-grid/update-entity! (content-grid ctx) entity)
     (world-grid/entity-position-changed! (ctx/world-grid ctx) entity)
     ctx))
 
