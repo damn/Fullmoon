@@ -8,6 +8,7 @@
             [core.state :as state]
             [core.property :as property]
             core.screens.world
+            [core.widgets.background-image :refer [->background-image]]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.Input$Keys))
@@ -36,7 +37,7 @@
     (cursors/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]
-  [(ctx/->background-image ctx)
+  [(->background-image ctx)
    (->buttons ctx)
    (ui/->actor ctx {:act (fn [_ctx]
                            (when (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)

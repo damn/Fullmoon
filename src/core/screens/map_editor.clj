@@ -14,6 +14,7 @@
             [core.state :as state]
             [core.screens.stage :as stage]
             [core.property :as property]
+            [core.widgets.error-modal :refer [error-window!]]
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
@@ -167,7 +168,7 @@ direction keys: move")
                                       (property/build ctx level-id))))]
                        [(ui/->text-button ctx "Generate" #(try (generate % (property/build % level-id))
                                                                (catch Throwable t
-                                                                 (ctx/error-window! % t)
+                                                                 (error-window! % t)
                                                                  (println t)
                                                                  %)))]]
                 :pack? true}))

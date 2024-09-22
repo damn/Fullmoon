@@ -6,7 +6,8 @@
             [core.context :as ctx]
             [core.screens :as screens]
             [core.screens.stage :as stage]
-            [core.screen :as screen])
+            [core.screen :as screen]
+            [core.widgets.background-image :refer [->background-image]])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defprotocol StatusCheckBox
@@ -69,6 +70,6 @@
 (defcomponent :screens/options-menu
   (component/create [_ ctx]
     {:stage (stage/create ctx
-                          [(ctx/->background-image ctx)
+                          [(->background-image ctx)
                            (create-table ctx)])
      :sub-screen [::sub-screen]}))

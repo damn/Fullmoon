@@ -1,9 +1,9 @@
 (ns core.property.data.relationships
   (:require [core.component :refer [defcomponent]]
             [core.info :as info]
-            [core.context :as ctx]
             [core.property :as property]
             [core.screens.stage :as stage]
+            [core.screens.property-editor :refer [->overview-table]]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]))
@@ -59,7 +59,7 @@
                                                  (actor/remove! window)
                                                  (redo-rows ctx (conj property-ids id))
                                                  ctx)]
-                             (ui/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
+                             (ui/add! window (->overview-table ctx property-type clicked-id-fn))
                              (.pack window)
                              (stage/add-actor! ctx window))))]
       (for [property-id property-ids]
@@ -103,7 +103,7 @@
                                                    (actor/remove! window)
                                                    (redo-rows ctx id)
                                                    ctx)]
-                               (ui/add! window (ctx/->overview-table ctx property-type clicked-id-fn))
+                               (ui/add! window (->overview-table ctx property-type clicked-id-fn))
                                (.pack window)
                                (stage/add-actor! ctx window)))))]
       [(when property-id

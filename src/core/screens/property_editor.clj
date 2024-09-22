@@ -6,9 +6,10 @@
             [core.component :refer [defcomponent] :as component]
             [core.info :as info]
             [core.property :as property]
-            [core.context :as ctx]
             [core.screens :as screens]
             [core.screens.stage :as stage]
+            [core.widgets.background-image :refer [->background-image]]
+            [core.widgets.error-modal :refer [error-window!]]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui])
@@ -184,7 +185,7 @@
        (actor/remove! window)
        ctx)
      (catch Throwable t
-       (ctx/error-window! ctx t)))))
+       (error-window! ctx t)))))
 
 (defn- ->property-editor-window [ctx id]
   (let [props (utils/safe-get (:db (:context/properties ctx)) id)
@@ -218,24 +219,22 @@
     (actor/set-touchable! top-widget :disabled)
     stack))
 
-(extend-type core.context.Context
-  core.context/PropertyEditor
-  (->overview-table [ctx property-type clicked-id-fn]
-    (let [{:keys [sort-by-fn
-                  extra-info-text
-                  columns
-                  image/scale]} (property/overview property-type)
-          properties (property/all-properties ctx property-type)
-          properties (if sort-by-fn
-                       (sort-by sort-by-fn properties)
-                       properties)]
-      (ui/->table
-       {:cell-defaults {:pad 5}
-        :rows (for [properties (partition-all columns properties)]
-                (for [property properties]
-                  (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
-                       (catch Throwable t
-                         (throw (ex-info "" {:property property} t))))))}))))
+(defn ->overview-table [ctx property-type clicked-id-fn]
+  (let [{:keys [sort-by-fn
+                extra-info-text
+                columns
+                image/scale]} (property/overview property-type)
+        properties (property/all-properties ctx property-type)
+        properties (if sort-by-fn
+                     (sort-by sort-by-fn properties)
+                     properties)]
+    (ui/->table
+     {:cell-defaults {:pad 5}
+      :rows (for [properties (partition-all columns properties)]
+              (for [property properties]
+                (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
+                     (catch Throwable t
+                       (throw (ex-info "" {:property property} t))))))})))
 
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
 (import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)
@@ -271,7 +270,7 @@
 (defn- ->tabs-data [ctx]
   (for [property-type (sort (property/types))]
     {:title (:title (property/overview property-type))
-     :content (ctx/->overview-table ctx property-type open-property-editor-window!)}))
+     :content (->overview-table ctx property-type open-property-editor-window!)}))
 
 (import 'com.badlogic.gdx.scenes.scene2d.InputListener)
 
@@ -279,7 +278,7 @@
 (defcomponent :screens/property-editor
   (component/create [_ {:keys [context/state] :as ctx}]
     {:stage (let [stage (stage/create ctx
-                                      [(ctx/->background-image ctx)
+                                      [(->background-image ctx)
                                        (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]

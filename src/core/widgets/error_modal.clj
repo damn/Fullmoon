@@ -1,10 +1,9 @@
 (ns core.widgets.error-modal
   (:require [clj-commons.pretty.repl :as p]
             [gdx.scene2d.ui :as ui]
-            [core.screens.stage :as stage]
-            core.context))
+            [core.screens.stage :as stage]))
 
-(defmacro with-err-str
+(defmacro ^:private with-err-str
   "Evaluates exprs in a context in which *out* is bound to a fresh
   StringWriter.  Returns the string created by any nested printing
   calls."
@@ -15,18 +14,16 @@
        ~@body
        (str s#))))
 
-(extend-type core.context.Context
-  core.context/ErrorWindow
-  (error-window! [ctx throwable]
-    (binding [*print-level* 5]
-      (p/pretty-pst throwable 24))
-    (stage/add-actor! ctx
-                      (ui/->window {:title "Error"
-                                    :rows [[(ui/->label (binding [*print-level* 3]
-                                                          (with-err-str
-                                                            (clojure.repl/pst throwable))))]]
-                                    :modal? true
-                                    :close-button? true
-                                    :close-on-escape? true
-                                    :center? true
-                                    :pack? true}))))
+(defn error-window! [ctx throwable]
+  (binding [*print-level* 5]
+    (p/pretty-pst throwable 24))
+  (stage/add-actor! ctx
+                    (ui/->window {:title "Error"
+                                  :rows [[(ui/->label (binding [*print-level* 3]
+                                                        (with-err-str
+                                                          (clojure.repl/pst throwable))))]]
+                                  :modal? true
+                                  :close-button? true
+                                  :close-on-escape? true
+                                  :center? true
+                                  :pack? true})))

@@ -22,6 +22,7 @@
             [core.potential-fields :as potential-fields]
             [core.world.grid :as world-grid]
             [core.world.cell :as cell]
+            [core.widgets.error-modal :refer [error-window!]]
             [core.render :as world-render]
             [core.debug-render :as debug-render])
   (:import (com.badlogic.gdx Gdx Input$Keys)
@@ -150,7 +151,7 @@
     (try (ecs/tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx
-               (ctx/error-window! t)
+               (error-window! t)
                (assoc :context/entity-tick-error t))))))
 
 (defmulti ^:private game-loop :context/game-loop-mode)

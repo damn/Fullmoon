@@ -4,8 +4,7 @@
             [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [safe-get]]
-            [core.component :as component :refer [defcomponent defsystem defcomponent*]]
-            [core.context :as ctx]))
+            [core.component :as component :refer [defcomponent defsystem defcomponent*]]))
 
 (defsystem ->value "..." [_])
 
@@ -90,13 +89,11 @@
   (.start
    (Thread.
     (fn []
-      (try (binding [*print-level* nil]
-             (->> data
-                  clojure.pprint/pprint
-                  with-out-str
-                  (spit file)))
-           (catch Throwable t
-             (ctx/error-window! ctx t)))))))
+      (binding [*print-level* nil]
+        (->> data
+             clojure.pprint/pprint
+             with-out-str
+             (spit file)))))))
 
 (defn- recur-sort-map [m]
   (into (sorted-map)
