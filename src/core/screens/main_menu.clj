@@ -6,7 +6,7 @@
             [core.screens.stage :as stage]
             [core.state :as state]
             [core.property :as property]
-            world.context
+            core.world
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]
             [gdx.scene2d.ui :as ui])
@@ -17,7 +17,7 @@
   (fn [ctx]
     (-> ctx
         (screens/change-screen :screens/world)
-        (world.context/start-new-game (level-generator/->world ctx world-id)))))
+        (core.world/start-new-game (level-generator/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat

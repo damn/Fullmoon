@@ -19,7 +19,7 @@
             [core.widgets.error-modal :refer [error-window!]]
             [core.render :as world-render]
             [core.debug-render :as debug-render]
-            [world.context :refer [active-entities]])
+            [core.world :refer [active-entities]])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (def ^:private ^:dbg-flag pausing? true)

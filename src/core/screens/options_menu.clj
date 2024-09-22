@@ -26,7 +26,7 @@
   (set-state [this is-selected]
     (.bindRoot avar is-selected)))
 
-(defn- debug-flags []
+(defn- debug-flags [] ;
   (apply concat
          ; TODO
          (for [nmspace (utils.ns/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components

@@ -33,7 +33,7 @@ So for a component `[k v]` it dispatches on the component-keyword `k`."
 
 (def ^:private warn-name-ns-mismatch? false)
 
-(defn- k->component-ns [k]
+(defn- k->component-ns [k] ;
   (symbol (str "components." (name (namespace k)) "." (name k))))
 
 (defn- check-warn-ns-name-mismatch [k]

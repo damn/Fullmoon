@@ -1,7 +1,7 @@
 (ns core.entity.projectile-collision
   (:require [utils.core :refer [find-first]]
             [core.component :as component :refer [defcomponent]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.entity :as entity]
             [core.world.grid :refer [rectangle->cells]]
             [core.world.cell :as cell :refer [cells->entities]]))

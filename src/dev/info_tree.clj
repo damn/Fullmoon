@@ -4,7 +4,7 @@
             [core.app :as app]
             [core.mouseover-entity :as mouseover]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.screens.stage :as stage])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.ui.Tree$Node

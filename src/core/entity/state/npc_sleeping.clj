@@ -1,6 +1,6 @@
 (ns core.entity.state.npc-sleeping
   (:require [core.component :as component :refer [defcomponent]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.entity :as entity]
             [core.g :as g]
             [core.state :as state]

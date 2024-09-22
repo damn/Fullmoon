@@ -1,6 +1,6 @@
 (ns core.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.graphics.views :refer [world-mouse-position]]
             [core.entity :as entity]
             [core.entity.player :as player]

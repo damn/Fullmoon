@@ -12,7 +12,7 @@
             [utils.core :refer :all]
             [core.entity :as entity]
             [core.world.grid :refer [cached-adjacent-cells rectangle->cells]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.world.cell :as cell]))
 
 (def ^:private cache (atom nil))

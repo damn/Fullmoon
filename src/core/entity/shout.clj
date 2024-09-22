@@ -1,6 +1,6 @@
 (ns core.entity.shout
   (:require [core.component :refer [defcomponent]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.entity :as entity]
             [core.time :as time]
             [core.tx :as tx]

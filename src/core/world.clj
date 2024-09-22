@@ -1,4 +1,4 @@
-(ns world.context
+(ns core.world
   (:require [utils.core :refer [tile->middle]]
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]

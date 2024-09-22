@@ -4,7 +4,7 @@
             [core.graphics.views :refer [world-mouse-position]]
             [core.mouseover-entity :as mouseover]
             [core.line-of-sight :refer [line-of-sight?]]
-            [world.context :refer [world-grid]]
+            [core.world :refer [world-grid]]
             [core.world.cell :as cell]))
 
 (defn- nearest-enemy [ctx entity*]
