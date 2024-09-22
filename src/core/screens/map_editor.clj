@@ -4,7 +4,6 @@
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [utils.core :refer [->tile]]
-            [core.context :as ctx]
             [core.tiled-map-renderer :as tiled-map-renderer]
             [core.screens :as screens]
             [core.g :as g]

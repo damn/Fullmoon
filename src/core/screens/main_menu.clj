@@ -1,13 +1,12 @@
 (ns core.screens.main-menu
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.graphics.cursors :as cursors]
             [core.screens :as screens]
             [core.screens.stage :as stage]
             [core.state :as state]
             [core.property :as property]
-            core.screens.world
+            world.context
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]
             [gdx.scene2d.ui :as ui])
@@ -18,7 +17,7 @@
   (fn [ctx]
     (-> ctx
         (screens/change-screen :screens/world)
-        (core.screens.world/start-new-game (level-generator/->world ctx world-id)))))
+        (world.context/start-new-game (level-generator/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat

@@ -1,7 +1,6 @@
 (ns core.widgets.debug-window
   (:require [gdx.graphics.camera :as camera]
             utils.core
-            [core.context :as ctx]
             [core.entity.player :as player]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]

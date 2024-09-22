@@ -1,6 +1,5 @@
 (ns core.widgets.skill-window
   (:require [core.info :as info]
-            [core.context :as ctx]
             [core.property :as property]
             [core.entity.player :as player]
             [core.tx :as tx]

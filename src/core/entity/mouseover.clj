@@ -1,6 +1,5 @@
 (ns core.entity.mouseover
   (:require [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.g :as g]
             [core.entity :as entity]
             [core.entity.player :as player]))

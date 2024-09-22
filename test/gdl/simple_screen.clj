@@ -1,6 +1,5 @@
 #_(ns gdl.simple-screen
   (:require [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.g :as g])
   (:import com.badlogic.gdx.graphics.Color))
 

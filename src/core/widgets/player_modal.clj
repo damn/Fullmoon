@@ -1,6 +1,5 @@
 (ns core.widgets.player-modal
   (:require [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.screens.stage :as stage]
             [gdx.scene2d.ui :as ui]

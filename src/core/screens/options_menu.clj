@@ -3,7 +3,6 @@
             utils.ns
             [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.screens :as screens]
             [core.screens.stage :as stage]
             [core.screen :as screen]

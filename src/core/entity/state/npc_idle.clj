@@ -1,7 +1,6 @@
 (ns core.entity.state.npc-idle
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
             [core.effect.core :refer [->npc-effect-ctx]]

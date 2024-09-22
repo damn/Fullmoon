@@ -10,9 +10,9 @@
   (:require [data.grid2d :as grid2d]
             [math.vector :as v]
             [utils.core :refer :all]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.world.grid :refer [cached-adjacent-cells rectangle->cells]]
+            [world.context :refer [world-grid]]
             [core.world.cell :as cell]))
 
 (def ^:private cache (atom nil))
@@ -253,12 +253,12 @@
          (v/direction position (:middle @target-cell)))))))
 
 (defn update! [ctx entities]
-  (let [world-grid (ctx/world-grid ctx)]
+  (let [world-grid (world-grid ctx)]
     (doseq [[faction max-iterations] factions-iterations]
       (update-faction-potential-field world-grid faction entities max-iterations))))
 
 (defn follow-to-enemy [ctx entity]
-  (potential-field-follow-to-enemy (ctx/world-grid ctx) entity))
+  (potential-field-follow-to-enemy (world-grid ctx) entity))
 
 ;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
 

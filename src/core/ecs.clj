@@ -2,7 +2,6 @@
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [safe-merge sort-by-order]]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [core.g :as g]
             [core.entity :as entity]
             [core.entity.player :as player]

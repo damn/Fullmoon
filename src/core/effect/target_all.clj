@@ -1,18 +1,18 @@
 (ns core.effect.target-all
   (:require [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.effect :as effect]
             [core.g :as g]
             [core.entity.player :as player]
             [core.line-of-sight :refer [line-of-sight?]]
-            [core.tx :as tx]))
+            [core.tx :as tx]
+            [world.context :refer [active-entities]]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
 
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
 (defn- creatures-in-los-of-player [ctx]
-  (->> (ctx/active-entities ctx)
+  (->> (active-entities ctx)
        (filter #(:creature/species @%))
        (filter #(line-of-sight? ctx (player/entity* ctx) @%))
        (remove #(:entity/player? @%))))

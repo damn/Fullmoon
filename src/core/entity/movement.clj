@@ -2,11 +2,11 @@
   (:require [malli.core :as m]
             [math.vector :as v]
             [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.world.cell :as cell]
             [core.world.grid :as world-grid]
             [core.time :as time]
+            [world.context :refer [world-grid]]
             [core.tx :as tx]))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
@@ -57,7 +57,7 @@
       (let [movement (assoc movement :delta-time (time/delta-time ctx))
             body @eid]
         (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
-                          (try-move-solid-body (ctx/world-grid ctx) body movement)
+                          (try-move-solid-body (world-grid ctx) body movement)
                           (move-body body movement))]
           [[:tx/assoc eid :position    (:position    body)]
            [:tx/assoc eid :left-bottom (:left-bottom body)]

@@ -1,7 +1,6 @@
 (ns core.widgets
   (:require [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
-            [core.context :as ctx]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]
             [gdx.scene2d.ui :as ui]

@@ -3,7 +3,6 @@
             [utils.wasd-movement :refer [WASD-movement-vector]]
             [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.state :as state]

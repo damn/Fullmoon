@@ -54,7 +54,6 @@
 (defn- debug-print-tx [tx]
   (pr-str (mapv #(cond
                   (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
-                  (instance? core.context.Context %) "<Context>"
                   :else %)
                 tx)))
 
@@ -75,7 +74,7 @@
   (let [result (if (fn? tx)
                  (tx ctx)
                  (do! tx ctx))]
-    (if (map? result) ; probably faster than (instance? core.context.Context result)
+    (if (map? result) ; new context
       (do
        (tx-happened! tx ctx)
        result)

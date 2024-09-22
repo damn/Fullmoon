@@ -2,7 +2,7 @@
   (:require [utils.core :refer [->tile]]
             [gdx.graphics.camera :as camera]
             [math.geom :as geom]
-            [core.context :refer [world-grid]]
+            [world.context :refer [world-grid]]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
             [core.world.grid :refer [circle->cells]]

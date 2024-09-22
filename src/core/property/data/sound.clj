@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [core.assets :as assets]
             [core.component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.property :as property]
             [core.screens.stage :as stage]
             [gdx.scene2d.actor :as actor]

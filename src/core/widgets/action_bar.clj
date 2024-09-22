@@ -1,7 +1,6 @@
 (ns core.widgets.action-bar
   (:require [core.component :refer [defcomponent]]
             [core.info :as info]
-            [core.context :as ctx]
             [core.entity.player :as player]
             [core.screens.stage :as stage]
             [gdx.scene2d.ui :as ui]
