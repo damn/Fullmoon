@@ -5,25 +5,25 @@
             [core.component :as component :refer [defcomponent]]))
 
 (defprotocol Grid
-  (cached-adjacent-cells [_ cell])
+  (cached-adjacent-cells [grid cell])
 
-  (rectangle->cells [_ rectangle])
-  (circle->cells    [_ circle])
-  (circle->entities [_ circle])
-  (point->entities [_ position])
+  (rectangle->cells [grid rectangle])
+  (circle->cells    [grid circle])
+  (circle->entities [grid circle])
+  (point->entities [grid position])
 
-  (add-entity!              [_ entity])
-  (remove-entity!           [_ entity])
-  (entity-position-changed! [_ entity]))
+  (add-entity!              [grid entity])
+  (remove-entity!           [grid entity])
+  (entity-position-changed! [grid entity]))
 
 (defprotocol Cell
-  (blocked? [_ z-order])
-  (blocks-vision? [_])
-  (occupied-by-other? [_ entity]
+  (blocked? [cell* z-order])
+  (blocks-vision? [cell*])
+  (occupied-by-other? [cell* entity]
                       "returns true if there is some occupying body with center-tile = this cell
                       or a multiple-cell-size body which touches this cell.")
-  (nearest-entity          [_ faction])
-  (nearest-entity-distance [_ faction]))
+  (nearest-entity          [cell* faction])
+  (nearest-entity-distance [cell* faction]))
 
 (defn cells->entities [cells*]
   (into #{} (mapcat :entities) cells*))
