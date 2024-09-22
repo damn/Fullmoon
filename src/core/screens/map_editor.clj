@@ -18,6 +18,7 @@
             [gdx.scene2d.actor :refer [set-position!]]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
+            [core.property.types.world :as level-generator]
             mapgen.gen
             mapgen.modules)
   (:import (com.badlogic.gdx Gdx Input$Keys)
@@ -149,7 +150,7 @@ direction keys: move")
 
 (defn- generate [context properties]
   (let [;{:keys [tiled-map area-level-grid start-position]} (mapgen.gen/generate context properties)
-        {:keys [tiled-map start-position]} (ctx/->world context world-id)
+        {:keys [tiled-map start-position]} (level-generator/->world context world-id)
         atom-data (current-data context)]
     (.dispose ^Disposable (:tiled-map @atom-data))
     (swap! atom-data assoc

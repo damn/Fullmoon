@@ -9,6 +9,7 @@
             [core.property :as property]
             core.screens.world
             [core.widgets.background-image :refer [->background-image]]
+            [core.property.types.world :as level-generator]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.Input$Keys))
@@ -17,7 +18,7 @@
   (fn [ctx]
     (-> ctx
         (screens/change-screen :screens/world)
-        (core.screens.world/start-new-game (ctx/->world ctx world-id)))))
+        (core.screens.world/start-new-game (level-generator/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat

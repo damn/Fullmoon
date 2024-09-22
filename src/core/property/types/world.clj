@@ -40,9 +40,7 @@
 (defmethod generate :world.generator/uf-caves [ctx world]
   (mapgen.gen/uf-caves ctx world))
 
-(extend-type core.context.Context
- core.context/WorldGenerator
- (->world [ctx world-id]
-   (let [prop (property/build ctx world-id)]
-     (assoc (generate ctx prop)
-            :world/player-creature (:world/player-creature prop)))))
+(defn ->world [ctx world-id]
+  (let [prop (property/build ctx world-id)]
+    (assoc (generate ctx prop)
+           :world/player-creature (:world/player-creature prop))))
