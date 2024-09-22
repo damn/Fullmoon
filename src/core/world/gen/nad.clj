@@ -1,11 +1,11 @@
-(ns mapgen.nad
+(ns core.world.gen.nad
   " nad = 'not-alloweddiagonal's lead to problems:
   - melee attack goes through the wall because of range check only not wall-check
   - potential field generation must check for it; following must cut it
   - light shines through the edges"
   (:require [utils.core :refer [assoc-ks]]
             [data.grid2d :as grid2d]
-            [mapgen.utils :refer [wall-at?]]))
+            [core.world.gen.utils :refer [wall-at?]]))
 
 (defn- nad-corner? [grid [fromx fromy] [tox toy]]
   (and

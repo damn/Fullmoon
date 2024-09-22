@@ -1,4 +1,4 @@
-(ns mapgen.area-level-grid
+(ns core.world.gen.area-level-grid
   (:require [data.grid2d :as grid]))
 
 ; can adjust:

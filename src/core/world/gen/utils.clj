@@ -1,4 +1,4 @@
-(ns mapgen.utils
+(ns core.world.gen.utils
   (:require [data.grid2d :as grid2d]))
 
 (defn scale-grid [grid [w h]]

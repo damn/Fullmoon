@@ -17,8 +17,8 @@
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui]
             [core.property.types.world :as level-generator]
-            mapgen.gen
-            mapgen.modules)
+            core.world.gen.gen
+            core.world.gen.modules)
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.utils.Disposable))
@@ -66,8 +66,8 @@ direction keys: move")
           (when-not area-level-grid
             (str "Module " (mapv (comp int /)
                                  (world-mouse-position ctx)
-                                 [mapgen.modules/module-width
-                                  mapgen.modules/module-height])))
+                                 [core.world.gen.modules/module-width
+                                  core.world.gen.modules/module-height])))
           (when area-level-grid
             (str "Creature id: " (tiled/property-value tiled-map :creatures tile :id)))
           (when area-level-grid
@@ -147,7 +147,7 @@ direction keys: move")
 (def ^:private world-id :worlds/modules)
 
 (defn- generate [context properties]
-  (let [;{:keys [tiled-map area-level-grid start-position]} (mapgen.gen/generate context properties)
+  (let [;{:keys [tiled-map area-level-grid start-position]} (core.world.gen.gen/generate context properties)
         {:keys [tiled-map start-position]} (level-generator/->world context world-id)
         atom-data (current-data context)]
     (.dispose ^Disposable (:tiled-map @atom-data))
@@ -203,7 +203,7 @@ direction keys: move")
 (defcomponent :screens/map-editor
   (component/create [_ ctx]
     {:sub-screen [::sub-screen
-                  (atom {:tiled-map (tiled/load-map mapgen.modules/modules-file)
+                  (atom {:tiled-map (tiled/load-map core.world.gen.modules/modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
      :stage (stage/create ctx [(->generate-map-window ctx world-id)

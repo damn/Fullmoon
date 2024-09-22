@@ -1,7 +1,7 @@
-(ns mapgen.modules
+(ns core.world.gen.modules
   (:require [gdx.maps.tiled :as tiled]
-            [mapgen.transitions :as transitions]
-            [mapgen.tiled-utils :refer [grid->tiled-map]]))
+            [core.world.gen.transitions :as transitions]
+            [core.world.gen.tiled-utils :refer [grid->tiled-map]]))
 
 (def modules-file "maps/modules.tmx")
 (def module-width  32)

@@ -1,4 +1,4 @@
-(ns mapgen.cave-gen
+(ns core.world.gen.cave-gen
   (:require [data.grid2d :as grid]
             [utils.core :refer (assoc-ks)]
             [utils.random :as rand]))

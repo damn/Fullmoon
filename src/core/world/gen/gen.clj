@@ -1,16 +1,16 @@
-(ns mapgen.gen
+(ns core.world.gen.gen
   (:require [utils.core :refer [assoc-ks]]
             [data.grid2d :as grid]
             [gdx.maps.tiled :as tiled]
             [core.ctx.assets :as assets]
             [core.ctx.property :as property]
-            [mapgen.utils :refer [printgrid scale-grid]]
-            [mapgen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
-            [mapgen.transitions :as transitions]
-            [mapgen.cave-gen :as cave-gen]
-            [mapgen.nad :as nad]
-            mapgen.modules
-            [mapgen.area-level-grid :refer [->area-level-grid]])
+            [core.world.gen.utils :refer [printgrid scale-grid]]
+            [core.world.gen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
+            [core.world.gen.transitions :as transitions]
+            [core.world.gen.cave-gen :as cave-gen]
+            [core.world.gen.nad :as nad]
+            core.world.gen.modules
+            [core.world.gen.area-level-grid :refer [->area-level-grid]])
   (:import java.util.Random))
 
 ; TODO generates 51,52. not max 50
@@ -116,10 +116,10 @@
                    (= #{:wall :ground :transition} (set (grid/cells grid)))
                    (= #{:ground :transition} (set (grid/cells grid))))
                   (str "(set (grid/cells grid)): " (set (grid/cells grid))))
-        scale mapgen.modules/scale
+        scale core.world.gen.modules/scale
         scaled-grid (scale-grid grid scale)
-        tiled-map (mapgen.modules/place-modules
-                   (tiled/load-map mapgen.modules/modules-file)
+        tiled-map (core.world.gen.modules/place-modules
+                   (tiled/load-map core.world.gen.modules/modules-file)
                    scaled-grid
                    grid
                    (filter #(= :ground     (get grid %)) (grid/posis grid))
@@ -251,7 +251,7 @@
         ;_ (printgrid grid)
         ;_ (println)
         scale uf-caves-scale
-        grid (mapgen.utils/scalegrid grid scale)
+        grid (core.world.gen.utils/scalegrid grid scale)
         ;_ (printgrid grid)
         ;_ (println)
         start-position (mapv #(* % scale) start)
@@ -273,7 +273,7 @@
                                          (->transition-tile ctx transition-idx)
                                          (->wall-tile ctx wall-idx))
                            :ground (->ground-tile ctx ground-idx)))
-        tiled-map (mapgen.tiled-utils/wgt-grid->tiled-map grid position->tile)
+        tiled-map (core.world.gen.tiled-utils/wgt-grid->tiled-map grid position->tile)
 
         can-spawn? #(= "all" (tiled/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable

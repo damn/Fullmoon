@@ -1,4 +1,4 @@
-(ns mapgen.tiled-utils
+(ns core.world.gen.tiled-utils
   (:require [data.grid2d :as grid]
             [gdx.maps.tiled :as tiled])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion

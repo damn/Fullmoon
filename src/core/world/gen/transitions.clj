@@ -1,5 +1,5 @@
 ; algorithm from: http://www.saltgames.com/2010/a-bitwise-method-for-applying-tilemaps/
-(ns mapgen.transitions
+(ns core.world.gen.transitions
   (:require [data.grid2d :as grid]))
 
 (let [idxvalues-order [[1 0] [-1 0] [0 1] [0 -1]]]

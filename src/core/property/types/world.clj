@@ -2,7 +2,7 @@
   (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
-            mapgen.gen))
+            core.world.gen.gen))
 
 (defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})
 
@@ -35,10 +35,10 @@
    :start-position [32 71]})
 
 (defmethod generate :world.generator/modules [ctx world]
-  (mapgen.gen/generate ctx world))
+  (core.world.gen.gen/generate ctx world))
 
 (defmethod generate :world.generator/uf-caves [ctx world]
-  (mapgen.gen/uf-caves ctx world))
+  (core.world.gen.gen/uf-caves ctx world))
 
 (defn ->world [ctx world-id]
   (let [prop (property/build ctx world-id)]
