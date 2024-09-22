@@ -85,7 +85,7 @@
 
 
 (defn active-entities [ctx]
-  (content-grid/active-entities (:context/content-grid ctx) (player/entity* ctx)))
+  (content-grid/active-entities ctx (player/entity* ctx)))
 
 (defcomponent :tx/add-to-world
   (tx/do! [[_ entity] ctx]
