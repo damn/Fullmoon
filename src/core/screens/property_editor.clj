@@ -4,7 +4,6 @@
             [malli.generator :as mg]
             [utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
-            [core.info :as info]
             [core.ctx.property :as property]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
@@ -215,7 +214,7 @@
                  (ui/->text-button ctx (name id) on-clicked))
         top-widget (ui/->label (or (and extra-info-text (extra-info-text props)) ""))
         stack (ui/->stack [button top-widget])]
-    (actor/add-tooltip! button #(info/->text props %))
+    (actor/add-tooltip! button #(component/->text props %))
     (actor/set-touchable! top-widget :disabled)
     stack))
 

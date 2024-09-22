@@ -1,6 +1,5 @@
 (ns core.widgets.skill-window
-  (:require [core.info :as info]
-            [core.ctx.property :as property]
+  (:require [core.ctx.property :as property]
             [core.entity.player :as player]
             [core.tx :as tx]
             [gdx.scene2d.actor :refer [add-tooltip!]]
@@ -24,6 +23,6 @@
                                                              (fn [ctx]
                                                                (tx/do-all ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
                          (do
-                          (add-tooltip! button #(info/->text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
+                          (add-tooltip! button #(component/->text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))
