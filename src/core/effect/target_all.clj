@@ -3,7 +3,6 @@
             [core.effect :as effect]
             [core.graphics :as g]
             [core.entity.player :as player]
-            [core.line-of-sight :refer [line-of-sight?]]
             [core.tx :as tx]
             [core.world.ctx :refer [active-entities]]))
 
@@ -14,7 +13,7 @@
 (defn- creatures-in-los-of-player [ctx]
   (->> (active-entities ctx)
        (filter #(:creature/species @%))
-       (filter #(line-of-sight? ctx (player/entity* ctx) @%))
+       (filter #(entity/line-of-sight? ctx (player/entity* ctx) @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!

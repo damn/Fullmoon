@@ -3,7 +3,6 @@
             [core.graphics.views :refer [world-mouse-position]]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.line-of-sight :refer [line-of-sight?]]
             [core.screens.stage :as stage]
             [core.ctx.grid :as grid]))
 
@@ -16,7 +15,7 @@
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse
-         (filter #(line-of-sight? ctx player-entity* %))
+         (filter #(entity/line-of-sight? ctx player-entity* %))
          first
          :entity/id)))
 

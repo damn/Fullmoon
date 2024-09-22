@@ -3,7 +3,6 @@
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.line-of-sight :refer [line-of-sight?]]
             [core.graphics :as g]
             [core.entity.state :as state]
             [core.ctx.time :as time]
@@ -38,7 +37,7 @@
   (update ctx :effect/target (fn [target]
                                (when (and target
                                           (not (:entity/destroyed? @target))
-                                          (line-of-sight? ctx @source @target))
+                                          (entity/line-of-sight? ctx @source @target))
                                  target))))
 
 (defn- applicable? [ctx effects]

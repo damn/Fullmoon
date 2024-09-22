@@ -3,7 +3,6 @@
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
             [core.ctx.mouseover-entity :as mouseover]
-            [core.line-of-sight :refer [line-of-sight?]]
             [core.ctx.grid :as grid]))
 
 (defn- nearest-enemy [{:keys [context/grid]} entity*]
@@ -12,7 +11,7 @@
 
 (defn ->npc-effect-ctx [ctx entity*]
   (let [target (nearest-enemy ctx entity*)
-        target (when (and target (line-of-sight? ctx entity* @target))
+        target (when (and target (entity/line-of-sight? ctx entity* @target))
                  target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
