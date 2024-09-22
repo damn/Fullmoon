@@ -83,7 +83,7 @@
 ; TODO LAZY SEQ @ grid2d/get-8-neighbour-positions !!
 ; https://github.com/damn/grid2d/blob/master/src/data/grid2d.clj#L126
 (extend-type data.grid2d.Grid2D
-  core.world.grid/Grid
+  Grid
   (cached-adjacent-cells [grid cell]
     (if-let [result (:adjacent-cells @cell)]
       result
