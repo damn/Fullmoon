@@ -2,12 +2,12 @@
   (:require [math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
+            [core.entity.inventory :as inventory]
             [core.entity.player :as player]
             [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position gui-mouse-position]]
             [core.entity.state :as state]
-            [core.screens.stage :as stage]
-            [core.inventory :as inventory])
+            [core.screens.stage :as stage])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]

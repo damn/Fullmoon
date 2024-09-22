@@ -9,9 +9,9 @@
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
             [core.entity :as entity]
+            [core.entity.inventory :as inventory]
             [core.entity.player :as player]
             [core.screens.stage :as stage]
-            [core.inventory :as inventory]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
