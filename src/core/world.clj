@@ -88,24 +88,24 @@
   (content-grid/active-entities (content-grid ctx)
                                 (player/entity* ctx)))
 
-(def world-grid :context/grid) ; => point->entities work on ctx .. ? this called means we want to use ctx directly ?!
-
 (defcomponent :tx/add-to-world
   (tx/do! [[_ entity] ctx]
     (content-grid/update-entity! (content-grid ctx) entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (grid/add-entity! (world-grid ctx) entity)
+    (grid/add-entity! ctx entity)
     ctx))
 
 (defcomponent :tx/remove-from-world
   (tx/do! [[_ entity] ctx]
     (content-grid/remove-entity! (content-grid ctx) entity)
-    (grid/remove-entity! (world-grid ctx) entity)
+    (grid/remove-entity! ctx entity)
     ctx))
 
 (defcomponent :tx/position-changed
   (tx/do! [[_ entity] ctx]
     (content-grid/update-entity! (content-grid ctx) entity)
-    (grid/entity-position-changed! (world-grid ctx) entity)
+    (grid/entity-position-changed! ctx entity)
     ctx))
+
+(def world-grid :context/grid)

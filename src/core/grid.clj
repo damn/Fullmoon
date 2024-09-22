@@ -10,11 +10,7 @@
   (rectangle->cells [grid rectangle])
   (circle->cells    [grid circle])
   (circle->entities [grid circle])
-  (point->entities [grid position])
-
-  (add-entity!              [grid entity])
-  (remove-entity!           [grid entity])
-  (entity-position-changed! [grid entity]))
+  (point->entities [grid position]))
 
 (defprotocol Cell
   (blocked? [cell* z-order])
@@ -108,20 +104,24 @@
   (point->entities [grid position]
     (when-let [cell (get grid (->tile position))]
       (filter #(geom/point-in-rect? position @%)
-              (:entities @cell))))
+              (:entities @cell)))))
 
-  (add-entity! [grid entity]
+(def ^:private this :context/grid)
+
+(defn add-entity! [ctx entity]
+  (let [grid (this ctx)]
     (set-cells! grid entity)
     (when (:collides? @entity)
-      (set-occupied-cells! grid entity)))
+      (set-occupied-cells! grid entity))))
 
-  (remove-entity! [_ entity]
+(defn remove-entity! [ctx entity]
+  (let [grid (this ctx)]
     (remove-from-cells! entity)
     (when (:collides? @entity)
-      (remove-from-occupied-cells! entity)))
+      (remove-from-occupied-cells! entity))))
 
-  (entity-position-changed! [grid entity]
-    (remove-from-cells! entity)
+(defn entity-position-changed! [ctx entity]
+  (let [grid (this ctx)] (remove-from-cells! entity)
     (set-cells! grid entity)
     (when (:collides? @entity)
       (remove-from-occupied-cells! entity)
