@@ -1,5 +1,6 @@
 (ns core.widgets.skill-window
-  (:require [core.ctx.property :as property]
+  (:require [core.component :as component]
+            [core.ctx.property :as property]
             [core.entity.player :as player]
             [core.tx :as tx]
             [gdx.scene2d.actor :refer [add-tooltip!]]

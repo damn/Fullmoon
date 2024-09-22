@@ -2,8 +2,8 @@
   (:require [utils.random :as random]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
+            [core.entity.stats :refer [defmodifier]]
             [core.effect :as effect]
-            [core.stat :refer [defmodifier]]
             [core.tx :as tx]))
 
 ; TODO negate this value also @ use

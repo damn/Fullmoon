@@ -1,5 +1,5 @@
 (ns core.property.data.relationships
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [core.screens.property-editor :refer [->overview-table]]
@@ -109,7 +109,7 @@
          (let [property (property/build ctx property-id)
                image-widget (ui/->image-widget (property/->image property)
                                                {:id property-id})]
-           (actor/add-tooltip! image-widget #(info/->text property %))
+           (actor/add-tooltip! image-widget #(component/->text property %))
            image-widget))]
       [(when property-id
          (ui/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))

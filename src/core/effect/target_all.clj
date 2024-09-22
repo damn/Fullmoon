@@ -2,6 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.effect :as effect]
             [core.graphics :as g]
+            [core.entity :as entity]
             [core.entity.player :as player]
             [core.tx :as tx]
             [core.world.ctx :refer [active-entities]]))
