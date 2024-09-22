@@ -5,7 +5,8 @@
             [core.entity :as entity]
             [core.effect :as effect]
             [core.effect.core :refer [->npc-effect-ctx]]
-            [core.potential-fields :as potential-fields]))
+            [core.potential-fields :as potential-fields]
+            [core.entity.state.active-skill :refer [skill-usable-state]]))
 
 ; TODO
 ; split it into 3 parts
@@ -26,7 +27,7 @@
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable (ctx/skill-usable-state ctx entity* %))
+       (filter #(and (= :usable (skill-usable-state ctx entity* %))
                      (useful? ctx (:skill/effects %))))
        first))
 

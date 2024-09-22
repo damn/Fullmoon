@@ -38,12 +38,12 @@
   {:let [cell-w cell-h]}
   (component/create [_ {:keys [context/grid]}]
     (->RContentGrid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
-                                       (inc (int (/ (grid2d/height grid) cell-h)))
-                                       (fn [idx]
-                                         (atom {:idx idx,
-                                                :entities #{}})))
-                   cell-w
-                   cell-h)))
+                                        (inc (int (/ (grid2d/height grid) cell-h)))
+                                        (fn [idx]
+                                          (atom {:idx idx,
+                                                 :entities #{}})))
+                    cell-w
+                    cell-h)))
 
 (comment
 

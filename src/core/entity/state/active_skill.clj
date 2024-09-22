@@ -1,7 +1,6 @@
 (ns core.entity.state.active-skill
   (:require [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.context :as ctx]
             [core.entity :as entity]
             [core.effect :as effect]
             [core.line-of-sight :refer [line-of-sight?]]
@@ -54,23 +53,20 @@
 (defn- not-enough-mana? [entity* {:keys [skill/cost]}]
   (> cost (mana-value entity*)))
 
-(extend-type core.context.Context
-  core.context/ActiveSkill
-  (skill-usable-state [ctx
-                       entity*
-                       {:keys [skill/cooling-down? skill/effects] :as skill}]
-    (cond
-     cooling-down?
-     :cooldown
+(defn skill-usable-state
+  [ctx entity* {:keys [skill/cooling-down? skill/effects] :as skill}]
+  (cond
+   cooling-down?
+   :cooldown
 
-     (not-enough-mana? entity* skill)
-     :not-enough-mana
+   (not-enough-mana? entity* skill)
+   :not-enough-mana
 
-     (not (applicable? ctx effects))
-     :invalid-params
+   (not (applicable? ctx effects))
+   :invalid-params
 
-     :else
-     :usable)))
+   :else
+   :usable))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)

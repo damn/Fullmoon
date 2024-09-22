@@ -11,6 +11,7 @@
             [core.effect.core :refer [->player-effect-ctx]]
             [core.mouseover-entity :as mouseover]
             [core.widgets :as widgets]
+            [core.entity.state.active-skill :refer [skill-usable-state]]
             [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
             [gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
@@ -91,9 +92,7 @@
      (if-let [skill-id (widgets/selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->player-effect-ctx context entity*)
-             state (ctx/skill-usable-state (safe-merge context effect-ctx)
-                                           entity*
-                                           skill)]
+             state (skill-usable-state (safe-merge context effect-ctx) entity* skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
