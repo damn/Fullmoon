@@ -1,10 +1,11 @@
 (ns core.entity.modifiers
-  (:require [utils.core :as utils]
+  (:require [clojure.string :as str]
+            [utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
             core.entity
             [core.operation :as operation]
-            [core.modifiers :as modifiers]
-            [core.tx :as tx]))
+            [core.tx :as tx])
+  (:import com.badlogic.gdx.graphics.Color))
 
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers
@@ -49,6 +50,29 @@
                            [operation-k value])]
         :when (seq operations)]
     [modifier-k operations]))
+
+(com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
+                                      Color/CYAN
+                                      ; maybe can be used in tooltip background is darker (from D2 copied color)
+                                      #_(com.badlogic.gdx.graphics.Color. (float 0.48)
+                                                                          (float 0.57)
+                                                                          (float 1)
+                                                                          (float 1)))
+
+; For now no green/red color for positive/negative numbers
+; as :stats/damage-receive negative value would be red but actually a useful buff
+; -> could give damage reduce 10% like in diablo 2
+; and then make it negative .... @ applicator
+(def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
+(def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
+
+(defn info-text [modifiers]
+  (str "[MODIFIER_BLUE]"
+       (str/join "\n"
+                 (for [[modifier-k operations] modifiers
+                       operation operations]
+                   (str (operation/info-text operation) " " (utils/k->pretty-name modifier-k))))
+       "[]"))
 
 (defcomponent :entity/modifiers
   {:data [:components-ns :modifier]

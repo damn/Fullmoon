@@ -1,7 +1,7 @@
 (ns core.property.types.item
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity.inventory :as inventory]
-            [core.modifiers :as modifiers]
+            [core.entity.modifiers :as modifiers]
             [core.ctx.property :as property]
             [core.tx :as tx]))
 
