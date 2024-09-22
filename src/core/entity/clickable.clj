@@ -1,7 +1,7 @@
 (ns core.entity.clickable
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.g :as g]))
+            [core.graphics :as g]))
 
 (defcomponent :entity/clickable
   (entity/render [[_ {:keys [text]}]

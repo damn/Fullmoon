@@ -1,6 +1,6 @@
 (ns core.widgets.player-message
   (:require [core.component :as component :refer [defcomponent]]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [gdx.scene2d.ui :as ui]
             [core.tx :as tx])

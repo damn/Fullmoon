@@ -3,7 +3,7 @@
             [core.val-max :refer [val-max-ratio]]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-viewport-width]]
             [gdx.scene2d.ui :as ui]))

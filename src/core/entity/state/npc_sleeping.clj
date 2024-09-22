@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.world :refer [world-grid]]
             [core.entity :as entity]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.entity.state :as state]
             [core.ctx.grid :as grid]))
 

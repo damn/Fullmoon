@@ -6,7 +6,7 @@
             [core.ctx.graphics :as graphics]
             [core.graphics.views :refer [world-camera]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
-            [core.g :as g])
+            [core.graphics :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))
 

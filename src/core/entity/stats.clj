@@ -5,7 +5,7 @@
             [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.stat :refer [stat-k->modifier-k defstat]]
             [core.tx :as tx])
   (:import com.badlogic.gdx.graphics.Color))

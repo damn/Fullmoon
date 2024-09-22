@@ -2,7 +2,7 @@
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [safe-merge sort-by-order]]
             [core.component :refer [defcomponent] :as component]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.line-of-sight :refer [line-of-sight?]]

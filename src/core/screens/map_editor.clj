@@ -6,7 +6,7 @@
             [utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.ctx.graphics :as graphics]
             [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]

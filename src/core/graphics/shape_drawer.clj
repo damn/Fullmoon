@@ -1,6 +1,6 @@
 (ns core.graphics.shape-drawer
   (:require [gdx.graphics :as graphics]
-            [core.g :as g])
+            [core.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)
            com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -27,8 +27,8 @@
 (defn- set-color [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (->color color)))
 
-(extend-type core.g.Graphics
-  core.g/ShapeDrawer
+(extend-type core.graphics.Graphics
+  core.graphics/ShapeDrawer
   (draw-ellipse [{:keys [^ShapeDrawer shape-drawer]} [x y] radius-x radius-y color]
     (set-color shape-drawer color)
     (.ellipse shape-drawer (float x) (float y) (float radius-x) (float radius-y)) )

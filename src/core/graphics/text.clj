@@ -1,6 +1,6 @@
 (ns core.graphics.text
   (:require [clojure.string :as str]
-            core.g)
+            core.graphics)
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Texture$TextureFilter
            com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -36,8 +36,8 @@
       count
       (* (.getLineHeight font))))
 
-(extend-type core.g.Graphics
-  core.g/TextDrawer
+(extend-type core.graphics.Graphics
+  core.graphics/TextDrawer
   (draw-text [{:keys [default-font unit-scale batch]}
               {:keys [x y text font h-align up? scale]}]
     (let [^BitmapFont font (or font default-font)

@@ -1,7 +1,7 @@
 (ns core.graphics.image
   (:require [gdx.graphics.g2d :as g2d]
             [core.ctx.assets :as assets]
-            [core.g :as g])
+            [core.graphics :as g])
   (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch)))
 
@@ -58,8 +58,8 @@
          rotation)
   (if color (.setColor batch Color/WHITE)))
 
-(extend-type core.g.Graphics
-  core.g/Image
+(extend-type core.graphics.Graphics
+  core.graphics/Image
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]

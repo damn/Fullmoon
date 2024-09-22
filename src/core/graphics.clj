@@ -1,4 +1,4 @@
-(ns core.g)
+(ns core.graphics)
 
 (defrecord Graphics [batch
                      shape-drawer

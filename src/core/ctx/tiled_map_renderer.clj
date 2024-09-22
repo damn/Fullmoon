@@ -2,7 +2,7 @@
   (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.views :refer [world-camera]]
-            [core.g :as g])
+            [core.graphics :as g])
   (:import com.badlogic.gdx.maps.MapLayer
            [gdl OrthogonalTiledMapRenderer ColorSetter]))
 

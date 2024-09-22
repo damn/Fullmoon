@@ -1,7 +1,7 @@
 (ns core.effect.target-all
   (:require [core.component :as component :refer [defcomponent]]
             [core.effect :as effect]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.entity.player :as player]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.tx :as tx]

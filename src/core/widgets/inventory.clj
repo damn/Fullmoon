@@ -5,7 +5,7 @@
             [gdx.graphics :as graphics]
             [core.component :refer [defcomponent]]
             [core.info :as info]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
             [core.entity :as entity]

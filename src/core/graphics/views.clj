@@ -1,5 +1,5 @@
 (ns core.graphics.views
-  (:require [core.g :as g])
+  (:require [core.graphics :as g])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.math MathUtils Vector2]
@@ -25,8 +25,8 @@
   {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
-(extend-type core.g.Graphics
-  core.g/WorldView
+(extend-type core.graphics.Graphics
+  core.graphics/WorldView
   (world-unit-scale [{:keys [world-view]}]
     (:unit-scale world-view))
 

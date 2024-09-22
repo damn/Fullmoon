@@ -3,7 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position gui-mouse-position]]
             [core.entity.state :as state]
             [core.screens.stage :as stage]

@@ -3,7 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.ctx.time :as time]
             [core.tx :as tx]))
 

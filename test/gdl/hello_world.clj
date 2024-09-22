@@ -1,6 +1,6 @@
 #_(ns gdl.hello-world
   (:require [app.start :as app]
-            [core.g :as g]))
+            [core.graphics :as g]))
 
 #_(defrecord MyScreen []
   Screen

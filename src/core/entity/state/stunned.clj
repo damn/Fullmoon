@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.state :as state]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.ctx.time :as time]  ))
 
 (defcomponent :stunned

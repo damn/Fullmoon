@@ -3,7 +3,7 @@
             [gdx.graphics.camera :as camera]
             [math.geom :as geom]
             [core.world :refer [world-grid]]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
             [core.ctx.grid :refer [circle->cells]]
             [core.ctx.potential-fields :as potential-field]))

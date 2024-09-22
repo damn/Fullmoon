@@ -3,7 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.effect :as effect]
             [core.entity :as entity]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.tx :as tx]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?

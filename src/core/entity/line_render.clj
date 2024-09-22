@@ -1,7 +1,7 @@
 (ns core.entity.line-render
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.g :as g]
+            [core.graphics :as g]
             [core.tx :as tx]))
 
 (defcomponent :entity/line-render
