@@ -1,7 +1,7 @@
 (ns core.entity.state.npc-moving
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.state :as state]
+            [core.entity.state :as state]
             [core.time :as time]  ))
 
 ; npc moving is basically a performance optimization so npcs do not have to check

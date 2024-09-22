@@ -4,21 +4,20 @@
             [core.component :refer [defcomponent] :as component]
             [core.graphics.views :refer [gui-mouse-position]]
             [core.screens :as screens]
-            [core.screen :as screen]
-            [core.state :as state])
+            [core.screen :as screen])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.Stage))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
   {:let {:keys [^Stage stage sub-screen]}}
-  (state/enter [_ context]
+  (screen/enter [_ context]
     (.setInputProcessor Gdx/input stage)
-    (state/enter sub-screen context))
+    (screen/enter sub-screen context))
 
-  (state/exit [_ context]
+  (screen/exit [_ context]
     (.setInputProcessor Gdx/input nil)
-    (state/exit sub-screen context))
+    (screen/exit sub-screen context))
 
   (screen/render! [_ app-state]
     ; stage act first so user-screen calls change-screen -> is the end of frame

@@ -1,6 +1,6 @@
 (ns core.entity.state.npc-dead
   (:require [core.component :as component :refer [defcomponent]]
-            [core.state :as state]))
+            [core.entity.state :as state]))
 
 (defcomponent :npc-dead
   {:let {:keys [eid]}}

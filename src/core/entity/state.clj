@@ -1,11 +1,33 @@
 (ns core.entity.state
   (:require [reduce-fsm :as fsm]
             [utils.core :refer [readable-number]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component :refer [defsystem defcomponent]]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.state :as state]
             [core.tx :as tx]))
+
+(defsystem enter "FIXME" [_ ctx])
+(defmethod enter :default [_ ctx])
+
+(defsystem exit  "FIXME" [_ ctx])
+(defmethod exit :default  [_ ctx])
+
+;; Player-State
+
+(defsystem player-enter "FIXME" [_])
+(defmethod player-enter :default [_])
+
+(defsystem pause-game? "FIXME" [_])
+(defmethod pause-game? :default [_])
+
+(defsystem manual-tick "FIXME" [_ ctx])
+(defmethod manual-tick :default [_ ctx])
+
+(defsystem clicked-inventory-cell "FIXME" [_ cell])
+(defmethod clicked-inventory-cell :default [_ cell])
+
+(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
+(defmethod clicked-skillmenu-skill :default [_ skill])
 
 (comment
  ; graphviz required in path
@@ -123,10 +145,10 @@
       (when-not (= old-state-k new-state-k)
         (let [old-state-obj (entity/state-obj @eid)
               new-state-obj [new-state-k (component/create [new-state-k eid params] ctx)]]
-          [#(state/exit old-state-obj %)
-           #(state/enter new-state-obj %)
+          [#(exit old-state-obj %)
+           #(enter new-state-obj %)
            (when (:entity/player? @eid)
-             (fn [_ctx] (state/player-enter new-state-obj)))
+             (fn [_ctx] (player-enter new-state-obj)))
            [:tx/assoc eid :entity/state new-fsm]
            [:tx/dissoc eid old-state-k]
            [:tx/assoc eid new-state-k (new-state-obj 1)]])))))

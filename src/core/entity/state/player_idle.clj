@@ -5,7 +5,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.state :as state]
+            [core.entity.state :as state]
             [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx]]
             [core.mouseover-entity :as mouseover]

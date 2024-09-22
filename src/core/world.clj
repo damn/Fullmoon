@@ -44,7 +44,8 @@
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
-(defn- ->world-map [{:keys [tiled-map start-position]}]
+(defn- ->world-map [{:keys [tiled-map start-position]}] ; == one object make ?! like graphics?
+  ; grep context/grid -> all dependent stuff?
   (component/create-into {:context/tiled-map tiled-map
                           :context/start-position start-position}
                          {:context/grid [(tiled/width  tiled-map)

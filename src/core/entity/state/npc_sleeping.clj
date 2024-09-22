@@ -3,7 +3,7 @@
             [core.world :refer [world-grid]]
             [core.entity :as entity]
             [core.g :as g]
-            [core.state :as state]
+            [core.entity.state :as state]
             [core.grid :as grid]))
 
 (defcomponent :npc-sleeping

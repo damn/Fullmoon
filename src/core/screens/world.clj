@@ -11,7 +11,6 @@
             [core.widgets :as widgets]
             [core.screen :as screen]
             [core.screens.stage :as stage]
-            [core.state :as state]
             [core.mouseover-entity :refer [update-mouseover-entity]]
             [core.tx :as tx]
             [core.time :as time]
@@ -109,7 +108,7 @@
         ctx))
 
 (defcomponent ::sub-screen
-  (state/exit [_ ctx]
+  (screen/exit [_ ctx]
     (cursors/set-cursor! ctx :cursors/default))
 
   (screen/render [_ ctx]

@@ -2,9 +2,9 @@
   (:require [utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.cursors :as cursors]
+            [core.screen :as screen]
             [core.screens :as screens]
             [core.screens.stage :as stage]
-            [core.state :as state]
             [core.property :as property]
             core.world
             [core.widgets.background-image :refer [->background-image]]
@@ -33,7 +33,7 @@
 
 
 (defcomponent ::sub-screen
-  (state/enter [_ ctx]
+  (screen/enter [_ ctx]
     (cursors/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]

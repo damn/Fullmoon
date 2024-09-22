@@ -1,7 +1,7 @@
 (ns core.entity.state.player-dead
   (:require [core.component :refer [defcomponent]]
             [core.screens :as screens]
-            [core.state :as state]))
+            [core.entity.state :as state]))
 
 (defcomponent :player-dead
   (state/player-enter [_]

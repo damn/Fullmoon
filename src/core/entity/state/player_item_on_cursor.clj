@@ -5,7 +5,7 @@
             [core.entity.player :as player]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position gui-mouse-position]]
-            [core.state :as state]
+            [core.entity.state :as state]
             [core.screens.stage :as stage]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))

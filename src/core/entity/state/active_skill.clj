@@ -5,7 +5,7 @@
             [core.effect :as effect]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.g :as g]
-            [core.state :as state]
+            [core.entity.state :as state]
             [core.time :as time]
             [core.tx :as tx]))
 

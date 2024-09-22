@@ -1,7 +1,6 @@
 (ns core.screens
   (:require [core.component :refer [defcomponent] :as component]
-            [core.screen :as screen]
-            [core.state :as state]))
+            [core.screen :as screen]))
 
 (defcomponent :context/screens
   {:data :some
@@ -21,20 +20,20 @@
   [current-screen (get screens current-screen)])
 
 (defn change-screen
-  "Calls state/exit on the current-screen (if there is one).
+  "Calls screen/exit on the current-screen (if there is one).
   Throws AssertionError when the context does not have a new-screen.
-  Calls state/enter on the new screen and
+  Calls screen/enter on the new screen and
   returns the context with current-screen set to new-screen."
   [{{:keys [current-screen screens]} :context/screens :as context}
    new-screen-key]
   (when-let [screen-v (and current-screen
                            (current-screen screens))]
-    (state/exit [current-screen screen-v] context))
+    (screen/exit [current-screen screen-v] context))
 
   (let [screen-v (new-screen-key screens)
         _ (assert screen-v (str "Cannot find screen with key: " new-screen-key))
         new-context (assoc-in context [:context/screens :current-screen] new-screen-key)]
-    (state/enter [new-screen-key screen-v] new-context)
+    (screen/enter [new-screen-key screen-v] new-context)
     new-context))
 
 (defn set-first-screen [context]

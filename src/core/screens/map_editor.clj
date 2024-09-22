@@ -10,7 +10,6 @@
             [core.graphics :as graphics]
             [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
-            [core.state :as state]
             [core.screens.stage :as stage]
             [core.property :as property]
             [core.widgets.error-modal :refer [error-window!]]
@@ -180,10 +179,10 @@ direction keys: move")
   #_(dispose [_]
       (dispose (:tiled-map @current-data)))
 
-  (state/enter [_ ctx]
+  (screen/enter [_ ctx]
     (show-whole-map! (world-camera ctx) (:tiled-map @current-data)))
 
-  (state/exit [_ ctx]
+  (screen/exit [_ ctx]
     (camera/reset-zoom! (world-camera ctx)))
 
   (screen/render [_ context]

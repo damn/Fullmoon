@@ -1,7 +1,7 @@
 (ns core.entity.player
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.state :as state]))
+            [core.entity.state :as state]))
 
 (def ^{:doc "Returns the player-entity atom."} entity :context/player-entity)
 

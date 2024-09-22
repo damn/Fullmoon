@@ -1,7 +1,7 @@
 (ns core.entity.state.stunned
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.state :as state]
+            [core.entity.state :as state]
             [core.g :as g]
             [core.time :as time]  ))
 

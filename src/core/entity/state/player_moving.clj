@@ -2,7 +2,7 @@
   (:require [utils.wasd-movement :refer [WASD-movement-vector]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.state :as state]))
+            [core.entity.state :as state]))
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
