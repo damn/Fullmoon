@@ -4,7 +4,7 @@
             [core.entity :as entity]
             [core.time :as time]
             [core.tx :as tx]
-            [core.world.grid :as grid]))
+            [core.grid :as grid]))
 
 (def ^:private shout-radius 4)
 

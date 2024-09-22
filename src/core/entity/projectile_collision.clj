@@ -3,8 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.world :refer [world-grid]]
             [core.entity :as entity]
-            [core.world.grid :refer [rectangle->cells]]
-            [core.world.cell :as cell :refer [cells->entities]]))
+            [core.grid :as grid]))
 
 (defcomponent :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}
@@ -18,15 +17,15 @@
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
     (let [entity* @entity
-          cells* (map deref (rectangle->cells (world-grid ctx) entity*)) ; just use cached-touched -cells
+          cells* (map deref (grid/rectangle->cells (world-grid ctx) entity*)) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
                                        (entity/collides? entity* @%))
-                                 (cells->entities cells*))
+                                 (grid/cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(cell/blocked? % (:z-order entity*)) cells*))
+                       (some #(grid/blocked? % (:z-order entity*)) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
          [:tx/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...

@@ -5,7 +5,7 @@
             [core.world :refer [world-grid]]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
-            [core.world.grid :refer [circle->cells]]
+            [core.grid :refer [circle->cells]]
             [core.potential-fields :as potential-field]))
 
 (defn- geom-test [g ctx]

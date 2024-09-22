@@ -11,9 +11,8 @@
             [math.vector :as v]
             [utils.core :refer :all]
             [core.entity :as entity]
-            [core.world.grid :refer [cached-adjacent-cells rectangle->cells]]
-            [core.world :refer [world-grid]]
-            [core.world.cell :as cell]))
+            [core.grid :as grid]
+            [core.world :refer [world-grid]]))
 
 (def ^:private cache (atom nil))
 
@@ -21,7 +20,7 @@
                                     :evil 5})
 
 (defn- cell-blocked? [cell*]
-  (cell/blocked? cell* :z-order/ground))
+  (grid/blocked? cell* :z-order/ground))
 
 ; FIXME assert @ mapload no NAD's and @ potential field init & remove from
 ; potential-field-following the removal of NAD's.
@@ -93,12 +92,12 @@
 ; (or teleported?)
 (defn- step [grid faction last-marked-cells]
   (let [marked-cells (transient [])
-        distance       #(cell/nearest-entity-distance % faction)
-        nearest-entity #(cell/nearest-entity          % faction)
+        distance       #(grid/nearest-entity-distance % faction)
+        nearest-entity #(grid/nearest-entity          % faction)
         marked? faction]
     ; sorting important because of diagonal-cell values, flow from lower dist first for correct distance
     (doseq [cell (sort-by #(distance @%) last-marked-cells)
-            adjacent-cell (cached-adjacent-cells grid cell)
+            adjacent-cell (grid/cached-adjacent-cells grid cell)
             :let [cell* @cell
                   adjacent-cell* @adjacent-cell]
             :when (not (or (cell-blocked? adjacent-cell*)
@@ -178,7 +177,7 @@
 (defn- filter-viable-cells [entity adjacent-cells]
   (remove-not-allowed-diagonals
     (mapv #(when-not (or (cell-blocked? @%)
-                         (cell/occupied-by-other? @% entity))
+                         (grid/occupied-by-other? @% entity))
              %)
           adjacent-cells)))
 
@@ -190,7 +189,7 @@
 (defn- viable-cell? [grid distance-to own-dist entity cell]
   (when-let [best-cell (get-min-dist-cell
                         distance-to
-                        (filter-viable-cells entity (cached-adjacent-cells grid cell)))]
+                        (filter-viable-cells entity (grid/cached-adjacent-cells grid cell)))]
     (when (< (float (distance-to best-cell)) (float own-dist))
       cell)))
 
@@ -198,10 +197,10 @@
   "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
   [grid entity own-cell]
   (let [faction (entity/enemy-faction @entity)
-        distance-to    #(cell/nearest-entity-distance @% faction)
-        nearest-entity #(cell/nearest-entity          @% faction)
+        distance-to    #(grid/nearest-entity-distance @% faction)
+        nearest-entity #(grid/nearest-entity          @% faction)
         own-dist (distance-to own-cell)
-        adjacent-cells (cached-adjacent-cells grid own-cell)]
+        adjacent-cells (grid/cached-adjacent-cells grid own-cell)]
     (if (and own-dist (zero? (float own-dist)))
       {:target-entity (nearest-entity own-cell)}
       (if-let [adjacent-cell (first (filter #(and (distance-to %)
@@ -229,7 +228,7 @@
                           own-cell)))}))))
 
 (defn- inside-cell? [grid entity* cell]
-  (let [cells (rectangle->cells grid entity*)]
+  (let [cells (grid/rectangle->cells grid entity*)]
     (and (= 1 (count cells))
          (= cell (first cells)))))
 
@@ -248,7 +247,7 @@
 
      :else
      (when-not (and (= target-cell own-cell)
-                    (cell/occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
+                    (grid/occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
        (when-not (inside-cell? grid @entity target-cell)
          (v/direction position (:middle @target-cell)))))))
 
@@ -278,7 +277,7 @@
   (when-let [body mouseoverbody]
     (let [occupied-cell (get (world-grid context) (entity/tile @body))
           own-dist (distance-to occupied-cell)
-          adj-cells (cached-adjacent-cells grid occupied-cell)
+          adj-cells (grid/cached-adjacent-cells grid occupied-cell)
           potential-cells (filter distance-to
                                   (filter-viable-cells body adj-cells))
           adj-cells (remove nil? adj-cells)]

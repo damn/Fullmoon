@@ -4,9 +4,8 @@
             [core.component :refer [defcomponent] :as component]
             [core.content-grid :as content-grid]
             [core.entity.player :as player]
-            [core.tx :as tx]
-            [core.world.grid :as world-grid]
-            [core.world.cell :as cell])
+            [core.grid :as grid]
+            [core.tx :as tx])
   (:import com.badlogic.gdx.utils.Disposable))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
@@ -54,7 +53,7 @@
                                           "none" :none
                                           "air"  :air
                                           "all"  :all)]
-                          :context/raycaster cell/blocks-vision?
+                          :context/raycaster grid/blocks-vision?
                           :context/content-grid [16 16]
                           :context/explored-tile-corners true}))
 
@@ -89,24 +88,24 @@
   (content-grid/active-entities (content-grid ctx)
                                 (player/entity* ctx)))
 
-(def world-grid :context/grid)
+(def world-grid :context/grid) ; => point->entities work on ctx .. ? this called means we want to use ctx directly ?!
 
 (defcomponent :tx/add-to-world
   (tx/do! [[_ entity] ctx]
     (content-grid/update-entity! (content-grid ctx) entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (world-grid/add-entity! (world-grid ctx) entity)
+    (grid/add-entity! (world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/remove-from-world
   (tx/do! [[_ entity] ctx]
     (content-grid/remove-entity! (content-grid ctx) entity)
-    (world-grid/remove-entity! (world-grid ctx) entity)
+    (grid/remove-entity! (world-grid ctx) entity)
     ctx))
 
 (defcomponent :tx/position-changed
   (tx/do! [[_ entity] ctx]
     (content-grid/update-entity! (content-grid ctx) entity)
-    (world-grid/entity-position-changed! (world-grid ctx) entity)
+    (grid/entity-position-changed! (world-grid ctx) entity)
     ctx))

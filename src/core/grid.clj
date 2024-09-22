@@ -2,9 +2,31 @@
   (:require [math.geom :as geom]
             [utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
-            [core.component :as component :refer [defcomponent]]
-            [core.world.grid :refer [rectangle->cells circle->cells]]
-            [core.world.cell :as cell :refer [cells->entities]]))
+            [core.component :as component :refer [defcomponent]]))
+
+(defprotocol Grid
+  (cached-adjacent-cells [_ cell])
+
+  (rectangle->cells [_ rectangle])
+  (circle->cells    [_ circle])
+  (circle->entities [_ circle])
+  (point->entities [_ position])
+
+  (add-entity!              [_ entity])
+  (remove-entity!           [_ entity])
+  (entity-position-changed! [_ entity]))
+
+(defprotocol Cell
+  (blocked? [_ z-order])
+  (blocks-vision? [_])
+  (occupied-by-other? [_ entity]
+                      "returns true if there is some occupying body with center-tile = this cell
+                      or a multiple-cell-size body which touches this cell.")
+  (nearest-entity          [_ faction])
+  (nearest-entity-distance [_ faction]))
+
+(defn cells->entities [cells*]
+  (into #{} (mapcat :entities) cells*))
 
 (defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]
@@ -105,7 +127,7 @@
       (remove-from-occupied-cells! entity)
       (set-occupied-cells! grid entity))))
 
-(defrecord Cell [position
+(defrecord RCell [position
                  middle ; only used @ potential-field-follow-to-enemy -> can remove it.
                  adjacent-cells
                  movement
@@ -113,7 +135,7 @@
                  occupied
                  good
                  evil]
-  core.world.cell/Cell
+  Cell
   (blocked? [_ z-order]
     (case movement
       :none true ; wall
@@ -136,7 +158,7 @@
 
 (defn- create-cell [position movement]
   {:pre [(#{:none :air :all} movement)]}
-  (map->Cell
+  (map->RCell
    {:position position
     :middle (tile->middle position)
     :movement movement

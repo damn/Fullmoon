@@ -6,14 +6,14 @@
             [core.entity.player :as player]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.screens.stage :as stage]
-            [core.world.grid :refer [point->entities]]))
+            [core.grid :as grid]))
 
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (player/entity* context)
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
-                          (point->entities (world-grid context)
-                                           (world-mouse-position context))))]
+                          (grid/point->entities (world-grid context)
+                                                (world-mouse-position context))))]
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse

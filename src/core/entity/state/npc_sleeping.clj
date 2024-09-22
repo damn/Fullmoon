@@ -4,7 +4,7 @@
             [core.entity :as entity]
             [core.g :as g]
             [core.state :as state]
-            [core.world.cell :as cell]))
+            [core.grid :as grid]))
 
 (defcomponent :npc-sleeping
   {:let {:keys [eid]}}
@@ -18,7 +18,7 @@
   (entity/tick [_ eid context]
     (let [entity* @eid
           cell ((world-grid context) (entity/tile entity*))]
-      (when-let [distance (cell/nearest-entity-distance @cell (entity/enemy-faction entity*))]
+      (when-let [distance (grid/nearest-entity-distance @cell (entity/enemy-faction entity*))]
         (when (<= distance (entity/stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 

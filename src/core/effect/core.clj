@@ -5,10 +5,10 @@
             [core.mouseover-entity :as mouseover]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.world :refer [world-grid]]
-            [core.world.cell :as cell]))
+            [core.grid :as grid]))
 
 (defn- nearest-enemy [ctx entity*]
-  (cell/nearest-entity @((world-grid ctx) (entity/tile entity*))
+  (grid/nearest-entity @((world-grid ctx) (entity/tile entity*))
                        (entity/enemy-faction entity*)))
 
 (defn ->npc-effect-ctx [ctx entity*]

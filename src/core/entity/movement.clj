@@ -3,8 +3,7 @@
             [math.vector :as v]
             [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.world.cell :as cell]
-            [core.world.grid :as world-grid]
+            [core.grid :as grid]
             [core.time :as time]
             [core.world :refer [world-grid]]
             [core.tx :as tx]))
@@ -19,10 +18,10 @@
 
 (defn- valid-position? [grid {:keys [entity/id z-order collides?] :as body}]
   {:pre [collides?]}
-  (let [cells* (into [] (map deref) (world-grid/rectangle->cells grid body))]
-    (and (not-any? #(cell/blocked? % z-order) cells*)
+  (let [cells* (into [] (map deref) (grid/rectangle->cells grid body))]
+    (and (not-any? #(grid/blocked? % z-order) cells*)
          (->> cells*
-              cell/cells->entities
+              grid/cells->entities
               (not-any? (fn [other-entity]
                           (let [other-entity* @other-entity]
                             (and (not= (:entity/id other-entity*) id)
