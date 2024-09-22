@@ -6,7 +6,7 @@
             [core.line-of-sight :refer [line-of-sight?]]
             [core.g :as g]
             [core.entity.state :as state]
-            [core.time :as time]
+            [core.ctx.time :as time]
             [core.tx :as tx]))
 
 ; SCHEMA effect-ctx

@@ -2,7 +2,7 @@
   (:require [gdx.scene2d.ui :as ui]
             [gdx.scene2d.group :as group]
             [core.app :as app]
-            [core.mouseover-entity :as mouseover]
+            [core.ctx.mouseover-entity :as mouseover]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
             [core.world :refer [world-grid]]
             [core.screens.stage :as stage])

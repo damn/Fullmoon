@@ -1,4 +1,4 @@
-(ns core.content-grid
+(ns core.ctx.content-grid
   (:require [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]))
 

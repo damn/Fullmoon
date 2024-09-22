@@ -3,7 +3,7 @@
             utils.ns
             [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent] :as component]
-            [core.screens :as screens]
+            [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
             [core.screen :as screen]
             [core.widgets.background-image :refer [->background-image]])

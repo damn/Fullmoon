@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.g :as g]
-            [core.time :as time]
+            [core.ctx.time :as time]
             [core.tx :as tx]))
 
 (defcomponent :entity/string-effect

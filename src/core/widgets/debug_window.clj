@@ -5,8 +5,8 @@
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]
             [core.screens.stage :as stage]
-            [core.time :as time]
-            [core.mouseover-entity :as mouseover]
+            [core.ctx.time :as time]
+            [core.ctx.mouseover-entity :as mouseover]
             [gdx.scene2d.group :refer [add-actor!]]
             [gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))

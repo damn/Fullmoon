@@ -3,8 +3,8 @@
             [math.vector :as v]
             [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.grid :as grid]
-            [core.time :as time]
+            [core.ctx.grid :as grid]
+            [core.ctx.time :as time]
             [core.world :refer [world-grid]]
             [core.tx :as tx]))
 

@@ -1,7 +1,7 @@
 (ns core.widgets.entity-info-window
   (:require [core.info :as info]
             [core.graphics.views :refer [gui-viewport-width]]
-            [core.mouseover-entity :as mouseover]
+            [core.ctx.mouseover-entity :as mouseover]
             [gdx.scene2d.ui :as ui]
             [gdx.scene2d.group :refer [add-actor!]]))
 

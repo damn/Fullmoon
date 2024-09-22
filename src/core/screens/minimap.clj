@@ -1,11 +1,11 @@
 (ns core.screens.minimap
   (:require [gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
-            [core.explored-tile-corners :refer [explored?]]
-            [core.screens :as screens]
-            [core.graphics :as graphics]
+            [core.ctx.explored-tile-corners :refer [explored?]]
+            [core.ctx.screens :as screens]
+            [core.ctx.graphics :as graphics]
             [core.graphics.views :refer [world-camera]]
-            [core.tiled-map-renderer :as tiled-map-renderer]
+            [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.g :as g])
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.graphics.Color))

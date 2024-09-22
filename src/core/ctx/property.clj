@@ -1,4 +1,4 @@
-(ns core.property
+(ns core.ctx.property
   (:require [clojure.edn :as edn]
             clojure.pprint
             [malli.core :as m]

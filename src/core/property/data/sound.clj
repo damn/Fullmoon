@@ -1,8 +1,8 @@
 (ns core.property.data.sound
   (:require [clojure.string :as str]
-            [core.assets :as assets]
+            [core.ctx.assets :as assets]
             [core.component :refer [defcomponent]]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.group :as group]

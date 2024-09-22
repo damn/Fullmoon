@@ -3,7 +3,7 @@
             [malli.core :as m]
             [utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [gdx.scene2d.actor :as actor]
             [gdx.scene2d.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))

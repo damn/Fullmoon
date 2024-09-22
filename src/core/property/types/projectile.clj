@@ -3,8 +3,8 @@
             [core.component :refer [defcomponent] :as component]
             [core.entity :as entity]
             [core.effect :as effect]
-            [core.property :as property]
-            [core.raycaster :refer [path-blocked?]]
+            [core.ctx.property :as property]
+            [core.ctx.raycaster :refer [path-blocked?]]
             [core.tx :as tx]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?

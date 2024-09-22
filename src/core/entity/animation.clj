@@ -1,10 +1,10 @@
 (ns core.entity.animation
   (:require [gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent]]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.entity :as entity]
             [core.graphics.image :as image]
-            [core.time :as time]))
+            [core.ctx.time :as time]))
 
 (defprotocol Animation
   (tick [_ delta])

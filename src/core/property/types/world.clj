@@ -1,7 +1,7 @@
 (ns core.property.types.world
   (:require [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent]]
-            [core.property :as property]
+            [core.ctx.property :as property]
             mapgen.gen))
 
 (defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})

@@ -2,9 +2,9 @@
   (:require [utils.core :refer [tile->middle]]
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
-            [core.content-grid :as content-grid]
+            [core.ctx.content-grid :as content-grid]
             [core.entity.player :as player]
-            [core.grid :as grid]
+            [core.ctx.grid :as grid]
             [core.tx :as tx])
   (:import com.badlogic.gdx.utils.Disposable))
 

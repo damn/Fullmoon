@@ -3,7 +3,7 @@
             [core.entity :as entity]
             [core.entity.state :as state]
             [core.g :as g]
-            [core.time :as time]  ))
+            [core.ctx.time :as time]  ))
 
 (defcomponent :stunned
   {:let {:keys [eid counter]}}

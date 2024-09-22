@@ -1,4 +1,4 @@
-(ns core.mouseover-entity
+(ns core.ctx.mouseover-entity
   (:require [utils.core :refer [sort-by-order]]
             [core.world :refer [world-grid]]
             [core.graphics.views :refer [world-mouse-position]]
@@ -6,7 +6,7 @@
             [core.entity.player :as player]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.screens.stage :as stage]
-            [core.grid :as grid]))
+            [core.ctx.grid :as grid]))
 
 (defn- calculate-mouseover-entity [context]
   (let [player-entity* (player/entity* context)

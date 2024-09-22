@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.effect :as effect]
             [core.tx :as tx]))
 

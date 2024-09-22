@@ -1,7 +1,7 @@
 (ns core.property.types.audiovisual
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.tx :as tx]))
 
 (property/def-type :properties/audiovisuals

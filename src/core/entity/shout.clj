@@ -2,9 +2,9 @@
   (:require [core.component :refer [defcomponent]]
             [core.world :refer [world-grid]]
             [core.entity :as entity]
-            [core.time :as time]
+            [core.ctx.time :as time]
             [core.tx :as tx]
-            [core.grid :as grid]))
+            [core.ctx.grid :as grid]))
 
 (def ^:private shout-radius 4)
 

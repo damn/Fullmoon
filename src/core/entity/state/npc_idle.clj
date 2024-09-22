@@ -4,7 +4,7 @@
             [core.entity :as entity]
             [core.effect :as effect]
             [core.effect.core :refer [->npc-effect-ctx]]
-            [core.potential-fields :as potential-fields]
+            [core.ctx.potential-fields :as potential-fields]
             [core.entity.state.active-skill :refer [skill-usable-state]]))
 
 ; TODO
@@ -33,7 +33,7 @@
 (comment
  (let [uid 76
        ctx @app/state
-       entity* @(core.ecs/get-entity ctx uid)
+       entity* @(core.ctx.ecs/get-entity ctx uid)
        effect-ctx (->npc-effect-ctx ctx entity*)]
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )

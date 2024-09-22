@@ -1,7 +1,7 @@
 (ns core.property.types.skill
   (:require [utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]
-            [core.property :as property]))
+            [core.ctx.property :as property]))
 
 (defcomponent :skill/action-time {:data :pos}
   (component/info-text [[_ v] _ctx]

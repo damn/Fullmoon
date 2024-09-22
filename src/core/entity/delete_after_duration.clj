@@ -2,7 +2,7 @@
   (:require [utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.time :as time]))
+            [core.ctx.time :as time]))
 
 (defcomponent :entity/delete-after-duration
   {:let counter}

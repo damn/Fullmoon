@@ -4,9 +4,9 @@
             [clojure.java.io :as io]
             [utils.core :refer [safe-merge]]
             [core.component :as component]
-            [core.graphics :as graphics]
-            [core.screens :as screens]
-            [core.property :as property])
+            [core.ctx.graphics :as graphics]
+            [core.ctx.screens :as screens]
+            [core.ctx.property :as property])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)

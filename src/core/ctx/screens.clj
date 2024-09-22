@@ -1,4 +1,4 @@
-(ns core.screens
+(ns core.ctx.screens
   (:require [core.component :refer [defcomponent] :as component]
             [core.screen :as screen]))
 

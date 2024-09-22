@@ -2,10 +2,10 @@
   (:require [math.vector :as v]
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
-            [core.mouseover-entity :as mouseover]
+            [core.ctx.mouseover-entity :as mouseover]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.world :refer [world-grid]]
-            [core.grid :as grid]))
+            [core.ctx.grid :as grid]))
 
 (defn- nearest-enemy [ctx entity*]
   (grid/nearest-entity @((world-grid ctx) (entity/tile entity*))

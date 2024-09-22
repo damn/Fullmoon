@@ -3,9 +3,9 @@
             [core.component :refer [defcomponent] :as component]
             [core.graphics.cursors :as cursors]
             [core.screen :as screen]
-            [core.screens :as screens]
+            [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
-            [core.property :as property]
+            [core.ctx.property :as property]
             core.world
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]

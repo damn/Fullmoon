@@ -1,7 +1,7 @@
 (ns core.property.data.relationships
   (:require [core.component :refer [defcomponent]]
             [core.info :as info]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [core.screens.property-editor :refer [->overview-table]]
             [gdx.scene2d.actor :as actor]

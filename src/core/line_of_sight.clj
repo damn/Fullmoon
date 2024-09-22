@@ -1,7 +1,7 @@
 (ns core.line-of-sight
   (:require [gdx.graphics.camera :as camera]
             [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]
-            [core.raycaster :refer [ray-blocked?]]))
+            [core.ctx.raycaster :refer [ray-blocked?]]))
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?

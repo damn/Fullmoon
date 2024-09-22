@@ -1,6 +1,6 @@
 (ns core.property.types.app
   (:require [core.component :refer [defcomponent]]
-            [core.property :as property]))
+            [core.ctx.property :as property]))
 
 (property/def-attributes
   :fps          :nat-int

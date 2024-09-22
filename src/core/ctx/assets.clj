@@ -1,4 +1,4 @@
-(ns core.assets
+(ns core.ctx.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component]
             [core.tx :as tx])

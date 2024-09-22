@@ -1,6 +1,6 @@
 (ns core.tx
   (:require [core.component  :as component :refer [defsystem defcomponent]]
-            [core.time :as time]))
+            [core.ctx.time :as time]))
 
 ; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
 ; when returning a 'map?'

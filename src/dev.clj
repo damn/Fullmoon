@@ -1,7 +1,7 @@
 (ns dev
   (:require [core.app :as app]
             [core.entity.player :as player]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))
 

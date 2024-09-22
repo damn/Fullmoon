@@ -3,7 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.world :refer [world-grid]]
             [core.entity :as entity]
-            [core.grid :as grid]))
+            [core.ctx.grid :as grid]))
 
 (defcomponent :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}

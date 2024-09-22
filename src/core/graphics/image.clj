@@ -1,6 +1,6 @@
 (ns core.graphics.image
   (:require [gdx.graphics.g2d :as g2d]
-            [core.assets :as assets]
+            [core.ctx.assets :as assets]
             [core.g :as g])
   (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch)))

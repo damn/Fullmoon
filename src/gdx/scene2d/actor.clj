@@ -18,13 +18,13 @@
 (defn name [^Actor actor]
   (.getName actor))
 
-(defn visible? [^Actor actor]
+(defn visible? [^Actor actor] ; used
   (.isVisible actor))
 
 (defn set-visible! [^Actor actor bool]
   (.setVisible actor (boolean bool)))
 
-(defn toggle-visible! [actor]
+(defn toggle-visible! [actor] ; used
   (set-visible! actor (not (visible? actor))))
 
 (defn set-position! [^Actor actor x y]
@@ -60,12 +60,12 @@
   [^Actor actor]
   (.remove actor))
 
-(defn parent
+(defn parent ; used
   "Returns the parent actor, or null if not in a group."
   [^Actor actor]
   (.getParent actor))
 
-(defn add-tooltip!
+(defn add-tooltip! ; used
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
   [^Actor actor tooltip-text]
   (let [text? (string? tooltip-text)

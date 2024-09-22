@@ -5,8 +5,8 @@
             [core.world :refer [world-grid]]
             [core.g :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
-            [core.grid :refer [circle->cells]]
-            [core.potential-fields :as potential-field]))
+            [core.ctx.grid :refer [circle->cells]]
+            [core.ctx.potential-fields :as potential-field]))
 
 (defn- geom-test [g ctx]
   (let [position (world-mouse-position ctx)

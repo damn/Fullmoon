@@ -4,7 +4,7 @@
             [core.entity :as entity]
             [core.g :as g]
             [core.entity.state :as state]
-            [core.grid :as grid]))
+            [core.ctx.grid :as grid]))
 
 (defcomponent :npc-sleeping
   {:let {:keys [eid]}}

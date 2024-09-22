@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.inventory :as inventory]
             [core.modifiers :as modifiers]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.tx :as tx]))
 
 (defcomponent :item/modifiers

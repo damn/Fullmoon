@@ -1,6 +1,6 @@
-(ns core.config
+(ns core.ctx.config
   (:require [core.component :refer [defcomponent] :as component]
-            [core.property :as property]))
+            [core.ctx.property :as property]))
 
 (property/def-attributes
   :tag [:enum [:dev :prod]]

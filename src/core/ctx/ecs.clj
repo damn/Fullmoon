@@ -1,4 +1,4 @@
-(ns core.ecs
+(ns core.ctx.ecs
   (:require [clj-commons.pretty.repl :as p]
             [utils.core :refer [safe-merge sort-by-order]]
             [core.component :refer [defcomponent] :as component]

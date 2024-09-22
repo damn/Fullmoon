@@ -1,6 +1,6 @@
-(ns core.graphics
+(ns core.ctx.graphics
   (:require [core.component :refer [defcomponent] :as component]
-            [core.property :as property]
+            [core.ctx.property :as property]
             [core.g :as g]
             (core.graphics cursors
                            shape-drawer

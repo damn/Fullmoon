@@ -3,7 +3,7 @@
   (:require [gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.views :refer [gui-mouse-position]]
-            [core.screens :as screens]
+            [core.ctx.screens :as screens]
             [core.screen :as screen])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.Stage))

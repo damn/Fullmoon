@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.state :as state]
-            [core.time :as time]  ))
+            [core.ctx.time :as time]))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
 ; pathfinding/usable skills every frame

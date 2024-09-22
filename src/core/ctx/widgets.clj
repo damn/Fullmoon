@@ -1,4 +1,4 @@
-(ns core.widgets
+(ns core.ctx.widgets
   (:require [utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
             [gdx.scene2d.actor :as actor]

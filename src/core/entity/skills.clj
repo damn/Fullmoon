@@ -2,7 +2,7 @@
   (:require #_[clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.time :as time]
+            [core.ctx.time :as time]
             [core.tx :as tx]))
 
 (defcomponent :entity/skills
