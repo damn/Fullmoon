@@ -82,15 +82,13 @@
                      :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
-(def ^:private content-grid :context/content-grid)
 
 (defn active-entities [ctx]
-  (content-grid/active-entities (content-grid ctx)
-                                (player/entity* ctx)))
+  (content-grid/active-entities (:context/content-grid ctx) (player/entity* ctx)))
 
 (defcomponent :tx/add-to-world
   (tx/do! [[_ entity] ctx]
-    (content-grid/update-entity! (content-grid ctx) entity)
+    (content-grid/update-entity! ctx entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (grid/add-entity! ctx entity)
@@ -98,13 +96,13 @@
 
 (defcomponent :tx/remove-from-world
   (tx/do! [[_ entity] ctx]
-    (content-grid/remove-entity! (content-grid ctx) entity)
+    (content-grid/remove-entity! ctx entity)
     (grid/remove-entity! ctx entity)
     ctx))
 
 (defcomponent :tx/position-changed
   (tx/do! [[_ entity] ctx]
-    (content-grid/update-entity! (content-grid ctx) entity)
+    (content-grid/update-entity! ctx entity)
     (grid/entity-position-changed! ctx entity)
     ctx))
 
