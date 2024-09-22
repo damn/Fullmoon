@@ -16,8 +16,8 @@
             [core.ctx.time :as time]
             [core.ctx.potential-fields :as potential-fields]
             [core.widgets.error-modal :refer [error-window!]]
-            [core.render :as world-render]
-            [core.debug-render :as debug-render]
+            [core.world.render.tiled-map :as world-render]
+            [core.world.render.debug :as debug-render]
             [core.world.ctx :refer [active-entities]])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 

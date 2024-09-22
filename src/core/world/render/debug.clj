@@ -1,4 +1,4 @@
-(ns core.debug-render
+(ns core.world.render.debug
   (:require [utils.core :refer [->tile]]
             [gdx.graphics.camera :as camera]
             [math.geom :as geom]

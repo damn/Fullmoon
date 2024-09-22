@@ -1,4 +1,4 @@
-(ns core.render
+(ns core.world.render.tiled-map
   (:require [math.raycaster :as raycaster]
             [gdx.graphics :as graphics]
             [utils.core :refer [->tile]]
