@@ -6,11 +6,9 @@
 
 (defprotocol Grid
   (cached-adjacent-cells [grid cell])
-
   (rectangle->cells [grid rectangle])
   (circle->cells    [grid circle])
-  (circle->entities [grid circle])
-  (point->entities [grid position]))
+  (circle->entities [grid circle]))
 
 (defprotocol Cell
   (blocked? [cell* z-order])
@@ -99,14 +97,14 @@
     (->> (circle->cells grid circle)
          (map deref)
          cells->entities
-         (filter #(geom/collides? circle @%))))
-
-  (point->entities [grid position]
-    (when-let [cell (get grid (->tile position))]
-      (filter #(geom/point-in-rect? position @%)
-              (:entities @cell)))))
+         (filter #(geom/collides? circle @%)))))
 
 (def ^:private this :context/grid)
+
+(defn point->entities [ctx position]
+  (when-let [cell (get (this ctx) (->tile position))]
+    (filter #(geom/point-in-rect? position @%)
+            (:entities @cell))))
 
 (defn add-entity! [ctx entity]
   (let [grid (this ctx)]

@@ -2,7 +2,6 @@
   (:require [utils.core :refer [->tile]]
             [gdx.graphics.camera :as camera]
             [math.geom :as geom]
-            [core.world :refer [world-grid]]
             [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
             [core.ctx.grid :refer [circle->cells]]
@@ -10,7 +9,7 @@
 
 (defn- geom-test [g ctx]
   (let [position (world-mouse-position ctx)
-        grid (world-grid ctx)
+        grid (:context/grid ctx)
         radius 0.8
         circle {:position position :radius radius}]
     (g/draw-circle g position radius [1 0 0 0.5])
@@ -26,7 +25,7 @@
 (def ^:private ^:dbg-flag cell-occupied? false)
 
 (defn- tile-debug [g ctx]
-  (let [grid (world-grid ctx)
+  (let [grid (:context/grid ctx)
         world-camera (world-camera ctx)
         [left-x right-x bottom-y top-y] (camera/frustum world-camera)]
 
@@ -59,7 +58,7 @@
 (defn- highlight-mouseover-tile [g ctx]
   (when highlight-blocked-cell?
     (let [[x y] (->tile (world-mouse-position ctx))
-          cell (get (world-grid ctx) [x y])]
+          cell (get (:context/grid ctx) [x y])]
       (when (and cell (#{:air :none} (:movement @cell)))
         (g/draw-rectangle g x y 1 1
                           (case (:movement @cell)

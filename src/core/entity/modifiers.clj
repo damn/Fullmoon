@@ -85,7 +85,7 @@
   (component/info-text [_ _ctx]
     (let [modifiers (sum-operation-values modifiers)]
       (when (seq modifiers)
-        (modifiers/info-text modifiers)))))
+        (info-text modifiers)))))
 
 (extend-type core.entity.Entity
   core.entity/Modifiers

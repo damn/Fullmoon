@@ -1,6 +1,5 @@
 (ns core.entity.shout
   (:require [core.component :refer [defcomponent]]
-            [core.world :refer [world-grid]]
             [core.entity :as entity]
             [core.ctx.time :as time]
             [core.tx :as tx]
@@ -11,7 +10,7 @@
 (defn- friendlies-in-radius [ctx position faction]
   (->> {:position position
         :radius shout-radius}
-       (grid/circle->entities (world-grid ctx))
+       (grid/circle->entities (:context/grid ctx))
        (map deref)
        (filter #(= (:entity/faction %) faction))
        (map :entity/id)))

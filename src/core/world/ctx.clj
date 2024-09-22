@@ -1,10 +1,10 @@
-(ns core.world
+(ns core.world.ctx
   (:require [utils.core :refer [tile->middle]]
             [gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.content-grid :as content-grid]
-            [core.entity.player :as player]
             [core.ctx.grid :as grid]
+            [core.entity.player :as player]
             [core.tx :as tx])
   (:import com.badlogic.gdx.utils.Disposable))
 
@@ -83,7 +83,6 @@
                      :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
-
 (defn active-entities [ctx]
   (content-grid/active-entities ctx (player/entity* ctx)))
 
@@ -106,5 +105,3 @@
     (content-grid/update-entity! ctx entity)
     (grid/entity-position-changed! ctx entity)
     ctx))
-
-(def world-grid :context/grid)

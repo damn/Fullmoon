@@ -4,7 +4,6 @@
             [core.app :as app]
             [core.ctx.mouseover-entity :as mouseover]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
-            [core.world :refer [world-grid]]
             [core.screens.stage :as stage])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
@@ -116,7 +115,7 @@
         object (case obj
                  :ctx ctx
                  :entity (mouseover/entity* ctx)
-                 :tile @(get (world-grid ctx) (mapv int (world-mouse-position ctx))))]
+                 :tile @(get (:context/grid ctx) (mapv int (world-mouse-position ctx))))]
     (stage/add-actor! ctx
                       (ui/->window {:title "Tree View"
                                     :close-button? true

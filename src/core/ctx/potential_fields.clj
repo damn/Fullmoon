@@ -11,8 +11,7 @@
             [math.vector :as v]
             [utils.core :refer :all]
             [core.entity :as entity]
-            [core.ctx.grid :as grid]
-            [core.world :refer [world-grid]]))
+            [core.ctx.grid :as grid]))
 
 (def ^:private cache (atom nil))
 
@@ -251,13 +250,12 @@
        (when-not (inside-cell? grid @entity target-cell)
          (v/direction position (:middle @target-cell)))))))
 
-(defn update! [ctx entities]
-  (let [world-grid (world-grid ctx)]
-    (doseq [[faction max-iterations] factions-iterations]
-      (update-faction-potential-field world-grid faction entities max-iterations))))
+(defn update! [{:keys [context/grid]} entities]
+  (doseq [[faction max-iterations] factions-iterations]
+    (update-faction-potential-field grid faction entities max-iterations)))
 
-(defn follow-to-enemy [ctx entity]
-  (potential-field-follow-to-enemy (world-grid ctx) entity))
+(defn follow-to-enemy [{:keys [context/grid]} entity]
+  (potential-field-follow-to-enemy grid entity))
 
 ;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
 
@@ -275,7 +273,7 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get (world-grid context) (entity/tile @body))
+    (let [occupied-cell (get (:context/grid context) (entity/tile @body))
           own-dist (distance-to occupied-cell)
           adj-cells (grid/cached-adjacent-cells grid occupied-cell)
           potential-cells (filter distance-to

@@ -5,7 +5,7 @@
             [core.entity.player :as player]
             [core.line-of-sight :refer [line-of-sight?]]
             [core.tx :as tx]
-            [core.world :refer [active-entities]]))
+            [core.world.ctx :refer [active-entities]]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
 
