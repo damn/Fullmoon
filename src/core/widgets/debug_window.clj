@@ -1,5 +1,5 @@
 (ns core.widgets.debug-window
-  (:require [core.gdx.graphics.camera :as camera]
+  (:require [core.graphics.camera :as camera]
             utils.core
             [core.entity.player :as player]
             [core.graphics :as g]

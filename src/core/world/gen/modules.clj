@@ -1,5 +1,5 @@
 (ns core.world.gen.modules
-  (:require [core.gdx.maps.tiled :as tiled]
+  (:require [core.tiled :as tiled]
             [core.world.gen.transitions :as transitions]
             [core.world.gen.tiled-utils :refer [grid->tiled-map]]))
 

@@ -1,6 +1,5 @@
 (ns core.graphics.shape-drawer
-  (:require [core.gdx.graphics :as graphics]
-            [core.graphics :as g])
+  (:require [core.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)
            com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -22,7 +21,7 @@
 (defn- ->color ^Color [color]
   (if (= Color (class color))
     color
-    (apply graphics/->color color)))
+    (apply g/->color color)))
 
 (defn- set-color [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (->color color)))

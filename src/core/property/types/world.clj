@@ -1,5 +1,5 @@
 (ns core.property.types.world
-  (:require [core.gdx.maps.tiled :as tiled]
+  (:require [core.tiled :as tiled]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
             core.world.gen.gen))

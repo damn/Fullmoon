@@ -2,7 +2,7 @@
   (:require [core.utils.core :refer [assoc-ks]]
             [core.utils.random :as random]
             [data.grid2d :as grid]
-            [core.gdx.maps.tiled :as tiled]
+            [core.tiled :as tiled]
             [core.ctx.assets :as assets]
             [core.ctx.property :as property]
             [core.world.gen.utils :refer [printgrid scale-grid]]
@@ -156,7 +156,7 @@
      :start-position (get-free-position-in-area-level 0)
      :area-level-grid scaled-area-level-grid}))
 
-(require '[core.gdx.graphics.g2d :refer [->texture-region]])
+(require '[core.graphics.image :refer [->texture-region]])
 
 (defn uf-transition [position grid]
   (transitions/index-value position (= :transition (get grid position))))

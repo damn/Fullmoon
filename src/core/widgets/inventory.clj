@@ -2,7 +2,6 @@
   (:require [data.grid2d :as grid]
             [core.gdx.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.gdx.scene2d.ui :as ui]
-            [core.gdx.graphics :as graphics]
             [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.image :as image]
@@ -86,7 +85,7 @@
                 (let [drawable (ui/->texture-region-drawable (:texture-region (image/sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
-                   (.tint ^TextureRegionDrawable drawable (graphics/->color 1 1 1 0.4))])))
+                   (.tint ^TextureRegionDrawable drawable (g/->color 1 1 1 0.4))])))
          (into {}))))
 
 ; TODO move together with empty-inventory definition ?

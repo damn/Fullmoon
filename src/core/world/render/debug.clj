@@ -1,6 +1,6 @@
 (ns core.world.render.debug
   (:require [core.utils.core :refer [->tile]]
-            [core.gdx.graphics.camera :as camera]
+            [core.graphics.camera :as camera]
             [core.math.geom :as geom]
             [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]

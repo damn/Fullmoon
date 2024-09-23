@@ -1,9 +1,15 @@
 (ns core.graphics.image
-  (:require [core.gdx.graphics.g2d :as g2d]
-            [core.ctx.assets :as assets]
+  (:require [core.ctx.assets :as assets]
             [core.graphics :as g])
-  (:import com.badlogic.gdx.graphics.Color
+  (:import (com.badlogic.gdx.graphics Color Texture)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch)))
+
+(defn ->texture-region
+  ([^Texture texture]
+   (TextureRegion. texture))
+
+  ([^TextureRegion texture-region [x y w h]]
+   (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
 
 (defrecord Image [texture-region
                   pixel-dimensions
@@ -87,10 +93,10 @@
     (g/draw-rotated-centered-image this image 0 position)))
 
 (defn create [{g :context/graphics :as ctx} file]
-  (->image g (g2d/->texture-region (assets/texture ctx file))))
+  (->image g (->texture-region (assets/texture ctx file))))
 
 (defn sub-image [{g :context/graphics} {:keys [texture-region]} bounds]
-  (->image g (g2d/->texture-region texture-region bounds)))
+  (->image g (->texture-region texture-region bounds)))
 
 (defn spritesheet [ctx file tilew tileh]
   {:image (create ctx file)

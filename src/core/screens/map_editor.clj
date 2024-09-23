@@ -1,7 +1,7 @@
 (ns core.screens.map-editor
   (:require [clojure.string :as str]
-            [core.gdx.graphics.camera :as camera]
-            [core.gdx.maps.tiled :as tiled]
+            [core.graphics.camera :as camera]
+            [core.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]

@@ -1,4 +1,4 @@
-(ns core.gdx.graphics.camera
+(ns core.graphics.camera
   (:import (com.badlogic.gdx.graphics Camera OrthographicCamera)
            com.badlogic.gdx.math.Vector3))
 
