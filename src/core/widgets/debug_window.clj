@@ -1,6 +1,6 @@
 (ns core.widgets.debug-window
   (:require [core.graphics.camera :as camera]
-            utils.core
+            [core.utils.core :as utils]
             [core.entity.player :as player]
             [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]
@@ -29,7 +29,7 @@
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position ctx) "\n"
      "paused? " (:context/paused? ctx) "\n"
-     "elapsed-time " (utils.core/readable-number (time/elapsed-time ctx)) " seconds \n"
+     "elapsed-time " (utils/readable-number (time/elapsed-time ctx)) " seconds \n"
      (skill-info (player/entity* ctx))
      (when-let [entity* (mouseover/entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
