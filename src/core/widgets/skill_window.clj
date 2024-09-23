@@ -2,7 +2,7 @@
   (:require [core.component :as component]
             [core.ctx.property :as property]
             [core.entity.player :as player]
-            [core.tx :as tx]
+            [core.effect :as effect]
             [core.ui.actor :refer [add-tooltip!]]
             [core.ctx.ui :as ui]))
 
@@ -22,7 +22,7 @@
                                                              (:entity/image (property/build context id)) ; TODO here anyway taken
                                                              ; => should probably build this window @ game start
                                                              (fn [ctx]
-                                                               (tx/do-all ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
+                                                               (effect/do ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
                          (do
                           (add-tooltip! button #(component/->text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]

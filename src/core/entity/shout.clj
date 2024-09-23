@@ -1,5 +1,5 @@
 (ns core.entity.shout
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.ctx.time :as time]
             [core.ctx.grid :as grid]))

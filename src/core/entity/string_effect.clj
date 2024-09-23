@@ -1,5 +1,5 @@
 (ns core.entity.string-effect
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.ctx.time :as time]))

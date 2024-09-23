@@ -10,7 +10,7 @@
             [core.entity.inventory :as inventory]
             [core.entity.player :as player]
             [core.screens.stage :as stage]
-            [core.tx :as tx])
+            [core.effect :as effect])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
@@ -65,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! state #(tx/do-all % (player/clicked-inventory % cell))))))
+                             (swap! state #(effect/do % (player/clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

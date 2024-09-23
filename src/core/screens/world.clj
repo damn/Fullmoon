@@ -12,7 +12,7 @@
             [core.screen :as screen]
             [core.screens.stage :as stage]
             [core.ctx.mouseover-entity :refer [update-mouseover-entity]]
-            [core.tx :as tx]
+            [core.effect :as effect]
             [core.ctx.time :as time]
             [core.ctx.potential-fields :as potential-fields]
             [core.widgets.error-modal :refer [error-window!]]
@@ -46,7 +46,7 @@
 (defmulti ^:private game-loop :context/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
-  (tx/do-all ctx [player/update-state
+  (effect/do ctx [player/update-state
                   update-mouseover-entity ; this do always so can get debug info even when game not running
                   update-game-paused
                   #(if (:context/paused? %)
@@ -60,7 +60,7 @@
         txs [:foo]#_(ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx
-        (tx/do-all txs)
+        (effect/do txs)
         #_(update :world.time/logic-frame inc))))  ; this is probably broken now (also frame->txs contains already time, so no need to inc ?)
 
 (def ^:private replay-speed 2)

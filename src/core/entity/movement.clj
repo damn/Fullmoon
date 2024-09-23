@@ -1,7 +1,7 @@
 (ns core.entity.movement
   (:require [malli.core :as m]
             [core.math.vector :as v]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.ctx.grid :as grid]
             [core.ctx.time :as time]))

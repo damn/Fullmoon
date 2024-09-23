@@ -5,7 +5,7 @@
             [core.graphics :as g]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.tx :as tx])
+            [core.effect :as effect])
   (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private this :context/ecs)
@@ -85,7 +85,7 @@
              ; should be moved together?
              (if-let [v (k @entity)]
                (let [component [k v]]
-                 (tx/do-all ctx (entity/tick component entity ctx)))
+                 (effect/do ctx (entity/tick component entity ctx)))
                ctx))
            ctx
            (keys @entity))

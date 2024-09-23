@@ -5,7 +5,7 @@
             [core.graphics :as g]
             [core.entity.state :as state]
             [core.ctx.time :as time]
-            [core.tx :as tx]))
+            [core.effect :as effect]))
 
 ; SCHEMA effect-ctx
 ; * source = always available
@@ -21,7 +21,7 @@
   (component/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (tx/do-all (filter #(component/applicable? % effect-ctx) effects))
+        (effect/do (filter #(component/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?

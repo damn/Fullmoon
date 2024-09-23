@@ -1,7 +1,7 @@
 (ns core.entity.inventory
   (:require [data.grid2d :as grid2d]
             [core.utils.core :refer [find-first]]
-            [core.component :refer [defcomponent]]
+            [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]))
 
 (def empty-inventory

@@ -5,7 +5,7 @@
             [core.ctx.content-grid :as content-grid]
             [core.ctx.grid :as grid]
             [core.entity.player :as player]
-            [core.tx :as tx])
+            [core.effect :as effect])
   (:import com.badlogic.gdx.utils.Disposable))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
@@ -35,7 +35,7 @@
      :components npc-components}))
 
 (defn- spawn-creatures! [ctx tiled-level]
-  (tx/do-all ctx
+  (effect/do ctx
              (for [creature (cons (world->player-creature ctx tiled-level)
                                   (when spawn-enemies?
                                     (world->enemy-creatures ctx)))]

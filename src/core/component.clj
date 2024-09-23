@@ -188,7 +188,7 @@ Example:
 
 ; 3. return nil in case of doing nothing -> will just continue with existing ctx.
 
-; do NOT do a tx/do-all inside a effect/do! because then we have to return a context
+; do NOT do a effect/do inside a effect/do! because then we have to return a context
 ; and that means that transaction will be recorded and done double with all the sub-transactions
 ; in the replay mode
 ; we only want to record actual side effects, not transactions returning other lower level transactions
