@@ -1,7 +1,6 @@
 (ns core.graphics.cursors
   (:require [core.utils.core :as utils :refer [mapvals]]
-            [core.component :refer [defcomponent]]
-            [core.tx :as tx])
+            [core.component :refer [defcomponent]])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Pixmap))
 
@@ -20,6 +19,6 @@
   (.setCursor Gdx/graphics (utils/safe-get (:cursors g) cursor-key)))
 
 (defcomponent :tx/cursor
-  (tx/do! [[_ cursor-key] ctx]
+  (component/do! [[_ cursor-key] ctx]
     (set-cursor! ctx cursor-key)
     ctx))

@@ -3,8 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.stats :refer [defmodifier]]
-            [core.effect :as effect]
-            [core.tx :as tx]))
+            [core.effect :as effect]))
 
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
@@ -29,7 +28,7 @@
   (effect/applicable? [_ effect-ctx]
     (effect/applicable? (damage-effect effect-ctx) effect-ctx))
 
-  (tx/do! [_ ctx]
+  (component/do! [_ ctx]
     [(damage-effect ctx)]))
 
 (defn- effective-armor-save [source* target*]
@@ -91,7 +90,7 @@
     (and target
          (entity/stat @target :stats/hp)))
 
-  (tx/do! [_ {:keys [effect/source effect/target]}]
+  (component/do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]

@@ -2,7 +2,7 @@
   (:require [core.component :refer [defsystem]]))
 
 (defsystem applicable?
-  "An effect will only be done (with tx/do!) if this function returns truthy.
+  "An effect will only be done (with component/do!) if this function returns truthy.
 Required system for every effect, no default."
   [_ ctx])
 

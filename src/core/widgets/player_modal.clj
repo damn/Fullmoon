@@ -3,8 +3,7 @@
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.screens.stage :as stage]
             [core.ctx.ui :as ui]
-            [core.ui.actor :refer [remove!]]
-            [core.tx :as tx]))
+            [core.ui.actor :refer [remove!]]))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?
@@ -28,5 +27,5 @@
                                   :pack? true})))
 
 (defcomponent :tx/player-modal
-  (tx/do! [[_ params] ctx]
+  (component/do! [[_ params] ctx]
     (show-player-modal! ctx params)))

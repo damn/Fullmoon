@@ -3,8 +3,7 @@
             [core.utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
             core.entity
-            [core.operation :as operation]
-            [core.tx :as tx])
+            [core.operation :as operation])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defn- txs-update-modifiers [entity modifiers f]
@@ -33,11 +32,11 @@
  )
 
 (defcomponent :tx/apply-modifiers
-  (tx/do! [[_ entity modifiers] _ctx]
+  (component/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers conj-value)))
 
 (defcomponent :tx/reverse-modifiers
-  (tx/do! [[_ entity modifiers] _ctx]
+  (component/do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
 ; DRY ->effective-value (summing)

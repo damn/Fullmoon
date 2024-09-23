@@ -3,8 +3,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.effect :as effect]
             [core.entity :as entity]
-            [core.graphics :as g]
-            [core.tx :as tx]))
+            [core.graphics :as g]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:position entity*)
@@ -43,7 +42,7 @@
     (assert target)
     (in-range? @source @target maxrange))
 
-  (tx/do! [_ {:keys [effect/source effect/target]}]
+  (component/do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)

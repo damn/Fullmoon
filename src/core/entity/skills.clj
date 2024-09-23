@@ -2,8 +2,7 @@
   (:require #_[clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.ctx.time :as time]
-            [core.tx :as tx]))
+            [core.ctx.time :as time]))
 
 (defcomponent :entity/skills
   {:data [:one-to-many :properties/skills]}
@@ -29,14 +28,14 @@
     (contains? skills id)))
 
 (defcomponent :tx/add-skill
-  (tx/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
+  (component/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
     (assert (not (entity/has-skill? @entity skill)))
     [[:e/assoc-in entity [:entity/skills id] skill]
      (when (:entity/player? @entity)
        [:tx.action-bar/add skill])]))
 
 (defcomponent :tx/remove-skill
-  (tx/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
+  (component/do! [[_ entity {:keys [property/id] :as skill}] _ctx]
     (assert (entity/has-skill? @entity skill))
     [[:e/dissoc-in entity [:entity/skills id]]
      (when (:entity/player? @entity)

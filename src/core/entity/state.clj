@@ -3,8 +3,7 @@
             [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defsystem defcomponent]]
             [core.entity :as entity]
-            [core.effect :as effect]
-            [core.tx :as tx]))
+            [core.effect :as effect]))
 
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
@@ -93,7 +92,7 @@
     (and target
          (:entity/state @target)))
 
-  (tx/do! [_ {:keys [effect/target]}]
+  (component/do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect.entity/kill
@@ -105,7 +104,7 @@
     (and target
          (:entity/state @target)))
 
-  (tx/do! [_ {:keys [effect/target]}]
+  (component/do! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))
 
 
@@ -154,5 +153,5 @@
            [:e/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defcomponent :tx/event
-  (tx/do! [[_ eid event params] ctx]
+  (component/do! [[_ eid event params] ctx]
     (send-event! ctx eid event params)))

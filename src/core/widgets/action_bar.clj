@@ -4,8 +4,7 @@
             [core.screens.stage :as stage]
             [core.ctx.ui :as ui]
             [core.ui.actor :as actor :refer [remove! add-tooltip!]]
-            [core.ui.group :refer [clear-children! add-actor!]]
-            [core.tx :as tx])
+            [core.ui.group :refer [clear-children! add-actor!]])
   (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 (def ^:private image-scale 2)
@@ -24,7 +23,7 @@
    :button-group (:action-bar (:context/widgets ctx))})
 
 (defcomponent :tx.action-bar/add
-  (tx/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
+  (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (ui/->image-button ctx image identity {:scale image-scale})]
       (actor/set-id! button id)
@@ -34,7 +33,7 @@
       ctx)))
 
 (defcomponent :tx.action-bar/remove
-  (tx/do! [[_ {:keys [property/id]}] ctx]
+  (component/do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
       (remove! button)

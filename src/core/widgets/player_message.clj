@@ -2,14 +2,13 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
-            [core.ctx.ui :as ui]
-            [core.tx :as tx])
+            [core.ctx.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
 
 (def ^:private this :context/msg-to-player)
 
 (defcomponent :tx/msg-to-player
-  (tx/do! [[_ message] ctx]
+  (component/do! [[_ message] ctx]
     (assoc ctx this {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)

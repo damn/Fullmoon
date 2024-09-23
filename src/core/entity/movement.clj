@@ -4,8 +4,7 @@
             [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.ctx.grid :as grid]
-            [core.ctx.time :as time]
-            [core.tx :as tx]))
+            [core.ctx.time :as time]))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
@@ -64,7 +63,7 @@
            [:tx/position-changed eid]])))))
 
 (defcomponent :tx/set-movement
-  (tx/do! [[_ entity movement] ctx]
+  (component/do! [[_ entity movement] ctx]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...

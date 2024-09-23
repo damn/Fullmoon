@@ -4,7 +4,6 @@
             [core.graphics :as g]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.tx :as tx]
             [core.world.ctx :refer [active-entities]]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
@@ -45,7 +44,7 @@
     false
     )
 
-  (tx/do! [_ {:keys [effect/source] :as ctx}]
+  (component/do! [_ {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (apply concat
              (for [target (creatures-in-los-of-player ctx)]

@@ -7,8 +7,7 @@
             [core.entity :as entity]
             [core.effect :as effect]
             [core.graphics :as g]
-            [core.operation :as operation]
-            [core.tx :as tx])
+            [core.operation :as operation])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defn defmodifier [k operations]
@@ -38,7 +37,7 @@
   (effect/useful? [_ _effect-ctx]
     true)
 
-  (tx/do! [[effect-k operations] {:keys [effect/target]}]
+  (component/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:e/assoc-in target [:entity/stats stat-k]
@@ -211,7 +210,7 @@
                                      (hpbar-color ratio))))))))
 
 (defcomponent :tx.entity.stats/pay-mana-cost
-  (tx/do! [[_ entity cost] _ctx]
+  (component/do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
@@ -221,6 +220,6 @@
        entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
-   (= (tx/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+   (= (component/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )

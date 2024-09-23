@@ -1,8 +1,7 @@
 (ns core.entity.line-render
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.graphics :as g]
-            [core.tx :as tx]))
+            [core.graphics :as g]))
 
 (defcomponent :entity/line-render
   {:let {:keys [thick? end color]}}
@@ -13,7 +12,7 @@
         (g/draw-line g position end color)))))
 
 (defcomponent :tx/line-render
-  (tx/do! [[_ {:keys [start end duration color thick?]}] _ctx]
+  (component/do! [[_ {:keys [start end duration color thick?]}] _ctx]
     [[:e/create
       start
       entity/effect-body-props

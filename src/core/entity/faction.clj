@@ -1,8 +1,7 @@
 (ns core.entity.faction
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.effect :as effect]
-            [core.tx :as tx]))
+            [core.effect :as effect]))
 
 (defcomponent :entity/faction
   {:let faction
@@ -30,6 +29,6 @@
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))
 
-  (tx/do! [_ {:keys [effect/source effect/target]}]
+  (component/do! [_ {:keys [effect/source effect/target]}]
     [[:tx/audiovisual (:position @target) :audiovisuals/convert]
      [:e/assoc target :entity/faction (entity/friendly-faction @source)]]))

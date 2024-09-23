@@ -4,8 +4,7 @@
             [core.entity :as entity]
             [core.effect :as effect]
             [core.ctx.property :as property]
-            [core.ctx.raycaster :refer [path-blocked?]]
-            [core.tx :as tx]))
+            [core.ctx.raycaster :refer [path-blocked?]]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 
@@ -32,7 +31,7 @@
   (first (:world-unit-dimensions (:entity/image projectile))))
 
 (defcomponent :tx/projectile
-  (tx/do! [[_
+  (component/do! [[_
             {:keys [position direction faction]}
             {:keys [entity/image
                     projectile/max-range
@@ -85,7 +84,7 @@
                           target-p)
               max-range))))
 
-  (tx/do! [_ {:keys [effect/source effect/direction] :as ctx}]
+  (component/do! [_ {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
       {:position (start-point @source direction (projectile-size projectile))

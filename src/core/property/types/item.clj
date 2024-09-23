@@ -2,8 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity.inventory :as inventory]
             [core.entity.modifiers :as modifiers]
-            [core.ctx.property :as property]
-            [core.tx :as tx]))
+            [core.ctx.property :as property]))
 
 (defcomponent :item/modifiers
   {:data [:components-ns :modifier]
@@ -34,7 +33,7 @@
    :z-order :z-order/on-ground})
 
 (defcomponent :tx/item
-  (tx/do! [[_ position item] _ctx]
+  (component/do! [[_ position item] _ctx]
     [[:e/create position body-props {:entity/image (:entity/image item)
                                       :entity/item item
                                       :entity/clickable {:type :clickable/item

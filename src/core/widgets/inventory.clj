@@ -133,7 +133,7 @@
    :slot->background (:slot->background (:context/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget
-  (tx/do! [[_ cell item] ctx]
+  (component/do! [[_ cell item] ctx]
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)
@@ -144,7 +144,7 @@
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget
-  (tx/do! [[_ cell] ctx]
+  (component/do! [[_ cell] ctx]
     (let [{:keys [table slot->background]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)]

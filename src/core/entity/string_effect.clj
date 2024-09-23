@@ -2,8 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]
-            [core.ctx.time :as time]
-            [core.tx :as tx]))
+            [core.ctx.time :as time]))
 
 (defcomponent :entity/string-effect
   (entity/tick [[k {:keys [counter]}] eid context]
@@ -20,7 +19,7 @@
                     :up? true}))))
 
 (defcomponent :tx/add-text-effect
-  (tx/do! [[_ entity text] ctx]
+  (component/do! [[_ entity text] ctx]
     [[:e/assoc
       entity
       :entity/string-effect
