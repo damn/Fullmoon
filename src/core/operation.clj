@@ -14,3 +14,17 @@
 
 (defn info-text [{value 1 :as operation}]
   (str (+? value) (value-text operation)))
+
+(defcomponent :op/inc
+  {:data :number
+   :let value}
+  (value-text [_] (str value))
+  (apply [_ base-value] (+ base-value value))
+  (order [_] 0))
+
+(defcomponent :op/mult
+  {:data :number
+   :let value}
+  (value-text [_] (str (int (* 100 value)) "%"))
+  (apply [_ base-value] (* base-value (inc value)))
+  (order [_] 1))
