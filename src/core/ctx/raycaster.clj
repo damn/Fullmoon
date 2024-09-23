@@ -1,6 +1,6 @@
 (ns core.ctx.raycaster
-  (:require [math.raycaster :as raycaster]
-            [math.vector :as v]
+  (:require [core.math.raycaster :as raycaster]
+            [core.math.vector :as v]
             [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]))
 

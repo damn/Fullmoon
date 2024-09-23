@@ -1,6 +1,6 @@
 (ns core.entity.inventory
   (:require [data.grid2d :as grid2d]
-            [utils.core :refer [find-first]]
+            [core.utils.core :refer [find-first]]
             [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.tx :as tx]))

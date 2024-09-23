@@ -1,5 +1,5 @@
 (ns core.screens.world
-  (:require [gdx.graphics.camera :as camera]
+  (:require [core.gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.ecs :as ecs]
             [core.entity :as entity]

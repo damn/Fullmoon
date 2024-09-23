@@ -1,8 +1,8 @@
-(ns gdx.scene2d.ui
+(ns core.gdx.scene2d.ui
   (:require core.graphics.image
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
-            [gdx.scene2d.actor :as actor]
-            [gdx.scene2d.group :as group])
+            [core.gdx.scene2d.actor :as actor]
+            [core.gdx.scene2d.group :as group])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group)

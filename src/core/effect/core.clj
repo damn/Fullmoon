@@ -1,5 +1,5 @@
 (ns core.effect.core
-  (:require [math.vector :as v]
+  (:require [core.math.vector :as v]
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
             [core.ctx.mouseover-entity :as mouseover]

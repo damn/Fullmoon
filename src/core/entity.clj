@@ -1,9 +1,9 @@
 (ns core.entity
   (:require [malli.core :as m]
-            [math.geom :as geom]
-            [math.vector :as v]
-            [utils.core :as utils]
-            [gdx.graphics.camera :as camera]
+            [core.math.geom :as geom]
+            [core.math.vector :as v]
+            [core.utils.core :as utils]
+            [core.gdx.graphics.camera :as camera]
             [core.component :refer [defsystem]]
             [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]
             [core.ctx.raycaster :refer [ray-blocked?]]))

@@ -3,9 +3,9 @@
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [core.screens.property-editor :refer [->overview-table]]
-            [gdx.scene2d.actor :as actor]
-            [gdx.scene2d.group :as group]
-            [gdx.scene2d.ui :as ui]))
+            [core.gdx.scene2d.actor :as actor]
+            [core.gdx.scene2d.group :as group]
+            [core.gdx.scene2d.ui :as ui]))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59

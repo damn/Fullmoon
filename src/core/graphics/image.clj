@@ -1,5 +1,5 @@
 (ns core.graphics.image
-  (:require [gdx.graphics.g2d :as g2d]
+  (:require [core.gdx.graphics.g2d :as g2d]
             [core.ctx.assets :as assets]
             [core.graphics :as g])
   (:import com.badlogic.gdx.graphics.Color

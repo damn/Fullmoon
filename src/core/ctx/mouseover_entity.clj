@@ -1,5 +1,5 @@
 (ns core.ctx.mouseover-entity
-  (:require [utils.core :refer [sort-by-order]]
+  (:require [core.utils.core :refer [sort-by-order]]
             [core.graphics.views :refer [world-mouse-position]]
             [core.entity :as entity]
             [core.entity.player :as player]

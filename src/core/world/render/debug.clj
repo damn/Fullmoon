@@ -1,7 +1,7 @@
 (ns core.world.render.debug
-  (:require [utils.core :refer [->tile]]
-            [gdx.graphics.camera :as camera]
-            [math.geom :as geom]
+  (:require [core.utils.core :refer [->tile]]
+            [core.gdx.graphics.camera :as camera]
+            [core.math.geom :as geom]
             [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
             [core.ctx.grid :refer [circle->cells]]

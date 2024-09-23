@@ -1,5 +1,5 @@
 (ns core.effect.target-entity
-  (:require [math.vector :as v]
+  (:require [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.effect :as effect]
             [core.entity :as entity]

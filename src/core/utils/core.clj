@@ -1,4 +1,4 @@
-(ns utils.core
+(ns core.utils.core
   (:require (clojure [string :as str]
                      set)))
 

@@ -1,8 +1,8 @@
 (ns core.widgets.inventory
   (:require [data.grid2d :as grid]
-            [gdx.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [gdx.scene2d.ui :as ui]
-            [gdx.graphics :as graphics]
+            [core.gdx.scene2d.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
+            [core.gdx.scene2d.ui :as ui]
+            [core.gdx.graphics :as graphics]
             [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.image :as image]

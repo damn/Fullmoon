@@ -1,6 +1,6 @@
 (ns core.world.ctx
-  (:require [utils.core :refer [tile->middle]]
-            [gdx.maps.tiled :as tiled]
+  (:require [core.utils.core :refer [tile->middle]]
+            [core.gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.content-grid :as content-grid]
             [core.ctx.grid :as grid]

@@ -1,6 +1,6 @@
 (ns core.property.types.creature
   (:require [clojure.string :as str]
-            [utils.core :refer [safe-merge]]
+            [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.effect :as effect]

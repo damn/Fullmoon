@@ -1,5 +1,5 @@
 (ns core.graphics.shape-drawer
-  (:require [gdx.graphics :as graphics]
+  (:require [core.gdx.graphics :as graphics]
             [core.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)

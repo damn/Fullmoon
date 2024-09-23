@@ -1,5 +1,5 @@
 (ns core.entity.animation
-  (:require [gdx.scene2d.ui :as ui]
+  (:require [core.gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.entity :as entity]

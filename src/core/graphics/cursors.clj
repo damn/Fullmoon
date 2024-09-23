@@ -1,5 +1,5 @@
 (ns core.graphics.cursors
-  (:require [utils.core :as utils :refer [mapvals]]
+  (:require [core.utils.core :as utils :refer [mapvals]]
             [core.component :refer [defcomponent]]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx

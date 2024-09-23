@@ -1,4 +1,4 @@
-(ns math.vector
+(ns core.math.vector
   "API for [x y] vectors."
   (:import [com.badlogic.gdx.math Vector2 MathUtils]))
 

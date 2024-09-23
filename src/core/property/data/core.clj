@@ -1,11 +1,11 @@
 (ns core.property.data.core
   (:require [clojure.edn :as edn]
             [malli.core :as m]
-            [utils.core :as utils]
+            [core.utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
-            [gdx.scene2d.actor :as actor]
-            [gdx.scene2d.ui :as ui])
+            [core.gdx.scene2d.actor :as actor]
+            [core.gdx.scene2d.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))
 
 (defcomponent :some {:schema :some})

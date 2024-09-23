@@ -1,6 +1,6 @@
 (ns core.entity.state
   (:require [reduce-fsm :as fsm]
-            [utils.core :refer [readable-number]]
+            [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defsystem defcomponent]]
             [core.entity :as entity]
             [core.effect :as effect]

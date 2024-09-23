@@ -1,7 +1,8 @@
 (ns core.world.gen.gen
-  (:require [utils.core :refer [assoc-ks]]
+  (:require [core.utils.core :refer [assoc-ks]]
+            [core.utils.random :as random]
             [data.grid2d :as grid]
-            [gdx.maps.tiled :as tiled]
+            [core.gdx.maps.tiled :as tiled]
             [core.ctx.assets :as assets]
             [core.ctx.property :as property]
             [core.world.gen.utils :refer [printgrid scale-grid]]
@@ -155,17 +156,17 @@
      :start-position (get-free-position-in-area-level 0)
      :area-level-grid scaled-area-level-grid}))
 
-(require '[gdx.graphics.g2d :refer [->texture-region]])
+(require '[core.gdx.graphics.g2d :refer [->texture-region]])
 
 (defn uf-transition [position grid]
   (transitions/index-value position (= :transition (get grid position))))
 
 (defn rand-0-3 []
-  (utils.random/get-rand-weighted-item
+  (random/get-rand-weighted-item
    {0 60 1 1 2 1 3 1}))
 
 (defn rand-0-5 []
-  (utils.random/get-rand-weighted-item
+  (random/get-rand-weighted-item
    {0 30 1 1 2 1 3 1 4 1 5 1}))
 
 ; TODO zoomed out see that line of sight raycast goes x screens away

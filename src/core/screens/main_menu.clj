@@ -1,5 +1,5 @@
 (ns core.screens.main-menu
-  (:require [utils.core :refer [safe-get]]
+  (:require [core.utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.cursors :as cursors]
             [core.screen :as screen]
@@ -9,7 +9,7 @@
             core.world.ctx
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]
-            [gdx.scene2d.ui :as ui])
+            [core.gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.Input$Keys))
 

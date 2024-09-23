@@ -1,5 +1,5 @@
 (ns core.property.types.projectile
-  (:require [math.vector :as v]
+  (:require [core.math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.entity :as entity]
             [core.effect :as effect]

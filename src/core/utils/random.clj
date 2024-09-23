@@ -1,4 +1,4 @@
-(ns utils.random
+(ns core.utils.random
   (:import java.util.Random))
 
 ;; Seed

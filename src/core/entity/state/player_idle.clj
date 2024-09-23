@@ -1,7 +1,7 @@
 (ns core.entity.state.player-idle
-  (:require [utils.core :refer [safe-merge]]
-            [utils.wasd-movement :refer [WASD-movement-vector]]
-            [math.vector :as v]
+  (:require [core.utils.core :refer [safe-merge]]
+            [core.utils.wasd-movement :refer [WASD-movement-vector]]
+            [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.mouseover-entity :as mouseover]
             [core.ctx.widgets :as widgets]
@@ -11,8 +11,8 @@
             [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx]]
             [core.entity.state.active-skill :refer [skill-usable-state]]
-            [gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
-            [gdx.scene2d.ui :as ui])
+            [core.gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
+            [core.gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- denied [text]

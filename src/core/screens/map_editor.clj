@@ -1,9 +1,9 @@
 (ns core.screens.map-editor
   (:require [clojure.string :as str]
-            [gdx.graphics.camera :as camera]
-            [gdx.maps.tiled :as tiled]
+            [core.gdx.graphics.camera :as camera]
+            [core.gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
-            [utils.core :refer [->tile]]
+            [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
             [core.graphics :as g]
@@ -13,9 +13,9 @@
             [core.screens.stage :as stage]
             [core.ctx.property :as property]
             [core.widgets.error-modal :refer [error-window!]]
-            [gdx.scene2d.actor :refer [set-position!]]
-            [gdx.scene2d.group :refer [add-actor!]]
-            [gdx.scene2d.ui :as ui]
+            [core.gdx.scene2d.actor :refer [set-position!]]
+            [core.gdx.scene2d.group :refer [add-actor!]]
+            [core.gdx.scene2d.ui :as ui]
             [core.property.types.world :as level-generator]
             core.world.gen.gen
             core.world.gen.modules)

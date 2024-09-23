@@ -1,9 +1,9 @@
 (ns core.ctx.widgets
-  (:require [utils.core :as utils]
+  (:require [core.utils.core :as utils]
             [core.component :refer [defcomponent] :as component]
-            [gdx.scene2d.actor :as actor]
-            [gdx.scene2d.group :as group]
-            [gdx.scene2d.ui :as ui]
+            [core.gdx.scene2d.actor :as actor]
+            [core.gdx.scene2d.group :as group]
+            [core.gdx.scene2d.ui :as ui]
             [core.entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]
             [core.screens.stage :as stage]
             [core.widgets.action-bar :as action-bar]

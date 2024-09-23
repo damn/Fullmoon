@@ -1,5 +1,5 @@
 (ns core.entity.temp-modifier
-  (:require [utils.core :refer [readable-number]]
+  (:require [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.effect :as effect]

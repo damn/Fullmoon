@@ -2,7 +2,7 @@
   "Application starting point."
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
-            [utils.core :refer [safe-merge]]
+            [core.utils.core :refer [safe-merge]]
             [core.component :as component]
             [core.ctx.graphics :as graphics]
             [core.ctx.screens :as screens]

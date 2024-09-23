@@ -2,16 +2,16 @@
   (:require [clojure.set :as set]
             [malli.core :as m]
             [malli.generator :as mg]
-            [utils.core :as utils :refer [index-of]]
+            [core.utils.core :as utils :refer [index-of]]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.property :as property]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
             [core.widgets.background-image :refer [->background-image]]
             [core.widgets.error-modal :refer [error-window!]]
-            [gdx.scene2d.actor :as actor]
-            [gdx.scene2d.group :as group]
-            [gdx.scene2d.ui :as ui])
+            [core.gdx.scene2d.actor :as actor]
+            [core.gdx.scene2d.group :as group]
+            [core.gdx.scene2d.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)

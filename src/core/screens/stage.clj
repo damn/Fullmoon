@@ -1,6 +1,6 @@
 (ns core.screens.stage
   (:refer-clojure :exclude [get])
-  (:require [gdx.scene2d.group :as group]
+  (:require [core.gdx.scene2d.group :as group]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.views :refer [gui-mouse-position]]
             [core.ctx.screens :as screens]

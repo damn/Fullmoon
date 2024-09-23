@@ -1,5 +1,5 @@
-(ns utils.wasd-movement
-  (:require [math.vector :as v])
+(ns core.utils.wasd-movement
+  (:require [core.math.vector :as v])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 (defn- add-vs [vs]

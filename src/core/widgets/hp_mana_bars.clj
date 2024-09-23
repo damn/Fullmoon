@@ -1,12 +1,12 @@
 (ns core.widgets.hp-mana-bars
-  (:require [utils.core :as utils]
+  (:require [core.utils.core :as utils]
             [core.val-max :refer [val-max-ratio]]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-viewport-width]]
-            [gdx.scene2d.ui :as ui]))
+            [core.gdx.scene2d.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
   (g/draw-text g {:text infostr

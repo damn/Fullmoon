@@ -1,6 +1,6 @@
 (ns core.entity.movement
   (:require [malli.core :as m]
-            [math.vector :as v]
+            [core.math.vector :as v]
             [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.ctx.grid :as grid]

@@ -8,8 +8,8 @@
   TODO assert @ mapload no NAD's and @ potential field init & remove from
   potential-field-following the removal of NAD's."
   (:require [data.grid2d :as grid2d]
-            [math.vector :as v]
-            [utils.core :refer :all]
+            [core.math.vector :as v]
+            [core.utils.core :refer :all]
             [core.entity :as entity]
             [core.ctx.grid :as grid]))
 

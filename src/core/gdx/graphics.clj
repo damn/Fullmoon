@@ -1,4 +1,4 @@
-(ns gdx.graphics
+(ns core.gdx.graphics
   (:import com.badlogic.gdx.graphics.Color))
 
 (defn ->color

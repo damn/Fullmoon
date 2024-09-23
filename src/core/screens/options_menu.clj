@@ -1,7 +1,7 @@
 (ns core.screens.options-menu
-  (:require [utils.core :refer [safe-get]]
-            utils.ns
-            [gdx.scene2d.ui :as ui]
+  (:require [core.utils.core :refer [safe-get]]
+            [core.utils.ns :as ns]
+            [core.gdx.scene2d.ui :as ui]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
@@ -29,8 +29,8 @@
 (defn- debug-flags [] ;
   (apply concat
          ; TODO
-         (for [nmspace (utils.ns/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
-           (utils.ns/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
+         (for [nmspace (ns/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
+           (ns/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
 
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 ; -. rebuild it on window open ...

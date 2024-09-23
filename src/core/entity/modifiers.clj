@@ -1,6 +1,6 @@
 (ns core.entity.modifiers
   (:require [clojure.string :as str]
-            [utils.core :as utils]
+            [core.utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
             core.entity
             [core.operation :as operation]

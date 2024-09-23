@@ -3,7 +3,7 @@
 
 The two macros [[defsystem]] and [[defcomponent]] allow us to define behaviour and metadata for different components."
   (:require [clojure.string :as str]
-            [utils.core :refer [index-of]]))
+            [core.utils.core :refer [index-of]]))
 
 (def ^{:doc "For defsystem and defcomponent"}
   warn-on-override? true)

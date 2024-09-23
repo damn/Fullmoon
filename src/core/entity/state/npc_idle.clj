@@ -1,5 +1,5 @@
 (ns core.entity.state.npc-idle
-  (:require [utils.core :refer [safe-merge]]
+  (:require [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.effect :as effect]

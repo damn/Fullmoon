@@ -1,5 +1,5 @@
 (ns dev.app-values-tree
-  (:require [utils.ns :as ns]))
+  (:require [core.utils.ns :as ns]))
 
 (comment
 

@@ -1,5 +1,5 @@
 (ns core.screens.minimap
-  (:require [gdx.graphics.camera :as camera]
+  (:require [core.gdx.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.explored-tile-corners :refer [explored?]]
             [core.ctx.screens :as screens]

@@ -1,4 +1,4 @@
-(ns gdx.math
+(ns core.gdx.math
   (:refer-clojure :exclude [contains?])
   (:import (com.badlogic.gdx.math Circle
                                   Rectangle

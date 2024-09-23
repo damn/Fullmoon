@@ -1,5 +1,5 @@
 (ns core.widgets.debug-window
-  (:require [gdx.graphics.camera :as camera]
+  (:require [core.gdx.graphics.camera :as camera]
             utils.core
             [core.entity.player :as player]
             [core.graphics :as g]
@@ -7,8 +7,8 @@
             [core.screens.stage :as stage]
             [core.ctx.time :as time]
             [core.ctx.mouseover-entity :as mouseover]
-            [gdx.scene2d.group :refer [add-actor!]]
-            [gdx.scene2d.ui :as ui])
+            [core.gdx.scene2d.group :refer [add-actor!]]
+            [core.gdx.scene2d.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
 
 (defn- skill-info [{:keys [entity/skills]}]

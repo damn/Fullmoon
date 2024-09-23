@@ -1,5 +1,5 @@
 (ns core.entity.state.player-item-on-cursor
-  (:require [math.vector :as v]
+  (:require [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.inventory :as inventory]

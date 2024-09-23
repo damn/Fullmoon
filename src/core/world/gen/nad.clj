@@ -3,7 +3,7 @@
   - melee attack goes through the wall because of range check only not wall-check
   - potential field generation must check for it; following must cut it
   - light shines through the edges"
-  (:require [utils.core :refer [assoc-ks]]
+  (:require [core.utils.core :refer [assoc-ks]]
             [data.grid2d :as grid2d]
             [core.world.gen.utils :refer [wall-at?]]))
 

@@ -1,6 +1,6 @@
 (ns core.ctx.grid
-  (:require [math.geom :as geom]
-            [utils.core :refer [->tile tile->middle]]
+  (:require [core.math.geom :as geom]
+            [core.utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
             [core.component :as component :refer [defcomponent]]))
 

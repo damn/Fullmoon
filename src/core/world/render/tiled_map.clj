@@ -1,7 +1,7 @@
 (ns core.world.render.tiled-map
-  (:require [math.raycaster :as raycaster]
-            [gdx.graphics :as graphics]
-            [utils.core :refer [->tile]]
+  (:require [core.math.raycaster :as raycaster]
+            [core.gdx.graphics :as graphics]
+            [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer])
   (:import com.badlogic.gdx.graphics.Color))
 

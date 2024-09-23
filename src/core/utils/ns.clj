@@ -1,4 +1,4 @@
-(ns utils.ns
+(ns core.utils.ns
   (:require [clojure.string :as str]))
 
 (defn get-namespaces [packages]

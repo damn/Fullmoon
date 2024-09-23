@@ -1,4 +1,4 @@
-(ns gdx.scene2d.actor
+(ns core.gdx.scene2d.actor
   (:refer-clojure :exclude [name])
   (:require [core.app :as app])
   (:import com.badlogic.gdx.utils.Align

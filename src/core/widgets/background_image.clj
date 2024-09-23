@@ -1,5 +1,5 @@
 (ns core.widgets.background-image
-  (:require [gdx.scene2d.ui :as ui]
+  (:require [core.gdx.scene2d.ui :as ui]
             [core.graphics.image :as image]))
 
 (def ^:private image-file "images/moon_background.png")

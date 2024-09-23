@@ -1,4 +1,4 @@
-(ns gdx.maps.tiled
+(ns core.gdx.maps.tiled
   (:import (com.badlogic.gdx.maps MapLayer MapLayers MapProperties)
            [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]))
 

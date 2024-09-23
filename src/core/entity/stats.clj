@@ -1,7 +1,7 @@
 (ns core.entity.stats
   (:require [clojure.string :as str]
             #_[malli.core :as m]
-            [utils.core :as utils :refer [k->pretty-name]]
+            [core.utils.core :as utils :refer [k->pretty-name]]
             [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]

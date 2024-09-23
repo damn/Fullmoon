@@ -3,7 +3,7 @@
             clojure.pprint
             [malli.core :as m]
             [malli.error :as me]
-            [utils.core :refer [safe-get]]
+            [core.utils.core :refer [safe-get]]
             [core.component :as component :refer [defcomponent defsystem defcomponent*]]))
 
 (defsystem ->value "..." [_])

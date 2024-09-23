@@ -1,5 +1,5 @@
 (ns core.ctx.tiled-map-renderer
-  (:require [gdx.maps.tiled :as tiled]
+  (:require [core.gdx.maps.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.views :refer [world-camera]]
             [core.graphics :as g])

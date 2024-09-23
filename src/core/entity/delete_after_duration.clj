@@ -1,5 +1,5 @@
 (ns core.entity.delete-after-duration
-  (:require [utils.core :refer [readable-number]]
+  (:require [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.ctx.time :as time]))

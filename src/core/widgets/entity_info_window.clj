@@ -2,8 +2,8 @@
   (:require [core.component :as component]
             [core.graphics.views :refer [gui-viewport-width]]
             [core.ctx.mouseover-entity :as mouseover]
-            [gdx.scene2d.ui :as ui]
-            [gdx.scene2d.group :refer [add-actor!]]))
+            [core.gdx.scene2d.ui :as ui]
+            [core.gdx.scene2d.group :refer [add-actor!]]))
 
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state
