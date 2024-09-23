@@ -27,8 +27,8 @@
                        (some #(grid/blocked? % (:z-order entity*)) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
-         [:tx/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
+         [:e/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
        (when destroy?
-         [:tx/destroy id])
+         [:e/destroy id])
        (when hit-entity
          [:tx/effect {:effect/source id :effect/target hit-entity} entity-effects])])))

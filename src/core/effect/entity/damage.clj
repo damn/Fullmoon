@@ -113,5 +113,5 @@
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx/audiovisual (:position target*) :audiovisuals/damage]
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          [:tx/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
+          [:e/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
           [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))

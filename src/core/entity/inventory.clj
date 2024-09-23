@@ -41,7 +41,7 @@
   (let [inventory (:entity/inventory entity*)]
     (assert (and (nil? (get-in inventory cell))
                  (valid-slot? cell item))))
-  [[:tx/assoc-in id (cons :entity/inventory cell) item]
+  [[:e/assoc-in id (cons :entity/inventory cell) item]
    (when (applies-modifiers? cell)
      [:tx/apply-modifiers id (:item/modifiers item)])
    (when (:entity/player? entity*)
@@ -50,7 +50,7 @@
 (defn- remove-item [{:keys [entity/id] :as entity*} cell]
   (let [item (get-in (:entity/inventory entity*) cell)]
     (assert item)
-    [[:tx/assoc-in id (cons :entity/inventory cell) nil]
+    [[:e/assoc-in id (cons :entity/inventory cell) nil]
      (when (applies-modifiers? cell)
        [:tx/reverse-modifiers id (:item/modifiers item)])
      (when (:entity/player? entity*)
@@ -117,6 +117,6 @@
 (defcomponent :entity/inventory
   {:data [:one-to-many :properties/items]}
   (entity/create [[_ items] eid _ctx]
-    (cons [:tx/assoc eid :entity/inventory empty-inventory]
+    (cons [:e/assoc eid :entity/inventory empty-inventory]
           (for [item items]
             [:tx/pickup-item eid item]))))

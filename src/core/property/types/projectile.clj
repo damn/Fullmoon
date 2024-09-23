@@ -41,7 +41,7 @@
                     projectile/piercing?] :as projectile}]
            ctx]
     (let [size (projectile-size projectile)]
-      [[:tx/create
+      [[:e/create
         position
         {:width size
          :height size

@@ -31,12 +31,12 @@
     (cond
      (visible? (widgets/inventory-window context))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
-      [:tx/destroy clicked-entity]
+      [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
 
      (entity/can-pickup-item? player-entity* item)
      [[:tx/sound "sounds/bfxr_pickup.wav"]
-      [:tx/destroy clicked-entity]
+      [:e/destroy clicked-entity]
       [:tx/pickup-item (:entity/id player-entity*) item]]
 
      :else
@@ -142,5 +142,5 @@
       ; TODO no else case, no visible free-skill-points
       (when (and (pos? free-skill-points)
                  (not (entity/has-skill? @eid skill)))
-        [[:tx/assoc eid :entity/free-skill-points (dec free-skill-points)]
+        [[:e/assoc eid :entity/free-skill-points (dec free-skill-points)]
          [:tx/add-skill eid skill]]))))

@@ -41,7 +41,7 @@
       ; thats why we reuse component and not fetch each time again for key
       (entity/create component eid ctx))))
 
-(defcomponent :tx/create
+(defcomponent :e/create
   (tx/do! [[_ position body components] ctx]
     (assert (and (not (contains? components :position))
                  (not (contains? components :entity/id))
@@ -56,9 +56,9 @@
                                       (component/create-vs ctx)))))
       (create-e-system eid))))
 
-(defcomponent :tx/destroy
+(defcomponent :e/destroy
   (tx/do! [[_ entity] ctx]
-    [[:tx/assoc entity :entity/destroyed? true]]))
+    [[:e/assoc entity :entity/destroyed? true]]))
 
 (def ^:private ^:dbg-flag show-body-bounds false)
 
@@ -118,37 +118,37 @@
       (render-entity* system entity* g ctx))))
 
 (defn remove-destroyed-entities!
-  "Calls destroy on all entities which are marked with ':tx/destroy'"
+  "Calls destroy on all entities which are marked with ':e/destroy'"
   [ctx]
   (for [entity (filter (comp :entity/destroyed? deref) (all-entities ctx))
         component @entity]
     (fn [ctx]
       (entity/destroy component entity ctx))))
 
-(defcomponent :tx/assoc
+(defcomponent :e/assoc
   (tx/do! [[_ entity k v] ctx]
     (assert (keyword? k))
     (swap! entity assoc k v)
     ctx))
 
-(defcomponent :tx/assoc-in
+(defcomponent :e/assoc-in
   (tx/do! [[_ entity ks v] ctx]
     (swap! entity assoc-in ks v)
     ctx))
 
-(defcomponent :tx/dissoc
+(defcomponent :e/dissoc
   (tx/do! [[_ entity k] ctx]
     (assert (keyword? k))
     (swap! entity dissoc k)
     ctx))
 
-(defcomponent :tx/dissoc-in
+(defcomponent :e/dissoc-in
   (tx/do! [[_ entity ks] ctx]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     ctx))
 
-(defcomponent :tx/update-in
+(defcomponent :e/update-in
   (tx/do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))

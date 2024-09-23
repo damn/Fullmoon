@@ -8,4 +8,4 @@
     {:eid eid})
 
   (state/enter [_ _ctx]
-    [[:tx/destroy eid]]))
+    [[:e/destroy eid]]))

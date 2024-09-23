@@ -8,7 +8,7 @@
 (defcomponent :entity/string-effect
   (entity/tick [[k {:keys [counter]}] eid context]
     (when (time/stopped? context counter)
-      [[:tx/dissoc eid k]]))
+      [[:e/dissoc eid k]]))
 
   (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
     (let [[x y] (:position entity*)]
@@ -21,7 +21,7 @@
 
 (defcomponent :tx/add-text-effect
   (tx/do! [[_ entity text] ctx]
-    [[:tx/assoc
+    [[:e/assoc
       entity
       :entity/string-effect
       (if-let [string-effect (:entity/string-effect @entity)]

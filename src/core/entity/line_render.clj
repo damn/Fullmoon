@@ -14,7 +14,7 @@
 
 (defcomponent :tx/line-render
   (tx/do! [[_ {:keys [start end duration color thick?]}] _ctx]
-    [[:tx/create
+    [[:e/create
       start
       entity/effect-body-props
       #:entity {:line-render {:thick? thick? :end end :color color}

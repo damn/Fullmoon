@@ -10,7 +10,7 @@
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers
         [operation-k value] operations]
-    [:tx/update-in entity [:entity/modifiers modifier-k operation-k] (f value)]))
+    [:e/update-in entity [:entity/modifiers modifier-k operation-k] (f value)]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -27,9 +27,9 @@
                                         :op/max-mult 0.3}
                           :modifier/movement-speed {:op/mult 0.1}}
                          (fn [_value] :fn))
-    [[:tx/update-in :entity [:entity/modifiers :modifier/hp :op/max-inc] :fn]
-     [:tx/update-in :entity [:entity/modifiers :modifier/hp :op/max-mult] :fn]
-     [:tx/update-in :entity [:entity/modifiers :modifier/movement-speed :op/mult] :fn]])
+    [[:e/update-in :entity [:entity/modifiers :modifier/hp :op/max-inc] :fn]
+     [:e/update-in :entity [:entity/modifiers :modifier/hp :op/max-mult] :fn]
+     [:e/update-in :entity [:entity/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
 
 (defcomponent :tx/apply-modifiers

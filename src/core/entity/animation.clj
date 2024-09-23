@@ -63,7 +63,7 @@
                :cell-defaults {:pad 1}}))
 
 (defn- tx-assoc-image-current-frame [eid animation]
-  [:tx/assoc eid :entity/image (current-frame animation)])
+  [:e/assoc eid :entity/image (current-frame animation)])
 
 (defcomponent :entity/animation
   {:data :data/animation
@@ -73,7 +73,7 @@
 
   (entity/tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
-     [:tx/assoc eid k (tick animation (time/delta-time ctx))]]))
+     [:e/assoc eid k (tick animation (time/delta-time ctx))]]))
 
 (defcomponent :entity/delete-after-animation-stopped?
   (entity/create [_ entity _ctx]
@@ -81,4 +81,4 @@
 
   (entity/tick [_ entity _ctx]
     (when (stopped? (:entity/animation @entity))
-      [[:tx/destroy entity]])))
+      [[:e/destroy entity]])))

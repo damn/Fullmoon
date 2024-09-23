@@ -41,7 +41,7 @@
   (tx/do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
-        [[:tx/assoc-in target [:entity/stats stat-k]
+        [[:e/assoc-in target [:entity/stats stat-k]
           ; TODO similar to components.entity.modifiers/->modified-value
           ; but operations not sort-by operation/order ??
           ; operation/apply reuse fn over operations to get effectiv value
@@ -214,7 +214,7 @@
   (tx/do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
-      [[:tx/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
 
 (comment
  (let [mana-val 4
@@ -222,5 +222,5 @@
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
    (= (tx/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
-      [[:tx/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )

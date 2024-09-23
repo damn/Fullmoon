@@ -68,7 +68,7 @@
   {:let {:keys [position creature-id components]}}
   (tx/do! [_ ctx]
     (let [props (property/build ctx creature-id)]
-      [[:tx/create
+      [[:e/create
         position
         (->body (:entity/body props))
         (-> props

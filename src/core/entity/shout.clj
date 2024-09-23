@@ -19,13 +19,13 @@
   {:let {:keys [counter faction]}}
   (entity/tick [_ eid ctx]
     (when (time/stopped? ctx counter)
-      (cons [:tx/destroy eid]
+      (cons [:e/destroy eid]
             (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
               [:tx/event friendly-eid :alert])))))
 
 (defcomponent :tx/shout
   (tx/do! [[_ position faction delay-seconds] ctx]
-    [[:tx/create
+    [[:e/create
       position
       entity/effect-body-props
       {::alert-friendlies-after-duration

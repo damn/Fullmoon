@@ -32,4 +32,4 @@
 
   (tx/do! [_ {:keys [effect/source effect/target]}]
     [[:tx/audiovisual (:position @target) :audiovisuals/convert]
-     [:tx/assoc target :entity/faction (entity/friendly-faction @source)]]))
+     [:e/assoc target :entity/faction (entity/friendly-faction @source)]]))

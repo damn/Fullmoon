@@ -35,7 +35,7 @@
 
 (defcomponent :tx/item
   (tx/do! [[_ position item] _ctx]
-    [[:tx/create position body-props {:entity/image (:entity/image item)
+    [[:e/create position body-props {:entity/image (:entity/image item)
                                       :entity/item item
                                       :entity/clickable {:type :clickable/item
                                                          :text (:property/pretty-name item)}}]]))

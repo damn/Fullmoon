@@ -14,4 +14,4 @@
 
   (entity/tick [_ eid ctx]
     (when (time/stopped? ctx counter)
-      [[:tx/destroy eid]])))
+      [[:e/destroy eid]])))

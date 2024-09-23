@@ -14,7 +14,7 @@
 
   (entity/tick [[k _] eid ctx]
     (when (time/stopped? ctx counter)
-      [[:tx/dissoc eid k]
+      [[:e/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
   (entity/render-above [_ entity* g ctx]
@@ -39,5 +39,5 @@
   (tx/do! [_ {:keys [effect/source effect/target] :as ctx}]
     (when-not (:entity/temp-modifier @target)
       [[:tx/apply-modifiers target modifiers]
-       [:tx/assoc target :entity/temp-modifier {:modifiers modifiers
+       [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                 :counter (time/->counter ctx duration)}]])))

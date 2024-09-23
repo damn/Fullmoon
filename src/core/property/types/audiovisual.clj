@@ -16,7 +16,7 @@
     (let [{:keys [tx/sound
                   entity/animation]} (property/build ctx id)]
       [[:tx/sound sound]
-       [:tx/create
+       [:e/create
         position
         entity/effect-body-props
         {:entity/animation animation
