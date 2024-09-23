@@ -22,7 +22,7 @@
                                                              (:entity/image (property/build context id)) ; TODO here anyway taken
                                                              ; => should probably build this window @ game start
                                                              (fn [ctx]
-                                                               (effect/do ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
+                                                               (effect/do! ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
                          (do
                           (add-tooltip! button #(component/->text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]

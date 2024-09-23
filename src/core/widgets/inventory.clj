@@ -65,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! state #(effect/do % (player/clicked-inventory % cell))))))
+                             (swap! state #(effect/do! % (player/clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

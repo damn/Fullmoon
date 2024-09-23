@@ -35,11 +35,11 @@
      :components npc-components}))
 
 (defn- spawn-creatures! [ctx tiled-level]
-  (effect/do ctx
-             (for [creature (cons (world->player-creature ctx tiled-level)
-                                  (when spawn-enemies?
-                                    (world->enemy-creatures ctx)))]
-               [:tx/creature (update creature :position tile->middle)])))
+  (effect/do! ctx
+              (for [creature (cons (world->player-creature ctx tiled-level)
+                                   (when spawn-enemies?
+                                     (world->enemy-creatures ctx)))]
+                [:tx/creature (update creature :position tile->middle)])))
 
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)

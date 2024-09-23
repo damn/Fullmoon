@@ -54,7 +54,7 @@
                  (not= (first tx) :tx/effect))
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
-(declare do)
+(declare do!)
 
 (defn- handle-tx! [ctx tx]
   (let [result (if (fn? tx)
@@ -64,9 +64,9 @@
       (do
        (tx-happened! tx ctx)
        result)
-      (do ctx result))))
+      (do! ctx result))))
 
-(defn do [ctx txs]
+(defn do! [ctx txs]
   (reduce (fn [ctx tx]
             (if (nil? tx)
               ctx

@@ -209,3 +209,6 @@ Default method returns true."
 
 (defsystem render "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
 (defmethod render :default [_ g ctx])
+
+; TODO all defsystem here & defsystem private
+; ^:no-doc and add extra defsystem to ns-docs itself? separate from fns then (which are less)

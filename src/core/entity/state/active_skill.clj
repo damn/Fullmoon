@@ -21,7 +21,7 @@
   (component/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (effect/do (filter #(component/applicable? % effect-ctx) effects))
+        (effect/do! (filter #(component/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?

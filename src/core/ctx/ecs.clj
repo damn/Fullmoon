@@ -85,7 +85,7 @@
              ; should be moved together?
              (if-let [v (k @entity)]
                (let [component [k v]]
-                 (effect/do ctx (entity/tick component entity ctx)))
+                 (effect/do! ctx (entity/tick component entity ctx)))
                ctx))
            ctx
            (keys @entity))

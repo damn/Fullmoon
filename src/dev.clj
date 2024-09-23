@@ -49,7 +49,7 @@
 
 
 (defn- post-tx! [tx]
-  (.postRunnable Gdx/app #(swap! app/state effect/do [tx])))
+  (.postRunnable Gdx/app #(swap! app/state effect/do! [tx])))
 
 (defn learn-skill! [skill-id]
   (post-tx! (fn [ctx]
