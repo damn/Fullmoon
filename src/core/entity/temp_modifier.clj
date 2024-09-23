@@ -2,7 +2,6 @@
   (:require [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.graphics :as g]
             [core.ctx.time :as time]))
 
@@ -30,7 +29,7 @@
     ; counter ?
     )
 
-  (effect/applicable? [_ {:keys [effect/source effect/target]}]
+  (component/applicable? [_ {:keys [effect/source effect/target]}]
     ; ?
     true)
 

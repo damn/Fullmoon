@@ -2,7 +2,6 @@
   (:require [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.graphics :as g]
             [core.entity.state :as state]
             [core.ctx.time :as time]
@@ -22,7 +21,7 @@
   (component/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (tx/do-all (filter #(effect/applicable? % effect-ctx) effects))
+        (tx/do-all (filter #(component/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?
@@ -42,7 +41,7 @@
 
 (defn- applicable? [ctx effects]
   (let [ctx (check-remove-target ctx)]
-    (some #(effect/applicable? % ctx) effects)))
+    (some #(component/applicable? % ctx) effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]
@@ -124,4 +123,4 @@
   (entity/render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (time/finished-ratio ctx counter))
-      (run! #(effect/render % g (merge ctx effect-ctx)) effects))))
+      (run! #(component/render % g (merge ctx effect-ctx)) effects))))

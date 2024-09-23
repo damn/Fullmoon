@@ -2,7 +2,6 @@
   (:require [core.math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.ctx.property :as property]
             [core.ctx.raycaster :refer [path-blocked?]]))
 
@@ -68,11 +67,11 @@
   {:data [:one-to-one :properties/projectiles]
    :let {:keys [entity-effects projectile/max-range] :as projectile}}
   ; TODO for npcs need target -- anyway only with direction
-  (effect/applicable? [_ {:keys [effect/direction]}]
+  (component/applicable? [_ {:keys [effect/direction]}]
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (effect/useful? [_ {:keys [effect/source effect/target] :as ctx}]
+  (component/useful? [_ {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (:position @source)
           target-p (:position @target)]
       (and (not (path-blocked? ctx ; TODO test

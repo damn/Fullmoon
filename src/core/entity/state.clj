@@ -2,8 +2,7 @@
   (:require [reduce-fsm :as fsm]
             [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defsystem defcomponent]]
-            [core.entity :as entity]
-            [core.effect :as effect]))
+            [core.entity :as entity]))
 
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
@@ -88,7 +87,7 @@
   (component/info-text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (effect/applicable? [_ {:keys [effect/target]}]
+  (component/applicable? [_ {:keys [effect/target]}]
     (and target
          (:entity/state @target)))
 
@@ -100,7 +99,7 @@
   (component/info-text [_ _effect-ctx]
     "Kills target")
 
-  (effect/applicable? [_ {:keys [effect/source effect/target]}]
+  (component/applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (:entity/state @target)))
 

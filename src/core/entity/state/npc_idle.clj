@@ -2,7 +2,6 @@
   (:require [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.effect.core :refer [->npc-effect-ctx]]
             [core.ctx.potential-fields :as potential-fields]
             [core.entity.state.active-skill :refer [skill-usable-state]]))
@@ -14,9 +13,9 @@
 ; usable?
 (defn- useful? [ctx effects]
   ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter #(effect/applicable? % ctx) effects)
+  (let [applicable-effects (filter #(component/applicable? % ctx) effects)
         ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some #(effect/useful? % ctx) applicable-effects)]
+        useful-effect (some #(component/useful? % ctx) applicable-effects)]
     ;(println "Useful: " useful-effect)
     useful-effect))
 

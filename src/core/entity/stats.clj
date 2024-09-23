@@ -5,7 +5,6 @@
             [core.val-max :refer [val-max-ratio]]
             [core.component :as component :refer [defcomponent defcomponent*]]
             [core.entity :as entity]
-            [core.effect :as effect]
             [core.graphics :as g]
             [core.operation :as operation])
   (:import com.badlogic.gdx.graphics.Color))
@@ -30,11 +29,11 @@
               (for [operation operations]
                 (str (operation/info-text operation) " " (utils/k->pretty-name k)))))
 
-  (effect/applicable? [[k _] {:keys [effect/target]}]
+  (component/applicable? [[k _] {:keys [effect/target]}]
     (and target
          (entity/stat @target (effect-k->stat-k k))))
 
-  (effect/useful? [_ _effect-ctx]
+  (component/useful? [_ _effect-ctx]
     true)
 
   (component/do! [[effect-k operations] {:keys [effect/target]}]

@@ -1,7 +1,6 @@
 (ns core.entity.faction
   (:require [core.component :as component :refer [defcomponent]]
-            [core.entity :as entity]
-            [core.effect :as effect]))
+            [core.entity :as entity]))
 
 (defcomponent :entity/faction
   {:let faction
@@ -24,7 +23,7 @@
   (component/info-text [_ _effect-ctx]
     "Converts target to your side.")
 
-  (effect/applicable? [_ {:keys [effect/source effect/target]}]
+  (component/applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))

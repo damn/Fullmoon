@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
-            [core.ctx.property :as property]
-            [core.effect :as effect]))
+            [core.ctx.property :as property]))
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
@@ -91,7 +90,7 @@
 (defcomponent :effect/spawn
   {:data [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
-  (effect/applicable? [_ {:keys [effect/source effect/target-position]}]
+  (component/applicable? [_ {:keys [effect/source effect/target-position]}]
     (and (:entity/faction @source)
          target-position))
 

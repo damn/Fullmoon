@@ -2,8 +2,7 @@
   (:require [core.utils.random :as random]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
-            [core.entity.stats :refer [defmodifier]]
-            [core.effect :as effect]))
+            [core.entity.stats :refer [defmodifier]]))
 
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
@@ -25,8 +24,8 @@
            (str "\n" (component/info-text (damage-effect effect-ctx)
                                           effect-ctx)))))
 
-  (effect/applicable? [_ effect-ctx]
-    (effect/applicable? (damage-effect effect-ctx) effect-ctx))
+  (component/applicable? [_ effect-ctx]
+    (component/applicable? (damage-effect effect-ctx) effect-ctx))
 
   (component/do! [_ ctx]
     [(damage-effect ctx)]))
@@ -86,7 +85,7 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (effect/applicable? [_ {:keys [effect/target]}]
+  (component/applicable? [_ {:keys [effect/target]}]
     (and target
          (entity/stat @target :stats/hp)))
 
