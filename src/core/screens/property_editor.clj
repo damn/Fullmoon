@@ -9,9 +9,9 @@
             [core.screens.stage :as stage]
             [core.widgets.background-image :refer [->background-image]]
             [core.widgets.error-modal :refer [error-window!]]
-            [core.gdx.scene2d.actor :as actor]
-            [core.gdx.scene2d.group :as group]
-            [core.gdx.scene2d.ui :as ui])
+            [core.ui.actor :as actor]
+            [core.ui.group :as group]
+            [core.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Keys)))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)

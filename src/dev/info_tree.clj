@@ -1,6 +1,6 @@
 (ns dev.info-tree
-  (:require [core.gdx.scene2d.ui :as ui]
-            [core.gdx.scene2d.group :as group]
+  (:require [core.ui :as ui]
+            [core.ui.group :as group]
             [core.app :as app]
             [core.ctx.mouseover-entity :as mouseover]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]

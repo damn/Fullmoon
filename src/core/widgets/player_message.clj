@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
-            [core.gdx.scene2d.ui :as ui]
+            [core.ui :as ui]
             [core.tx :as tx])
   (:import com.badlogic.gdx.Gdx))
 

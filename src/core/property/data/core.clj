@@ -4,8 +4,8 @@
             [core.utils.core :as utils]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
-            [core.gdx.scene2d.actor :as actor]
-            [core.gdx.scene2d.ui :as ui])
+            [core.ui.actor :as actor]
+            [core.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))
 
 (defcomponent :some {:schema :some})

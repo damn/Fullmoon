@@ -11,8 +11,8 @@
             [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx]]
             [core.entity.state.active-skill :refer [skill-usable-state]]
-            [core.gdx.scene2d.actor :refer [visible? toggle-visible! parent] :as actor]
-            [core.gdx.scene2d.ui :as ui])
+            [core.ui.actor :refer [visible? toggle-visible! parent] :as actor]
+            [core.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- denied [text]

@@ -13,9 +13,9 @@
             [core.screens.stage :as stage]
             [core.ctx.property :as property]
             [core.widgets.error-modal :refer [error-window!]]
-            [core.gdx.scene2d.actor :refer [set-position!]]
-            [core.gdx.scene2d.group :refer [add-actor!]]
-            [core.gdx.scene2d.ui :as ui]
+            [core.ui.actor :refer [set-position!]]
+            [core.ui.group :refer [add-actor!]]
+            [core.ui :as ui]
             [core.property.types.world :as level-generator]
             core.world.gen.gen
             core.world.gen.modules)

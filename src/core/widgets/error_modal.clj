@@ -1,6 +1,6 @@
 (ns core.widgets.error-modal
   (:require [clj-commons.pretty.repl :as p]
-            [core.gdx.scene2d.ui :as ui]
+            [core.ui :as ui]
             [core.screens.stage :as stage]))
 
 (defmacro ^:private with-err-str

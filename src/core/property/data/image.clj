@@ -1,5 +1,5 @@
 (ns core.property.data.image
-  (:require [core.gdx.scene2d.ui :as ui]
+  (:require [core.ui :as ui]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.graphics.image :as image]))

@@ -2,9 +2,9 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity.player :as player]
             [core.screens.stage :as stage]
-            [core.gdx.scene2d.ui :as ui]
-            [core.gdx.scene2d.actor :as actor :refer [remove! add-tooltip!]]
-            [core.gdx.scene2d.group :refer [clear-children! add-actor!]]
+            [core.ui :as ui]
+            [core.ui.actor :as actor :refer [remove! add-tooltip!]]
+            [core.ui.group :refer [clear-children! add-actor!]]
             [core.tx :as tx])
   (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 

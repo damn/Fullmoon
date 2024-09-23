@@ -1,4 +1,4 @@
-(ns core.ctx.vis-ui
+(ns core.ctx.ui
   (:require [core.component :refer [defcomponent] :as component])
   (:import (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
            com.kotcrab.vis.ui.widget.Tooltip))

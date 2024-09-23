@@ -3,8 +3,8 @@
             [core.ctx.property :as property]
             [core.entity.player :as player]
             [core.tx :as tx]
-            [core.gdx.scene2d.actor :refer [add-tooltip!]]
-            [core.gdx.scene2d.ui :as ui]))
+            [core.ui.actor :refer [add-tooltip!]]
+            [core.ui :as ui]))
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))

@@ -2,8 +2,8 @@
   (:require [core.component :refer [defcomponent]]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.screens.stage :as stage]
-            [core.gdx.scene2d.ui :as ui]
-            [core.gdx.scene2d.actor :refer [remove!]]
+            [core.ui :as ui]
+            [core.ui.actor :refer [remove!]]
             [core.tx :as tx]))
 
 ; TODO no window movable type cursor appears here like in player idle

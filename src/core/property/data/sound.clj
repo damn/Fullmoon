@@ -4,9 +4,9 @@
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
-            [core.gdx.scene2d.actor :as actor]
-            [core.gdx.scene2d.group :as group]
-            [core.gdx.scene2d.ui :as ui]))
+            [core.ui.actor :as actor]
+            [core.ui.group :as group]
+            [core.ui :as ui]))
 
 (defcomponent :sound {:schema :string})
 
