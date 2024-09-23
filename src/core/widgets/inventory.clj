@@ -1,7 +1,7 @@
 (ns core.widgets.inventory
   (:require [data.grid2d :as grid]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [core.ui :as ui]
+            [core.ctx.ui :as ui]
             [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.image :as image]

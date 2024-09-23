@@ -5,7 +5,7 @@
             [core.screens.property-editor :refer [->overview-table]]
             [core.ui.actor :as actor]
             [core.ui.group :as group]
-            [core.ui :as ui]))
+            [core.ctx.ui :as ui]))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59

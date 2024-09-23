@@ -12,7 +12,7 @@
             [core.effect.core :refer [->player-effect-ctx]]
             [core.entity.state.active-skill :refer [skill-usable-state]]
             [core.ui.actor :refer [visible? toggle-visible! parent] :as actor]
-            [core.ui :as ui])
+            [core.ctx.ui :as ui])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- denied [text]

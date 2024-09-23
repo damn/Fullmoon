@@ -1,5 +1,5 @@
 (ns core.entity.animation
-  (:require [core.ui :as ui]
+  (:require [core.ctx.ui :as ui]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.entity :as entity]

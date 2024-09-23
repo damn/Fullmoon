@@ -8,7 +8,7 @@
             [core.ctx.time :as time]
             [core.ctx.mouseover-entity :as mouseover]
             [core.ui.group :refer [add-actor!]]
-            [core.ui :as ui])
+            [core.ctx.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
 
 (defn- skill-info [{:keys [entity/skills]}]

@@ -1,5 +1,5 @@
 (ns dev.info-tree
-  (:require [core.ui :as ui]
+  (:require [core.ctx.ui :as ui]
             [core.ui.group :as group]
             [core.app :as app]
             [core.ctx.mouseover-entity :as mouseover]

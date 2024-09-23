@@ -1,7 +1,7 @@
 (ns core.screens.options-menu
   (:require [core.utils.core :refer [safe-get]]
             [core.utils.ns :as ns]
-            [core.ui :as ui]
+            [core.ctx.ui :as ui]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]

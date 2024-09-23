@@ -1,5 +1,5 @@
 (ns core.property.data.image
-  (:require [core.ui :as ui]
+  (:require [core.ctx.ui :as ui]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.graphics.image :as image]))

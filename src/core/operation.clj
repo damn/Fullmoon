@@ -1,6 +1,6 @@
 (ns core.operation
   (:require [clojure.math :as math]
-            [core.component :as component :refer [defsystem]]))
+            [core.component :as component :refer [defsystem defcomponent]]))
 
 (defsystem value-text "FIXME" [_])
 (defsystem apply "FIXME" [_ base-value])

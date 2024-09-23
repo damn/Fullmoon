@@ -5,7 +5,7 @@
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.ui.actor :as actor]
-            [core.ui :as ui])
+            [core.ctx.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))
 
 (defcomponent :some {:schema :some})

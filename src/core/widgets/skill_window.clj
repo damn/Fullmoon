@@ -4,7 +4,7 @@
             [core.entity.player :as player]
             [core.tx :as tx]
             [core.ui.actor :refer [add-tooltip!]]
-            [core.ui :as ui]))
+            [core.ctx.ui :as ui]))
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))

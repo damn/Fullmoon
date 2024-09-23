@@ -2,7 +2,7 @@
   (:require [core.component :refer [defcomponent]]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.screens.stage :as stage]
-            [core.ui :as ui]
+            [core.ctx.ui :as ui]
             [core.ui.actor :refer [remove!]]
             [core.tx :as tx]))
 

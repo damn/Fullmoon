@@ -15,7 +15,7 @@
             [core.widgets.error-modal :refer [error-window!]]
             [core.ui.actor :refer [set-position!]]
             [core.ui.group :refer [add-actor!]]
-            [core.ui :as ui]
+            [core.ctx.ui :as ui]
             [core.property.types.world :as level-generator]
             core.world.gen.gen
             core.world.gen.modules)

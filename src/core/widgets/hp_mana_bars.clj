@@ -6,7 +6,7 @@
             [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-viewport-width]]
-            [core.ui :as ui]))
+            [core.ctx.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
   (g/draw-text g {:text infostr

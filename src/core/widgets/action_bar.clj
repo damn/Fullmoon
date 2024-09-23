@@ -2,7 +2,7 @@
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity.player :as player]
             [core.screens.stage :as stage]
-            [core.ui :as ui]
+            [core.ctx.ui :as ui]
             [core.ui.actor :as actor :refer [remove! add-tooltip!]]
             [core.ui.group :refer [clear-children! add-actor!]]
             [core.tx :as tx])
