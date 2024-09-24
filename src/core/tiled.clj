@@ -175,8 +175,8 @@ Renders only visible layers."
     (set-color-setter! map-renderer color-setter)
     (.setView map-renderer world-camera)
     (->> tiled-map
-         tiled/layers
+         layers
          (filter MapLayer/.isVisible)
-         (map (partial tiled/layer-index tiled-map))
+         (map (partial layer-index tiled-map))
          int-array
          (.render map-renderer))))

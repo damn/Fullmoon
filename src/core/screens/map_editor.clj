@@ -4,7 +4,6 @@
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
             [core.utils.core :refer [->tile]]
-            [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.screens :as screens]
             [core.screen :as screen]
             [core.stage :as stage]
@@ -181,9 +180,7 @@ direction keys: move")
     (camera/reset-zoom! (world-camera ctx)))
 
   (screen/render [_ context]
-    (tiled-map-renderer/render! context
-                                (:tiled-map @current-data)
-                                (constantly Color/WHITE))
+    (tiled/render! context (:tiled-map @current-data) (constantly Color/WHITE))
     (render-world-view context #(render-on-map % context))
     (if (.isKeyJustPressed gdx-input Input$Keys/L)
       (swap! current-data update :show-grid-lines not))

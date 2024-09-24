@@ -2,7 +2,7 @@
   (:require [core.ctx :refer :all]
             [core.math.raycaster :as raycaster]
             [core.utils.core :refer [->tile]]
-            [core.ctx.tiled-map-renderer :as tiled-map-renderer])
+            [core.tiled :as tiled])
   (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
@@ -43,10 +43,10 @@
             Color/WHITE)))))
 
 (defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
-  (tiled-map-renderer/render! ctx
-                              tiled-map
-                              (->tile-color-setter (atom nil)
-                                                   light-position
-                                                   (:context/raycaster ctx)
-                                                   (:context/explored-tile-corners ctx)))
+  (tiled/render! ctx
+                 tiled-map
+                 (->tile-color-setter (atom nil)
+                                      light-position
+                                      (:context/raycaster ctx)
+                                      (:context/explored-tile-corners ctx)))
   #_(reset! do-once false))

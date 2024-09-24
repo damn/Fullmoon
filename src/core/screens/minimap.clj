@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.world.explored-tile-corners :refer [explored?]]
             [core.screens :as screens]
-            [core.ctx.tiled-map-renderer :as tiled-map-renderer])
+            [core.tiled :as tiled])
   (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
 
@@ -46,9 +46,9 @@
 
     ; TODO fixme not subscreen
     (render [_ {:keys [context/tiled-map context/explored-tile-corners] :as context}]
-      (tiled-map-renderer/render! context
-                                  tiled-map
-                                  (->tile-corner-color-setter @explored-tile-corners))
+      (tiled/render! context
+                     tiled-map
+                     (->tile-corner-color-setter @explored-tile-corners))
       (render-world-view context
                          (fn [g]
                            (draw-filled-circle g
