@@ -15,7 +15,6 @@
             [core.widgets.error-modal :refer [error-window!]]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
-            [core.world.ecs :as ecs]
             [core.world.widgets :as widgets]
             [core.world.grid :as grid]
             [core.world.mouseover-entity :refer [update-mouseover-entity]]
@@ -307,7 +306,7 @@
   (let [ctx (time/update-time ctx (min (.getDeltaTime gdx-graphics) entity/max-delta-time))
         active-entities (active-entities ctx)]
     (potential-fields/update! ctx active-entities)
-    (try (ecs/tick-entities! ctx active-entities)
+    (try (entity/tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx
                (error-window! t)
@@ -322,7 +321,7 @@
                 #(if (:context/paused? %)
                    %
                    (update-world %))
-                ecs/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ]))
 
 (defn- replay-frame! [ctx]
@@ -346,10 +345,10 @@
   (render-world-view ctx
                      (fn [g]
                        (before-entities ctx g)
-                       (ecs/render-entities! ctx
-                                             g
-                                             (->> (active-entities ctx)
-                                                  (map deref)))
+                       (entity/render-entities! ctx
+                                                g
+                                                (->> (active-entities ctx)
+                                                     (map deref)))
                        (after-entities ctx g))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
