@@ -4446,7 +4446,7 @@
   :world/spawn-rate 0.01}
  {:property/id :worlds/modules,
   :world/generator :world.generator/modules,
-  :world/map-size 25,
-  :world/max-area-level 6,
+  :world/map-size 5,
+  :world/max-area-level 3,
   :world/player-creature :creatures/vampire,
   :world/spawn-rate 0.05})
