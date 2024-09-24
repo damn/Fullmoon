@@ -618,3 +618,23 @@
 
   (entity/render-below [_ entity* g _ctx]
     (draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))
+
+(def ^{:doc "Returns the player-entity atom."} ctx-player :context/player-entity)
+
+(defcomponent :entity/player?
+  (entity/create [_ eid ctx]
+    (assoc ctx ctx-player eid)))
+
+(defn- p-state-obj [ctx]
+  (-> ctx player-entity* entity/state-obj))
+
+(extend-type core.ctx.Context
+  Player
+  (player-entity  [ctx]  (ctx-player ctx))
+  (player-entity* [ctx] @(ctx-player ctx))
+  (player-update-state      [ctx]       (manual-tick             (p-state-obj ctx) ctx))
+  (player-state-pause-game? [ctx]       (pause-game?             (p-state-obj ctx)))
+  (player-clicked-inventory [ctx cell]  (clicked-inventory-cell  (p-state-obj ctx) cell))
+  (player-clicked-skillmenu [ctx skill] (clicked-skillmenu-skill (p-state-obj ctx) skill)))
+
+

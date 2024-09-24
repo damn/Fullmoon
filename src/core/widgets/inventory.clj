@@ -59,7 +59,7 @@
     (ui/set-id! stack cell)
     (ui/add-listener! stack (proxy [ClickListener] []
                                  (clicked [event x y]
-                                   (swap! app-state #(effect! % (player/clicked-inventory % cell))))))
+                                   (swap! app-state #(effect! % (player-clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

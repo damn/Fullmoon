@@ -393,14 +393,18 @@ Returns ctx."
     (play-sound! ctx file)))
 
 (defprotocol RenderWorldView
-  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context."))
+  (render-world-view [ctx render-fn] "render-fn is a function of param 'g', graphics context."))
 
 (defprotocol MouseOverEntity
-  (mouseover-entity* [_]))
+  (mouseover-entity* [ctx]))
 
 (defprotocol Player
-  (player-entity [_])
-  (player-entity* [_]))
+  (player-entity [ctx])
+  (player-entity* [ctx])
+  (player-update-state      [ctx])
+  (player-state-pause-game? [ctx])
+  (player-clicked-inventory [ctx cell])
+  (player-clicked-skillmenu [ctx skill]))
 
 (defsystem applicable?
   "An effect will only be done (with do!) if this function returns truthy.
