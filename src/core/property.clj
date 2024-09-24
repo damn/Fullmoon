@@ -710,3 +710,5 @@
 
 (defmethod widget->value :one-to-one [_ widget]
   (->> (ui/children widget) (keep ui/actor-id) first))
+
+(defcomponent :val-max {:schema (m/form val-max-schema)})
