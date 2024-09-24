@@ -16,7 +16,6 @@
             [core.entity.state :refer [draw-item-on-cursor]]
             [core.entity.player :as player]
             [core.world.gen.gen :as level-generator]
-            [core.widgets.error-modal :refer [error-window!]]
             [core.widgets.inventory :as inventory]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
@@ -314,7 +313,7 @@
     (try (entity/tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx
-               (error-window! t)
+               (ui/error-window! t)
                (assoc :context/entity-tick-error t))))))
 
 (defmulti ^:private game-loop :context/game-loop-mode)

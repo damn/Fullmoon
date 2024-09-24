@@ -7,7 +7,6 @@
             [core.property :as property]
             [core.screens :as screens]
             [core.stage :as stage]
-            [core.widgets.error-modal :refer [error-window!]]
             [core.actor :as actor]
             [core.group :as group]
             [core.ui :as ui])
@@ -180,7 +179,7 @@
        (actor/remove! window)
        ctx)
      (catch Throwable t
-       (error-window! ctx t)))))
+       (ui/error-window! ctx t)))))
 
 (defn- ->property-editor-window [ctx id]
   (let [props (utils/safe-get (:db (:context/properties ctx)) id)

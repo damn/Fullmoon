@@ -6,7 +6,6 @@
             [core.utils.core :refer [->tile]]
             [core.screens :as screens]
             [core.stage :as stage]
-            [core.widgets.error-modal :refer [error-window!]]
             [core.actor :refer [set-position!]]
             [core.group :refer [add-actor!]]
             [core.ui :as ui]
@@ -159,7 +158,7 @@ direction keys: move")
                                       (build-property ctx level-id))))]
                        [(ui/->text-button "Generate" #(try (generate % (build-property % level-id))
                                                            (catch Throwable t
-                                                             (error-window! % t)
+                                                             (ui/error-window! % t)
                                                              (println t)
                                                              %)))]]
                 :pack? true}))
