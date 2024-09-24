@@ -133,10 +133,6 @@
 (defprotocol Skills
   (has-skill? [_ skill]))
 
-(defprotocol Faction
-  (enemy-faction [_])
-  (friendly-faction [_]))
-
 (defprotocol Inventory
   (can-pickup-item? [_ item]))
 
@@ -249,3 +245,70 @@
   (tick [_ entity _ctx]
     (when (stopped? (:entity/animation @entity))
       [[:e/destroy entity]])))
+
+(defcomponent :entity/clickable
+  (render [[_ {:keys [text]}]
+           {:keys [entity/mouseover?] :as entity*}
+           g
+           _ctx]
+    (when (and mouseover? text)
+      (let [[x y] (:position entity*)]
+        (draw-text g
+                   {:text text
+                    :x x
+                    :y (+ y (:half-height entity*))
+                    :up? true})))))
+
+(defcomponent :entity/delete-after-duration
+  {:let counter}
+  (->mk [[_ duration] ctx]
+    (time/->counter ctx duration))
+
+  (info-text [_ ctx]
+    (str "[LIGHT_GRAY]Remaining: " (utils/readable-number (time/finished-ratio ctx counter)) "/1[]"))
+
+  (tick [_ eid ctx]
+    (when (time/stopped? ctx counter)
+      [[:e/destroy eid]])))
+
+(defcomponent :entity/destroy-audiovisual
+  {:let audiovisuals-id}
+  (destroy [_ entity ctx]
+    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
+
+(defcomponent :entity/faction
+  {:let faction
+   :data [:enum [:good :evil]]}
+  (info-text [_ _ctx]
+    (str "[SLATE]Faction: " (name faction) "[]")))
+
+(defn enemy-faction [{:keys [entity/faction]}]
+  (case faction
+    :evil :good
+    :good :evil))
+
+(defn friendly-faction [{:keys [entity/faction]}]
+  faction)
+
+(defcomponent :effect.entity/convert
+  {:data :some}
+  (info-text [_ _effect-ctx]
+    "Converts target to your side.")
+
+  (applicable? [_ {:keys [effect/source effect/target]}]
+    (and target
+         (= (:entity/faction @target)
+            (enemy-faction @source))))
+
+  (do! [_ {:keys [effect/source effect/target]}]
+    [[:tx/audiovisual (:position @target) :audiovisuals/convert]
+     [:e/assoc target :entity/faction (friendly-faction @source)]]))
+
+(defcomponent :entity/image
+  {:data :image
+   :let image}
+  (render [_ entity* g _ctx]
+    (draw-rotated-centered-image g
+                                 image
+                                 (or (:rotation-angle entity*) 0)
+                                 (:position entity*))))
