@@ -4,7 +4,6 @@
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
             [core.component :as component :refer [defcomponent]]
-            [core.ctx.mouseover-entity :as mouseover]
             [core.ctx.grid :as grid]))
 
 (defn- nearest-enemy [{:keys [context/grid]} entity*]
@@ -20,7 +19,7 @@
      :effect/direction (when target (entity/direction entity* @target))}))
 
 (defn ->player-effect-ctx [ctx entity*]
-  (let [target* (mouseover/entity* ctx)
+  (let [target* (mouseover-entity* ctx)
         target-position (or (and target* (:position target*))
                             (world-mouse-position ctx))]
     {:effect/source (:entity/id entity*)

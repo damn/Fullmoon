@@ -14,7 +14,8 @@
   (:require [core.component  :as component :refer [defcomponent]]
             [core.ctx.assets :as assets]
             [core.ctx.graphics :as graphics]
-            [core.ctx.time :as time]))
+            [core.ctx.time :as time]
+            [core.ctx.mouseover-entity :as mouseover]))
 
 ; TODO docstrings not avilable here ...
 (def play-sound! assets/play-sound!)
@@ -106,3 +107,5 @@
           txs))
 
 (def render-world-view graphics/render-world-view)
+
+(def mouseover-entity* mouseover/entity*)

@@ -1,4 +1,4 @@
-(ns core.ctx.mouseover-entity
+(ns ^:no-doc core.ctx.mouseover-entity
   (:require [core.utils.core :refer [sort-by-order]]
             [core.graphics.views :refer [world-mouse-position]]
             [core.entity :as entity]
@@ -25,7 +25,7 @@
   (when-let [entity (this-k ctx)]
     @entity))
 
-(defn ^:no-doc update-mouseover-entity [ctx]
+(defn update-mouseover-entity [ctx]
   (let [entity (if (stage/mouse-on-actor? ctx)
                  nil
                  (calculate-mouseover-entity ctx))]

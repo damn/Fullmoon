@@ -1,8 +1,8 @@
 (ns ^:no-doc dev.info-tree
-  (:require [core.ctx.ui :as ui]
+  (:require [core.ctx :refer :all]
+            [core.ctx.ui :as ui]
             [core.ui.group :as group]
             [core.app :as app]
-            [core.ctx.mouseover-entity :as mouseover]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
             [core.screens.stage :as stage])
   (:import com.badlogic.gdx.Gdx
@@ -114,7 +114,7 @@
   (let [ctx @app/state
         object (case obj
                  :ctx ctx
-                 :entity (mouseover/entity* ctx)
+                 :entity (mouseover-entity* ctx)
                  :tile @(get (:context/grid ctx) (mapv int (world-mouse-position ctx))))]
     (stage/add-actor! ctx
                       (ui/->window {:title "Tree View"

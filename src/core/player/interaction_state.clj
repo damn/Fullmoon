@@ -1,7 +1,6 @@
 (ns ^:no-doc core.player.interaction-state
   (:require [core.utils.core :refer [safe-merge]]
             [core.math.vector :as v]
-            [core.ctx.mouseover-entity :as mouseover]
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.screens.stage :as stage]
@@ -79,7 +78,7 @@
      :else :cursors/default)))
 
 (defn ->interaction-state [context entity*]
-  (let [mouseover-entity* (mouseover/entity* context)]
+  (let [mouseover-entity* (mouseover-entity* context)]
     (cond
      (stage/mouse-on-actor? context)
      [(mouseover-actor->cursor context)
