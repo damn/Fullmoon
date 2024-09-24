@@ -17,12 +17,67 @@
             [core.math.raycaster :as raycaster]
             [core.world.ecs :as ecs]
             [core.world.widgets :as widgets]
-            [core.world.content-grid :as content-grid]
             [core.world.grid :as grid]
             [core.world.mouseover-entity :refer [update-mouseover-entity]]
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys))
+
+(def ^:private content-grid :context/content-grid)
+
+(defn- content-grid-update-entity! [ctx entity]
+  (let [{:keys [grid cell-w cell-h]} (content-grid ctx)
+        {::keys [content-cell] :as entity*} @entity
+        [x y] (:position entity*)
+        new-cell (get grid [(int (/ x cell-w))
+                            (int (/ y cell-h))])]
+    (when-not (= content-cell new-cell)
+      (swap! new-cell update :entities conj entity)
+      (swap! entity assoc ::content-cell new-cell)
+      (when content-cell
+        (swap! content-cell update :entities disj entity)))))
+
+(defn- content-grid-remove-entity! [_ entity]
+  (-> @entity
+      ::content-cell
+      (swap! update :entities disj entity)))
+
+(defn- active-entities* [ctx center-entity*]
+  (let [{:keys [grid]} (content-grid ctx)]
+    (->> (let [idx (-> center-entity*
+                       ::content-cell
+                       deref
+                       :idx)]
+           (cons idx (grid2d/get-8-neighbour-positions idx)))
+         (keep grid)
+         (mapcat (comp :entities deref)))))
+
+(extend-type core.ctx.Context
+  ActiveEntities
+  (active-entities [ctx]
+    (active-entities* ctx (player-entity* ctx))))
+
+(defcomponent content-grid
+  {:let [cell-w cell-h]}
+  (->mk [_ {:keys [context/grid]}]
+    {:grid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
+                               (inc (int (/ (grid2d/height grid) cell-h)))
+                               (fn [idx]
+                                 (atom {:idx idx,
+                                        :entities #{}})))
+     :cell-w cell-w
+     :cell-h cell-h}))
+
+(comment
+
+ (defn get-all-entities-of-current-map [context]
+   (mapcat (comp :entities deref)
+           (grid2d/cells (core.context/content-grid context))))
+
+ (count
+  (get-all-entities-of-current-map @app/state))
+
+ )
 
 (defcomponent :context/explored-tile-corners
   (->mk [_ {:keys [context/grid]}]
@@ -134,10 +189,10 @@
                           :air  [1 1 0 0.5]
                           :none [1 0 0 0.5]))))))
 
-(defn before-entities [ctx g]
+(defn- before-entities [ctx g]
   (tile-debug g ctx))
 
-(defn after-entities [ctx g]
+(defn- after-entities [ctx g]
   #_(geom-test g ctx)
   (highlight-mouseover-tile g ctx))
 
@@ -188,7 +243,7 @@
                                   "air"  :air
                                   "all"  :all)]
                 :context/raycaster grid/blocks-vision?
-                :context/content-grid [16 16]
+                content-grid [16 16]
                 :context/explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
@@ -210,20 +265,15 @@
       :game-loop/replay (merge ctx (->world-map (select-keys ctx [:context/tiled-map
                                                                   :context/start-position]))))))
 
-(defn ^:no-doc start-new-game [ctx tiled-level]
+(defn- start-new-game [ctx tiled-level]
   (init-game-context ctx
                      :mode :game-loop/normal
                      :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
-(extend-type core.ctx.Context
-  ActiveEntities
-  (active-entities [ctx]
-    (content-grid/active-entities* ctx (player-entity* ctx))))
-
 (defcomponent :tx/add-to-world
   (do! [[_ entity] ctx]
-    (content-grid/update-entity! ctx entity)
+    (content-grid-update-entity! ctx entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (grid/add-entity! ctx entity)
@@ -231,13 +281,13 @@
 
 (defcomponent :tx/remove-from-world
   (do! [[_ entity] ctx]
-    (content-grid/remove-entity! ctx entity)
+    (content-grid-remove-entity! ctx entity)
     (grid/remove-entity! ctx entity)
     ctx))
 
 (defcomponent :tx/position-changed
   (do! [[_ entity] ctx]
-    (content-grid/update-entity! ctx entity)
+    (content-grid-update-entity! ctx entity)
     (grid/entity-position-changed! ctx entity)
     ctx))
 

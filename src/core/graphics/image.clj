@@ -118,4 +118,3 @@
               [(int (/ sprite-x tilew))
                (int (/ sprite-y tileh))]))
     (create ctx file)))
-
