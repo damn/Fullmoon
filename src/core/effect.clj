@@ -1,6 +1,5 @@
 (ns core.effect
-  (:require [core.math.vector :as v]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]))
 
 (defsystem render "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
@@ -25,7 +24,7 @@
     {:effect/source (:entity/id entity*)
      :effect/target (:entity/id target*)
      :effect/target-position target-position
-     :effect/direction (v/direction (:position entity*) target-position)}))
+     :effect/direction (v-direction (:position entity*) target-position)}))
 
 ; SCHEMA effect-ctx
 ; * source = always available
@@ -150,7 +149,7 @@
                    [1 0 0 0.5])))))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
-  (< (- (float (v/distance (:position entity*)
+  (< (- (float (v-distance (:position entity*)
                            (:position target*)))
         (float (:radius entity*))
         (float (:radius target*)))
@@ -158,13 +157,13 @@
 
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
-  (v/add (:position entity*)
-         (v/scale (entity/direction entity* target*)
+  (v-add (:position entity*)
+         (v-scale (entity/direction entity* target*)
                   (:radius entity*))))
 
 (defn- end-point [entity* target* maxrange]
-  (v/add (start-point entity* target*)
-         (v/scale (entity/direction entity* target*)
+  (v-add (start-point entity* target*)
+         (v-scale (entity/direction entity* target*)
                   maxrange)))
 
 (defcomponent :maxrange {:data :pos}

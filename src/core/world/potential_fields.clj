@@ -8,7 +8,6 @@
   TODO assert @ mapload no NAD's and @ potential field init & remove from
   potential-field-following the removal of NAD's."
   (:require [data.grid2d :as grid2d]
-            [core.math.vector :as v]
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.entity :as entity]))
@@ -239,7 +238,7 @@
         {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
     (cond
      target-entity
-     (v/direction position (:position @target-entity))
+     (v-direction position (:position @target-entity))
 
      (nil? target-cell)
      nil
@@ -248,7 +247,7 @@
      (when-not (and (= target-cell own-cell)
                     (occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
        (when-not (inside-cell? grid @entity target-cell)
-         (v/direction position (:middle @target-cell)))))))
+         (v-direction position (:middle @target-cell)))))))
 
 (defn ^:no-doc update! [{:keys [context/grid]} entities]
   (doseq [[faction max-iterations] factions-iterations]

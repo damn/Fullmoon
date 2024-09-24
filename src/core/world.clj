@@ -10,9 +10,6 @@
             [core.entity-state :refer [draw-item-on-cursor]]
             [core.world.gen.gen :as level-generator]
             [core.inventory :as inventory]
-            [core.math.geom :as geom]
-            [core.math.raycaster :as raycaster]
-            [core.math.vector :as v]
             [core.tiled :as tiled]
             [core.world.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys
@@ -87,9 +84,9 @@
           arr (make-array Boolean/TYPE width height)]
       (doseq [cell (grid2d/cells grid)]
         (set-arr arr @cell position->blocked?))
-      (raycaster/map->ArrRayCaster {:arr arr
-                                    :width width
-                                    :height height}))))
+      (map->ArrRayCaster {:arr arr
+                          :width width
+                          :height height}))))
 
 ; TO math.... // not tested
 (defn- create-double-ray-endpositions
@@ -111,13 +108,13 @@
 (extend-type core.ctx.Context
   RayCaster
   (ray-blocked? [{:keys [context/raycaster]} start target]
-    (raycaster/ray-blocked? raycaster start target))
+    (fast-ray-blocked? raycaster start target))
 
   (path-blocked? [{:keys [context/raycaster]} start target path-w]
     (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
       (or
-       (raycaster/ray-blocked? raycaster start1 target1)
-       (raycaster/ray-blocked? raycaster start2 target2)))))
+       (fast-ray-blocked? raycaster start1 target1)
+       (fast-ray-blocked? raycaster start2 target2)))))
 
 (defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]
@@ -187,14 +184,14 @@
 
   (circle->cells [grid circle]
     (->> circle
-         geom/circle->outer-rectangle
+         circle->outer-rectangle
          (rectangle->cells grid)))
 
   (circle->entities [grid circle]
     (->> (circle->cells grid circle)
          (map deref)
          cells->entities
-         (filter #(geom/collides? circle @%)))))
+         (filter #(shape-collides? circle @%)))))
 
 (def ^:private this :context/grid)
 
@@ -202,7 +199,7 @@
   GridPointEntities
   (point->entities [ctx position]
     (when-let [cell (get (this ctx) (->tile position))]
-      (filter #(geom/point-in-rect? position @%)
+      (filter #(point-in-rect? position @%)
               (:entities @cell)))))
 
 (defn- grid-add-entity! [ctx entity]
@@ -355,7 +352,7 @@
           base-color (if explored? explored-tile-color color-black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
-                     (let [blocked? (raycaster/ray-blocked? raycaster light-position position)]
+                     (let [blocked? (fast-ray-blocked? raycaster light-position position)]
                        (swap! light-cache assoc position blocked?)
                        blocked?)
                      cache-entry)]
@@ -385,7 +382,7 @@
     (doseq [[x y] (map #(:position @%)
                        (circle->cells grid circle))]
       (draw-rectangle g x y 1 1 [1 0 0 0.5]))
-    (let [{[x y] :left-bottom :keys [width height]} (geom/circle->outer-rectangle circle)]
+    (let [{[x y] :left-bottom :keys [width height]} (circle->outer-rectangle circle)]
       (draw-rectangle g x y width height [0 0 1 1]))))
 
 (def ^:private ^:dbg-flag tile-grid? false)

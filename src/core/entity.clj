@@ -2,8 +2,6 @@
   (:require [clojure.string :as str]
             [clj-commons.pretty.repl :as p]
             [malli.core :as m]
-            [core.math.geom :as geom]
-            [core.math.vector :as v]
             [core.utils.core :as utils :refer [sort-by-order]]
             [core.ctx :refer :all]
             [core.camera :as camera]
@@ -121,10 +119,10 @@
   (->tile (:position entity*)))
 
 (defn direction [entity* other-entity*]
-  (v/direction (:position entity*) (:position other-entity*)))
+  (v-direction (:position entity*) (:position other-entity*)))
 
 (defn collides? [entity* other-entity*]
-  (geom/collides? entity* other-entity*))
+  (shape-collides? entity* other-entity*))
 
 (defprotocol State
   (state [_])
@@ -530,9 +528,9 @@
   {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
   (tick [_ eid ctx]
     (assert (m/validate movement-speed-schema speed))
-    (assert (or (zero? (v/length direction))
-                (v/normalised? direction)))
-    (when-not (or (zero? (v/length direction))
+    (assert (or (zero? (v-length direction))
+                (v-normalised? direction)))
+    (when-not (or (zero? (v-length direction))
                   (nil? speed)
                   (zero? speed))
       (let [movement (assoc movement :delta-time (delta-time ctx))
@@ -543,7 +541,7 @@
           [[:e/assoc eid :position    (:position    body)]
            [:e/assoc eid :left-bottom (:left-bottom body)]
            (when rotate-in-movement-direction?
-             [:e/assoc eid :rotation-angle (v/get-angle-from-vector direction)])
+             [:e/assoc eid :rotation-angle (v-get-angle-from-vector direction)])
            [:tx/position-changed eid]])))))
 
 (defcomponent :tx/set-movement
@@ -869,7 +867,7 @@
         {:width size
          :height size
          :z-order :z-order/flying
-         :rotation-angle (v/get-angle-from-vector direction)}
+         :rotation-angle (v-get-angle-from-vector direction)}
         {:entity/movement {:direction direction
                            :speed speed}
          :entity/image image
@@ -880,8 +878,8 @@
                                        :piercing? piercing?}}]])))
 
 (defn- start-point [entity* direction size]
-  (v/add (:position entity*)
-         (v/scale direction
+  (v-add (:position entity*)
+         (v-scale direction
                   (+ (:radius entity*) size 0.1))))
 
 ; TODO effect/text ... shouldn't have source/target dmg stuff ....
@@ -904,7 +902,7 @@
                                target-p
                                (projectile-size projectile)))
            ; TODO not taking into account body sizes
-           (< (v/distance source-p ; entity/distance function protocol EntityPosition
+           (< (v-distance source-p ; entity/distance function protocol EntityPosition
                           target-p)
               max-range))))
 

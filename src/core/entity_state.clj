@@ -1,7 +1,6 @@
 (ns ^:no-doc core.entity-state
   (:require [reduce-fsm :as fsm]
             [core.ctx :refer :all]
-            [core.math.vector :as v]
             [core.entity :as entity]
             [core.ui :as ui]
             [core.world.potential-fields :as potential-fields]
@@ -330,7 +329,7 @@
                         :on-click #(change-screen % :screens/main-menu)}]]))
 
 (defn- add-vs [vs]
-  (v/normalise (reduce v/add [0 0] vs)))
+  (v-normalise (reduce v-add [0 0] vs)))
 
 (defn- WASD-movement-vector []
   (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
@@ -339,7 +338,7 @@
         d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
     (when (or r l u d)
       (let [v (add-vs (remove nil? [r l u d]))]
-        (when (pos? (v/length v))
+        (when (pos? (v-length v))
           v)))))
 
 (defn- selected-skill [ctx]
@@ -390,7 +389,7 @@
     :clickable/player :cursors/bag))
 
 (defn- ->clickable-mouseover-entity-interaction [ctx player-entity* mouseover-entity*]
-  (if (< (v/distance (:position player-entity*) (:position mouseover-entity*))
+  (if (< (v-distance (:position player-entity*) (:position mouseover-entity*))
          (:entity/click-distance-tiles player-entity*))
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
@@ -517,10 +516,10 @@
 ; this is okay, you have thrown the item over a hill, thats possible.
 
 (defn- placement-point [player target maxrange]
-  (v/add player
-         (v/scale (v/direction player target)
+  (v-add player
+         (v-scale (v-direction player target)
                   (min maxrange
-                       (v/distance player target)))))
+                       (v-distance player target)))))
 
 (defn- item-place-position [ctx entity*]
   (placement-point (:position entity*)
