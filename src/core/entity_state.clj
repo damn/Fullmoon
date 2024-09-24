@@ -778,13 +778,15 @@
     (when (world-item? ctx)
       (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
-(defn draw-item-on-cursor [g ctx]
-  (let [player-entity* (player-entity* ctx)]
-    (when (and (= :player-item-on-cursor (entity/state player-entity*))
-               (not (world-item? ctx)))
-      (draw-centered-image g
-                           (:entity/image (:entity/item-on-cursor player-entity*))
-                           (gui-mouse-position ctx)))))
+(extend-type core.ctx.Graphics
+  DrawItemOnCursor
+  (draw-item-on-cursor [g ctx]
+    (let [player-entity* (player-entity* ctx)]
+      (when (and (= :player-item-on-cursor (entity/state player-entity*))
+                 (not (world-item? ctx)))
+        (draw-centered-image g
+                             (:entity/image (:entity/item-on-cursor player-entity*))
+                             (gui-mouse-position ctx))))))
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}

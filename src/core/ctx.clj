@@ -1487,3 +1487,9 @@ Default method returns true."
 
 (defprotocol Pathfinding
   (potential-fields-follow-to-enemy [ctx eid]))
+
+(defprotocol DrawItemOnCursor
+  (draw-item-on-cursor [g ctx]))
+
+(defprotocol WorldGen
+  (->world [ctx world-id])) ; pointless? core.world not required at all now

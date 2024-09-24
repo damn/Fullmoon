@@ -736,10 +736,12 @@
 (defmethod generate :world.generator/uf-caves [ctx world]
   (uf-caves ctx world))
 
-(defn ->world [ctx world-id]
-  (let [prop (build-property ctx world-id)]
-    (assoc (generate ctx prop)
-           :world/player-creature (:world/player-creature prop))))
+(extend-type core.ctx.Context
+  WorldGen
+  (->world [ctx world-id]
+    (let [prop (build-property ctx world-id)]
+      (assoc (generate ctx prop)
+             :world/player-creature (:world/player-creature prop)))))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?

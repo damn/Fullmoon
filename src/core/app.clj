@@ -2,12 +2,12 @@
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.entity-state :refer [draw-item-on-cursor]]
             [core.inventory :as inventory]
             [core.property :as property]
             [core.tiled :as tiled]
             [core.ui :as ui]
-            [core.world :as world])
+            core.entity-state
+            core.world)
   (:import org.lwjgl.system.Configuration
            (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -1244,7 +1244,7 @@
   (fn [ctx]
     (-> ctx
         (change-screen :screens/world)
-        (start-new-game (world/->world ctx world-id)))))
+        (start-new-game (->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat

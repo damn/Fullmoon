@@ -8,7 +8,7 @@
 
   You can bind this on a key for smooth dev experience, here in VIM:
   ``` vimscript
-  nmap <F5> :Eval (do (in-ns 'dev-loop)(restart!))
+  nmap <F5> :Eval (do (in-ns 'core.interactive)(restart!))
   ```"
   (:require [clojure.java.io :as io]
             [nrepl.server :refer [start-server]]
@@ -59,7 +59,7 @@
   (loop []
     (when-not @thrown
       (do
-       (.bindRoot #'refresh-error (refresh :after 'dev-loop/dev-loop))
+       (.bindRoot #'refresh-error (refresh :after 'core.interactive/dev-loop))
        (handle-throwable! refresh-error)))
     (wait!)
     (recur)))
