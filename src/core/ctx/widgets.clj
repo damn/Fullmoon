@@ -35,7 +35,7 @@
                 :actors [(debug-window/create ctx)
                          (entity-info-window/create ctx)
                          (inventory/->build ctx widget-data)]})
-   (ui/->actor ctx {:draw draw-item-on-cursor})
+   (ui/->actor {:draw draw-item-on-cursor})
    (component/create [:widgets/player-message] ctx)])
 
 (defcomponent :context/widgets

@@ -52,9 +52,9 @@
                                            (partial set-state check-box)
                                            (boolean (get-state check-box)))]))
 
-                      [[(ui/->text-button ctx "Resume" #(screens/change-screen % :screens/world))]
+                      [[(ui/->text-button "Resume" #(screens/change-screen % :screens/world))]
 
-                       [(ui/->text-button ctx "Exit" #(screens/change-screen % :screens/main-menu))]])
+                       [(ui/->text-button "Exit" #(screens/change-screen % :screens/main-menu))]])
 
                :fill-parent? true
                :cell-defaults {:pad-bottom 10}}))

@@ -18,7 +18,7 @@
                                  :skills/spawn
                                  :skills/melee-attack]
                              :let [; get-property in callbacks if they get changed, this is part of context permanently
-                                   button (ui/->image-button context ; TODO reuse actionbar button scale?
+                                   button (ui/->image-button ; TODO reuse actionbar button scale?
                                                              (:entity/image (property/build context id)) ; TODO here anyway taken
                                                              ; => should probably build this window @ game start
                                                              (fn [ctx]

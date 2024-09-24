@@ -47,7 +47,7 @@
                     (actor/pack-ancestor-window! table))]
     (ui/add-rows!
      table
-     [[(ui/->text-button ctx "+"
+     [[(ui/->text-button "+"
                          (fn [ctx]
                            (let [window (ui/->window {:title "Choose"
                                                       :modal? true
@@ -68,7 +68,7 @@
           (actor/add-tooltip! image-widget #(component/->text property %))
           image-widget))
       (for [id property-ids]
-        (ui/->text-button ctx "-" #(do (redo-rows % (disj property-ids id)) %)))])))
+        (ui/->text-button "-" #(do (redo-rows % (disj property-ids id)) %)))])))
 
 (defmethod property/->widget :one-to-many [[_ data] property-ids context]
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
@@ -91,7 +91,7 @@
     (ui/add-rows!
      table
      [[(when-not property-id
-         (ui/->text-button ctx "+"
+         (ui/->text-button "+"
                            (fn [ctx]
                              (let [window (ui/->window {:title "Choose"
                                                         :modal? true
@@ -112,7 +112,7 @@
            (actor/add-tooltip! image-widget #(component/->text property %))
            image-widget))]
       [(when property-id
-         (ui/->text-button ctx "-" #(do (redo-rows % nil) %)))]])))
+         (ui/->text-button "-" #(do (redo-rows % nil) %)))]])))
 
 (defmethod property/->widget :one-to-one [[_ data] property-id ctx]
   (let [table (ui/->table {:cell-defaults {:pad 5}})]

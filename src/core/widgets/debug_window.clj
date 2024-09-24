@@ -46,7 +46,7 @@
                              :visible? false
                              :position [0 (gui-viewport-height context)]
                              :rows [[label]]})]
-    (add-actor! window (ui/->actor context {:act #(do
-                                                   (.setText label (debug-infos %))
-                                                   (.pack window))}))
+    (add-actor! window (ui/->actor {:act #(do
+                                           (.setText label (debug-infos %))
+                                           (.pack window))}))
     window))

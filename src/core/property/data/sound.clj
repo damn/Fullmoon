@@ -19,32 +19,31 @@
                 :rows [[(ui/->scroll-pane-cell ctx rows)]]
                 :pack? true}))
 
-(defn- ->play-sound-button [ctx sound-file]
-  (ui/->text-button ctx "play!" #(assets/play-sound! % sound-file)))
+(defn- ->play-sound-button [sound-file]
+  (ui/->text-button "play!" #(assets/play-sound! % sound-file)))
 
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [ctx table]
   (let [rows (for [sound-file (:sound-files (:context/assets ctx))]
-               [(ui/->text-button ctx
-                                  (str/replace-first sound-file "sounds/" "")
+               [(ui/->text-button (str/replace-first sound-file "sounds/" "")
                                   (fn [{:keys [context/actor] :as ctx}]
                                     (group/clear-children! table)
-                                    (ui/add-rows! table [(->sound-columns ctx table sound-file)])
+                                    (ui/add-rows! table [(->sound-columns table sound-file)])
                                     (actor/remove! (actor/find-ancestor-window actor))
                                     (actor/pack-ancestor-window! table)
                                     (actor/set-id! table sound-file)
                                     ctx))
-                (->play-sound-button ctx sound-file)])]
+                (->play-sound-button sound-file)])]
     (stage/add-actor! ctx (->scrollable-choose-window ctx rows))))
 
-(defn- ->sound-columns [ctx table sound-file]
-  [(ui/->text-button ctx (name sound-file) #(open-sounds-window! % table))
-   (->play-sound-button ctx sound-file)])
+(defn- ->sound-columns [table sound-file]
+  [(ui/->text-button (name sound-file) #(open-sounds-window! % table))
+   (->play-sound-button sound-file)])
 
-(defmethod property/->widget :sound [_ sound-file ctx]
+(defmethod property/->widget :sound [_ sound-file _ctx]
   (let [table (ui/->table {:cell-defaults {:pad 5}})]
     (ui/add-rows! table [(if sound-file
-                           (->sound-columns ctx table sound-file)
-                           [(ui/->text-button ctx "No sound" #(open-sounds-window! % table))])])
+                           (->sound-columns table sound-file)
+                           [(ui/->text-button "No sound" #(open-sounds-window! % table))])])
     table))

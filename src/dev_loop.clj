@@ -20,8 +20,8 @@
 
 (defn- start-app []
   (eval `(do ; old namespace/var bindings are unloaded with refresh-all so always evaluate them fresh
-          (require (quote core.app))
-          (core.app/-main))))
+          (require (quote core.start))
+          (core.start/-main))))
 
 (def ^:private ^Object obj (Object.))
 

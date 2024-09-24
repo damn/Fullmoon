@@ -16,11 +16,11 @@
 ; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
   (for [file (sort (:texture-files (:context/assets ctx)))]
-    [(ui/->image-button ctx (image/create ctx file) identity)]
-    #_[(ui/->text-button ctx file identity)]))
+    [(ui/->image-button (image/create ctx file) identity)]
+    #_[(ui/->text-button file identity)]))
 
 (defmethod property/->widget :image [_ image ctx]
   (ui/->image-widget (image/edn->image image ctx) {})
-  #_(ui/->image-button ctx image
-                        #(stage/add-actor! % (->scrollable-choose-window % (texture-rows %)))
-                        {:dimensions [96 96]})) ; x2  , not hardcoded here
+  #_(ui/->image-button image
+                       #(stage/add-actor! % (->scrollable-choose-window % (texture-rows %)))
+                       {:dimensions [96 96]})) ; x2  , not hardcoded here

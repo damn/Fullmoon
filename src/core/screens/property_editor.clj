@@ -3,6 +3,7 @@
             [malli.core :as m]
             [malli.generator :as mg]
             [core.utils.core :as utils :refer [index-of]]
+            [core.app :as app]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.property :as property]
             [core.ctx.screens :as screens]
@@ -87,8 +88,7 @@
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
                                      (map-keys (:schema data))))]
       (ui/add-rows! window (for [k remaining-ks]
-                             [(ui/->text-button ctx
-                                                (name k)
+                             [(ui/->text-button (name k)
                                                 (fn [ctx]
                                                   (actor/remove! window)
                                                   (group/add-actor! attribute-widget-group
@@ -116,10 +116,8 @@
     (ui/->table {:cell-defaults {:pad 5}
                  :rows (remove nil?
                                [(when optional-keys-left?
-                                  [(ui/->text-button
-                                    ctx
-                                    "Add component"
-                                    (->choose-component-window data attribute-widget-group))])
+                                  [(ui/->text-button "Add component"
+                                                     (->choose-component-window data attribute-widget-group))])
                                 (when optional-keys-left?
                                   [(ui/->horizontal-separator-cell 1)])
                                 [attribute-widget-group]])})))
@@ -141,11 +139,11 @@
                            :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
-                          (ui/->text-button ctx "-" (fn [ctx]
-                                                      (let [window (actor/find-ancestor-window table)]
-                                                        (actor/remove! table)
-                                                        (.pack window))
-                                                      ctx)))
+                          (ui/->text-button "-" (fn [ctx]
+                                                  (let [window (actor/find-ancestor-window table)]
+                                                    (actor/remove! table)
+                                                    (.pack window))
+                                                  ctx)))
                         label
                         (ui/->vertical-separator-cell)
                         value-widget])
@@ -198,20 +196,20 @@
         save!   (apply-context-fn window #(property/update! % (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(property/delete! % id))]
     (ui/add-rows! window [[(ui/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
-                                                       [(ui/->text-button ctx "Save [LIGHT_GRAY](ENTER)[]" save!)
-                                                        (ui/->text-button ctx "Delete" delete!)]])]])
+                                                       [(ui/->text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
+                                                        (ui/->text-button "Delete" delete!)]])]])
     (group/add-actor! window
-                      (ui/->actor ctx {:act (fn [{:keys [context/state]}]
-                                              (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
-                                                (swap! state save!)))}))
+                      (ui/->actor {:act (fn [_ctx]
+                                          (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
+                                            (swap! app/state save!)))}))
     (.pack window)
     window))
 
-(defn- ->overview-property-widget [{:keys [property/id] :as props} ctx clicked-id-fn extra-info-text scale]
+(defn- ->overview-property-widget [{:keys [property/id] :as props} clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn % id)
         button (if-let [image (property/->image props)]
-                 (ui/->image-button ctx image on-clicked {:scale scale})
-                 (ui/->text-button ctx (name id) on-clicked))
+                 (ui/->image-button image on-clicked {:scale scale})
+                 (ui/->text-button (name id) on-clicked))
         top-widget (ui/->label (or (and extra-info-text (extra-info-text props)) ""))
         stack (ui/->stack [button top-widget])]
     (actor/add-tooltip! button #(component/->text props %))
@@ -231,7 +229,7 @@
      {:cell-defaults {:pad 5}
       :rows (for [properties (partition-all columns properties)]
               (for [property properties]
-                (try (->overview-property-widget property ctx clicked-id-fn extra-info-text scale)
+                (try (->overview-property-widget property clicked-id-fn extra-info-text scale)
                      (catch Throwable t
                        (throw (ex-info "" {:property property} t))))))})))
 
@@ -275,7 +273,7 @@
 
 (derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
-  (component/create [_ {:keys [context/state] :as ctx}]
+  (component/create [_ ctx]
     {:stage (let [stage (stage/create ctx
                                       [(->background-image ctx)
                                        (->tabbed-pane (->tabs-data ctx))])]
@@ -283,7 +281,7 @@
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)
                                         (do
-                                         (swap! state screens/change-screen :screens/main-menu)
+                                         (swap! app/state screens/change-screen :screens/main-menu)
                                          true)
                                         false))))
               stage)}))

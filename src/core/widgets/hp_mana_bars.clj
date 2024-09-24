@@ -28,8 +28,7 @@
                                           (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                           [x y])
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
-    (ui/->actor context
-                {:draw (fn [g ctx]
+    (ui/->actor {:draw (fn [g ctx]
                          (let [player-entity* (player/entity* ctx)
                                x (- x (/ rahmenw 2))]
                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")

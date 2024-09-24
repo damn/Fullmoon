@@ -25,7 +25,7 @@
 (defcomponent :tx.action-bar/add
   (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-          button (ui/->image-button ctx image identity {:scale image-scale})]
+          button (ui/->image-button image identity {:scale image-scale})]
       (actor/set-id! button id)
       (add-tooltip! button #(component/->text skill (assoc % :effect/source (player/entity %))))
       (add-actor! horizontal-group button)

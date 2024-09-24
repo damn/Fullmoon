@@ -1,5 +1,6 @@
 (ns core.ctx.ui
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [core.app :as app]
+            [core.component :refer [defcomponent] :as component]
             core.graphics.image
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ui.actor :as actor]
@@ -107,13 +108,13 @@
    :fill-y? true
    :expand-y? true})
 
-(defn- ->change-listener [{:keys [context/state]} on-clicked]
+(defn- ->change-listener [on-clicked]
   (proxy [ChangeListener] []
     (changed [event actor]
-      (swap! state #(-> %
-                        (assoc :context/actor actor)
-                        on-clicked
-                        (dissoc :context/actor))))))
+      (swap! app/state #(-> %
+                            (assoc :context/actor actor)
+                            on-clicked
+                            (dissoc :context/actor))))))
 
 ; candidate for opts: :tooltip
 (defn- set-actor-opts [actor {:keys [id name visible? touchable center-position position] :as opts}]
@@ -160,16 +161,16 @@
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defn ->actor [{:keys [context/state]} {:keys [draw act]}]
+(defn ->actor [{:keys [draw act]}]
   (proxy [Actor] []
     (draw [_batch _parent-alpha]
       (when draw
-        (let [ctx @state
+        (let [ctx @app/state
               g (assoc (:context/graphics ctx) :unit-scale 1)]
           (draw g ctx))))
     (act [_delta]
       (when act
-        (act @state)))))
+        (act @app/state)))))
 
 (defn ->group [{:keys [actors] :as opts}]
   (let [group (group/proxy-ILookup Group [])]
@@ -193,9 +194,9 @@
     (.setMinCheckCount button-group min-check-count)
     button-group))
 
-(defn ->text-button [context text on-clicked]
+(defn ->text-button [text on-clicked]
   (let [button (VisTextButton. ^String text)]
-    (.addListener button (->change-listener context on-clicked))
+    (.addListener button (->change-listener on-clicked))
     button))
 
 (defn ->check-box
@@ -217,16 +218,16 @@
 ; TODO give directly texture-region
 ; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
 (defn ->image-button
-  ([context image on-clicked]
-   (->image-button context image on-clicked {}))
+  ([image on-clicked]
+   (->image-button image on-clicked {}))
 
-  ([context image on-clicked {:keys [scale]}]
+  ([image on-clicked {:keys [scale]}]
    (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture-region image))
          button (VisImageButton. drawable)]
      (when scale
        (let [[w h] (:pixel-dimensions image)]
          (.setMinSize drawable (float (* scale w)) (float (* scale h)))))
-     (.addListener button (->change-listener context on-clicked))
+     (.addListener button (->change-listener on-clicked))
      button)))
 
 (defn ->table ^Table [opts]

@@ -83,9 +83,9 @@ direction keys: move")
 (defn- ->info-window [ctx]
   (let [label (ui/->label "")
         window (ui/->window {:title "Info" :rows [[label]]})]
-    (add-actor! window (ui/->actor ctx {:act #(do
-                                               (.setText label (debug-infos %))
-                                               (.pack window))}))
+    (add-actor! window (ui/->actor {:act #(do
+                                           (.setText label (debug-infos %))
+                                           (.pack window))}))
     (set-position! window 0 (gui-viewport-height ctx))
     window))
 
@@ -165,11 +165,11 @@ direction keys: move")
                 :rows [[(ui/->label (with-out-str
                                      (clojure.pprint/pprint
                                       (property/build ctx level-id))))]
-                       [(ui/->text-button ctx "Generate" #(try (generate % (property/build % level-id))
-                                                               (catch Throwable t
-                                                                 (error-window! % t)
-                                                                 (println t)
-                                                                 %)))]]
+                       [(ui/->text-button "Generate" #(try (generate % (property/build % level-id))
+                                                           (catch Throwable t
+                                                             (error-window! % t)
+                                                             (println t)
+                                                             %)))]]
                 :pack? true}))
 
 (defcomponent ::sub-screen

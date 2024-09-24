@@ -2,6 +2,7 @@
   (:require [data.grid2d :as grid]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
+            [core.app :as app]
             [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.image :as image]
@@ -43,10 +44,10 @@
 ; TODO why do I need to call getX ?
 ; is not layouted automatically to cell , use 0/0 ??
 ; (maybe (.setTransform stack true) ? , but docs say it should work anyway
-(defn- draw-rect-actor ^Widget [app-state]
+(defn- draw-rect-actor ^Widget []
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{g :context/graphics :as ctx} @app-state
+      (let [{g :context/graphics :as ctx} @app/state
             g (assoc g :unit-scale 1)
             player-entity* (player/entity* ctx)
             ^Widget this this]
@@ -57,15 +58,15 @@
                         (mouseover? this (gui-mouse-position ctx))
                         (actor/id (actor/parent this)))))))
 
-(defn- ->cell [{:keys [context/state] :as ctx} slot->background slot & {:keys [position]}]
+(defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
         image-widget (ui/->image-widget (slot->background slot) {:id :image})
-        stack (ui/->stack [(draw-rect-actor state) image-widget])]
+        stack (ui/->stack [(draw-rect-actor) image-widget])]
     (set-name! stack "inventory-cell")
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! state #(effect/do! % (player/clicked-inventory % cell))))))
+                             (swap! app/state #(effect/do! % (player/clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]
@@ -89,9 +90,9 @@
          (into {}))))
 
 ; TODO move together with empty-inventory definition ?
-(defn- redo-table! [ctx ^Table table slot->background]
+(defn- redo-table! [^Table table slot->background]
   ; cannot do add-rows, need bag :position idx
-  (let [cell (fn [& args] (apply ->cell ctx slot->background args))] ; TODO cell just return type hint ^Actor
+  (let [cell (fn [& args] (apply ->cell slot->background args))] ; TODO cell just return type hint ^Actor
     (.clear table) ; no need as we create new table ... TODO
     (doto table .add .add
       (.add ^Actor (cell :inventory.slot/helm))
@@ -116,7 +117,7 @@
 
 (defn ->build [ctx {:keys [slot->background]}]
   (let [table (ui/->table {:id ::table})]
-    (redo-table! ctx table slot->background)
+    (redo-table! table slot->background)
     (ui/->window {:title "Inventory"
                   :id :inventory-window
                   :visible? false

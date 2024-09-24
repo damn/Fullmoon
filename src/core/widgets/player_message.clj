@@ -1,5 +1,6 @@
 (ns ^:no-doc core.widgets.player-message
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.app :as app]
+            [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ctx.ui :as ui])
@@ -21,13 +22,13 @@
                     :scale 2.5
                     :up? true})))
 
-(defn- check-remove-message [{:keys [context/state] :as ctx}]
+(defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (this ctx)]
-    (swap! state update this update :counter + (.getDeltaTime Gdx/graphics))
+    (swap! app/state update this update :counter + (.getDeltaTime Gdx/graphics))
     (when (>= counter duration-seconds)
-      (swap! state assoc this nil))))
+      (swap! app/state assoc this nil))))
 
 (defcomponent :widgets/player-message
-  (component/create [_ ctx]
-    (ui/->actor ctx {:draw draw-player-message
-                     :act check-remove-message})))
+  (component/create [_ _ctx]
+    (ui/->actor {:draw draw-player-message
+                 :act check-remove-message})))

@@ -22,12 +22,12 @@
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat
                                    (for [{:keys [property/id]} (property/all-properties ctx :properties/worlds)]
-                                     [(ui/->text-button ctx (str "Start " id) (start-game! id))])
+                                     [(ui/->text-button (str "Start " id) (start-game! id))])
                                    [(when (safe-get config :map-editor?)
-                                      [(ui/->text-button ctx "Map editor" #(screens/change-screen % :screens/map-editor))])
+                                      [(ui/->text-button "Map editor" #(screens/change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
-                                      [(ui/->text-button ctx "Property editor" #(screens/change-screen % :screens/property-editor))])
-                                    [(ui/->text-button ctx "Exit" (fn [ctx] (.exit Gdx/app) ctx))]]))
+                                      [(ui/->text-button "Property editor" #(screens/change-screen % :screens/property-editor))])
+                                    [(ui/->text-button "Exit" (fn [ctx] (.exit Gdx/app) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
 
@@ -39,9 +39,9 @@
 (defn- ->actors [ctx]
   [(->background-image ctx)
    (->buttons ctx)
-   (ui/->actor ctx {:act (fn [_ctx]
-                           (when (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
-                             (.exit Gdx/app)))})])
+   (ui/->actor {:act (fn [_ctx]
+                       (when (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
+                         (.exit Gdx/app)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu
