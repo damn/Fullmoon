@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.entity-info-window
   (:require [core.ctx :refer :all]
-            [core.graphics.views :refer [gui-viewport-width]]
             [core.ctx.ui :as ui]
             [core.ui.group :refer [add-actor!]]))
 

@@ -8,7 +8,6 @@
             [core.ctx.grid :as grid]
             [core.ctx.potential-fields :as potential-fields]
             [core.ctx.time :as time]
-            [core.graphics.views :refer [world-mouse-position gui-mouse-position]]
             [core.effect.core :refer [->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.entity :as entity]
             [core.entity.state :as state]

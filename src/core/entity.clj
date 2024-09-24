@@ -5,7 +5,6 @@
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
-            [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]
             [core.ctx.raycaster :refer [ray-blocked?]]))
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil."

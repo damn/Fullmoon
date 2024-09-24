@@ -1,4 +1,4 @@
-(ns core.graphics.views
+(ns ^:no-doc core.graphics.views
   (:require [core.ctx :refer :all])
   (:import com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.math MathUtils Vector2]
@@ -20,7 +20,7 @@
                  (.setToOrtho camera y-down? world-width world-height)
                  (FitViewport. world-width world-height camera))}))
 
-(defn ^:no-doc ->build [{:keys [gui-view world-view]}]
+(defn ->build [{:keys [gui-view world-view]}]
   {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
@@ -32,8 +32,8 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (world-unit-scale g))))
 
-(defn ^:no-doc gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
-(defn ^:no-doc world-viewport ^Viewport [g] (-> g :world-view :viewport))
+(defn gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
+(defn world-viewport ^Viewport [g] (-> g :world-view :viewport))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))
@@ -61,10 +61,12 @@
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(defn gui-mouse-position    [ctx] (gui-mouse-position*   (gr ctx)))
-(defn world-mouse-position  [ctx] (world-mouse-position* (gr ctx)))
-(defn gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
-(defn gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
-(defn world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
-(defn world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-(defn world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))
+(extend-type core.ctx.Context
+  Views
+  (gui-mouse-position    [ctx] (gui-mouse-position*             (gr ctx)))
+  (world-mouse-position  [ctx] (world-mouse-position*           (gr ctx)))
+  (gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
+  (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
+  (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
+  (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
+  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx)))))

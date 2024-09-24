@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.player-message
   (:require [core.ctx :refer :all]
-            [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ctx.ui :as ui]))
 
 (def ^:private this :context/msg-to-player)

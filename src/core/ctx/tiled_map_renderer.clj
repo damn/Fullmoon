@@ -1,7 +1,6 @@
 (ns core.ctx.tiled-map-renderer
   (:require [core.tiled :as tiled]
-            [core.ctx :refer :all]
-            [core.graphics.views :refer [world-camera]])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.maps.MapLayer
            [gdl OrthogonalTiledMapRenderer ColorSetter]))
 

@@ -4,7 +4,6 @@
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
             [core.graphics.image :as image]
-            [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
             [core.entity :as entity]
             [core.entity.inventory :as inventory]
             [core.entity.player :as player]

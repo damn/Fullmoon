@@ -4,7 +4,6 @@
             [core.val-max :refer [val-max-ratio]]
             [core.entity :as entity]
             [core.graphics.image :as image]
-            [core.graphics.views :refer [gui-viewport-width]]
             [core.ctx.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]

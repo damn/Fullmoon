@@ -3,7 +3,6 @@
             [core.utils.core :refer [->tile]]
             [core.graphics.camera :as camera]
             [core.math.geom :as geom]
-            [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
             [core.ctx.grid :refer [circle->cells]]
             [core.ctx.potential-fields :as potential-field]))
 

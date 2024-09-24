@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.ctx.explored-tile-corners :refer [explored?]]
             [core.ctx.screens :as screens]
-            [core.graphics.views :refer [world-camera]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer])
   (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))

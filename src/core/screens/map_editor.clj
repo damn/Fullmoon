@@ -6,7 +6,6 @@
             [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
-            [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
             [core.screens.stage :as stage]
             [core.widgets.error-modal :refer [error-window!]]

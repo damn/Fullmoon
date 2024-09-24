@@ -2,7 +2,6 @@
   (:require [core.ctx :refer :all]
             [core.ctx.ui :as ui]
             [core.ui.group :as group]
-            [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
             [core.screens.stage :as stage])
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))

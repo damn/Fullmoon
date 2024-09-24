@@ -389,3 +389,12 @@ Default method returns true."
   (draw-image [_ image position])
   (draw-centered-image [_ image position])
   (draw-rotated-centered-image [_ image rotation position]))
+
+(defprotocol Views
+  (gui-mouse-position    [_])
+  (world-mouse-position  [_])
+  (gui-viewport-width    [_])
+  (gui-viewport-height   [_])
+  (world-camera          [_])
+  (world-viewport-width  [_])
+  (world-viewport-height [_]))

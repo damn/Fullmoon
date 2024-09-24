@@ -5,7 +5,6 @@
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.graphics.cursors :as cursors]
-            [core.graphics.views :refer [world-camera]]
             [core.ctx.screens :as screens]
             [core.ctx.widgets :as widgets]
             [core.screen :as screen]

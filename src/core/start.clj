@@ -16,10 +16,10 @@
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []
     (create []
-      (.bindRoot #'core.ctx/gdx-app      Gdx/app)
-      (.bindRoot #'core.ctx/gdx-files    Gdx/files)
-      (.bindRoot #'core.ctx/gdx-input    Gdx/input)
-      (.bindRoot #'core.ctx/gdx-graphics Gdx/graphics)
+      (.bindRoot #'gdx-app      Gdx/app)
+      (.bindRoot #'gdx-files    Gdx/files)
+      (.bindRoot #'gdx-input    Gdx/input)
+      (.bindRoot #'gdx-graphics Gdx/graphics)
       (->> context
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))

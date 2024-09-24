@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.player-modal
-  (:require [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
-            [core.screens.stage :as stage]
+  (:require [core.screens.stage :as stage]
             [core.ctx :refer :all]
             [core.ctx.ui :as ui]
             [core.ui.actor :refer [remove!]]))

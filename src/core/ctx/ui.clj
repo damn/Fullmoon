@@ -1,7 +1,6 @@
 (ns core.ctx.ui
   (:require [core.ctx :refer :all]
             core.graphics.image
-            [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ui.actor :as actor]
             [core.ui.group :as group])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion

@@ -2,7 +2,6 @@
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.graphics.views :refer [world-mouse-position]]
             [core.ctx.grid :as grid]))
 
 (defsystem render "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])

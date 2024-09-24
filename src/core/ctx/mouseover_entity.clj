@@ -1,7 +1,6 @@
 (ns ^:no-doc core.ctx.mouseover-entity
   (:require [core.utils.core :refer [sort-by-order]]
             [core.ctx :refer :all]
-            [core.graphics.views :refer [world-mouse-position]]
             [core.entity :as entity]
             [core.screens.stage :as stage]
             [core.ctx.grid :as grid]))
