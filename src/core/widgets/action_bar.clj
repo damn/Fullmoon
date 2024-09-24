@@ -1,5 +1,5 @@
 (ns ^:no-doc core.widgets.action-bar
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component]
             [core.ctx :refer :all]
             [core.screens.stage :as stage]
             [core.ctx.ui :as ui]

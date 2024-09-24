@@ -1,7 +1,7 @@
 (ns ^:no-doc core.screens.minimap
   (:require [core.graphics.camera :as camera]
             [core.ctx :refer :all]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
             [core.ctx.explored-tile-corners :refer [explored?]]
             [core.ctx.screens :as screens]
             [core.graphics.views :refer [world-camera]]

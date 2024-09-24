@@ -1,7 +1,8 @@
 (ns ^:no-doc core.entity.modifiers
   (:require [clojure.string :as str]
             [core.utils.core :as utils]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             core.entity
             [core.operation :as operation])
   (:import com.badlogic.gdx.graphics.Color))

@@ -1,5 +1,6 @@
 (ns core.ctx.time
-  (:require [core.component :as component :refer [defcomponent]]))
+  (:require [core.ctx :refer :all]
+            [core.component :as component]))
 
 (def ^:private this :context/time)
 

@@ -1,7 +1,8 @@
 (ns core.screens.stage
   (:refer-clojure :exclude [get])
   (:require [core.ui.group :as group]
-            [core.component :refer [defcomponent] :as component]
+            [core.ctx :refer :all]
+            [core.component :as component]
             [core.graphics.views :refer [gui-mouse-position]]
             [core.ctx.screens :as screens]
             [core.screen :as screen])

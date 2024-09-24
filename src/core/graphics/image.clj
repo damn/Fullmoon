@@ -93,7 +93,7 @@
     (g/draw-rotated-centered-image this image 0 position)))
 
 (defn create [{g :context/graphics :as ctx} file]
-  (->image g (->texture-region (texture ctx file))))
+  (->image g (->texture-region (texture ctx file)))) ; TODO why doesnt texture work?
 
 (defn sub-image [{g :context/graphics} {:keys [texture-region]} bounds]
   (->image g (->texture-region texture-region bounds)))

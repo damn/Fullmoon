@@ -1,6 +1,6 @@
 (ns ^:no-doc core.entity.animation
   (:require [core.ctx.ui :as ui]
-            [core.component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.entity :as entity]
             [core.graphics.image :as image]

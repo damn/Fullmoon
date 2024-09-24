@@ -4,15 +4,16 @@
             [malli.core :as m]
             [malli.error :as me]
             [core.utils.core :refer [safe-get]]
-            [core.component :as component :refer [defcomponent defsystem defcomponent*]]))
+            [core.ctx :refer :all]
+            [core.component :refer [defsystem]]))
 
 (defsystem ->value "..." [_])
 
 (defn data-component [k]
-  (try (let [data (:data (safe-get component/attributes k))]
+  (try (let [data (:data (safe-get component-attributes k))]
          (if (vector? data)
            [(first data) (->value data)]
-           [data (safe-get component/attributes data)]))
+           [data (safe-get component-attributes data)]))
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
 
@@ -48,10 +49,10 @@
       (first (:frames animation))))
 
 (defn types []
-  (filter #(= "properties" (namespace %)) (keys component/attributes)))
+  (filter #(= "properties" (namespace %)) (keys component-attributes)))
 
 (defn overview [property-type]
-  (:overview (get component/attributes property-type)))
+  (:overview (get component-attributes property-type)))
 
 (defn ->schema [property]
   (-> property

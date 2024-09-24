@@ -1,5 +1,5 @@
 (ns ^:no-doc core.property.types.app
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.ctx :refer :all]
             [core.ctx.property :as property]))
 
 (property/def-attributes

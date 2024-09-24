@@ -1,6 +1,6 @@
 (ns ^:no-doc core.entity.clickable
-  (:require [core.component :refer [defcomponent]]
-            [core.entity :as entity]
+  (:require [core.entity :as entity]
+            [core.ctx :refer :all]
             [core.graphics :as g]))
 
 (defcomponent :entity/clickable

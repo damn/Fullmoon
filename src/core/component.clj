@@ -1,7 +1,4 @@
 (ns core.component
-  "We define a component as vector of `[keyword value]`.
-
-The two macros [[defsystem]] and [[defcomponent]] allow us to define behaviour and metadata for different components."
   (:require [clojure.string :as str]
             [core.utils.core :refer [index-of]]))
 
@@ -29,80 +26,6 @@ So for a component `[k v]` it dispatches on the component-keyword `k`."
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
-
-(def ^{:doc "Map of component-keys to component metadata."}
-  attributes {})
-
-(def ^:private warn-name-ns-mismatch? false)
-
-(defn- k->component-ns [k] ;
-  (symbol (str "components." (name (namespace k)) "." (name k))))
-
-(defn- check-warn-ns-name-mismatch [k]
-  (when (and warn-name-ns-mismatch?
-             (namespace k)
-             (not= (k->component-ns k) (ns-name *ns*)))
-    (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
-
-(defn defcomponent*
-  "Defines a component without systems methods, so only to set metadata."
-  [k attr-map & {:keys [warn-on-override?]}]
-  (when (and warn-on-override? (get attributes k))
-    (println "WARNING: Overwriting defcomponent" k "attr-map"))
-  (alter-var-root #'attributes assoc k attr-map))
-
-(defmacro defcomponent
-  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
-
-attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
-
-Example:
-```
-(defsystem foo \"foo docstring.\" [_])
-
-(defcomponent :foo/bar
-  {:let {:keys [a b]}}
-  (foo [_]
-    (+ a b)))
-
-(foo [:foo/bar {:a 1 :b 2}])
-=> 3
-```"
-  [k & sys-impls]
-  (check-warn-ns-name-mismatch k)
-  (let [attr-map? (not (list? (first sys-impls)))
-        attr-map  (if attr-map? (first sys-impls) {})
-        sys-impls (if attr-map? (rest sys-impls) sys-impls)
-        let-bindings (:let attr-map)
-        attr-map (dissoc attr-map :let)]
-    `(do
-      (when ~attr-map?
-        (defcomponent* ~k ~attr-map :warn-on-override? warn-on-override?))
-      #_(alter-meta! *ns* #(update % :doc str "\n* defcomponent `" ~k "`"))
-      ~@(for [[sys & fn-body] sys-impls
-              :let [sys-var (resolve sys)
-                    sys-params (:params (meta sys-var))
-                    fn-params (first fn-body)
-                    fn-exprs (rest fn-body)]]
-          (do
-           (when-not sys-var
-             (throw (IllegalArgumentException. (str sys " does not exist."))))
-           (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
-             (throw (IllegalArgumentException.
-                     (str sys-var " requires " (count sys-params) " args: " sys-params "."
-                          " Given " (count fn-params)  " args: " fn-params))))
-           `(do
-             (assert (keyword? ~k) (pr-str ~k))
-             (alter-var-root #'attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
-             (when (and warn-on-override?
-                        (get (methods @~sys-var) ~k))
-               (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
-             (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
-               [& params#]
-               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
-                     ~fn-params params#]
-                 ~@fn-exprs)))))
-      ~k)))
 
 (defsystem create "Create component value. Default returns v." [_ ctx])
 (defmethod create :default [[_ v] _ctx] v)

@@ -1,6 +1,7 @@
 (ns ^:no-doc core.effect.entity.damage
   (:require [core.utils.random :as random]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.entity.stats :refer [defmodifier]]))
 

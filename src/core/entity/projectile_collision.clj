@@ -1,7 +1,8 @@
 (ns ^:no-doc core.entity.projectile-collision
   (:require [core.utils.core :refer [find-first]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
             [core.entity :as entity]
+            [core.ctx :refer :all]
             [core.ctx.grid :as grid]))
 
 (defcomponent :entity/projectile-collision

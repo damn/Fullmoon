@@ -1,6 +1,7 @@
 (ns ^:no-doc core.ctx.content-grid
   (:require [data.grid2d :as grid2d]
-            [core.component :as component :refer [defcomponent]]))
+            [core.ctx :refer :all]
+            [core.component :as component]))
 
 (def ^:private this :context/content-grid)
 

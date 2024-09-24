@@ -1,6 +1,7 @@
 (ns core.ctx.widgets
   (:require [core.utils.core :as utils]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.ui.actor :as actor]
             [core.ui.group :as group]
             [core.ctx.ui :as ui]

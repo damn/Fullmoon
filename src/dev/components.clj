@@ -1,5 +1,6 @@
 (ns ^:no-doc dev.components
-  (:require [core.component :as component]))
+  (:require [core.component :as component]
+            [core.ctx :refer :all]))
 
 ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
 ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
@@ -20,7 +21,7 @@
 
              (println "\n#" nmsp)
              (doseq [k ks
-                     :let [attr-m (get component/attributes k)]]
+                     :let [attr-m (get component-attributes k)]]
                (println (str "* __" k "__ `" (get (:params attr-m) "do!") "`"))
                (when-let [data (:data attr-m)]
                  (println (str "    * data: `" (pr-str data) "`")))
@@ -29,7 +30,7 @@
                    (println "    * Descendants"))
                  (doseq [k ks]
                    (println "      *" k)
-                   (println (str "        * data: `" (pr-str (:data (get component/attributes k))) "`"))))))))))
+                   (println (str "        * data: `" (pr-str (:data (get component-attributes k))) "`"))))))))))
 
 (defn- component-systems [component-k]
    (for [[sys-name sys-var] component/defsystems
@@ -44,7 +45,7 @@
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))
-                 component/attributes)))))
+                 component-attributes)))))
 
 (defn- print-components* [ks]
   (doseq [k ks]
@@ -52,7 +53,7 @@
              (if-let [ancestrs (ancestors k)]
                (str "-> "(clojure.string/join "," ancestrs))
                "")
-             (let [attr-map (get component/attributes k)]
+             (let [attr-map (get component-attributes k)]
                #_(if (seq attr-map)
                    (pr-str (:core.component/fn-params attr-map))
                    (str " `"
@@ -78,7 +79,7 @@
           (with-out-str
            (doseq [[nmsp components] (sort-by first
                                               (group-by namespace
-                                                        (sort (keys component/attributes))))]
+                                                        (sort (keys component-attributes))))]
              (println "\n#" nmsp)
              (print-components* components)
              )))))

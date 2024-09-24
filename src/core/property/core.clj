@@ -1,5 +1,6 @@
 (ns ^:no-doc core.property.core
-  (:require [core.component :as component :refer [defcomponent]]))
+  (:require [core.component :as component]
+            [core.ctx :refer :all]))
 
 (com.badlogic.gdx.graphics.Colors/put
  "ITEM_GOLD"

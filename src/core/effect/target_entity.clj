@@ -1,6 +1,7 @@
 (ns ^:no-doc core.effect.target-entity
   (:require [core.math.vector :as v]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics :as g]))
 

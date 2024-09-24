@@ -1,5 +1,6 @@
 (ns core.ctx.screens
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.screen :as screen]))
 
 (defcomponent :context/screens

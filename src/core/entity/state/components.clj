@@ -3,7 +3,7 @@
             [core.utils.wasd-movement :refer [WASD-movement-vector]]
             [core.ctx :refer :all]
             [core.math.vector :as v]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
             [core.screens.stage :as stage]
             [core.ctx.screens :as screens]
             [core.ctx.grid :as grid]

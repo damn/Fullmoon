@@ -1,7 +1,8 @@
 (ns ^:no-doc core.property.types.creature
   (:require [clojure.string :as str]
             [core.utils.core :refer [safe-merge]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]))
 
 ; player doesn;t need aggro-range/reaction-time

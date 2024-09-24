@@ -1,6 +1,7 @@
 (ns ^:no-doc core.entity.temp-modifier
   (:require [core.utils.core :refer [readable-number]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.ctx.time :as time]))

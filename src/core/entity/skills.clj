@@ -1,6 +1,7 @@
 (ns ^:no-doc core.entity.skills
   (:require #_[clojure.string :as str]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.time :as time]))
 

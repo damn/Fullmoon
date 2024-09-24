@@ -1,5 +1,5 @@
 (ns ^:no-doc core.entity.destroy-audiovisual
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]))
 
 (defcomponent :entity/destroy-audiovisual

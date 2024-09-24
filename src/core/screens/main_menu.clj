@@ -1,6 +1,7 @@
 (ns ^:no-doc core.screens.main-menu
   (:require [core.utils.core :refer [safe-get]]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.graphics.cursors :as cursors]
             [core.screen :as screen]
             [core.ctx.screens :as screens]

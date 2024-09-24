@@ -3,7 +3,8 @@
             #_[malli.core :as m]
             [core.utils.core :as utils :refer [k->pretty-name]]
             [core.val-max :refer [val-max-ratio]]
-            [core.component :as component :refer [defcomponent defcomponent*]]
+            [core.ctx :refer :all]
+            [core.component :as component]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.operation :as operation])

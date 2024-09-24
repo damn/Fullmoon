@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
             [core.ctx.grid :as grid]))
 
 (defn- nearest-enemy [{:keys [context/grid]} entity*]

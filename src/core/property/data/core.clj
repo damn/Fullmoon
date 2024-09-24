@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn]
             [malli.core :as m]
             [core.utils.core :as utils]
-            [core.component :as component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.ui.actor :as actor]
             [core.ctx.ui :as ui])
@@ -84,7 +84,7 @@
 
 (defn- namespaced-ks [ns-name-k]
   (filter #(= (name ns-name-k) (namespace %))
-          (keys component/attributes)))
+          (keys component-attributes)))
 
 (defcomponent :components-ns
   (property/->value [[_ ns-name-k]]

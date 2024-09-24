@@ -1,6 +1,7 @@
 (ns ^:no-doc core.property.data.image
   (:require [core.ctx.ui :as ui]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.graphics.image :as image]))
 

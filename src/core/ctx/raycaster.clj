@@ -2,7 +2,8 @@
   (:require [core.math.raycaster :as raycaster]
             [core.math.vector :as v]
             [data.grid2d :as grid2d]
-            [core.component :as component :refer [defcomponent]]))
+            [core.ctx :refer :all]
+            [core.component :as component]))
 
 (defn- set-arr [arr cell* cell*->blocked?]
   (let [[x y] (:position cell*)]

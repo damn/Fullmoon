@@ -1,7 +1,6 @@
 (ns ^:no-doc core.property.data.sound
   (:require [clojure.string :as str]
             [core.ctx :refer :all]
-            [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [core.ui.actor :as actor]

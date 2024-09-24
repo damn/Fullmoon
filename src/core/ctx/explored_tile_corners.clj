@@ -1,6 +1,7 @@
 (ns core.ctx.explored-tile-corners
   (:require [data.grid2d :as grid2d]
-            [core.component :as component :refer [defcomponent]]))
+            [core.ctx :refer :all]
+            [core.component :as component]))
 
 (defcomponent :context/explored-tile-corners
   (component/create [_ {:keys [context/grid]}]

@@ -1,6 +1,7 @@
 (ns core.ctx.tiled-map-renderer
   (:require [core.tiled :as tiled]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.graphics.views :refer [world-camera]]
             [core.graphics :as g])
   (:import com.badlogic.gdx.maps.MapLayer

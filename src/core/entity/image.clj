@@ -1,5 +1,5 @@
 (ns ^:no-doc core.entity.image
-  (:require [core.component :refer [defcomponent]]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics :as g]))
 

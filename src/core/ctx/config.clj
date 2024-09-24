@@ -1,5 +1,6 @@
 (ns ^:no-doc core.ctx.config
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]))
 
 (property/def-attributes

@@ -1,5 +1,6 @@
 (ns ^:no-doc core.property.types.audiovisual
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.property :as property]))
 

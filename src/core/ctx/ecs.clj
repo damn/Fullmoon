@@ -2,7 +2,7 @@
   (:require [clj-commons.pretty.repl :as p]
             [core.utils.core :refer [safe-merge sort-by-order]]
             [core.ctx :refer :all]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
             [core.graphics :as g]
             [core.entity :as entity])
   (:import com.badlogic.gdx.graphics.Color))

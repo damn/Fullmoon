@@ -1,6 +1,6 @@
 (ns ^:no-doc core.property.types.world
   (:require [core.tiled :as tiled]
-            [core.component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             core.world.gen.gen))
 

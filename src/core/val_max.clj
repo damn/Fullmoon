@@ -1,7 +1,7 @@
 (ns core.val-max
   (:require [clojure.string :as str]
             [malli.core :as m]
-            [core.component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.operation :as operation]))
 
 (def ^:private val-max-schema

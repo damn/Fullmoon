@@ -1,4 +1,6 @@
 ; TODO:
+; * maybe systems in another color and also here?
+; or s/foo or c/bar
 ; * clone vim clojure static
 ; * add a different color (clj-green, or anything unused, gold) for ctx functions
 ; ( * and 'ctx' can also have a special color?! )
@@ -12,19 +14,92 @@
 ; crazy ...
 ; 'gdl'
 (ns core.ctx
-  (:require [core.component  :as component :refer [defcomponent]]
-            [core.ctx.assets :as assets]
-            [core.ctx.graphics :as graphics]
-            [core.ctx.time :as time]))
+  (:require [core.component :as component]))
+
+(def component-attributes {})
+
+(def ^:private warn-name-ns-mismatch? false)
+
+(defn- k->component-ns [k] ;
+  (symbol (str "components." (name (namespace k)) "." (name k))))
+
+(defn- check-warn-ns-name-mismatch [k]
+  (when (and warn-name-ns-mismatch?
+             (namespace k)
+             (not= (k->component-ns k) (ns-name *ns*)))
+    (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
+
+(defn defcomponent*
+  "Defines a component without systems methods, so only to set metadata."
+  [k attr-map]
+  (when (get component-attributes k)
+    (println "WARNING: Overwriting defcomponent" k "attr-map"))
+  (alter-var-root #'component-attributes assoc k attr-map))
+
+(defmacro defcomponent
+  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
+
+attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
+
+Example:
+```
+(defsystem foo \"foo docstring.\" [_])
+
+(defcomponent :foo/bar
+  {:let {:keys [a b]}}
+  (foo [_]
+    (+ a b)))
+
+(foo [:foo/bar {:a 1 :b 2}])
+=> 3
+```"
+  [k & sys-impls]
+  (check-warn-ns-name-mismatch k)
+  (let [attr-map? (not (list? (first sys-impls)))
+        attr-map  (if attr-map? (first sys-impls) {})
+        sys-impls (if attr-map? (rest sys-impls) sys-impls)
+        let-bindings (:let attr-map)
+        attr-map (dissoc attr-map :let)]
+    `(do
+      (when ~attr-map?
+        (defcomponent* ~k ~attr-map))
+      #_(alter-meta! *ns* #(update % :doc str "\n* defcomponent `" ~k "`"))
+      ~@(for [[sys & fn-body] sys-impls
+              :let [sys-var (resolve sys)
+                    sys-params (:params (meta sys-var))
+                    fn-params (first fn-body)
+                    fn-exprs (rest fn-body)]]
+          (do
+           (when-not sys-var
+             (throw (IllegalArgumentException. (str sys " does not exist."))))
+           (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
+             (throw (IllegalArgumentException.
+                     (str sys-var " requires " (count sys-params) " args: " sys-params "."
+                          " Given " (count fn-params)  " args: " fn-params))))
+           `(do
+             (assert (keyword? ~k) (pr-str ~k))
+             (alter-var-root #'component-attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
+             (when (get (methods @~sys-var) ~k)
+               (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
+             (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
+               [& params#]
+               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
+                     ~fn-params params#]
+                 ~@fn-exprs)))))
+      ~k)))
 
 (defrecord Context [])
 
 (def ^{:doc "An atom referencing the current context. Only use by ui-callbacks or for development/debugging."}
   app-state (atom nil))
 
-; TODO docstrings not avilable here ...
-(def play-sound! assets/play-sound!)
-(def texture     assets/texture)
+(defprotocol PlaySound
+  (play-sound! [_ file]
+               "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
+  Returns ctx."))
+
+(defprotocol TextureAsset
+  (texture [_ file] "Already loaded."))
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -75,7 +150,7 @@
                   :else %)
                 tx)))
 
-(defn- tx-happened! [tx ctx]
+#_(defn- tx-happened! [tx ctx]
   (when (and
          (not (fn? tx))
          (not= :tx/cursor (first tx)))
@@ -94,7 +169,7 @@
                  (component/do! tx ctx))]
     (if (map? result) ; new context
       (do
-       (tx-happened! tx ctx)
+       #_(tx-happened! tx ctx)
        result)
       (effect! ctx result))))
 
@@ -111,7 +186,8 @@
           ctx
           txs))
 
-(def render-world-view graphics/render-world-view)
+(defprotocol RenderWorldView
+  (render-world-view [_ render-fn] "render-fn is a function of param 'g', graphics context."))
 
 (defprotocol MouseOverEntity
   (mouseover-entity* [_]))

@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
             [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]

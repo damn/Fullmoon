@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.player
-  (:require [core.component :refer [defcomponent]]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]
             [core.entity.state :as state]))
 

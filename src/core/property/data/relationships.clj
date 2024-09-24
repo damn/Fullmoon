@@ -1,5 +1,6 @@
 (ns ^:no-doc core.property.data.relationships
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [core.screens.property-editor :refer [->overview-table]]

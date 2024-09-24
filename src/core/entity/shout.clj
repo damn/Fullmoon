@@ -1,5 +1,6 @@
 (ns ^:no-doc core.entity.shout
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.time :as time]
             [core.ctx.grid :as grid]))

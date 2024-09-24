@@ -1,7 +1,8 @@
 (ns ^:no-doc core.entity.state
   (:require [reduce-fsm :as fsm]
             [core.utils.core :refer [readable-number]]
-            [core.component :as component :refer [defsystem defcomponent]]
+            [core.ctx :refer :all]
+            [core.component :as component :refer [defsystem]]
             [core.entity :as entity]))
 
 (defsystem enter "FIXME" [_ ctx])

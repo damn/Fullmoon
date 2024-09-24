@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.mouseover
-  (:require [core.component :refer [defcomponent]]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.graphics :as g]
             [core.entity :as entity]))
 

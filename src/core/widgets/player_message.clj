@@ -1,6 +1,6 @@
 (ns ^:no-doc core.widgets.player-message
   (:require [core.ctx :refer :all]
-            [core.component :as component :refer [defcomponent]]
+            [core.component :as component]
             [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ctx.ui :as ui])

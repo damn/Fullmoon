@@ -1,6 +1,6 @@
 (ns core.ctx.ui
   (:require [core.ctx :refer :all]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
             core.graphics.image
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ui.actor :as actor]

@@ -1,6 +1,6 @@
 (ns ^:no-doc core.screens.world
   (:require [core.graphics.camera :as camera]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
             [core.ctx :refer :all]
             [core.ctx.ecs :as ecs]
             [core.entity :as entity]

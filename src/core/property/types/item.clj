@@ -1,5 +1,6 @@
 (ns ^:no-doc core.property.types.item
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity.inventory :as inventory]
             [core.entity.modifiers :as modifiers]
             [core.ctx.property :as property]))

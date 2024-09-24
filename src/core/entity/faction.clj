@@ -1,5 +1,6 @@
 (ns ^:no-doc core.entity.faction
-  (:require [core.component :as component :refer [defcomponent]]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]))
 
 (defcomponent :entity/faction

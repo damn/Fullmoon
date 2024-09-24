@@ -1,5 +1,6 @@
 (ns ^:no-doc core.ctx.graphics
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [core.component :as component]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.graphics :as g]
             (core.graphics cursors
@@ -59,10 +60,10 @@
   [ctx render-fn]
   (render-view ctx :gui-view render-fn))
 
-(defn render-world-view
-  "render-fn is a function of param 'g', graphics context."
-  [ctx render-fn]
-  (render-view ctx :world-view render-fn))
+(extend-type core.ctx.Context
+  RenderWorldView
+  (render-world-view [ctx render-fn]
+    (render-view ctx :world-view render-fn)) )
 
 (defn on-resize [{g :context/graphics} w h]
   (.update (views/gui-viewport g) w h true)

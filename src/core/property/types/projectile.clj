@@ -1,6 +1,7 @@
 (ns ^:no-doc core.property.types.projectile
   (:require [core.math.vector :as v]
-            [core.component :refer [defcomponent] :as component]
+            [core.component :as component]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.property :as property]
             [core.ctx.raycaster :refer [path-blocked?]]))
