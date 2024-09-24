@@ -1,4 +1,4 @@
-(ns core.world-gen
+(ns core.world
   (:require [clojure.string :as str]
             [data.grid2d :as g]
             [core.ctx :refer :all]

@@ -7,7 +7,7 @@
             [core.property :as property]
             [core.tiled :as tiled]
             [core.ui :as ui]
-            [core.world-gen :as level-generator])
+            [core.world :as world])
   (:import org.lwjgl.system.Configuration
            (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -1244,7 +1244,7 @@
   (fn [ctx]
     (-> ctx
         (change-screen :screens/world)
-        (start-new-game (level-generator/->world ctx world-id)))))
+        (start-new-game (world/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat
