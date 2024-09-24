@@ -24,7 +24,7 @@
             [lein-ancient "1.0.0-RC3"]
             [lein-codox "0.10.8"]
             [lein-hiera "2.0.0"]]
-  :java-source-paths ["src-java"]
+  :java-source-paths ["java-src"]
   :target-path "target/%s/" ; https://stackoverflow.com/questions/44246924/clojure-tools-namespace-refresh-fails-with-no-namespace-foo
   :uberjar-name "cdq_3.jar"
   :omit-source true
