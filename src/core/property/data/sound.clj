@@ -5,7 +5,7 @@
             [core.screens.stage :as stage]
             [core.actor :as actor]
             [core.group :as group]
-            [core.ctx.ui :as ui]))
+            [core.ui :as ui]))
 
 (defcomponent :sound {:schema :string})
 

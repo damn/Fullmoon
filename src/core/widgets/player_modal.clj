@@ -1,7 +1,7 @@
 (ns ^:no-doc core.widgets.player-modal
   (:require [core.screens.stage :as stage]
             [core.ctx :refer :all]
-            [core.ctx.ui :as ui]
+            [core.ui :as ui]
             [core.actor :refer [remove!]]))
 
 ; TODO no window movable type cursor appears here like in player idle

@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.actor :as actor]
             [core.group :as group]
-            [core.ctx.ui :as ui]
+            [core.ui :as ui]
             [core.entity.state.components :refer [draw-item-on-cursor]]
             [core.screens.stage :as stage]
             [core.widgets.action-bar :as action-bar]

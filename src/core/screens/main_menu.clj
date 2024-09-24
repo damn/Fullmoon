@@ -9,7 +9,7 @@
             core.world.ctx
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]
-            [core.ctx.ui :as ui])
+            [core.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys))
 
 (defn- start-game! [world-id]

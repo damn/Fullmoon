@@ -1,4 +1,4 @@
-(ns core.ctx.ui
+(ns core.ui
   (:require [core.ctx :refer :all]
             core.graphics.image
             [core.actor :as actor]

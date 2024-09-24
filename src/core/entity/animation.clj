@@ -1,5 +1,5 @@
 (ns ^:no-doc core.entity.animation
-  (:require [core.ctx.ui :as ui]
+  (:require [core.ui :as ui]
             [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.entity :as entity]

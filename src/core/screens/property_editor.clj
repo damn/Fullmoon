@@ -11,7 +11,7 @@
             [core.widgets.error-modal :refer [error-window!]]
             [core.actor :as actor]
             [core.group :as group]
-            [core.ctx.ui :as ui])
+            [core.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)

@@ -5,7 +5,7 @@
             [core.screens.stage :as stage]
             [core.ctx.time :as time]
             [core.group :refer [add-actor!]]
-            [core.ctx.ui :as ui]))
+            [core.ui :as ui]))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"

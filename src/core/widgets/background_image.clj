@@ -1,5 +1,5 @@
 (ns ^:no-doc core.widgets.background-image
-  (:require [core.ctx.ui :as ui]
+  (:require [core.ui :as ui]
             [core.graphics.image :as image]))
 
 (def ^:private image-file "images/moon_background.png")

@@ -1,6 +1,6 @@
 (ns ^:no-doc dev.info-tree
   (:require [core.ctx :refer :all]
-            [core.ctx.ui :as ui]
+            [core.ui :as ui]
             [core.group :as group]
             [core.screens.stage :as stage])
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node

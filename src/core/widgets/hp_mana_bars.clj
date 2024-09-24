@@ -4,7 +4,7 @@
             [core.val-max :refer [val-max-ratio]]
             [core.entity :as entity]
             [core.graphics.image :as image]
-            [core.ctx.ui :as ui]))
+            [core.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
   (draw-text g {:text infostr

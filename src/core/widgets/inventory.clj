@@ -2,7 +2,7 @@
   (:require [data.grid2d :as grid]
             [core.ctx :refer :all]
             [core.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
-            [core.ctx.ui :as ui]
+            [core.ui :as ui]
             [core.graphics.image :as image]
             [core.entity :as entity]
             [core.entity.inventory :as inventory]

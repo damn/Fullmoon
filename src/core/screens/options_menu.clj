@@ -1,7 +1,7 @@
 (ns ^:no-doc core.screens.options-menu
   (:require [core.utils.core :refer [safe-get]]
             [core.utils.ns :as ns]
-            [core.ctx.ui :as ui]
+            [core.ui :as ui]
             [core.ctx :refer :all]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
