@@ -1,4 +1,4 @@
-(ns core.ctx.assets
+(ns ^:no-doc core.ctx.assets
   (:require [clojure.string :as str]
             [core.component :refer [defcomponent] :as component])
   (:import com.badlogic.gdx.Gdx

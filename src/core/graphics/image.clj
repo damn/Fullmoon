@@ -1,12 +1,12 @@
 (ns core.graphics.image
-  (:require [core.ctx.assets :as assets]
+  (:require [core.ctx :refer :all]
             [core.graphics :as g])
   (:import (com.badlogic.gdx.graphics Color Texture)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch)))
 
 (defn ->texture-region
-  ([^Texture texture]
-   (TextureRegion. texture))
+  ([^Texture tex]
+   (TextureRegion. tex))
 
   ([^TextureRegion texture-region [x y w h]]
    (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
@@ -93,7 +93,7 @@
     (g/draw-rotated-centered-image this image 0 position)))
 
 (defn create [{g :context/graphics :as ctx} file]
-  (->image g (->texture-region (assets/texture ctx file))))
+  (->image g (->texture-region (texture ctx file))))
 
 (defn sub-image [{g :context/graphics} {:keys [texture-region]} bounds]
   (->image g (->texture-region texture-region bounds)))

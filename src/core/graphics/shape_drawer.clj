@@ -6,14 +6,14 @@
            space.earlygrey.shapedrawer.ShapeDrawer))
 
 (defn ->build [batch]
-  (let [texture (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                               (.setColor ^Color Color/WHITE)
-                               (.drawPixel 0 0))
-                      texture (Texture. pixmap)]
-                  (.dispose pixmap)
-                  texture)]
-    {:shape-drawer (ShapeDrawer. batch (TextureRegion. texture 1 0 1 1))
-     :shape-drawer-texture texture}))
+  (let [tex (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
+                           (.setColor ^Color Color/WHITE)
+                           (.drawPixel 0 0))
+                  tex (Texture. pixmap)]
+              (.dispose pixmap)
+              tex)]
+    {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
+     :shape-drawer-texture tex}))
 
 (defn- degree->radians [degree]
   (* (float degree) MathUtils/degreesToRadians))

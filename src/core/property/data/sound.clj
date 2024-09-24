@@ -1,6 +1,6 @@
 (ns ^:no-doc core.property.data.sound
   (:require [clojure.string :as str]
-            [core.ctx.assets :as assets]
+            [core.ctx :refer :all]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
@@ -20,7 +20,7 @@
                 :pack? true}))
 
 (defn- ->play-sound-button [sound-file]
-  (ui/->text-button "play!" #(assets/play-sound! % sound-file)))
+  (ui/->text-button "play!" #(play-sound! % sound-file)))
 
 (declare ->sound-columns)
 
