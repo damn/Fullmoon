@@ -1,6 +1,6 @@
 (ns ^:no-doc core.widgets.action-bar
   (:require [core.ctx :refer :all]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.ui :as ui]
             [core.actor :as actor :refer [remove! add-tooltip!]]
             [core.group :refer [clear-children! add-actor!]])

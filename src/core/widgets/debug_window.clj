@@ -2,7 +2,7 @@
   (:require [core.graphics.camera :as camera]
             [core.ctx :refer :all]
             [core.utils.core :as utils]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.ctx.time :as time]
             [core.group :refer [add-actor!]]
             [core.ui :as ui]))

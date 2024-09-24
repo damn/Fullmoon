@@ -6,7 +6,7 @@
             [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.ctx.screens :as screens]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.widgets.background-image :refer [->background-image]]
             [core.widgets.error-modal :refer [error-window!]]
             [core.actor :as actor]

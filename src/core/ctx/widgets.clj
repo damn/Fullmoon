@@ -5,7 +5,7 @@
             [core.group :as group]
             [core.ui :as ui]
             [core.entity.state.components :refer [draw-item-on-cursor]]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.widgets.action-bar :as action-bar]
             [core.widgets.debug-window :as debug-window]
             [core.widgets.entity-info-window :as entity-info-window]

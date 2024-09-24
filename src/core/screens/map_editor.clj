@@ -7,7 +7,7 @@
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
             [core.screen :as screen]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.widgets.error-modal :refer [error-window!]]
             [core.actor :refer [set-position!]]
             [core.group :refer [add-actor!]]

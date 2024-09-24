@@ -2,7 +2,7 @@
   (:require [core.ctx :refer :all]
             [core.ui :as ui]
             [core.group :as group]
-            [core.screens.stage :as stage])
+            [core.stage :as stage])
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
 

@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx skill-usable-state]]
             [core.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.ui :as ui])

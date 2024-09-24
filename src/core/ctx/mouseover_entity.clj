@@ -2,7 +2,7 @@
   (:require [core.utils.core :refer [sort-by-order]]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.ctx.grid :as grid]))
 
 (defn- calculate-mouseover-entity [ctx]

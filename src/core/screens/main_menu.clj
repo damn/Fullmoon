@@ -4,7 +4,7 @@
             [core.graphics.cursors :as cursors]
             [core.screen :as screen]
             [core.ctx.screens :as screens]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.ctx.property :as property]
             core.world.ctx
             [core.widgets.background-image :refer [->background-image]]

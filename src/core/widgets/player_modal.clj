@@ -1,5 +1,5 @@
 (ns ^:no-doc core.widgets.player-modal
-  (:require [core.screens.stage :as stage]
+  (:require [core.stage :as stage]
             [core.ctx :refer :all]
             [core.ui :as ui]
             [core.actor :refer [remove!]]))

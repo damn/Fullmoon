@@ -1,4 +1,4 @@
-(ns core.screens.stage
+(ns core.stage
   (:refer-clojure :exclude [get])
   (:require [core.group :as group]
             [core.ctx :refer :all]

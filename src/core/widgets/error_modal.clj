@@ -1,7 +1,7 @@
 (ns ^:no-doc core.widgets.error-modal
   (:require [clj-commons.pretty.repl :as p]
             [core.ui :as ui]
-            [core.screens.stage :as stage]))
+            [core.stage :as stage]))
 
 (defmacro ^:private with-err-str
   "Evaluates exprs in a context in which *out* is bound to a fresh

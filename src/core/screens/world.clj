@@ -8,7 +8,7 @@
             [core.ctx.screens :as screens]
             [core.ctx.widgets :as widgets]
             [core.screen :as screen]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.ctx.mouseover-entity :refer [update-mouseover-entity]]
             [core.ctx.time :as time]
             [core.ctx.potential-fields :as potential-fields]

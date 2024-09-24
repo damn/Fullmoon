@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [core.ctx :refer :all]
             [core.ctx.property :as property]
-            [core.screens.stage :as stage]
+            [core.stage :as stage]
             [core.actor :as actor]
             [core.group :as group]
             [core.ui :as ui]))
