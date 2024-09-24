@@ -2,7 +2,6 @@
   (:require [core.utils.core :refer [readable-number]]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.graphics :as g]
             [core.ctx.time :as time]))
 
 (defcomponent :entity/temp-modifier
@@ -16,7 +15,7 @@
        [:tx/reverse-modifiers eid modifiers]]))
 
   (entity/render-above [_ entity* g ctx]
-    (g/draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
+    (draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
 (def ^:private modifiers {:modifier/movement-speed {:op/mult -0.5}})
 (def ^:private duration 5)

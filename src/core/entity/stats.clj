@@ -5,7 +5,6 @@
             [core.val-max :refer [val-max-ratio]]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.graphics :as g]
             [core.operation :as operation])
   (:import com.badlogic.gdx.graphics.Color))
 
@@ -198,15 +197,15 @@
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
-                height (g/pixels->world-units g entity/hpbar-height-px)
-                border (g/pixels->world-units g borders-px)]
-            (g/draw-filled-rectangle g x y width height Color/BLACK)
-            (g/draw-filled-rectangle g
-                                     (+ x border)
-                                     (+ y border)
-                                     (- (* width ratio) (* 2 border))
-                                     (- height (* 2 border))
-                                     (hpbar-color ratio))))))))
+                height (pixels->world-units g entity/hpbar-height-px)
+                border (pixels->world-units g borders-px)]
+            (draw-filled-rectangle g x y width height Color/BLACK)
+            (draw-filled-rectangle g
+                                   (+ x border)
+                                   (+ y border)
+                                   (- (* width ratio) (* 2 border))
+                                   (- height (* 2 border))
+                                   (hpbar-color ratio))))))))
 
 (defcomponent :tx.entity.stats/pay-mana-cost
   (do! [[_ entity cost] _ctx]

@@ -2,7 +2,6 @@
   (:require [clj-commons.pretty.repl :as p]
             [core.utils.core :refer [safe-merge sort-by-order]]
             [core.ctx :refer :all]
-            [core.graphics :as g]
             [core.entity :as entity])
   (:import com.badlogic.gdx.graphics.Color))
 
@@ -62,7 +61,7 @@
 
 (defn- draw-body-rect [g entity* color]
   (let [[x y] (:left-bottom entity*)]
-    (g/draw-rectangle g x y (:width entity*) (:height entity*) color)))
+    (draw-rectangle g x y (:width entity*) (:height entity*) color)))
 
 (defn- render-entity* [system entity* g ctx]
   (try

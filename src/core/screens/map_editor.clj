@@ -6,7 +6,6 @@
             [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
-            [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
             [core.screens.stage :as stage]
@@ -123,24 +122,24 @@ direction keys: move")
                 show-grid-lines]} @(current-data ctx)
         visible-tiles (camera/visible-tiles (world-camera ctx))
         [x y] (->tile (world-mouse-position ctx))]
-    (g/draw-rectangle g x y 1 1 Color/WHITE)
+    (draw-rectangle g x y 1 1 Color/WHITE)
     (when start-position
-      (g/draw-filled-rectangle g (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
+      (draw-filled-rectangle g (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
               :let [movement-property (tiled/movement-property tiled-map [x y])]]
-        (g/draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
-                              0.08
-                              Color/BLACK)
-        (g/draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
-                              0.05
-                              (case movement-property
-                                "all"   Color/GREEN
-                                "air"   Color/ORANGE
-                                "none"  Color/RED))))
+        (draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
+                            0.08
+                            Color/BLACK)
+        (draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
+                            0.05
+                            (case movement-property
+                              "all"   Color/GREEN
+                              "air"   Color/ORANGE
+                              "none"  Color/RED))))
     (when show-grid-lines
-      (g/draw-grid g 0 0 (tiled/width  tiled-map) (tiled/height tiled-map) 1 1 [1 1 1 0.5]))))
+      (draw-grid g 0 0 (tiled/width  tiled-map) (tiled/height tiled-map) 1 1 [1 1 1 0.5]))))
 
 (def ^:private world-id :worlds/modules)
 

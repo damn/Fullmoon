@@ -1,11 +1,11 @@
 (ns ^:no-doc core.world.render.tiled-map
-  (:require [core.math.raycaster :as raycaster]
-            [core.graphics :as g]
+  (:require [core.ctx :refer :all]
+            [core.math.raycaster :as raycaster]
             [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer])
   (:import com.badlogic.gdx.graphics.Color))
 
-(def ^:private explored-tile-color (g/->color 0.5 0.5 0.5 1))
+(def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
 
 (def ^:private ^:dbg-flag see-all-tiles? false)
 

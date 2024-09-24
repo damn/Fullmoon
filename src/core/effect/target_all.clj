@@ -1,7 +1,6 @@
 (ns ^:no-doc core.effect.target-all
   (:require [core.ctx :refer :all]
             [core.effect.core :as effect]
-            [core.graphics :as g]
             [core.entity :as entity]
             [core.world.ctx :refer [active-entities]]))
 
@@ -63,7 +62,7 @@
   (effect/render [_ g {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (doseq [target* (map deref (creatures-in-los-of-player ctx))]
-        (g/draw-line g
-                     (:position source*) #_(start-point source* target*)
-                     (:position target*)
-                     [1 0 0 0.5])))))
+        (draw-line g
+                   (:position source*) #_(start-point source* target*)
+                   (:position target*)
+                   [1 0 0 0.5])))))

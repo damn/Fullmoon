@@ -1,8 +1,8 @@
 (ns ^:no-doc core.world.render.debug
-  (:require [core.utils.core :refer [->tile]]
+  (:require [core.ctx :refer :all]
+            [core.utils.core :refer [->tile]]
             [core.graphics.camera :as camera]
             [core.math.geom :as geom]
-            [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera world-viewport-width world-viewport-height]]
             [core.ctx.grid :refer [circle->cells]]
             [core.ctx.potential-fields :as potential-field]))
@@ -12,12 +12,12 @@
         grid (:context/grid ctx)
         radius 0.8
         circle {:position position :radius radius}]
-    (g/draw-circle g position radius [1 0 0 0.5])
+    (draw-circle g position radius [1 0 0 0.5])
     (doseq [[x y] (map #(:position @%)
                        (circle->cells grid circle))]
-      (g/draw-rectangle g x y 1 1 [1 0 0 0.5]))
+      (draw-rectangle g x y 1 1 [1 0 0 0.5]))
     (let [{[x y] :left-bottom :keys [width height]} (geom/circle->outer-rectangle circle)]
-      (g/draw-rectangle g x y width height [0 0 1 1]))))
+      (draw-rectangle g x y width height [0 0 1 1]))))
 
 (def ^:private ^:dbg-flag tile-grid? false)
 (def ^:private ^:dbg-flag potential-field-colors? false)
@@ -30,10 +30,10 @@
         [left-x right-x bottom-y top-y] (camera/frustum world-camera)]
 
     (when tile-grid?
-      (g/draw-grid g (int left-x) (int bottom-y)
-                   (inc (int (world-viewport-width ctx)))
-                   (+ 2 (int (world-viewport-height ctx)))
-                   1 1 [1 1 1 0.8]))
+      (draw-grid g (int left-x) (int bottom-y)
+                 (inc (int (world-viewport-width ctx)))
+                 (+ 2 (int (world-viewport-height ctx)))
+                 1 1 [1 1 1 0.8]))
 
     (doseq [[x y] (camera/visible-tiles world-camera)
             :let [cell (grid [x y])]
@@ -41,17 +41,17 @@
             :let [cell* @cell]]
 
       (when (and cell-entities? (seq (:entities cell*)))
-        (g/draw-filled-rectangle g x y 1 1 [1 0 0 0.6]))
+        (draw-filled-rectangle g x y 1 1 [1 0 0 0.6]))
 
       (when (and cell-occupied? (seq (:occupied cell*)))
-        (g/draw-filled-rectangle g x y 1 1 [0 0 1 0.6]))
+        (draw-filled-rectangle g x y 1 1 [0 0 1 0.6]))
 
       (when potential-field-colors?
         (let [faction :good
               {:keys [distance entity]} (faction cell*)]
           (when distance
             (let [ratio (/ distance (@#'potential-field/factions-iterations faction))]
-              (g/draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
+              (draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
 (def ^:private ^:dbg-flag highlight-blocked-cell? true)
 
@@ -60,10 +60,10 @@
     (let [[x y] (->tile (world-mouse-position ctx))
           cell (get (:context/grid ctx) [x y])]
       (when (and cell (#{:air :none} (:movement @cell)))
-        (g/draw-rectangle g x y 1 1
-                          (case (:movement @cell)
-                            :air  [1 1 0 0.5]
-                            :none [1 0 0 0.5]))))))
+        (draw-rectangle g x y 1 1
+                        (case (:movement @cell)
+                          :air  [1 1 0 0.5]
+                          :none [1 0 0 0.5]))))))
 
 (defn before-entities [ctx g]
   (tile-debug g ctx))

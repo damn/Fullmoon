@@ -1,15 +1,14 @@
 (ns ^:no-doc core.entity.line-render
   (:require [core.ctx :refer :all]
-            [core.entity :as entity]
-            [core.graphics :as g]))
+            [core.entity :as entity]))
 
 (defcomponent :entity/line-render
   {:let {:keys [thick? end color]}}
   (entity/render [_ entity* g _ctx]
     (let [position (:position entity*)]
       (if thick?
-        (g/with-shape-line-width g 4 #(g/draw-line g position end color))
-        (g/draw-line g position end color)))))
+        (with-shape-line-width g 4 #(draw-line g position end color))
+        (draw-line g position end color)))))
 
 (defcomponent :tx/line-render
   (do! [[_ {:keys [start end duration color thick?]}] _ctx]

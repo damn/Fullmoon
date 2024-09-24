@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
-            [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
             [core.entity :as entity]
@@ -26,14 +25,14 @@
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
 (defn- draw-cell-rect [g player-entity* x y mouseover? cell]
-  (g/draw-rectangle g x y cell-size cell-size Color/GRAY)
+  (draw-rectangle g x y cell-size cell-size Color/GRAY)
   (when (and mouseover?
              (= :player-item-on-cursor (entity/state player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)
           color (if (inventory/valid-slot? cell item)
-                 droppable-color
-                 not-allowed-color)]
-      (g/draw-filled-rectangle g (inc x) (inc y) (- cell-size 2) (- cell-size 2) color))))
+                  droppable-color
+                  not-allowed-color)]
+      (draw-filled-rectangle g (inc x) (inc y) (- cell-size 2) (- cell-size 2) color))))
 
 (defn- mouseover? [^Actor actor [x y]]
   (let [v (.stageToLocalCoordinates actor (Vector2. x y))]
@@ -84,7 +83,7 @@
                 (let [drawable (ui/->texture-region-drawable (:texture-region (image/sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
-                   (.tint ^TextureRegionDrawable drawable (g/->color 1 1 1 0.4))])))
+                   (.tint ^TextureRegionDrawable drawable (->color 1 1 1 0.4))])))
          (into {}))))
 
 ; TODO move together with empty-inventory definition ?

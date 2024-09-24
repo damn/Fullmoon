@@ -1,8 +1,7 @@
 (ns core.ctx.tiled-map-renderer
   (:require [core.tiled :as tiled]
             [core.ctx :refer :all]
-            [core.graphics.views :refer [world-camera]]
-            [core.graphics :as g])
+            [core.graphics.views :refer [world-camera]])
   (:import com.badlogic.gdx.maps.MapLayer
            [gdl OrthogonalTiledMapRenderer ColorSetter]))
 
@@ -10,9 +9,7 @@
 ; and when a batch is passed to the constructor
 ; we do not need to dispose the renderer
 (defn- map-renderer-for [{:keys [batch] :as g} tiled-map]
-  (OrthogonalTiledMapRenderer. tiled-map
-                               (float (g/world-unit-scale g))
-                               batch))
+  (OrthogonalTiledMapRenderer. tiled-map (float (world-unit-scale g)) batch))
 
 (defn- set-color-setter! [^OrthogonalTiledMapRenderer map-renderer color-setter]
   (.setColorSetter map-renderer (reify ColorSetter

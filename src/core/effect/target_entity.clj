@@ -2,8 +2,7 @@
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.effect.core :as effect]
-            [core.entity :as entity]
-            [core.graphics :as g]))
+            [core.entity :as entity]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v/distance (:position entity*)
@@ -66,9 +65,9 @@
   (effect/render [_ g {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
-      (g/draw-line g
-                   (start-point source* target*)
-                   (end-point   source* target* maxrange)
-                   (if (in-range? source* target* maxrange)
-                     [1 0 0 0.5]
-                     [1 1 0 0.5])))))
+      (draw-line g
+                 (start-point source* target*)
+                 (end-point   source* target* maxrange)
+                 (if (in-range? source* target* maxrange)
+                   [1 0 0 0.5]
+                   [1 1 0 0.5])))))

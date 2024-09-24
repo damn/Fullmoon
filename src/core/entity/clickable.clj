@@ -1,7 +1,6 @@
 (ns ^:no-doc core.entity.clickable
   (:require [core.entity :as entity]
-            [core.ctx :refer :all]
-            [core.graphics :as g]))
+            [core.ctx :refer :all]))
 
 (defcomponent :entity/clickable
   (entity/render [[_ {:keys [text]}]
@@ -10,8 +9,8 @@
                   _ctx]
     (when (and mouseover? text)
       (let [[x y] (:position entity*)]
-        (g/draw-text g
-                     {:text text
-                      :x x
-                      :y (+ y (:half-height entity*))
-                      :up? true})))))
+        (draw-text g
+                   {:text text
+                    :x x
+                    :y (+ y (:half-height entity*))
+                    :up? true})))))

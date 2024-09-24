@@ -1,7 +1,6 @@
 (ns ^:no-doc core.entity.string-effect
   (:require [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.graphics :as g]
             [core.ctx.time :as time]))
 
 (defcomponent :entity/string-effect
@@ -11,12 +10,12 @@
 
   (entity/render-above [[_ {:keys [text]}] entity* g _ctx]
     (let [[x y] (:position entity*)]
-      (g/draw-text g
-                   {:text text
-                    :x x
-                    :y (+ y (:half-height entity*) (g/pixels->world-units g entity/hpbar-height-px))
-                    :scale 2
-                    :up? true}))))
+      (draw-text g
+                 {:text text
+                  :x x
+                  :y (+ y (:half-height entity*) (pixels->world-units g entity/hpbar-height-px))
+                  :scale 2
+                  :up? true}))))
 
 (defcomponent :tx/add-text-effect
   (do! [[_ entity text] ctx]

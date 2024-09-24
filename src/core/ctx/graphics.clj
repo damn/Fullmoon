@@ -1,6 +1,5 @@
 (ns ^:no-doc core.ctx.graphics
   (:require [core.ctx :refer :all]
-            [core.graphics :as g]
             (core.graphics cursors
                            shape-drawer
                            text
@@ -27,7 +26,7 @@
   {:data [:map [:cursors :default-font :views]]
    :let {:keys [views default-font cursors]}}
   (->mk [_ _ctx]
-    (core.graphics/map->Graphics
+    (map->Graphics
      (let [batch (SpriteBatch.)]
        (merge {:batch batch}
               (core.graphics.shape-drawer/->build batch)
@@ -48,9 +47,9 @@
     (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
     (.setProjectionMatrix batch (.combined (.getCamera viewport)))
     (.begin batch)
-    (g/with-shape-line-width g
-                             unit-scale
-                             #(draw-fn (assoc g :unit-scale unit-scale)))
+    (with-shape-line-width g
+      unit-scale
+      #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
 (defn render-gui-view
@@ -67,5 +66,3 @@
   (.update (views/gui-viewport g) w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update (views/world-viewport g) w h false))
-
-

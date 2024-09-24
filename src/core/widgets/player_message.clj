@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.player-message
   (:require [core.ctx :refer :all]
-            [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ctx.ui :as ui])
   (:import com.badlogic.gdx.Gdx))
@@ -15,11 +14,11 @@
 
 (defn- draw-player-message [g ctx]
   (when-let [{:keys [message]} (this ctx)]
-    (g/draw-text g {:x (/ (gui-viewport-width ctx) 2)
-                    :y (+ (/ (gui-viewport-height ctx) 2) 200)
-                    :text message
-                    :scale 2.5
-                    :up? true})))
+    (draw-text g {:x (/ (gui-viewport-width ctx) 2)
+                  :y (+ (/ (gui-viewport-height ctx) 2) 200)
+                  :text message
+                  :scale 2.5
+                  :up? true})))
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (this ctx)]

@@ -1,5 +1,5 @@
 #_(ns gdl.simple-screen
-  (:require [core.graphics :as g])
+  (:require [])
   (:import com.badlogic.gdx.graphics.Color))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]

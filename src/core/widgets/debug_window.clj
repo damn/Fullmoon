@@ -2,7 +2,6 @@
   (:require [core.graphics.camera :as camera]
             [core.ctx :refer :all]
             [core.utils.core :as utils]
-            [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]
             [core.screens.stage :as stage]
             [core.ctx.time :as time]

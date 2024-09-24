@@ -13,8 +13,7 @@
             [core.entity :as entity]
             [core.entity.state :as state]
             [core.entity.inventory :as inventory]
-            [core.player.interaction-state :refer [->interaction-state]]
-            [core.graphics :as g])
+            [core.player.interaction-state :refer [->interaction-state]])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
@@ -23,12 +22,12 @@
         radius (/ (float width) 2)
         y (+ (float y) (float (:half-height entity*)) (float 0.15))
         center [x (+ y radius)]]
-    (g/draw-filled-circle g center radius [1 1 1 0.125])
-    (g/draw-sector g center radius
-                   90 ; start-angle
-                   (* (float action-counter-ratio) 360) ; degree
-                   [1 1 1 0.5])
-    (g/draw-image g icon [(- (float x) radius) y])))
+    (draw-filled-circle g center radius [1 1 1 0.125])
+    (draw-sector g center radius
+                 90 ; start-angle
+                 (* (float action-counter-ratio) 360) ; degree
+                 [1 1 1 0.5])
+    (draw-image g icon [(- (float x) radius) y])))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
@@ -127,7 +126,7 @@
         [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy ctx eid)]]))))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
-; pathfinding/usable skills every frame
+; pathfindinusable skills every frame
 ; also prevents fast twitching around changing directions every frame
 (defcomponent :npc-moving
   {:let {:keys [eid movement-vector counter]}}
@@ -165,11 +164,11 @@
 
   (entity/render-above [_ entity* g _ctx]
     (let [[x y] (:position entity*)]
-      (g/draw-text g
-                   {:text "zzz"
-                    :x x
-                    :y (+ y (:half-height entity*))
-                    :up? true}))))
+      (draw-text g
+                 {:text "zzz"
+                  :x x
+                  :y (+ y (:half-height entity*))
+                  :up? true}))))
 
 (defcomponent :player-dead
   (state/player-enter [_]
@@ -301,15 +300,15 @@
 
   (entity/render-below [_ entity* g ctx]
     (when (world-item? ctx)
-      (g/draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
+      (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
 (defn draw-item-on-cursor [g ctx]
   (let [player-entity* (player-entity* ctx)]
     (when (and (= :player-item-on-cursor (entity/state player-entity*))
                (not (world-item? ctx)))
-      (g/draw-centered-image g
-                             (:entity/image (:entity/item-on-cursor player-entity*))
-                             (gui-mouse-position ctx)))))
+      (draw-centered-image g
+                           (:entity/image (:entity/item-on-cursor player-entity*))
+                           (gui-mouse-position ctx)))))
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
@@ -353,4 +352,4 @@
       [[:tx/event eid :effect-wears-off]]))
 
   (entity/render-below [_ entity* g _ctx]
-    (g/draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))
+    (draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))

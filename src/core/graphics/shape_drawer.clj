@@ -1,5 +1,5 @@
 (ns ^:no-doc core.graphics.shape-drawer
-  (:require [core.graphics :as g])
+  (:require [core.ctx :refer :all])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)
            com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -18,16 +18,16 @@
 (defn- degree->radians [degree]
   (* (float degree) MathUtils/degreesToRadians))
 
-(defn- ->color ^Color [color]
+(defn- munge-color ^Color [color]
   (if (= Color (class color))
     color
-    (apply g/->color color)))
+    (apply ->color color)))
 
 (defn- set-color [^ShapeDrawer shape-drawer color]
-  (.setColor shape-drawer (->color color)))
+  (.setColor shape-drawer (munge-color color)))
 
-(extend-type core.graphics.Graphics
-  core.graphics/ShapeDrawer
+(extend-type core.ctx.Graphics
+  core.ctx/PShapeDrawer
   (draw-ellipse [{:keys [^ShapeDrawer shape-drawer]} [x y] radius-x radius-y color]
     (set-color shape-drawer color)
     (.ellipse shape-drawer (float x) (float y) (float radius-x) (float radius-y)) )
@@ -71,10 +71,10 @@
           rightx (+ (float leftx) (float w))]
       (doseq [idx (range (inc (float gridw)))
               :let [linex (+ (float leftx) (* (float idx) (float cellw)))]]
-        (g/draw-line this [linex topy] [linex bottomy] color))
+        (draw-line this [linex topy] [linex bottomy] color))
       (doseq [idx (range (inc (float gridh)))
               :let [liney (+ (float bottomy) (* (float idx) (float cellh)))]]
-        (g/draw-line this [leftx liney] [rightx liney] color))))
+        (draw-line this [leftx liney] [rightx liney] color))))
 
   (with-shape-line-width [{:keys [^ShapeDrawer shape-drawer]} width draw-fn]
     (let [old-line-width (.getDefaultLineWidth shape-drawer)]

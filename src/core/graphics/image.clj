@@ -1,6 +1,5 @@
 (ns core.graphics.image
-  (:require [core.ctx :refer :all]
-            [core.graphics :as g])
+  (:require [core.ctx :refer :all])
   (:import (com.badlogic.gdx.graphics Color Texture)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch)))
 
@@ -40,7 +39,7 @@
                            scale)]
     (assoc image
            :pixel-dimensions pixel-dimensions
-           :world-unit-dimensions (scale-dimensions pixel-dimensions (g/world-unit-scale g)))))
+           :world-unit-dimensions (scale-dimensions pixel-dimensions (world-unit-scale g)))))
 
 (defn- ->image [g texture-region]
   (-> {:texture-region texture-region}
@@ -64,8 +63,8 @@
          rotation)
   (if color (.setColor batch Color/WHITE)))
 
-(extend-type core.graphics.Graphics
-  core.graphics/Image
+(extend-type core.ctx.Graphics
+  core.ctx/ImageDraw
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]
@@ -90,7 +89,7 @@
                            color)))
 
   (draw-centered-image [this image position]
-    (g/draw-rotated-centered-image this image 0 position)))
+    (draw-rotated-centered-image this image 0 position)))
 
 (defn create [{g :context/graphics :as ctx} file]
   (->image g (->texture-region (texture ctx file)))) ; TODO why doesnt texture work?

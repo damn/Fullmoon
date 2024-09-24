@@ -3,16 +3,15 @@
             [core.ctx :refer :all]
             [core.val-max :refer [val-max-ratio]]
             [core.entity :as entity]
-            [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-viewport-width]]
             [core.ctx.ui :as ui]))
 
 (defn- render-infostr-on-bar [g infostr x y h]
-  (g/draw-text g {:text infostr
-                  :x (+ x 75)
-                  :y (+ y 2)
-                  :up? true}))
+  (draw-text g {:text infostr
+                :x (+ x 75)
+                :y (+ y 2)
+                :up? true}))
 
 (defn ->hp-mana-bars [context]
   (let [rahmen      (image/create context "images/rahmen.png")
@@ -23,10 +22,10 @@
         y-mana 80 ; action-bar-icon-size
         y-hp (+ y-mana rahmenh)
         render-hpmana-bar (fn [g ctx x y contentimg minmaxval name]
-                            (g/draw-image g rahmen [x y])
-                            (g/draw-image g
-                                          (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
-                                          [x y])
+                            (draw-image g rahmen [x y])
+                            (draw-image g
+                                        (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                                        [x y])
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/->actor {:draw (fn [g ctx]
                          (let [player-entity* (player-entity* ctx)
