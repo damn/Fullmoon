@@ -14,7 +14,6 @@
             [core.math.raycaster :as raycaster]
             [core.math.vector :as v]
             [core.tiled :as tiled]
-            [core.val-max :refer [val-max-ratio]]
             [core.world.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color

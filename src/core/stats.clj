@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             #_[malli.core :as m]
             [core.utils.random :as random]
-            [core.val-max :refer [val-max-ratio]]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.operation :as operation])

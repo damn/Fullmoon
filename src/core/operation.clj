@@ -1,6 +1,7 @@
 (ns core.operation
   (:require [clojure.string :as str]
             [clojure.math :as math]
+            [malli.core :as m]
             [core.ctx :refer :all]))
 
 (defsystem value-text "FIXME" [_])
