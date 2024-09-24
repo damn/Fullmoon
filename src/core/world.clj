@@ -18,7 +18,6 @@
             [core.world.gen.gen :as level-generator]
             [core.widgets.error-modal :refer [error-window!]]
             [core.widgets.action-bar :as action-bar]
-            [core.widgets.debug-window :as debug-window]
             [core.widgets.inventory :as inventory]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
@@ -383,12 +382,53 @@
                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
                            (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))
 
+(defn- skill-info [{:keys [entity/skills]}]
+  (clojure.string/join "\n"
+                       (for [{:keys [property/id skill/cooling-down?]} (vals skills)
+                             :when cooling-down? ]
+                         [id [:cooling-down? (boolean cooling-down?)]])))
+
+; TODO component to info-text move to the component itself.....
+(defn- debug-infos ^String [ctx]
+  (let [world-mouse (world-mouse-position ctx)]
+    (str
+     "logic-frame: " (time/logic-frame ctx) "\n"
+     "FPS: " (.getFramesPerSecond gdx-graphics)  "\n"
+     "Zoom: " (camera/zoom (world-camera ctx)) "\n"
+     "World: "(mapv int world-mouse) "\n"
+     "X:" (world-mouse 0) "\n"
+     "Y:" (world-mouse 1) "\n"
+     "GUI: " (gui-mouse-position ctx) "\n"
+     "paused? " (:context/paused? ctx) "\n"
+     "elapsed-time " (utils/readable-number (time/elapsed-time ctx)) " seconds \n"
+     (skill-info (player-entity* ctx))
+     (when-let [entity* (mouseover-entity* ctx)]
+       (str "Mouseover-entity uid: " (:entity/uid entity*)))
+     ;"\nMouseover-Actor:\n"
+     #_(when-let [actor (stage/mouse-on-actor? ctx)]
+         (str "TRUE - name:" (.getName actor)
+              "id: " (gdx.scene2d.actor/id actor)
+              )))))
+
+(defn- ->debug-window [context]
+  (let [label (ui/->label "")
+        window (ui/->window {:title "Debug"
+                             :id :debug-window
+                             :visible? false
+                             :position [0 (gui-viewport-height context)]
+                             :rows [[label]]})]
+    (group/add-actor! window
+                      (ui/->actor {:act #(do
+                                          (.setText label (debug-infos %))
+                                          (.pack window))}))
+    window))
+
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state
                                 :entity/faction
                                 :active-skill])
 
-(defn ->entity-info-window [context]
+(defn- ->entity-info-window [context]
   (let [label (ui/->label "")
         window (ui/->window {:title "Info"
                              :id :entity-info-window
@@ -423,7 +463,7 @@
                 :fill-parent? true})
    (->hp-mana-bars ctx)
    (ui/->group {:id :windows
-                :actors [(debug-window/create ctx)
+                :actors [(->debug-window ctx)
                          (->entity-info-window ctx)
                          (inventory/->build ctx widget-data)]})
    (ui/->actor {:draw draw-item-on-cursor})
