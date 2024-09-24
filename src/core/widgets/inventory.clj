@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ui :as ui]
-            [core.graphics.image :as image]
             [core.entity :as entity]
             [core.entity.inventory :as inventory]
             [core.entity.player :as player]
@@ -66,7 +65,7 @@
     stack))
 
 (defn- slot->background [ctx]
-  (let [sheet (image/spritesheet ctx "images/items.png" 48 48)]
+  (let [sheet (sprite-sheet ctx "images/items.png" 48 48)]
     (->> #:inventory.slot {:weapon   0
                            :shield   1
                            :rings    2
@@ -79,7 +78,7 @@
                            :boot     9
                            :bag      10} ; transparent
          (map (fn [[slot y]]
-                (let [drawable (ui/->texture-region-drawable (:texture-region (image/sprite ctx sheet [21 (+ y 2)])))]
+                (let [drawable (ui/->texture-region-drawable (:texture-region (sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
                    (.tint ^TextureRegionDrawable drawable (->color 1 1 1 0.4))])))

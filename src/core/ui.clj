@@ -1,7 +1,6 @@
 (ns core.ui
   (:require [clj-commons.pretty.repl :as p]
             [core.ctx :refer :all]
-            [core.graphics.image :as image]
             [core.actor :as actor]
             [core.group :as group]
             [core.stage :as stage])
@@ -157,7 +156,7 @@
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image core.graphics.image.Image
+(defmethod ->vis-image core.ctx.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
@@ -325,7 +324,7 @@
 (def ^:private image-file "images/moon_background.png")
 
 (defn ->background-image [ctx]
-  (->image-widget (image/create ctx image-file)
+  (->image-widget (->image ctx image-file)
                   {:fill-parent? true
                    :scaling :fill
                    :align :center}))

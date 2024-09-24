@@ -10,7 +10,6 @@
             [core.property :as property]
             [core.graphics :as graphics]
             [core.graphics.camera :as camera]
-            [core.graphics.image :as image]
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.state :refer [draw-item-on-cursor]]
@@ -362,9 +361,9 @@
                 :up? true}))
 
 (defn- ->hp-mana-bars [context]
-  (let [rahmen      (image/create context "images/rahmen.png")
-        hpcontent   (image/create context "images/hp.png")
-        manacontent (image/create context "images/mana.png")
+  (let [rahmen      (->image context "images/rahmen.png")
+        hpcontent   (->image context "images/hp.png")
+        manacontent (->image context "images/mana.png")
         x (/ (gui-viewport-width context) 2)
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         y-mana 80 ; action-bar-icon-size
@@ -372,7 +371,7 @@
         render-hpmana-bar (fn [g ctx x y contentimg minmaxval name]
                             (draw-image g rahmen [x y])
                             (draw-image g
-                                        (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                                        (sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                         [x y])
                             (render-infostr-on-bar g (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/->actor {:draw (fn [g ctx]

@@ -7,7 +7,6 @@
             [core.utils.core :as utils :refer [sort-by-order]]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
-            [core.graphics.image :as image]
             [core.property :as property]
             [core.ui :as ui]
             [core.stage :as stage]
@@ -348,7 +347,7 @@
      :maxcnt (* (count frames) (float frame-duration))}))
 
 (defn- edn->animation [{:keys [frames frame-duration looping?]} ctx]
-  (->animation (map #(image/edn->image % ctx) frames)
+  (->animation (map #(edn->image % ctx) frames)
                :frame-duration frame-duration
                :looping? looping?))
 
@@ -367,7 +366,7 @@
 ; hidden actor act tick atom animation & set current frame image drawable
 (defmethod property/->widget :data/animation [_ animation ctx]
   (ui/->table {:rows [(for [image (:frames animation)]
-                        (ui/->image-widget (image/edn->image image ctx) {}))]
+                        (ui/->image-widget (edn->image image ctx) {}))]
                :cell-defaults {:pad 1}}))
 
 (defn- tx-assoc-image-current-frame [eid animation]

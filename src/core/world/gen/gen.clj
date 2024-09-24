@@ -155,8 +155,6 @@
      :start-position (get-free-position-in-area-level 0)
      :area-level-grid scaled-area-level-grid}))
 
-(require '[core.graphics.image :refer [->texture-region]])
-
 (defn uf-transition [position grid]
   (transitions/index-value position (= :transition (get grid position))))
 
