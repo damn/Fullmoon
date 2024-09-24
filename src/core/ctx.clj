@@ -729,3 +729,4 @@ Default method returns true."
 (defn ns-publics-comma-separated []
   (apply str (interpose " , " (map str (keys (ns-publics 'core.ctx))))))
 ; TODO no anonym class, macros
+; Graphics & Image not highlighted

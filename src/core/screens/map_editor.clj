@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
-            [core.actor :refer [set-position!]]
+            [core.actor :as actor]
             [core.ui :as ui]
             [core.world.gen.gen :as level-generator]
             core.world.gen.modules)
@@ -73,7 +73,7 @@ direction keys: move")
     (ui/add-actor! window (ui/->actor {:act #(do
                                               (.setText label (debug-infos %))
                                               (.pack window))}))
-    (set-position! window 0 (gui-viewport-height ctx))
+    (actor/set-position! window 0 (gui-viewport-height ctx))
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
