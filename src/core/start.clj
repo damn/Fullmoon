@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [core.ctx :refer :all]
-            [core.graphics :as graphics]
             [core.property :as property])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.Gdx
@@ -43,7 +42,7 @@
 
     (resize [w h]
       ; TODO fix mac screen resize bug again
-      (graphics/on-resize @app-state w h))))
+      (on-resize @app-state w h))))
 
 (defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
   ; can remove :pre, we are having a schema now
