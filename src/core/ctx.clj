@@ -7,9 +7,13 @@
 ; * clojure game development extension(s)  ?
 ; cljgdx
 ; 'ctx' makes more sense ...
+; * defcomponent also!! here ??
+; * and build components ... then only here defcomponents
+; crazy ...
 (ns core.ctx
   (:require [core.component  :as component :refer [defcomponent]]
             [core.ctx.assets :as assets]
+            [core.ctx.graphics :as graphics]
             [core.ctx.time :as time]))
 
 ; TODO docstrings not avilable here ...
@@ -100,3 +104,5 @@
                                  t))))))
           ctx
           txs))
+
+(def render-world-view graphics/render-world-view)

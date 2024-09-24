@@ -1,9 +1,9 @@
 (ns ^:no-doc core.screens.minimap
   (:require [core.graphics.camera :as camera]
+            [core.ctx :refer :all]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.explored-tile-corners :refer [explored?]]
             [core.ctx.screens :as screens]
-            [core.ctx.graphics :as graphics]
             [core.graphics.views :refer [world-camera]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.graphics :as g])
@@ -52,12 +52,12 @@
     (tiled-map-renderer/render! context
                                 tiled-map
                                 (->tile-corner-color-setter @explored-tile-corners))
-    (graphics/render-world-view context
-                                (fn [g]
-                                  (g/draw-filled-circle g
-                                                        (camera/position (world-camera context))
-                                                        0.5
-                                                        Color/GREEN)))
+    (render-world-view context
+                       (fn [g]
+                         (g/draw-filled-circle g
+                                               (camera/position (world-camera context))
+                                               0.5
+                                               Color/GREEN)))
     (if (or (.isKeyJustPressed Gdx/input Input$Keys/TAB)
             (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE))
       (screens/change-screen context :screens/world)

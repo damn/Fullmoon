@@ -5,7 +5,6 @@
             [core.ctx.ecs :as ecs]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.ctx.graphics :as graphics]
             [core.graphics.cursors :as cursors]
             [core.graphics.views :refer [world-camera]]
             [core.ctx.screens :as screens]
@@ -73,14 +72,14 @@
 (defn- render-world! [ctx]
   (camera/set-position! (world-camera ctx) (:position (player/entity* ctx)))
   (world-render/render-map ctx (camera/position (world-camera ctx)))
-  (graphics/render-world-view ctx
-                              (fn [g]
-                                (debug-render/before-entities ctx g)
-                                (ecs/render-entities! ctx
-                                                      g
-                                                      (->> (active-entities ctx)
-                                                           (map deref)))
-                                (debug-render/after-entities ctx g))))
+  (render-world-view ctx
+                     (fn [g]
+                       (debug-render/before-entities ctx g)
+                       (ecs/render-entities! ctx
+                                             g
+                                             (->> (active-entities ctx)
+                                                  (map deref)))
+                       (debug-render/after-entities ctx g))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))

@@ -1,5 +1,6 @@
 (ns ^:no-doc core.screens.map-editor
   (:require [clojure.string :as str]
+            [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
@@ -7,7 +8,6 @@
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
             [core.graphics :as g]
-            [core.ctx.graphics :as graphics]
             [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
             [core.screens.stage :as stage]
@@ -189,7 +189,7 @@ direction keys: move")
     (tiled-map-renderer/render! context
                                 (:tiled-map @current-data)
                                 (constantly Color/WHITE))
-    (graphics/render-world-view context #(render-on-map % context))
+    (render-world-view context #(render-on-map % context))
     (if (.isKeyJustPressed Gdx/input Input$Keys/L)
       (swap! current-data update :show-grid-lines not))
     (if (.isKeyJustPressed Gdx/input Input$Keys/M)
