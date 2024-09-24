@@ -363,18 +363,45 @@
 (defn- show-player-modal! [ctx {:keys [title text button-text on-click]}]
   (assert (not (::modal (stage/get ctx))))
   (stage/add-actor! ctx
-                    (ui/->window {:title title
-                                  :rows [[(ui/->label text)]
-                                         [(ui/->text-button button-text
-                                                            (fn [ctx]
-                                                              (actor/remove! (::modal (stage/get ctx)))
-                                                              (on-click ctx)))]]
-                                  :id ::modal
-                                  :modal? true
-                                  :center-position [(/ (gui-viewport-width ctx) 2)
-                                                    (* (gui-viewport-height ctx) (/ 3 4))]
-                                  :pack? true})))
+                    (->window {:title title
+                               :rows [[(->label text)]
+                                      [(->text-button button-text
+                                                      (fn [ctx]
+                                                        (actor/remove! (::modal (stage/get ctx)))
+                                                        (on-click ctx)))]]
+                               :id ::modal
+                               :modal? true
+                               :center-position [(/ (gui-viewport-width ctx) 2)
+                                                 (* (gui-viewport-height ctx) (/ 3 4))]
+                               :pack? true})))
 
 (defcomponent :tx/player-modal
   (do! [[_ params] ctx]
     (show-player-modal! ctx params)))
+
+(def ^:private ctx-msg-player :context/msg-to-player)
+
+(defcomponent :tx/msg-to-player
+  (do! [[_ message] ctx]
+    (assoc ctx ctx-msg-player {:message message :counter 0})))
+
+(def ^:private duration-seconds 1.5)
+
+(defn- draw-player-message [g ctx]
+  (when-let [{:keys [message]} (ctx-msg-player ctx)]
+    (draw-text g {:x (/ (gui-viewport-width ctx) 2)
+                  :y (+ (/ (gui-viewport-height ctx) 2) 200)
+                  :text message
+                  :scale 2.5
+                  :up? true})))
+
+(defn- check-remove-message [ctx]
+  (when-let [{:keys [counter]} (ctx-msg-player ctx)]
+    (swap! app-state update ctx-msg-player update :counter + (.getDeltaTime gdx-graphics))
+    (when (>= counter duration-seconds)
+      (swap! app-state assoc ctx-msg-player nil))))
+
+(defcomponent :widgets/player-message
+  (->mk [_ _ctx]
+    (->actor {:draw draw-player-message
+              :act check-remove-message})))
