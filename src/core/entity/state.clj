@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.state
   (:require [reduce-fsm :as fsm]
-            [core.utils.core :refer [readable-number safe-merge]]
             [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]

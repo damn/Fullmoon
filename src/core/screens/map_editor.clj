@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
-            [core.utils.core :refer [->tile]]
             [core.screens :as screens]
             [core.stage :as stage]
             [core.actor :refer [set-position!]]

@@ -61,28 +61,6 @@
       (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
       '(:c :b :a :null :null))))
 
-; libgdx fn is available:
-; (MathUtils/isEqual 1 (length v))
-(defn approx-numbers [a b epsilon]
-  (<=
-    (Math/abs (float (- a b)))
-    epsilon))
-
-(defn- round-n-decimals [^double x n]
-  (let [z (Math/pow 10 n)]
-    (float
-      (/
-        (Math/round (float (* x z)))
-        z))))
-
-(defn readable-number [^double x]
-  {:pre [(number? x)]} ; do not assert (>= x 0) beacuse when using floats x may become -0.000...000something
-  (if (or
-        (> x 5)
-        (approx-numbers x (int x) 0.001)) ; for "2.0" show "2" -> simpler
-    (int x)
-    (round-n-decimals x 2)))
-
 (defmacro when-seq [[aseq bind] & body]
   `(let [~aseq ~bind]
      (when (seq ~aseq)
@@ -92,23 +70,6 @@
   (if (empty? ks)
     m
     (apply assoc m (interleave ks (repeat v)))))
-
-(let [obj (Object.)]
-  (defn safe-get [m k]
-    (let [result (clojure.core/get m k obj)]
-      (if (= result obj)
-        (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
-        result))))
-
-(defn ->tile [position]
-  (mapv int position))
-
-(defn tile->middle [position]
-  (mapv (partial + 0.5) position))
-
-(defn safe-merge [m1 m2]
-  {:pre [(not-any? #(contains? m1 %) (keys m2))]}
-  (merge m1 m2))
 
 (defn remove-one [coll item]
   (let [[n m] (split-with (partial not= item) coll)]

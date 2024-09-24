@@ -182,7 +182,7 @@
        (ui/error-window! ctx t)))))
 
 (defn- ->property-editor-window [ctx id]
-  (let [props (utils/safe-get (:db (:context/properties ctx)) id)
+  (let [props (safe-get (:db (:context/properties ctx)) id)
         window (ui/->window {:title "Edit Property"
                              :modal? true
                              :close-button? true

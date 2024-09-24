@@ -1,6 +1,6 @@
 (ns core.world
   (:require [data.grid2d :as grid2d]
-            [core.utils.core :as utils :refer [->tile tile->middle safe-get]]
+            [core.utils.core :as utils]
             [core.actor :as actor]
             [core.ctx :refer :all]
             [core.group :as group]
@@ -374,7 +374,7 @@
                             (draw-image g
                                         (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                         [x y])
-                            (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
+                            (render-infostr-on-bar g (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/->actor {:draw (fn [g ctx]
                          (let [player-entity* (player-entity* ctx)
                                x (- x (/ rahmenw 2))]
@@ -399,7 +399,7 @@
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position ctx) "\n"
      "paused? " (:context/paused? ctx) "\n"
-     "elapsed-time " (utils/readable-number (time/elapsed-time ctx)) " seconds \n"
+     "elapsed-time " (readable-number (time/elapsed-time ctx)) " seconds \n"
      (skill-info (player-entity* ctx))
      (when-let [entity* (mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
@@ -582,7 +582,7 @@
 (defn- hotkey->window-id [{:keys [context/config]}]
   (merge {Input$Keys/I :inventory-window
           Input$Keys/E :entity-info-window}
-         (when (utils/safe-get config :debug-window?)
+         (when (safe-get config :debug-window?)
            {Input$Keys/Z :debug-window})))
 
 (defn- check-window-hotkeys [ctx]

@@ -1,7 +1,6 @@
 (ns core.start
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
-            [core.utils.core :refer [safe-merge]]
             [core.ctx :refer :all]
             [core.graphics :as graphics]
             [core.screens :as screens]

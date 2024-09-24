@@ -1,6 +1,6 @@
 (ns core.graphics
   (:require [clojure.string :as str]
-            [core.utils.core :as utils :refer [mapvals]]
+            [core.utils.core :refer [mapvals]]
             [core.ctx :refer :all])
   (:import (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format OrthographicCamera)
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch TextureRegion BitmapFont)
@@ -216,7 +216,7 @@
                      cursors)})
 
 (defn set-cursor! [{g :context/graphics} cursor-key]
-  (.setCursor gdx-graphics (utils/safe-get (:cursors g) cursor-key)))
+  (.setCursor gdx-graphics (safe-get (:cursors g) cursor-key)))
 
 (defcomponent :tx/cursor
   (do! [[_ cursor-key] ctx]

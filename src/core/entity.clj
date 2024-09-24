@@ -4,7 +4,7 @@
             [malli.core :as m]
             [core.math.geom :as geom]
             [core.math.vector :as v]
-            [core.utils.core :as utils :refer [find-first safe-merge readable-number sort-by-order]]
+            [core.utils.core :as utils :refer [find-first sort-by-order]]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.graphics.image :as image]
@@ -122,7 +122,7 @@
    :z-order :z-order/effect})
 
 (defn tile [entity*]
-  (utils/->tile (:position entity*)))
+  (->tile (:position entity*)))
 
 (defn direction [entity* other-entity*]
   (v/direction (:position entity*) (:position other-entity*)))
@@ -410,7 +410,7 @@
     (time/->counter ctx duration))
 
   (info-text [_ ctx]
-    (str "[LIGHT_GRAY]Remaining: " (utils/readable-number (time/finished-ratio ctx counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Remaining: " (readable-number (time/finished-ratio ctx counter)) "/1[]"))
 
   (tick [_ eid ctx]
     (when (time/stopped? ctx counter)

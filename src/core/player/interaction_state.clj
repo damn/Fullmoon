@@ -1,6 +1,5 @@
 (ns ^:no-doc core.player.interaction-state
-  (:require [core.utils.core :refer [safe-merge]]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]
             [core.stage :as stage]
