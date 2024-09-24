@@ -482,3 +482,6 @@ Default method returns true."
 
 (defprotocol ActiveEntities
   (active-entities [_]))
+
+(def color-black Color/BLACK)
+(def color-white Color/WHITE)

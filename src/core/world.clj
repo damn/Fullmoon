@@ -1,5 +1,6 @@
 (ns core.world
   (:require [core.utils.core :refer [->tile tile->middle safe-get]]
+            [core.utils.ns :as ns]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.screen :as screen]
@@ -23,8 +24,7 @@
             [core.world.mouseover-entity :refer [update-mouseover-entity]]
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
-  (:import com.badlogic.gdx.graphics.Color
-           com.badlogic.gdx.Input$Keys))
+  (:import com.badlogic.gdx.Input$Keys))
 
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
 
@@ -48,7 +48,7 @@
   (fn tile-color-setter [_color x y]
     (let [position [(int x) (int y)]
           explored? (get @explored-tile-corners position) ; TODO needs int call ?
-          base-color (if explored? explored-tile-color Color/BLACK)
+          base-color (if explored? explored-tile-color color-black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
                      (let [blocked? (raycaster/ray-blocked? raycaster light-position position)]
@@ -58,10 +58,10 @@
       #_(when @do-once
           (swap! ray-positions conj position))
       (if blocked?
-        (if see-all-tiles? Color/WHITE base-color)
+        (if see-all-tiles? color-white base-color)
         (do (when-not explored?
               (swap! explored-tile-corners assoc (->tile position) true))
-            Color/WHITE)))))
+            color-white)))))
 
 (defn- render-map [{:keys [context/tiled-map] :as ctx} light-position]
   (tiled/render! ctx
@@ -408,3 +408,67 @@
   (->mk [[k _] ctx]
     {:sub-screen [:main/sub-screen]
      :stage (stage/create ctx (->actors ctx))}))
+
+(defprotocol StatusCheckBox
+  (get-text [this])
+  (get-state [this])
+  (set-state [this is-selected]))
+
+(deftype VarStatusCheckBox [^clojure.lang.Var avar]
+  StatusCheckBox
+  (get-text [this]
+    (let [m (meta avar)]
+      (str "[LIGHT_GRAY]" (str (:ns m)) "/[WHITE]" (name (:name m)) "[]")))
+
+  (get-state [this]
+    @avar)
+
+  (set-state [this is-selected]
+    (.bindRoot avar is-selected)))
+
+(defn- debug-flags [] ;
+  (apply concat
+         ; TODO
+         (for [nmspace (ns/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
+           (ns/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
+
+; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
+; -. rebuild it on window open ...
+(def ^:private debug-flags (map ->VarStatusCheckBox (debug-flags)))
+
+(def ^:private key-help-text
+  "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
+
+(defn- create-table [{:keys [context/config] :as ctx}]
+  (ui/->table {:rows (concat
+                      [[(ui/->label key-help-text)]]
+
+                      (when (safe-get config :debug-window?)
+                        [[(ui/->label "[Z] - Debug window")]])
+
+                      (when (safe-get config :debug-options?)
+                        (for [check-box debug-flags]
+                          [(ui/->check-box (get-text check-box)
+                                           (partial set-state check-box)
+                                           (boolean (get-state check-box)))]))
+
+                      [[(ui/->text-button "Resume" #(screens/change-screen % :screens/world))]
+
+                       [(ui/->text-button "Exit" #(screens/change-screen % :screens/main-menu))]])
+
+               :fill-parent? true
+               :cell-defaults {:pad-bottom 10}}))
+
+(defcomponent :options/sub-screen
+  (screen/render [_ ctx]
+    (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
+      (screens/change-screen ctx :screens/world)
+      ctx)))
+
+(derive :screens/options-menu :screens/stage)
+(defcomponent :screens/options-menu
+  (->mk [_ ctx]
+    {:stage (stage/create ctx
+                          [(->background-image ctx)
+                           (create-table ctx)])
+     :sub-screen [:options/sub-screen]}))
