@@ -15,7 +15,7 @@
                                         :title]]})
 
 (defcomponent :app/context
-  {:data [:map [:context/assets
+  {:data [:map [assets
                 :context/config
                 :context/graphics
                 :context/screens

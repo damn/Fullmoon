@@ -24,7 +24,7 @@
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [ctx table]
-  (let [rows (for [sound-file (:sound-files (:context/assets ctx))]
+  (let [rows (for [sound-file (:sound-files (assets ctx))]
                [(ui/->text-button (str/replace-first sound-file "sounds/" "")
                                   (fn [{:keys [context/actor] :as ctx}]
                                     (group/clear-children! table)

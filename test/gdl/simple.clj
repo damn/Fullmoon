@@ -13,7 +13,7 @@
                     :height 600
                     :full-screen? false}
               :context [[:context/graphics true]
-                        [:context/assets true]
+                        [assets true]
                         [:context/image-drawer-creator true]
                         [:context/ui true]
                         [:context/screens {:first-screen :gdl/simple-screen
