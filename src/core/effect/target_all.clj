@@ -1,6 +1,6 @@
 (ns ^:no-doc core.effect.target-all
   (:require [core.ctx :refer :all]
-            [core.effect.core :as effect]
+            [core.effect :as effect]
             [core.entity :as entity]
             [core.world :refer [active-entities]]))
 

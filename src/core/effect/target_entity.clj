@@ -1,7 +1,7 @@
 (ns ^:no-doc core.effect.target-entity
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
-            [core.effect.core :as effect]
+            [core.effect :as effect]
             [core.entity :as entity]))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?

@@ -8,7 +8,7 @@
             [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
             [core.world.time :as time]
-            [core.effect.core :refer [->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
+            [core.effect :refer [->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.entity :as entity]
             [core.entity.state :as state]
             [core.entity.inventory :as inventory]

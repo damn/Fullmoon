@@ -1,4 +1,4 @@
-(ns ^:no-doc core.effect.core
+(ns core.effect
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.entity :as entity]
