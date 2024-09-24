@@ -14,7 +14,7 @@
 
 ; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer
 (defprotocol HasProperties
-  (properties ^MapProperties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
+  (m-props ^MapProperties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
   (get-property [_ key] "Pass keyword key, looks up in properties."))
 
 (defprotocol TMap
@@ -55,19 +55,19 @@
  )
 
 (defn- lookup [has-properties key]
-  (.get (properties has-properties) (name key)))
+  (.get (m-props has-properties) (name key)))
 
 (extend-protocol HasProperties
   TiledMap
-  (properties [tiled-map] (.getProperties tiled-map))
+  (m-props [tiled-map] (.getProperties tiled-map))
   (get-property [tiled-map key] (lookup tiled-map key))
 
   MapLayer
-  (properties [layer] (.getProperties layer))
+  (m-props [layer] (.getProperties layer))
   (get-property [layer key] (lookup layer key))
 
   TiledMapTile
-  (properties [tile] (.getProperties tile))
+  (m-props [tile] (.getProperties tile))
   (get-property [tile key] (lookup tile key)))
 
 (extend-type com.badlogic.gdx.maps.tiled.TiledMap
@@ -212,7 +212,7 @@ Renders only visible layers."
                                   (get-property tiled-map :tileheight))]
     (.setName layer name)
     (when properties
-      (.putAll ^MapProperties (properties layer) properties))
+      (.putAll ^MapProperties (m-props layer) properties))
     (.setVisible layer visible)
     (.add ^MapLayers (layers tiled-map) layer)
     layer))
@@ -234,15 +234,15 @@ Renders only visible layers."
   The size of the map is as of the grid, which contains also the tile information from the schema-tiled-map."
   [schema-tiled-map grid]
   (let [tiled-map (->empty-tiled-map)
-        properties (properties tiled-map)]
-    (put-all! properties (properties schema-tiled-map))
+        properties (m-props tiled-map)]
+    (put-all! properties (m-props schema-tiled-map))
     (put! properties "width"  (grid/width  grid))
     (put! properties "height" (grid/height grid))
     (doseq [layer (layers schema-tiled-map)
             :let [new-layer (add-layer! tiled-map
                                         :name (layer-name layer)
                                         :visible (visible? layer)
-                                        :properties (properties layer))]]
+                                        :properties (m-props layer))]]
       (doseq [position (grid/posis grid)
               :let [local-position (get grid position)]
               :when local-position]
@@ -255,13 +255,13 @@ Renders only visible layers."
 
 (defn wgt-grid->tiled-map [grid position->tile]
   (let [tiled-map (->empty-tiled-map)
-        properties (properties tiled-map)]
+        properties (m-props tiled-map)]
     (put! properties "width"  (grid/width  grid))
     (put! properties "height" (grid/height grid))
     (put! properties "tilewidth" 48)
     (put! properties "tileheight" 48)
     (let [layer (add-layer! tiled-map :name "ground" :visible true)
-          properties (properties layer)]
+          properties (m-props layer)]
       (put! properties "movement-properties" true)
       (doseq [position (grid/posis grid)
               :let [value (get grid position)

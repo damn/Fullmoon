@@ -83,7 +83,7 @@
      (assert id)
      (let [image (property/->image prop)
            tile (tiled/->static-tiled-map-tile (:texture-region image))]
-       (tiled/put! (tiled/properties tile) "id" id)
+       (tiled/put! (tiled/m-props tile) "id" id)
        tile))))
 
 (def ^:private spawn-creatures? true)
@@ -201,7 +201,7 @@
    (fn ->tm-tile [texture-region movement]
      {:pre [#{"all" "air" "none"} movement]}
      (let [tile (tiled/->static-tiled-map-tile texture-region)]
-       (tiled/put! (tiled/properties tile) "movement" movement)
+       (tiled/put! (tiled/m-props tile) "movement" movement)
        tile))))
 
 (def ^:private sprite-size 48)
