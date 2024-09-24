@@ -2,13 +2,14 @@
   (:require [malli.core :as m]
             [core.math.geom :as geom]
             [core.math.vector :as v]
-            [core.utils.core :as utils]
+            [core.utils.core :as utils :refer [find-first]]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.graphics.image :as image]
             [core.property :as property]
             [core.ui :as ui]
             [core.world.raycaster :refer [ray-blocked?]]
+            [core.world.grid :as grid]
             [core.world.time :as time]))
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil."
@@ -129,9 +130,6 @@
 (defprotocol State
   (state [_])
   (state-obj [_]))
-
-(defprotocol Skills
-  (has-skill? [_ skill]))
 
 (defprotocol Inventory
   (can-pickup-item? [_ item]))
@@ -312,3 +310,225 @@
                                  image
                                  (or (:rotation-angle entity*) 0)
                                  (:position entity*))))
+
+(defcomponent :entity/line-render
+  {:let {:keys [thick? end color]}}
+  (render [_ entity* g _ctx]
+    (let [position (:position entity*)]
+      (if thick?
+        (with-shape-line-width g 4 #(draw-line g position end color))
+        (draw-line g position end color)))))
+
+(defcomponent :tx/line-render
+  (do! [[_ {:keys [start end duration color thick?]}] _ctx]
+    [[:e/create
+      start
+      effect-body-props
+      #:entity {:line-render {:thick? thick? :end end :color color}
+                :delete-after-duration duration}]]))
+
+(def ^:private outline-alpha 0.4)
+(def ^:private enemy-color    [1 0 0 outline-alpha])
+(def ^:private friendly-color [0 1 0 outline-alpha])
+(def ^:private neutral-color  [1 1 1 outline-alpha])
+
+(defcomponent :entity/mouseover?
+  (render-below [_ {:keys [entity/faction] :as entity*} g ctx]
+    (let [player-entity* (player-entity* ctx)]
+      (with-shape-line-width g 3
+        #(draw-ellipse g
+                       (:position entity*)
+                       (:half-width entity*)
+                       (:half-height entity*)
+                       (cond (= faction (enemy-faction player-entity*))
+                             enemy-color
+                             (= faction (friendly-faction player-entity*))
+                             friendly-color
+                             :else
+                             neutral-color))))))
+
+(defn- move-position [position {:keys [direction speed delta-time]}]
+  (mapv #(+ %1 (* %2 speed delta-time)) position direction))
+
+(defn- move-body [body movement]
+  (-> body
+      (update :position    move-position movement)
+      (update :left-bottom move-position movement)))
+
+(defn- valid-position? [grid {:keys [entity/id z-order] :as body}]
+  {:pre [(:collides? body)]}
+  (let [cells* (into [] (map deref) (grid/rectangle->cells grid body))]
+    (and (not-any? #(grid/blocked? % z-order) cells*)
+         (->> cells*
+              grid/cells->entities
+              (not-any? (fn [other-entity]
+                          (let [other-entity* @other-entity]
+                            (and (not= (:entity/id other-entity*) id)
+                                 (:collides? other-entity*)
+                                 (collides? other-entity* body)))))))))
+
+(defn- try-move [grid body movement]
+  (let [new-body (move-body body movement)]
+    (when (valid-position? grid new-body)
+      new-body)))
+
+; TODO sliding threshold
+; TODO name - with-sliding? 'on'
+; TODO if direction was [-1 0] and invalid-position then this algorithm tried to move with
+; direection [0 0] which is a waste of processor power...
+(defn- try-move-solid-body [grid body {[vx vy] :direction :as movement}]
+  (let [xdir (Math/signum (float vx))
+        ydir (Math/signum (float vy))]
+    (or (try-move grid body movement)
+        (try-move grid body (assoc movement :direction [xdir 0]))
+        (try-move grid body (assoc movement :direction [0 ydir])))))
+
+(defcomponent :entity/movement
+  {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
+  (tick [_ eid ctx]
+    (assert (m/validate movement-speed-schema speed))
+    (assert (or (zero? (v/length direction))
+                (v/normalised? direction)))
+    (when-not (or (zero? (v/length direction))
+                  (nil? speed)
+                  (zero? speed))
+      (let [movement (assoc movement :delta-time (time/delta-time ctx))
+            body @eid]
+        (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
+                          (try-move-solid-body (:context/grid ctx) body movement)
+                          (move-body body movement))]
+          [[:e/assoc eid :position    (:position    body)]
+           [:e/assoc eid :left-bottom (:left-bottom body)]
+           (when rotate-in-movement-direction?
+             [:e/assoc eid :rotation-angle (v/get-angle-from-vector direction)])
+           [:tx/position-changed eid]])))))
+
+(defcomponent :tx/set-movement
+  (do! [[_ entity movement] ctx]
+    (assert (or (nil? movement)
+                (nil? (:direction movement))
+                (and (:direction movement) ; continue schema of that ...
+                     #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
+    [(if (or (nil? movement)
+             (nil? (:direction movement)))
+       [:e/dissoc entity :entity/movement]
+       [:e/assoc entity :entity/movement movement])]))
+
+; TODO add teleport effect ~ or tx
+
+(defcomponent :entity/projectile-collision
+  {:let {:keys [entity-effects already-hit-bodies piercing?]}}
+  (->mk [[_ v] _ctx]
+    (assoc v :already-hit-bodies #{}))
+
+  ; TODO probably belongs to body
+  (tick [[k _] entity ctx]
+    ; TODO this could be called from body on collision
+    ; for non-solid
+    ; means non colliding with other entities
+    ; but still collding with other stuff here ? o.o
+    (let [entity* @entity
+          cells* (map deref (grid/rectangle->cells (:context/grid ctx) entity*)) ; just use cached-touched -cells
+          hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
+                                       (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
+                                             (:entity/faction @%))
+                                       (:collides? @%)
+                                       (collides? entity* @%))
+                                 (grid/cells->entities cells*))
+          destroy? (or (and hit-entity (not piercing?))
+                       (some #(grid/blocked? % (:z-order entity*)) cells*))
+          id (:entity/id entity*)]
+      [(when hit-entity
+         [:e/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
+       (when destroy?
+         [:e/destroy id])
+       (when hit-entity
+         [:tx/effect {:effect/source id :effect/target hit-entity} entity-effects])])))
+
+(def ^:private shout-radius 4)
+
+(defn- friendlies-in-radius [ctx position faction]
+  (->> {:position position
+        :radius shout-radius}
+       (grid/circle->entities (:context/grid ctx))
+       (map deref)
+       (filter #(= (:entity/faction %) faction))
+       (map :entity/id)))
+
+(defcomponent :entity/alert-friendlies-after-duration
+  {:let {:keys [counter faction]}}
+  (tick [_ eid ctx]
+    (when (time/stopped? ctx counter)
+      (cons [:e/destroy eid]
+            (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
+              [:tx/event friendly-eid :alert])))))
+
+(defcomponent :tx/shout
+  (do! [[_ position faction delay-seconds] ctx]
+    [[:e/create
+      position
+      effect-body-props
+      {:entity/alert-friendlies-after-duration
+       {:counter (time/->counter ctx delay-seconds)
+        :faction faction}}]]))
+
+(defcomponent :entity/skills
+  {:data [:one-to-many :properties/skills]}
+  (create [[k skills] eid ctx]
+    (cons [:e/assoc eid k nil]
+          (for [skill skills]
+            [:tx/add-skill eid skill])))
+
+  (info-text [[_ skills] _ctx]
+    ; => recursive info-text leads to endless text wall
+    #_(when (seq skills)
+        (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
+
+  (tick [[k skills] eid ctx]
+    (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
+          :when (and cooling-down?
+                     (time/stopped? ctx cooling-down?))]
+      [:e/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
+
+(defn has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
+  (contains? skills id))
+
+(defcomponent :tx/add-skill
+  (do! [[_ entity {:keys [property/id] :as skill}] _ctx]
+    (assert (not (has-skill? @entity skill)))
+    [[:e/assoc-in entity [:entity/skills id] skill]
+     (when (:entity/player? @entity)
+       [:tx.action-bar/add skill])]))
+
+(defcomponent :tx/remove-skill
+  (do! [[_ entity {:keys [property/id] :as skill}] _ctx]
+    (assert (has-skill? @entity skill))
+    [[:e/dissoc-in entity [:entity/skills id]]
+     (when (:entity/player? @entity)
+       [:tx.action-bar/remove skill])]))
+
+(defcomponent :entity/string-effect
+  (tick [[k {:keys [counter]}] eid context]
+    (when (time/stopped? context counter)
+      [[:e/dissoc eid k]]))
+
+  (render-above [[_ {:keys [text]}] entity* g _ctx]
+    (let [[x y] (:position entity*)]
+      (draw-text g
+                 {:text text
+                  :x x
+                  :y (+ y (:half-height entity*) (pixels->world-units g hpbar-height-px))
+                  :scale 2
+                  :up? true}))))
+
+(defcomponent :tx/add-text-effect
+  (do! [[_ entity text] ctx]
+    [[:e/assoc
+      entity
+      :entity/string-effect
+      (if-let [string-effect (:entity/string-effect @entity)]
+        (-> string-effect
+            (update :text str "\n" text)
+            (update :counter #(time/reset ctx %)))
+        {:text text
+         :counter (time/->counter ctx 0.4)})]]))
