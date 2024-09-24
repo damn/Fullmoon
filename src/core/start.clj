@@ -35,6 +35,7 @@
       (screens/render! app-state))
 
     (resize [w h]
+      ; TODO fix mac screen resize bug again
       (graphics/on-resize @app-state w h))))
 
 (defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]

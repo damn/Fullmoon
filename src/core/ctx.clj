@@ -19,14 +19,19 @@
 ; crazy ...
 ; 'gdl'
 (ns core.ctx
-  (:require [clojure.string :as str]
-            [core.utils.core :refer [index-of]])
+  (:require [clojure.string :as str])
   (:import (com.badlogic.gdx Gdx Application Files Input)
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color Texture)
            com.badlogic.gdx.utils.Disposable))
+
+(defn index-of [k ^clojure.lang.PersistentVector v]
+  (let [idx (.indexOf v k)]
+    (if (= -1 idx)
+      nil
+      idx)))
 
 (def ^{:tag Application}               gdx-app)
 (def ^{:tag Files}                     gdx-files)

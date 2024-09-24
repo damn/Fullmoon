@@ -2,7 +2,7 @@
   (:require [clojure.set :as set]
             [malli.core :as m]
             [malli.generator :as mg]
-            [core.utils.core :as utils :refer [index-of]]
+            [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.property :as property]
             [core.screens :as screens]
