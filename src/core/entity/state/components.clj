@@ -32,7 +32,6 @@
                    [1 1 1 0.5])
     (g/draw-image g icon [(- (float x) radius) y])))
 
-
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
      (or (entity/stat entity* (:skill/action-time-modifier-key skill))
