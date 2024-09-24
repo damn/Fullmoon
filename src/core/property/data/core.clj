@@ -4,7 +4,6 @@
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.property :as property]
-            [core.actor :as actor]
             [core.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))
 
@@ -21,7 +20,7 @@
 (defcomponent :string {:schema :string})
 
 (defn- add-schema-tooltip! [widget data]
-  (actor/add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
+  (ui/add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
   widget)
 
 (defmethod property/->widget :string [[_ data] v _ctx]

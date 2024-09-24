@@ -5,7 +5,6 @@
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.property :as property]
-            [core.actor :as actor]
             [core.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys))
 
@@ -48,7 +47,7 @@
   (ui/->label (truncate (utils/->edn-str v) 60)))
 
 (defmethod property/widget->value :default [_ widget]
-  (actor/id widget))
+  (ui/actor-id widget))
 
 (declare ->component-widget
          attribute-widget-group->data)
@@ -84,13 +83,13 @@
       (ui/add-rows! window (for [k remaining-ks]
                              [(ui/->text-button (name k)
                                                 (fn [ctx]
-                                                  (actor/remove! window)
+                                                  (ui/remove! window)
                                                   (ui/add-actor! attribute-widget-group
                                                                  (->component-widget ctx
                                                                                      [k (get k-props k) (k->default-value k)]
                                                                                      :horizontal-sep?
                                                                                      (pos? (count (ui/children attribute-widget-group)))))
-                                                  (actor/pack-ancestor-window! attribute-widget-group)
+                                                  (ui/pack-ancestor-window! attribute-widget-group)
                                                   ctx))]))
       (.pack window)
       (ui/stage-add! ctx window))))
@@ -106,7 +105,7 @@
   (let [attribute-widget-group (->attribute-widget-group ctx (:schema data) m)
         optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
                                                  (set (keys m))))]
-    (actor/set-id! attribute-widget-group :attribute-widget-group)
+    (ui/set-id! attribute-widget-group :attribute-widget-group)
     (ui/->table {:cell-defaults {:pad 5}
                  :rows (remove nil?
                                [(when optional-keys-left?
@@ -123,7 +122,7 @@
 (defn- ->attribute-label [k]
   (let [label (ui/->label (str k))]
     (when-let [doc (:editor/doc (get component-attributes k))]
-      (actor/add-tooltip! label doc))
+      (ui/add-tooltip! label doc))
     label))
 
 (defn- ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
@@ -134,8 +133,8 @@
         column (remove nil?
                        [(when (:optional k-props)
                           (ui/->text-button "-" (fn [ctx]
-                                                  (let [window (actor/find-ancestor-window table)]
-                                                    (actor/remove! table)
+                                                  (let [window (ui/find-ancestor-window table)]
+                                                    (ui/remove! table)
                                                     (.pack window))
                                                   ctx)))
                         label
@@ -143,7 +142,7 @@
                         value-widget])
         rows [(when horizontal-sep? [(ui/->horizontal-separator-cell (count column))])
               column]]
-    (actor/set-id! value-widget v)
+    (ui/set-id! value-widget v)
     (ui/add-rows! table (remove nil? rows))
     table))
 
@@ -162,7 +161,7 @@
   (ui/->vertical-group (->component-widgets ctx schema props)))
 
 (defn- attribute-widget-group->data [group]
-  (into {} (for [k (map actor/id (ui/children group))
+  (into {} (for [k (map ui/actor-id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
              [k (property/widget->value (property/data-component k) value-widget)])))
@@ -173,7 +172,7 @@
   (fn [ctx]
     (try
      (let [ctx (f ctx)]
-       (actor/remove! window)
+       (ui/remove! window)
        ctx)
      (catch Throwable t
        (ui/error-window! ctx t)))))
@@ -206,8 +205,8 @@
                  (ui/->text-button (name id) on-clicked))
         top-widget (ui/->label (or (and extra-info-text (extra-info-text props)) ""))
         stack (ui/->stack [button top-widget])]
-    (actor/add-tooltip! button #(->info-text props %))
-    (actor/set-touchable! top-widget :disabled)
+    (ui/add-tooltip! button #(->info-text props %))
+    (ui/set-touchable! top-widget :disabled)
     stack))
 
 (defn- ->overview-table [ctx property-type clicked-id-fn]
@@ -316,7 +315,7 @@
   (let [redo-rows (fn [ctx property-ids]
                     (ui/clear-children! table)
                     (add-one-to-many-rows ctx table property-type property-ids)
-                    (actor/pack-ancestor-window! table))]
+                    (ui/pack-ancestor-window! table))]
     (ui/add-rows!
      table
      [[(ui/->text-button "+"
@@ -327,7 +326,7 @@
                                                       :center? true
                                                       :close-on-escape? true})
                                  clicked-id-fn (fn [ctx id]
-                                                 (actor/remove! window)
+                                                 (ui/remove! window)
                                                  (redo-rows ctx (conj property-ids id))
                                                  ctx)]
                              (ui/add! window (->overview-table ctx property-type clicked-id-fn))
@@ -337,7 +336,7 @@
         (let [property (build-property ctx property-id)
               image-widget (ui/->image-widget (property/->image property)
                                               {:id property-id})]
-          (actor/add-tooltip! image-widget #(->info-text property %))
+          (ui/add-tooltip! image-widget #(->info-text property %))
           image-widget))
       (for [id property-ids]
         (ui/->text-button "-" #(do (redo-rows % (disj property-ids id)) %)))])))
@@ -352,14 +351,14 @@
 
 (defmethod property/widget->value :one-to-many [_ widget]
   (->> (ui/children widget)
-       (keep actor/id)
+       (keep ui/actor-id)
        set))
 
 (defn- add-one-to-one-rows [ctx table property-type property-id]
   (let [redo-rows (fn [ctx id]
                     (ui/clear-children! table)
                     (add-one-to-one-rows ctx table property-type id)
-                    (actor/pack-ancestor-window! table))]
+                    (ui/pack-ancestor-window! table))]
     (ui/add-rows!
      table
      [[(when-not property-id
@@ -371,7 +370,7 @@
                                                         :center? true
                                                         :close-on-escape? true})
                                    clicked-id-fn (fn [ctx id]
-                                                   (actor/remove! window)
+                                                   (ui/remove! window)
                                                    (redo-rows ctx id)
                                                    ctx)]
                                (ui/add! window (->overview-table ctx property-type clicked-id-fn))
@@ -381,7 +380,7 @@
          (let [property (build-property ctx property-id)
                image-widget (ui/->image-widget (property/->image property)
                                                {:id property-id})]
-           (actor/add-tooltip! image-widget #(->info-text property %))
+           (ui/add-tooltip! image-widget #(->info-text property %))
            image-widget))]
       [(when property-id
          (ui/->text-button "-" #(do (redo-rows % nil) %)))]])))
@@ -395,4 +394,4 @@
     table))
 
 (defmethod property/widget->value :one-to-one [_ widget]
-  (->> (ui/children widget) (keep actor/id) first))
+  (->> (ui/children widget) (keep ui/actor-id) first))

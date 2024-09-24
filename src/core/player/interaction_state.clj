@@ -3,14 +3,13 @@
             [core.math.vector :as v]
             [core.entity :as entity]
             [core.effect :refer [->player-effect-ctx skill-usable-state]]
-            [core.actor :as actor]
             [core.ui :as ui])
   (:import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
 (defn- selected-skill [ctx]
   (let [button-group (:action-bar (:context/widgets ctx))]
     (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
-      (actor/id skill-button))))
+      (ui/actor-id skill-button))))
 
 (defn- inventory-window [ctx]
   (get (:windows (ui/stage-get ctx)) :inventory-window))
@@ -29,7 +28,7 @@
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
-     (actor/visible? (inventory-window context))
+     (ui/visible? (inventory-window context))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
@@ -45,7 +44,7 @@
 
 (defmethod on-clicked :clickable/player
   [ctx _clicked-entity*]
-  (actor/toggle-visible! (inventory-window ctx))) ; TODO no tx
+  (ui/toggle-visible! (inventory-window ctx))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
@@ -62,10 +61,10 @@
 
 ; TODO move to inventory-window extend Context
 (defn- inventory-cell-with-item? [ctx actor]
-  (and (actor/parent actor)
-       (= "inventory-cell" (actor/name (actor/parent actor)))
+  (and (ui/parent actor)
+       (= "inventory-cell" (ui/actor-name (ui/parent actor)))
        (get-in (:entity/inventory (player-entity* ctx))
-               (actor/id (actor/parent actor)))))
+               (ui/actor-id (ui/parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]
   (let [actor (ui/mouse-on-actor? ctx)]

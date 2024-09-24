@@ -268,7 +268,7 @@
      :width (/ (gui-viewport-width ctx) 2)
      :height
      (- (gui-viewport-height ctx) 50)
-     #_(min (- (gui-viewport-height ctx) 50) (actor/height table))}))
+     #_(min (- (gui-viewport-height ctx) 50) (ui/height table))}))
 
 (defn- show-tree-view! [obj]
   (let [ctx @app-state

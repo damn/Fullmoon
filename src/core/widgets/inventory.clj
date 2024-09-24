@@ -1,7 +1,6 @@
 (ns ^:no-doc core.widgets.inventory
   (:require [data.grid2d :as grid]
             [core.ctx :refer :all]
-            [core.actor :as actor]
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.inventory :as inventory]
@@ -50,15 +49,15 @@
                         (.getX this)
                         (.getY this)
                         (mouseover? this (gui-mouse-position ctx))
-                        (actor/id (actor/parent this)))))))
+                        (ui/actor-id (ui/parent this)))))))
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
         image-widget (ui/->image-widget (slot->background slot) {:id :image})
         stack (ui/->stack [(draw-rect-actor) image-widget])]
-    (actor/set-name! stack "inventory-cell")
-    (actor/set-id! stack cell)
-    (actor/add-listener! stack (proxy [ClickListener] []
+    (ui/set-name! stack "inventory-cell")
+    (ui/set-id! stack cell)
+    (ui/add-listener! stack (proxy [ClickListener] []
                                  (clicked [event x y]
                                    (swap! app-state #(effect! % (player/clicked-inventory % cell))))))
     stack))
@@ -135,7 +134,7 @@
           drawable (ui/->texture-region-drawable (:texture-region (:entity/image item)))]
       (.setMinSize drawable (float cell-size) (float cell-size))
       (.setDrawable image-widget drawable)
-      (actor/add-tooltip! cell-widget #(->info-text item %))
+      (ui/add-tooltip! cell-widget #(->info-text item %))
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget
@@ -144,5 +143,5 @@
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)]
       (.setDrawable image-widget (slot->background (cell 0)))
-      (actor/remove-tooltip! cell-widget)
+      (ui/remove-tooltip! cell-widget)
       ctx)))

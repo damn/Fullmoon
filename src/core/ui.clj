@@ -1,10 +1,10 @@
 (ns core.ui
+  (:refer-clojure :exclude [name])
   (:require [clj-commons.pretty.repl :as p]
-            [core.ctx :refer :all]
-            [core.actor :as actor])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
-           (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
+           (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Label Image Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
@@ -46,6 +46,92 @@
   (destroy! [_]
     (VisUI/dispose)))
 
+(defn actor-id [^Actor actor]
+  (.getUserObject actor))
+
+(defn set-id! [^Actor actor id]
+  (.setUserObject actor id))
+
+(defn set-name! [^Actor actor name]
+  (.setName actor name))
+
+(defn actor-name [^Actor actor]
+  (.getName actor))
+
+(defn visible? [^Actor actor] ; used
+  (.isVisible actor))
+
+(defn set-visible! [^Actor actor bool]
+  (.setVisible actor (boolean bool)))
+
+(defn toggle-visible! [actor] ; used
+  (set-visible! actor (not (visible? actor))))
+
+(defn set-position! [^Actor actor x y]
+  (.setPosition actor x y))
+
+(defn width  [^Actor actor] (.getWidth actor))
+(defn height [^Actor actor] (.getHeight actor))
+
+(defn set-center! [actor x y]
+  (set-position! actor
+                 (- x (/ (width actor) 2))
+                 (- y (/ (height actor) 2))))
+
+(defn set-touchable!
+  ":children-only, :disabled or :enabled."
+  [^Actor actor touchable]
+  (.setTouchable actor (case touchable
+                         :children-only Touchable/childrenOnly
+                         :disabled      Touchable/disabled
+                         :enabled       Touchable/enabled)))
+
+(defn add-listener! [^Actor actor listener]
+  (.addListener actor listener))
+
+(defn remove!
+  "Removes this actor from its parent, if it has a parent."
+  [^Actor actor]
+  (.remove actor))
+
+(defn parent ; used
+  "Returns the parent actor, or null if not in a group."
+  [^Actor actor]
+  (.getParent actor))
+
+(defn add-tooltip! ; used
+  "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
+  [^Actor actor tooltip-text]
+  (let [text? (string? tooltip-text)
+        label (VisLabel. (if text? tooltip-text ""))
+        tooltip (proxy [Tooltip] []
+                  ; hooking into getWidth because at
+                  ; https://github.com/kotcrab/vis-ui/blob/master/ui/src/main/java/com/kotcrab/vis/ui/widget/Tooltip.java#L271
+                  ; when tooltip position gets calculated we setText (which calls pack) before that
+                  ; so that the size is correct for the newly calculated text.
+                  (getWidth []
+                    (let [^Tooltip this this]
+                      (when-not text?
+                        (when-let [ctx @app-state]  ; initial tooltip creation when app context is getting built.
+                          (.setText this (str (tooltip-text ctx)))))
+                      (proxy-super getWidth))))]
+    (.setAlignment label Align/center)
+    (.setTarget  tooltip ^Actor actor)
+    (.setContent tooltip ^Actor label)))
+
+(defn remove-tooltip! [^Actor actor]
+  (Tooltip/removeTooltip actor))
+
+(defn find-ancestor-window ^Window [^Actor actor]
+  (if-let [p (parent actor)]
+    (if (instance? Window p)
+      p
+      (find-ancestor-window p))
+    (throw (Error. (str "Actor has no parent window " actor)))))
+
+(defn pack-ancestor-window! [^Actor actor]
+  (.pack (find-ancestor-window actor)))
+
 (defn children
   "Returns an ordered list of child actors in this group."
   [^Group group]
@@ -63,11 +149,11 @@
 
 (defn- find-actor-with-id [group id]
   (let [actors (children group)
-        ids (keep actor/id actors)]
+        ids (keep actor-id actors)]
     (assert (or (empty? ids)
                 (apply distinct? ids)) ; TODO could check @ add
             (str "Actor ids are not distinct: " (vec ids)))
-    (first (filter #(= id (actor/id %))
+    (first (filter #(= id (actor-id %))
                    actors))))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
@@ -185,12 +271,12 @@
 
 ; candidate for opts: :tooltip
 (defn- set-actor-opts [actor {:keys [id name visible? touchable center-position position] :as opts}]
-  (when id   (actor/set-id!   actor id))
-  (when name (actor/set-name! actor name))
-  (when (contains? opts :visible?)  (actor/set-visible! actor visible?))
-  (when touchable (actor/set-touchable! actor touchable))
-  (when-let [[x y] center-position] (actor/set-center!   actor x y))
-  (when-let [[x y] position]        (actor/set-position! actor x y))
+  (when id   (set-id!   actor id))
+  (when name (set-name! actor name))
+  (when (contains? opts :visible?)  (set-visible! actor visible?))
+  (when touchable (set-touchable! actor touchable))
+  (when-let [[x y] center-position] (set-center!   actor x y))
+  (when-let [[x y] position]        (set-position! actor x y))
   actor)
 
 (comment
@@ -377,15 +463,15 @@
   "Returns true if the actor or its parent is a button."
   [actor]
   (or (button-class? actor)
-      (and (actor/parent actor)
-           (button-class? (actor/parent actor)))))
+      (and (parent actor)
+           (button-class? (parent actor)))))
 
 (defn window-title-bar?
   "Returns true if the actor is a window title bar."
   [actor]
   (when (instance? Label actor)
-    (when-let [parent (actor/parent actor)]
-      (when-let [parent (actor/parent parent)]
+    (when-let [parent (parent actor)]
+      (when-let [parent (parent parent)]
         (and (instance? VisWindow parent)
              (= (.getTitleLabel ^Window parent) actor))))))
 
@@ -433,7 +519,7 @@
                             :rows [[(->label text)]
                                    [(->text-button button-text
                                                    (fn [ctx]
-                                                     (actor/remove! (::modal (stage-get ctx)))
+                                                     (remove! (::modal (stage-get ctx)))
                                                      (on-click ctx)))]]
                             :id ::modal
                             :modal? true

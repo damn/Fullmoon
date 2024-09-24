@@ -1,7 +1,6 @@
 (ns core.world
   (:require [data.grid2d :as grid2d]
             [core.utils.core :as utils]
-            [core.actor :as actor]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.property :as property]
@@ -402,7 +401,7 @@
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (ui/mouse-on-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (gdx.scene2d.actor/id actor)
+              "id: " (ui/actor-id actor)
               )))))
 
 (defn- ->debug-window [context]
@@ -450,7 +449,7 @@
 
 (defn- ->action-bar []
   (let [group (ui/->horizontal-group {:pad 2 :space 2})]
-    (actor/set-id! group ::action-bar)
+    (ui/set-id! group ::action-bar)
     group))
 
 (defn- ->action-bar-button-group []
@@ -465,8 +464,8 @@
   (do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (ui/->image-button image identity {:scale image-scale})]
-      (actor/set-id! button id)
-      (actor/add-tooltip! button
+      (ui/set-id! button id)
+      (ui/add-tooltip! button
                           #(->info-text skill (assoc % :effect/source (player-entity %))))
       (ui/add-actor! horizontal-group button)
       (.add ^ButtonGroup button-group ^Button button)
@@ -476,7 +475,7 @@
   (do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
-      (actor/remove! button)
+      (ui/remove! button)
       (.remove ^ButtonGroup button-group ^Button button)
       ctx)))
 
@@ -581,13 +580,13 @@
 (defn- check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
           :when (.isKeyJustPressed gdx-input hotkey)]
-    (actor/toggle-visible! (get (:windows (ui/stage-get ctx)) window-id))))
+    (ui/toggle-visible! (get (:windows (ui/stage-get ctx)) window-id))))
 
 (defn- close-windows?! [context]
   (let [windows (ui/children (:windows (ui/stage-get context)))]
-    (if (some actor/visible? windows)
+    (if (some ui/visible? windows)
       (do
-       (run! #(actor/set-visible! % false) windows)
+       (run! #(ui/set-visible! % false) windows)
        true))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
