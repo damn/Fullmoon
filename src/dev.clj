@@ -1,6 +1,5 @@
 (ns ^:no-doc dev
-  (:require [core.ctx :refer :all]
-            [core.ctx.property :as property])
+  (:require [core.ctx :refer :all])
   (:import com.badlogic.gdx.Gdx))
 
 (comment
@@ -49,14 +48,5 @@
 (defn- post-tx! [tx]
   (.postRunnable Gdx/app #(swap! app-state effect! [tx])))
 
-(defn learn-skill! [skill-id]
-  (post-tx! (fn [ctx]
-              [[:tx/add-skill
-                (:entity/id (player-entity* ctx))
-                (property/build ctx skill-id)]])))
-
-(defn create-item! [item-id]
-  (post-tx! (fn [ctx]
-              [[:tx/item
-                (:position (player-entity* ctx))
-                (property/build ctx item-id)]])))
+(defn learn-skill! [skill-id] (post-tx! (fn [ctx] [[:tx/add-skill (:entity/id (player-entity* ctx)) (build-property ctx skill-id)]])))
+(defn create-item! [item-id]  (post-tx! (fn [ctx] [[:tx/item (:position (player-entity* ctx))       (build-property ctx item-id)]])))

@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.skill-window
   (:require [core.ctx :refer :all]
-            [core.ctx.property :as property]
             [core.entity.player :as player]
             [core.ui.actor :refer [add-tooltip!]]
             [core.ctx.ui :as ui]))
@@ -18,11 +17,11 @@
                                  :skills/melee-attack]
                              :let [; get-property in callbacks if they get changed, this is part of context permanently
                                    button (ui/->image-button ; TODO reuse actionbar button scale?
-                                                             (:entity/image (property/build context id)) ; TODO here anyway taken
+                                                             (:entity/image (build-property context id)) ; TODO here anyway taken
                                                              ; => should probably build this window @ game start
                                                              (fn [ctx]
-                                                               (effect! ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
+                                                               (effect! ctx (player/clicked-skillmenu ctx (build-property ctx id)))))]]
                          (do
-                          (add-tooltip! button #(->info-text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
+                          (add-tooltip! button #(->info-text (build-property % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))

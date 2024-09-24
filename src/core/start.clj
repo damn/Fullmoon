@@ -76,8 +76,7 @@
 
 (defn -main []
   (require-all-components!)
-  (let [ctx (map->Context
-             {:context/properties (property/validate-and-create properties-edn-file)})
-        app (property/build ctx :app/core)]
+  (let [ctx (map->Context {:context/properties (property/validate-and-create properties-edn-file)})
+        app (build-property ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))

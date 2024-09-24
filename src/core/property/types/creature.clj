@@ -1,8 +1,7 @@
 (ns ^:no-doc core.property.types.creature
   (:require [clojure.string :as str]
             [core.utils.core :refer [safe-merge]]
-            [core.ctx :refer :all]
-            [core.ctx.property :as property]))
+            [core.ctx :refer :all]))
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
@@ -65,7 +64,7 @@
 (defcomponent :tx/creature
   {:let {:keys [position creature-id components]}}
   (do! [_ ctx]
-    (let [props (property/build ctx creature-id)]
+    (let [props (build-property ctx creature-id)]
       [[:e/create
         position
         (->body (:entity/body props))

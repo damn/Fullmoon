@@ -336,3 +336,6 @@ Default method returns true."
   (defcomponent k
     {:data [:map (conj schema :property/id)]
      :overview overview}))
+
+(defprotocol Property
+  (build-property [_ id]))

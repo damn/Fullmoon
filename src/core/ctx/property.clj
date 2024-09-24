@@ -117,17 +117,19 @@
           m
           (keys m)))
 
-(defn- build-property [ctx property]
+(defn- build-property* [ctx property]
   (apply-kvs property
              (fn [k v]
                (edn->value (try (data-component k)
                                 (catch Throwable _t
                                   (swap! undefined-data-ks conj k)))
-                           (if (map? v) (build-property ctx v) v)
+                           (if (map? v) (build-property* ctx v) v)
                            ctx))))
 
-(defn build [{{:keys [db]} :context/properties :as ctx} id]
-  (build-property ctx (safe-get db id)))
+(extend-type core.ctx.Context
+  Property
+  (build-property [{{:keys [db]} :context/properties :as ctx} id]
+    (build-property* ctx (safe-get db id))))
 
 (defn all-properties [{{:keys [db]} :context/properties :as ctx} type]
   (->> (vals db)

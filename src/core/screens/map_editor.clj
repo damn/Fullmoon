@@ -10,7 +10,6 @@
             [core.graphics.views :refer [world-mouse-position gui-viewport-height world-camera]]
             [core.screen :as screen]
             [core.screens.stage :as stage]
-            [core.ctx.property :as property]
             [core.widgets.error-modal :refer [error-window!]]
             [core.ui.actor :refer [set-position!]]
             [core.ui.group :refer [add-actor!]]
@@ -163,8 +162,8 @@ direction keys: move")
                 :cell-defaults {:pad 10}
                 :rows [[(ui/->label (with-out-str
                                      (clojure.pprint/pprint
-                                      (property/build ctx level-id))))]
-                       [(ui/->text-button "Generate" #(try (generate % (property/build % level-id))
+                                      (build-property ctx level-id))))]
+                       [(ui/->text-button "Generate" #(try (generate % (build-property % level-id))
                                                            (catch Throwable t
                                                              (error-window! % t)
                                                              (println t)

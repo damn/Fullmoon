@@ -1,7 +1,6 @@
 (ns ^:no-doc core.property.types.audiovisual
   (:require [core.ctx :refer :all]
-            [core.entity :as entity]
-            [core.ctx.property :as property]))
+            [core.entity :as entity]))
 
 (def-type :properties/audiovisuals
   {:schema [:tx/sound
@@ -13,7 +12,7 @@
 (defcomponent :tx/audiovisual
   (do! [[_ position id] ctx]
     (let [{:keys [tx/sound
-                  entity/animation]} (property/build ctx id)]
+                  entity/animation]} (build-property ctx id)]
       [[:tx/sound sound]
        [:e/create
         position

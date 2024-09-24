@@ -1,7 +1,6 @@
 (ns ^:no-doc core.property.types.world
   (:require [core.tiled :as tiled]
             [core.ctx :refer :all]
-            [core.ctx.property :as property]
             core.world.gen.gen))
 
 (defcomponent :world/player-creature {:data :some #_[:one-to-one :properties/creatures]})
@@ -41,6 +40,6 @@
   (core.world.gen.gen/uf-caves ctx world))
 
 (defn ->world [ctx world-id]
-  (let [prop (property/build ctx world-id)]
+  (let [prop (build-property ctx world-id)]
     (assoc (generate ctx prop)
            :world/player-creature (:world/player-creature prop))))
