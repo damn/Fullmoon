@@ -1457,7 +1457,7 @@ Default method returns true."
   [^Camera camera & {:keys [left top right bottom]}]
   (let [viewport-width  (.viewportWidth  camera)
         viewport-height (.viewportHeight camera)
-        [px py] (position camera)
+        [px py] (camera-position camera)
         px (float px)
         py (float py)
         leftx (float (left 0))
