@@ -253,8 +253,8 @@
       (.add ^Actor (cell :inventory.slot/rings :position [1 0]))
       (.add ^Actor (cell :inventory.slot/boot)) .row)
     ; TODO add separator
-    (doseq [y (range (grid/height (:inventory.slot/bag empty-inventory)))]
-      (doseq [x (range (grid/width (:inventory.slot/bag empty-inventory)))]
+    (doseq [y (range (grid2d/height (:inventory.slot/bag empty-inventory)))]
+      (doseq [x (range (grid2d/width (:inventory.slot/bag empty-inventory)))]
         (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
       (.row table))))
 

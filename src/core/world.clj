@@ -9,7 +9,7 @@
             [core.entity :as entity]
             [core.entity-state :refer [draw-item-on-cursor]]
             [core.world.gen.gen :as level-generator]
-            [core.widgets.inventory :as inventory]
+            [core.inventory :as inventory]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
             [core.math.vector :as v]
