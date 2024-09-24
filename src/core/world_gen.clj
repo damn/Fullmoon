@@ -1,7 +1,6 @@
 (ns core.world-gen
   (:require [clojure.string :as str]
             [data.grid2d :as g]
-            [core.camera :as camera]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.property :as property]
@@ -752,15 +751,15 @@
 ; maybe update viewport not called on resize sometimes
 
 (defn- show-whole-map! [camera tiled-map]
-  (camera/set-position! camera
+  (camera-set-position! camera
                         [(/ (tiled/width  tiled-map) 2)
                          (/ (tiled/height tiled-map) 2)])
-  (camera/set-zoom! camera
-                    (camera/calculate-zoom camera
-                                           :left [0 0]
-                                           :top [0 (tiled/height tiled-map)]
-                                           :right [(tiled/width tiled-map) 0]
-                                           :bottom [0 0])))
+  (set-zoom! camera
+             (calculate-zoom camera
+                             :left [0 0]
+                             :top [0 (tiled/height tiled-map)]
+                             :right [(tiled/width tiled-map) 0]
+                             :bottom [0 0])))
 
 (defn- current-data [ctx]
   (-> ctx
@@ -808,7 +807,7 @@ direction keys: move")
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
-  (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
+  (set-zoom! camera (max 0.1 (+ (zoom camera) by))))
 
 ; TODO movement-speed scales with zoom value for big maps useful
 (def ^:private camera-movement-speed 1)
@@ -822,8 +821,8 @@ direction keys: move")
   (when (.isKeyPressed gdx-input Input$Keys/MINUS)
     (adjust-zoom camera (- zoom-speed)))
   (let [apply-position (fn [idx f]
-                         (camera/set-position! camera
-                                               (update (camera/position camera)
+                         (camera-set-position! camera
+                                               (update (camera-position camera)
                                                        idx
                                                        #(f % camera-movement-speed))))]
     (if (.isKeyPressed gdx-input Input$Keys/LEFT)  (apply-position 0 -))
@@ -841,7 +840,7 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (camera/visible-tiles (world-camera ctx))
+        visible-tiles (visible-tiles (world-camera ctx))
         [x y] (->tile (world-mouse-position ctx))]
     (draw-rectangle g x y 1 1 Color/WHITE)
     (when start-position
@@ -901,7 +900,7 @@ direction keys: move")
     (show-whole-map! (world-camera ctx) (:tiled-map @current-data)))
 
   (screen-exit [_ ctx]
-    (camera/reset-zoom! (world-camera ctx)))
+    (reset-zoom! (world-camera ctx)))
 
   (screen-render [_ context]
     (tiled/render! context (:tiled-map @current-data) (constantly Color/WHITE))

@@ -3,7 +3,6 @@
             [clj-commons.pretty.repl :as p]
             [malli.core :as m]
             [core.ctx :refer :all]
-            [core.camera :as camera]
             [core.property :as property]
             [core.ui :as ui])
   (:import com.badlogic.gdx.graphics.Color))
@@ -169,7 +168,7 @@
   (let [[x y] (:position entity*)
         x (float x)
         y (float y)
-        [cx cy] (camera/position (world-camera ctx))
+        [cx cy] (camera-position (world-camera ctx))
         px (float cx)
         py (float cy)
         xdist (Math/abs (- x px))

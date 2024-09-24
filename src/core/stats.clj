@@ -1,7 +1,7 @@
 (ns core.stats
   (:require [clojure.string :as str]
             [clojure.math :as math]
-            #_[malli.core :as m]
+            [malli.core :as m]
             [core.ctx :refer :all]
             [core.entity :as entity])
   (:import com.badlogic.gdx.graphics.Color))
