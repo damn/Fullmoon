@@ -48,7 +48,7 @@
                 *print-level* 3
                 }
   :aliases {"dev" ["run" "-m" "dev-loop"]}
-  :main core.start)
+  :main core.app)
 
 ; * Notes
 
