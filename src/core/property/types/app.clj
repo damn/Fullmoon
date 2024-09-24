@@ -1,8 +1,7 @@
 (ns ^:no-doc core.property.types.app
-  (:require [core.ctx :refer :all]
-            [core.ctx.property :as property]))
+  (:require [core.ctx :refer :all]))
 
-(property/def-attributes
+(def-attributes
   :fps          :nat-int
   :full-screen? :boolean
   :width        :nat-int
@@ -23,7 +22,7 @@
                 [:context/vis-ui {:optional true}]
                 [:context/tiled-map-renderer {:optional true}]]]})
 
-(property/def-type :properties/app
+(def-type :properties/app
   {:schema [:app/lwjgl3
             :app/context]
    :overview {:title "Apps"

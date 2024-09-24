@@ -1,8 +1,7 @@
 (ns ^:no-doc core.ctx.config
-  (:require [core.ctx :refer :all]
-            [core.ctx.property :as property]))
+  (:require [core.ctx :refer :all]))
 
-(property/def-attributes
+(def-attributes
   :tag [:enum [:dev :prod]]
   :configs :some)
 

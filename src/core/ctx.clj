@@ -324,3 +324,15 @@ Default method returns true."
 (defprotocol Entities
   (all-entities [_])
   (get-entity [_ uid]))
+
+(defn def-attributes [& attributes-data]
+  {:pre [(even? (count attributes-data))]}
+  (doseq [[k data] (partition 2 attributes-data)]
+    (defcomponent* k {:data data})))
+
+(defcomponent :property/id {:data [:qualified-keyword]})
+
+(defn def-type [k {:keys [schema overview]}]
+  (defcomponent k
+    {:data [:map (conj schema :property/id)]
+     :overview overview}))

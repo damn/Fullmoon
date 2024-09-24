@@ -1,8 +1,7 @@
 (ns ^:no-doc core.property.types.item
   (:require [core.ctx :refer :all]
             [core.entity.inventory :as inventory]
-            [core.entity.modifiers :as modifiers]
-            [core.ctx.property :as property]))
+            [core.entity.modifiers :as modifiers]))
 
 (defcomponent :item/modifiers
   {:data [:components-ns :modifier]
@@ -14,7 +13,7 @@
 (defcomponent :item/slot
   {:data [:enum (keys inventory/empty-inventory)]})
 
-(property/def-type :properties/items
+(def-type :properties/items
   {:schema [:property/pretty-name
             :entity/image
             :item/slot

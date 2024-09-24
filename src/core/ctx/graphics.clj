@@ -1,6 +1,5 @@
 (ns ^:no-doc core.ctx.graphics
   (:require [core.ctx :refer :all]
-            [core.ctx.property :as property]
             [core.graphics :as g]
             (core.graphics cursors
                            shape-drawer
@@ -11,7 +10,7 @@
            com.badlogic.gdx.utils.Disposable
            com.badlogic.gdx.utils.viewport.Viewport))
 
-(property/def-attributes
+(def-attributes
   :views [:map [:gui-view :world-view]]
   :gui-view [:map [:world-width :world-height]]
   :world-view [:map [:tile-size :world-width :world-height]]

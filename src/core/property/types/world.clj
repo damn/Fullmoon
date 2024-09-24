@@ -18,7 +18,7 @@
                                               :world.generator/modules
                                               :world.generator/uf-caves]]})
 
-(property/def-type :properties/worlds
+(def-type :properties/worlds
   {:schema [:world/generator
             :world/player-creature
             [:world/tiled-map {:optional true}]

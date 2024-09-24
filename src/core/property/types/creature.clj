@@ -8,7 +8,7 @@
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
 
-(property/def-attributes
+(def-attributes
   :body/width   :pos
   :body/height  :pos
   :body/flying? :boolean)
@@ -30,7 +30,7 @@
   (info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
-(property/def-type :properties/creatures
+(def-type :properties/creatures
   {:schema [:entity/body
             :property/pretty-name
             :creature/species

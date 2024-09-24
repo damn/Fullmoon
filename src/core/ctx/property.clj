@@ -29,11 +29,6 @@
 (defmulti ->widget      (fn [[k _] _v _ctx] (k->widget k)))
 (defmulti widget->value (fn [[k _] _widget] (k->widget k)))
 
-(defn def-attributes [& attributes-data]
-  {:pre [(even? (count attributes-data))]}
-  (doseq [[k data] (partition 2 attributes-data)]
-    (defcomponent* k {:data data})))
-
 (defn property-type->id-namespace [property-type]
   (keyword (name property-type)))
 
@@ -60,13 +55,6 @@
       (get 1)
       :schema
       m/schema))
-
-(defcomponent :property/id {:data [:qualified-keyword]})
-
-(defn def-type [k {:keys [schema overview]}]
-  (defcomponent k
-    {:data [:map (conj schema :property/id)]
-     :overview overview}))
 
 (defn- validate [property]
   (let [schema (->schema property)

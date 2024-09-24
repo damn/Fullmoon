@@ -3,7 +3,7 @@
             [core.entity :as entity]
             [core.ctx.property :as property]))
 
-(property/def-type :properties/audiovisuals
+(def-type :properties/audiovisuals
   {:schema [:tx/sound
             :entity/animation]
    :overview {:title "Audiovisuals"

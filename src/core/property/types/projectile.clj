@@ -2,7 +2,6 @@
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.property :as property]
             [core.ctx.raycaster :refer [path-blocked?]]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
@@ -15,7 +14,7 @@
 (defcomponent :projectile/piercing? {:data :boolean}
   (info-text [_ ctx] "[LIME]Piercing[]"))
 
-(property/def-type :properties/projectiles
+(def-type :properties/projectiles
   {:schema [:entity/image
             :projectile/max-range
             :projectile/speed
