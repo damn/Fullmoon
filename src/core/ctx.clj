@@ -1067,4 +1067,3 @@ Default method returns true."
 
 (defn cells->entities [cells*]
   (into #{} (mapcat :entities) cells*))
-
