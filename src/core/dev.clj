@@ -1,4 +1,4 @@
-(ns ^:no-doc dev
+(ns core.dev
   (:require [core.ctx :refer :all]
             [core.ui :as ui]
             core.property)
