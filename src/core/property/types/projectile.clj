@@ -2,7 +2,7 @@
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.raycaster :refer [path-blocked?]]))
+            [core.world.raycaster :refer [path-blocked?]]))
 
 ; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
 

@@ -2,7 +2,7 @@
   (:require [core.utils.core :refer [readable-number]]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.time :as time]))
+            [core.world.time :as time]))
 
 (defcomponent :entity/temp-modifier
   {:let {:keys [counter modifiers]}}

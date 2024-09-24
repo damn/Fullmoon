@@ -1,4 +1,4 @@
-(ns core.ctx.potential-fields
+(ns core.world.potential-fields
   "Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
   adjacent cells are walls and blocked.
   (important for wavefront-expansion and field-following)
@@ -11,7 +11,7 @@
             [core.math.vector :as v]
             [core.utils.core :refer :all]
             [core.entity :as entity]
-            [core.ctx.grid :as grid]))
+            [core.world.grid :as grid]))
 
 (def ^:private cache (atom nil))
 

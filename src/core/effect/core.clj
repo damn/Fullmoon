@@ -2,7 +2,7 @@
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.grid :as grid]))
+            [core.world.grid :as grid]))
 
 (defsystem render "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
 (defmethod render :default [_ g ctx])

@@ -5,7 +5,7 @@
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
-            [core.ctx.raycaster :refer [ray-blocked?]]))
+            [core.world.raycaster :refer [ray-blocked?]]))
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil."
   [_ entity ctx])

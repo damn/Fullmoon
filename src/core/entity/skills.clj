@@ -2,7 +2,7 @@
   (:require #_[clojure.string :as str]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.time :as time]))
+            [core.world.time :as time]))
 
 (defcomponent :entity/skills
   {:data [:one-to-many :properties/skills]}

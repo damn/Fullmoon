@@ -1,4 +1,4 @@
-(ns core.ctx.grid
+(ns core.world.grid
   (:require [core.math.geom :as geom]
             [core.utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]

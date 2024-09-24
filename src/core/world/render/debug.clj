@@ -3,8 +3,8 @@
             [core.utils.core :refer [->tile]]
             [core.graphics.camera :as camera]
             [core.math.geom :as geom]
-            [core.ctx.grid :refer [circle->cells]]
-            [core.ctx.potential-fields :as potential-field]))
+            [core.world.grid :refer [circle->cells]]
+            [core.world.potential-fields :as potential-field]))
 
 (defn- geom-test [g ctx]
   (let [position (world-mouse-position ctx)

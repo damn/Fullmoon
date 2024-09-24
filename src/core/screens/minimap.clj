@@ -1,7 +1,7 @@
 (ns ^:no-doc core.screens.minimap
   (:require [core.graphics.camera :as camera]
             [core.ctx :refer :all]
-            [core.ctx.explored-tile-corners :refer [explored?]]
+            [core.world.explored-tile-corners :refer [explored?]]
             [core.ctx.screens :as screens]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer])
   (:import com.badlogic.gdx.Input$Keys

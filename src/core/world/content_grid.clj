@@ -1,4 +1,4 @@
-(ns ^:no-doc core.ctx.content-grid
+(ns ^:no-doc core.world.content-grid
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]))
 

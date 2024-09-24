@@ -3,8 +3,8 @@
             [core.math.vector :as v]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.grid :as grid]
-            [core.ctx.time :as time]))
+            [core.world.grid :as grid]
+            [core.world.time :as time]))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))

@@ -4,7 +4,7 @@
             [core.ctx.property :as property]
             [core.entity :as entity]
             [core.graphics.image :as image]
-            [core.ctx.time :as time]))
+            [core.world.time :as time]))
 
 (defprotocol Animation
   (tick [_ delta])

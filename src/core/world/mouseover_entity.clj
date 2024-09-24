@@ -1,9 +1,9 @@
-(ns ^:no-doc core.ctx.mouseover-entity
+(ns ^:no-doc core.world.mouseover-entity
   (:require [core.utils.core :refer [sort-by-order]]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.stage :as stage]
-            [core.ctx.grid :as grid]))
+            [core.world.grid :as grid]))
 
 (defn- calculate-mouseover-entity [ctx]
   (let [player-entity* (player-entity* ctx)

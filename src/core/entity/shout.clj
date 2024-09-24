@@ -1,8 +1,8 @@
 (ns ^:no-doc core.entity.shout
   (:require [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.time :as time]
-            [core.ctx.grid :as grid]))
+            [core.world.time :as time]
+            [core.world.grid :as grid]))
 
 (def ^:private shout-radius 4)
 

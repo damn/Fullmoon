@@ -1,4 +1,4 @@
-(ns ^:no-doc core.ctx.ecs
+(ns ^:no-doc core.world.ecs
   (:require [clj-commons.pretty.repl :as p]
             [core.utils.core :refer [safe-merge sort-by-order]]
             [core.ctx :refer :all]

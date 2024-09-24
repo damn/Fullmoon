@@ -5,9 +5,9 @@
             [core.math.vector :as v]
             [core.stage :as stage]
             [core.ctx.screens :as screens]
-            [core.ctx.grid :as grid]
-            [core.ctx.potential-fields :as potential-fields]
-            [core.ctx.time :as time]
+            [core.world.grid :as grid]
+            [core.world.potential-fields :as potential-fields]
+            [core.world.time :as time]
             [core.effect.core :refer [->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.entity :as entity]
             [core.entity.state :as state]
@@ -107,7 +107,7 @@
 (comment
  (let [uid 76
        ctx @app/state
-       entity* @(core.ctx.ecs/get-entity ctx uid)
+       entity* @(core.world.ecs/get-entity ctx uid)
        effect-ctx (->npc-effect-ctx ctx entity*)]
    (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
  )

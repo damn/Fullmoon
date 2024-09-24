@@ -2,7 +2,7 @@
   (:require [core.utils.core :refer [find-first]]
             [core.entity :as entity]
             [core.ctx :refer :all]
-            [core.ctx.grid :as grid]))
+            [core.world.grid :as grid]))
 
 (defcomponent :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}

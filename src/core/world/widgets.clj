@@ -1,4 +1,4 @@
-(ns core.ctx.widgets
+(ns core.world.widgets
   (:require [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.actor :as actor]

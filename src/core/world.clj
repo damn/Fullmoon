@@ -2,8 +2,8 @@
   (:require [core.utils.core :refer [tile->middle]]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
-            [core.ctx.content-grid :as content-grid]
-            [core.ctx.grid :as grid]))
+            [core.world.content-grid :as content-grid]
+            [core.world.grid :as grid]))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 

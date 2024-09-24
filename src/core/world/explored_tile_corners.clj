@@ -1,4 +1,4 @@
-(ns core.ctx.explored-tile-corners
+(ns core.world.explored-tile-corners
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]))
 

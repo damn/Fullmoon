@@ -1,4 +1,4 @@
-(ns core.ctx.raycaster
+(ns core.world.raycaster
   (:require [core.math.raycaster :as raycaster]
             [core.math.vector :as v]
             [data.grid2d :as grid2d]

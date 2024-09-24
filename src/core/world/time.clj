@@ -1,4 +1,4 @@
-(ns core.ctx.time
+(ns core.world.time
   (:require [core.ctx :refer :all]))
 
 (def ^:private this :context/time)

@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.utils.core :as utils]
             [core.stage :as stage]
-            [core.ctx.time :as time]
+            [core.world.time :as time]
             [core.group :refer [add-actor!]]
             [core.ui :as ui]))
 

@@ -1,7 +1,7 @@
 (ns ^:no-doc core.entity.string-effect
   (:require [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ctx.time :as time]))
+            [core.world.time :as time]))
 
 (defcomponent :entity/string-effect
   (entity/tick [[k {:keys [counter]}] eid context]
