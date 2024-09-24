@@ -4,6 +4,7 @@
             [core.math.vector :as v]
             [core.entity :as entity]
             [core.screens :as screens]
+            [core.ui :as ui]
             [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
             [core.world.time :as time]

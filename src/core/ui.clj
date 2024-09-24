@@ -50,7 +50,7 @@
 (defn children
   "Returns an ordered list of child actors in this group."
   [^Group group]
-  (seq (.getchildren group)))
+  (seq (.getChildren group)))
 
 (defn clear-children!
   "Removes all actors from this group and unfocuses them."
@@ -94,14 +94,14 @@
   (proxy [Stage clojure.lang.ILookup] [viewport batch]
     (valAt
       ([id]
-       (ui/find-actor-with-id (.getRoot ^Stage this) id))
+       (find-actor-with-id (.getRoot ^Stage this) id))
       ([id not-found]
-       (or (ui/find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
+       (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
 
 (defn ->stage
   "Stage implements clojure.lang.ILookup (get) on actor id."
   [{{:keys [gui-view batch]} :context/graphics} actors]
-  (let [stage (->stage (:viewport gui-view) batch)]
+  (let [stage (->stage* (:viewport gui-view) batch)]
     (run! #(.addActor stage %) actors)
     stage))
 
@@ -412,16 +412,15 @@
 (defn error-window! [ctx throwable]
   (binding [*print-level* 5]
     (p/pretty-pst throwable 24))
-  (ui/stage-add! ctx
-                 (->window {:title "Error"
-                            :rows [[(->label (binding [*print-level* 3]
-                                               (with-err-str
-                                                 (clojure.repl/pst throwable))))]]
-                            :modal? true
-                            :close-button? true
-                            :close-on-escape? true
-                            :center? true
-                            :pack? true})))
+  (stage-add! ctx (->window {:title "Error"
+                             :rows [[(->label (binding [*print-level* 3]
+                                                (with-err-str
+                                                  (clojure.repl/pst throwable))))]]
+                             :modal? true
+                             :close-button? true
+                             :close-on-escape? true
+                             :center? true
+                             :pack? true})))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?
@@ -429,13 +428,13 @@
 ; hmmm interesting ... can disable @ item in cursor  / moving / etc.
 
 (defn- show-player-modal! [ctx {:keys [title text button-text on-click]}]
-  (assert (not (::modal (ui/stage-get ctx))))
-  (ui/stage-add! ctx
+  (assert (not (::modal (stage-get ctx))))
+  (stage-add! ctx
                  (->window {:title title
                             :rows [[(->label text)]
                                    [(->text-button button-text
                                                    (fn [ctx]
-                                                     (actor/remove! (::modal (ui/stage-get ctx)))
+                                                     (actor/remove! (::modal (stage-get ctx)))
                                                      (on-click ctx)))]]
                             :id ::modal
                             :modal? true
