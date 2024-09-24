@@ -1,5 +1,5 @@
 #_(ns gdl.simple
-  (:require [core.component :refer [defcomponent] :as component]
+  (:require [core.component :as component]
             [app.start :as app]
             [core.graphics.image :as image]))
 

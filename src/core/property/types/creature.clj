@@ -65,7 +65,7 @@
 
 (defcomponent :tx/creature
   {:let {:keys [position creature-id components]}}
-  (component/do! [_ ctx]
+  (do! [_ ctx]
     (let [props (property/build ctx creature-id)]
       [[:e/create
         position
@@ -95,7 +95,7 @@
     (and (:entity/faction @source)
          target-position))
 
-  (component/do! [_ {:keys [effect/source effect/target-position]}]
+  (do! [_ {:keys [effect/source effect/target-position]}]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
                     :creature-id id ; already properties/get called through one-to-one, now called again.

@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.shout
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.time :as time]
             [core.ctx.grid :as grid]))
@@ -24,7 +23,7 @@
               [:tx/event friendly-eid :alert])))))
 
 (defcomponent :tx/shout
-  (component/do! [[_ position faction delay-seconds] ctx]
+  (do! [[_ position faction delay-seconds] ctx]
     [[:e/create
       position
       entity/effect-body-props

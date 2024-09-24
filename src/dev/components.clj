@@ -17,7 +17,7 @@
         (binding [*print-level* nil]
           (with-out-str
            (doseq [[nmsp ks] (sort-by first
-                                      (group-by namespace (sort (keys (methods component/do!)))))]
+                                      (group-by namespace (sort (keys (methods do!)))))]
 
              (println "\n#" nmsp)
              (doseq [k ks

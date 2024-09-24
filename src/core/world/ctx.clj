@@ -86,7 +86,7 @@
   (content-grid/active-entities ctx (player-entity* ctx)))
 
 (defcomponent :tx/add-to-world
-  (component/do! [[_ entity] ctx]
+  (do! [[_ entity] ctx]
     (content-grid/update-entity! ctx entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
@@ -94,13 +94,13 @@
     ctx))
 
 (defcomponent :tx/remove-from-world
-  (component/do! [[_ entity] ctx]
+  (do! [[_ entity] ctx]
     (content-grid/remove-entity! ctx entity)
     (grid/remove-entity! ctx entity)
     ctx))
 
 (defcomponent :tx/position-changed
-  (component/do! [[_ entity] ctx]
+  (do! [[_ entity] ctx]
     (content-grid/update-entity! ctx entity)
     (grid/entity-position-changed! ctx entity)
     ctx))

@@ -28,7 +28,7 @@
   (component/applicable? [_ effect-ctx]
     (component/applicable? (damage-effect effect-ctx) effect-ctx))
 
-  (component/do! [_ ctx]
+  (do! [_ ctx]
     [(damage-effect ctx)]))
 
 (defn- effective-armor-save [source* target*]
@@ -90,7 +90,7 @@
     (and target
          (entity/stat @target :stats/hp)))
 
-  (component/do! [_ {:keys [effect/source effect/target]}]
+  (do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
           hp (entity/stat target* :stats/hp)]

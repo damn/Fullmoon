@@ -41,7 +41,7 @@
       (entity/create component eid ctx))))
 
 (defcomponent :e/create
-  (component/do! [[_ position body components] ctx]
+  (do! [[_ position body components] ctx]
     (assert (and (not (contains? components :position))
                  (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
@@ -56,7 +56,7 @@
       (create-e-system eid))))
 
 (defcomponent :e/destroy
-  (component/do! [[_ entity] ctx]
+  (do! [[_ entity] ctx]
     [[:e/assoc entity :entity/destroyed? true]]))
 
 (def ^:private ^:dbg-flag show-body-bounds false)
@@ -125,29 +125,29 @@
       (entity/destroy component entity ctx))))
 
 (defcomponent :e/assoc
-  (component/do! [[_ entity k v] ctx]
+  (do! [[_ entity k v] ctx]
     (assert (keyword? k))
     (swap! entity assoc k v)
     ctx))
 
 (defcomponent :e/assoc-in
-  (component/do! [[_ entity ks v] ctx]
+  (do! [[_ entity ks v] ctx]
     (swap! entity assoc-in ks v)
     ctx))
 
 (defcomponent :e/dissoc
-  (component/do! [[_ entity k] ctx]
+  (do! [[_ entity k] ctx]
     (assert (keyword? k))
     (swap! entity dissoc k)
     ctx))
 
 (defcomponent :e/dissoc-in
-  (component/do! [[_ entity ks] ctx]
+  (do! [[_ entity ks] ctx]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     ctx))
 
 (defcomponent :e/update-in
-  (component/do! [[_ entity ks f] ctx]
+  (do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))

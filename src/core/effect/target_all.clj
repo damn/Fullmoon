@@ -43,7 +43,7 @@
     false
     )
 
-  (component/do! [_ {:keys [effect/source] :as ctx}]
+  (do! [_ {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (apply concat
              (for [target (creatures-in-los-of-player ctx)]

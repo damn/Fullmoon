@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.string-effect
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.ctx.time :as time]))
@@ -20,7 +19,7 @@
                     :up? true}))))
 
 (defcomponent :tx/add-text-effect
-  (component/do! [[_ entity text] ctx]
+  (do! [[_ entity text] ctx]
     [[:e/assoc
       entity
       :entity/string-effect

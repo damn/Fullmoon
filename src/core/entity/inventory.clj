@@ -1,7 +1,6 @@
 (ns core.entity.inventory
   (:require [data.grid2d :as grid2d]
             [core.utils.core :refer [find-first]]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.entity :as entity]))
 
@@ -57,11 +56,11 @@
        [:tx/remove-item-from-widget cell])]))
 
 (defcomponent :tx/set-item
-  (component/do! [[_ entity cell item] _ctx]
+  (do! [[_ entity cell item] _ctx]
     (set-item @entity cell item)))
 
 (defcomponent :tx/remove-item
-  (component/do! [[_ entity cell] _ctx]
+  (do! [[_ entity cell] _ctx]
     (remove-item @entity cell)))
 
 ; TODO doesnt exist, stackable, usable items with action/skillbar thingy
@@ -86,7 +85,7 @@
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
 (defcomponent :tx/stack-item
-  (component/do! [[_ entity cell item] _ctx]
+  (do! [[_ entity cell item] _ctx]
     (stack-item @entity cell item)))
 
 (defn- try-put-item-in [entity* slot item]
@@ -106,7 +105,7 @@
    (try-put-item-in entity* :inventory.slot/bag item)))
 
 (defcomponent :tx/pickup-item
-  (component/do! [[_ entity item] _ctx]
+  (do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
 (extend-type core.entity.Entity

@@ -14,7 +14,7 @@
 ; crazy ...
 ; 'gdl'
 (ns core.ctx
-  (:require [core.component :as component]))
+  (:require [core.component :as component :refer [defsystem]]))
 
 (def component-attributes {})
 
@@ -161,12 +161,26 @@ Example:
                  (not= (first tx) :tx/effect))
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
+; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
+; when returning a 'map?'
+
+; 2. return seq of txs -> those txs will be done recursively
+; 2.1 also seq of fns wih [ctx] param can be passed.
+
+; 3. return nil in case of doing nothing -> will just continue with existing ctx.
+
+; do NOT do a effect/do inside a effect/do! because then we have to return a context
+; and that means that transaction will be recorded and done double with all the sub-transactions
+; in the replay mode
+; we only want to record actual side effects, not transactions returning other lower level transactions
+(defsystem do! "FIXME" [_ ctx])
+
 (declare effect!)
 
 (defn- handle-tx! [ctx tx]
   (let [result (if (fn? tx)
                  (tx ctx)
-                 (component/do! tx ctx))]
+                 (do! tx ctx))]
     (if (map? result) ; new context
       (do
        #_(tx-happened! tx ctx)

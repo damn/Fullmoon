@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.player-modal
-  (:require [core.component :as component]
-            [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
+  (:require [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.screens.stage :as stage]
             [core.ctx :refer :all]
             [core.ctx.ui :as ui]
@@ -27,5 +26,5 @@
                                   :pack? true})))
 
 (defcomponent :tx/player-modal
-  (component/do! [[_ params] ctx]
+  (do! [[_ params] ctx]
     (show-player-modal! ctx params)))

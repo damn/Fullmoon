@@ -38,7 +38,7 @@
 ;  * direction  = always available (from mouse world position)
 
 (defcomponent :tx/effect
-  (component/do! [[_ effect-ctx effects] ctx]
+  (do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
         (effect! (filter #(component/applicable? % effect-ctx) effects))

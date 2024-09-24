@@ -42,7 +42,7 @@
     (assert target)
     (in-range? @source @target maxrange))
 
-  (component/do! [_ {:keys [effect/source effect/target]}]
+  (do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)

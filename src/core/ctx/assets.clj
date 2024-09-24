@@ -72,5 +72,5 @@
 
 (defcomponent :tx/sound
   {:data :sound}
-  (component/do! [[_ file] ctx]
+  (do! [[_ file] ctx]
     (play-sound! ctx file)))

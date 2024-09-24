@@ -23,7 +23,7 @@
    :button-group (:action-bar (:context/widgets ctx))})
 
 (defcomponent :tx.action-bar/add
-  (component/do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
+  (do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (ui/->image-button image identity {:scale image-scale})]
       (actor/set-id! button id)
@@ -33,7 +33,7 @@
       ctx)))
 
 (defcomponent :tx.action-bar/remove
-  (component/do! [[_ {:keys [property/id]}] ctx]
+  (do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
       (remove! button)

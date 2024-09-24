@@ -20,6 +20,6 @@
   (.setCursor Gdx/graphics (utils/safe-get (:cursors g) cursor-key)))
 
 (defcomponent :tx/cursor
-  (component/do! [[_ cursor-key] ctx]
+  (do! [[_ cursor-key] ctx]
     (set-cursor! ctx cursor-key)
     ctx))

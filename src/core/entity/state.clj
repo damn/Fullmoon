@@ -92,7 +92,7 @@
     (and target
          (:entity/state @target)))
 
-  (component/do! [_ {:keys [effect/target]}]
+  (do! [_ {:keys [effect/target]}]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect.entity/kill
@@ -104,7 +104,7 @@
     (and target
          (:entity/state @target)))
 
-  (component/do! [_ {:keys [effect/target]}]
+  (do! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))
 
 
@@ -153,5 +153,5 @@
            [:e/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defcomponent :tx/event
-  (component/do! [[_ eid event params] ctx]
+  (do! [[_ eid event params] ctx]
     (send-event! ctx eid event params)))

@@ -31,7 +31,7 @@
   (first (:world-unit-dimensions (:entity/image projectile))))
 
 (defcomponent :tx/projectile
-  (component/do! [[_
+  (do! [[_
             {:keys [position direction faction]}
             {:keys [entity/image
                     projectile/max-range
@@ -84,7 +84,7 @@
                           target-p)
               max-range))))
 
-  (component/do! [_ {:keys [effect/source effect/direction] :as ctx}]
+  (do! [_ {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
       {:position (start-point @source direction (projectile-size projectile))

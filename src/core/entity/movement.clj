@@ -64,7 +64,7 @@
            [:tx/position-changed eid]])))))
 
 (defcomponent :tx/set-movement
-  (component/do! [[_ entity movement] ctx]
+  (do! [[_ entity movement] ctx]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...

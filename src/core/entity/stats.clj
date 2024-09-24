@@ -37,7 +37,7 @@
   (component/useful? [_ _effect-ctx]
     true)
 
-  (component/do! [[effect-k operations] {:keys [effect/target]}]
+  (do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity/stat @target stat-k)]
         [[:e/assoc-in target [:entity/stats stat-k]
@@ -210,7 +210,7 @@
                                      (hpbar-color ratio))))))))
 
 (defcomponent :tx.entity.stats/pay-mana-cost
-  (component/do! [[_ entity cost] _ctx]
+  (do! [[_ entity cost] _ctx]
     (let [mana-val ((entity/stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
@@ -220,6 +220,6 @@
        entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
-   (= (component/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )

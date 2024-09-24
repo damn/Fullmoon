@@ -33,11 +33,11 @@
  )
 
 (defcomponent :tx/apply-modifiers
-  (component/do! [[_ entity modifiers] _ctx]
+  (do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers conj-value)))
 
 (defcomponent :tx/reverse-modifiers
-  (component/do! [[_ entity modifiers] _ctx]
+  (do! [[_ entity modifiers] _ctx]
     (txs-update-modifiers entity modifiers remove-value)))
 
 ; DRY ->effective-value (summing)

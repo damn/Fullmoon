@@ -35,7 +35,7 @@
     true)
 
   ; TODO stacking? (if already has k ?) or reset counter ? (see string-effect too)
-  (component/do! [_ {:keys [effect/source effect/target] :as ctx}]
+  (do! [_ {:keys [effect/source effect/target] :as ctx}]
     (when-not (:entity/temp-modifier @target)
       [[:tx/apply-modifiers target modifiers]
        [:e/assoc target :entity/temp-modifier {:modifiers modifiers

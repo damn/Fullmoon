@@ -34,7 +34,7 @@
    :z-order :z-order/on-ground})
 
 (defcomponent :tx/item
-  (component/do! [[_ position item] _ctx]
+  (do! [[_ position item] _ctx]
     [[:e/create position body-props {:entity/image (:entity/image item)
                                       :entity/item item
                                       :entity/clickable {:type :clickable/item

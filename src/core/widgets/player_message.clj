@@ -9,7 +9,7 @@
 (def ^:private this :context/msg-to-player)
 
 (defcomponent :tx/msg-to-player
-  (component/do! [[_ message] ctx]
+  (do! [[_ message] ctx]
     (assoc ctx this {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)
