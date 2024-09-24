@@ -693,7 +693,7 @@ Default method returns true."
   [ctx {:keys [image tilew tileh]} [x y]]
   (sub-image ctx image [(* x tilew) (* y tileh) tilew tileh]))
 
-(defn ^:no-doc edn->image [{:keys [file sub-image-bounds]} ctx]
+(defn edn->image [{:keys [file sub-image-bounds]} ctx]
   (if sub-image-bounds
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
           [tilew tileh]       (drop 2 sub-image-bounds)]
@@ -1484,3 +1484,6 @@ Default method returns true."
   "Sets the zoom value to 1."
   [camera]
   (set-zoom! camera 1))
+
+(defprotocol Pathfinding
+  (potential-fields-follow-to-enemy [ctx eid]))

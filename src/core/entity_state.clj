@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ui :as ui]
-            [core.potential-fields :as potential-fields]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
@@ -480,7 +479,7 @@
           effect-ctx (->npc-effect-ctx ctx entity*)]
       (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy ctx eid)]]))))
+        [[:tx/event eid :movement-direction (potential-fields-follow-to-enemy ctx eid)]]))))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
 ; pathfindinusable skills every frame
