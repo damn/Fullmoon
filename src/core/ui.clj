@@ -172,19 +172,29 @@
       (when act
         (act @app-state)))))
 
+(defmacro ^:private proxy-ILookup
+  "For actors inheriting from Group."
+  [class args]
+  `(proxy [~class clojure.lang.ILookup] ~args
+     (valAt
+       ([id#]
+        (group/find-actor-with-id ~'this id#))
+       ([id# not-found#]
+        (or (group/find-actor-with-id ~'this id#) not-found#)))))
+
 (defn ->group [{:keys [actors] :as opts}]
-  (let [group (group/proxy-ILookup Group [])]
+  (let [group (proxy-ILookup Group [])]
     (run! #(group/add-actor! group %) actors)
     (set-opts group opts)))
 
 (defn ->horizontal-group [{:keys [space pad]}]
-  (let [group (group/proxy-ILookup HorizontalGroup [])]
+  (let [group (proxy-ILookup HorizontalGroup [])]
     (when space (.space group (float space)))
     (when pad   (.pad   group (float pad)))
     group))
 
 (defn ->vertical-group [actors]
-  (let [group (group/proxy-ILookup VerticalGroup [])]
+  (let [group (proxy-ILookup VerticalGroup [])]
     (run! #(group/add-actor! group %) actors)
     group))
 
@@ -231,11 +241,11 @@
      button)))
 
 (defn ->table ^Table [opts]
-  (-> (group/proxy-ILookup VisTable [])
+  (-> (proxy-ILookup VisTable [])
       (set-opts opts)))
 
 (defn ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
-  (-> (let [window (doto (group/proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
+  (-> (let [window (doto (proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
                      (.setModal (boolean modal?)))]
         (when close-button?    (.addCloseButton window))
         (when center?          (.centerWindow   window))
@@ -258,7 +268,7 @@
       (set-actor-opts opts)))
 
 (defn ->stack [actors]
-  (group/proxy-ILookup Stack [(into-array Actor actors)]))
+  (proxy-ILookup Stack [(into-array Actor actors)]))
 
 ; TODO widget also make, for fill parent
 (defn ->image-widget

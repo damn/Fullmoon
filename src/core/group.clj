@@ -25,13 +25,3 @@
             (str "Actor ids are not distinct: " (vec ids)))
     (first (filter #(= id (actor/id %))
                    actors))))
-
-(defmacro proxy-ILookup
-  "For actors inheriting from Group."
-  [class args]
-  `(proxy [~class clojure.lang.ILookup] ~args
-     (valAt
-       ([id#]
-        (find-actor-with-id ~'this id#))
-       ([id# not-found#]
-        (or (find-actor-with-id ~'this id#) not-found#)))))
