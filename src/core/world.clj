@@ -8,7 +8,6 @@
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.state :refer [draw-item-on-cursor]]
-            [core.entity.player :as player]
             [core.world.gen.gen :as level-generator]
             [core.widgets.inventory :as inventory]
             [core.math.geom :as geom]
@@ -547,7 +546,7 @@
 (defn- update-game-paused [ctx]
   (assoc ctx :context/paused? (or (:context/entity-tick-error ctx)
                                   (and pausing?
-                                       (player/state-pause-game? ctx)
+                                       (player-state-pause-game? ctx)
                                        (not (player-unpaused?))))))
 
 (defn- update-time [ctx delta]
@@ -569,7 +568,7 @@
 (defmulti ^:private game-loop :context/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
-  (effect! ctx [player/update-state
+  (effect! ctx [player-update-state
                 entity/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (:context/paused? %)

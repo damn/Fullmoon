@@ -3,8 +3,7 @@
             [core.ctx :refer :all]
             [core.ui :as ui]
             [core.entity :as entity]
-            [core.entity.inventory :as inventory]
-            [core.entity.player :as player])
+            [core.entity.inventory :as inventory])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)

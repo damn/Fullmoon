@@ -453,7 +453,7 @@ direction keys: move")
 
 (def ^:private world-id :worlds/modules)
 
-(defn- generate [context properties]
+(defn- generate-screen-ctx [context properties]
   (let [;{:keys [tiled-map area-level-grid start-position]} (core.world.gen.gen/generate context properties)
         {:keys [tiled-map start-position]} (->world context world-id)
         atom-data (current-data context)]
@@ -472,7 +472,7 @@ direction keys: move")
                 :rows [[(ui/->label (with-out-str
                                      (clojure.pprint/pprint
                                       (build-property ctx level-id))))]
-                       [(ui/->text-button "Generate" #(try (generate % (build-property % level-id))
+                       [(ui/->text-button "Generate" #(try (generate-screen-ctx % (build-property % level-id))
                                                            (catch Throwable t
                                                              (ui/error-window! % t)
                                                              (println t)

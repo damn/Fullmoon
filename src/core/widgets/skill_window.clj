@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.skill-window
   (:require [core.ctx :refer :all]
-            [core.entity.player :as player]
             [core.ui :as ui]))
 
 ; TODO render text label free-skill-points
@@ -19,7 +18,7 @@
                                                              (:entity/image (build-property context id)) ; TODO here anyway taken
                                                              ; => should probably build this window @ game start
                                                              (fn [ctx]
-                                                               (effect! ctx (player/clicked-skillmenu ctx (build-property ctx id)))))]]
+                                                               (effect! ctx (player-clicked-skillmenu ctx (build-property ctx id)))))]]
                          (do
                           (ui/add-tooltip! button #(->info-text (build-property % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]
