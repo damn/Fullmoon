@@ -4,7 +4,7 @@
             [malli.generator :as mg]
             [core.utils.core :as utils :refer [index-of]]
             [core.ctx :refer :all]
-            [core.ctx.property :as property]
+            [core.property :as property]
             [core.ctx.screens :as screens]
             [core.stage :as stage]
             [core.widgets.background-image :refer [->background-image]]

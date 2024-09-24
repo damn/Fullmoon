@@ -3,7 +3,7 @@
             [malli.core :as m]
             [core.utils.core :as utils]
             [core.ctx :refer :all]
-            [core.ctx.property :as property]
+            [core.property :as property]
             [core.actor :as actor]
             [core.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))

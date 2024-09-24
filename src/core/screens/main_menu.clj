@@ -5,7 +5,7 @@
             [core.screen :as screen]
             [core.ctx.screens :as screens]
             [core.stage :as stage]
-            [core.ctx.property :as property]
+            [core.property :as property]
             core.world
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]

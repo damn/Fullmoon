@@ -4,7 +4,7 @@
             [data.grid2d :as grid]
             [core.tiled :as tiled]
             [core.ctx :refer :all]
-            [core.ctx.property :as property]
+            [core.property :as property]
             [core.world.gen.utils :refer [printgrid scale-grid]]
             [core.world.gen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
             [core.world.gen.transitions :as transitions]

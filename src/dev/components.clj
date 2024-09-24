@@ -1,6 +1,6 @@
 (ns ^:no-doc dev.components
   (:require [core.ctx :refer :all]
-            core.ctx.property))
+            core.property))
 
 ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
 ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
@@ -41,7 +41,7 @@
 (defn data-components []
   (sort
    (concat
-    (keys (methods core.ctx.property/->value))
+    (keys (methods core.property/->value))
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))

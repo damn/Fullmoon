@@ -1,4 +1,4 @@
-(ns ^:no-doc core.ctx.graphics
+(ns ^:no-doc core.graphics
   (:require [core.ctx :refer :all]
             (core.graphics cursors
                            shape-drawer

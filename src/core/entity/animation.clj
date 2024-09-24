@@ -1,7 +1,7 @@
 (ns ^:no-doc core.entity.animation
   (:require [core.ui :as ui]
             [core.ctx :refer :all]
-            [core.ctx.property :as property]
+            [core.property :as property]
             [core.entity :as entity]
             [core.graphics.image :as image]
             [core.world.time :as time]))

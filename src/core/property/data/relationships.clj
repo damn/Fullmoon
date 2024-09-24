@@ -1,6 +1,6 @@
 (ns ^:no-doc core.property.data.relationships
   (:require [core.ctx :refer :all]
-            [core.ctx.property :as property]
+            [core.property :as property]
             [core.stage :as stage]
             [core.screens.property-editor :refer [->overview-table]]
             [core.actor :as actor]
