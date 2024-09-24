@@ -1,18 +1,15 @@
 (ns core.app
-  (:require [clojure.string :as str]
-            [clojure.java.io :as io]
-            [data.grid2d :as grid2d]
-            [core.ctx :refer :all]
-            [core.tiled :as tiled]
-            [core.property :as property]
+  (:require [data.grid2d :as grid2d]
             [core.camera :as camera]
-            [core.ui :as ui]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.entity-state :refer [draw-item-on-cursor]]
-            [core.world-gen :as level-generator]
             [core.inventory :as inventory]
+            [core.potential-fields :as potential-fields]
+            [core.property :as property]
             [core.tiled :as tiled]
-            [core.potential-fields :as potential-fields])
+            [core.ui :as ui]
+            [core.world-gen :as level-generator])
   (:import org.lwjgl.system.Configuration
            (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -1070,31 +1067,15 @@
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
 
-(defn- require-all-components! []
-  (let [component-namespaces (->> "src/core/"
-                                  io/file
-                                  file-seq
-                                  (map java.io.File/.getPath)
-                                  (filter #(str/ends-with? % ".clj"))
-                                  (map #(-> %
-                                            (str/replace "src/" "")
-                                            (str/replace ".clj" "")
-                                            (str/replace "/" ".")
-                                            symbol)))]
-    (run! require component-namespaces)))
-
-; https://github.com/libgdx/libgdx/pull/7361
-; Maybe can delete this when using that new libgdx version
-; which includes this PR.
-(when (SharedLibraryLoader/isMac)
-  (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
-  (.set Configuration/GLFW_CHECK_THREAD0 false))
-
-(def ^:private properties-edn-file "resources/properties.edn")
-
 (defn -main []
-  (require-all-components!)
-  (let [ctx (map->Context {:context/properties (property/validate-and-create properties-edn-file)})
+  ; https://github.com/libgdx/libgdx/pull/7361
+  ; Maybe can delete this when using that new libgdx version
+  ; which includes this PR.
+  (when (SharedLibraryLoader/isMac)
+    (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set Configuration/GLFW_CHECK_THREAD0 false))
+  (let [ctx (map->Context {:context/properties
+                           (property/validate-and-create "resources/properties.edn")})
         app (build-property ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))
