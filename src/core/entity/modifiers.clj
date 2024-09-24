@@ -1,7 +1,6 @@
 (ns ^:no-doc core.entity.modifiers
   (:require [clojure.string :as str]
             [core.utils.core :as utils]
-            [core.component :as component]
             [core.ctx :refer :all]
             core.entity
             [core.operation :as operation])
@@ -66,12 +65,12 @@
 (def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
 (def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
 
-(defn info-text [modifiers]
+(defn mod-info-text [modifiers]
   (str "[MODIFIER_BLUE]"
        (str/join "\n"
                  (for [[modifier-k operations] modifiers
                        operation operations]
-                   (str (operation/info-text operation) " " (utils/k->pretty-name modifier-k))))
+                   (str (operation/op-info-text operation) " " (utils/k->pretty-name modifier-k))))
        "[]"))
 
 (defcomponent :entity/modifiers
@@ -82,10 +81,10 @@
                [modifier-k (into {} (for [[operation-k value] operations]
                                       [operation-k [value]]))])))
 
-  (component/info-text [_ _ctx]
+  (info-text [_ _ctx]
     (let [modifiers (sum-operation-values modifiers)]
       (when (seq modifiers)
-        (info-text modifiers)))))
+        (mod-info-text modifiers)))))
 
 (extend-type core.entity.Entity
   core.entity/Modifiers

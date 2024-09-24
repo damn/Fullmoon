@@ -3,7 +3,6 @@
             [clojure.java.io :as io]
             [core.utils.core :refer [safe-merge]]
             [core.ctx :refer :all]
-            [core.component :as component]
             [core.ctx.graphics :as graphics]
             [core.ctx.screens :as screens]
             [core.ctx.property :as property])

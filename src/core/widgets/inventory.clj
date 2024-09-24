@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
-            [core.component :as component]
             [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-mouse-position gui-viewport-width gui-viewport-height]]
@@ -133,18 +132,18 @@
    :slot->background (:slot->background (:context/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget
-  (component/do! [[_ cell item] ctx]
+  (do! [[_ cell item] ctx]
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)
           drawable (ui/->texture-region-drawable (:texture-region (:entity/image item)))]
       (.setMinSize drawable (float cell-size) (float cell-size))
       (.setDrawable image-widget drawable)
-      (add-tooltip! cell-widget #(component/->text item %))
+      (add-tooltip! cell-widget #(->info-text item %))
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget
-  (component/do! [[_ cell] ctx]
+  (do! [[_ cell] ctx]
     (let [{:keys [table slot->background]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)]

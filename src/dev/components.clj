@@ -1,6 +1,6 @@
 (ns ^:no-doc dev.components
-  (:require [core.component :as component]
-            [core.ctx :refer :all]))
+  (:require [core.ctx :refer :all]
+            core.ctx.property))
 
 ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
 ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
@@ -33,7 +33,7 @@
                    (println (str "        * data: `" (pr-str (:data (get component-attributes k))) "`"))))))))))
 
 (defn- component-systems [component-k]
-   (for [[sys-name sys-var] component/defsystems
+   (for [[sys-name sys-var] defsystems
          [k method] (methods @sys-var)
          :when (= k component-k)]
      sys-name))

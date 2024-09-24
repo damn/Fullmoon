@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.temp-modifier
   (:require [core.utils.core :refer [readable-number]]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics :as g]
@@ -8,7 +7,7 @@
 
 (defcomponent :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
-  (component/info-text [_ ctx]
+  (info-text [_ ctx]
     (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (time/finished-ratio ctx counter)) "/1[]"))
 
   (entity/tick [[k _] eid ctx]
@@ -24,13 +23,13 @@
 
 (defcomponent :effect.entity/spiderweb
   {:data :some}
-  (component/info-text [_ _effect-ctx]
+  (info-text [_ _effect-ctx]
     "Spiderweb slows 50% for 5 seconds."
     ; modifiers same like item/modifiers has info-text
     ; counter ?
     )
 
-  (component/applicable? [_ {:keys [effect/source effect/target]}]
+  (applicable? [_ {:keys [effect/source effect/target]}]
     ; ?
     true)
 

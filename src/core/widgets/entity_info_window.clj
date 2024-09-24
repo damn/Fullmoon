@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.entity-info-window
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.graphics.views :refer [gui-viewport-width]]
             [core.ctx.ui :as ui]
             [core.ui.group :refer [add-actor!]]))
@@ -23,11 +22,11 @@
                                            ; items then have 2x pretty-name
                                            #_(.setText (.getTitleLabel window)
                                                        (if-let [entity* (mouseover-entity* ctx)]
-                                                         (core.component/info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                         (info-text [:property/pretty-name (:property/pretty-name entity*)])
                                                          "Entity Info"))
                                            (.setText label
                                                      (str (when-let [entity* (mouseover-entity* ctx)]
-                                                            (component/->text
+                                                            (->info-text
                                                              ; don't use select-keys as it loses core.entity.Entity record type
                                                              (apply dissoc entity* disallowed-keys)
                                                              ctx))))

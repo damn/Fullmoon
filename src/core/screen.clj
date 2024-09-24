@@ -1,5 +1,5 @@
 (ns core.screen
-  (:require [core.component :refer [defsystem]]))
+  (:require [core.ctx :refer :all]))
 
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])

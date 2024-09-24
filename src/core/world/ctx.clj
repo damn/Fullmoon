@@ -2,7 +2,6 @@
   (:require [core.utils.core :refer [tile->middle]]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
-            [core.component :as component]
             [core.ctx.content-grid :as content-grid]
             [core.ctx.grid :as grid])
   (:import com.badlogic.gdx.utils.Disposable))

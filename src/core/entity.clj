@@ -3,8 +3,8 @@
             [core.math.geom :as geom]
             [core.math.vector :as v]
             [core.utils.core :as utils]
+            [core.ctx :refer :all]
             [core.graphics.camera :as camera]
-            [core.component :refer [defsystem]]
             [core.graphics.views :refer [world-camera world-viewport-width world-viewport-height]]
             [core.ctx.raycaster :refer [ray-blocked?]]))
 

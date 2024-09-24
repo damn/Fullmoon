@@ -1,6 +1,6 @@
 (ns ^:no-doc core.effect.target-all
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
+            [core.effect.core :as effect]
             [core.graphics :as g]
             [core.entity :as entity]
             [core.world.ctx :refer [active-entities]]))
@@ -32,13 +32,13 @@
 (defcomponent :effect/target-all
   {:data [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
-  (component/info-text [_ ctx]
+  (info-text [_ ctx]
     "[LIGHT_GRAY]All visible targets[]")
 
-  (component/applicable? [_ _ctx]
+  (applicable? [_ _ctx]
     true)
 
-  (component/useful? [_ _ctx]
+  (useful? [_ _ctx]
     ; TODO
     false
     )
@@ -60,7 +60,7 @@
                 ; find a way to pass ctx / effect-ctx separate ?
                 [:tx/effect {:effect/source source :effect/target target} entity-effects]]))))
 
-  (component/render [_ g {:keys [effect/source] :as ctx}]
+  (effect/render [_ g {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (doseq [target* (map deref (creatures-in-los-of-player ctx))]
         (g/draw-line g

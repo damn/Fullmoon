@@ -1,12 +1,11 @@
 (ns ^:no-doc core.entity.faction
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.entity :as entity]))
 
 (defcomponent :entity/faction
   {:let faction
    :data [:enum [:good :evil]]}
-  (component/info-text [_ _ctx]
+  (info-text [_ _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
 (extend-type core.entity.Entity
@@ -21,10 +20,10 @@
 
 (defcomponent :effect.entity/convert
   {:data :some}
-  (component/info-text [_ _effect-ctx]
+  (info-text [_ _effect-ctx]
     "Converts target to your side.")
 
-  (component/applicable? [_ {:keys [effect/source effect/target]}]
+  (applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (= (:entity/faction @target)
             (entity/enemy-faction @source))))

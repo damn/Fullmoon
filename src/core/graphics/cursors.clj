@@ -1,7 +1,6 @@
 (ns core.graphics.cursors
   (:require [core.utils.core :as utils :refer [mapvals]]
-            [core.ctx :refer :all]
-            [core.component :as component])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Pixmap))
 

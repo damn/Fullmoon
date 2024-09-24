@@ -2,7 +2,6 @@
   (:require [reduce-fsm :as fsm]
             [core.utils.core :refer [readable-number]]
             [core.ctx :refer :all]
-            [core.component :as component :refer [defsystem]]
             [core.entity :as entity]))
 
 (defsystem enter "FIXME" [_ ctx])
@@ -85,10 +84,10 @@
 (defcomponent :effect.entity/stun
   {:data :pos
    :let duration}
-  (component/info-text [_ _effect-ctx]
+  (info-text [_ _effect-ctx]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (component/applicable? [_ {:keys [effect/target]}]
+  (applicable? [_ {:keys [effect/target]}]
     (and target
          (:entity/state @target)))
 
@@ -97,10 +96,10 @@
 
 (defcomponent :effect.entity/kill
   {:data :some}
-  (component/info-text [_ _effect-ctx]
+  (info-text [_ _effect-ctx]
     "Kills target")
 
-  (component/applicable? [_ {:keys [effect/source effect/target]}]
+  (applicable? [_ {:keys [effect/source effect/target]}]
     (and target
          (:entity/state @target)))
 
@@ -124,7 +123,7 @@
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
      [:e/assoc eid initial-state (->mk [initial-state eid] ctx)]])
 
-  (component/info-text [[_ fsm] _ctx]
+  (info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
 (extend-type core.entity.Entity

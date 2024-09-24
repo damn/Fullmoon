@@ -1,7 +1,6 @@
 (ns ^:no-doc core.property.types.creature
   (:require [clojure.string :as str]
             [core.utils.core :refer [safe-merge]]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.ctx.property :as property]))
 
@@ -23,12 +22,12 @@
   {:data [:qualified-keyword {:namespace :species}]}
   (->mk [[_ species] _ctx]
     (str/capitalize (name species)))
-  (component/info-text [[_ species] _ctx]
+  (info-text [[_ species] _ctx]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defcomponent :creature/level
   {:data :pos-int}
-  (component/info-text [[_ lvl] _ctx]
+  (info-text [[_ lvl] _ctx]
     (str "[GRAY]Level " lvl "[]")))
 
 (property/def-type :properties/creatures
@@ -91,7 +90,7 @@
 (defcomponent :effect/spawn
   {:data [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
-  (component/applicable? [_ {:keys [effect/source effect/target-position]}]
+  (applicable? [_ {:keys [effect/source effect/target-position]}]
     (and (:entity/faction @source)
          target-position))
 

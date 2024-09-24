@@ -1,6 +1,5 @@
 (ns ^:no-doc core.property.core
-  (:require [core.component :as component]
-            [core.ctx :refer :all]))
+  (:require [core.ctx :refer :all]))
 
 (com.badlogic.gdx.graphics.Colors/put
  "ITEM_GOLD"
@@ -12,5 +11,5 @@
 (defcomponent :property/pretty-name
   {:data :string
    :let value}
-  (component/info-text [_ _ctx]
+  (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))

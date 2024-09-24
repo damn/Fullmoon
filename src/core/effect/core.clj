@@ -3,8 +3,10 @@
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
-            [core.component :as component]
             [core.ctx.grid :as grid]))
+
+(defsystem render "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
+(defmethod render :default [_ g ctx])
 
 (defn- nearest-enemy [{:keys [context/grid]} entity*]
   (grid/nearest-entity @(grid (entity/tile entity*))
@@ -41,7 +43,7 @@
   (do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (effect! (filter #(component/applicable? % effect-ctx) effects))
+        (effect! (filter #(applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?
@@ -59,9 +61,9 @@
                                           (entity/line-of-sight? ctx @source @target))
                                  target))))
 
-(defn applicable? [ctx effects]
+(defn effect-applicable? [ctx effects]
   (let [ctx (check-remove-target ctx)]
-    (some #(component/applicable? % ctx) effects)))
+    (some #(applicable? % ctx) effects)))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity/stat entity* :stats/mana)]
@@ -80,7 +82,7 @@
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (applicable? ctx effects))
+   (not (effect-applicable? ctx effects))
    :invalid-params
 
    :else

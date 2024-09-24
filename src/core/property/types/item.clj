@@ -1,6 +1,5 @@
 (ns ^:no-doc core.property.types.item
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.entity.inventory :as inventory]
             [core.entity.modifiers :as modifiers]
             [core.ctx.property :as property]))
@@ -8,9 +7,9 @@
 (defcomponent :item/modifiers
   {:data [:components-ns :modifier]
    :let modifiers}
-  (component/info-text [_ _ctx]
+  (info-text [_ _ctx]
     (when (seq modifiers)
-      (modifiers/info-text modifiers))))
+      (modifiers/mod-info-text modifiers))))
 
 (defcomponent :item/slot
   {:data [:enum (keys inventory/empty-inventory)]})

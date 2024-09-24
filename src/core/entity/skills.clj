@@ -1,6 +1,5 @@
 (ns ^:no-doc core.entity.skills
   (:require #_[clojure.string :as str]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.time :as time]))
@@ -12,7 +11,7 @@
           (for [skill skills]
             [:tx/add-skill eid skill])))
 
-  (component/info-text [[_ skills] _ctx]
+  (info-text [[_ skills] _ctx]
     ; => recursive info-text leads to endless text wall
     #_(when (seq skills)
         (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))

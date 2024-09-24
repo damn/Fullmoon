@@ -1,20 +1,19 @@
 (ns ^:no-doc core.property.types.skill
   (:require [core.utils.core :refer [readable-number]]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.ctx.property :as property]))
 
 (defcomponent :skill/action-time {:data :pos}
-  (component/info-text [[_ v] _ctx]
+  (info-text [[_ v] _ctx]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
 (defcomponent :skill/cooldown {:data :nat-int}
-  (component/info-text [[_ v] _ctx]
+  (info-text [[_ v] _ctx]
     (when-not (zero? v)
       (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
 
 (defcomponent :skill/cost {:data :nat-int}
-  (component/info-text [[_ v] _ctx]
+  (info-text [[_ v] _ctx]
     (when-not (zero? v)
       (str "[CYAN]Cost: " v " Mana[]"))))
 
@@ -25,7 +24,7 @@
 
 (defcomponent :skill/action-time-modifier-key
   {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
-  (component/info-text [[_ v] _ctx]
+  (info-text [[_ v] _ctx]
     (str "[VIOLET]" (case v
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))

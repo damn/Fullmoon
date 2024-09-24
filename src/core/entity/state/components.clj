@@ -3,14 +3,13 @@
             [core.utils.wasd-movement :refer [WASD-movement-vector]]
             [core.ctx :refer :all]
             [core.math.vector :as v]
-            [core.component :as component]
             [core.screens.stage :as stage]
             [core.ctx.screens :as screens]
             [core.ctx.grid :as grid]
             [core.ctx.potential-fields :as potential-fields]
             [core.ctx.time :as time]
             [core.graphics.views :refer [world-mouse-position gui-mouse-position]]
-            [core.effect.core :refer [->npc-effect-ctx skill-usable-state applicable?]]
+            [core.effect.core :refer [->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.entity :as entity]
             [core.entity.state :as state]
             [core.entity.inventory :as inventory]
@@ -62,7 +61,7 @@
 
   (entity/tick [_ eid context]
     (cond
-     (not (applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
+     (not (effect-applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
       ; TODO some sound ?
       ]
@@ -74,7 +73,7 @@
   (entity/render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (time/finished-ratio ctx counter))
-      (run! #(component/render % g (merge ctx effect-ctx)) effects))))
+      (run! #(effect/render % g (merge ctx effect-ctx)) effects))))
 
 (defcomponent :npc-dead
   {:let {:keys [eid]}}
@@ -89,11 +88,11 @@
 ; applicable
 ; useful
 ; usable?
-(defn- useful? [ctx effects]
+(defn- effect-useful? [ctx effects]
   ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter #(component/applicable? % ctx) effects)
+  (let [applicable-effects (filter #(applicable? % ctx) effects)
         ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some #(component/useful? % ctx) applicable-effects)]
+        useful-effect (some #(useful? % ctx) applicable-effects)]
     ;(println "Useful: " useful-effect)
     useful-effect))
 
@@ -104,7 +103,7 @@
        (sort-by #(or (:skill/cost %) 0))
        reverse
        (filter #(and (= :usable (skill-usable-state ctx entity* %))
-                     (useful? ctx (:skill/effects %))))
+                     (effect-useful? ctx (:skill/effects %))))
        first))
 
 (comment

@@ -1,6 +1,5 @@
 (ns ^:no-doc core.property.types.projectile
   (:require [core.math.vector :as v]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ctx.property :as property]
@@ -14,7 +13,7 @@
 (defcomponent :projectile/speed     {:data :pos-int})
 
 (defcomponent :projectile/piercing? {:data :boolean}
-  (component/info-text [_ ctx] "[LIME]Piercing[]"))
+  (info-text [_ ctx] "[LIME]Piercing[]"))
 
 (property/def-type :properties/projectiles
   {:schema [:entity/image
@@ -68,11 +67,11 @@
   {:data [:one-to-one :properties/projectiles]
    :let {:keys [entity-effects projectile/max-range] :as projectile}}
   ; TODO for npcs need target -- anyway only with direction
-  (component/applicable? [_ {:keys [effect/direction]}]
+  (applicable? [_ {:keys [effect/direction]}]
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (component/useful? [_ {:keys [effect/source effect/target] :as ctx}]
+  (useful? [_ {:keys [effect/source effect/target] :as ctx}]
     (let [source-p (:position @source)
           target-p (:position @target)]
       (and (not (path-blocked? ctx ; TODO test

@@ -1,6 +1,5 @@
 (ns ^:no-doc core.effect.entity.damage
   (:require [core.utils.random :as random]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.entity.stats :refer [defmodifier]]))
@@ -19,14 +18,13 @@
 
 (defcomponent :effect.entity/melee-damage
   {:data :some}
-  (component/info-text [_ {:keys [effect/source] :as effect-ctx}]
+  (info-text [_ {:keys [effect/source] :as effect-ctx}]
     (str "Damage based on entity strength."
          (when source
-           (str "\n" (component/info-text (damage-effect effect-ctx)
-                                          effect-ctx)))))
+           (str "\n" (info-text (damage-effect effect-ctx) effect-ctx)))))
 
-  (component/applicable? [_ effect-ctx]
-    (component/applicable? (damage-effect effect-ctx) effect-ctx))
+  (applicable? [_ effect-ctx]
+    (applicable? (damage-effect effect-ctx) effect-ctx))
 
   (do! [_ ctx]
     [(damage-effect ctx)]))
@@ -78,7 +76,7 @@
 (defcomponent :effect.entity/damage
   {:let damage
    :data [:map [:damage/min-max]]}
-  (component/info-text [_ {:keys [effect/source]}]
+  (info-text [_ {:keys [effect/source]}]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
@@ -86,7 +84,7 @@
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (component/applicable? [_ {:keys [effect/target]}]
+  (applicable? [_ {:keys [effect/target]}]
     (and target
          (entity/stat @target :stats/hp)))
 

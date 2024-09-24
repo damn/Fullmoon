@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.skill-window
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.entity.player :as player]
             [core.ui.actor :refer [add-tooltip!]]
@@ -24,6 +23,6 @@
                                                              (fn [ctx]
                                                                (effect! ctx (player/clicked-skillmenu ctx (property/build ctx id)))))]]
                          (do
-                          (add-tooltip! button #(component/->text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
+                          (add-tooltip! button #(->info-text (property/build % id) %)) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))

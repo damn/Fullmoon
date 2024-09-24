@@ -4,7 +4,6 @@
             [core.utils.core :as utils :refer [k->pretty-name]]
             [core.val-max :refer [val-max-ratio]]
             [core.ctx :refer :all]
-            [core.component :as component]
             [core.entity :as entity]
             [core.graphics :as g]
             [core.operation :as operation])
@@ -25,16 +24,16 @@
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defcomponent :base/stat-effect
-  (component/info-text [[k operations] _effect-ctx]
+  (info-text [[k operations] _effect-ctx]
     (str/join "\n"
               (for [operation operations]
-                (str (operation/info-text operation) " " (utils/k->pretty-name k)))))
+                (str (operation/op-info-text operation) " " (utils/k->pretty-name k)))))
 
-  (component/applicable? [[k _] {:keys [effect/target]}]
+  (applicable? [[k _] {:keys [effect/target]}]
     (and target
          (entity/stat @target (effect-k->stat-k k))))
 
-  (component/useful? [_ _effect-ctx]
+  (useful? [_ _effect-ctx]
     true)
 
   (do! [[effect-k operations] {:keys [effect/target]}]
@@ -188,7 +187,7 @@
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
-  (component/info-text [_ {:keys [info-text/entity*]}]
+  (info-text [_ {:keys [info-text/entity*]}]
     (stats-info-texts entity*))
 
   (entity/render-info [_ entity* g _ctx]

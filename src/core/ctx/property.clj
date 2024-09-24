@@ -4,8 +4,7 @@
             [malli.core :as m]
             [malli.error :as me]
             [core.utils.core :refer [safe-get]]
-            [core.ctx :refer :all]
-            [core.component :refer [defsystem]]))
+            [core.ctx :refer :all]))
 
 (defsystem ->value "..." [_])
 

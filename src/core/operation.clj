@@ -1,7 +1,6 @@
 (ns core.operation
   (:require [clojure.math :as math]
-            [core.ctx :refer :all]
-            [core.component :as component :refer [defsystem]]))
+            [core.ctx :refer :all]))
 
 (defsystem value-text "FIXME" [_])
 (defsystem apply "FIXME" [_ base-value])
@@ -13,7 +12,7 @@
     1.0 "+"
     -1.0 ""))
 
-(defn info-text [{value 1 :as operation}]
+(defn op-info-text [{value 1 :as operation}]
   (str (+? value) (value-text operation)))
 
 (defcomponent :op/inc
