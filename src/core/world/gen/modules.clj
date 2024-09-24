@@ -1,7 +1,6 @@
 (ns core.world.gen.modules
   (:require [core.tiled :as tiled]
-            [core.world.gen.transitions :as transitions]
-            [core.world.gen.tiled-utils :refer [grid->tiled-map]]))
+            [core.world.gen.transitions :as transitions]))
 
 (def modules-file "maps/modules.tmx")
 (def module-width  32)
@@ -77,4 +76,4 @@
                                                                     (get unscaled-grid %))))
                             scaled-grid
                             unscaled-transition-positions)]
-    (grid->tiled-map modules-tiled-map scaled-grid)))
+    (tiled/grid->tiled-map modules-tiled-map scaled-grid)))

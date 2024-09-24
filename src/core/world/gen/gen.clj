@@ -6,7 +6,6 @@
             [core.ctx :refer :all]
             [core.property :as property]
             [core.world.gen.utils :refer [printgrid scale-grid]]
-            [core.world.gen.tiled-utils :refer [->static-tiled-map-tile set-tile! put! add-layer!]]
             [core.world.gen.transitions :as transitions]
             [core.world.gen.cave-gen :as cave-gen]
             [core.world.gen.nad :as nad]
@@ -83,14 +82,14 @@
    (fn [{:keys [property/id] :as prop}]
      (assert id)
      (let [image (property/->image prop)
-           tile (->static-tiled-map-tile (:texture-region image))]
-       (put! (tiled/properties tile) "id" id)
+           tile (tiled/->static-tiled-map-tile (:texture-region image))]
+       (tiled/put! (tiled/properties tile) "id" id)
        tile))))
 
 (def ^:private spawn-creatures? true)
 
 (defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
-  (let [layer (add-layer! tiled-map :name "creatures" :visible false)
+  (let [layer (tiled/add-layer! tiled-map :name "creatures" :visible false)
         creature-properties (property/all-properties context :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
@@ -99,7 +98,7 @@
                          (<= (rand) spawn-rate))]
         (let [creatures (creatures-with-level creature-properties area-level)]
           (when (seq creatures)
-            (set-tile! layer position (creature->tile (rand-nth creatures)))))))))
+            (tiled/set-tile! layer position (creature->tile (rand-nth creatures)))))))))
 
 (defn generate-modules
   "The generated tiled-map needs to be disposed."
@@ -187,7 +186,7 @@
 ; can use different algorithms(e.g. cave, module-gen-uf-terrain, room-gen? , differnt cave algorithm ...)
 
 (defn- uf-place-creatures! [context spawn-rate tiled-map spawn-positions]
-  (let [layer (add-layer! tiled-map :name "creatures" :visible false)
+  (let [layer (tiled/add-layer! tiled-map :name "creatures" :visible false)
         creatures (property/all-properties context :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
@@ -195,14 +194,14 @@
     ;(println "Creatures with level: " (count creatures))
     (doseq [position spawn-positions
             :when (<= (rand) spawn-rate)]
-      (set-tile! layer position (creature->tile (rand-nth creatures))))))
+      (tiled/set-tile! layer position (creature->tile (rand-nth creatures))))))
 
 (def ^:private ->tm-tile
   (memoize
    (fn ->tm-tile [texture-region movement]
      {:pre [#{"all" "air" "none"} movement]}
-     (let [tile (->static-tiled-map-tile texture-region)]
-       (put! (tiled/properties tile) "movement" movement)
+     (let [tile (tiled/->static-tiled-map-tile texture-region)]
+       (tiled/put! (tiled/properties tile) "movement" movement)
        tile))))
 
 (def ^:private sprite-size 48)
@@ -274,7 +273,7 @@
                                          (->transition-tile ctx transition-idx)
                                          (->wall-tile ctx wall-idx))
                            :ground (->ground-tile ctx ground-idx)))
-        tiled-map (core.world.gen.tiled-utils/wgt-grid->tiled-map grid position->tile)
+        tiled-map (tiled/wgt-grid->tiled-map grid position->tile)
 
         can-spawn? #(= "all" (tiled/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
