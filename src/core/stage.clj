@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [get])
   (:require [core.group :as group]
             [core.ctx :refer :all]
-            [core.ctx.screens :as screens]
+            [core.screens :as screens]
             [core.screen :as screen])
   (:import com.badlogic.gdx.scenes.scene2d.Stage))
 

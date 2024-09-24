@@ -4,7 +4,7 @@
             [core.utils.core :refer [safe-merge]]
             [core.ctx :refer :all]
             [core.graphics :as graphics]
-            [core.ctx.screens :as screens]
+            [core.screens :as screens]
             [core.property :as property])
   (:import org.lwjgl.system.Configuration
            com.badlogic.gdx.Gdx

@@ -5,7 +5,7 @@
             [core.entity :as entity]
             [core.entity.player :as player]
             [core.graphics.cursors :as cursors]
-            [core.ctx.screens :as screens]
+            [core.screens :as screens]
             [core.world.widgets :as widgets]
             [core.screen :as screen]
             [core.stage :as stage]

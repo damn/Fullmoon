@@ -4,7 +4,7 @@
             [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.stage :as stage]
-            [core.ctx.screens :as screens]
+            [core.screens :as screens]
             [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
             [core.world.time :as time]

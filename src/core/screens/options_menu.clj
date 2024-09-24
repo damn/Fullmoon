@@ -3,7 +3,7 @@
             [core.utils.ns :as ns]
             [core.ui :as ui]
             [core.ctx :refer :all]
-            [core.ctx.screens :as screens]
+            [core.screens :as screens]
             [core.stage :as stage]
             [core.screen :as screen]
             [core.widgets.background-image :refer [->background-image]])
