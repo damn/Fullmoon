@@ -2,7 +2,7 @@
   (:require [core.ctx :refer :all]
             [core.effect.core :as effect]
             [core.entity :as entity]
-            [core.world.ctx :refer [active-entities]]))
+            [core.world :refer [active-entities]]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
 

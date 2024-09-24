@@ -1,4 +1,4 @@
-(ns core.world.ctx
+(ns core.world
   (:require [core.utils.core :refer [tile->middle]]
             [core.ctx :refer :all]
             [core.tiled :as tiled]

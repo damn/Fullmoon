@@ -6,7 +6,7 @@
             [core.ctx.screens :as screens]
             [core.stage :as stage]
             [core.ctx.property :as property]
-            core.world.ctx
+            core.world
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]
             [core.ui :as ui])
@@ -16,7 +16,7 @@
   (fn [ctx]
     (-> ctx
         (screens/change-screen :screens/world)
-        (core.world.ctx/start-new-game (level-generator/->world ctx world-id)))))
+        (core.world/start-new-game (level-generator/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (ui/->table {:rows (remove nil? (concat
