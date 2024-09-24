@@ -1,7 +1,6 @@
 (ns ^:no-doc dev
   (:require [core.app :as app]
             [core.ctx :refer :all]
-            [core.entity.player :as player]
             [core.ctx.property :as property])
   (:import com.badlogic.gdx.Gdx))
 
@@ -54,11 +53,11 @@
 (defn learn-skill! [skill-id]
   (post-tx! (fn [ctx]
               [[:tx/add-skill
-                (:entity/id (player/entity* ctx))
+                (:entity/id (player-entity* ctx))
                 (property/build ctx skill-id)]])))
 
 (defn create-item! [item-id]
   (post-tx! (fn [ctx]
               [[:tx/item
-                (:position (player/entity* ctx))
+                (:position (player-entity* ctx))
                 (property/build ctx item-id)]])))

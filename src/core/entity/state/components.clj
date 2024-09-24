@@ -1,6 +1,7 @@
 (ns core.entity.state.components
   (:require [core.utils.core :refer [safe-merge]]
             [core.utils.wasd-movement :refer [WASD-movement-vector]]
+            [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.screens.stage :as stage]
@@ -13,7 +14,6 @@
             [core.entity :as entity]
             [core.entity.state :as state]
             [core.entity.inventory :as inventory]
-            [core.entity.player :as player]
             [core.player.interaction-state :refer [->interaction-state]]
             [core.graphics :as g])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
@@ -305,7 +305,7 @@
       (g/draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
 (defn draw-item-on-cursor [g ctx]
-  (let [player-entity* (player/entity* ctx)]
+  (let [player-entity* (player-entity* ctx)]
     (when (and (= :player-item-on-cursor (entity/state player-entity*))
                (not (world-item? ctx)))
       (g/draw-centered-image g

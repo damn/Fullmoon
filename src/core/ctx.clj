@@ -10,12 +10,14 @@
 ; * defcomponent also!! here ??
 ; * and build components ... then only here defcomponents
 ; crazy ...
+; 'gdl'
 (ns core.ctx
   (:require [core.component  :as component :refer [defcomponent]]
             [core.ctx.assets :as assets]
             [core.ctx.graphics :as graphics]
-            [core.ctx.time :as time]
-            [core.ctx.mouseover-entity :as mouseover]))
+            [core.ctx.time :as time]))
+
+(defrecord Context [])
 
 ; TODO docstrings not avilable here ...
 (def play-sound! assets/play-sound!)
@@ -108,4 +110,9 @@
 
 (def render-world-view graphics/render-world-view)
 
-(def mouseover-entity* mouseover/entity*)
+(defprotocol MouseOverEntity
+  (mouseover-entity* [_]))
+
+(defprotocol Player
+  (player-entity [_])
+  (player-entity* [_]))

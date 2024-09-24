@@ -2,7 +2,6 @@
   (:require [core.graphics.camera :as camera]
             [core.ctx :refer :all]
             [core.utils.core :as utils]
-            [core.entity.player :as player]
             [core.graphics :as g]
             [core.graphics.views :refer [world-mouse-position world-camera gui-mouse-position gui-viewport-height]]
             [core.screens.stage :as stage]
@@ -30,7 +29,7 @@
      "GUI: " (gui-mouse-position ctx) "\n"
      "paused? " (:context/paused? ctx) "\n"
      "elapsed-time " (utils/readable-number (time/elapsed-time ctx)) " seconds \n"
-     (skill-info (player/entity* ctx))
+     (skill-info (player-entity* ctx))
      (when-let [entity* (mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"

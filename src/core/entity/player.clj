@@ -1,5 +1,6 @@
-(ns core.entity.player
+(ns ^:no-doc core.entity.player
   (:require [core.component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.entity.state :as state]))
 
@@ -9,17 +10,17 @@
   (entity/create [_ eid ctx]
     (assoc ctx entity eid)))
 
-(defn entity*
-  "Returns the dereferenced value of the player-entity atom."
-  [ctx]
-  @(entity ctx))
+(extend-type core.ctx.Context
+  Player
+  (player-entity  [ctx]  (entity ctx))
+  (player-entity* [ctx] @(entity ctx)))
 
 (defn- state-obj [ctx]
   (-> ctx
-      entity*
+      player-entity*
       entity/state-obj))
 
-(defn ^:no-doc update-state      [ctx]       (state/manual-tick             (state-obj ctx) ctx))
-(defn ^:no-doc state-pause-game? [ctx]       (state/pause-game?             (state-obj ctx)))
-(defn ^:no-doc clicked-inventory [ctx cell]  (state/clicked-inventory-cell  (state-obj ctx) cell))
-(defn ^:no-doc clicked-skillmenu [ctx skill] (state/clicked-skillmenu-skill (state-obj ctx) skill))
+(defn update-state      [ctx]       (state/manual-tick             (state-obj ctx) ctx))
+(defn state-pause-game? [ctx]       (state/pause-game?             (state-obj ctx)))
+(defn clicked-inventory [ctx cell]  (state/clicked-inventory-cell  (state-obj ctx) cell))
+(defn clicked-skillmenu [ctx skill] (state/clicked-skillmenu-skill (state-obj ctx) skill))

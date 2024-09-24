@@ -1,8 +1,8 @@
 (ns ^:no-doc core.widgets.hp-mana-bars
   (:require [core.utils.core :as utils]
+            [core.ctx :refer :all]
             [core.val-max :refer [val-max-ratio]]
             [core.entity :as entity]
-            [core.entity.player :as player]
             [core.graphics :as g]
             [core.graphics.image :as image]
             [core.graphics.views :refer [gui-viewport-width]]
@@ -29,7 +29,7 @@
                                           [x y])
                             (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/->actor {:draw (fn [g ctx]
-                         (let [player-entity* (player/entity* ctx)
+                         (let [player-entity* (player-entity* ctx)
                                x (- x (/ rahmenw 2))]
                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
                            (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))

@@ -1,6 +1,6 @@
 (ns ^:no-doc core.widgets.action-bar
   (:require [core.component :as component :refer [defcomponent]]
-            [core.entity.player :as player]
+            [core.ctx :refer :all]
             [core.screens.stage :as stage]
             [core.ctx.ui :as ui]
             [core.ui.actor :as actor :refer [remove! add-tooltip!]]
@@ -27,7 +27,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (ui/->image-button image identity {:scale image-scale})]
       (actor/set-id! button id)
-      (add-tooltip! button #(component/->text skill (assoc % :effect/source (player/entity %))))
+      (add-tooltip! button #(component/->text skill (assoc % :effect/source (player-entity %))))
       (add-actor! horizontal-group button)
       (.add ^ButtonGroup button-group ^Button button)
       ctx)))

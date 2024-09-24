@@ -1,8 +1,8 @@
 (ns ^:no-doc core.player.interaction-state
   (:require [core.utils.core :refer [safe-merge]]
+            [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]
-            [core.entity.player :as player]
             [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx skill-usable-state]]
             [core.ui.actor :refer [visible? toggle-visible! parent] :as actor]
@@ -27,7 +27,7 @@
 
 (defmethod on-clicked :clickable/item
   [context clicked-entity*]
-  (let [player-entity* (player/entity* context)
+  (let [player-entity* (player-entity* context)
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
@@ -66,7 +66,7 @@
 (defn- inventory-cell-with-item? [ctx actor]
   (and (parent actor)
        (= "inventory-cell" (actor/name (parent actor)))
-       (get-in (:entity/inventory (player/entity* ctx))
+       (get-in (:entity/inventory (player-entity* ctx))
                (actor/id (parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]

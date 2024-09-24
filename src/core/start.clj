@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [core.utils.core :refer [safe-merge]]
             [core.app :as app]
+            [core.ctx :refer :all]
             [core.component :as component]
             [core.ctx.graphics :as graphics]
             [core.ctx.screens :as screens]
@@ -77,7 +78,8 @@
 
 (defn -main []
   (require-all-components!)
-  (let [ctx {:context/properties (property/validate-and-create properties-edn-file)}
+  (let [ctx (map->Context
+             {:context/properties (property/validate-and-create properties-edn-file)})
         app (property/build ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))

@@ -1,8 +1,8 @@
 (ns ^:no-doc core.entity.mouseover
   (:require [core.component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.graphics :as g]
-            [core.entity :as entity]
-            [core.entity.player :as player]))
+            [core.entity :as entity]))
 
 (def ^:private outline-alpha 0.4)
 (def ^:private enemy-color    [1 0 0 outline-alpha])
@@ -11,7 +11,7 @@
 
 (defcomponent :entity/mouseover?
   (entity/render-below [_ {:keys [entity/faction] :as entity*} g ctx]
-    (let [player-entity* (player/entity* ctx)]
+    (let [player-entity* (player-entity* ctx)]
       (g/with-shape-line-width g 3
         #(g/draw-ellipse g
                          (:position entity*)

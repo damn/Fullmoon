@@ -4,8 +4,7 @@
             [core.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.content-grid :as content-grid]
-            [core.ctx.grid :as grid]
-            [core.entity.player :as player])
+            [core.ctx.grid :as grid])
   (:import com.badlogic.gdx.utils.Disposable))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
@@ -84,7 +83,7 @@
                      :tiled-level tiled-level))
 
 (defn active-entities [ctx]
-  (content-grid/active-entities ctx (player/entity* ctx)))
+  (content-grid/active-entities ctx (player-entity* ctx)))
 
 (defcomponent :tx/add-to-world
   (component/do! [[_ entity] ctx]

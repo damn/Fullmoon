@@ -1,8 +1,8 @@
 (ns ^:no-doc core.effect.target-all
   (:require [core.component :as component :refer [defcomponent]]
+            [core.ctx :refer :all]
             [core.graphics :as g]
             [core.entity :as entity]
-            [core.entity.player :as player]
             [core.world.ctx :refer [active-entities]]))
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})
@@ -12,7 +12,7 @@
 (defn- creatures-in-los-of-player [ctx]
   (->> (active-entities ctx)
        (filter #(:creature/species @%))
-       (filter #(entity/line-of-sight? ctx (player/entity* ctx) @%))
+       (filter #(entity/line-of-sight? ctx (player-entity* ctx) @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!

@@ -49,7 +49,7 @@
     (draw [_batch _parent-alpha]
       (let [{g :context/graphics :as ctx} @app/state
             g (assoc g :unit-scale 1)
-            player-entity* (player/entity* ctx)
+            player-entity* (player-entity* ctx)
             ^Widget this this]
         (draw-cell-rect g
                         player-entity*

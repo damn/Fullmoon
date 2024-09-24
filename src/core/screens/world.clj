@@ -70,7 +70,7 @@
           (range replay-speed)))
 
 (defn- render-world! [ctx]
-  (camera/set-position! (world-camera ctx) (:position (player/entity* ctx)))
+  (camera/set-position! (world-camera ctx) (:position (player-entity* ctx)))
   (world-render/render-map ctx (camera/position (world-camera ctx)))
   (render-world-view ctx
                      (fn [g]
