@@ -1,7 +1,7 @@
 (ns ^:no-doc core.screens.map-editor
   (:require [clojure.string :as str]
             [core.ctx :refer :all]
-            [core.graphics.camera :as camera]
+            [core.camera :as camera]
             [core.tiled :as tiled]
             [core.ui :as ui]
             [core.world.gen.gen :as level-generator]

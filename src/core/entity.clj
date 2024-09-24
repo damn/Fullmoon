@@ -6,7 +6,7 @@
             [core.math.vector :as v]
             [core.utils.core :as utils :refer [sort-by-order]]
             [core.ctx :refer :all]
-            [core.graphics.camera :as camera]
+            [core.camera :as camera]
             [core.property :as property]
             [core.ui :as ui]
             [core.world.grid :as grid]

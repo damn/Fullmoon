@@ -1,6 +1,6 @@
 (ns ^:no-doc core.screens.minimap
   (:require [data.grid2d :as grid2d]
-            [core.graphics.camera :as camera]
+            [core.camera :as camera]
             [core.ctx :refer :all]
             [core.tiled :as tiled])
   (:import com.badlogic.gdx.Input$Keys

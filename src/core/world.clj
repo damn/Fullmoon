@@ -4,7 +4,7 @@
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.property :as property]
-            [core.graphics.camera :as camera]
+            [core.camera :as camera]
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.state :refer [draw-item-on-cursor]]
