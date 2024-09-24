@@ -9,8 +9,8 @@
             [core.screens.stage :as stage]
             [core.widgets.background-image :refer [->background-image]]
             [core.widgets.error-modal :refer [error-window!]]
-            [core.ui.actor :as actor]
-            [core.ui.group :as group]
+            [core.actor :as actor]
+            [core.group :as group]
             [core.ctx.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys))
 

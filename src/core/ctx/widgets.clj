@@ -1,8 +1,8 @@
 (ns core.ctx.widgets
   (:require [core.utils.core :as utils]
             [core.ctx :refer :all]
-            [core.ui.actor :as actor]
-            [core.ui.group :as group]
+            [core.actor :as actor]
+            [core.group :as group]
             [core.ctx.ui :as ui]
             [core.entity.state.components :refer [draw-item-on-cursor]]
             [core.screens.stage :as stage]

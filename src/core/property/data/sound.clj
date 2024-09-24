@@ -3,8 +3,8 @@
             [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
-            [core.ui.actor :as actor]
-            [core.ui.group :as group]
+            [core.actor :as actor]
+            [core.group :as group]
             [core.ctx.ui :as ui]))
 
 (defcomponent :sound {:schema :string})

@@ -1,7 +1,7 @@
 (ns ^:no-doc core.widgets.entity-info-window
   (:require [core.ctx :refer :all]
             [core.ctx.ui :as ui]
-            [core.ui.group :refer [add-actor!]]))
+            [core.group :refer [add-actor!]]))
 
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state

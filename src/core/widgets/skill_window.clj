@@ -1,7 +1,7 @@
 (ns ^:no-doc core.widgets.skill-window
   (:require [core.ctx :refer :all]
             [core.entity.player :as player]
-            [core.ui.actor :refer [add-tooltip!]]
+            [core.actor :refer [add-tooltip!]]
             [core.ctx.ui :as ui]))
 
 ; TODO render text label free-skill-points

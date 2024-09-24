@@ -4,7 +4,7 @@
             [core.utils.core :as utils]
             [core.screens.stage :as stage]
             [core.ctx.time :as time]
-            [core.ui.group :refer [add-actor!]]
+            [core.group :refer [add-actor!]]
             [core.ctx.ui :as ui]))
 
 (defn- skill-info [{:keys [entity/skills]}]

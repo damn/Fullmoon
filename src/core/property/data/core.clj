@@ -4,7 +4,7 @@
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.ctx.property :as property]
-            [core.ui.actor :as actor]
+            [core.actor :as actor]
             [core.ctx.ui :as ui])
   (:import (com.kotcrab.vis.ui.widget VisCheckBox VisSelectBox VisTextField)))
 

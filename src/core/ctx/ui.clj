@@ -1,8 +1,8 @@
 (ns core.ctx.ui
   (:require [core.ctx :refer :all]
             core.graphics.image
-            [core.ui.actor :as actor]
-            [core.ui.group :as group])
+            [core.actor :as actor]
+            [core.group :as group])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group)

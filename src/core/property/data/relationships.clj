@@ -3,8 +3,8 @@
             [core.ctx.property :as property]
             [core.screens.stage :as stage]
             [core.screens.property-editor :refer [->overview-table]]
-            [core.ui.actor :as actor]
-            [core.ui.group :as group]
+            [core.actor :as actor]
+            [core.group :as group]
             [core.ctx.ui :as ui]))
 
 ; TODO schemas not checking if that property exists in db...

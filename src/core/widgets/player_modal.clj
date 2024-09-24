@@ -2,7 +2,7 @@
   (:require [core.screens.stage :as stage]
             [core.ctx :refer :all]
             [core.ctx.ui :as ui]
-            [core.ui.actor :refer [remove!]]))
+            [core.actor :refer [remove!]]))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?

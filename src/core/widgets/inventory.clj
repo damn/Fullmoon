@@ -1,7 +1,7 @@
 (ns ^:no-doc core.widgets.inventory
   (:require [data.grid2d :as grid]
             [core.ctx :refer :all]
-            [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
+            [core.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
             [core.graphics.image :as image]
             [core.entity :as entity]

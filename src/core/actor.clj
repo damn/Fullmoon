@@ -1,4 +1,4 @@
-(ns core.ui.actor
+(ns core.actor
   (:refer-clojure :exclude [name])
   (:require [core.ctx :refer :all])
   (:import com.badlogic.gdx.utils.Align

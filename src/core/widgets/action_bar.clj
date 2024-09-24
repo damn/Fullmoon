@@ -2,8 +2,8 @@
   (:require [core.ctx :refer :all]
             [core.screens.stage :as stage]
             [core.ctx.ui :as ui]
-            [core.ui.actor :as actor :refer [remove! add-tooltip!]]
-            [core.ui.group :refer [clear-children! add-actor!]])
+            [core.actor :as actor :refer [remove! add-tooltip!]]
+            [core.group :refer [clear-children! add-actor!]])
   (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 (def ^:private image-scale 2)

@@ -5,7 +5,7 @@
             [core.entity :as entity]
             [core.screens.stage :as stage]
             [core.effect.core :refer [->player-effect-ctx skill-usable-state]]
-            [core.ui.actor :refer [visible? toggle-visible! parent] :as actor]
+            [core.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.ctx.ui :as ui])
   (:import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 

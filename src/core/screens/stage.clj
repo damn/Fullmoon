@@ -1,6 +1,6 @@
 (ns core.screens.stage
   (:refer-clojure :exclude [get])
-  (:require [core.ui.group :as group]
+  (:require [core.group :as group]
             [core.ctx :refer :all]
             [core.ctx.screens :as screens]
             [core.screen :as screen])
