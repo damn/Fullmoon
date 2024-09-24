@@ -31,7 +31,7 @@
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
            (create-into context)
-           screens/set-first-screen
+           set-first-screen
            (reset! app-state)))
 
     (dispose []
@@ -39,7 +39,7 @@
 
     (render []
       (ScreenUtils/clear Color/BLACK)
-      (screens/render! app-state))
+      (render! app-state))
 
     (resize [w h]
       ; TODO fix mac screen resize bug again
