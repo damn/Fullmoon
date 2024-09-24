@@ -1,4 +1,4 @@
-(ns core.entity.skills
+(ns ^:no-doc core.entity.skills
   (:require #_[clojure.string :as str]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

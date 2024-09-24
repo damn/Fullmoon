@@ -19,7 +19,7 @@
       entity*
       entity/state-obj))
 
-(defn update-state      [ctx]       (state/manual-tick             (state-obj ctx) ctx))
-(defn state-pause-game? [ctx]       (state/pause-game?             (state-obj ctx)))
-(defn clicked-inventory [ctx cell]  (state/clicked-inventory-cell  (state-obj ctx) cell))
-(defn clicked-skillmenu [ctx skill] (state/clicked-skillmenu-skill (state-obj ctx) skill))
+(defn ^:no-doc update-state      [ctx]       (state/manual-tick             (state-obj ctx) ctx))
+(defn ^:no-doc state-pause-game? [ctx]       (state/pause-game?             (state-obj ctx)))
+(defn ^:no-doc clicked-inventory [ctx cell]  (state/clicked-inventory-cell  (state-obj ctx) cell))
+(defn ^:no-doc clicked-skillmenu [ctx skill] (state/clicked-skillmenu-skill (state-obj ctx) skill))

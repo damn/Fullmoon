@@ -1,4 +1,4 @@
-(ns core.property.types.projectile
+(ns ^:no-doc core.property.types.projectile
   (:require [core.math.vector :as v]
             [core.component :refer [defcomponent] :as component]
             [core.entity :as entity]

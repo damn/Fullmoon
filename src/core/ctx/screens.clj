@@ -36,11 +36,11 @@
     (screen/enter [new-screen-key screen-v] new-context)
     new-context))
 
-(defn set-first-screen [context]
+(defn ^:no-doc set-first-screen [context]
   (->> context
        :context/screens
        :first-screen
        (change-screen context)))
 
-(defn render! [app-state]
+(defn ^:no-doc render! [app-state]
   (screen/render! (current-screen @app-state) app-state))

@@ -1,4 +1,4 @@
-(ns core.widgets.debug-window
+(ns ^:no-doc core.widgets.debug-window
   (:require [core.graphics.camera :as camera]
             [core.utils.core :as utils]
             [core.entity.player :as player]

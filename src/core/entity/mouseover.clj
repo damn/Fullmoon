@@ -1,4 +1,4 @@
-(ns core.entity.mouseover
+(ns ^:no-doc core.entity.mouseover
   (:require [core.component :refer [defcomponent]]
             [core.graphics :as g]
             [core.entity :as entity]

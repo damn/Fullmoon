@@ -1,4 +1,4 @@
-(ns core.entity.state.player-moving
+(ns ^:no-doc core.entity.state.player-moving
   (:require [core.utils.wasd-movement :refer [WASD-movement-vector]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

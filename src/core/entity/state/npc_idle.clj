@@ -1,4 +1,4 @@
-(ns core.entity.state.npc-idle
+(ns ^:no-doc core.entity.state.npc-idle
   (:require [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

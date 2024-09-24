@@ -1,4 +1,4 @@
-(ns core.widgets.player-modal
+(ns ^:no-doc core.widgets.player-modal
   (:require [core.component :as component :refer [defcomponent]]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.screens.stage :as stage]

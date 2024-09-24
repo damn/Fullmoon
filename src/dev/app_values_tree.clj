@@ -1,4 +1,4 @@
-(ns dev.app-values-tree
+(ns ^:no-doc dev.app-values-tree
   (:require [core.utils.ns :as ns]))
 
 (comment

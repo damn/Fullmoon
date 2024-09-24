@@ -1,4 +1,4 @@
-(ns core.graphics.shape-drawer
+(ns ^:no-doc core.graphics.shape-drawer
   (:require [core.graphics :as g])
   (:import com.badlogic.gdx.math.MathUtils
            (com.badlogic.gdx.graphics Color Texture Pixmap Pixmap$Format)

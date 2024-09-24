@@ -1,4 +1,4 @@
-(ns core.entity.state.player-item-on-cursor
+(ns ^:no-doc core.entity.state.player-item-on-cursor
   (:require [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

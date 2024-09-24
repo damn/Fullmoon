@@ -1,4 +1,4 @@
-(ns core.ctx.config
+(ns ^:no-doc core.ctx.config
   (:require [core.component :refer [defcomponent] :as component]
             [core.ctx.property :as property]))
 

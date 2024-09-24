@@ -1,4 +1,4 @@
-(ns core.entity.movement
+(ns ^:no-doc core.entity.movement
   (:require [malli.core :as m]
             [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]

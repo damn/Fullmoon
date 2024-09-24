@@ -1,4 +1,4 @@
-(ns core.widgets.inventory
+(ns ^:no-doc core.widgets.inventory
   (:require [data.grid2d :as grid]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]

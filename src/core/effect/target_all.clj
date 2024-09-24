@@ -1,4 +1,4 @@
-(ns core.effect.target-all
+(ns ^:no-doc core.effect.target-all
   (:require [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.entity :as entity]

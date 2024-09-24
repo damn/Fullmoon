@@ -106,19 +106,19 @@
     (filter #(geom/point-in-rect? position @%)
             (:entities @cell))))
 
-(defn add-entity! [ctx entity]
+(defn ^:no-doc add-entity! [ctx entity]
   (let [grid (this ctx)]
     (set-cells! grid entity)
     (when (:collides? @entity)
       (set-occupied-cells! grid entity))))
 
-(defn remove-entity! [ctx entity]
+(defn ^:no-doc remove-entity! [ctx entity]
   (let [grid (this ctx)]
     (remove-from-cells! entity)
     (when (:collides? @entity)
       (remove-from-occupied-cells! entity))))
 
-(defn entity-position-changed! [ctx entity]
+(defn ^:no-doc entity-position-changed! [ctx entity]
   (let [grid (this ctx)] (remove-from-cells! entity)
     (set-cells! grid entity)
     (when (:collides? @entity)

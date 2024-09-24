@@ -1,4 +1,4 @@
-(ns core.screens.minimap
+(ns ^:no-doc core.screens.minimap
   (:require [core.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.explored-tile-corners :refer [explored?]]

@@ -99,12 +99,12 @@
 (defn get-entity [ctx uid]
   (get (entities ctx) uid))
 
-(defn tick-entities!
+(defn ^:no-doc tick-entities!
   "Calls tick system on all components of entities."
   [ctx entities]
   (reduce tick-system ctx entities))
 
-(defn render-entities!
+(defn ^:no-doc render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [ctx g entities*]
   (let [player-entity* (player/entity* ctx)]
@@ -117,7 +117,7 @@
                       (entity/line-of-sight? ctx player-entity* entity*))]
       (render-entity* system entity* g ctx))))
 
-(defn remove-destroyed-entities!
+(defn ^:no-doc remove-destroyed-entities!
   "Calls destroy on all entities which are marked with ':e/destroy'"
   [ctx]
   (for [entity (filter (comp :entity/destroyed? deref) (all-entities ctx))

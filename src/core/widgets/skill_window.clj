@@ -1,4 +1,4 @@
-(ns core.widgets.skill-window
+(ns ^:no-doc core.widgets.skill-window
   (:require [core.component :as component]
             [core.ctx.property :as property]
             [core.entity.player :as player]

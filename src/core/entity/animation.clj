@@ -1,4 +1,4 @@
-(ns core.entity.animation
+(ns ^:no-doc core.entity.animation
   (:require [core.ctx.ui :as ui]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]

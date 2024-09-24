@@ -1,4 +1,4 @@
-(ns core.entity.state.npc-dead
+(ns ^:no-doc core.entity.state.npc-dead
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity.state :as state]))
 

@@ -8,7 +8,7 @@
     {:elapsed 0
      :logic-frame 0}))
 
-(defn update-time [ctx delta]
+(defn ^:no-doc update-time [ctx delta]
   (update ctx this #(-> %
                         (assoc :delta-time delta)
                         (update :elapsed + delta)

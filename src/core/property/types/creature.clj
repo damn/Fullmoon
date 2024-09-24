@@ -1,4 +1,4 @@
-(ns core.property.types.creature
+(ns ^:no-doc core.property.types.creature
   (:require [clojure.string :as str]
             [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]

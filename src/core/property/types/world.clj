@@ -1,4 +1,4 @@
-(ns core.property.types.world
+(ns ^:no-doc core.property.types.world
   (:require [core.tiled :as tiled]
             [core.component :refer [defcomponent]]
             [core.ctx.property :as property]

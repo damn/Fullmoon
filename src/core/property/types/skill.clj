@@ -1,4 +1,4 @@
-(ns core.property.types.skill
+(ns ^:no-doc core.property.types.skill
   (:require [core.utils.core :refer [readable-number]]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.property :as property]))

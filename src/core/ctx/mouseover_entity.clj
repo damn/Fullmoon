@@ -25,7 +25,7 @@
   (when-let [entity (this-k ctx)]
     @entity))
 
-(defn update-mouseover-entity [ctx]
+(defn ^:no-doc update-mouseover-entity [ctx]
   (let [entity (if (stage/mouse-on-actor? ctx)
                  nil
                  (calculate-mouseover-entity ctx))]

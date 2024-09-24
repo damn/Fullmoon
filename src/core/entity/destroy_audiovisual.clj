@@ -1,4 +1,4 @@
-(ns core.entity.destroy-audiovisual
+(ns ^:no-doc core.entity.destroy-audiovisual
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]))
 

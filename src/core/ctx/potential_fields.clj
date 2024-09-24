@@ -250,7 +250,7 @@
        (when-not (inside-cell? grid @entity target-cell)
          (v/direction position (:middle @target-cell)))))))
 
-(defn update! [{:keys [context/grid]} entities]
+(defn ^:no-doc update! [{:keys [context/grid]} entities]
   (doseq [[faction max-iterations] factions-iterations]
     (update-faction-potential-field grid faction entities max-iterations)))
 

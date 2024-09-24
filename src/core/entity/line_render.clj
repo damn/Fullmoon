@@ -1,4 +1,4 @@
-(ns core.entity.line-render
+(ns ^:no-doc core.entity.line-render
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]))

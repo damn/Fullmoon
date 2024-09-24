@@ -1,4 +1,4 @@
-(ns core.screens.world
+(ns ^:no-doc core.screens.world
   (:require [core.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.ecs :as ecs]

@@ -1,4 +1,4 @@
-(ns core.property.data.image
+(ns ^:no-doc core.property.data.image
   (:require [core.ctx.ui :as ui]
             [core.component :as component :refer [defcomponent]]
             [core.ctx.property :as property]

@@ -10,7 +10,7 @@
     (.dispose pixmap)
     cursor))
 
-(defn ->build [cursors]
+(defn ^:no-doc ->build [cursors]
   {:cursors (mapvals (fn [[file hotspot]]
                        (->cursor (str "cursors/" file ".png") hotspot))
                      cursors)})

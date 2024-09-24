@@ -1,4 +1,4 @@
-(ns core.screens.main-menu
+(ns ^:no-doc core.screens.main-menu
   (:require [core.utils.core :refer [safe-get]]
             [core.component :refer [defcomponent] :as component]
             [core.graphics.cursors :as cursors]

@@ -1,4 +1,4 @@
-(ns core.world.render.debug
+(ns ^:no-doc core.world.render.debug
   (:require [core.utils.core :refer [->tile]]
             [core.graphics.camera :as camera]
             [core.math.geom :as geom]

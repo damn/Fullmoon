@@ -1,4 +1,4 @@
-(ns core.screens.property-editor
+(ns ^:no-doc core.screens.property-editor
   (:require [clojure.set :as set]
             [malli.core :as m]
             [malli.generator :as mg]

@@ -110,7 +110,7 @@
                  image
                  [(* x tilew) (* y tileh) tilew tileh]))
 
-(defn edn->image [{:keys [file sub-image-bounds]} ctx]
+(defn ^:no-doc edn->image [{:keys [file sub-image-bounds]} ctx]
   (if sub-image-bounds
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
           [tilew tileh]       (drop 2 sub-image-bounds)]

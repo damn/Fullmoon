@@ -1,4 +1,4 @@
-(ns core.entity.state.player-idle
+(ns ^:no-doc core.entity.state.player-idle
   (:require [core.utils.core :refer [safe-merge]]
             [core.utils.wasd-movement :refer [WASD-movement-vector]]
             [core.math.vector :as v]

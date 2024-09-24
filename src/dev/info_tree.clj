@@ -1,4 +1,4 @@
-(ns dev.info-tree
+(ns ^:no-doc dev.info-tree
   (:require [core.ctx.ui :as ui]
             [core.ui.group :as group]
             [core.app :as app]

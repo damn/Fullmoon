@@ -1,4 +1,4 @@
-(ns core.widgets.entity-info-window
+(ns ^:no-doc core.widgets.entity-info-window
   (:require [core.component :as component]
             [core.graphics.views :refer [gui-viewport-width]]
             [core.ctx.mouseover-entity :as mouseover]

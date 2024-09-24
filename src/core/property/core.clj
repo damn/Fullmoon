@@ -1,4 +1,4 @@
-(ns core.property.core
+(ns ^:no-doc core.property.core
   (:require [core.component :as component :refer [defcomponent]]))
 
 (com.badlogic.gdx.graphics.Colors/put

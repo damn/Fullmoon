@@ -1,4 +1,4 @@
-(ns core.widgets.player-message
+(ns ^:no-doc core.widgets.player-message
   (:require [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]

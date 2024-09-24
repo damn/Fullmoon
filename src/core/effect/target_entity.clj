@@ -1,4 +1,4 @@
-(ns core.effect.target-entity
+(ns ^:no-doc core.effect.target-entity
   (:require [core.math.vector :as v]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

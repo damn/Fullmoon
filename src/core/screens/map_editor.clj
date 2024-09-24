@@ -1,4 +1,4 @@
-(ns core.screens.map-editor
+(ns ^:no-doc core.screens.map-editor
   (:require [clojure.string :as str]
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]

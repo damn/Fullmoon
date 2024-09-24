@@ -1,4 +1,4 @@
-(ns core.widgets.error-modal
+(ns ^:no-doc core.widgets.error-modal
   (:require [clj-commons.pretty.repl :as p]
             [core.ctx.ui :as ui]
             [core.screens.stage :as stage]))

@@ -1,4 +1,4 @@
-(ns core.entity.state.npc-sleeping
+(ns ^:no-doc core.entity.state.npc-sleeping
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]

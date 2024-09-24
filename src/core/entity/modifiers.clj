@@ -1,4 +1,4 @@
-(ns core.entity.modifiers
+(ns ^:no-doc core.entity.modifiers
   (:require [clojure.string :as str]
             [core.utils.core :as utils]
             [core.component :as component :refer [defcomponent]]

@@ -1,4 +1,4 @@
-(ns core.widgets.background-image
+(ns ^:no-doc core.widgets.background-image
   (:require [core.ctx.ui :as ui]
             [core.graphics.image :as image]))
 

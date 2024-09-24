@@ -1,4 +1,4 @@
-(ns core.screens.options-menu
+(ns ^:no-doc core.screens.options-menu
   (:require [core.utils.core :refer [safe-get]]
             [core.utils.ns :as ns]
             [core.ctx.ui :as ui]

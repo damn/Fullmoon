@@ -1,4 +1,4 @@
-(ns core.entity.string-effect
+(ns ^:no-doc core.entity.string-effect
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]

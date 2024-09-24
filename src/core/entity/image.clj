@@ -1,4 +1,4 @@
-(ns core.entity.image
+(ns ^:no-doc core.entity.image
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]))

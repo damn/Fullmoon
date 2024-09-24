@@ -1,4 +1,4 @@
-(ns core.entity.clickable
+(ns ^:no-doc core.entity.clickable
   (:require [core.component :refer [defcomponent]]
             [core.entity :as entity]
             [core.graphics :as g]))

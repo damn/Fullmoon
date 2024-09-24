@@ -1,4 +1,4 @@
-(ns core.entity.state.stunned
+(ns ^:no-doc core.entity.state.stunned
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]
             [core.entity.state :as state]

@@ -1,4 +1,4 @@
-(ns core.entity.delete-after-duration
+(ns ^:no-doc core.entity.delete-after-duration
   (:require [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

@@ -1,4 +1,4 @@
-(ns core.entity.state.active-skill
+(ns ^:no-doc core.entity.state.active-skill
   (:require [core.utils.core :refer [safe-merge]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

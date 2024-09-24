@@ -1,4 +1,4 @@
-(ns core.entity.faction
+(ns ^:no-doc core.entity.faction
   (:require [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]))
 

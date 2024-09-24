@@ -1,4 +1,4 @@
-(ns dev
+(ns ^:no-doc dev
   (:require [core.app :as app]
             [core.entity.player :as player]
             [core.ctx.property :as property]

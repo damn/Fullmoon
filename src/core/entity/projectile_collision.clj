@@ -1,4 +1,4 @@
-(ns core.entity.projectile-collision
+(ns ^:no-doc core.entity.projectile-collision
   (:require [core.utils.core :refer [find-first]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

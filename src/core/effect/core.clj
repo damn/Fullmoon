@@ -1,4 +1,4 @@
-(ns core.effect.core
+(ns ^:no-doc core.effect.core
   (:require [core.math.vector :as v]
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]

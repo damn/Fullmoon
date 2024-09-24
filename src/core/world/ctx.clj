@@ -77,7 +77,7 @@
       :game-loop/replay (merge ctx (->world-map (select-keys ctx [:context/tiled-map
                                                                   :context/start-position]))))))
 
-(defn start-new-game [ctx tiled-level]
+(defn ^:no-doc start-new-game [ctx tiled-level]
   (init-game-context ctx
                      :mode :game-loop/normal
                      :record-transactions? false ; TODO top level flag ?

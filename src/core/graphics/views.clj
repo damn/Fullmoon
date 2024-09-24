@@ -21,7 +21,7 @@
                  (.setToOrtho camera y-down? world-width world-height)
                  (FitViewport. world-width world-height camera))}))
 
-(defn ->build [{:keys [gui-view world-view]}]
+(defn ^:no-doc ->build [{:keys [gui-view world-view]}]
   {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
@@ -33,8 +33,8 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (g/world-unit-scale g))))
 
-(defn gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
-(defn world-viewport ^Viewport [g] (-> g :world-view :viewport))
+(defn ^:no-doc gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
+(defn ^:no-doc world-viewport ^Viewport [g] (-> g :world-view :viewport))
 
 (defn- clamp [value min max]
   (MathUtils/clamp (float value) (float min) (float max)))

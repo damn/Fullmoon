@@ -1,4 +1,4 @@
-(ns core.entity.temp-modifier
+(ns ^:no-doc core.entity.temp-modifier
   (:require [core.utils.core :refer [readable-number]]
             [core.component :as component :refer [defcomponent]]
             [core.entity :as entity]

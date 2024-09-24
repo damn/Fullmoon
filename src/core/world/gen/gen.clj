@@ -1,4 +1,4 @@
-(ns core.world.gen.gen
+(ns ^:no-doc core.world.gen.gen
   (:require [core.utils.core :refer [assoc-ks]]
             [core.utils.random :as random]
             [data.grid2d :as grid]

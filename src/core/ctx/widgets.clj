@@ -53,12 +53,12 @@
          (when (utils/safe-get config :debug-window?)
            {Input$Keys/Z :debug-window})))
 
-(defn check-window-hotkeys [ctx]
+(defn ^:no-doc check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
           :when (.isKeyJustPressed Gdx/input hotkey)]
     (actor/toggle-visible! (get (:windows (stage/get ctx)) window-id))))
 
-(defn close-windows? [context]
+(defn ^:no-doc close-windows? [context]
   (let [windows (group/children (:windows (stage/get context)))]
     (if (some actor/visible? windows)
       (do
