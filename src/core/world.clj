@@ -454,21 +454,6 @@
                          (.pack window))}))
     window))
 
-(defn- ->ui-actors [ctx widget-data]
-  [(ui/->table {:rows [[{:actor (->action-bar)
-                         :expand? true
-                         :bottom? true}]]
-                :id :action-bar-table
-                :cell-defaults {:pad 2}
-                :fill-parent? true})
-   (->hp-mana-bars ctx)
-   (ui/->group {:id :windows
-                :actors [(->debug-window ctx)
-                         (->entity-info-window ctx)
-                         (inventory/->build ctx widget-data)]})
-   (ui/->actor {:draw draw-item-on-cursor})
-   (->mk [:widgets/player-message] ctx)])
-
 (def ^:private image-scale 2)
 
 (defn- ->action-bar []
@@ -569,6 +554,22 @@
  (.getChildren horizontal-group)
 
  )
+
+(defn- ->ui-actors [ctx widget-data]
+  [(ui/->table {:rows [[{:actor (->action-bar)
+                         :expand? true
+                         :bottom? true}]]
+                :id :action-bar-table
+                :cell-defaults {:pad 2}
+                :fill-parent? true})
+   (->hp-mana-bars ctx)
+   (ui/->group {:id :windows
+                :actors [(->debug-window ctx)
+                         (->entity-info-window ctx)
+                         (inventory/->build ctx widget-data)]})
+   (ui/->actor {:draw draw-item-on-cursor})
+   (->mk [:widgets/player-message] ctx)])
+
 
 (defcomponent :context/widgets
   (->mk [_ ctx]
