@@ -515,3 +515,7 @@ Default method returns true."
    :let value}
   (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
+
+(defprotocol RayCaster
+  (ray-blocked? [ctx start target])
+  (path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))

@@ -11,7 +11,6 @@
             [core.property :as property]
             [core.ui :as ui]
             [core.stage :as stage]
-            [core.world.raycaster :refer [ray-blocked? path-blocked?]]
             [core.world.grid :as grid]
             [core.world.time :as time])
   (:import com.badlogic.gdx.graphics.Color))

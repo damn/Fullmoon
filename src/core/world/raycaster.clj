@@ -1,4 +1,4 @@
-(ns core.world.raycaster
+(ns ^:no-doc core.world.raycaster
   (:require [core.math.raycaster :as raycaster]
             [core.math.vector :as v]
             [data.grid2d :as grid2d]
@@ -36,13 +36,14 @@
         target2 (v/add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
-(defn ray-blocked? [{:keys [context/raycaster]} start target]
-  (raycaster/ray-blocked? raycaster start target))
+(extend-type core.ctx.Context
+  RayCaster
+  (ray-blocked? [{:keys [context/raycaster]} start target]
+    (raycaster/ray-blocked? raycaster start target))
 
-(defn path-blocked?
-  "path-w in tiles. casts two rays."
-  [{:keys [context/raycaster]} start target path-w]
-  (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
-    (or
-     (raycaster/ray-blocked? raycaster start1 target1)
-     (raycaster/ray-blocked? raycaster start2 target2))))
+  (path-blocked? [{:keys [context/raycaster]} start target path-w]
+    (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
+      (or
+       (raycaster/ray-blocked? raycaster start1 target1)
+       (raycaster/ray-blocked? raycaster start2 target2)))))
+
