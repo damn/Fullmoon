@@ -1,9 +1,8 @@
 (ns core.entity.inventory
   (:require [data.grid2d :as grid2d]
-            [core.utils.core :refer [find-first]]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.entity.modifiers :as modifiers]))
+            [core.entity.stats :refer [mod-info-text]]))
 
 (def empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
@@ -126,7 +125,7 @@
    :let modifiers}
   (info-text [_ _ctx]
     (when (seq modifiers)
-      (modifiers/mod-info-text modifiers))))
+      (mod-info-text modifiers))))
 
 (defcomponent :item/slot
   {:data [:enum (keys empty-inventory)]})

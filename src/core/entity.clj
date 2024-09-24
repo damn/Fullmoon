@@ -4,7 +4,7 @@
             [malli.core :as m]
             [core.math.geom :as geom]
             [core.math.vector :as v]
-            [core.utils.core :as utils :refer [find-first sort-by-order]]
+            [core.utils.core :as utils :refer [sort-by-order]]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.graphics.image :as image]

@@ -9,7 +9,8 @@
   potential-field-following the removal of NAD's."
   (:require [data.grid2d :as grid2d]
             [core.math.vector :as v]
-            [core.utils.core :refer :all]
+            [core.utils.core :as utils]
+            [core.ctx :refer [->tile]]
             [core.entity :as entity]
             [core.world.grid :as grid]))
 
@@ -152,8 +153,8 @@
 (let [order (grid2d/get-8-neighbour-positions [0 0])]
   (def ^:private diagonal-check-indizes
     (into {} (for [[x y] (filter diagonal-direction? order)]
-               [(first (positions #(= % [x y]) order))
-                (vec (positions #(some #{%} [[x 0] [0 y]])
+               [(first (utils/positions #(= % [x y]) order))
+                (vec (utils/positions #(some #{%} [[x 0] [0 y]])
                                      order))]))))
 
 (defn- is-not-allowed-diagonal? [at-idx adjacent-cells]
@@ -181,7 +182,7 @@
           adjacent-cells)))
 
 (defn- get-min-dist-cell [distance-to cells]
-  (when-seq [cells (filter distance-to cells)]
+  (utils/when-seq [cells (filter distance-to cells)]
     (apply min-key distance-to cells)))
 
 ; rarely called -> no performance bottleneck

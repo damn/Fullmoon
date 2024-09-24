@@ -16,17 +16,6 @@
   [pred coll]
   (for [[idx elt] (indexed coll) :when (pred elt)] idx))
 
-(defn find-first ; from clojure.contrib.seq-utils (discontinued in 1.3)
-  "Returns the first item of coll for which (pred item) returns logical true.
-  Consumes sequences up to the first match, will consume the entire sequence
-  and return nil if no match is found."
-  [pred coll]
-  (first (filter pred coll)))
-
-(defn mapvals [f m]
-  (into {} (for [[k v] m]
-             [k (f v)])))
-
 (defn genmap
   "function is applied for every key to get value. use memoize instead?"
   [ks f]
@@ -70,13 +59,6 @@
   (if (empty? ks)
     m
     (apply assoc m (interleave ks (repeat v)))))
-
-(defn remove-one [coll item]
-  (let [[n m] (split-with (partial not= item) coll)]
-    (concat n (rest m))))
-
-(defn k->pretty-name [k]
-  (str/capitalize (name k)))
 
 (defn ->edn-str [v]
   (binding [*print-level* nil]

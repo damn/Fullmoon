@@ -27,6 +27,24 @@
            (com.badlogic.gdx.graphics Color Texture)
            com.badlogic.gdx.utils.Disposable))
 
+(defn remove-one [coll item]
+  (let [[n m] (split-with (partial not= item) coll)]
+    (concat n (rest m))))
+
+(defn mapvals [f m]
+  (into {} (for [[k v] m]
+             [k (f v)])))
+
+(defn k->pretty-name [k]
+  (str/capitalize (name k)))
+
+(defn find-first ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns the first item of coll for which (pred item) returns logical true.
+  Consumes sequences up to the first match, will consume the entire sequence
+  and return nil if no match is found."
+  [pred coll]
+  (first (filter pred coll)))
+
 (defn ->tile [position]
   (mapv int position))
 

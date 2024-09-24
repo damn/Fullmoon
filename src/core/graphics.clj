@@ -1,6 +1,5 @@
 (ns core.graphics
   (:require [clojure.string :as str]
-            [core.utils.core :refer [mapvals]]
             [core.ctx :refer :all])
   (:import (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format OrthographicCamera)
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch TextureRegion BitmapFont)
