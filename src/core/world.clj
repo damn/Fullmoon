@@ -10,6 +10,7 @@
             [core.property :as property]
             [core.graphics :as graphics]
             [core.graphics.camera :as camera]
+            [core.graphics.image :as image]
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.state :refer [draw-item-on-cursor]]
@@ -19,10 +20,10 @@
             [core.widgets.action-bar :as action-bar]
             [core.widgets.debug-window :as debug-window]
             [core.widgets.entity-info-window :as entity-info-window]
-            [core.widgets.hp-mana-bars :refer [->hp-mana-bars]]
             [core.widgets.inventory :as inventory]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
+            [core.val-max :refer [val-max-ratio]]
             [core.world.grid :as grid]
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
@@ -356,6 +357,32 @@
                                                 (->> (active-entities ctx)
                                                      (map deref)))
                        (after-entities ctx g))))
+
+(defn- render-infostr-on-bar [g infostr x y h]
+  (draw-text g {:text infostr
+                :x (+ x 75)
+                :y (+ y 2)
+                :up? true}))
+
+(defn- ->hp-mana-bars [context]
+  (let [rahmen      (image/create context "images/rahmen.png")
+        hpcontent   (image/create context "images/hp.png")
+        manacontent (image/create context "images/mana.png")
+        x (/ (gui-viewport-width context) 2)
+        [rahmenw rahmenh] (:pixel-dimensions rahmen)
+        y-mana 80 ; action-bar-icon-size
+        y-hp (+ y-mana rahmenh)
+        render-hpmana-bar (fn [g ctx x y contentimg minmaxval name]
+                            (draw-image g rahmen [x y])
+                            (draw-image g
+                                        (image/sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                                        [x y])
+                            (render-infostr-on-bar g (str (utils/readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
+    (ui/->actor {:draw (fn [g ctx]
+                         (let [player-entity* (player-entity* ctx)
+                               x (- x (/ rahmenw 2))]
+                           (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
+                           (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))
 
 (defn- ->ui-actors [ctx widget-data]
   [(ui/->table {:rows [[{:actor (action-bar/->build)
