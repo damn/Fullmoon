@@ -1,6 +1,5 @@
 (ns core.world
   (:require [data.grid2d :as grid2d]
-            [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.property :as property]
@@ -8,10 +7,10 @@
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity-state :refer [draw-item-on-cursor]]
-            [core.world.gen.gen :as level-generator]
+            [core.world-gen :as level-generator]
             [core.inventory :as inventory]
             [core.tiled :as tiled]
-            [core.world.potential-fields :as potential-fields])
+            [core.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
@@ -970,8 +969,8 @@
 (defn- debug-flags [] ;
   (apply concat
          ; TODO
-         (for [nmspace (utils/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
-           (utils/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
+         (for [nmspace (get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
+           (get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
 
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 ; -. rebuild it on window open ...

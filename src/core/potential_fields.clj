@@ -1,4 +1,4 @@
-(ns core.world.potential-fields
+(ns core.potential-fields
   "Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
   adjacent cells are walls and blocked.
   (important for wavefront-expansion and field-following)
@@ -8,7 +8,6 @@
   TODO assert @ mapload no NAD's and @ potential field init & remove from
   potential-field-following the removal of NAD's."
   (:require [data.grid2d :as grid2d]
-            [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.entity :as entity]))
 
@@ -148,11 +147,26 @@
 
 ;; MOVEMENT AI
 
+(defn- indexed ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence of [index, item] pairs, where items come
+ from 's' and indexes count up from zero.
+
+ (indexed '(a b c d)) => ([0 a] [1 b] [2 c] [3 d])"
+  [s]
+  (map vector (iterate inc 0) s))
+
+(defn utils-positions ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence containing the positions at which pred
+	 is true for items in coll."
+  [pred coll]
+  (for [[idx elt] (indexed coll) :when (pred elt)] idx))
+
+
 (let [order (grid2d/get-8-neighbour-positions [0 0])]
   (def ^:private diagonal-check-indizes
     (into {} (for [[x y] (filter diagonal-direction? order)]
-               [(first (utils/positions #(= % [x y]) order))
-                (vec (utils/positions #(some #{%} [[x 0] [0 y]])
+               [(first (utils-positions #(= % [x y]) order))
+                (vec (utils-positions #(some #{%} [[x 0] [0 y]])
                                      order))]))))
 
 (defn- is-not-allowed-diagonal? [at-idx adjacent-cells]
@@ -179,8 +193,13 @@
              %)
           adjacent-cells)))
 
+(defmacro when-seq [[aseq bind] & body]
+  `(let [~aseq ~bind]
+     (when (seq ~aseq)
+       ~@body)))
+
 (defn- get-min-dist-cell [distance-to cells]
-  (utils/when-seq [cells (filter distance-to cells)]
+  (when-seq [cells (filter distance-to cells)]
     (apply min-key distance-to cells)))
 
 ; rarely called -> no performance bottleneck
@@ -269,6 +288,11 @@
   (color/defrgb transp-yellow 1 1 0 a))
 
 #_(def ^:private adjacent-cells-colors (atom nil))
+
+#_(defn genmap
+    "function is applied for every key to get value. use memoize instead?"
+    [ks f]
+    (zipmap ks (map f ks)))
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]

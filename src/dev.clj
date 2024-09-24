@@ -1,6 +1,5 @@
 (ns dev
-  (:require [core.utils.core :as utils]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.ui :as ui]
             core.property)
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
@@ -73,22 +72,21 @@
        (:on value)))
 
 (defn- get-non-fn-vars [nmspace]
-  (utils/get-vars nmspace
-                  (fn [avar]
-                    (let [value @avar]
-                      (not (or (fn? value)
-                               (instance? clojure.lang.MultiFn value)
-                               #_(:method-map value) ; breaks for stage Ilookup
-                               (protocol? value)
-                               (instance? java.lang.Class value) ;anonymous class (proxy)
-                               ))))))
+  (get-vars nmspace (fn [avar]
+                      (let [value @avar]
+                        (not (or (fn? value)
+                                 (instance? clojure.lang.MultiFn value)
+                                 #_(:method-map value) ; breaks for stage Ilookup
+                                 (protocol? value)
+                                 (instance? java.lang.Class value) ;anonymous class (proxy)
+                                 ))))))
 
 (defn- print-app-values-tree []
   (spit "app-values-tree.clj"
         (with-out-str
          (clojure.pprint/pprint
           (for [nmspace (sort-by (comp name ns-name)
-                                 (utils/get-namespaces
+                                 (get-namespaces
                                   (fn [first-ns-part-str]
                                     (not (#{"clojure"
                                             "nrepl"

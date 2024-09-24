@@ -3,7 +3,7 @@
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.ui :as ui]
-            [core.world.potential-fields :as potential-fields]
+            [core.potential-fields :as potential-fields]
             [core.effect :refer [->player-effect-ctx ->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)

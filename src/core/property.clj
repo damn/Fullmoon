@@ -10,7 +10,6 @@
             [malli.core :as m]
             [malli.error :as me]
             [malli.generator :as mg]
-            [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys
@@ -209,8 +208,13 @@
 (defcomponent :pos     {:schema pos?})
 (defcomponent :pos-int {:schema pos-int?})
 
+(defn- ->edn-str [v]
+  (binding [*print-level* nil]
+    (pr-str v)))
+
+
 (defmethod ->widget :number [[_ data] v _ctx]
-  (add-schema-tooltip! (ui/->text-field (utils/->edn-str v) {})
+  (add-schema-tooltip! (ui/->text-field (->edn-str v) {})
                        data))
 
 (defmethod widget->value :number [_ widget]
@@ -221,8 +225,8 @@
     {:schema (apply vector :enum items)}))
 
 (defmethod ->widget :enum [[_ data] v _ctx]
-  (ui/->select-box {:items (map utils/->edn-str (rest (:schema data)))
-                    :selected (utils/->edn-str v)}))
+  (ui/->select-box {:items (map ->edn-str (rest (:schema data)))
+                    :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^VisSelectBox widget)))
@@ -359,7 +363,7 @@
     s))
 
 (defmethod ->widget :default [_ v _ctx]
-  (ui/->label (truncate (utils/->edn-str v) 60)))
+  (ui/->label (truncate (->edn-str v) 60)))
 
 (defmethod widget->value :default [_ widget]
   (ui/actor-id widget))

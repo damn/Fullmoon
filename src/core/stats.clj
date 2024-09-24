@@ -1,7 +1,6 @@
 (ns core.stats
   (:require [clojure.string :as str]
             #_[malli.core :as m]
-            [core.utils.random :as random]
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.operation :as operation])
@@ -445,7 +444,7 @@
              ;_ (println "\nSource modified: min-max:" min-max)
              min-max (entity/->modified-value target* :modifier/damage-receive min-max)
              ;_ (println "effective min-max: " min-max)
-             dmg-amount (random/rand-int-between min-max)
+             dmg-amount (rand-int-between min-max)
              ;_ (println "dmg-amount: " dmg-amount)
              new-hp-val (max (- (hp 0) dmg-amount) 0)]
          [[:tx/audiovisual (:position target*) :audiovisuals/damage]

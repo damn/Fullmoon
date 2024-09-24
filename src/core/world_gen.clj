@@ -1,30 +1,445 @@
-(ns ^:no-doc core.world.gen.gen
+(ns core.world-gen
   (:require [clojure.string :as str]
-            [core.utils.core :refer [assoc-ks]]
-            [core.utils.random :as random]
-            [data.grid2d :as grid]
-            [core.tiled :as tiled]
-            [core.ctx :refer :all]
-            [core.property :as property]
+            [data.grid2d :as g]
             [core.camera :as camera]
-            [core.ui :as ui]
-            [core.world.gen.utils :refer [printgrid scale-grid]]
-            [core.world.gen.transitions :as transitions]
-            [core.world.gen.cave-gen :as cave-gen]
-            [core.world.gen.nad :as nad]
-            core.world.gen.modules
-            [core.world.gen.area-level-grid :refer [->area-level-grid]])
+            [core.ctx :refer :all]
+            [core.tiled :as tiled]
+            [core.property :as property]
+            [core.ui :as ui])
   (:import java.util.Random
            com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
+
+(defn assoc-ks [m ks v]
+  (if (empty? ks)
+    m
+    (apply assoc m (interleave ks (repeat v)))))
+
+(defn scale-grid [grid [w h]]
+  (g/create-grid (* (g/width grid)  w)
+                 (* (g/height grid) h)
+                 (fn [[x y]]
+                   (get grid
+                        [(int (/ x w))
+                         (int (/ y h))]))))
+
+(defn scalegrid [grid factor]
+  (g/create-grid (* (g/width grid) factor)
+                 (* (g/height grid) factor)
+                 (fn [posi]
+                   (get grid (mapv #(int (/ % factor)) posi)))))
+; TODO other keys in the map-grid are lost -> look where i transform grids like this
+; merge with ld-grid?
+
+(defn create-borders-positions [grid] ; TODO not distinct -> apply distinct or set
+  (let [w (g/width grid),h (g/height grid)]
+    (concat
+      (mapcat (fn [x] [[x 0] [x (dec h)]]) (range w))
+      (mapcat (fn [y] [[0 y] [(dec w) y]]) (range h)))))
+
+(defn get-3x3-cellvalues [grid posi]
+  (map grid (cons posi (g/get-8-neighbour-positions posi))))
+
+(defn not-border-position? [[x y] grid]
+  (and (>= x 1) (>= y 1)
+       (< x (dec (g/width grid)))
+       (< y (dec (g/height grid)))))
+
+(defn border-position? [p grid] (not (not-border-position? p grid)))
+
+(defn wall-at? [grid posi]
+  (= :wall (get grid posi)))
+
+(defn undefined-value-behind-walls
+  "also border positions set to undefined where there are nil values"
+  [grid]
+  (g/transform grid
+               (fn [posi value]
+                 (if (and (= :wall value)
+                          (every? #(let [value (get grid %)]
+                                     (or (= :wall value) (nil? value)))
+                                  (g/get-8-neighbour-positions posi)))
+                   :undefined
+                   value))))
+
+; if no tile
+; and some has tile at get-8-neighbour-positions
+; -> should be a wall
+; -> paint in tiled editor set tile at cell and layer
+; -> texture ?
+; spritesheet already available ?!
+
+(defn fill-single-cells [grid] ; TODO removes single walls without adjacent walls
+  (g/transform grid
+               (fn [posi value]
+                 (if (and (not-border-position? posi grid)
+                          (= :wall value)
+                          (not-any? #(wall-at? grid %)
+                                    (g/get-4-neighbour-positions posi)))
+                   :ground
+                   value))))
+
+(defn- print-cell [celltype]
+  (print (if (number? celltype)
+           celltype
+           (case celltype
+             nil               "?"
+             :undefined        " "
+             :ground           "_"
+             :wall             "#"
+             :airwalkable      "."
+             :module-placement "X"
+             :start-module     "@"
+             :transition       "+"))))
+
+; print-grid in data.grid2d is y-down
+(defn printgrid
+  "Prints with y-up coordinates."
+  [grid]
+  (doseq [y (range (dec (g/height grid)) -1 -1)]
+    (doseq [x (range (g/width grid))]
+      (print-cell (grid [x y])))
+    (println)))
+
+(let [idxvalues-order [[1 0] [-1 0] [0 1] [0 -1]]]
+  (assert (= (g/get-4-neighbour-positions [0 0])
+             idxvalues-order)))
+
+(comment
+  ; Values for every neighbour:
+  {          [0 1] 1
+   [-1 0]  8          [1 0] 2
+             [0 -1] 4 })
+
+; so the idxvalues-order corresponds to the following values for a neighbour tile:
+(def ^:private idxvalues [2 8 1 4])
+
+(defn- calculate-index-value [position->transition? idx position]
+  (if (position->transition? position)
+    (idxvalues idx)
+    0))
+
+(defn transition-idx-value [position position->transition?]
+  (->> position
+       g/get-4-neighbour-positions
+       (map-indexed (partial calculate-index-value
+                             position->transition?))
+       (apply +)))
+
+(defn- nad-corner? [grid [fromx fromy] [tox toy]]
+  (and
+    (= :ground (get grid [tox toy])) ; also filters nil/out of map
+    (wall-at? grid [tox fromy])
+    (wall-at? grid [fromx toy])))
+
+(def ^:private diagonal-steps [[-1 -1] [-1 1] [1 -1] [1 1]])
+
+; TODO could be made faster because accessing the same posis oftentimes at nad-corner? check
+(defn get-nads [grid]
+  (loop [checkposis (filter (fn [{y 1 :as posi}]
+                              (and (even? y)
+                                   (= :ground (get grid posi))))
+                            (g/posis grid))
+         result []]
+    (if (seq checkposis)
+      (let [position (first checkposis)
+            diagonal-posis (map #(mapv + position %) diagonal-steps)
+            nads (map (fn [nad] [position nad])
+                      (filter #(nad-corner? grid position %) diagonal-posis))]
+        (recur
+          (rest checkposis)
+          (doall (concat result nads)))) ; doall else stackoverflow error
+      result)))
+
+(defn- get-tiles-needing-fix-for-nad [grid [[fromx fromy]
+                                           [tox toy]]]
+  (let [xstep (- tox fromx)
+        ystep (- toy fromy)
+        cell1x (+ fromx xstep)
+        cell1y fromy
+        cell1 [cell1x cell1y]
+        cell11 [(+ cell1x xstep) (+ cell1y (- ystep))]
+        cell2x (+ cell1x xstep)
+        cell2y cell1y
+        cell2 [cell2x cell2y]
+        cell21 [(+ cell2x xstep) (+ cell2y ystep)]
+        cell3 [cell2x (+ cell2y ystep)]]
+;    (println "from: " [fromx fromy] " to: " [tox toy])
+;    (println "xstep " xstep " ystep " ystep)
+;    (println "cell1 " cell1)
+;    (println "cell11 " cell11)
+;    (println "cell2 " cell2)
+;    (println "cell21 " cell21)
+;    (println "cell3 " cell3)
+    (if-not (nad-corner? grid cell1 cell11)
+      [cell1]
+      (if-not (nad-corner? grid cell2 cell21)
+        [cell1 cell2]
+        [cell1 cell2 cell3]))))
+
+(defn mark-nads [grid nads label]
+  (assoc-ks grid (mapcat #(get-tiles-needing-fix-for-nad grid %) nads) label))
+
+(defn fix-not-allowed-diagonals [grid]
+  (mark-nads grid (get-nads grid) :ground))
+
+;; TEST
+
+(comment
+  (def found (atom false))
+
+  (defn search-buggy-nads []
+    (println "searching buggy nads")
+    (doseq [n (range 100000)
+            :when (not @found)]
+      (println "try " n)
+      (let [grid (cellular-automata-gridgen 100 80 :fillprob 62 :generations 0 :wall-borders true)
+            nads (get-nads grid)
+            fixed-grid (mark-nads grid nads :ground)]
+        (when
+          (and
+            (not (zero? (count nads)))
+            (not (zero? (count (get-nads fixed-grid)))))
+          (println "found!")
+          (reset! found [grid fixed-grid]))))
+    (println "found buggy nads? " @found)))
+
+(def modules-file "maps/modules.tmx")
+(def module-width  32)
+(def module-height 20)
+(def modules-scale [module-width module-height])
+
+(def ^:private number-modules-x 8)
+(def ^:private number-modules-y 4)
+(def ^:private module-offset-tiles 1)
+(def ^:private transition-modules-row-width 4)
+(def ^:private transition-modules-row-height 4)
+(def ^:private transition-modules-offset-x 4)
+(def ^:private floor-modules-row-width 4)
+(def ^:private floor-modules-row-height 4)
+(def ^:private floor-idxvalue 0)
+
+(defn- module-index->tiled-map-positions [[module-x module-y]]
+  (let [start-x (* module-x (+ module-width  module-offset-tiles))
+        start-y (* module-y (+ module-height module-offset-tiles))]
+    (for [x (range start-x (+ start-x module-width))
+          y (range start-y (+ start-y module-height))]
+      [x y])))
+
+(defn- floor->module-index []
+  [(rand-int floor-modules-row-width)
+   (rand-int floor-modules-row-height)])
+
+(defn- transition-idxvalue->module-index [idxvalue]
+  [(+ (rem idxvalue transition-modules-row-width)
+      transition-modules-offset-x)
+   (int (/ idxvalue transition-modules-row-height))])
+
+(defn- place-module [scaled-grid
+                     unscaled-position
+                     & {:keys [transition?
+                               transition-neighbor?]}]
+  (let [idxvalue (if transition?
+                   (transition-idx-value unscaled-position transition-neighbor?)
+                   floor-idxvalue)
+        tiled-map-positions (module-index->tiled-map-positions
+                             (if transition?
+                               (transition-idxvalue->module-index idxvalue)
+                               (floor->module-index)))
+        offsets (for [x (range module-width)
+                      y (range module-height)]
+                  [x y])
+        offset->tiled-map-position (zipmap offsets tiled-map-positions)
+        scaled-position (mapv * unscaled-position modules-scale)]
+    (reduce (fn [grid offset]
+              (assoc grid
+                     (mapv + scaled-position offset)
+                     (offset->tiled-map-position offset)))
+            scaled-grid
+            offsets)))
+
+(defn place-modules [modules-tiled-map
+                     scaled-grid
+                     unscaled-grid
+                     unscaled-floor-positions
+                     unscaled-transition-positions]
+  (let [_ (assert (and (= (tiled/width modules-tiled-map)
+                          (* number-modules-x (+ module-width module-offset-tiles)))
+                       (= (tiled/height modules-tiled-map)
+                          (* number-modules-y (+ module-height module-offset-tiles)))))
+        scaled-grid (reduce (fn [scaled-grid unscaled-position]
+                              (place-module scaled-grid unscaled-position :transition? false))
+                            scaled-grid
+                            unscaled-floor-positions)
+        scaled-grid (reduce (fn [scaled-grid unscaled-position]
+                              (place-module scaled-grid unscaled-position :transition? true
+                                            :transition-neighbor? #(#{:transition :wall}
+                                                                    (get unscaled-grid %))))
+                            scaled-grid
+                            unscaled-transition-positions)]
+    (tiled/grid->tiled-map modules-tiled-map scaled-grid)))
+
+
+;Cave Algorithmus.
+;http://properundead.com/2009/03/cave-generator.html
+;http://properundead.com/2009/07/procedural-generation-3-cave-source.html
+;http://forums.tigsource.com/index.php?topic=5174.0
+
+(defn- create-order [random]
+  (sshuffle (range 4) random))
+
+(defn- get-in-order [v order]
+  (map #(get v %) order))
+
+(def ^:private current-order (atom nil))
+
+(def ^:private turn-ratio 0.25)
+
+(defn- create-rand-4-neighbour-posis [posi n random] ; TODO does more than 1 thing
+  (when (< (srand random) turn-ratio)
+    (reset! current-order (create-order random)))
+  (take n
+        (get-in-order (g/get-4-neighbour-positions posi)
+                      @current-order)))
+
+(defn- get-default-adj-num [open-paths random]
+  (if (= open-paths 1)
+    (case (int (srand-int 4 random))
+      0 1
+      1 1
+      2 1
+      3 2
+      1)
+    (case (int (srand-int 4 random))
+      0 0
+      1 1
+      2 1
+      3 2
+      1)))
+
+(defn- get-thin-adj-num [open-paths random]
+  (if (= open-paths 1)
+    1
+    (case (int (srand-int 7 random))
+      0 0
+      1 2
+      1)))
+
+(defn- get-wide-adj-num [open-paths random]
+  (if (= open-paths 1)
+    (case (int (srand-int 3 random))
+      0 1
+      2)
+    (case (int (srand-int 4 random))
+      0 1
+      1 2
+      2 3
+      3 4
+      1)))
+
+(def ^:private get-adj-num
+  {:wide    get-wide-adj-num
+   :thin    get-thin-adj-num    ; h�hle mit breite 1 �berall nur -> turn-ratio verringern besser
+   :default get-default-adj-num}) ; etwas breiter als 1 aber immernoch zu d�nn f�r m ein game -> turn-ratio verringern besser
+
+; gute ergebnisse: :wide / 500-4000 max-cells / turn-ratio 0.5
+; besser 150x150 anstatt 100x100 w h
+; TODO glaubich einziger unterschied noch: openpaths wird bei jeder cell neu berechnet?
+; TODO max-tries wenn er nie �ber min-cells kommt? -> im let dazu definieren vlt max 30 sekunden -> in tries umgerechnet??
+(defn cave-gridgen [random min-cells max-cells adjnum-type]
+  ; move up where its used only
+  (reset! current-order (create-order random))
+  (let [start [0 0]
+        start-grid (assoc {} start :ground) ; grid of posis to :ground or no entry for walls
+        finished (fn [grid end cell-cnt]
+                   ;(println "Reached cells: " cell-cnt) ; TODO cell-cnt stimmt net genau
+                   ; TODO already called there down ... make mincells check there
+                   (if (< cell-cnt min-cells)
+                     (cave-gridgen random min-cells max-cells adjnum-type) ; recur?
+                     (let [[grid convert] (g/mapgrid->vectorgrid grid
+                                                                    #(if (nil? %) :wall :ground))]
+                       {:grid  grid
+                        :start (convert start)
+                        :end   (convert end)})))]
+    (loop [posi-seq [start]
+           grid     start-grid
+           cell-cnt 0]
+      ; TODO min cells check !?
+      (if (>= cell-cnt max-cells)
+        (finished grid
+                  (last posi-seq)
+                  cell-cnt)
+        (let [try-carve-posis (create-rand-4-neighbour-posis
+                                (last posi-seq) ; TODO take random ! at corner ... hmm
+                                ((get-adj-num adjnum-type) (count posi-seq) random)
+                                random)
+              carve-posis (filter #(nil? (get grid %)) try-carve-posis)
+              new-pos-seq (concat (drop-last posi-seq) carve-posis)]
+          (if (not-empty new-pos-seq)
+            (recur new-pos-seq
+                   (if (seq carve-posis)
+                     (assoc-ks grid carve-posis :ground)
+                     grid)
+                   (+ cell-cnt (count carve-posis)))
+            ; TODO here min-cells check ?
+            (finished grid (last posi-seq) cell-cnt)))))))
+
+; can adjust:
+; * split percentage , for higher level areas may scale faster (need to be more careful)
+; * not 4 neighbors but just 1 tile randomwalk -> possible to have lvl 9 area next to lvl 1 ?
+; * adds metagame to the game , avoid/or fight higher level areas, which areas to go next , etc...
+; -> up to the player not step by step level increase like D2
+; can not only take first of added-p but multiples also
+; can make parameter how fast it scales
+; area-level-grid works better with more wide grids
+; if the cave is very straight then it is just a continous progression and area-level-grid is useless
+(defn ->area-level-grid
+  "Expands from start position by adding one random adjacent neighbor.
+  Each random walk is a step and is assigned a level as of max-level.
+  (Levels are scaled, for example grid has 100 ground cells, so steps would be 0 to 100(99?)
+  and max-level will smooth it out over 0 to max-level.
+  The point of this is to randomize the levels so player does not have a smooth progression
+  but can encounter higher level areas randomly around but there is always a path which goes from
+  level 0 to max-level, so the player has to decide which areas to do in which order."
+  [& {:keys [grid start max-level walk-on]}]
+  (let [maxcount (->> grid
+                      g/cells
+                      (filter walk-on)
+                      count)
+        ; -> assume all :ground cells can be reached from start
+        ; later check steps count == maxcount assert
+        level-step (/ maxcount max-level)
+        step->level #(int (Math/ceil (/ % level-step)))
+        walkable-neighbours (fn [grid position]
+                              (filter #(walk-on (get grid %))
+                                      (g/get-4-neighbour-positions position)))]
+    (loop [next-positions #{start}
+           steps          [[0 start]]
+           grid           (assoc grid start 0)]
+      (let [next-positions (set
+                            (filter #(seq (walkable-neighbours grid %))
+                                    next-positions))]
+        (if (seq next-positions)
+          (let [p (rand-nth (seq next-positions))
+                added-p (rand-nth (walkable-neighbours grid p))]
+            (if added-p
+              (let [area-level (step->level (count steps))]
+                (recur (conj next-positions added-p)
+                       (conj steps [area-level added-p])
+                       (assoc grid added-p area-level)))
+              (recur next-positions
+                     steps
+                     grid)))
+          {:steps steps
+           :area-level-grid grid})))))
 
 ; TODO generates 51,52. not max 50
 ; TODO can use different turn-ratio/depth/etc. params
 ; (printgrid (:grid (->cave-grid :size 800)))
 (defn- ->cave-grid [& {:keys [size]}]
-  (let [{:keys [start grid]} (cave-gen/cave-gridgen (Random.) size size :wide)
-        grid (nad/fix-not-allowed-diagonals grid)]
-    (assert (= #{:wall :ground} (set (grid/cells grid))))
+  (let [{:keys [start grid]} (cave-gridgen (Random.) size size :wide)
+        grid (fix-not-allowed-diagonals grid)]
+    (assert (= #{:wall :ground} (set (g/cells grid))))
     {:start start
      :grid grid}))
 
@@ -45,8 +460,8 @@
 (defn- adjacent-wall-positions [grid]
   (filter (fn [p] (and (= :wall (get grid p))
                        (some #(= :ground (get grid %))
-                             (grid/get-8-neighbour-positions p))))
-          (grid/posis grid)))
+                             (g/get-8-neighbour-positions p))))
+          (g/posis grid)))
 
 (defn- flood-fill [grid start walk-on-position?]
   (loop [next-positions [start]
@@ -56,7 +471,7 @@
       (recur (filter #(and (get grid %)
                            (walk-on-position? %))
                      (distinct
-                      (mapcat grid/get-8-neighbour-positions
+                      (mapcat g/get-8-neighbour-positions
                               next-positions)))
              (concat filled next-positions)
              (assoc-ks grid next-positions nil))
@@ -69,10 +484,10 @@
        ;_ (println)
        ;_ (println "WITH START POSITION (0) :\n")
        ;_ (printgrid (assoc grid start 0))
-       ;_ (println "\nwidth:  " (grid/width  grid)
-       ;           "height: " (grid/height grid)
+       ;_ (println "\nwidth:  " (g/width  grid)
+       ;           "height: " (g/height grid)
        ;           "start " start "\n")
-       ;_ (println (grid/posis grid))
+       ;_ (println (g/posis grid))
        _ (println "\n\n")
        filled (flood-fill grid start (fn [p] (= :ground (get grid p))))
        _ (printgrid (reduce #(assoc %1 %2 nil) grid filled))])
@@ -118,17 +533,16 @@
         ;_ (printgrid grid)
         ;_ (println " - ")
         _ (assert (or
-                   (= #{:wall :ground :transition} (set (grid/cells grid)))
-                   (= #{:ground :transition} (set (grid/cells grid))))
-                  (str "(set (grid/cells grid)): " (set (grid/cells grid))))
-        scale core.world.gen.modules/scale
+                   (= #{:wall :ground :transition} (set (g/cells grid)))
+                   (= #{:ground :transition} (set (g/cells grid))))
+                  (str "(set (g/cells grid)): " (set (g/cells grid))))
+        scale modules-scale
         scaled-grid (scale-grid grid scale)
-        tiled-map (core.world.gen.modules/place-modules
-                   (tiled/load-map core.world.gen.modules/modules-file)
-                   scaled-grid
-                   grid
-                   (filter #(= :ground     (get grid %)) (grid/posis grid))
-                   (filter #(= :transition (get grid %)) (grid/posis grid)))
+        tiled-map (place-modules (tiled/load-map modules-file)
+                                 scaled-grid
+                                 grid
+                                 (filter #(= :ground     (get grid %)) (g/posis grid))
+                                 (filter #(= :transition (get grid %)) (g/posis grid)))
         start-position (mapv * start scale)
         can-spawn? #(= "all" (tiled/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
@@ -143,9 +557,9 @@
         ;_ (printgrid area-level-grid)
         _ (assert (or
                    (= (set (concat [max-area-level] (range max-area-level)))
-                      (set (grid/cells area-level-grid)))
+                      (set (g/cells area-level-grid)))
                    (= (set (concat [:wall max-area-level] (range max-area-level)))
-                      (set (grid/cells area-level-grid)))))
+                      (set (g/cells area-level-grid)))))
         scaled-area-level-grid (scale-grid area-level-grid scale)
         get-free-position-in-area-level (fn [area-level]
                                           (rand-nth
@@ -161,15 +575,13 @@
      :area-level-grid scaled-area-level-grid}))
 
 (defn uf-transition [position grid]
-  (transitions/index-value position (= :transition (get grid position))))
+  (transition-idx-value position (= :transition (get grid position))))
 
 (defn rand-0-3 []
-  (random/get-rand-weighted-item
-   {0 60 1 1 2 1 3 1}))
+  (get-rand-weighted-item {0 60 1 1 2 1 3 1}))
 
 (defn rand-0-5 []
-  (random/get-rand-weighted-item
-   {0 30 1 1 2 1 3 1 4 1 5 1}))
+  (get-rand-weighted-item {0 30 1 1 2 1 3 1 4 1 5 1}))
 
 ; TODO zoomed out see that line of sight raycast goes x screens away
 ; only becuz of zoom?
@@ -254,16 +666,16 @@
         ;_ (printgrid grid)
         ;_ (println)
         scale uf-caves-scale
-        grid (core.world.gen.utils/scalegrid grid scale)
+        grid (scalegrid grid scale)
         ;_ (printgrid grid)
         ;_ (println)
         start-position (mapv #(* % scale) start)
         grid (reduce #(assoc %1 %2 :transition) grid
                      (adjacent-wall-positions grid))
         _ (assert (or
-                   (= #{:wall :ground :transition} (set (grid/cells grid)))
-                   (= #{:ground :transition}       (set (grid/cells grid))))
-                  (str "(set (grid/cells grid)): " (set (grid/cells grid))))
+                   (= #{:wall :ground :transition} (set (g/cells grid)))
+                   (= #{:ground :transition}       (set (g/cells grid))))
+                  (str "(set (g/cells grid)): " (set (g/cells grid))))
         ;_ (printgrid grid)
         ;_ (println)
         ground-idx (rand-nth uf-grounds)
@@ -373,8 +785,7 @@ direction keys: move")
           (when-not area-level-grid
             (str "Module " (mapv (comp int /)
                                  (world-mouse-position ctx)
-                                 [core.world.gen.modules/module-width
-                                  core.world.gen.modules/module-height])))
+                                 [module-width module-height])))
           (when area-level-grid
             (str "Creature id: " (tiled/property-value tiled-map :creatures tile :id)))
           (when area-level-grid
@@ -454,7 +865,7 @@ direction keys: move")
 (def ^:private world-id :worlds/modules)
 
 (defn- generate-screen-ctx [context properties]
-  (let [;{:keys [tiled-map area-level-grid start-position]} (core.world.gen.gen/generate context properties)
+  (let [;{:keys [tiled-map area-level-grid start-position]} (generate-modules context properties)
         {:keys [tiled-map start-position]} (->world context world-id)
         atom-data (current-data context)]
     (dispose (:tiled-map @atom-data))
@@ -508,7 +919,7 @@ direction keys: move")
 (defcomponent :screens/map-editor
   (->mk [_ ctx]
     {:sub-screen [::sub-screen
-                  (atom {:tiled-map (tiled/load-map core.world.gen.modules/modules-file)
+                  (atom {:tiled-map (tiled/load-map modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
      :stage (ui/->stage ctx [(->generate-map-window ctx world-id)
