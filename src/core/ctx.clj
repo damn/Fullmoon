@@ -22,7 +22,8 @@
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Texture)))
+           (com.badlogic.gdx.graphics Color Texture)
+           com.badlogic.gdx.utils.Disposable))
 
 (def ^{:tag Application}               gdx-app)
 (def ^{:tag Files}                     gdx-files)
@@ -472,3 +473,5 @@ Default method returns true."
    :let {:keys [tag configs]}}
   (->mk [_ _ctx]
     (get configs tag)))
+
+(defn dispose [obj] (Disposable/.dispose obj))

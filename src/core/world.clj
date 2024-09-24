@@ -3,8 +3,7 @@
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.ctx.content-grid :as content-grid]
-            [core.ctx.grid :as grid])
-  (:import com.badlogic.gdx.utils.Disposable))
+            [core.ctx.grid :as grid]))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -68,7 +67,7 @@
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:context/tiled-map ctx)]
-                           (.dispose ^Disposable tiled-map))
+                           (dispose tiled-map))
                          (-> ctx
                              (merge (->world-map tiled-level))
                              (spawn-creatures! tiled-level)))

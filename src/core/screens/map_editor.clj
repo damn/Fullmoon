@@ -16,8 +16,7 @@
             core.world.gen.gen
             core.world.gen.modules)
   (:import com.badlogic.gdx.Input$Keys
-           com.badlogic.gdx.graphics.Color
-           com.badlogic.gdx.utils.Disposable))
+           com.badlogic.gdx.graphics.Color))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -146,7 +145,7 @@ direction keys: move")
   (let [;{:keys [tiled-map area-level-grid start-position]} (core.world.gen.gen/generate context properties)
         {:keys [tiled-map start-position]} (level-generator/->world context world-id)
         atom-data (current-data context)]
-    (.dispose ^Disposable (:tiled-map @atom-data))
+    (dispose (:tiled-map @atom-data))
     (swap! atom-data assoc
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
