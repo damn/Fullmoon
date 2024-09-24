@@ -1,6 +1,6 @@
 (ns ^:no-doc core.effect.core
   (:require [core.math.vector :as v]
-            [core.effect :as effect]
+            [core.ctx :refer :all]
             [core.entity :as entity]
             [core.graphics.views :refer [world-mouse-position]]
             [core.component :as component :refer [defcomponent]]
@@ -42,7 +42,7 @@
   (component/do! [[_ effect-ctx effects] ctx]
     (-> ctx
         (merge effect-ctx)
-        (effect/do! (filter #(component/applicable? % effect-ctx) effects))
+        (effect! (filter #(component/applicable? % effect-ctx) effects))
         ; TODO
         ; context/source ?
         ; skill.context ?  ?

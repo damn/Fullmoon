@@ -1,6 +1,7 @@
 (ns ^:no-doc core.screens.world
   (:require [core.graphics.camera :as camera]
             [core.component :refer [defcomponent] :as component]
+            [core.ctx :refer :all]
             [core.ctx.ecs :as ecs]
             [core.entity :as entity]
             [core.entity.player :as player]
@@ -12,7 +13,6 @@
             [core.screen :as screen]
             [core.screens.stage :as stage]
             [core.ctx.mouseover-entity :refer [update-mouseover-entity]]
-            [core.effect :as effect]
             [core.ctx.time :as time]
             [core.ctx.potential-fields :as potential-fields]
             [core.widgets.error-modal :refer [error-window!]]
@@ -46,21 +46,21 @@
 (defmulti ^:private game-loop :context/game-loop-mode)
 
 (defmethod game-loop :game-loop/normal [ctx]
-  (effect/do! ctx [player/update-state
-                   update-mouseover-entity ; this do always so can get debug info even when game not running
-                   update-game-paused
-                   #(if (:context/paused? %)
-                      %
-                      (update-world %))
-                   ecs/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
-                   ]))
+  (effect! ctx [player/update-state
+                update-mouseover-entity ; this do always so can get debug info even when game not running
+                update-game-paused
+                #(if (:context/paused? %)
+                   %
+                   (update-world %))
+                ecs/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                ]))
 
 (defn- replay-frame! [ctx]
   (let [frame-number (time/logic-frame ctx)
         txs [:foo]#_(ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx
-        (effect/do! txs)
+        (effect! txs)
         #_(update :world.time/logic-frame inc))))  ; this is probably broken now (also frame->txs contains already time, so no need to inc ?)
 
 (def ^:private replay-speed 2)

@@ -1,11 +1,11 @@
 (ns core.world.ctx
   (:require [core.utils.core :refer [tile->middle]]
+            [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.component :refer [defcomponent] :as component]
             [core.ctx.content-grid :as content-grid]
             [core.ctx.grid :as grid]
-            [core.entity.player :as player]
-            [core.effect :as effect])
+            [core.entity.player :as player])
   (:import com.badlogic.gdx.utils.Disposable))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
@@ -35,11 +35,11 @@
      :components npc-components}))
 
 (defn- spawn-creatures! [ctx tiled-level]
-  (effect/do! ctx
-              (for [creature (cons (world->player-creature ctx tiled-level)
-                                   (when spawn-enemies?
-                                     (world->enemy-creatures ctx)))]
-                [:tx/creature (update creature :position tile->middle)])))
+  (effect! ctx
+           (for [creature (cons (world->player-creature ctx tiled-level)
+                                (when spawn-enemies?
+                                  (world->enemy-creatures ctx)))]
+             [:tx/creature (update creature :position tile->middle)])))
 
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)

@@ -1,5 +1,6 @@
 (ns ^:no-doc core.widgets.inventory
   (:require [data.grid2d :as grid]
+            [core.ctx :refer :all]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
             [core.app :as app]
@@ -10,8 +11,7 @@
             [core.entity :as entity]
             [core.entity.inventory :as inventory]
             [core.entity.player :as player]
-            [core.screens.stage :as stage]
-            [core.effect :as effect])
+            [core.screens.stage :as stage])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
@@ -66,7 +66,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! app/state #(effect/do! % (player/clicked-inventory % cell))))))
+                             (swap! app/state #(effect! % (player/clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

@@ -15,8 +15,7 @@
             [core.entity.inventory :as inventory]
             [core.entity.player :as player]
             [core.player.interaction-state :refer [->interaction-state]]
-            [core.graphics :as g]
-            [core.effect :as effect])
+            [core.graphics :as g])
   (:import (com.badlogic.gdx Gdx Input$Buttons)))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]

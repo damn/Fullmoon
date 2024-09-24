@@ -1,8 +1,8 @@
 (ns ^:no-doc dev
   (:require [core.app :as app]
+            [core.ctx :refer :all]
             [core.entity.player :as player]
-            [core.ctx.property :as property]
-            [core.effect :as effect])
+            [core.ctx.property :as property])
   (:import com.badlogic.gdx.Gdx))
 
 (comment
@@ -49,7 +49,7 @@
 
 
 (defn- post-tx! [tx]
-  (.postRunnable Gdx/app #(swap! app/state effect/do! [tx])))
+  (.postRunnable Gdx/app #(swap! app/state effect! [tx])))
 
 (defn learn-skill! [skill-id]
   (post-tx! (fn [ctx]

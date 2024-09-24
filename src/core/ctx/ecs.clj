@@ -1,11 +1,11 @@
 (ns core.ctx.ecs
   (:require [clj-commons.pretty.repl :as p]
             [core.utils.core :refer [safe-merge sort-by-order]]
+            [core.ctx :refer :all]
             [core.component :refer [defcomponent] :as component]
             [core.graphics :as g]
             [core.entity :as entity]
-            [core.entity.player :as player]
-            [core.effect :as effect])
+            [core.entity.player :as player])
   (:import com.badlogic.gdx.graphics.Color))
 
 (def ^:private this :context/ecs)
@@ -85,7 +85,7 @@
              ; should be moved together?
              (if-let [v (k @entity)]
                (let [component [k v]]
-                 (effect/do! ctx (entity/tick component entity ctx)))
+                 (effect! ctx (entity/tick component entity ctx)))
                ctx))
            ctx
            (keys @entity))
