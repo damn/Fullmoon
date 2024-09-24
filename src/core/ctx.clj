@@ -1,3 +1,6 @@
+
+;; the name of the project/main ns => google it and grep and no results
+
 ; TODO:
 ; !! * chekc all names _unique_ so can easily rename, e.g. check 'texture', 'cached-texture'
 ; => shouldnt make any regex stuff

@@ -1,5 +1,5 @@
 (ns core.world
-  (:require [core.utils.core :refer [tile->middle safe-get]]
+  (:require [core.utils.core :refer [->tile tile->middle safe-get]]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.screen :as screen]
@@ -14,16 +14,127 @@
             [core.property.types.world :as level-generator]
             [core.widgets.error-modal :refer [error-window!]]
             [core.widgets.background-image :refer [->background-image]]
+            [core.math.geom :as geom]
             [core.world.ecs :as ecs]
             [core.world.widgets :as widgets]
             [core.world.content-grid :as content-grid]
             [core.world.grid :as grid]
             [core.world.mouseover-entity :refer [update-mouseover-entity]]
             [core.world.time :as time]
-            [core.world.potential-fields :as potential-fields]
-            [core.world.render.tiled-map :as world-render]
-            [core.world.render.debug :as debug-render])
-  (:import com.badlogic.gdx.Input$Keys))
+            [core.world.potential-fields :as potential-fields])
+  (:import com.badlogic.gdx.graphics.Color
+           com.badlogic.gdx.Input$Keys))
+
+(def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
+
+(def ^:private ^:dbg-flag see-all-tiles? false)
+
+(comment
+ (def ^:private count-rays? false)
+
+ (def ray-positions (atom []))
+ (def do-once (atom true))
+
+ (count @ray-positions)
+ 2256
+ (count (distinct @ray-positions))
+ 608
+ (* 608 4)
+ 2432
+ )
+
+(defn- ->tile-color-setter [light-cache light-position raycaster explored-tile-corners]
+  (fn tile-color-setter [_color x y]
+    (let [position [(int x) (int y)]
+          explored? (get @explored-tile-corners position) ; TODO needs int call ?
+          base-color (if explored? explored-tile-color Color/BLACK)
+          cache-entry (get @light-cache position :not-found)
+          blocked? (if (= cache-entry :not-found)
+                     (let [blocked? (raycaster/ray-blocked? raycaster light-position position)]
+                       (swap! light-cache assoc position blocked?)
+                       blocked?)
+                     cache-entry)]
+      #_(when @do-once
+          (swap! ray-positions conj position))
+      (if blocked?
+        (if see-all-tiles? Color/WHITE base-color)
+        (do (when-not explored?
+              (swap! explored-tile-corners assoc (->tile position) true))
+            Color/WHITE)))))
+
+(defn- render-map [{:keys [context/tiled-map] :as ctx} light-position]
+  (tiled/render! ctx
+                 tiled-map
+                 (->tile-color-setter (atom nil)
+                                      light-position
+                                      (:context/raycaster ctx)
+                                      (:context/explored-tile-corners ctx)))
+  #_(reset! do-once false))
+
+(defn- geom-test [g ctx]
+  (let [position (world-mouse-position ctx)
+        grid (:context/grid ctx)
+        radius 0.8
+        circle {:position position :radius radius}]
+    (draw-circle g position radius [1 0 0 0.5])
+    (doseq [[x y] (map #(:position @%)
+                       (grid/circle->cells grid circle))]
+      (draw-rectangle g x y 1 1 [1 0 0 0.5]))
+    (let [{[x y] :left-bottom :keys [width height]} (geom/circle->outer-rectangle circle)]
+      (draw-rectangle g x y width height [0 0 1 1]))))
+
+(def ^:private ^:dbg-flag tile-grid? false)
+(def ^:private ^:dbg-flag potential-field-colors? false)
+(def ^:private ^:dbg-flag cell-entities? false)
+(def ^:private ^:dbg-flag cell-occupied? false)
+
+(defn- tile-debug [g ctx]
+  (let [grid (:context/grid ctx)
+        world-camera (world-camera ctx)
+        [left-x right-x bottom-y top-y] (camera/frustum world-camera)]
+
+    (when tile-grid?
+      (draw-grid g (int left-x) (int bottom-y)
+                 (inc (int (world-viewport-width ctx)))
+                 (+ 2 (int (world-viewport-height ctx)))
+                 1 1 [1 1 1 0.8]))
+
+    (doseq [[x y] (camera/visible-tiles world-camera)
+            :let [cell (grid [x y])]
+            :when cell
+            :let [cell* @cell]]
+
+      (when (and cell-entities? (seq (:entities cell*)))
+        (draw-filled-rectangle g x y 1 1 [1 0 0 0.6]))
+
+      (when (and cell-occupied? (seq (:occupied cell*)))
+        (draw-filled-rectangle g x y 1 1 [0 0 1 0.6]))
+
+      (when potential-field-colors?
+        (let [faction :good
+              {:keys [distance entity]} (faction cell*)]
+          (when distance
+            (let [ratio (/ distance (@#'potential-fields/factions-iterations faction))]
+              (draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
+
+(def ^:private ^:dbg-flag highlight-blocked-cell? true)
+
+(defn- highlight-mouseover-tile [g ctx]
+  (when highlight-blocked-cell?
+    (let [[x y] (->tile (world-mouse-position ctx))
+          cell (get (:context/grid ctx) [x y])]
+      (when (and cell (#{:air :none} (:movement @cell)))
+        (draw-rectangle g x y 1 1
+                        (case (:movement @cell)
+                          :air  [1 1 0 0.5]
+                          :none [1 0 0 0.5]))))))
+
+(defn before-entities [ctx g]
+  (tile-debug g ctx))
+
+(defn after-entities [ctx g]
+  #_(geom-test g ctx)
+  (highlight-mouseover-tile g ctx))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -176,7 +287,7 @@
 
 (defn- render-world! [ctx]
   (camera/set-position! (world-camera ctx) (:position (player-entity* ctx)))
-  (world-render/render-map ctx (camera/position (world-camera ctx)))
+  (render-map ctx (camera/position (world-camera ctx)))
   (render-world-view ctx
                      (fn [g]
                        (debug-render/before-entities ctx g)
