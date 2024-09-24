@@ -4,7 +4,6 @@
             [core.math.vector :as v]
             [core.entity :as entity]
             [core.ui :as ui]
-            [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
             [core.effect :refer [->player-effect-ctx ->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.entity.inventory :as inventory])
@@ -304,7 +303,7 @@
   (entity/tick [_ eid context]
     (let [entity* @eid
           cell ((:context/grid context) (entity/tile entity*))]
-      (when-let [distance (grid/nearest-entity-distance @cell (entity/enemy-faction entity*))]
+      (when-let [distance (nearest-entity-distance @cell (entity/enemy-faction entity*))]
         (when (<= distance (entity/stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 

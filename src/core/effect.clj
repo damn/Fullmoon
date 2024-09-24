@@ -1,15 +1,14 @@
 (ns core.effect
   (:require [core.math.vector :as v]
             [core.ctx :refer :all]
-            [core.entity :as entity]
-            [core.world.grid :as grid]))
+            [core.entity :as entity]))
 
 (defsystem render "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
 (defmethod render :default [_ g ctx])
 
 (defn- nearest-enemy [{:keys [context/grid]} entity*]
-  (grid/nearest-entity @(grid (entity/tile entity*))
-                       (entity/enemy-faction entity*)))
+  (nearest-entity @(grid (entity/tile entity*))
+                  (entity/enemy-faction entity*)))
 
 (defn ->npc-effect-ctx [ctx entity*]
   (let [target (nearest-enemy ctx entity*)

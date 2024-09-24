@@ -134,7 +134,7 @@
         circle {:position position :radius radius}]
     (draw-circle g position radius [1 0 0 0.5])
     (doseq [[x y] (map #(:position @%)
-                       (grid/circle->cells grid circle))]
+                       (circle->cells grid circle))]
       (draw-rectangle g x y 1 1 [1 0 0 0.5]))
     (let [{[x y] :left-bottom :keys [width height]} (geom/circle->outer-rectangle circle)]
       (draw-rectangle g x y width height [0 0 1 1]))))
@@ -238,7 +238,7 @@
                                   "none" :none
                                   "air"  :air
                                   "all"  :all)]
-                :context/raycaster grid/blocks-vision?
+                :context/raycaster blocks-vision?
                 content-grid [16 16]
                 :context/explored-tile-corners true}))
 

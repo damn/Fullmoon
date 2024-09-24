@@ -8,8 +8,7 @@
             [core.ctx :refer :all]
             [core.camera :as camera]
             [core.property :as property]
-            [core.ui :as ui]
-            [core.world.grid :as grid])
+            [core.ui :as ui])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil."
@@ -501,10 +500,10 @@
 
 (defn- valid-position? [grid {:keys [entity/id z-order] :as body}]
   {:pre [(:collides? body)]}
-  (let [cells* (into [] (map deref) (grid/rectangle->cells grid body))]
-    (and (not-any? #(grid/blocked? % z-order) cells*)
+  (let [cells* (into [] (map deref) (rectangle->cells grid body))]
+    (and (not-any? #(blocked? % z-order) cells*)
          (->> cells*
-              grid/cells->entities
+              cells->entities
               (not-any? (fn [other-entity]
                           (let [other-entity* @other-entity]
                             (and (not= (:entity/id other-entity*) id)
@@ -572,15 +571,15 @@
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
     (let [entity* @entity
-          cells* (map deref (grid/rectangle->cells (:context/grid ctx) entity*)) ; just use cached-touched -cells
+          cells* (map deref (rectangle->cells (:context/grid ctx) entity*)) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
                                        (collides? entity* @%))
-                                 (grid/cells->entities cells*))
+                                 (cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(grid/blocked? % (:z-order entity*)) cells*))
+                       (some #(blocked? % (:z-order entity*)) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
          [:e/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
@@ -594,7 +593,7 @@
 (defn- friendlies-in-radius [ctx position faction]
   (->> {:position position
         :radius shout-radius}
-       (grid/circle->entities (:context/grid ctx))
+       (circle->entities (:context/grid ctx))
        (map deref)
        (filter #(= (:entity/faction %) faction))
        (map :entity/id)))
@@ -936,8 +935,8 @@
   (let [player-entity* (player-entity* ctx)
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
-                          (grid/point->entities ctx
-                                                (world-mouse-position ctx))))]
+                          (point->entities ctx
+                                           (world-mouse-position ctx))))]
     (->> render-order
          (sort-by-order hits :z-order)
          reverse
