@@ -94,12 +94,12 @@
   [^Actor actor]
   (.remove actor))
 
-(defn parent ; used
+(defn parent
   "Returns the parent actor, or null if not in a group."
   [^Actor actor]
   (.getParent actor))
 
-(defn add-tooltip! ; used
+(defn add-tooltip!
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
   [^Actor actor tooltip-text]
   (let [text? (string? tooltip-text)
@@ -470,10 +470,10 @@
   "Returns true if the actor is a window title bar."
   [actor]
   (when (instance? Label actor)
-    (when-let [parent (parent actor)]
-      (when-let [parent (parent parent)]
+    (when-let [p (parent actor)]
+      (when-let [p (parent parent)]
         (and (instance? VisWindow parent)
-             (= (.getTitleLabel ^Window parent) actor))))))
+             (= (.getTitleLabel ^Window p) actor))))))
 
 (def ^:private image-file "images/moon_background.png")
 
