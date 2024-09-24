@@ -1,5 +1,6 @@
 (ns core.property
-  (:require [clojure.edn :as edn]
+  (:require [clojure.string :as str]
+            [clojure.edn :as edn]
             clojure.pprint
             [malli.core :as m]
             [malli.error :as me]

@@ -6,7 +6,6 @@
             [core.ui :as ui]
             [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
-            [core.world.time :as time]
             [core.effect :refer [->player-effect-ctx ->npc-effect-ctx skill-usable-state effect-applicable?] :as effect]
             [core.entity.inventory :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)
@@ -190,7 +189,7 @@
      :counter (->> skill
                    :skill/action-time
                    (apply-action-speed-modifier @eid skill)
-                   (time/->counter ctx))})
+                   (->counter ctx))})
 
   (player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
@@ -201,7 +200,7 @@
   (enter [_ ctx]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
-       [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (time/->counter ctx (:skill/cooldown skill))])
+       [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
@@ -212,13 +211,13 @@
       ; TODO some sound ?
       ]
 
-     (time/stopped? context counter)
+     (stopped? context counter)
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
   (entity/render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
-      (draw-skill-icon g image entity* (:position entity*) (time/finished-ratio ctx counter))
+      (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
       (run! #(effect/render % g (merge ctx effect-ctx)) effects))))
 
 (defcomponent :npc-dead
@@ -280,7 +279,7 @@
   (->mk [[_ eid movement-vector] ctx]
     {:eid eid
      :movement-vector movement-vector
-     :counter (time/->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
+     :counter (->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
 
   (enter [_ _ctx]
     [[:tx/set-movement eid {:direction movement-vector
@@ -290,7 +289,7 @@
     [[:tx/set-movement eid nil]])
 
   (entity/tick [_ eid ctx]
-    (when (time/stopped? ctx counter)
+    (when (stopped? ctx counter)
       [[:tx/event eid :timer-finished]])))
 
 (defcomponent :npc-sleeping
@@ -606,7 +605,7 @@
   {:let {:keys [eid counter]}}
   (->mk [[_ eid duration] ctx]
     {:eid eid
-     :counter (time/->counter ctx duration)})
+     :counter (->counter ctx duration)})
 
   (player-enter [_]
     [[:tx/cursor :cursors/denied]])
@@ -615,7 +614,7 @@
     false)
 
   (entity/tick [_ eid ctx]
-    (when (time/stopped? ctx counter)
+    (when (stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))
 
   (entity/render-below [_ entity* g _ctx]

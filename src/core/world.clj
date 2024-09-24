@@ -15,7 +15,6 @@
             [core.math.raycaster :as raycaster]
             [core.val-max :refer [val-max-ratio]]
             [core.world.grid :as grid]
-            [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
@@ -300,8 +299,14 @@
                                        (player/state-pause-game? ctx)
                                        (not (player-unpaused?))))))
 
+(defn- update-time [ctx delta]
+  (update ctx ctx-time #(-> %
+                            (assoc :delta-time delta)
+                            (update :elapsed + delta)
+                            (update :logic-frame inc))))
+
 (defn- update-world [ctx]
-  (let [ctx (time/update-time ctx (min (.getDeltaTime gdx-graphics) entity/max-delta-time))
+  (let [ctx (update-time ctx (min (.getDeltaTime gdx-graphics) entity/max-delta-time))
         active-entities (active-entities ctx)]
     (potential-fields/update! ctx active-entities)
     (try (entity/tick-entities! ctx active-entities)
@@ -323,7 +328,7 @@
                 ]))
 
 (defn- replay-frame! [ctx]
-  (let [frame-number (time/logic-frame ctx)
+  (let [frame-number (logic-frame ctx)
         txs [:foo]#_(ctx/frame->txs ctx frame-number)]
     ;(println frame-number ". " (count txs))
     (-> ctx
@@ -385,7 +390,7 @@
 (defn- debug-infos ^String [ctx]
   (let [world-mouse (world-mouse-position ctx)]
     (str
-     "logic-frame: " (time/logic-frame ctx) "\n"
+     "logic-frame: " (logic-frame ctx) "\n"
      "FPS: " (.getFramesPerSecond gdx-graphics)  "\n"
      "Zoom: " (camera/zoom (world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
@@ -393,7 +398,7 @@
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position ctx) "\n"
      "paused? " (:context/paused? ctx) "\n"
-     "elapsed-time " (readable-number (time/elapsed-time ctx)) " seconds \n"
+     "elapsed-time " (readable-number (elapsed-time ctx)) " seconds \n"
      (skill-info (player-entity* ctx))
      (when-let [entity* (mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))

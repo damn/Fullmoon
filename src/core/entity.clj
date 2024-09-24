@@ -9,8 +9,7 @@
             [core.camera :as camera]
             [core.property :as property]
             [core.ui :as ui]
-            [core.world.grid :as grid]
-            [core.world.time :as time])
+            [core.world.grid :as grid])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil."
@@ -315,7 +314,7 @@
 (defprotocol Animation
   (anim-tick [_ delta])
   (restart [_])
-  (stopped? [_])
+  (anim-stopped? [_])
   (current-frame [_]))
 
 (defrecord ImmutableAnimation [frames frame-duration looping? cnt maxcnt]
@@ -330,7 +329,7 @@
   (restart [this]
     (assoc this :cnt 0))
 
-  (stopped? [_]
+  (anim-stopped? [_]
     (and (not looping?) (>= cnt maxcnt)))
 
   (current-frame [this]
@@ -379,14 +378,14 @@
 
   (tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
-     [:e/assoc eid k (anim-tick animation (time/delta-time ctx))]]))
+     [:e/assoc eid k (anim-tick animation (delta-time ctx))]]))
 
 (defcomponent :entity/delete-after-animation-stopped?
   (create [_ entity _ctx]
     (-> @entity :entity/animation :looping? not assert))
 
   (tick [_ entity _ctx]
-    (when (stopped? (:entity/animation @entity))
+    (when (anim-stopped? (:entity/animation @entity))
       [[:e/destroy entity]])))
 
 (defcomponent :entity/clickable
@@ -405,13 +404,13 @@
 (defcomponent :entity/delete-after-duration
   {:let counter}
   (->mk [[_ duration] ctx]
-    (time/->counter ctx duration))
+    (->counter ctx duration))
 
   (info-text [_ ctx]
-    (str "[LIGHT_GRAY]Remaining: " (readable-number (time/finished-ratio ctx counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio ctx counter)) "/1[]"))
 
   (tick [_ eid ctx]
-    (when (time/stopped? ctx counter)
+    (when (stopped? ctx counter)
       [[:e/destroy eid]])))
 
 (defcomponent :entity/destroy-audiovisual
@@ -537,7 +536,7 @@
     (when-not (or (zero? (v/length direction))
                   (nil? speed)
                   (zero? speed))
-      (let [movement (assoc movement :delta-time (time/delta-time ctx))
+      (let [movement (assoc movement :delta-time (delta-time ctx))
             body @eid]
         (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
                           (try-move-solid-body (:context/grid ctx) body movement)
@@ -603,7 +602,7 @@
 (defcomponent :entity/alert-friendlies-after-duration
   {:let {:keys [counter faction]}}
   (tick [_ eid ctx]
-    (when (time/stopped? ctx counter)
+    (when (stopped? ctx counter)
       (cons [:e/destroy eid]
             (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
               [:tx/event friendly-eid :alert])))))
@@ -614,7 +613,7 @@
       position
       effect-body-props
       {:entity/alert-friendlies-after-duration
-       {:counter (time/->counter ctx delay-seconds)
+       {:counter (->counter ctx delay-seconds)
         :faction faction}}]]))
 
 (defcomponent :skill/action-time {:data :pos}
@@ -671,7 +670,7 @@
   (tick [[k skills] eid ctx]
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
-                     (time/stopped? ctx cooling-down?))]
+                     (stopped? ctx cooling-down?))]
       [:e/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
 (defn has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
@@ -693,7 +692,7 @@
 
 (defcomponent :entity/string-effect
   (tick [[k {:keys [counter]}] eid context]
-    (when (time/stopped? context counter)
+    (when (stopped? context counter)
       [[:e/dissoc eid k]]))
 
   (render-above [[_ {:keys [text]}] entity* g _ctx]
@@ -713,9 +712,9 @@
       (if-let [string-effect (:entity/string-effect @entity)]
         (-> string-effect
             (update :text str "\n" text)
-            (update :counter #(time/reset ctx %)))
+            (update :counter #(reset ctx %)))
         {:text text
-         :counter (time/->counter ctx 0.4)})]]))
+         :counter (->counter ctx 0.4)})]]))
 
 (def-type :properties/audiovisuals
   {:schema [:tx/sound
@@ -968,10 +967,10 @@
 (defcomponent :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
   (info-text [_ ctx]
-    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (time/finished-ratio ctx counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (finished-ratio ctx counter)) "/1[]"))
 
   (tick [[k _] eid ctx]
-    (when (time/stopped? ctx counter)
+    (when (stopped? ctx counter)
       [[:e/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
@@ -997,4 +996,4 @@
       (when-not (:entity/temp-modifier @target)
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
-                                                 :counter (time/->counter ctx duration)}]]))))
+                                                 :counter (->counter ctx duration)}]]))))
