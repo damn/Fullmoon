@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.ui.actor :as actor :refer [set-id! add-listener! set-name! add-tooltip! remove-tooltip!]]
             [core.ctx.ui :as ui]
-            [core.app :as app]
             [core.component :as component :refer [defcomponent]]
             [core.graphics :as g]
             [core.graphics.image :as image]
@@ -47,7 +46,7 @@
 (defn- draw-rect-actor ^Widget []
   (proxy [Widget] []
     (draw [_batch _parent-alpha]
-      (let [{g :context/graphics :as ctx} @app/state
+      (let [{g :context/graphics :as ctx} @app-state
             g (assoc g :unit-scale 1)
             player-entity* (player-entity* ctx)
             ^Widget this this]
@@ -66,7 +65,7 @@
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
-                             (swap! app/state #(effect! % (player/clicked-inventory % cell))))))
+                             (swap! app-state #(effect! % (player/clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]

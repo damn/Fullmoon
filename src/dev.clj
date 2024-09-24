@@ -1,6 +1,5 @@
 (ns ^:no-doc dev
-  (:require [core.app :as app]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.ctx.property :as property])
   (:import com.badlogic.gdx.Gdx))
 
@@ -42,13 +41,13 @@
             (comp #(str/split % #"-")
                   name
                   :property/id)
-            (property/all-properties @app/state :properties/items)))))))
+            (property/all-properties @app-state :properties/items)))))))
 
  )
 
 
 (defn- post-tx! [tx]
-  (.postRunnable Gdx/app #(swap! app/state effect! [tx])))
+  (.postRunnable Gdx/app #(swap! app-state effect! [tx])))
 
 (defn learn-skill! [skill-id]
   (post-tx! (fn [ctx]

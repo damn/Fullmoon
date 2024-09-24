@@ -2,7 +2,6 @@
   (:require [core.ctx :refer :all]
             [core.ctx.ui :as ui]
             [core.ui.group :as group]
-            [core.app :as app]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
             [core.screens.stage :as stage])
   (:import com.badlogic.gdx.Gdx
@@ -71,7 +70,7 @@
   )
 
 (comment
- (let [vis-image (first (group/children (.getRoot (stage/get @app/state))))]
+ (let [vis-image (first (group/children (.getRoot (stage/get @app-state))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -111,7 +110,7 @@
      #_(min (- (gui-viewport-height ctx) 50) (actor/height table))}))
 
 (defn show-tree-view! [obj]
-  (let [ctx @app/state
+  (let [ctx @app-state
         object (case obj
                  :ctx ctx
                  :entity (mouseover-entity* ctx)

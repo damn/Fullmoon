@@ -19,6 +19,9 @@
 
 (defrecord Context [])
 
+(def ^{:doc "An atom referencing the current context. Only use by ui-callbacks or for development/debugging."}
+  app-state (atom nil))
+
 ; TODO docstrings not avilable here ...
 (def play-sound! assets/play-sound!)
 (def texture     assets/texture)

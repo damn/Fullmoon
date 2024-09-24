@@ -152,6 +152,6 @@
 
  (.postRunnable com.badlogic.gdx.Gdx/app
   (fn []
-    (swap! core.app/state start-replay-mode!)))
+    (swap! app-state start-replay-mode!)))
 
  )

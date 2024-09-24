@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [core.utils.core :refer [safe-merge]]
-            [core.app :as app]
             [core.ctx :refer :all]
             [core.component :as component]
             [core.ctx.graphics :as graphics]
@@ -22,17 +21,17 @@
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
            (component/create-into context)
            screens/set-first-screen
-           (reset! app/state)))
+           (reset! app-state)))
 
     (dispose []
-      (run! component/destroy! @app/state))
+      (run! component/destroy! @app-state))
 
     (render []
       (ScreenUtils/clear Color/BLACK)
-      (screens/render! app/state))
+      (screens/render! app-state))
 
     (resize [w h]
-      (graphics/on-resize @app/state w h))))
+      (graphics/on-resize @app-state w h))))
 
 (defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
   ; can remove :pre, we are having a schema now

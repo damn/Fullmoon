@@ -3,8 +3,8 @@
             [malli.core :as m]
             [malli.generator :as mg]
             [core.utils.core :as utils :refer [index-of]]
-            [core.app :as app]
             [core.component :refer [defcomponent] :as component]
+            [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
@@ -201,7 +201,7 @@
     (group/add-actor! window
                       (ui/->actor {:act (fn [_ctx]
                                           (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
-                                            (swap! app/state save!)))}))
+                                            (swap! app-state save!)))}))
     (.pack window)
     window))
 
@@ -281,7 +281,7 @@
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)
                                         (do
-                                         (swap! app/state screens/change-screen :screens/main-menu)
+                                         (swap! app-state screens/change-screen :screens/main-menu)
                                          true)
                                         false))))
               stage)}))

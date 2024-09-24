@@ -1,5 +1,5 @@
 (ns core.ctx.ui
-  (:require [core.app :as app]
+  (:require [core.ctx :refer :all]
             [core.component :refer [defcomponent] :as component]
             core.graphics.image
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
@@ -111,7 +111,7 @@
 (defn- ->change-listener [on-clicked]
   (proxy [ChangeListener] []
     (changed [event actor]
-      (swap! app/state #(-> %
+      (swap! app-state #(-> %
                             (assoc :context/actor actor)
                             on-clicked
                             (dissoc :context/actor))))))
@@ -165,12 +165,12 @@
   (proxy [Actor] []
     (draw [_batch _parent-alpha]
       (when draw
-        (let [ctx @app/state
+        (let [ctx @app-state
               g (assoc (:context/graphics ctx) :unit-scale 1)]
           (draw g ctx))))
     (act [_delta]
       (when act
-        (act @app/state)))))
+        (act @app-state)))))
 
 (defn ->group [{:keys [actors] :as opts}]
   (let [group (group/proxy-ILookup Group [])]

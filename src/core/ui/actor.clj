@@ -1,6 +1,6 @@
 (ns core.ui.actor
   (:refer-clojure :exclude [name])
-  (:require [core.app :as app])
+  (:require [core.ctx :refer :all])
   (:import com.badlogic.gdx.utils.Align
            (com.badlogic.gdx.scenes.scene2d Actor Touchable)
            com.badlogic.gdx.scenes.scene2d.ui.Window
@@ -78,7 +78,7 @@
                   (getWidth []
                     (let [^Tooltip this this]
                       (when-not text?
-                        (when-let [ctx @app/state]  ; initial tooltip creation when app context is getting built.
+                        (when-let [ctx @app-state]  ; initial tooltip creation when app context is getting built.
                           (.setText this (str (tooltip-text ctx)))))
                       (proxy-super getWidth))))]
     (.setAlignment label Align/center)
