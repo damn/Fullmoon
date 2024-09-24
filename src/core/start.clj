@@ -7,6 +7,7 @@
             [core.ctx.screens :as screens]
             [core.ctx.property :as property])
   (:import org.lwjgl.system.Configuration
+           com.badlogic.gdx.Gdx
            com.badlogic.gdx.ApplicationAdapter
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.graphics.Color
@@ -15,6 +16,10 @@
 (defn- ->application [context]
   (proxy [ApplicationAdapter] []
     (create []
+      (.bindRoot #'core.ctx/gdx-app      Gdx/app)
+      (.bindRoot #'core.ctx/gdx-files    Gdx/files)
+      (.bindRoot #'core.ctx/gdx-input    Gdx/input)
+      (.bindRoot #'core.ctx/gdx-graphics Gdx/graphics)
       (->> context
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))

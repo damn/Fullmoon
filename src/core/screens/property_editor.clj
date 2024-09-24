@@ -12,7 +12,7 @@
             [core.ui.actor :as actor]
             [core.ui.group :as group]
             [core.ctx.ui :as ui])
-  (:import (com.badlogic.gdx Gdx Input$Keys)))
+  (:import com.badlogic.gdx.Input$Keys))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
 ; TODO save button show if changes made, otherwise disabled?
@@ -199,7 +199,7 @@
                                                         (ui/->text-button "Delete" delete!)]])]])
     (group/add-actor! window
                       (ui/->actor {:act (fn [_ctx]
-                                          (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
+                                          (when (.isKeyJustPressed gdx-input Input$Keys/ENTER)
                                             (swap! app-state save!)))}))
     (.pack window)
     window))

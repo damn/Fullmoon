@@ -1,7 +1,6 @@
 (ns core.graphics.views
   (:require [core.ctx :refer :all])
-  (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.graphics.OrthographicCamera
+  (:import com.badlogic.gdx.graphics.OrthographicCamera
            [com.badlogic.gdx.math MathUtils Vector2]
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)))
 
@@ -42,10 +41,10 @@
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [^Viewport viewport]
-  (let [mouse-x (clamp (.getX Gdx/input)
+  (let [mouse-x (clamp (.getX gdx-input)
                        (.getLeftGutterWidth viewport)
                        (.getRightGutterX viewport))
-        mouse-y (clamp (.getY Gdx/input)
+        mouse-y (clamp (.getY gdx-input)
                        (.getTopGutterHeight viewport)
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]

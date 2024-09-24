@@ -18,7 +18,13 @@
 (ns core.ctx
   (:require [clojure.string :as str]
             [core.utils.core :refer [index-of]])
-  (:import com.badlogic.gdx.graphics.Color))
+  (:import (com.badlogic.gdx Gdx Application Files Input)
+           com.badlogic.gdx.graphics.Color))
+
+(def ^{:tag Application}               gdx-app)
+(def ^{:tag Files}                     gdx-files)
+(def ^{:tag Input}                     gdx-input)
+(def ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
 
 (def ^{:doc "Map of all systems as key of name-string to var."} defsystems {})
 

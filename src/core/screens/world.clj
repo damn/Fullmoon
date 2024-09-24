@@ -17,13 +17,13 @@
             [core.world.render.tiled-map :as world-render]
             [core.world.render.debug :as debug-render]
             [core.world.ctx :refer [active-entities]])
-  (:import (com.badlogic.gdx Gdx Input$Keys)))
+  (:import com.badlogic.gdx.Input$Keys))
 
 (def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
-  (or (.isKeyJustPressed Gdx/input Input$Keys/P)
-      (.isKeyPressed     Gdx/input Input$Keys/SPACE)))
+  (or (.isKeyJustPressed gdx-input Input$Keys/P)
+      (.isKeyPressed     gdx-input Input$Keys/SPACE)))
 
 (defn- update-game-paused [ctx]
   (assoc ctx :context/paused? (or (:context/entity-tick-error ctx)
@@ -32,7 +32,7 @@
                                        (not (player-unpaused?))))))
 
 (defn- update-world [ctx]
-  (let [ctx (time/update-time ctx (min (.getDeltaTime Gdx/graphics) entity/max-delta-time))
+  (let [ctx (time/update-time ctx (min (.getDeltaTime gdx-graphics) entity/max-delta-time))
         active-entities (active-entities ctx)]
     (potential-fields/update! ctx active-entities)
     (try (ecs/tick-entities! ctx active-entities)
@@ -87,19 +87,19 @@
 
 (defn- check-zoom-keys [ctx]
   (let [camera (world-camera ctx)]
-    (when (.isKeyPressed Gdx/input Input$Keys/MINUS)  (adjust-zoom camera    zoom-speed))
-    (when (.isKeyPressed Gdx/input Input$Keys/EQUALS) (adjust-zoom camera (- zoom-speed)))))
+    (when (.isKeyPressed gdx-input Input$Keys/MINUS)  (adjust-zoom camera    zoom-speed))
+    (when (.isKeyPressed gdx-input Input$Keys/EQUALS) (adjust-zoom camera (- zoom-speed)))))
 
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
   (check-zoom-keys ctx)
   (widgets/check-window-hotkeys ctx)
-  (cond (and (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
+  (cond (and (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
              (not (widgets/close-windows? ctx)))
         (screens/change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen/render!
-        #_(.isKeyJustPressed Gdx/input Input$Keys/TAB)
+        #_(.isKeyJustPressed gdx-input Input$Keys/TAB)
         #_(screens/change-screen ctx :screens/minimap)
 
         :else
@@ -146,10 +146,10 @@
  ; for some reason he calls end of frame checks but cannot open windows with hotkeys
 
  (defn- start-replay-mode! [ctx]
-   (.setInputProcessor Gdx/input nil)
+   (.setInputProcessor gdx-input nil)
    (init-game-context ctx :mode :game-loop/replay))
 
- (.postRunnable com.badlogic.gdx.Gdx/app
+ (.postRunnable gdx-app
   (fn []
     (swap! app-state start-replay-mode!)))
 

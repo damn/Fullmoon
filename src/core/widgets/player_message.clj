@@ -1,8 +1,7 @@
 (ns ^:no-doc core.widgets.player-message
   (:require [core.ctx :refer :all]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
-            [core.ctx.ui :as ui])
-  (:import com.badlogic.gdx.Gdx))
+            [core.ctx.ui :as ui]))
 
 (def ^:private this :context/msg-to-player)
 
@@ -22,7 +21,7 @@
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (this ctx)]
-    (swap! app-state update this update :counter + (.getDeltaTime Gdx/graphics))
+    (swap! app-state update this update :counter + (.getDeltaTime gdx-graphics))
     (when (>= counter duration-seconds)
       (swap! app-state assoc this nil))))
 

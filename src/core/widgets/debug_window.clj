@@ -6,8 +6,7 @@
             [core.screens.stage :as stage]
             [core.ctx.time :as time]
             [core.ui.group :refer [add-actor!]]
-            [core.ctx.ui :as ui])
-  (:import com.badlogic.gdx.Gdx))
+            [core.ctx.ui :as ui]))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -20,7 +19,7 @@
   (let [world-mouse (world-mouse-position ctx)]
     (str
      "logic-frame: " (time/logic-frame ctx) "\n"
-     "FPS: " (.getFramesPerSecond Gdx/graphics)  "\n"
+     "FPS: " (.getFramesPerSecond gdx-graphics)  "\n"
      "Zoom: " (camera/zoom (world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"

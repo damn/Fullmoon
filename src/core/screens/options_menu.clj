@@ -7,7 +7,7 @@
             [core.screens.stage :as stage]
             [core.screen :as screen]
             [core.widgets.background-image :refer [->background-image]])
-  (:import (com.badlogic.gdx Gdx Input$Keys)))
+  (:import com.badlogic.gdx.Input$Keys))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -61,7 +61,7 @@
 
 (defcomponent ::sub-screen
   (screen/render [_ ctx]
-    (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
+    (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
       (screens/change-screen ctx :screens/world)
       ctx)))
 

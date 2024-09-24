@@ -11,7 +11,7 @@
             [core.widgets.entity-info-window :as entity-info-window]
             [core.widgets.hp-mana-bars :refer [->hp-mana-bars]]
             [core.widgets.inventory :as inventory])
-  (:import (com.badlogic.gdx Gdx Input$Keys)
+  (:import (com.badlogic.gdx Input$Keys)
            com.badlogic.gdx.scenes.scene2d.Stage
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
@@ -47,7 +47,7 @@
 
 (defn ^:no-doc check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
-          :when (.isKeyJustPressed Gdx/input hotkey)]
+          :when (.isKeyJustPressed gdx-input hotkey)]
     (actor/toggle-visible! (get (:windows (stage/get ctx)) window-id))))
 
 (defn ^:no-doc close-windows? [context]

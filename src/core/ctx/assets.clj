@@ -1,8 +1,7 @@
 (ns ^:no-doc core.ctx.assets
   (:require [clojure.string :as str]
             [core.ctx :refer :all])
-  (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.audio.Sound
+  (:import com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.files.FileHandle
            com.badlogic.gdx.graphics.Texture))
@@ -13,7 +12,7 @@
       (.get ^AssetManager this ^String file))))
 
 (defn- recursively-search [folder extensions]
-  (loop [[^FileHandle file & remaining] (.list (.internal Gdx/files folder))
+  (loop [[^FileHandle file & remaining] (.list (.internal gdx-files folder))
          result []]
     (cond (nil? file)
           result

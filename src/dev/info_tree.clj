@@ -4,13 +4,12 @@
             [core.ui.group :as group]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height world-mouse-position]]
             [core.screens.stage :as stage])
-  (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
+  (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
 
 (comment
 
- (.postRunnable Gdx/app (fn [] (show-tree-view! :ctx)))
+ (.postRunnable gdx-app (fn [] (show-tree-view! :ctx)))
  (show-tree-view! :entity)
  (show-tree-view! :tile)
 

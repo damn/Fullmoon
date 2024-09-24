@@ -14,7 +14,7 @@
             [core.entity.state :as state]
             [core.entity.inventory :as inventory]
             [core.player.interaction-state :refer [->interaction-state]])
-  (:import (com.badlogic.gdx Gdx Input$Buttons)))
+  (:import com.badlogic.gdx.Input$Buttons))
 
 (defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)
@@ -197,7 +197,7 @@
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state ctx @eid)]
         (cons [:tx/cursor cursor]
-              (when (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
+              (when (.isButtonJustPressed gdx-input Input$Buttons/LEFT)
                 (on-click))))))
 
   (state/clicked-inventory-cell [_ cell]
@@ -276,7 +276,7 @@
     true)
 
   (state/manual-tick [_ ctx]
-    (when (and (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
+    (when (and (.isButtonJustPressed gdx-input Input$Buttons/LEFT)
                (world-item? ctx))
       [[:tx/event eid :drop-item]]))
 

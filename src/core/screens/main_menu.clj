@@ -10,8 +10,7 @@
             [core.widgets.background-image :refer [->background-image]]
             [core.property.types.world :as level-generator]
             [core.ctx.ui :as ui])
-  (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.Input$Keys))
+  (:import com.badlogic.gdx.Input$Keys))
 
 (defn- start-game! [world-id]
   (fn [ctx]
@@ -27,7 +26,7 @@
                                       [(ui/->text-button "Map editor" #(screens/change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
                                       [(ui/->text-button "Property editor" #(screens/change-screen % :screens/property-editor))])
-                                    [(ui/->text-button "Exit" (fn [ctx] (.exit Gdx/app) ctx))]]))
+                                    [(ui/->text-button "Exit" (fn [ctx] (.exit gdx-app) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
 
@@ -40,8 +39,8 @@
   [(->background-image ctx)
    (->buttons ctx)
    (ui/->actor {:act (fn [_ctx]
-                       (when (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
-                         (.exit Gdx/app)))})])
+                       (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
+                         (.exit gdx-app)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu

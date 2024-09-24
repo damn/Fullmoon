@@ -16,7 +16,7 @@
             [core.property.types.world :as level-generator]
             core.world.gen.gen
             core.world.gen.modules)
-  (:import (com.badlogic.gdx Gdx Input$Keys)
+  (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.utils.Disposable))
 
@@ -96,19 +96,19 @@ direction keys: move")
 ; TODO textfield takes control !
 ; TODO PLUS symbol shift & = symbol on keyboard not registered
 (defn- camera-controls [context camera]
-  (when (.isKeyPressed Gdx/input Input$Keys/SHIFT_LEFT)
+  (when (.isKeyPressed gdx-input Input$Keys/SHIFT_LEFT)
     (adjust-zoom camera    zoom-speed))
-  (when (.isKeyPressed Gdx/input Input$Keys/MINUS)
+  (when (.isKeyPressed gdx-input Input$Keys/MINUS)
     (adjust-zoom camera (- zoom-speed)))
   (let [apply-position (fn [idx f]
                          (camera/set-position! camera
                                                (update (camera/position camera)
                                                        idx
                                                        #(f % camera-movement-speed))))]
-    (if (.isKeyPressed Gdx/input Input$Keys/LEFT)  (apply-position 0 -))
-    (if (.isKeyPressed Gdx/input Input$Keys/RIGHT) (apply-position 0 +))
-    (if (.isKeyPressed Gdx/input Input$Keys/UP)    (apply-position 1 +))
-    (if (.isKeyPressed Gdx/input Input$Keys/DOWN)  (apply-position 1 -))))
+    (if (.isKeyPressed gdx-input Input$Keys/LEFT)  (apply-position 0 -))
+    (if (.isKeyPressed gdx-input Input$Keys/RIGHT) (apply-position 0 +))
+    (if (.isKeyPressed gdx-input Input$Keys/UP)    (apply-position 1 +))
+    (if (.isKeyPressed gdx-input Input$Keys/DOWN)  (apply-position 1 -))))
 
 #_(def ^:private show-area-level-colors true)
 ; TODO unused
@@ -187,12 +187,12 @@ direction keys: move")
                                 (:tiled-map @current-data)
                                 (constantly Color/WHITE))
     (render-world-view context #(render-on-map % context))
-    (if (.isKeyJustPressed Gdx/input Input$Keys/L)
+    (if (.isKeyJustPressed gdx-input Input$Keys/L)
       (swap! current-data update :show-grid-lines not))
-    (if (.isKeyJustPressed Gdx/input Input$Keys/M)
+    (if (.isKeyJustPressed gdx-input Input$Keys/M)
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (world-camera context))
-    (if (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE)
+    (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
       (screens/change-screen context :screens/main-menu)
       context)))
 

@@ -5,7 +5,7 @@
             [core.ctx.screens :as screens]
             [core.graphics.views :refer [world-camera]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer])
-  (:import (com.badlogic.gdx Gdx Input$Keys)
+  (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
 
 ; 28.4 viewportwidth
@@ -56,8 +56,8 @@
                                                (camera/position (world-camera context))
                                                0.5
                                                Color/GREEN)))
-      (if (or (.isKeyJustPressed Gdx/input Input$Keys/TAB)
-              (.isKeyJustPressed Gdx/input Input$Keys/ESCAPE))
+      (if (or (.isKeyJustPressed gdx-input Input$Keys/TAB)
+              (.isKeyJustPressed gdx-input Input$Keys/ESCAPE))
         (screens/change-screen context :screens/world)
         context)))
 
