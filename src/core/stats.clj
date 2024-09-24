@@ -1,4 +1,4 @@
-(ns core.entity.stats
+(ns core.stats
   (:require [clojure.string :as str]
             #_[malli.core :as m]
             [core.utils.random :as random]
