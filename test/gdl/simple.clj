@@ -1,10 +1,9 @@
 #_(ns gdl.simple
-  (:require [core.component :as component]
-            [app.start :as app]
+  (:require [app.start :as app]
             [core.graphics.image :as image]))
 
 #_(defcomponent :gdl/simple
-  (component/create [[_ {:keys [font logo]}] ctx]
+  (->mk [[_ {:keys [font logo]}] ctx]
     {:special-font (ctx/generate-ttf ctx font)
      :logo (image/create ctx logo)}))
 

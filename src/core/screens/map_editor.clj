@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
-            [core.component :as component]
             [core.utils.core :refer [->tile]]
             [core.ctx.tiled-map-renderer :as tiled-map-renderer]
             [core.ctx.screens :as screens]
@@ -201,7 +200,7 @@ direction keys: move")
 
 (derive :screens/map-editor :screens/stage)
 (defcomponent :screens/map-editor
-  (component/create [_ ctx]
+  (->mk [_ ctx]
     {:sub-screen [::sub-screen
                   (atom {:tiled-map (tiled/load-map core.world.gen.modules/modules-file)
                          :show-movement-properties false

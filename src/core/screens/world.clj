@@ -1,6 +1,5 @@
 (ns ^:no-doc core.screens.world
   (:require [core.graphics.camera :as camera]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.ctx.ecs :as ecs]
             [core.entity :as entity]
@@ -118,7 +117,7 @@
 
 (derive :screens/world :screens/stage)
 (defcomponent :screens/world
-  (component/create [_ ctx]
+  (->mk [_ ctx]
     {:stage (stage/create ctx [])
      :sub-screen [::sub-screen]}))
 

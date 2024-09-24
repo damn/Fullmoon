@@ -45,27 +45,27 @@
 ; done at module-gen? but not custom tiledmap?
 (defn- ->world-map [{:keys [tiled-map start-position]}] ; == one object make ?! like graphics?
   ; grep context/grid -> all dependent stuff?
-  (component/create-into {:context/tiled-map tiled-map
-                          :context/start-position start-position}
-                         {:context/grid [(tiled/width  tiled-map)
-                                         (tiled/height tiled-map)
-                                       #(case (tiled/movement-property tiled-map %)
-                                          "none" :none
-                                          "air"  :air
-                                          "all"  :all)]
-                          :context/raycaster grid/blocks-vision?
-                          :context/content-grid [16 16]
-                          :context/explored-tile-corners true}))
+  (create-into {:context/tiled-map tiled-map
+                :context/start-position start-position}
+               {:context/grid [(tiled/width  tiled-map)
+                               (tiled/height tiled-map)
+                               #(case (tiled/movement-property tiled-map %)
+                                  "none" :none
+                                  "air"  :air
+                                  "all"  :all)]
+                :context/raycaster grid/blocks-vision?
+                :context/content-grid [16 16]
+                :context/explored-tile-corners true}))
 
 (defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
   (let [ctx (dissoc ctx :context/entity-tick-error)
         ctx (-> ctx
                 (merge {:context/game-loop-mode mode}
-                       (component/create-into ctx
-                                              {:context/ecs true
-                                               :context/time true
-                                               :context/widgets true
-                                               :context/effect-handler [mode record-transactions?]})))]
+                       (create-into ctx
+                                    {:context/ecs true
+                                     :context/time true
+                                     :context/widgets true
+                                     :context/effect-handler [mode record-transactions?]})))]
     (case mode
       :game-loop/normal (do
                          (when-let [tiled-map (:context/tiled-map ctx)]

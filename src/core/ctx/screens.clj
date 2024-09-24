@@ -1,16 +1,15 @@
 (ns core.ctx.screens
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.screen :as screen]))
 
 (defcomponent :context/screens
   {:data :some
    :let screen-ks}
-  (component/create [_ ctx]
-    {:screens (component/create-vs (zipmap screen-ks (repeat nil)) ctx)
+  (->mk [_ ctx]
+    {:screens (create-vs (zipmap screen-ks (repeat nil)) ctx)
      :first-screen (first screen-ks)})
 
-  (component/destroy! [_]
+  (destroy! [_]
     ; TODO screens not disposed https://github.com/damn/core/issues/41
     ))
 

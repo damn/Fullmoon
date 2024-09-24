@@ -2,7 +2,6 @@
   (:require [clj-commons.pretty.repl :as p]
             [core.utils.core :refer [safe-merge sort-by-order]]
             [core.ctx :refer :all]
-            [core.component :as component]
             [core.graphics :as g]
             [core.entity :as entity])
   (:import com.badlogic.gdx.graphics.Color))
@@ -10,7 +9,7 @@
 (def ^:private this :context/ecs)
 
 (defcomponent this
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     {}))
 
 (defn- entities [ctx] (this ctx))
@@ -52,7 +51,7 @@
                       (safe-merge (-> components
                                       (assoc :entity/id eid
                                              :entity/uid (unique-number!))
-                                      (component/create-vs ctx)))))
+                                      (create-vs ctx)))))
       (create-e-system eid))))
 
 (defcomponent :e/destroy

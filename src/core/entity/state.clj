@@ -114,7 +114,7 @@
   (assoc (fsm initial-state nil) :state initial-state))
 
 (defcomponent :entity/state
-  (component/create [[_ [player-or-npc initial-state]] _ctx]
+  (->mk [[_ [player-or-npc initial-state]] _ctx]
     {:initial-state initial-state
      :fsm (case player-or-npc
             :state/player player-fsm
@@ -122,7 +122,7 @@
 
   (entity/create [[k {:keys [fsm initial-state]}] eid ctx]
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
-     [:e/assoc eid initial-state (component/create [initial-state eid] ctx)]])
+     [:e/assoc eid initial-state (->mk [initial-state eid] ctx)]])
 
   (component/info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
@@ -143,7 +143,7 @@
           new-state-k (:state new-fsm)]
       (when-not (= old-state-k new-state-k)
         (let [old-state-obj (entity/state-obj @eid)
-              new-state-obj [new-state-k (component/create [new-state-k eid params] ctx)]]
+              new-state-obj [new-state-k (->mk [new-state-k eid params] ctx)]]
           [#(exit old-state-obj %)
            #(enter new-state-obj %)
            (when (:entity/player? @eid)

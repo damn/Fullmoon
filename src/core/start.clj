@@ -19,12 +19,12 @@
       (->> context
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
-           (component/create-into context)
+           (create-into context)
            screens/set-first-screen
            (reset! app-state)))
 
     (dispose []
-      (run! component/destroy! @app-state))
+      (run! destroy! @app-state))
 
     (render []
       (ScreenUtils/clear Color/BLACK)

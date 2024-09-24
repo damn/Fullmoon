@@ -14,7 +14,33 @@
 ; crazy ...
 ; 'gdl'
 (ns core.ctx
-  (:require [core.component :as component :refer [defsystem]]))
+  (:require [core.component :refer [defsystem]]))
+
+(defsystem ->mk "Create component value. Default returns v." [_ ctx])
+(defmethod ->mk :default [[_ v] _ctx] v)
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
+  [components ctx]
+  (reduce (fn [m [k v]]
+            (assoc m k (->mk [k v] ctx)))
+          {}
+          components))
+
+(defn create-into
+  "For every component `[k v]`  `(core.->mk [k v] ctx)` is non-nil
+  or false, assoc's at ctx k v"
+  [ctx components]
+  (assert (map? ctx))
+  (reduce (fn [ctx [k v]]
+            (if-let [v (->mk [k v] ctx)]
+              (assoc ctx k v)
+              ctx))
+          ctx
+          components))
+
+(defsystem destroy! "Side effect destroy resources. Default do nothing." [_])
+(defmethod destroy! :default [_])
 
 (def component-attributes {})
 
@@ -116,7 +142,7 @@ Example:
   (@frame->txs frame-number))
 
 (defcomponent :context/effect-handler
-  (component/create [[_ [game-loop-mode record-transactions?]] _ctx]
+  (->mk [[_ [game-loop-mode record-transactions?]] _ctx]
     (case game-loop-mode
       :game-loop/normal (when record-transactions?
                           (clear-recorded-txs!)

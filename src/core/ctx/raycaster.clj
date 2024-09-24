@@ -2,15 +2,14 @@
   (:require [core.math.raycaster :as raycaster]
             [core.math.vector :as v]
             [data.grid2d :as grid2d]
-            [core.ctx :refer :all]
-            [core.component :as component]))
+            [core.ctx :refer :all]))
 
 (defn- set-arr [arr cell* cell*->blocked?]
   (let [[x y] (:position cell*)]
     (aset arr x y (boolean (cell*->blocked? cell*)))))
 
 (defcomponent :context/raycaster
-  (component/create [[_ position->blocked?] {:keys [context/grid]}]
+  (->mk [[_ position->blocked?] {:keys [context/grid]}]
     (let [width  (grid2d/width  grid)
           height (grid2d/height grid)
           arr (make-array Boolean/TYPE width height)]

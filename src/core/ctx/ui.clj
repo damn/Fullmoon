@@ -1,6 +1,5 @@
 (ns core.ctx.ui
   (:require [core.ctx :refer :all]
-            [core.component :as component]
             core.graphics.image
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ui.actor :as actor]
@@ -37,7 +36,7 @@
 (defcomponent :context/vis-ui
   {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
    :let skin-scale}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (check-cleanup-visui!)
     (VisUI/load (case skin-scale
                   :skin-scale/x1 VisUI$SkinScale/X1
@@ -46,7 +45,7 @@
     (set-tooltip-config!)
     :loaded)
 
-  (component/destroy! [_]
+  (destroy! [_]
     (VisUI/dispose)))
 
 (defn cells [^Table table]

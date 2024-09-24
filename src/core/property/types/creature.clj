@@ -21,7 +21,7 @@
 
 (defcomponent :creature/species
   {:data [:qualified-keyword {:namespace :species}]}
-  (component/create [[_ species] _ctx]
+  (->mk [[_ species] _ctx]
     (str/capitalize (name species)))
   (component/info-text [[_ species] _ctx]
     (str "[LIGHT_GRAY]Creature - " species "[]")))

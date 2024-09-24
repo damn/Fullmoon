@@ -2,8 +2,7 @@
   (:require [core.math.geom :as geom]
             [core.utils.core :refer [->tile tile->middle]]
             [data.grid2d :as grid2d]
-            [core.ctx :refer :all]
-            [core.component :as component]))
+            [core.ctx :refer :all]))
 
 (defprotocol Grid
   (cached-adjacent-cells [grid cell])
@@ -165,7 +164,7 @@
     :occupied #{}}))
 
 (defcomponent this
-  (component/create [[_ [width height position->value]] _world]
+  (->mk [[_ [width height position->value]] _world]
     (grid2d/create-grid width
                         height
                         #(atom (create-cell % (position->value %))))))

@@ -7,7 +7,7 @@
 
 (defcomponent :entity/delete-after-duration
   {:let counter}
-  (component/create [[_ duration] ctx]
+  (->mk [[_ duration] ctx]
     (time/->counter ctx duration))
 
   (component/info-text [_ ctx]

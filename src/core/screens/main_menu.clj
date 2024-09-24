@@ -1,6 +1,5 @@
 (ns ^:no-doc core.screens.main-menu
   (:require [core.utils.core :refer [safe-get]]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.graphics.cursors :as cursors]
             [core.screen :as screen]
@@ -46,6 +45,6 @@
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu
-  (component/create [[k _] ctx]
+  (->mk [[k _] ctx]
     {:sub-screen [::sub-screen]
      :stage (stage/create ctx (->actors ctx))}))

@@ -38,7 +38,7 @@
 
 (defcomponent :active-skill
   {:let {:keys [eid skill effect-ctx counter]}}
-  (component/create [[_ eid [skill effect-ctx]] ctx]
+  (->mk [[_ eid [skill effect-ctx]] ctx]
     {:eid eid
      :skill skill
      :effect-ctx effect-ctx
@@ -78,7 +78,7 @@
 
 (defcomponent :npc-dead
   {:let {:keys [eid]}}
-  (component/create [[_ eid] _ctx]
+  (->mk [[_ eid] _ctx]
     {:eid eid})
 
   (state/enter [_ _ctx]
@@ -117,7 +117,7 @@
 
 (defcomponent :npc-idle
   {:let {:keys [eid]}}
-  (component/create [[_ eid] _ctx]
+  (->mk [[_ eid] _ctx]
     {:eid eid})
 
   (entity/tick [_ eid ctx]
@@ -132,7 +132,7 @@
 ; also prevents fast twitching around changing directions every frame
 (defcomponent :npc-moving
   {:let {:keys [eid movement-vector counter]}}
-  (component/create [[_ eid movement-vector] ctx]
+  (->mk [[_ eid movement-vector] ctx]
     {:eid eid
      :movement-vector movement-vector
      :counter (time/->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
@@ -150,7 +150,7 @@
 
 (defcomponent :npc-sleeping
   {:let {:keys [eid]}}
-  (component/create [[_ eid] _ctx]
+  (->mk [[_ eid] _ctx]
     {:eid eid})
 
   (state/exit [_ ctx]
@@ -188,7 +188,7 @@
 
 (defcomponent :player-idle
   {:let {:keys [eid]}}
-  (component/create [[_ eid] _ctx]
+  (->mk [[_ eid] _ctx]
     {:eid eid})
 
   (state/pause-game? [_]
@@ -270,7 +270,7 @@
 
 (defcomponent :player-item-on-cursor
   {:let {:keys [eid item]}}
-  (component/create [[_ eid item] _ctx]
+  (->mk [[_ eid item] _ctx]
     {:eid eid
      :item item})
 
@@ -314,7 +314,7 @@
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
-  (component/create [[_ eid movement-vector] _ctx]
+  (->mk [[_ eid movement-vector] _ctx]
     {:eid eid
      :movement-vector movement-vector})
 
@@ -339,7 +339,7 @@
 
 (defcomponent :stunned
   {:let {:keys [eid counter]}}
-  (component/create [[_ eid duration] ctx]
+  (->mk [[_ eid duration] ctx]
     {:eid eid
      :counter (time/->counter ctx duration)})
 

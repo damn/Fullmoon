@@ -77,7 +77,7 @@
 (defcomponent :entity/modifiers
   {:data [:components-ns :modifier]
    :let modifiers}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (into {} (for [[modifier-k operations] modifiers]
                [modifier-k (into {} (for [[operation-k value] operations]
                                       [operation-k [value]]))])))

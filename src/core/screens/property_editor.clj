@@ -273,7 +273,7 @@
 
 (derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
-  (component/create [_ ctx]
+  (->mk [_ ctx]
     {:stage (let [stage (stage/create ctx
                                       [(->background-image ctx)
                                        (->tabbed-pane (->tabs-data ctx))])]

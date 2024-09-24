@@ -1,6 +1,5 @@
 (ns ^:no-doc core.ctx.config
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.ctx.property :as property]))
 
 (property/def-attributes
@@ -10,5 +9,5 @@
 (defcomponent :context/config
   {:data [:map [:tag :configs]]
    :let {:keys [tag configs]}}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (get configs tag)))

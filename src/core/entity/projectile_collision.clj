@@ -1,13 +1,12 @@
 (ns ^:no-doc core.entity.projectile-collision
   (:require [core.utils.core :refer [find-first]]
-            [core.component :as component]
             [core.entity :as entity]
             [core.ctx :refer :all]
             [core.ctx.grid :as grid]))
 
 (defcomponent :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}
-  (component/create [[_ v] _ctx]
+  (->mk [[_ v] _ctx]
     (assoc v :already-hit-bodies #{}))
 
   ; TODO probably belongs to body

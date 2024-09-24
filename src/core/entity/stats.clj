@@ -183,7 +183,7 @@
                 [:stats/armor-save    {:optional true}]
                 [:stats/armor-pierce  {:optional true}]]]
    :let stats}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))

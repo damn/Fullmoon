@@ -27,34 +27,12 @@ So for a component `[k v]` it dispatches on the component-keyword `k`."
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(defsystem create "Create component value. Default returns v." [_ ctx])
-(defmethod create :default [[_ v] _ctx] v)
 
 (defsystem destroy! "Side effect destroy resources. Default do nothing." [_])
 (defmethod destroy! :default [_])
 
 (defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
 (defmethod info-text :default [_ ctx])
-
-(defn create-vs
-  "Creates a map for every component with map entries `[k (core.component/create [k v] ctx)]`."
-  [components ctx]
-  (reduce (fn [m [k v]]
-            (assoc m k (create [k v] ctx)))
-          {}
-          components))
-
-(defn create-into
-  "For every component `[k v]`  `(core.component/create [k v] ctx)` is non-nil
-  or false, assoc's at ctx k v"
-  [ctx components]
-  (assert (map? ctx))
-  (reduce (fn [ctx [k v]]
-            (if-let [v (create [k v] ctx)]
-              (assoc ctx k v)
-              ctx))
-          ctx
-          components))
 
 (def ^:private k-order
   [:property/pretty-name
@@ -94,7 +72,7 @@ So for a component `[k v]` it dispatches on the component-keyword `k`."
                (str (try (info-text component (assoc ctx :info-text/entity* components))
                          (catch Throwable t
                            ; calling from property-editor where entity components
-                           ; have a different data schema than after component/create
+                           ; have a different data schema than after ->mk
                            ; and info-text might break
                            (pr-str component)))
                     (when (map? v)

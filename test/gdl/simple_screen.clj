@@ -1,6 +1,5 @@
 #_(ns gdl.simple-screen
-  (:require [core.component :refer [defcomponent] :as component]
-            [core.graphics :as g])
+  (:require [core.graphics :as g])
   (:import com.badlogic.gdx.graphics.Color))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
@@ -29,5 +28,5 @@
     (ctx/render-gui-view ctx #(draw-test % ctx))))
 
 #_(defcomponent :gdl/simple-screen
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (->Screen)))

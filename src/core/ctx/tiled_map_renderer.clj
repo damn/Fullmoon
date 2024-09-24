@@ -1,6 +1,5 @@
 (ns core.ctx.tiled-map-renderer
   (:require [core.tiled :as tiled]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.graphics.views :refer [world-camera]]
             [core.graphics :as g])
@@ -22,7 +21,7 @@
 
 (defcomponent :context/tiled-map-renderer
   {:data :some}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (memoize map-renderer-for)))
 
 (defn render!

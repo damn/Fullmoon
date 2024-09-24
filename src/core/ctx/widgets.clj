@@ -1,6 +1,5 @@
 (ns core.ctx.widgets
   (:require [core.utils.core :as utils]
-            [core.component :as component]
             [core.ctx :refer :all]
             [core.ui.actor :as actor]
             [core.ui.group :as group]
@@ -29,10 +28,10 @@
                          (entity-info-window/create ctx)
                          (inventory/->build ctx widget-data)]})
    (ui/->actor {:draw draw-item-on-cursor})
-   (component/create [:widgets/player-message] ctx)])
+   (->mk [:widgets/player-message] ctx)])
 
 (defcomponent :context/widgets
-  (component/create [_ ctx]
+  (->mk [_ ctx]
     (let [widget-data {:action-bar (action-bar/->button-group)
                        :slot->background (inventory/->data ctx)}
           stage (stage/get ctx)]

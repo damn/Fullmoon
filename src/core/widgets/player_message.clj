@@ -1,6 +1,5 @@
 (ns ^:no-doc core.widgets.player-message
   (:require [core.ctx :refer :all]
-            [core.component :as component]
             [core.graphics :as g]
             [core.graphics.views :refer [gui-viewport-width gui-viewport-height]]
             [core.ctx.ui :as ui])
@@ -29,6 +28,6 @@
       (swap! app-state assoc this nil))))
 
 (defcomponent :widgets/player-message
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (ui/->actor {:draw draw-player-message
                  :act check-remove-message})))

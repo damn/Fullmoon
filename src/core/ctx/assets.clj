@@ -1,7 +1,6 @@
 (ns ^:no-doc core.ctx.assets
   (:require [clojure.string :as str]
-            [core.ctx :refer :all]
-            [core.component :as component])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
@@ -46,7 +45,7 @@
                 sound-file-extensions
                 image-file-extensions
                 log?]}}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (let [manager (->asset-manager)
           sound-files   (asset-files folder sound-file-extensions)
           texture-files (asset-files folder image-file-extensions)]

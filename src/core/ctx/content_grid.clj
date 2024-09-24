@@ -1,7 +1,6 @@
 (ns ^:no-doc core.ctx.content-grid
   (:require [data.grid2d :as grid2d]
-            [core.ctx :refer :all]
-            [core.component :as component]))
+            [core.ctx :refer :all]))
 
 (def ^:private this :context/content-grid)
 
@@ -34,7 +33,7 @@
 
 (defcomponent this
   {:let [cell-w cell-h]}
-  (component/create [_ {:keys [context/grid]}]
+  (->mk [_ {:keys [context/grid]}]
     {:grid (grid2d/create-grid (inc (int (/ (grid2d/width grid) cell-w))) ; inc because corners
                                (inc (int (/ (grid2d/height grid) cell-h)))
                                (fn [idx]

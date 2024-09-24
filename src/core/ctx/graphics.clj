@@ -1,6 +1,5 @@
 (ns ^:no-doc core.ctx.graphics
-  (:require [core.component :as component]
-            [core.ctx :refer :all]
+  (:require [core.ctx :refer :all]
             [core.ctx.property :as property]
             [core.graphics :as g]
             (core.graphics cursors
@@ -28,7 +27,7 @@
 (defcomponent :context/graphics
   {:data [:map [:cursors :default-font :views]]
    :let {:keys [views default-font cursors]}}
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     (core.graphics/map->Graphics
      (let [batch (SpriteBatch.)]
        (merge {:batch batch}
@@ -37,7 +36,7 @@
               (core.graphics.views/->build views)
               (core.graphics.cursors/->build cursors)))))
 
-  (component/destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
+  (destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
     (.dispose ^Disposable batch)
     (.dispose ^Disposable shape-drawer-texture)
     (.dispose ^Disposable default-font)

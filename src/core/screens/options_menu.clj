@@ -3,7 +3,6 @@
             [core.utils.ns :as ns]
             [core.ctx.ui :as ui]
             [core.ctx :refer :all]
-            [core.component :as component]
             [core.ctx.screens :as screens]
             [core.screens.stage :as stage]
             [core.screen :as screen]
@@ -68,7 +67,7 @@
 
 (derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
-  (component/create [_ ctx]
+  (->mk [_ ctx]
     {:stage (stage/create ctx
                           [(->background-image ctx)
                            (create-table ctx)])

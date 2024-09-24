@@ -1,11 +1,10 @@
 (ns core.ctx.time
-  (:require [core.ctx :refer :all]
-            [core.component :as component]))
+  (:require [core.ctx :refer :all]))
 
 (def ^:private this :context/time)
 
 (defcomponent this
-  (component/create [_ _ctx]
+  (->mk [_ _ctx]
     {:elapsed 0
      :logic-frame 0}))
 
