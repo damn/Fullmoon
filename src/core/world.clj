@@ -15,6 +15,7 @@
             [core.widgets.error-modal :refer [error-window!]]
             [core.widgets.background-image :refer [->background-image]]
             [core.math.geom :as geom]
+            [core.math.raycaster :as raycaster]
             [core.world.ecs :as ecs]
             [core.world.widgets :as widgets]
             [core.world.content-grid :as content-grid]
@@ -290,12 +291,12 @@
   (render-map ctx (camera/position (world-camera ctx)))
   (render-world-view ctx
                      (fn [g]
-                       (debug-render/before-entities ctx g)
+                       (before-entities ctx g)
                        (ecs/render-entities! ctx
                                              g
                                              (->> (active-entities ctx)
                                                   (map deref)))
-                       (debug-render/after-entities ctx g))))
+                       (after-entities ctx g))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
