@@ -476,3 +476,6 @@ Default method returns true."
     (get configs tag)))
 
 (defn dispose [obj] (Disposable/.dispose obj))
+
+(defprotocol ActiveEntities
+  (active-entities [_]))

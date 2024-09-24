@@ -21,7 +21,7 @@
       ::content-cell
       (swap! update :entities disj entity)))
 
-(defn active-entities [ctx center-entity*]
+(defn active-entities* [ctx center-entity*]
   (let [{:keys [grid]} (this ctx)]
     (->> (let [idx (-> center-entity*
                        ::content-cell

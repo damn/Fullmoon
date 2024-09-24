@@ -22,7 +22,7 @@
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields]
             [core.world.render.tiled-map :as world-render]
-            [core.world.render.debug :as debug-render]  )
+            [core.world.render.debug :as debug-render])
   (:import com.badlogic.gdx.Input$Keys))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
@@ -100,8 +100,10 @@
                      :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
-(defn active-entities [ctx]
-  (content-grid/active-entities ctx (player-entity* ctx)))
+(extend-type core.ctx.Context
+  ActiveEntities
+  (active-entities [ctx]
+    (content-grid/active-entities* ctx (player-entity* ctx))))
 
 (defcomponent :tx/add-to-world
   (do! [[_ entity] ctx]
