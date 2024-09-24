@@ -5,8 +5,7 @@
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.inventory :as inventory]
-            [core.entity.player :as player]
-            [core.stage :as stage])
+            [core.entity.player :as player])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
@@ -125,7 +124,7 @@
   (slot->background ctx))
 
 (defn- get-inventory [ctx]
-  {:table (::table (get (:windows (stage/get ctx)) :inventory-window))
+  {:table (::table (get (:windows (ui/stage-get ctx)) :inventory-window))
    :slot->background (:slot->background (:context/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget

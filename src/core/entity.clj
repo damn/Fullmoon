@@ -9,7 +9,6 @@
             [core.graphics.camera :as camera]
             [core.property :as property]
             [core.ui :as ui]
-            [core.stage :as stage]
             [core.world.grid :as grid]
             [core.world.time :as time])
   (:import com.badlogic.gdx.graphics.Color))
@@ -956,7 +955,7 @@
       @entity)))
 
 (defn update-mouseover-entity [ctx]
-  (let [entity (if (stage/mouse-on-actor? ctx)
+  (let [entity (if (ui/mouse-on-actor? ctx)
                  nil
                  (calculate-mouseover-entity ctx))]
     [(when-let [old-entity (ctx-mouseover-entity ctx)]

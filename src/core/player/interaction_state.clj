@@ -2,7 +2,6 @@
   (:require [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]
-            [core.stage :as stage]
             [core.effect :refer [->player-effect-ctx skill-usable-state]]
             [core.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.ui :as ui])
@@ -14,7 +13,7 @@
       (actor/id skill-button))))
 
 (defn- inventory-window [ctx]
-  (get (:windows (stage/get ctx)) :inventory-window))
+  (get (:windows (ui/stage-get ctx)) :inventory-window))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -69,7 +68,7 @@
                (actor/id (parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]
-  (let [actor (stage/mouse-on-actor? ctx)]
+  (let [actor (ui/mouse-on-actor? ctx)]
     (cond
      (inventory-cell-with-item? ctx actor) :cursors/hand-before-grab
      (ui/window-title-bar? actor) :cursors/move-window
@@ -79,7 +78,7 @@
 (defn ->interaction-state [context entity*]
   (let [mouseover-entity* (mouseover-entity* context)]
     (cond
-     (stage/mouse-on-actor? context)
+     (ui/mouse-on-actor? context)
      [(mouseover-actor->cursor context)
       (fn []
         nil)] ; handled by actors themself, they check player state

@@ -2,8 +2,6 @@
   (:require [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.ui :as ui]
-            [core.group :as group]
-            [core.stage :as stage]
             core.property)
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
@@ -226,14 +224,14 @@
     (add-elements! node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! node (children->str-map (group/children (.getRoot v))) level))
+    (add-map-nodes! node (children->str-map (ui/children (.getRoot v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
-    (add-map-nodes! node (children->str-map (group/children v)) level))
+    (add-map-nodes! node (children->str-map (ui/children v)) level))
   )
 
 (comment
- (let [vis-image (first (group/children (.getRoot (stage/get @app-state))))]
+ (let [vis-image (first (ui/children (.getRoot (ui/stage-get @app-state))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -278,10 +276,10 @@
                  :ctx ctx
                  :entity (mouseover-entity* ctx)
                  :tile @(get (:context/grid ctx) (mapv int (world-mouse-position ctx))))]
-    (stage/add-actor! ctx
-                      (ui/->window {:title "Tree View"
-                                    :close-button? true
-                                    :close-on-escape? true
-                                    :center? true
-                                    :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
-                                    :pack? true}))))
+    (ui/stage-add! ctx
+                   (ui/->window {:title "Tree View"
+                                 :close-button? true
+                                 :close-on-escape? true
+                                 :center? true
+                                 :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
+                                 :pack? true}))))

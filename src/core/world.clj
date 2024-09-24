@@ -3,10 +3,8 @@
             [core.utils.core :as utils]
             [core.actor :as actor]
             [core.ctx :refer :all]
-            [core.group :as group]
             [core.tiled :as tiled]
             [core.screens :as screens]
-            [core.stage :as stage]
             [core.property :as property]
             [core.graphics :as graphics]
             [core.graphics.camera :as camera]
@@ -403,7 +401,7 @@
      (when-let [entity* (mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
-     #_(when-let [actor (stage/mouse-on-actor? ctx)]
+     #_(when-let [actor (ui/mouse-on-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
               "id: " (gdx.scene2d.actor/id actor)
               )))))
@@ -415,10 +413,9 @@
                              :visible? false
                              :position [0 (gui-viewport-height context)]
                              :rows [[label]]})]
-    (group/add-actor! window
-                      (ui/->actor {:act #(do
-                                          (.setText label (debug-infos %))
-                                          (.pack window))}))
+    (ui/add-actor! window (ui/->actor {:act #(do
+                                              (.setText label (debug-infos %))
+                                              (.pack window))}))
     window))
 
 (def ^:private disallowed-keys [:entity/skills
@@ -435,21 +432,19 @@
                              :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
-    (group/add-actor!
-     window
-     (ui/->actor {:act (fn update-label-text [ctx]
-                         ; items then have 2x pretty-name
-                         #_(.setText (.getTitleLabel window)
-                                     (if-let [entity* (mouseover-entity* ctx)]
-                                       (info-text [:property/pretty-name (:property/pretty-name entity*)])
-                                       "Entity Info"))
-                         (.setText label
-                                   (str (when-let [entity* (mouseover-entity* ctx)]
-                                          (->info-text
-                                           ; don't use select-keys as it loses core.entity.Entity record type
-                                           (apply dissoc entity* disallowed-keys)
-                                           ctx))))
-                         (.pack window))}))
+    (ui/add-actor! window (ui/->actor {:act (fn update-label-text [ctx]
+                                              ; items then have 2x pretty-name
+                                              #_(.setText (.getTitleLabel window)
+                                                          (if-let [entity* (mouseover-entity* ctx)]
+                                                            (info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                            "Entity Info"))
+                                              (.setText label
+                                                        (str (when-let [entity* (mouseover-entity* ctx)]
+                                                               (->info-text
+                                                                ; don't use select-keys as it loses core.entity.Entity record type
+                                                                (apply dissoc entity* disallowed-keys)
+                                                                ctx))))
+                                              (.pack window))}))
     window))
 
 (def ^:private image-scale 2)
@@ -464,7 +459,7 @@
                       :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
-  {:horizontal-group (::action-bar (:action-bar-table (stage/get ctx)))
+  {:horizontal-group (::action-bar (:action-bar-table (ui/stage-get ctx)))
    :button-group (:action-bar (:context/widgets ctx))})
 
 (defcomponent :tx.action-bar/add
@@ -474,7 +469,7 @@
       (actor/set-id! button id)
       (actor/add-tooltip! button
                           #(->info-text skill (assoc % :effect/source (player-entity %))))
-      (group/add-actor! horizontal-group button)
+      (ui/add-actor! horizontal-group button)
       (.add ^ButtonGroup button-group ^Button button)
       ctx)))
 
@@ -573,7 +568,7 @@
   (->mk [_ ctx]
     (let [widget-data {:action-bar (->action-bar-button-group)
                        :slot->background (inventory/->data ctx)}
-          stage (stage/get ctx)]
+          stage (ui/stage-get ctx)]
       (.clear stage)
       (run! #(.addActor stage %) (->ui-actors ctx widget-data))
       widget-data)))
@@ -587,10 +582,10 @@
 (defn- check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
           :when (.isKeyJustPressed gdx-input hotkey)]
-    (actor/toggle-visible! (get (:windows (stage/get ctx)) window-id))))
+    (actor/toggle-visible! (get (:windows (ui/stage-get ctx)) window-id))))
 
 (defn- close-windows?! [context]
-  (let [windows (group/children (:windows (stage/get context)))]
+  (let [windows (ui/children (:windows (ui/stage-get context)))]
     (if (some actor/visible? windows)
       (do
        (run! #(actor/set-visible! % false) windows)
@@ -634,7 +629,7 @@
 (derive :screens/world :screens/stage)
 (defcomponent :screens/world
   (->mk [_ ctx]
-    {:stage (stage/create ctx [])
+    {:stage (ui/->stage ctx [])
      :sub-screen [:world/sub-screen]}))
 
 (comment
@@ -705,7 +700,7 @@
 (defcomponent :screens/main-menu
   (->mk [[k _] ctx]
     {:sub-screen [:main/sub-screen]
-     :stage (stage/create ctx (->actors ctx))}))
+     :stage (ui/->stage ctx (->actors ctx))}))
 
 (defprotocol StatusCheckBox
   (get-text [this])
@@ -766,7 +761,5 @@
 (derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
   (->mk [_ ctx]
-    {:stage (stage/create ctx
-                          [(ui/->background-image ctx)
-                           (create-table ctx)])
+    {:stage (ui/->stage ctx [(ui/->background-image ctx) (create-table ctx)])
      :sub-screen [:options/sub-screen]}))

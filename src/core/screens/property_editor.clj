@@ -6,9 +6,7 @@
             [core.ctx :refer :all]
             [core.property :as property]
             [core.screens :as screens]
-            [core.stage :as stage]
             [core.actor :as actor]
-            [core.group :as group]
             [core.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys))
 
@@ -88,15 +86,15 @@
                              [(ui/->text-button (name k)
                                                 (fn [ctx]
                                                   (actor/remove! window)
-                                                  (group/add-actor! attribute-widget-group
-                                                                    (->component-widget ctx
-                                                                                        [k (get k-props k) (k->default-value k)]
-                                                                                        :horizontal-sep?
-                                                                                        (pos? (count (group/children attribute-widget-group)))))
+                                                  (ui/add-actor! attribute-widget-group
+                                                                 (->component-widget ctx
+                                                                                     [k (get k-props k) (k->default-value k)]
+                                                                                     :horizontal-sep?
+                                                                                     (pos? (count (ui/children attribute-widget-group)))))
                                                   (actor/pack-ancestor-window! attribute-widget-group)
                                                   ctx))]))
       (.pack window)
-      (stage/add-actor! ctx window))))
+      (ui/stage-add! ctx window))))
 
 (declare ->attribute-widget-group)
 
@@ -151,7 +149,7 @@
     table))
 
 (defn- attribute-widget-table->value-widget [table]
-  (-> table group/children last))
+  (-> table ui/children last))
 
 (defn- ->component-widgets [ctx schema props]
   (let [first-row? (atom true)
@@ -165,7 +163,7 @@
   (ui/->vertical-group (->component-widgets ctx schema props)))
 
 (defn- attribute-widget-group->data [group]
-  (into {} (for [k (map actor/id (group/children group))
+  (into {} (for [k (map actor/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
              [k (property/widget->value (property/data-component k) value-widget)])))
@@ -195,7 +193,7 @@
     (ui/add-rows! window [[(ui/->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
                                                        [(ui/->text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                         (ui/->text-button "Delete" delete!)]])]])
-    (group/add-actor! window
+    (ui/add-actor! window
                       (ui/->actor {:act (fn [_ctx]
                                           (when (.isKeyJustPressed gdx-input Input$Keys/ENTER)
                                             (swap! app-state save!)))}))
@@ -259,7 +257,7 @@
     main-table))
 
 (defn- open-property-editor-window! [context property-id]
-  (stage/add-actor! context (->property-editor-window context property-id)))
+  (ui/stage-add! context (->property-editor-window context property-id)))
 
 (defn- ->tabs-data [ctx]
   (for [property-type (sort (property/types))]
@@ -271,9 +269,8 @@
 (derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
   (->mk [_ ctx]
-    {:stage (let [stage (stage/create ctx
-                                      [(ui/->background-image ctx)
-                                       (->tabbed-pane (->tabs-data ctx))])]
+    {:stage (let [stage (ui/->stage ctx [(ui/->background-image ctx)
+                                         (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)
@@ -318,7 +315,7 @@
 
 (defn- add-one-to-many-rows [ctx table property-type property-ids]
   (let [redo-rows (fn [ctx property-ids]
-                    (group/clear-children! table)
+                    (ui/clear-children! table)
                     (add-one-to-many-rows ctx table property-type property-ids)
                     (actor/pack-ancestor-window! table))]
     (ui/add-rows!
@@ -336,7 +333,7 @@
                                                  ctx)]
                              (ui/add! window (->overview-table ctx property-type clicked-id-fn))
                              (.pack window)
-                             (stage/add-actor! ctx window))))]
+                             (ui/stage-add! ctx window))))]
       (for [property-id property-ids]
         (let [property (build-property ctx property-id)
               image-widget (ui/->image-widget (property/->image property)
@@ -355,13 +352,13 @@
     table))
 
 (defmethod property/widget->value :one-to-many [_ widget]
-  (->> (group/children widget)
+  (->> (ui/children widget)
        (keep actor/id)
        set))
 
 (defn- add-one-to-one-rows [ctx table property-type property-id]
   (let [redo-rows (fn [ctx id]
-                    (group/clear-children! table)
+                    (ui/clear-children! table)
                     (add-one-to-one-rows ctx table property-type id)
                     (actor/pack-ancestor-window! table))]
     (ui/add-rows!
@@ -380,7 +377,7 @@
                                                    ctx)]
                                (ui/add! window (->overview-table ctx property-type clicked-id-fn))
                                (.pack window)
-                               (stage/add-actor! ctx window)))))]
+                               (ui/stage-add! ctx window)))))]
       [(when property-id
          (let [property (build-property ctx property-id)
                image-widget (ui/->image-widget (property/->image property)
@@ -399,4 +396,4 @@
     table))
 
 (defmethod property/widget->value :one-to-one [_ widget]
-  (->> (group/children widget) (keep actor/id) first))
+  (->> (ui/children widget) (keep actor/id) first))

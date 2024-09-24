@@ -2,11 +2,10 @@
   (:require [clj-commons.pretty.repl :as p]
             [core.ctx :refer :all]
             [core.actor :as actor]
-            [core.group :as group]
-            [core.stage :as stage])
+            [core.screens :as screens])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
-           (com.badlogic.gdx.scenes.scene2d Actor Group)
+           (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Label Image Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
@@ -47,6 +46,76 @@
 
   (destroy! [_]
     (VisUI/dispose)))
+
+(defn children
+  "Returns an ordered list of child actors in this group."
+  [^Group group]
+  (seq (.getchildren group)))
+
+(defn clear-children!
+  "Removes all actors from this group and unfocuses them."
+  [^Group group]
+  (.clearChildren group))
+
+(defn add-actor!
+  "Adds an actor as a child of this group, removing it from its previous parent. If the actor is already a child of this group, no changes are made."
+  [^Group group actor]
+  (.addActor group actor))
+
+(defn- find-actor-with-id [group id]
+  (let [actors (children group)
+        ids (keep actor/id actors)]
+    (assert (or (empty? ids)
+                (apply distinct? ids)) ; TODO could check @ add
+            (str "Actor ids are not distinct: " (vec ids)))
+    (first (filter #(= id (actor/id %))
+                   actors))))
+
+; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
+(defcomponent :screens/stage
+  {:let {:keys [^Stage stage sub-screen]}}
+  (screen-enter [_ context]
+    (.setInputProcessor gdx-input stage)
+    (screen-enter sub-screen context))
+
+  (screen-exit [_ context]
+    (.setInputProcessor gdx-input nil)
+    (screen-exit sub-screen context))
+
+  (screen-render! [_ app-state]
+    ; stage act first so user-screen calls change-screen -> is the end of frame
+    ; otherwise would need render-after-stage
+    ; or on change-screen the stage of the current screen would still .act
+    (.act stage)
+    (swap! app-state #(screen-render sub-screen %))
+    (.draw stage)))
+
+(defn- ->stage* ^Stage [viewport batch]
+  (proxy [Stage clojure.lang.ILookup] [viewport batch]
+    (valAt
+      ([id]
+       (ui/find-actor-with-id (.getRoot ^Stage this) id))
+      ([id not-found]
+       (or (ui/find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
+
+(defn ->stage
+  "Stage implements clojure.lang.ILookup (get) on actor id."
+  [{{:keys [gui-view batch]} :context/graphics} actors]
+  (let [stage (->stage (:viewport gui-view) batch)]
+    (run! #(.addActor stage %) actors)
+    stage))
+
+(defn stage-get ^Stage [context]
+  (:stage ((screens/current-screen context) 1)))
+
+(defn mouse-on-actor? [context]
+  (let [[x y] (gui-mouse-position context)
+        touchable? true]
+    (.hit (stage-get context) x y touchable?)))
+
+(defn stage-add! [ctx actor]
+  (-> ctx stage-get (.addActor actor))
+  ctx)
 
 (defn cells [^Table table]
   (.getCells table))
@@ -177,13 +246,13 @@
   `(proxy [~class clojure.lang.ILookup] ~args
      (valAt
        ([id#]
-        (group/find-actor-with-id ~'this id#))
+        (find-actor-with-id ~'this id#))
        ([id# not-found#]
-        (or (group/find-actor-with-id ~'this id#) not-found#)))))
+        (or (find-actor-with-id ~'this id#) not-found#)))))
 
 (defn ->group [{:keys [actors] :as opts}]
   (let [group (proxy-ILookup Group [])]
-    (run! #(group/add-actor! group %) actors)
+    (run! #(add-actor! group %) actors)
     (set-opts group opts)))
 
 (defn ->horizontal-group [{:keys [space pad]}]
@@ -194,7 +263,7 @@
 
 (defn ->vertical-group [actors]
   (let [group (proxy-ILookup VerticalGroup [])]
-    (run! #(group/add-actor! group %) actors)
+    (run! #(add-actor! group %) actors)
     group))
 
 (defn ->button-group [{:keys [max-check-count min-check-count]}]
@@ -343,16 +412,16 @@
 (defn error-window! [ctx throwable]
   (binding [*print-level* 5]
     (p/pretty-pst throwable 24))
-  (stage/add-actor! ctx
-                    (->window {:title "Error"
-                               :rows [[(->label (binding [*print-level* 3]
-                                                  (with-err-str
-                                                    (clojure.repl/pst throwable))))]]
-                               :modal? true
-                               :close-button? true
-                               :close-on-escape? true
-                               :center? true
-                               :pack? true})))
+  (ui/stage-add! ctx
+                 (->window {:title "Error"
+                            :rows [[(->label (binding [*print-level* 3]
+                                               (with-err-str
+                                                 (clojure.repl/pst throwable))))]]
+                            :modal? true
+                            :close-button? true
+                            :close-on-escape? true
+                            :center? true
+                            :pack? true})))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?
@@ -360,19 +429,19 @@
 ; hmmm interesting ... can disable @ item in cursor  / moving / etc.
 
 (defn- show-player-modal! [ctx {:keys [title text button-text on-click]}]
-  (assert (not (::modal (stage/get ctx))))
-  (stage/add-actor! ctx
-                    (->window {:title title
-                               :rows [[(->label text)]
-                                      [(->text-button button-text
-                                                      (fn [ctx]
-                                                        (actor/remove! (::modal (stage/get ctx)))
-                                                        (on-click ctx)))]]
-                               :id ::modal
-                               :modal? true
-                               :center-position [(/ (gui-viewport-width ctx) 2)
-                                                 (* (gui-viewport-height ctx) (/ 3 4))]
-                               :pack? true})))
+  (assert (not (::modal (ui/stage-get ctx))))
+  (ui/stage-add! ctx
+                 (->window {:title title
+                            :rows [[(->label text)]
+                                   [(->text-button button-text
+                                                   (fn [ctx]
+                                                     (actor/remove! (::modal (ui/stage-get ctx)))
+                                                     (on-click ctx)))]]
+                            :id ::modal
+                            :modal? true
+                            :center-position [(/ (gui-viewport-width ctx) 2)
+                                              (* (gui-viewport-height ctx) (/ 3 4))]
+                            :pack? true})))
 
 (defcomponent :tx/player-modal
   (do! [[_ params] ctx]

@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]
-            [core.stage :as stage]
             [core.screens :as screens]
             [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
@@ -425,7 +424,7 @@
                    (- (:entity/click-distance-tiles entity*) 0.1)))
 
 (defn- world-item? [ctx]
-  (not (stage/mouse-on-actor? ctx)))
+  (not (ui/mouse-on-actor? ctx)))
 
 (defcomponent :player-item-on-cursor
   {:let {:keys [eid item]}}

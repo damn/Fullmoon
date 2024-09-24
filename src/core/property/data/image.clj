@@ -21,5 +21,5 @@
 (defmethod property/->widget :image [_ image ctx]
   (ui/->image-widget (edn->image image ctx) {})
   #_(ui/->image-button image
-                       #(stage/add-actor! % (->scrollable-choose-window % (texture-rows %)))
+                       #(ui/stage-add! % (->scrollable-choose-window % (texture-rows %)))
                        {:dimensions [96 96]})) ; x2  , not hardcoded here

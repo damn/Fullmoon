@@ -4,9 +4,7 @@
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
             [core.screens :as screens]
-            [core.stage :as stage]
             [core.actor :refer [set-position!]]
-            [core.group :refer [add-actor!]]
             [core.ui :as ui]
             [core.world.gen.gen :as level-generator]
             core.world.gen.modules)
@@ -73,9 +71,9 @@ direction keys: move")
 (defn- ->info-window [ctx]
   (let [label (ui/->label "")
         window (ui/->window {:title "Info" :rows [[label]]})]
-    (add-actor! window (ui/->actor {:act #(do
-                                           (.setText label (debug-infos %))
-                                           (.pack window))}))
+    (ui/add-actor! window (ui/->actor {:act #(do
+                                              (.setText label (debug-infos %))
+                                              (.pack window))}))
     (set-position! window 0 (gui-viewport-height ctx))
     window))
 
@@ -194,5 +192,5 @@ direction keys: move")
                   (atom {:tiled-map (tiled/load-map core.world.gen.modules/modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
-     :stage (stage/create ctx [(->generate-map-window ctx world-id)
-                              (->info-window ctx)])}))
+     :stage (ui/->stage ctx [(->generate-map-window ctx world-id)
+                             (->info-window ctx)])}))

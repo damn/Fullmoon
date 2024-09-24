@@ -2,9 +2,7 @@
   (:require [clojure.string :as str]
             [core.ctx :refer :all]
             [core.property :as property]
-            [core.stage :as stage]
             [core.actor :as actor]
-            [core.group :as group]
             [core.ui :as ui]))
 
 (defcomponent :sound {:schema :string})
@@ -27,14 +25,14 @@
   (let [rows (for [sound-file (:sound-files (assets ctx))]
                [(ui/->text-button (str/replace-first sound-file "sounds/" "")
                                   (fn [{:keys [context/actor] :as ctx}]
-                                    (group/clear-children! table)
+                                    (ui/clear-children! table)
                                     (ui/add-rows! table [(->sound-columns table sound-file)])
                                     (actor/remove! (actor/find-ancestor-window actor))
                                     (actor/pack-ancestor-window! table)
                                     (actor/set-id! table sound-file)
                                     ctx))
                 (->play-sound-button sound-file)])]
-    (stage/add-actor! ctx (->scrollable-choose-window ctx rows))))
+    (ui/stage-add! ctx (->scrollable-choose-window ctx rows))))
 
 (defn- ->sound-columns [table sound-file]
   [(ui/->text-button (name sound-file) #(open-sounds-window! % table))
