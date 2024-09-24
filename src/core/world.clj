@@ -17,7 +17,6 @@
             [core.math.raycaster :as raycaster]
             [core.world.widgets :as widgets]
             [core.world.grid :as grid]
-            [core.world.mouseover-entity :refer [update-mouseover-entity]]
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys))
@@ -316,7 +315,7 @@
 
 (defmethod game-loop :game-loop/normal [ctx]
   (effect! ctx [player/update-state
-                update-mouseover-entity ; this do always so can get debug info even when game not running
+                entity/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (:context/paused? %)
                    %

@@ -10,6 +10,7 @@
             [core.graphics.image :as image]
             [core.property :as property]
             [core.ui :as ui]
+            [core.stage :as stage]
             [core.world.raycaster :refer [ray-blocked? path-blocked?]]
             [core.world.grid :as grid]
             [core.world.time :as time])
@@ -934,3 +935,35 @@
    [:tx/projectile projectile-id ...]
    )
  )
+
+(defn- calculate-mouseover-entity [ctx]
+  (let [player-entity* (player-entity* ctx)
+        hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
+                     (map deref
+                          (grid/point->entities ctx
+                                                (world-mouse-position ctx))))]
+    (->> render-order
+         (sort-by-order hits :z-order)
+         reverse
+         (filter #(line-of-sight? ctx player-entity* %))
+         first
+         :entity/id)))
+
+(def ^:private ctx-mouseover-entity :context/mouseover-entity)
+
+(extend-type core.ctx.Context
+  MouseOverEntity
+  (mouseover-entity* [ctx]
+    (when-let [entity (ctx-mouseover-entity ctx)]
+      @entity)))
+
+(defn update-mouseover-entity [ctx]
+  (let [entity (if (stage/mouse-on-actor? ctx)
+                 nil
+                 (calculate-mouseover-entity ctx))]
+    [(when-let [old-entity (ctx-mouseover-entity ctx)]
+       [:e/dissoc old-entity :entity/mouseover?])
+     (when entity
+       [:e/assoc entity :entity/mouseover? true])
+     (fn [ctx]
+       (assoc ctx ctx-mouseover-entity entity))]))
