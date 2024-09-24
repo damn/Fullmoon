@@ -1,7 +1,9 @@
 (ns core.world
   (:require [data.grid2d :as grid2d]
             [core.utils.core :as utils :refer [->tile tile->middle safe-get]]
+            [core.actor :as actor]
             [core.ctx :refer :all]
+            [core.group :as group]
             [core.tiled :as tiled]
             [core.screens :as screens]
             [core.stage :as stage]
@@ -10,12 +12,17 @@
             [core.graphics.camera :as camera]
             [core.ui :as ui]
             [core.entity :as entity]
+            [core.entity.state :refer [draw-item-on-cursor]]
             [core.entity.player :as player]
             [core.world.gen.gen :as level-generator]
             [core.widgets.error-modal :refer [error-window!]]
+            [core.widgets.action-bar :as action-bar]
+            [core.widgets.debug-window :as debug-window]
+            [core.widgets.entity-info-window :as entity-info-window]
+            [core.widgets.hp-mana-bars :refer [->hp-mana-bars]]
+            [core.widgets.inventory :as inventory]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
-            [core.world.widgets :as widgets]
             [core.world.grid :as grid]
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
@@ -350,6 +357,48 @@
                                                      (map deref)))
                        (after-entities ctx g))))
 
+(defn- ->ui-actors [ctx widget-data]
+  [(ui/->table {:rows [[{:actor (action-bar/->build)
+                         :expand? true
+                         :bottom? true}]]
+                :id :action-bar-table
+                :cell-defaults {:pad 2}
+                :fill-parent? true})
+   (->hp-mana-bars ctx)
+   (ui/->group {:id :windows
+                :actors [(debug-window/create ctx)
+                         (entity-info-window/create ctx)
+                         (inventory/->build ctx widget-data)]})
+   (ui/->actor {:draw draw-item-on-cursor})
+   (->mk [:widgets/player-message] ctx)])
+
+(defcomponent :context/widgets
+  (->mk [_ ctx]
+    (let [widget-data {:action-bar (action-bar/->button-group)
+                       :slot->background (inventory/->data ctx)}
+          stage (stage/get ctx)]
+      (.clear stage)
+      (run! #(.addActor stage %) (->ui-actors ctx widget-data))
+      widget-data)))
+
+(defn- hotkey->window-id [{:keys [context/config]}]
+  (merge {Input$Keys/I :inventory-window
+          Input$Keys/E :entity-info-window}
+         (when (utils/safe-get config :debug-window?)
+           {Input$Keys/Z :debug-window})))
+
+(defn- check-window-hotkeys [ctx]
+  (doseq [[hotkey window-id] (hotkey->window-id ctx)
+          :when (.isKeyJustPressed gdx-input hotkey)]
+    (actor/toggle-visible! (get (:windows (stage/get ctx)) window-id))))
+
+(defn- close-windows?! [context]
+  (let [windows (group/children (:windows (stage/get context)))]
+    (if (some actor/visible? windows)
+      (do
+       (run! #(actor/set-visible! % false) windows)
+       true))))
+
 (defn- adjust-zoom [camera by] ; DRY map editor
   (camera/set-zoom! camera (max 0.1 (+ (camera/zoom camera) by))))
 
@@ -363,9 +412,9 @@
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
   (check-zoom-keys ctx)
-  (widgets/check-window-hotkeys ctx)
+  (check-window-hotkeys ctx)
   (cond (and (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
-             (not (widgets/close-windows? ctx)))
+             (not (close-windows?! ctx)))
         (screens/change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen-render!
