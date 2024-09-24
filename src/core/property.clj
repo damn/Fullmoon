@@ -1,3 +1,7 @@
+; all-properties
+; prop-image
+; validate-and-create
+; :data/animation ... ?
 (ns core.property
   (:require [clojure.set :as set]
             [clojure.string :as str]
