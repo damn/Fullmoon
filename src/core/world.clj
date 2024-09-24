@@ -14,7 +14,6 @@
             [core.entity.player :as player]
             [core.property.types.world :as level-generator]
             [core.widgets.error-modal :refer [error-window!]]
-            [core.widgets.background-image :refer [->background-image]]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
             [core.world.ecs :as ecs]
@@ -397,7 +396,7 @@
     (cursors/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]
-  [(->background-image ctx)
+  [(ui/->background-image ctx)
    (->buttons ctx)
    (ui/->actor {:act (fn [_ctx]
                        (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
@@ -469,6 +468,6 @@
 (defcomponent :screens/options-menu
   (->mk [_ ctx]
     {:stage (stage/create ctx
-                          [(->background-image ctx)
+                          [(ui/->background-image ctx)
                            (create-table ctx)])
      :sub-screen [:options/sub-screen]}))

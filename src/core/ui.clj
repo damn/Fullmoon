@@ -1,6 +1,6 @@
 (ns core.ui
   (:require [core.ctx :refer :all]
-            core.graphics.image
+            [core.graphics.image :as image]
             [core.actor :as actor]
             [core.group :as group])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -309,3 +309,11 @@
       (when-let [parent (actor/parent parent)]
         (and (instance? VisWindow parent)
              (= (.getTitleLabel ^Window parent) actor))))))
+
+(def ^:private image-file "images/moon_background.png")
+
+(defn ->background-image [ctx]
+  (ui/->image-widget (image/create ctx image-file)
+                     {:fill-parent? true
+                      :scaling :fill
+                      :align :center}))

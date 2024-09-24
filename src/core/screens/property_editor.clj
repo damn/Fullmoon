@@ -7,7 +7,6 @@
             [core.property :as property]
             [core.screens :as screens]
             [core.stage :as stage]
-            [core.widgets.background-image :refer [->background-image]]
             [core.widgets.error-modal :refer [error-window!]]
             [core.actor :as actor]
             [core.group :as group]
@@ -274,7 +273,7 @@
 (defcomponent :screens/property-editor
   (->mk [_ ctx]
     {:stage (let [stage (stage/create ctx
-                                      [(->background-image ctx)
+                                      [(ui/->background-image ctx)
                                        (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
