@@ -3,7 +3,6 @@
             [core.utils.ns :as ns]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
-            [core.screen :as screen]
             [core.screens :as screens]
             [core.stage :as stage]
             [core.property :as property]
@@ -24,6 +23,12 @@
             [core.world.time :as time]
             [core.world.potential-fields :as potential-fields])
   (:import com.badlogic.gdx.Input$Keys))
+
+(defcomponent :context/explored-tile-corners
+  (->mk [_ {:keys [context/grid]}]
+    (atom (grid2d/create-grid (grid2d/width grid)
+                              (grid2d/height grid)
+                              (constantly false)))))
 
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
 
@@ -315,7 +320,7 @@
              (not (widgets/close-windows? ctx)))
         (screens/change-screen ctx :screens/options-menu)
 
-        ; TODO not implementing StageSubScreen so NPE no screen/render!
+        ; TODO not implementing StageSubScreen so NPE no screen-render!
         #_(.isKeyJustPressed gdx-input Input$Keys/TAB)
         #_(screens/change-screen ctx :screens/minimap)
 
@@ -323,10 +328,10 @@
         ctx))
 
 (defcomponent :world/sub-screen
-  (screen/exit [_ ctx]
+  (screen-exit [_ ctx]
     (cursors/set-cursor! ctx :cursors/default))
 
-  (screen/render [_ ctx]
+  (screen-render [_ ctx]
     (render-world! ctx)
     (-> ctx
         game-loop
@@ -392,7 +397,7 @@
 
 
 (defcomponent :main/sub-screen
-  (screen/enter [_ ctx]
+  (screen-enter [_ ctx]
     (cursors/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]
@@ -459,7 +464,7 @@
                :cell-defaults {:pad-bottom 10}}))
 
 (defcomponent :options/sub-screen
-  (screen/render [_ ctx]
+  (screen-render [_ ctx]
     (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
       (screens/change-screen ctx :screens/world)
       ctx)))

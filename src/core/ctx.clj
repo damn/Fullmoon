@@ -485,3 +485,15 @@ Default method returns true."
 
 (def color-black Color/BLACK)
 (def color-white Color/WHITE)
+
+(defsystem screen-enter "FIXME" [_ ctx])
+(defmethod screen-enter :default [_ ctx])
+
+(defsystem screen-exit  "FIXME" [_ ctx])
+(defmethod screen-exit :default  [_ ctx])
+
+(defsystem screen-render! "FIXME" [_ app-state])
+
+(defsystem screen-render "FIXME" [_ ctx])
+(defmethod screen-render :default [_ ctx]
+  ctx)

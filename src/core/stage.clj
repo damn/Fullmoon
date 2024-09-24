@@ -2,27 +2,26 @@
   (:refer-clojure :exclude [get])
   (:require [core.group :as group]
             [core.ctx :refer :all]
-            [core.screens :as screens]
-            [core.screen :as screen])
+            [core.screens :as screens])
   (:import com.badlogic.gdx.scenes.scene2d.Stage))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
   {:let {:keys [^Stage stage sub-screen]}}
-  (screen/enter [_ context]
+  (screen-enter [_ context]
     (.setInputProcessor gdx-input stage)
-    (screen/enter sub-screen context))
+    (screen-enter sub-screen context))
 
-  (screen/exit [_ context]
+  (screen-exit [_ context]
     (.setInputProcessor gdx-input nil)
-    (screen/exit sub-screen context))
+    (screen-exit sub-screen context))
 
-  (screen/render! [_ app-state]
+  (screen-render! [_ app-state]
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
     (.act stage)
-    (swap! app-state #(screen/render sub-screen %))
+    (swap! app-state #(screen-render sub-screen %))
     (.draw stage)))
 
 (defn- ->stage ^Stage [viewport batch]

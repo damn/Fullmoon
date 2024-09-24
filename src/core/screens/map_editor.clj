@@ -5,7 +5,6 @@
             [core.tiled :as tiled]
             [core.utils.core :refer [->tile]]
             [core.screens :as screens]
-            [core.screen :as screen]
             [core.stage :as stage]
             [core.widgets.error-modal :refer [error-window!]]
             [core.actor :refer [set-position!]]
@@ -173,13 +172,13 @@ direction keys: move")
   #_(dispose [_]
       (dispose (:tiled-map @current-data)))
 
-  (screen/enter [_ ctx]
+  (screen-enter [_ ctx]
     (show-whole-map! (world-camera ctx) (:tiled-map @current-data)))
 
-  (screen/exit [_ ctx]
+  (screen-exit [_ ctx]
     (camera/reset-zoom! (world-camera ctx)))
 
-  (screen/render [_ context]
+  (screen-render [_ context]
     (tiled/render! context (:tiled-map @current-data) (constantly Color/WHITE))
     (render-world-view context #(render-on-map % context))
     (if (.isKeyJustPressed gdx-input Input$Keys/L)
