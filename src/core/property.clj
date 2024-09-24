@@ -37,7 +37,7 @@
 (defn- ->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
-(defn ->image [{:keys [entity/image entity/animation]}]
+(defn ->image [{:keys [entity/image entity/animation]}] ; FIXME replaces ctx var
   (or image
       (first (:frames animation))))
 

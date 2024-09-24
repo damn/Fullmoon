@@ -673,7 +673,7 @@ Default method returns true."
   (->image* g (->texture-region texture-region bounds)))
 
 (defn sprite-sheet [ctx file tilew tileh]
-  {:image (create ctx file)
+  {:image (->image ctx file)
    :tilew tilew
    :tileh tileh})
 
@@ -690,4 +690,4 @@ Default method returns true."
               (sprite-sheet ctx file tilew tileh)
               [(int (/ sprite-x tilew))
                (int (/ sprite-y tileh))]))
-    (create ctx file)))
+    (->image ctx file)))
