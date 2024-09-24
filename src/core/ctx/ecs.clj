@@ -1,4 +1,4 @@
-(ns core.ctx.ecs
+(ns ^:no-doc core.ctx.ecs
   (:require [clj-commons.pretty.repl :as p]
             [core.utils.core :refer [safe-merge sort-by-order]]
             [core.ctx :refer :all]
@@ -91,18 +91,17 @@
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(defn all-entities [ctx]
-  (vals (entities ctx)))
+(extend-type core.ctx.Context
+  Entities
+  (all-entities [ctx] (vals (entities ctx)))
+  (get-entity [ctx uid] (get (entities ctx) uid)))
 
-(defn get-entity [ctx uid]
-  (get (entities ctx) uid))
-
-(defn ^:no-doc tick-entities!
+(defn tick-entities!
   "Calls tick system on all components of entities."
   [ctx entities]
   (reduce tick-system ctx entities))
 
-(defn ^:no-doc render-entities!
+(defn render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [ctx g entities*]
   (let [player-entity* (player-entity* ctx)]
@@ -115,7 +114,7 @@
                       (entity/line-of-sight? ctx player-entity* entity*))]
       (render-entity* system entity* g ctx))))
 
-(defn ^:no-doc remove-destroyed-entities!
+(defn remove-destroyed-entities!
   "Calls destroy on all entities which are marked with ':e/destroy'"
   [ctx]
   (for [entity (filter (comp :entity/destroyed? deref) (all-entities ctx))

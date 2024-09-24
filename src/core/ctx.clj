@@ -320,3 +320,7 @@ Default method returns true."
                       (str "\n" (->info-text v ctx))))))
        (str/join "\n")
        remove-newlines))
+
+(defprotocol Entities
+  (all-entities [_])
+  (get-entity [_ uid]))
