@@ -1,8 +1,7 @@
 (ns core.ui
   (:require [clj-commons.pretty.repl :as p]
             [core.ctx :refer :all]
-            [core.actor :as actor]
-            [core.screens :as screens])
+            [core.actor :as actor])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
@@ -106,7 +105,7 @@
     stage))
 
 (defn stage-get ^Stage [context]
-  (:stage ((screens/current-screen context) 1)))
+  (:stage ((current-screen context) 1)))
 
 (defn mouse-on-actor? [context]
   (let [[x y] (gui-mouse-position context)

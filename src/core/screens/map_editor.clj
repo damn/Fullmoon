@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.tiled :as tiled]
-            [core.screens :as screens]
             [core.actor :refer [set-position!]]
             [core.ui :as ui]
             [core.world.gen.gen :as level-generator]
@@ -33,7 +32,7 @@
 
 (defn- current-data [ctx]
   (-> ctx
-      screens/current-screen
+      current-screen
       (get 1)
       :sub-screen
       (get 1)))
@@ -182,7 +181,7 @@ direction keys: move")
       (swap! current-data update :show-movement-properties not))
     (camera-controls context (world-camera context))
     (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
-      (screens/change-screen context :screens/main-menu)
+      (change-screen context :screens/main-menu)
       context)))
 
 (derive :screens/map-editor :screens/stage)

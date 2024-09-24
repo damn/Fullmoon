@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.math.vector :as v]
             [core.entity :as entity]
-            [core.screens :as screens]
             [core.ui :as ui]
             [core.world.grid :as grid]
             [core.world.potential-fields :as potential-fields]
@@ -330,7 +329,7 @@
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
                         :button-text ":("
-                        :on-click #(screens/change-screen % :screens/main-menu)}]]))
+                        :on-click #(change-screen % :screens/main-menu)}]]))
 
 (defn- add-vs [vs]
   (v/normalise (reduce v/add [0 0] vs)))

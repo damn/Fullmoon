@@ -2,7 +2,6 @@
   (:require [data.grid2d :as grid2d]
             [core.graphics.camera :as camera]
             [core.ctx :refer :all]
-            [core.screens :as screens]
             [core.tiled :as tiled])
   (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
@@ -57,7 +56,7 @@
                                                Color/GREEN)))
       (if (or (.isKeyJustPressed gdx-input Input$Keys/TAB)
               (.isKeyJustPressed gdx-input Input$Keys/ESCAPE))
-        (screens/change-screen context :screens/world)
+        (change-screen context :screens/world)
         context)))
 
 #_(defcomponent :screens/minimap

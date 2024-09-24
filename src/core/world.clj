@@ -4,7 +4,6 @@
             [core.actor :as actor]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
-            [core.screens :as screens]
             [core.property :as property]
             [core.graphics :as graphics]
             [core.graphics.camera :as camera]
@@ -607,11 +606,11 @@
   (check-window-hotkeys ctx)
   (cond (and (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
              (not (close-windows?! ctx)))
-        (screens/change-screen ctx :screens/options-menu)
+        (change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen-render!
         #_(.isKeyJustPressed gdx-input Input$Keys/TAB)
-        #_(screens/change-screen ctx :screens/minimap)
+        #_(change-screen ctx :screens/minimap)
 
         :else
         ctx))
@@ -669,7 +668,7 @@
 (defn- start-game! [world-id]
   (fn [ctx]
     (-> ctx
-        (screens/change-screen :screens/world)
+        (change-screen :screens/world)
         (start-new-game (level-generator/->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
@@ -677,9 +676,9 @@
                                    (for [{:keys [property/id]} (property/all-properties ctx :properties/worlds)]
                                      [(ui/->text-button (str "Start " id) (start-game! id))])
                                    [(when (safe-get config :map-editor?)
-                                      [(ui/->text-button "Map editor" #(screens/change-screen % :screens/map-editor))])
+                                      [(ui/->text-button "Map editor" #(change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
-                                      [(ui/->text-button "Property editor" #(screens/change-screen % :screens/property-editor))])
+                                      [(ui/->text-button "Property editor" #(change-screen % :screens/property-editor))])
                                     [(ui/->text-button "Exit" (fn [ctx] (.exit gdx-app) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
@@ -745,9 +744,9 @@
                                            (partial set-state check-box)
                                            (boolean (get-state check-box)))]))
 
-                      [[(ui/->text-button "Resume" #(screens/change-screen % :screens/world))]
+                      [[(ui/->text-button "Resume" #(change-screen % :screens/world))]
 
-                       [(ui/->text-button "Exit" #(screens/change-screen % :screens/main-menu))]])
+                       [(ui/->text-button "Exit" #(change-screen % :screens/main-menu))]])
 
                :fill-parent? true
                :cell-defaults {:pad-bottom 10}}))
@@ -755,7 +754,7 @@
 (defcomponent :options/sub-screen
   (screen-render [_ ctx]
     (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
-      (screens/change-screen ctx :screens/world)
+      (change-screen ctx :screens/world)
       ctx)))
 
 (derive :screens/options-menu :screens/stage)

@@ -5,7 +5,6 @@
             [core.utils.core :as utils]
             [core.ctx :refer :all]
             [core.property :as property]
-            [core.screens :as screens]
             [core.actor :as actor]
             [core.ui :as ui])
   (:import com.badlogic.gdx.Input$Keys))
@@ -275,7 +274,7 @@
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)
                                         (do
-                                         (swap! app-state screens/change-screen :screens/main-menu)
+                                         (swap! app-state change-screen :screens/main-menu)
                                          true)
                                         false))))
               stage)}))
