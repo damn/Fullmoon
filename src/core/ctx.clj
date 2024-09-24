@@ -1056,7 +1056,7 @@ Default method returns true."
 (defprotocol GridPointEntities
   (point->entities [ctx position]))
 
-(defprotocol Cell
+(defprotocol GridCell
   (blocked? [cell* z-order])
   (blocks-vision? [cell*])
   (occupied-by-other? [cell* entity]

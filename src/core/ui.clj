@@ -5,7 +5,7 @@
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
-           (com.badlogic.gdx.scenes.scene2d.ui Label Image Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
+           (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
            (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator)))
@@ -427,7 +427,7 @@
 (defn ->image-widget
   "Takes either an image or drawable. Opts are :scaling, :align and actor opts."
   [object {:keys [scaling align fill-parent?] :as opts}]
-  (-> (let [^Image image (->vis-image object)]
+  (-> (let [^com.badlogic.gdx.scenes.scene2d.ui.Image image (->vis-image object)]
         (when (= :center align) (.setAlign image Align/center))
         (when (= :fill scaling) (.setScaling image Scaling/fill))
         (when fill-parent? (.setFillParent image true))
@@ -515,17 +515,17 @@
 (defn- show-player-modal! [ctx {:keys [title text button-text on-click]}]
   (assert (not (::modal (stage-get ctx))))
   (stage-add! ctx
-                 (->window {:title title
-                            :rows [[(->label text)]
-                                   [(->text-button button-text
-                                                   (fn [ctx]
-                                                     (remove! (::modal (stage-get ctx)))
-                                                     (on-click ctx)))]]
-                            :id ::modal
-                            :modal? true
-                            :center-position [(/ (gui-viewport-width ctx) 2)
-                                              (* (gui-viewport-height ctx) (/ 3 4))]
-                            :pack? true})))
+              (->window {:title title
+                         :rows [[(->label text)]
+                                [(->text-button button-text
+                                                (fn [ctx]
+                                                  (remove! (::modal (stage-get ctx)))
+                                                  (on-click ctx)))]]
+                         :id ::modal
+                         :modal? true
+                         :center-position [(/ (gui-viewport-width ctx) 2)
+                                           (* (gui-viewport-height ctx) (/ 3 4))]
+                         :pack? true})))
 
 (defcomponent :tx/player-modal
   (do! [[_ params] ctx]
