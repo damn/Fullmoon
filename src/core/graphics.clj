@@ -1,12 +1,31 @@
-(ns ^:no-doc core.graphics
-  (:require [core.ctx :refer :all]
-            (core.graphics cursors
-                           shape-drawer
+(ns core.graphics
+  (:require [core.utils.core :as utils :refer [mapvals]]
+            [core.ctx :refer :all]
+            (core.graphics shape-drawer
                            text
                            [views :as views]))
-  (:import com.badlogic.gdx.graphics.Color
+  (:import (com.badlogic.gdx.graphics Color Pixmap)
            (com.badlogic.gdx.graphics.g2d Batch SpriteBatch)
            com.badlogic.gdx.utils.viewport.Viewport))
+
+(defn- ->cursor [file [hotspot-x hotspot-y]]
+  (let [pixmap (Pixmap. (.internal gdx-files file))
+        cursor (.newCursor gdx-graphics pixmap hotspot-x hotspot-y)]
+    (.dispose pixmap)
+    cursor))
+
+(defn- ->cursors [cursors]
+  {:cursors (mapvals (fn [[file hotspot]]
+                       (->cursor (str "cursors/" file ".png") hotspot))
+                     cursors)})
+
+(defn set-cursor! [{g :context/graphics} cursor-key]
+  (.setCursor gdx-graphics (utils/safe-get (:cursors g) cursor-key)))
+
+(defcomponent :tx/cursor
+  (do! [[_ cursor-key] ctx]
+    (set-cursor! ctx cursor-key)
+    ctx))
 
 (def-attributes
   :views [:map [:gui-view :world-view]]
@@ -31,7 +50,7 @@
               (core.graphics.shape-drawer/->build batch)
               (core.graphics.text/->build default-font)
               (core.graphics.views/->build views)
-              (core.graphics.cursors/->build cursors)))))
+              (->cursors cursors)))))
 
   (destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
     (dispose batch)

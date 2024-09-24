@@ -6,7 +6,7 @@
             [core.screens :as screens]
             [core.stage :as stage]
             [core.property :as property]
-            [core.graphics.cursors :as cursors]
+            [core.graphics :as graphics]
             [core.graphics.camera :as camera]
             [core.ui :as ui]
             [core.entity :as entity]
@@ -329,7 +329,7 @@
 
 (defcomponent :world/sub-screen
   (screen-exit [_ ctx]
-    (cursors/set-cursor! ctx :cursors/default))
+    (graphics/set-cursor! ctx :cursors/default))
 
   (screen-render [_ ctx]
     (render-world! ctx)
@@ -398,7 +398,7 @@
 
 (defcomponent :main/sub-screen
   (screen-enter [_ ctx]
-    (cursors/set-cursor! ctx :cursors/default)))
+    (graphics/set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]
   [(ui/->background-image ctx)
