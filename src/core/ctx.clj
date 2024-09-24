@@ -584,7 +584,7 @@ Default method returns true."
   (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
 
-(defprotocol RayCaster
+(defprotocol PRayCaster
   (ray-blocked? [ctx start target])
   (path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
 
@@ -1156,7 +1156,7 @@ Default method returns true."
      :width  size
      :height size}))
 
-(defprotocol PRayCaster
+(defprotocol PFastRayCaster
   (fast-ray-blocked? [_ start target]))
 
 ; boolean array used because 10x faster than access to clojure grid data structure
@@ -1167,7 +1167,7 @@ Default method returns true."
 
 ; does not show warning on reflection, but shows cast-double a lot.
 (defrecord ArrRayCaster [arr width height]
-  PRayCaster
+  PFastRayCaster
   (fast-ray-blocked? [_ [start-x start-y] [target-x target-y]]
     (RayCaster/rayBlocked (double start-x)
                           (double start-y)
@@ -1237,13 +1237,13 @@ Default method returns true."
     (let [maxsteps 10]
       (reset! current-steps
               (raycaster/ray-maxsteps (get-cell-blocked-boolean-array)
-                                      (v/direction (g/map-coords) start)
+                                      (v-direction (g/map-coords) start)
                                       maxsteps))))
 
 #_(defn draw-test-raycast []
   (let [start (:position @player-entity)
         target (g/map-coords)
-        color (if (ray-blocked? start target) g/red g/green)]
+        color (if (fast-ray-blocked? start target) g/red g/green)]
     (render-line-middle-to-mouse color)))
 
 ; PATH BLOCKED TEST
@@ -1281,21 +1281,20 @@ Default method returns true."
 
 (defn v-normalised? [v]
   ; Returns true if a is nearly equal to b.
-  (MathUtils/isEqual 1 (length v)))
+  (MathUtils/isEqual 1 (v-length v)))
 
 (defn v-get-normal-vectors [[x y]]
   [[(- (float y))         x]
    [          y (- (float x))]])
 
 (defn v-direction [[sx sy] [tx ty]]
-  (normalise [(- (float tx) (float sx))
-              (- (float ty) (float sy))]))
+  (v-normalise [(- (float tx) (float sx))
+                (- (float ty) (float sy))]))
 
 (defn v-get-angle-from-vector
   "converts theta of Vector2 to angle from top (top is 0 degree, moving left is 90 degree etc.), ->counterclockwise"
   [v]
-  (.angleDeg (->v v)
-             (Vector2. 0 1)))
+  (.angleDeg (->v v) (Vector2. 0 1)))
 
 (comment
 
