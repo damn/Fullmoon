@@ -1,14 +1,15 @@
 (ns core.entity
-  (:require [malli.core :as m]
+  (:require [clojure.string :as str]
+            [malli.core :as m]
             [core.math.geom :as geom]
             [core.math.vector :as v]
-            [core.utils.core :as utils :refer [find-first]]
+            [core.utils.core :as utils :refer [find-first safe-merge readable-number]]
             [core.ctx :refer :all]
             [core.graphics.camera :as camera]
             [core.graphics.image :as image]
             [core.property :as property]
             [core.ui :as ui]
-            [core.world.raycaster :refer [ray-blocked?]]
+            [core.world.raycaster :refer [ray-blocked? path-blocked?]]
             [core.world.grid :as grid]
             [core.world.time :as time]))
 
@@ -472,6 +473,45 @@
        {:counter (time/->counter ctx delay-seconds)
         :faction faction}}]]))
 
+(defcomponent :skill/action-time {:data :pos}
+  (info-text [[_ v] _ctx]
+    (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
+
+(defcomponent :skill/cooldown {:data :nat-int}
+  (info-text [[_ v] _ctx]
+    (when-not (zero? v)
+      (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
+
+(defcomponent :skill/cost {:data :nat-int}
+  (info-text [[_ v] _ctx]
+    (when-not (zero? v)
+      (str "[CYAN]Cost: " v " Mana[]"))))
+
+(defcomponent :skill/effects
+  {:data [:components-ns :effect]})
+
+(defcomponent :skill/start-action-sound {:data :sound})
+
+(defcomponent :skill/action-time-modifier-key
+  {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
+  (info-text [[_ v] _ctx]
+    (str "[VIOLET]" (case v
+                      :stats/cast-speed "Spell"
+                      :stats/attack-speed "Attack") "[]")))
+
+(def-type :properties/skills
+  {:schema [:entity/image
+            :property/pretty-name
+            :skill/action-time-modifier-key
+            :skill/action-time
+            :skill/start-action-sound
+            :skill/effects
+            [:skill/cooldown {:optional true}]
+            [:skill/cost {:optional true}]]
+   :overview {:title "Skills"
+              :columns 16
+              :image/scale 2}})
+
 (defcomponent :entity/skills
   {:data [:one-to-many :properties/skills]}
   (create [[k skills] eid ctx]
@@ -532,3 +572,219 @@
             (update :counter #(time/reset ctx %)))
         {:text text
          :counter (time/->counter ctx 0.4)})]]))
+
+(def-type :properties/audiovisuals
+  {:schema [:tx/sound
+            :entity/animation]
+   :overview {:title "Audiovisuals"
+              :columns 10
+              :image/scale 2}})
+
+(defcomponent :tx/audiovisual
+  (do! [[_ position id] ctx]
+    (let [{:keys [tx/sound
+                  entity/animation]} (build-property ctx id)]
+      [[:tx/sound sound]
+       [:e/create
+        position
+        effect-body-props
+        {:entity/animation animation
+         :entity/delete-after-animation-stopped? true}]])))
+
+; player doesn;t need aggro-range/reaction-time
+; stats armor-pierce wrong place
+; assert min body size from core.entity
+
+(def-attributes
+  :body/width   :pos
+  :body/height  :pos
+  :body/flying? :boolean)
+
+(defcomponent :entity/body
+  {:data [:map [:body/width
+                :body/height
+                :body/flying?]]})
+
+(defcomponent :creature/species
+  {:data [:qualified-keyword {:namespace :species}]}
+  (->mk [[_ species] _ctx]
+    (str/capitalize (name species)))
+  (info-text [[_ species] _ctx]
+    (str "[LIGHT_GRAY]Creature - " species "[]")))
+
+(defcomponent :creature/level
+  {:data :pos-int}
+  (info-text [[_ lvl] _ctx]
+    (str "[GRAY]Level " lvl "[]")))
+
+(def-type :properties/creatures
+  {:schema [:entity/body
+            :property/pretty-name
+            :creature/species
+            :creature/level
+            :entity/animation
+            :entity/stats
+            :entity/skills
+            [:entity/modifiers {:optional true}]
+            [:entity/inventory {:optional true}]]
+   :overview {:title "Creatures"
+              :columns 15
+              :image/scale 1.5
+              :sort-by-fn #(vector (:creature/level %)
+                             (name (:creature/species %))
+                             (name (:property/id %)))
+              :extra-info-text #(str (:creature/level %))}})
+
+; # :z-order/flying has no effect for now
+; * entities with :z-order/flying are not flying over water,etc. (movement/air)
+; because using potential-field for z-order/ground
+; -> would have to add one more potential-field for each faction for z-order/flying
+; * they would also (maybe) need a separate occupied-cells if they don't collide with other
+; * they could also go over ground units and not collide with them
+; ( a test showed then flying OVER player entity )
+; -> so no flying units for now
+(defn- ->body [{:keys [body/width body/height #_body/flying?]}]
+  {:width  width
+   :height height
+   :collides? true
+   :z-order :z-order/ground #_(if flying? :z-order/flying :z-order/ground)})
+
+(defcomponent :tx/creature
+  {:let {:keys [position creature-id components]}}
+  (do! [_ ctx]
+    (let [props (build-property ctx creature-id)]
+      [[:e/create
+        position
+        (->body (:entity/body props))
+        (-> props
+            (dissoc :entity/body)
+            (assoc :entity/destroy-audiovisual :audiovisuals/creature-die)
+            (safe-merge components))]])))
+
+; TODO https://github.com/damn/core/issues/29
+; spawning on player both without error ?! => not valid position checked
+; also what if someone moves on the target posi ? find nearby valid cell ?
+; BLOCKING PLAYER MOVEMENT ! (summons no-clip with player ?)
+; check not blocked position // line of sight. (part of target-position make)
+; limit max. spawns
+; animation/sound
+; proper icon (grayscaled ?)
+; keep in player movement range priority ( follow player if too far, otherwise going for enemies)
+; => so they follow you around
+; not try-spawn, but check valid-params & then spawn !
+; new UI -> show creature body & then place
+; >> but what if it is blocked the area during action-time ?? <<
+(defcomponent :effect/spawn
+  {:data [:one-to-one :properties/creatures]
+   :let {:keys [property/id]}}
+  (applicable? [_ {:keys [effect/source effect/target-position]}]
+    (and (:entity/faction @source)
+         target-position))
+
+  (do! [_ {:keys [effect/source effect/target-position]}]
+    [[:tx/sound "sounds/bfxr_shield_consume.wav"]
+     [:tx/creature {:position target-position
+                    :creature-id id ; already properties/get called through one-to-one, now called again.
+                    :components {:entity/state [:state/npc :npc-idle]
+                                 :entity/faction (:entity/faction @source)}}]]))
+
+; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
+
+; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
+; -> first range check then ray ! otherwise somewhere in contentfield out of sight
+(defcomponent :projectile/max-range {:data :pos-int})
+(defcomponent :projectile/speed     {:data :pos-int})
+
+(defcomponent :projectile/piercing? {:data :boolean}
+  (info-text [_ ctx] "[LIME]Piercing[]"))
+
+(def-type :properties/projectiles
+  {:schema [:entity/image
+            :projectile/max-range
+            :projectile/speed
+            :projectile/piercing?
+            :entity-effects]
+   :overview {:title "Projectiles"
+              :columns 16
+              :image/scale 2}})
+
+(defn- projectile-size [projectile]
+  {:pre [(:entity/image projectile)]}
+  (first (:world-unit-dimensions (:entity/image projectile))))
+
+(defcomponent :tx/projectile
+  (do! [[_
+            {:keys [position direction faction]}
+            {:keys [entity/image
+                    projectile/max-range
+                    projectile/speed
+                    entity-effects
+                    projectile/piercing?] :as projectile}]
+           ctx]
+    (let [size (projectile-size projectile)]
+      [[:e/create
+        position
+        {:width size
+         :height size
+         :z-order :z-order/flying
+         :rotation-angle (v/get-angle-from-vector direction)}
+        {:entity/movement {:direction direction
+                           :speed speed}
+         :entity/image image
+         :entity/faction faction
+         :entity/delete-after-duration (/ max-range speed)
+         :entity/destroy-audiovisual :audiovisuals/hit-wall
+         :entity/projectile-collision {:entity-effects entity-effects
+                                       :piercing? piercing?}}]])))
+
+(defn- start-point [entity* direction size]
+  (v/add (:position entity*)
+         (v/scale direction
+                  (+ (:radius entity*) size 0.1))))
+
+; TODO effect/text ... shouldn't have source/target dmg stuff ....
+; as it is just sent .....
+; or we adjust the effect when we send it ....
+
+(defcomponent :effect/projectile
+  {:data [:one-to-one :properties/projectiles]
+   :let {:keys [entity-effects projectile/max-range] :as projectile}}
+  ; TODO for npcs need target -- anyway only with direction
+  (applicable? [_ {:keys [effect/direction]}]
+    direction) ; faction @ source also ?
+
+  ; TODO valid params direction has to be  non-nil (entities not los player ) ?
+  (useful? [_ {:keys [effect/source effect/target] :as ctx}]
+    (let [source-p (:position @source)
+          target-p (:position @target)]
+      (and (not (path-blocked? ctx ; TODO test
+                               source-p
+                               target-p
+                               (projectile-size projectile)))
+           ; TODO not taking into account body sizes
+           (< (v/distance source-p ; entity/distance function protocol EntityPosition
+                          target-p)
+              max-range))))
+
+  (do! [_ {:keys [effect/source effect/direction] :as ctx}]
+    [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
+     [:tx/projectile
+      {:position (start-point @source direction (projectile-size projectile))
+       :direction direction
+       :faction (:entity/faction @source)}
+      projectile]]))
+
+(comment
+ ; mass shooting
+ (for [direction (map math.vector/normalise
+                      [[1 0]
+                       [1 1]
+                       [1 -1]
+                       [0 1]
+                       [0 -1]
+                       [-1 -1]
+                       [-1 1]
+                       [-1 0]])]
+   [:tx/projectile projectile-id ...]
+   )
+ )

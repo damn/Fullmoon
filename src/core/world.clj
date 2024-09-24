@@ -1,6 +1,6 @@
 (ns core.world
-  (:require [core.utils.core :refer [->tile tile->middle safe-get]]
-            [core.utils.ns :as ns]
+  (:require [data.grid2d :as grid2d]
+            [core.utils.core :as utils :refer [->tile tile->middle safe-get]]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
             [core.screens :as screens]
@@ -11,7 +11,7 @@
             [core.ui :as ui]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.property.types.world :as level-generator]
+            [core.world.gen.gen :as level-generator]
             [core.widgets.error-modal :refer [error-window!]]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
@@ -433,8 +433,8 @@
 (defn- debug-flags [] ;
   (apply concat
          ; TODO
-         (for [nmspace (ns/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
-           (ns/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
+         (for [nmspace (utils/get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
+           (utils/get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
 
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
 ; -. rebuild it on window open ...

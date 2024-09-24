@@ -126,3 +126,21 @@
 (defn ->edn-str [v]
   (binding [*print-level* nil]
     (pr-str v)))
+
+(defn get-namespaces [packages]
+  (filter #(packages (first (str/split (name (ns-name %)) #"\.")))
+          (all-ns)))
+
+(defn get-vars [nmspace condition]
+  (for [[sym avar] (ns-interns nmspace)
+        :when (condition avar)]
+    avar))
+
+(comment
+ (clojure.pprint/pprint
+  (enumeration-seq (.getResources (ClassLoader/getSystemClassLoader) "components")))
+
+ (clojure.pprint/pprint
+  (seq (.getDefinedPackages (ClassLoader/getSystemClassLoader))))
+
+ )

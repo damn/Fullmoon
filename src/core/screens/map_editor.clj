@@ -10,8 +10,7 @@
             [core.actor :refer [set-position!]]
             [core.group :refer [add-actor!]]
             [core.ui :as ui]
-            [core.property.types.world :as level-generator]
-            core.world.gen.gen
+            [core.world.gen.gen :as level-generator]
             core.world.gen.modules)
   (:import com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
