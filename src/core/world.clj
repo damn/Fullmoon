@@ -19,7 +19,6 @@
             [core.widgets.error-modal :refer [error-window!]]
             [core.widgets.action-bar :as action-bar]
             [core.widgets.debug-window :as debug-window]
-            [core.widgets.entity-info-window :as entity-info-window]
             [core.widgets.inventory :as inventory]
             [core.math.geom :as geom]
             [core.math.raycaster :as raycaster]
@@ -384,6 +383,37 @@
                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
                            (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))
 
+(def ^:private disallowed-keys [:entity/skills
+                                :entity/state
+                                :entity/faction
+                                :active-skill])
+
+(defn ->entity-info-window [context]
+  (let [label (ui/->label "")
+        window (ui/->window {:title "Info"
+                             :id :entity-info-window
+                             :visible? false
+                             :position [(gui-viewport-width context) 0]
+                             :rows [[{:actor label :expand? true}]]})]
+    ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
+    ; => fix size somehow.
+    (group/add-actor!
+     window
+     (ui/->actor {:act (fn update-label-text [ctx]
+                         ; items then have 2x pretty-name
+                         #_(.setText (.getTitleLabel window)
+                                     (if-let [entity* (mouseover-entity* ctx)]
+                                       (info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                       "Entity Info"))
+                         (.setText label
+                                   (str (when-let [entity* (mouseover-entity* ctx)]
+                                          (->info-text
+                                           ; don't use select-keys as it loses core.entity.Entity record type
+                                           (apply dissoc entity* disallowed-keys)
+                                           ctx))))
+                         (.pack window))}))
+    window))
+
 (defn- ->ui-actors [ctx widget-data]
   [(ui/->table {:rows [[{:actor (action-bar/->build)
                          :expand? true
@@ -394,7 +424,7 @@
    (->hp-mana-bars ctx)
    (ui/->group {:id :windows
                 :actors [(debug-window/create ctx)
-                         (entity-info-window/create ctx)
+                         (->entity-info-window ctx)
                          (inventory/->build ctx widget-data)]})
    (ui/->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
