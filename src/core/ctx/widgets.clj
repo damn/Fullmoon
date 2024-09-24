@@ -4,7 +4,7 @@
             [core.ui.actor :as actor]
             [core.ui.group :as group]
             [core.ctx.ui :as ui]
-            [core.entity.state.player-item-on-cursor :refer [draw-item-on-cursor]]
+            [core.entity.state.components :refer [draw-item-on-cursor]]
             [core.screens.stage :as stage]
             [core.widgets.action-bar :as action-bar]
             [core.widgets.debug-window :as debug-window]
@@ -14,14 +14,6 @@
   (:import (com.badlogic.gdx Gdx Input$Keys)
            com.badlogic.gdx.scenes.scene2d.Stage
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
-
-(defn selected-skill [ctx]
-  (let [button-group (:action-bar (:context/widgets ctx))]
-    (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
-      (actor/id skill-button))))
-
-(defn inventory-window [ctx]
-  (get (:windows (stage/get ctx)) :inventory-window))
 
 (defn- ->ui-actors [ctx widget-data]
   [(ui/->table {:rows [[{:actor (action-bar/->build)

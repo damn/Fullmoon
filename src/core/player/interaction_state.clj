@@ -1,19 +1,22 @@
-(ns ^:no-doc core.entity.state.player-idle
+(ns ^:no-doc core.player.interaction-state
   (:require [core.utils.core :refer [safe-merge]]
-            [core.utils.wasd-movement :refer [WASD-movement-vector]]
             [core.math.vector :as v]
-            [core.component :as component :refer [defcomponent]]
             [core.ctx.mouseover-entity :as mouseover]
-            [core.ctx.widgets :as widgets]
             [core.entity :as entity]
             [core.entity.player :as player]
-            [core.entity.state :as state]
             [core.screens.stage :as stage]
-            [core.effect.core :refer [->player-effect-ctx]]
-            [core.entity.state.active-skill :refer [skill-usable-state]]
+            [core.effect.core :refer [->player-effect-ctx skill-usable-state]]
             [core.ui.actor :refer [visible? toggle-visible! parent] :as actor]
             [core.ctx.ui :as ui])
-  (:import (com.badlogic.gdx Gdx Input$Buttons)))
+  (:import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
+
+(defn- selected-skill [ctx]
+  (let [button-group (:action-bar (:context/widgets ctx))]
+    (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
+      (actor/id skill-button))))
+
+(defn- inventory-window [ctx]
+  (get (:windows (stage/get ctx)) :inventory-window))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -29,7 +32,7 @@
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
-     (visible? (widgets/inventory-window context))
+     (visible? (inventory-window context))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
@@ -45,7 +48,7 @@
 
 (defmethod on-clicked :clickable/player
   [ctx _clicked-entity*]
-  (toggle-visible! (widgets/inventory-window ctx))) ; TODO no tx
+  (toggle-visible! (inventory-window ctx))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
@@ -75,7 +78,7 @@
      (ui/button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn- ->interaction-state [context entity*]
+(defn ->interaction-state [context entity*]
   (let [mouseover-entity* (mouseover/entity* context)]
     (cond
      (stage/mouse-on-actor? context)
@@ -88,7 +91,7 @@
      (->clickable-mouseover-entity-interaction context entity* mouseover-entity*)
 
      :else
-     (if-let [skill-id (widgets/selected-skill context)]
+     (if-let [skill-id (selected-skill context)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->player-effect-ctx context entity*)
              state (skill-usable-state (safe-merge context effect-ctx) entity* skill)]
@@ -113,34 +116,3 @@
                          :invalid-params "Cannot use this here")))])))
        [:cursors/no-skill-selected
         (fn [] (denied "No selected skill"))]))))
-
-(defcomponent :player-idle
-  {:let {:keys [eid]}}
-  (component/create [[_ eid] _ctx]
-    {:eid eid})
-
-  (state/pause-game? [_]
-    true)
-
-  (state/manual-tick [_ ctx]
-    (if-let [movement-vector (WASD-movement-vector)]
-      [[:tx/event eid :movement-input movement-vector]]
-      (let [[cursor on-click] (->interaction-state ctx @eid)]
-        (cons [:tx/cursor cursor]
-              (when (.isButtonJustPressed Gdx/input Input$Buttons/LEFT)
-                (on-click))))))
-
-  (state/clicked-inventory-cell [_ cell]
-    ; TODO no else case
-    (when-let [item (get-in (:entity/inventory @eid) cell)]
-      [[:tx/sound "sounds/bfxr_takeit.wav"]
-       [:tx/event eid :pickup-item item]
-       [:tx/remove-item eid cell]]))
-
-  (state/clicked-skillmenu-skill [_ skill]
-    (let [free-skill-points (:entity/free-skill-points @eid)]
-      ; TODO no else case, no visible free-skill-points
-      (when (and (pos? free-skill-points)
-                 (not (entity/has-skill? @eid skill)))
-        [[:e/assoc eid :entity/free-skill-points (dec free-skill-points)]
-         [:tx/add-skill eid skill]]))))
