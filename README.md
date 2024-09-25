@@ -42,7 +42,9 @@ It will start the application and also:
 # [API Docs](https://damn.github.io/clojure.gdx/)
 
 # Namespaces
-![namespaces](https://github.com/user-attachments/assets/57dfd03b-e31a-4d18-b7ec-de7fe9b9b9d5)
+
+![namespaces](https://github.com/user-attachments/assets/433026d4-84ff-4a05-82ba-698a654bffc7)
+
 
 # Code Licensed under MIT License.
 
