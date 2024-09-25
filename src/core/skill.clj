@@ -1,5 +1,5 @@
-(ns ^:no-doc core.skill
-  (:require [clojure.gdx :refer :all])
+(ns core.skill
+  (:require [clojure.world :refer :all])
   (:import com.badlogic.gdx.Input$Buttons
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
@@ -445,7 +445,7 @@
     [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
 
-; TODO move to inventory-window extend Context
+; TODO move to inventory-window extend Ctx
 (defn- inventory-cell-with-item? [ctx actor]
   (and (parent actor)
        (= "inventory-cell" (actor-name (parent actor)))

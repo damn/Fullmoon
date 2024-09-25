@@ -1,5 +1,5 @@
-(ns ^:no-doc dev.experiment
-  (:require [clojure.gdx :refer :all])
+(ns dev.experiment
+  (:require [clojure.world :refer :all])
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
 (comment

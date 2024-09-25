@@ -1,5 +1,5 @@
 (ns core.app
-  (:require [clojure.gdx :refer :all]
+  (:require [clojure.world :refer :all]
             [core.item :as inventory]
             core.audiovisual
             core.creature
@@ -7,16 +7,27 @@
             core.skill
             [core.world :as world])
   (:import org.lwjgl.system.Configuration
-           (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
+           (com.badlogic.gdx ApplicationAdapter Input$Keys)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)
            (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)))
 
+; contains at the bottom
+;; options-menu, main-menu, screens/world, & oben minimap
+; so app ==> screens (property editor not here)
+; just pass to options-menu,e tc. stuff ?
+
+; actually do I need those ?!
+
+; * minimap, options-menu  -> integrate
+; * maybe property/(== map-editor link from world gen property)  also integrate just ?
+; * or separate app
+
 (def-type :properties/app
   {:schema [:app/lwjgl3
             :app/context]
-   :overview {:title "Apps"
+   :overview {:title "Apps" ; - only 1 ? - no overview - ?
               :columns 10}})
 
 ; 28.4 viewportwidth
@@ -166,7 +177,8 @@
                      :record-transactions? false ; TODO top level flag ?
                      :tiled-level tiled-level))
 
-(def ^:private ^:dbg-flag pausing? true)
+(def ^:private ^:dbg-flag pausing? true) ; allow setting @ app/game config?
+; context/world ... ?
 
 (defn- player-unpaused? []
   (or (.isKeyJustPressed gdx-input Input$Keys/P)
@@ -426,6 +438,9 @@
 
  )
 
+;; world widgets/ui ?
+; what context?!
+
 (defn- ->ui-actors [ctx widget-data]
   [(->table {:rows [[{:actor (->action-bar)
                       :expand? true
@@ -550,6 +565,10 @@
         (change-screen :screens/world)
         (start-new-game (->world ctx world-id)))))
 
+;; we are in 'world' namespace?
+; then where does main-menu/minimap/etc go
+; actually do I need them ?!
+
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (->table {:rows (remove nil? (concat
                                    (for [{:keys [property/id]} (all-properties ctx :properties/worlds)]
@@ -651,13 +670,10 @@
 (defn- render! [app-state]
   (screen-render! (current-screen @app-state) app-state))
 
-(defn- ->application [context]
+(defn- ->application-listener [context]
   (proxy [ApplicationAdapter] []
     (create []
-      (.bindRoot #'gdx-app      Gdx/app)
-      (.bindRoot #'gdx-files    Gdx/files)
-      (.bindRoot #'gdx-input    Gdx/input)
-      (.bindRoot #'gdx-graphics Gdx/graphics)
+      (bind-gdx-statics!)
       (->> context
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
@@ -717,15 +733,27 @@
                 [:context/vis-ui {:optional true}]
                 [:context/tiled-map-renderer {:optional true}]]]})
 
+(defn- ->lwjgl3-app [listener config]
+  (Lwjgl3Application. listener config))
+
 (defn -main []
+
+  ; TODO this is part of lwjgl3 config - mac can pass config key
+
   ; https://github.com/libgdx/libgdx/pull/7361
   ; Maybe can delete this when using that new libgdx version
   ; which includes this PR.
-  (when (SharedLibraryLoader/isMac)
+  (when SharedLibraryLoader/isMac
     (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
     (.set Configuration/GLFW_CHECK_THREAD0 false))
-  (let [ctx (map->Context {:context/properties
-                           (validate-and-create "resources/properties.edn")})
+
+
+
+  (let [ctx (map->Ctx {:context/properties
+                       (validate-and-create "resources/properties.edn")})
         app (build-property ctx :app/core)]
-    (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
-                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
+    ; the app internally reads the config & appl - listener
+    ; and lwjgl3/keys for config
+    ; and app/lwjg3-config
+    (->lwjgl3-app (->application-listener (safe-merge ctx (:app/context app)))
+                  (->lwjgl3-app-config (:app/lwjgl3 app)))))

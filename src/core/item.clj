@@ -1,5 +1,5 @@
 (ns core.item
-  (:require [clojure.gdx :refer :all]
+  (:require [clojure.world :refer :all]
             [data.grid2d :as grid2d])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
@@ -147,7 +147,7 @@
   (do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
-(extend-type clojure.gdx.Entity
+(extend-type clojure.world.Entity
   Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))

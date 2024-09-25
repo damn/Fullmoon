@@ -38,7 +38,7 @@ It will start the application and also:
 * On any error the JVM does not have to be restarted, you can fix the error and call `dev.interactive/restart!` I have bound it on my VIM to F5 with:
   `nmap <F5> :Eval (do (in-ns 'dev.interactive)(restart!))`
 
-# [API Docs](https://damn.github.io/clojure.gdx/)
+# [API Docs](https://damn.github.io/clojure.world/)
 
 # Namespaces
 

@@ -1,13 +1,13 @@
-(ns clojure.gdx
-  (:require [clojure.set :as set]
-            [clojure.string :as str]
-            [clojure.edn :as edn]
-            [clojure.math :as math]
-            clojure.pprint
-            [clj-commons.pretty.repl :as p]
-            [malli.core :as m]
-            [malli.error :as me]
-            [malli.generator :as mg])
+(ns clojure.world
+  (:require (clojure [set :as set]
+                     [string :as str]
+                     [edn :as edn]
+                     [math :as math]
+                     [pprint :refer [pprint]])
+            [clj-commons.pretty.repl :refer [pretty-pst]]
+            (malli [core :as m]
+                   [error :as me]
+                   [generator :as mg]))
   (:import java.util.Random
            (com.badlogic.gdx Gdx Application Files Input Input$Keys)
            com.badlogic.gdx.audio.Sound
@@ -26,6 +26,27 @@
            (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator)
            space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster))
+
+(defrecord Ctx [])
+
+(def ^{:doc "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging."}
+  app-state (atom nil))
+
+; Use (.postRunnable gdx-app f-with-no-args) for altering the state atom
+; => write a macro/fn for that?
+
+; also I want to have docs somewhere else?
+; code easier to read?
+
+; in another file ?
+; and with a macro read in?
+; then can write as much as I want there
+
+;;;;
+;;;;
+;;;; 🔧 Utils
+;;;;
+;;;;
 
 (defn remove-one [coll item]
   (let [[n m] (split-with (partial not= item) coll)]
@@ -90,10 +111,11 @@
       nil
       idx)))
 
-(def ^{:tag Application}               gdx-app)
-(def ^{:tag Files}                     gdx-files)
-(def ^{:tag Input}                     gdx-input)
-(def ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
+;;;;
+;;;;
+;;;; 👽 Alien Technology
+;;;;
+;;;;
 
 (def ^{:doc "Map of all systems as key of name-string to var."} defsystems {})
 
@@ -114,32 +136,6 @@
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
-
-(defsystem ->mk "Create component value. Default returns v." [_ ctx])
-(defmethod ->mk :default [[_ v] _ctx] v)
-
-(defn create-vs
-  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
-  [components ctx]
-  (reduce (fn [m [k v]]
-            (assoc m k (->mk [k v] ctx)))
-          {}
-          components))
-
-(defn create-into
-  "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
-  or false, assoc's at ctx k v"
-  [ctx components]
-  (assert (map? ctx))
-  (reduce (fn [ctx [k v]]
-            (if-let [v (->mk [k v] ctx)]
-              (assoc ctx k v)
-              ctx))
-          ctx
-          components))
-
-(defsystem destroy! "Side effect destroy resources. Default do nothing." [_])
-(defmethod destroy! :default [_])
 
 (def component-attributes {})
 
@@ -213,10 +209,52 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
-(defrecord Context [])
+;; Gdx statics
 
-(def ^{:doc "An atom referencing the current context. Only use by ui-callbacks or for development/debugging."}
-  app-state (atom nil))
+(declare ^{:tag Application}               gdx-app
+         ^{:tag Files}                     gdx-files
+         ^{:tag Input}                     gdx-input
+         ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
+
+(defn bind-gdx-statics! []
+  (.bindRoot #'gdx-app      Gdx/app)
+  (.bindRoot #'gdx-files    Gdx/files)
+  (.bindRoot #'gdx-input    Gdx/input)
+  (.bindRoot #'gdx-graphics Gdx/graphics))
+
+;; Create & Destroy systems & helper fns
+
+(defsystem ->mk "Create component value. Default returns v." [_ ctx])
+(defmethod ->mk :default [[_ v] _ctx] v)
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
+  [components ctx]
+  (reduce (fn [m [k v]]
+            (assoc m k (->mk [k v] ctx)))
+          {}
+          components))
+
+(defn create-into
+  "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
+  or false, assoc's at ctx k v"
+  [ctx components]
+  (assert (map? ctx))
+  (reduce (fn [ctx [k v]]
+            (if-let [v (->mk [k v] ctx)]
+              (assoc ctx k v)
+              ctx))
+          ctx
+          components))
+
+(defsystem destroy! "Side effect destroy resources. Default do nothing." [_])
+(defmethod destroy! :default [_])
+
+;;;;
+;;;;
+;;;; 💥 Effects
+;;;;
+;;;;
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -225,7 +263,7 @@ Example:
   (reset! frame->txs {}))
 
 #_(defn summarize-txs [_ txs]
-  (clojure.pprint/pprint
+  (pprint
    (for [[txkey txs] (group-by first txs)]
      [txkey (count txs)])))
 
@@ -317,6 +355,11 @@ Example:
           ctx
           txs))
 
+;;;;
+;;;;
+;;;; 🌀 Assets
+;;;;
+;;;;
 
 (defn- ->asset-manager ^AssetManager []
   (proxy [AssetManager clojure.lang.ILookup] []
@@ -387,6 +430,8 @@ Returns ctx."
   (do! [[_ file] ctx]
     (play-sound! ctx file)))
 
+;; ???
+
 (defprotocol RenderWorldView
   (render-world-view [ctx render-fn] "render-fn is a function of param 'g', graphics context."))
 
@@ -401,6 +446,8 @@ Returns ctx."
   (player-clicked-inventory [ctx cell])
   (player-clicked-skillmenu [ctx skill]))
 
+;; effect systems -> move to effect
+
 (defsystem applicable?
   "An effect will only be done (with do!) if this function returns truthy.
 Required system for every effect, no default."
@@ -413,6 +460,8 @@ For example use for healing effect is only useful if hitpoints is < max.
 Default method returns true."
   [_ ctx])
 (defmethod useful? :default [_ ctx] true)
+
+;; info-text system
 
 (defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
 (defmethod info-text :default [_ ctx])
@@ -463,9 +512,17 @@ Default method returns true."
        (str/join "\n")
        remove-newlines))
 
+;;
+
 (defprotocol Entities
   (all-entities [_])
   (get-entity [_ uid]))
+
+;;;;
+;;;;
+;;;; 💾 Properties
+;;;;
+;;;;
 
 (defn def-attributes [& attributes-data]
   {:pre [(even? (count attributes-data))]}
@@ -481,6 +538,12 @@ Default method returns true."
 
 (defprotocol Property
   (build-property [_ id]))
+
+;;;;
+;;;;
+;;;; 🎨 Graphics
+;;;;
+;;;;
 
 (defn ->color
   ([r g b]
@@ -534,6 +597,8 @@ Default method returns true."
   (world-viewport-width  [_])
   (world-viewport-height [_]))
 
+;; ctx/config
+
 (def-attributes
   :tag [:enum [:dev :prod]]
   :configs :some)
@@ -544,13 +609,19 @@ Default method returns true."
   (->mk [_ _ctx]
     (get configs tag)))
 
+;; gdx helper fns
+
 (defn dispose [obj] (Disposable/.dispose obj))
 
 (defprotocol ActiveEntities
   (active-entities [_]))
 
+;; graphics
+
 (def color-black Color/BLACK)
 (def color-white Color/WHITE)
+
+;; screen systems
 
 (defsystem screen-enter "FIXME" [_ ctx])
 (defmethod screen-enter :default [_ ctx])
@@ -563,6 +634,8 @@ Default method returns true."
 (defsystem screen-render "FIXME" [_ ctx])
 (defmethod screen-render :default [_ ctx]
   ctx)
+
+;; property/pretty-name
 
 (com.badlogic.gdx.graphics.Colors/put
  "ITEM_GOLD"
@@ -577,9 +650,13 @@ Default method returns true."
   (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
 
+;; raycaster
+
 (defprotocol PRayCaster
   (ray-blocked? [ctx start target])
   (path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
+
+;; image
 
 (defn ->texture-region
   ([^Texture tex]
@@ -636,8 +713,8 @@ Default method returns true."
          rotation)
   (if color (.setColor batch Color/WHITE)))
 
-(extend-type clojure.gdx.Graphics
-  clojure.gdx/ImageDraw
+(extend-type Graphics
+  ImageDraw
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]
@@ -695,6 +772,12 @@ Default method returns true."
                (int (/ sprite-y tileh))]))
     (->image ctx file)))
 
+;;;;
+;;;;
+;;;; 🖥️ Screens
+;;;;
+;;;;
+
 (defcomponent :context/screens
   {:data :some
    :let screen-ks}
@@ -729,6 +812,8 @@ Default method returns true."
     (screen-enter [new-screen-key screen-v] new-context)
     new-context))
 
+;; dev vim helper -> can generate after changes on commit & deploy?
+
 (defn vimstuff []
   (spit "vimstuff"
         (apply str
@@ -739,6 +824,8 @@ Default method returns true."
                                                           (ns-publics *ns*)))))))))
 ; TODO no anonym class, macros
 ; Graphics & Image not highlighted
+
+;; graphics/text
 
 (defn- ->params [size quality-scaling]
   (let [params (FreeTypeFontGenerator$FreeTypeFontParameter.)]
@@ -769,8 +856,8 @@ Default method returns true."
       count
       (* (.getLineHeight font))))
 
-(extend-type clojure.gdx.Graphics
-  clojure.gdx/TextDrawer
+(extend-type Graphics
+  TextDrawer
   (draw-text [{:keys [default-font unit-scale batch]}
               {:keys [x y text font h-align up? scale]}]
     (let [^BitmapFont font (or font default-font)
@@ -789,6 +876,8 @@ Default method returns true."
                :right  Align/right)
              false) ; wrap false, no need target-width
       (.setScale data old-scale))))
+
+;; graphics/shape
 
 (defn- ->shape-drawer [batch]
   (let [tex (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
@@ -811,8 +900,8 @@ Default method returns true."
 (defn- set-color [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (munge-color color)))
 
-(extend-type clojure.gdx.Graphics
-  clojure.gdx/PShapeDrawer
+(extend-type Graphics
+  PShapeDrawer
   (draw-ellipse [{:keys [^ShapeDrawer shape-drawer]} [x y] radius-x radius-y color]
     (set-color shape-drawer color)
     (.ellipse shape-drawer (float x) (float y) (float radius-x) (float radius-y)) )
@@ -867,6 +956,8 @@ Default method returns true."
       (draw-fn)
       (.setDefaultLineWidth shape-drawer (float old-line-width)))))
 
+;; graphics views gui/world
+
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
    :viewport (FitViewport. world-width
@@ -887,8 +978,8 @@ Default method returns true."
   {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
-(extend-type clojure.gdx.Graphics
-  clojure.gdx/WorldView
+(extend-type Graphics
+  WorldView
   (world-unit-scale [{:keys [world-view]}]
     (:unit-scale world-view))
 
@@ -924,7 +1015,7 @@ Default method returns true."
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(extend-type clojure.gdx.Context
+(extend-type Ctx
   Views
   (gui-mouse-position    [ctx] (gui-mouse-position*             (gr ctx)))
   (world-mouse-position  [ctx] (world-mouse-position*           (gr ctx)))
@@ -933,6 +1024,8 @@ Default method returns true."
   (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
   (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
   (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx)))))
+
+;; graphics cursors
 
 (defn- ->cursor [file [hotspot-x hotspot-y]]
   (let [pixmap (Pixmap. (.internal gdx-files file))
@@ -952,6 +1045,8 @@ Default method returns true."
   (do! [[_ cursor-key] ctx]
     (set-cursor! ctx cursor-key)
     ctx))
+
+;; ctx/graphics
 
 (def-attributes
   :views [:map [:gui-view :world-view]]
@@ -1001,7 +1096,7 @@ Default method returns true."
   [ctx render-fn]
   (render-view ctx :gui-view render-fn))
 
-(extend-type clojure.gdx.Context
+(extend-type Ctx
   RenderWorldView
   (render-world-view [ctx render-fn]
     (render-view ctx :world-view render-fn)) )
@@ -1010,6 +1105,12 @@ Default method returns true."
   (.update (gui-viewport g) w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update (world-viewport g) w h false))
+
+;;;;
+;;;;
+;;;; ⏳️ Time
+;;;;
+;;;;
 
 (def ctx-time :context/time)
 
@@ -1023,12 +1124,12 @@ Default method returns true."
   [ctx]
   (:delta-time (ctx-time ctx)))
 
-(defn elapsed-time
+(defn elapsed-time ; world-time, not counting different screens or paused world....
   "The elapsed in-game-time (not counting when game is paused)."
   [ctx]
   (:elapsed (ctx-time ctx)))
 
-(defn logic-frame
+(defn logic-frame ; starting with 0 ... ? when not doing anything
   "The game-logic frame number, starting with 1. (not counting when game is paused)"
   [ctx]
   (:logic-frame (ctx-time ctx)))
@@ -1052,6 +1153,12 @@ Default method returns true."
     ; min 1 because floating point math inaccuracies
     (min 1 (/ (- stop-time (elapsed-time ctx)) duration))))
 
+;;;;
+;;;;
+;;;;️ 🌍 World
+;;;;
+;;;;
+
 (defprotocol Grid
   (cached-adjacent-cells [grid cell])
   (rectangle->cells [grid rectangle])
@@ -1072,6 +1179,8 @@ Default method returns true."
 
 (defn cells->entities [cells*]
   (into #{} (mapcat :entities) cells*))
+
+;; data/val-max
 
 (def val-max-schema
   (m/schema [:and
@@ -1096,6 +1205,8 @@ Default method returns true."
 #_(defn set-to-max [[v mx]]
   {:pre [(m/validate val-max-schema [v mx])]}
   [mx mx])
+
+;; intersections/geometry/shapes
 
 (defn- ->circle [[x y] radius]
   (Circle. x y radius))
@@ -1154,6 +1265,8 @@ Default method returns true."
                    (- (float y) radius)]
      :width  size
      :height size}))
+
+;; again raycaster, move together
 
 (defprotocol PFastRayCaster
   (fast-ray-blocked? [_ start target]))
@@ -1261,6 +1374,15 @@ Default method returns true."
     (g/draw-line start1screenx start1screeny target1screenx target1screeny color)
     (g/draw-line start2screenx start2screeny target2screenx target2screeny color)))
 
+
+;;;;
+;;;;
+;;;;️ 📐 Geometry
+;;;;
+;;;;
+
+;; vector2d
+
 ; TODO not important badlogic, using clojure vectors
 ; could extend some protocol by clojure vectors and just require the protocol
 ; also call vector2 v2/add ? v2/scale ?
@@ -1297,7 +1419,7 @@ Default method returns true."
 
 (comment
 
- (clojure.pprint/pprint
+ (pprint
   (for [v [[0 1]
            [1 1]
            [1 0]
@@ -1312,6 +1434,8 @@ Default method returns true."
 
  )
 
+;; ns-utils
+
 (defn get-namespaces [packages]
   (filter #(packages (first (str/split (name (ns-name %)) #"\.")))
           (all-ns)))
@@ -1322,13 +1446,15 @@ Default method returns true."
     avar))
 
 (comment
- (clojure.pprint/pprint
+ (pprint
   (enumeration-seq (.getResources (ClassLoader/getSystemClassLoader) "components")))
 
- (clojure.pprint/pprint
+ (pprint
   (seq (.getDefinedPackages (ClassLoader/getSystemClassLoader))))
 
  )
+
+;; RANDOM utils
 
 ;; Seed
 
@@ -1420,6 +1546,8 @@ Default method returns true."
 (defn high-weighted-rand-nth [coll]
   (nth coll (high-weighted-rand-int (count coll))))
 
+;; CAMERA (is only world, see use cases )
+
 (defn camera-position
   "Returns camera position as [x y] vector."
   [^Camera camera]
@@ -1483,6 +1611,8 @@ Default method returns true."
   [camera]
   (set-zoom! camera 1))
 
+;;
+
 (defprotocol Pathfinding
   (potential-fields-follow-to-enemy [ctx eid]))
 
@@ -1491,6 +1621,14 @@ Default method returns true."
 
 (defprotocol WorldGen
   (->world [ctx world-id]))
+
+;; ctx/vis-ui
+
+;;;;
+;;;;
+;;;;️ 🎛️ UI
+;;;;
+;;;;
 
 (defn- check-cleanup-visui! []
   ; app crashes during startup before VisUI/dispose and we do clojure.tools.namespace.refresh-> gui elements not showing.
@@ -1527,6 +1665,8 @@ Default method returns true."
 
   (destroy! [_]
     (VisUI/dispose)))
+
+;; gdx scene2d helper
 
 (defn actor-id [^Actor actor]
   (.getUserObject actor))
@@ -1577,6 +1717,8 @@ Default method returns true."
   "Returns the parent actor, or null if not in a group."
   [^Actor actor]
   (.getParent actor))
+
+;; vis-tooltip
 
 (defn add-tooltip!
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
@@ -1635,6 +1777,8 @@ Default method returns true."
     (first (filter #(= id (actor-id %))
                    actors))))
 
+;; screens/stage
+
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
   {:let {:keys [^Stage stage sub-screen]}}
@@ -1680,6 +1824,8 @@ Default method returns true."
 (defn stage-add! [ctx actor]
   (-> ctx stage-get (.addActor actor))
   ctx)
+
+;; ui
 
 (defn set-cell-opts [^Cell cell opts]
   (doseq [[option arg] opts]
@@ -1781,11 +1927,13 @@ Default method returns true."
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image clojure.gdx.Image
+(defmethod ->vis-image Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defn ->actor [{:keys [draw act]}]
+(defn ->actor
+  "[com.badlogic.gdx.scenes.scene2d.Actor](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/Actor.html)"
+  [{:keys [draw act]}]
   (proxy [Actor] []
     (draw [_batch _parent-alpha]
       (when draw
@@ -1822,7 +1970,9 @@ Default method returns true."
     (run! #(add-actor! group %) actors)
     group))
 
-(defn ->button-group [{:keys [max-check-count min-check-count]}]
+(defn ->button-group
+  "https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/ButtonGroup.html"
+  [{:keys [max-check-count min-check-count]}]
   (let [button-group (ButtonGroup.)]
     (.setMaxCheckCount button-group max-check-count)
     (.setMinCheckCount button-group min-check-count)
@@ -1834,7 +1984,8 @@ Default method returns true."
     button))
 
 (defn ->check-box
-  "on-clicked is a fn of one arg, taking the current isChecked state"
+  "on-clicked is a fn of one arg, taking the current isChecked state
+  [com.kotcrab.vis.ui.widget.VisCheckBox](https://www.javadoc.io/static/com.kotcrab.vis/vis-ui/1.5.3/com/kotcrab/vis/ui/widget/VisCheckBox.html)"
   [text on-clicked checked?]
   (let [^Button button (VisCheckBox. ^String text)]
     (.setChecked button checked?)
@@ -1967,7 +2118,7 @@ Default method returns true."
 
 (defn error-window! [ctx throwable]
   (binding [*print-level* 5]
-    (p/pretty-pst throwable 24))
+    (pretty-pst throwable 24))
   (stage-add! ctx (->window {:title "Error"
                              :rows [[(->label (binding [*print-level* 3]
                                                 (with-err-str
@@ -1986,6 +2137,8 @@ Default method returns true."
 (defn- show-player-modal! [ctx {:keys [title text button-text on-click]}]
   (assert (not (::modal (stage-get ctx))))
   (stage-add! ctx
+              ; move into separate fns with params
+              ; and othe rstuff into do
               (->window {:title title
                          :rows [[(->label text)]
                                 [(->text-button button-text
@@ -2001,6 +2154,8 @@ Default method returns true."
 (defcomponent :tx/player-modal
   (do! [[_ params] ctx]
     (show-player-modal! ctx params)))
+
+;; context msg yo player
 
 (def ^:private ctx-msg-player :context/msg-to-player)
 
@@ -2050,6 +2205,8 @@ Default method returns true."
                        (add-tooltip! button #(->info-text (build-property % id) %)) ; TODO no player modifiers applied (see actionbar)
                        button))]
              :pack? true}))
+
+;; properties
 
 (defsystem ->value "..." [_])
 
@@ -2124,7 +2281,7 @@ Default method returns true."
     (fn []
       (binding [*print-level* nil]
         (->> data
-             clojure.pprint/pprint
+             pprint
              with-out-str
              (spit file)))))))
 
@@ -2171,7 +2328,7 @@ Default method returns true."
                            (if (map? v) (build ctx v) v)
                            ctx))))
 
-(extend-type clojure.gdx.Context
+(extend-type Ctx
   Property
   (build-property [{{:keys [db]} :context/properties :as ctx} id]
     (build ctx (safe-get db id))))
@@ -2359,8 +2516,8 @@ Default method returns true."
 (defmethod ->widget :sound [_ sound-file _ctx]
   (let [table (->table {:cell-defaults {:pad 5}})]
     (add-rows! table [(if sound-file
-                           (->sound-columns table sound-file)
-                           [(->text-button "No sound" #(open-sounds-window! % table))])])
+                        (->sound-columns table sound-file)
+                        [(->text-button "No sound" #(open-sounds-window! % table))])])
     table))
 
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
@@ -2622,7 +2779,7 @@ Default method returns true."
 (defcomponent :screens/property-editor
   (->mk [_ ctx]
     {:stage (let [stage (->stage ctx [(->background-image ctx)
-                                         (->tabbed-pane (->tabs-data ctx))])]
+                                      (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
                                       (if (= keycode Input$Keys/SHIFT_LEFT)
@@ -2752,14 +2909,20 @@ Default method returns true."
 
 (defcomponent :val-max {:schema (m/form val-max-schema)})
 
-(defn define-order [order-k-vector]
+;;;;
+;;;;
+;;;;️ 👾️ Entities
+;;;;
+;;;;
+
+(defn- define-order [order-k-vector]
   (apply hash-map
          (interleave order-k-vector (range))))
 
-(defn sort-by-order [coll get-item-order-k order]
+(defn- sort-by-order [coll get-item-order-k order]
   (sort-by #((get-item-order-k %) order) < coll))
 
-(defn order-contains? [order k]
+#_(defn order-contains? [order k]
   ((apply hash-set (keys order)) k))
 
 #_(deftest test-order
@@ -2999,7 +3162,7 @@ Default method returns true."
    (run! #(system % entity* g ctx) entity*)
    (catch Throwable t
      (draw-body-rect g entity* Color/RED)
-     (p/pretty-pst t 12))))
+     (pretty-pst t 12))))
 
 (defn- tick-system [ctx entity]
   (try
@@ -3019,7 +3182,7 @@ Default method returns true."
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(extend-type clojure.gdx.Context
+(extend-type Ctx
   Entities
   (all-entities [ctx] (vals (entities ctx)))
   (get-entity [ctx uid] (get (entities ctx) uid)))
@@ -3380,6 +3543,8 @@ Default method returns true."
         {:text text
          :counter (->counter ctx 0.4)})]]))
 
+;; ctx
+
 (defn- calculate-mouseover-entity [ctx]
   (let [player-entity* (player-entity* ctx)
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
@@ -3395,7 +3560,7 @@ Default method returns true."
 
 (def ^:private ctx-mouseover-entity :context/mouseover-entity)
 
-(extend-type clojure.gdx.Context
+(extend-type Ctx
   MouseOverEntity
   (mouseover-entity* [ctx]
     (when-let [entity (ctx-mouseover-entity ctx)]
@@ -3446,6 +3611,8 @@ Default method returns true."
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                  :counter (->counter ctx duration)}]]))))
 
+;; entity (-state)
+
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 
@@ -3481,6 +3648,12 @@ Default method returns true."
       (let [v (add-vs (remove nil? [r l u d]))]
         (when (pos? (v-length v))
           v)))))
+
+;;;;
+;;;;
+;;;; ⚔️  Stats
+;;;;
+;;;;
 
 (defsystem op-value-text "FIXME" [_])
 (defsystem op-apply "FIXME" [_ base-value])
@@ -3647,7 +3820,7 @@ Default method returns true."
       (when (seq modifiers)
         (mod-info-text modifiers)))))
 
-(extend-type clojure.gdx.Entity
+(extend-type Entity
   Modifiers
   (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
     {:pre [(= "modifier" (namespace modifier-k))]}
@@ -3806,7 +3979,7 @@ Default method returns true."
   {:data :number
    :modifier-ops [:op/inc]})
 
-(extend-type clojure.gdx.Entity
+(extend-type Entity
   Stats
   (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]

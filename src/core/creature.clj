@@ -1,5 +1,5 @@
-(ns ^:no-doc core.creature
-  (:require [clojure.gdx :refer :all]
+(ns core.creature
+  (:require [clojure.world :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
             [core.item :as inventory])
@@ -201,7 +201,7 @@
   (info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(extend-type clojure.gdx.Entity
+(extend-type clojure.world.Entity
   State
   (entity-state [entity*]
     (-> entity* :entity/state :state))
@@ -384,7 +384,7 @@
     (when (world-item? ctx)
       (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
-(extend-type clojure.gdx.Graphics
+(extend-type clojure.world.Graphics
   DrawItemOnCursor
   (draw-item-on-cursor [g ctx]
     (let [player-entity* (player-entity* ctx)]
@@ -447,7 +447,7 @@
 (defn- p-state-obj [ctx]
   (-> ctx player-entity* state-obj))
 
-(extend-type clojure.gdx.Context
+(extend-type clojure.world.Ctx
   Player
   (player-entity  [ctx]  (ctx-player ctx))
   (player-entity* [ctx] @(ctx-player ctx))

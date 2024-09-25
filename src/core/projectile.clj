@@ -1,5 +1,5 @@
-(ns ^:no-doc core.projectile
-  (:require [clojure.gdx :refer :all]))
+(ns core.projectile
+  (:require [clojure.world :refer :all]))
 
 (def-type :properties/projectiles
   {:schema [:entity/image
