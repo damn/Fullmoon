@@ -1,4 +1,4 @@
-(ns core.projectile
+(ns ^:no-doc core.projectile
   (:require [clojure.gdx :refer :all]))
 
 (def-type :properties/projectiles

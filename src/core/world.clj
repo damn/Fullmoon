@@ -1,4 +1,4 @@
-(ns core.world
+(ns ^:no-doc core.world
   (:require [clojure.gdx :refer :all]
             [clojure.string :as str]
             [data.grid2d :as g]

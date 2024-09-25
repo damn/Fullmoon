@@ -1,4 +1,4 @@
-(ns core.skill
+(ns ^:no-doc core.skill
   (:require [clojure.gdx :refer :all])
   (:import com.badlogic.gdx.Input$Buttons
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
