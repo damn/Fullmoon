@@ -5,6 +5,7 @@
             [core.tiled :as tiled]
             core.audiovisual
             core.creature
+            core.projectile
             core.skill
             core.world)
   (:import org.lwjgl.system.Configuration
