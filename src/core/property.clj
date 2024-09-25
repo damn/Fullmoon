@@ -648,7 +648,7 @@
                                                  (ui/remove! window)
                                                  (redo-rows ctx (conj property-ids id))
                                                  ctx)]
-                             (ui/add! window (->overview-table ctx property-type clicked-id-fn))
+                             (.add window (->overview-table ctx property-type clicked-id-fn))
                              (.pack window)
                              (ui/stage-add! ctx window))))]
       (for [property-id property-ids]
@@ -692,7 +692,7 @@
                                                    (ui/remove! window)
                                                    (redo-rows ctx id)
                                                    ctx)]
-                               (ui/add! window (->overview-table ctx property-type clicked-id-fn))
+                               (.add window (->overview-table ctx property-type clicked-id-fn))
                                (.pack window)
                                (ui/stage-add! ctx window)))))]
       [(when property-id

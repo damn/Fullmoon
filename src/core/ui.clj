@@ -70,13 +70,10 @@
 (defn set-position! [^Actor actor x y]
   (.setPosition actor x y))
 
-(defn width  [^Actor actor] (.getWidth actor))
-(defn height [^Actor actor] (.getHeight actor))
-
-(defn set-center! [actor x y]
+(defn set-center! [^Actor actor x y]
   (set-position! actor
-                 (- x (/ (width actor) 2))
-                 (- y (/ (height actor) 2))))
+                 (- x (/ (.getWidth actor) 2))
+                 (- y (/ (.getHeight actor) 2))))
 
 (defn set-touchable!
   ":children-only, :disabled or :enabled."
@@ -201,14 +198,6 @@
 (defn stage-add! [ctx actor]
   (-> ctx stage-get (.addActor actor))
   ctx)
-
-(defn cells [^Table table]
-  (.getCells table))
-
-(defn add!
-  "Adds a new cell to the table with the specified actor."
-  [^Table table actor]
-  (.add table ^Actor actor))
 
 (defn set-cell-opts [^Cell cell opts]
   (doseq [[option arg] opts]
