@@ -59,6 +59,10 @@ It will start the application and also:
 
 # [API Docs](https://damn.github.io/core/)
 
+# Namespaces
+
+![namespaces](https://github.com/user-attachments/assets/7aebbb4a-67b1-453b-8ad2-8c4d196bd358)
+
 # Code Licensed under MIT License.
 
 # Asset license
