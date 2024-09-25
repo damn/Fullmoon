@@ -86,7 +86,7 @@
           (for [nmspace (sort-by (comp name ns-name)
                                  (get-namespaces
                                   (fn [first-ns-part-str]
-                                    (not (#{"clojure"
+                                    (not (#{;"clojure"
                                             "nrepl"
                                             "malli"
                                             "user"

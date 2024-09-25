@@ -923,3 +923,700 @@ direction keys: move")
                          :show-grid-lines false})]
      :stage (->stage ctx [(->generate-map-window ctx world-id)
                              (->info-window ctx)])}))
+
+;; potential-fields
+
+; Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
+; adjacent cells are walls and blocked.
+; (important for wavefront-expansion and field-following)
+; * entities do not move to NADs (they remove them)
+; * the potential field flows into diagonals, so they should be reachable too.
+;
+; TODO assert @ mapload no NAD's and @ potential field init & remove from
+; potential-field-following the removal of NAD's.
+
+(def ^:private pf-cache (atom nil))
+
+(def factions-iterations {:good 15 :evil 5})
+
+(defn- cell-blocked? [cell*]
+  (blocked? cell* :z-order/ground))
+
+; FIXME assert @ mapload no NAD's and @ potential field init & remove from
+; potential-field-following the removal of NAD's.
+
+; TODO remove max pot field movement player screen + 10 tiles as of screen size
+; => is coupled to max-steps & also
+; to friendly units follow player distance
+
+; TODO remove cached get adj cells & use grid as atom not cells ?
+; how to compare perfr ?
+
+; TODO visualize steps, maybe I see something I missed
+
+(comment
+ (defrecord Foo [a b c])
+
+ (let [^Foo foo (->Foo 1 2 3)]
+   (time (dotimes [_ 10000000] (:a foo)))
+   (time (dotimes [_ 10000000] (.a foo)))
+   ; .a 7x faster ! => use for faction/distance & make record?
+   ))
+
+(comment
+ ; Stepping through manually
+ (clear-marked-cells! :good (get @faction->marked-cells :good))
+
+ (defn- faction->tiles->entities-map* [entities]
+   (into {}
+         (for [[faction entities] (->> entities
+                                       (filter   #(:entity/faction @%))
+                                       (group-by #(:entity/faction @%)))]
+           [faction
+            (zipmap (map #(entity-tile @%) entities)
+                    entities)])))
+
+ (def max-iterations 1)
+
+ (let [entities (map db/get-entity [140 110 91])
+       tl->es (:good (faction->tiles->entities-map* entities))]
+   tl->es
+   (def last-marked-cells (generate-potential-field :good tl->es)))
+ (println *1)
+ (def marked *2)
+ (step :good *1)
+ )
+
+(defn- diagonal-direction? [[x y]]
+  (and (not (zero? (float x)))
+       (not (zero? (float y)))))
+
+(defn- diagonal-cells? [cell* other-cell*]
+  (let [[x1 y1] (:position cell*)
+        [x2 y2] (:position other-cell*)]
+    (and (not= x1 x2)
+         (not= y1 y2))))
+
+(defrecord FieldData [distance entity])
+
+(defn- add-field-data! [cell faction distance entity]
+  (swap! cell assoc faction (->FieldData distance entity)))
+
+(defn- remove-field-data! [cell faction]
+  (swap! cell assoc faction nil)) ; don't dissoc - will lose the Cell record type
+
+; TODO performance
+; * cached-adjacent-non-blocked-cells ? -> no need for cell blocked check?
+; * sorted-set-by ?
+; * do not refresh the potential-fields EVERY frame, maybe very 100ms & check for exists? target if they died inbetween.
+; (or teleported?)
+(defn- step [grid faction last-marked-cells]
+  (let [marked-cells (transient [])
+        distance       #(nearest-entity-distance % faction)
+        nearest-entity #(nearest-entity          % faction)
+        marked? faction]
+    ; sorting important because of diagonal-cell values, flow from lower dist first for correct distance
+    (doseq [cell (sort-by #(distance @%) last-marked-cells)
+            adjacent-cell (cached-adjacent-cells grid cell)
+            :let [cell* @cell
+                  adjacent-cell* @adjacent-cell]
+            :when (not (or (cell-blocked? adjacent-cell*)
+                           (marked? adjacent-cell*)))
+            :let [distance-value (+ (float (distance cell*))
+                                    (float (if (diagonal-cells? cell* adjacent-cell*)
+                                             1.4 ; square root of 2 * 10
+                                             1)))]]
+      (add-field-data! adjacent-cell faction distance-value (nearest-entity cell*))
+      (conj! marked-cells adjacent-cell))
+    (persistent! marked-cells)))
+
+(defn- generate-potential-field
+  "returns the marked-cells"
+  [grid faction tiles->entities max-iterations]
+  (let [entity-cell-seq (for [[tile entity] tiles->entities] ; FIXME lazy seq
+                          [entity (get grid tile)])
+        marked (map second entity-cell-seq)]
+    (doseq [[entity cell] entity-cell-seq]
+      (add-field-data! cell faction 0 entity))
+    (loop [marked-cells     marked
+           new-marked-cells marked
+           iterations 0]
+      (if (= iterations max-iterations)
+        marked-cells
+        (let [new-marked (step grid faction new-marked-cells)]
+          (recur (concat marked-cells new-marked) ; FIXME lazy seq
+                 new-marked
+                 (inc iterations)))))))
+
+(defn- tiles->entities [entities faction]
+  (let [entities (filter #(= (:entity/faction @%) faction)
+                         entities)]
+    (zipmap (map #(entity-tile @%) entities)
+            entities)))
+
+(defn- update-faction-potential-field [grid faction entities max-iterations]
+  (let [tiles->entities (tiles->entities entities faction)
+        last-state   [faction :tiles->entities]
+        marked-cells [faction :marked-cells]]
+    (when-not (= (get-in @pf-cache last-state) tiles->entities)
+      (swap! pf-cache assoc-in last-state tiles->entities)
+      (doseq [cell (get-in @pf-cache marked-cells)]
+        (remove-field-data! cell faction))
+      (swap! pf-cache assoc-in marked-cells (generate-potential-field
+                                          grid
+                                          faction
+                                          tiles->entities
+                                          max-iterations)))))
+
+;; MOVEMENT AI
+
+(defn- indexed ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence of [index, item] pairs, where items come
+ from 's' and indexes count up from zero.
+
+ (indexed '(a b c d)) => ([0 a] [1 b] [2 c] [3 d])"
+  [s]
+  (map vector (iterate inc 0) s))
+
+(defn- utils-positions ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence containing the positions at which pred
+	 is true for items in coll."
+  [pred coll]
+  (for [[idx elt] (indexed coll) :when (pred elt)] idx))
+
+
+(let [order (g/get-8-neighbour-positions [0 0])]
+  (def ^:private diagonal-check-indizes
+    (into {} (for [[x y] (filter diagonal-direction? order)]
+               [(first (utils-positions #(= % [x y]) order))
+                (vec (utils-positions #(some #{%} [[x 0] [0 y]])
+                                     order))]))))
+
+(defn- is-not-allowed-diagonal? [at-idx adjacent-cells]
+  (when-let [[a b] (get diagonal-check-indizes at-idx)]
+    (and (nil? (adjacent-cells a))
+         (nil? (adjacent-cells b)))))
+
+(defn- remove-not-allowed-diagonals [adjacent-cells]
+  (remove nil?
+          (map-indexed
+            (fn [idx cell]
+              (when-not (or (nil? cell)
+                            (is-not-allowed-diagonal? idx adjacent-cells))
+                cell))
+            adjacent-cells)))
+
+; not using filter because nil cells considered @ remove-not-allowed-diagonals
+; TODO only non-nil cells check
+; TODO always called with cached-adjacent-cells ...
+(defn- filter-viable-cells [entity adjacent-cells]
+  (remove-not-allowed-diagonals
+    (mapv #(when-not (or (cell-blocked? @%)
+                         (occupied-by-other? @% entity))
+             %)
+          adjacent-cells)))
+
+(defmacro ^:private when-seq [[aseq bind] & body]
+  `(let [~aseq ~bind]
+     (when (seq ~aseq)
+       ~@body)))
+
+(defn- get-min-dist-cell [distance-to cells]
+  (when-seq [cells (filter distance-to cells)]
+    (apply min-key distance-to cells)))
+
+; rarely called -> no performance bottleneck
+(defn- viable-cell? [grid distance-to own-dist entity cell]
+  (when-let [best-cell (get-min-dist-cell
+                        distance-to
+                        (filter-viable-cells entity (cached-adjacent-cells grid cell)))]
+    (when (< (float (distance-to best-cell)) (float own-dist))
+      cell)))
+
+(defn- find-next-cell
+  "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
+  [grid entity own-cell]
+  (let [faction (enemy-faction @entity)
+        distance-to    #(nearest-entity-distance @% faction)
+        nearest-entity #(nearest-entity          @% faction)
+        own-dist (distance-to own-cell)
+        adjacent-cells (cached-adjacent-cells grid own-cell)]
+    (if (and own-dist (zero? (float own-dist)))
+      {:target-entity (nearest-entity own-cell)}
+      (if-let [adjacent-cell (first (filter #(and (distance-to %)
+                                                  (zero? (float (distance-to %))))
+                                            adjacent-cells))]
+        {:target-entity (nearest-entity adjacent-cell)}
+        {:target-cell (let [cells (filter-viable-cells entity adjacent-cells)
+                            min-key-cell (get-min-dist-cell distance-to cells)]
+                        (cond
+                         (not min-key-cell)  ; red
+                         own-cell
+
+                         (not own-dist)
+                         min-key-cell
+
+                         (> (float (distance-to min-key-cell)) (float own-dist)) ; red
+                         own-cell
+
+                         (< (float (distance-to min-key-cell)) (float own-dist)) ; green
+                         min-key-cell
+
+                         (= (distance-to min-key-cell) own-dist) ; yellow
+                         (or
+                          (some #(viable-cell? grid distance-to own-dist entity %) cells)
+                          own-cell)))}))))
+
+(defn- inside-cell? [grid entity* cell]
+  (let [cells (rectangle->cells grid entity*)]
+    (and (= 1 (count cells))
+         (= cell (first cells)))))
+
+  ; TODO work with entity* !? occupied-by-other? works with entity not entity* ... not with ids ... hmmm
+(defn- potential-field-follow-to-enemy* [world-grid entity] ; TODO pass faction here, one less dependency.
+  (let [grid world-grid
+        position (:position @entity)
+        own-cell (get grid (->tile position))
+        {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
+    (cond
+     target-entity
+     (v-direction position (:position @target-entity))
+
+     (nil? target-cell)
+     nil
+
+     :else
+     (when-not (and (= target-cell own-cell)
+                    (occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
+       (when-not (inside-cell? grid @entity target-cell)
+         (v-direction position (:middle @target-cell)))))))
+
+(defn potential-fields-update! [{:keys [context/grid]} entities]
+  (doseq [[faction max-iterations] factions-iterations]
+    (update-faction-potential-field grid faction entities max-iterations)))
+
+(extend-type clojure.gdx.Context
+  Pathfinding
+  (potential-fields-follow-to-enemy [{:keys [context/grid]} entity]
+    (potential-field-follow-to-enemy* grid entity)))
+
+;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
+
+; -> render on-screen tile stuff
+; -> I just use render-on-map and use tile coords
+; -> I need the current viewed tiles x,y,w,h
+
+#_(let [a 0.5]
+  (color/defrgb transp-red 1 0 0 a)
+  (color/defrgb transp-green 0 1 0 a)
+  (color/defrgb transp-orange 1 0.34 0 a)
+  (color/defrgb transp-yellow 1 1 0 a))
+
+#_(def ^:private adjacent-cells-colors (atom nil))
+
+#_(defn genmap
+    "function is applied for every key to get value. use memoize instead?"
+    [ks f]
+    (zipmap ks (map f ks)))
+
+#_(defn calculate-mouseover-body-colors [mouseoverbody]
+  (when-let [body mouseoverbody]
+    (let [occupied-cell (get (:context/grid context) (entity-tile @body))
+          own-dist (distance-to occupied-cell)
+          adj-cells (cached-adjacent-cells grid occupied-cell)
+          potential-cells (filter distance-to
+                                  (filter-viable-cells body adj-cells))
+          adj-cells (remove nil? adj-cells)]
+      (reset! adjacent-cells-colors
+        (genmap adj-cells
+          (fn [cell]
+            (cond
+              (not-any? #{cell} potential-cells)
+              transp-red
+
+              (not own-dist) ; die andre hat eine dist da sonst potential-cells rausgefiltert -> besser als jetzige cell.
+              transp-green
+
+              (< own-dist (distance-to cell))
+              transp-red
+
+              (= own-dist (distance-to cell))
+              transp-yellow
+
+              :else transp-green)))))))
+
+#_(defn render-potential-field-following-mouseover-info
+    [leftx topy xrect yrect cell mouseoverbody]
+    (when-let [body mouseoverbody]
+      (when-let [color (get @adjacent-cells-colors cell)]
+        (shape-drawer/filled-rectangle leftx topy 1 1 color)))) ; FIXME scale ok for map rendering?
+
+(defn- set-arr [arr cell* cell*->blocked?]
+  (let [[x y] (:position cell*)]
+    (aset arr x y (boolean (cell*->blocked? cell*)))))
+
+(defcomponent :context/raycaster
+  (->mk [[_ position->blocked?] {:keys [context/grid]}]
+    (let [width  (g/width  grid)
+          height (g/height grid)
+          arr (make-array Boolean/TYPE width height)]
+      (doseq [cell (g/cells grid)]
+        (set-arr arr @cell position->blocked?))
+      (map->ArrRayCaster {:arr arr
+                          :width width
+                          :height height}))))
+
+; TO math.... // not tested
+(defn- create-double-ray-endpositions
+  "path-w in tiles."
+  [[start-x start-y] [target-x target-y] path-w]
+  {:pre [(< path-w 0.98)]} ; wieso 0.98??
+  (let [path-w (+ path-w 0.02) ;etwas gr�sser damit z.b. projektil nicht an ecken anst�sst
+        v (v-direction [start-x start-y]
+                       [target-y target-y])
+        [normal1 normal2] (v-get-normal-vectors v)
+        normal1 (v-scale normal1 (/ path-w 2))
+        normal2 (v-scale normal2 (/ path-w 2))
+        start1  (v-add [start-x  start-y]  normal1)
+        start2  (v-add [start-x  start-y]  normal2)
+        target1 (v-add [target-x target-y] normal1)
+        target2 (v-add [target-x target-y] normal2)]
+    [start1,target1,start2,target2]))
+
+(extend-type clojure.gdx.Context
+  PRayCaster
+  (ray-blocked? [{:keys [context/raycaster]} start target]
+    (fast-ray-blocked? raycaster start target))
+
+  (path-blocked? [{:keys [context/raycaster]} start target path-w]
+    (let [[start1,target1,start2,target2] (create-double-ray-endpositions start target path-w)]
+      (or
+       (fast-ray-blocked? raycaster start1 target1)
+       (fast-ray-blocked? raycaster start2 target2)))))
+
+(defn- rectangle->tiles
+  [{[x y] :left-bottom :keys [left-bottom width height]}]
+  {:pre [left-bottom width height]}
+  (let [x       (float x)
+        y       (float y)
+        width   (float width)
+        height  (float height)
+        l (int x)
+        b (int y)
+        r (int (+ x width))
+        t (int (+ y height))]
+    (set
+     (if (or (> width 1) (> height 1))
+       (for [x (range l (inc r))
+             y (range b (inc t))]
+         [x y])
+       [[l b] [l t] [r b] [r t]]))))
+
+(defn- set-cells! [grid entity]
+  (let [cells (rectangle->cells grid @entity)]
+    (assert (not-any? nil? cells))
+    (swap! entity assoc ::touched-cells cells)
+    (doseq [cell cells]
+      (assert (not (get (:entities @cell) entity)))
+      (swap! cell update :entities conj entity))))
+
+(defn- remove-from-cells! [entity]
+  (doseq [cell (::touched-cells @entity)]
+    (assert (get (:entities @cell) entity))
+    (swap! cell update :entities disj entity)))
+
+; could use inside tiles only for >1 tile bodies (for example size 4.5 use 4x4 tiles for occupied)
+; => only now there are no >1 tile entities anyway
+(defn- rectangle->occupied-cells [grid {:keys [left-bottom width height] :as rectangle}]
+  (if (or (> (float width) 1) (> (float height) 1))
+    (rectangle->cells grid rectangle)
+    [(get grid
+          [(int (+ (float (left-bottom 0)) (/ (float width) 2)))
+           (int (+ (float (left-bottom 1)) (/ (float height) 2)))])]))
+
+(defn- set-occupied-cells! [grid entity]
+  (let [cells (rectangle->occupied-cells grid @entity)]
+    (doseq [cell cells]
+      (assert (not (get (:occupied @cell) entity)))
+      (swap! cell update :occupied conj entity))
+    (swap! entity assoc ::occupied-cells cells)))
+
+(defn- remove-from-occupied-cells! [entity]
+  (doseq [cell (::occupied-cells @entity)]
+    (assert (get (:occupied @cell) entity))
+    (swap! cell update :occupied disj entity)))
+
+; TODO LAZY SEQ @ g/get-8-neighbour-positions !!
+; https://github.com/damn/g/blob/master/src/data/grid2d.clj#L126
+(extend-type data.grid2d.Grid2D
+  Grid
+  (cached-adjacent-cells [grid cell]
+    (if-let [result (:adjacent-cells @cell)]
+      result
+      (let [result (into [] (keep grid) (-> @cell :position g/get-8-neighbour-positions))]
+        (swap! cell assoc :adjacent-cells result)
+        result)))
+
+  (rectangle->cells [grid rectangle]
+    (into [] (keep grid) (rectangle->tiles rectangle)))
+
+  (circle->cells [grid circle]
+    (->> circle
+         circle->outer-rectangle
+         (rectangle->cells grid)))
+
+  (circle->entities [grid circle]
+    (->> (circle->cells grid circle)
+         (map deref)
+         cells->entities
+         (filter #(shape-collides? circle @%)))))
+
+(def ^:private this :context/grid)
+
+(extend-type clojure.gdx.Context
+  GridPointEntities
+  (point->entities [ctx position]
+    (when-let [cell (get (this ctx) (->tile position))]
+      (filter #(point-in-rect? position @%)
+              (:entities @cell)))))
+
+(defn- grid-add-entity! [ctx entity]
+  (let [grid (this ctx)]
+    (set-cells! grid entity)
+    (when (:collides? @entity)
+      (set-occupied-cells! grid entity))))
+
+(defn- grid-remove-entity! [ctx entity]
+  (let [grid (this ctx)]
+    (remove-from-cells! entity)
+    (when (:collides? @entity)
+      (remove-from-occupied-cells! entity))))
+
+(defn- grid-entity-position-changed! [ctx entity]
+  (let [grid (this ctx)] (remove-from-cells! entity)
+    (set-cells! grid entity)
+    (when (:collides? @entity)
+      (remove-from-occupied-cells! entity)
+      (set-occupied-cells! grid entity))))
+
+(defrecord RCell [position
+                 middle ; only used @ potential-field-follow-to-enemy -> can remove it.
+                 adjacent-cells
+                 movement
+                 entities
+                 occupied
+                 good
+                 evil]
+  GridCell
+  (blocked? [_ z-order]
+    (case movement
+      :none true ; wall
+      :air (case z-order ; water/doodads
+             :z-order/flying false
+             :z-order/ground true)
+      :all false)) ; ground/floor
+
+  (blocks-vision? [_]
+    (= movement :none))
+
+  (occupied-by-other? [_ entity]
+    (some #(not= % entity) occupied)) ; contains? faster?
+
+  (nearest-entity [this faction]
+    (-> this faction :entity))
+
+  (nearest-entity-distance [this faction]
+    (-> this faction :distance)))
+
+(defn- create-cell [position movement]
+  {:pre [(#{:none :air :all} movement)]}
+  (map->RCell
+   {:position position
+    :middle (tile->middle position)
+    :movement movement
+    :entities #{}
+    :occupied #{}}))
+
+(defcomponent this
+  (->mk [[_ [width height position->value]] _world]
+    (g/create-grid width
+                        height
+                        #(atom (create-cell % (position->value %))))))
+
+(def ^:private content-grid :context/content-grid)
+
+(defn- content-grid-update-entity! [ctx entity]
+  (let [{:keys [grid cell-w cell-h]} (content-grid ctx)
+        {::keys [content-cell] :as entity*} @entity
+        [x y] (:position entity*)
+        new-cell (get grid [(int (/ x cell-w))
+                            (int (/ y cell-h))])]
+    (when-not (= content-cell new-cell)
+      (swap! new-cell update :entities conj entity)
+      (swap! entity assoc ::content-cell new-cell)
+      (when content-cell
+        (swap! content-cell update :entities disj entity)))))
+
+(defn- content-grid-remove-entity! [_ entity]
+  (-> @entity
+      ::content-cell
+      (swap! update :entities disj entity)))
+
+(defn- active-entities* [ctx center-entity*]
+  (let [{:keys [grid]} (content-grid ctx)]
+    (->> (let [idx (-> center-entity*
+                       ::content-cell
+                       deref
+                       :idx)]
+           (cons idx (g/get-8-neighbour-positions idx)))
+         (keep grid)
+         (mapcat (comp :entities deref)))))
+
+(extend-type clojure.gdx.Context
+  ActiveEntities
+  (active-entities [ctx]
+    (active-entities* ctx (player-entity* ctx))))
+
+(defcomponent content-grid
+  {:let [cell-w cell-h]}
+  (->mk [_ {:keys [context/grid]}]
+    {:grid (g/create-grid (inc (int (/ (g/width grid) cell-w))) ; inc because corners
+                               (inc (int (/ (g/height grid) cell-h)))
+                               (fn [idx]
+                                 (atom {:idx idx,
+                                        :entities #{}})))
+     :cell-w cell-w
+     :cell-h cell-h}))
+
+(comment
+
+ (defn get-all-entities-of-current-map [context]
+   (mapcat (comp :entities deref)
+           (g/cells (content-grid context))))
+
+ (count
+  (get-all-entities-of-current-map @app/state))
+
+ )
+
+(defcomponent :context/explored-tile-corners
+  (->mk [_ {:keys [context/grid]}]
+    (atom (g/create-grid (g/width grid)
+                         (g/height grid)
+                         (constantly false)))))
+
+(def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
+
+(def ^:private ^:dbg-flag see-all-tiles? false)
+
+(comment
+ (def ^:private count-rays? false)
+
+ (def ray-positions (atom []))
+ (def do-once (atom true))
+
+ (count @ray-positions)
+ 2256
+ (count (distinct @ray-positions))
+ 608
+ (* 608 4)
+ 2432
+ )
+
+(defn- ->tile-color-setter [light-cache light-position raycaster explored-tile-corners]
+  (fn tile-color-setter [_color x y]
+    (let [position [(int x) (int y)]
+          explored? (get @explored-tile-corners position) ; TODO needs int call ?
+          base-color (if explored? explored-tile-color color-black)
+          cache-entry (get @light-cache position :not-found)
+          blocked? (if (= cache-entry :not-found)
+                     (let [blocked? (fast-ray-blocked? raycaster light-position position)]
+                       (swap! light-cache assoc position blocked?)
+                       blocked?)
+                     cache-entry)]
+      #_(when @do-once
+          (swap! ray-positions conj position))
+      (if blocked?
+        (if see-all-tiles? color-white base-color)
+        (do (when-not explored?
+              (swap! explored-tile-corners assoc (->tile position) true))
+            color-white)))))
+
+(defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
+  (tiled/render! ctx
+                 tiled-map
+                 (->tile-color-setter (atom nil)
+                                      light-position
+                                      (:context/raycaster ctx)
+                                      (:context/explored-tile-corners ctx)))
+  #_(reset! do-once false))
+
+(def ^:private ^:dbg-flag spawn-enemies? true)
+
+(def ^:private player-components {:entity/state [:state/player :player-idle]
+                                  :entity/faction :good
+                                  :entity/player? true
+                                  :entity/free-skill-points 3
+                                  :entity/clickable {:type :clickable/player}
+                                  :entity/click-distance-tiles 1.5})
+
+(def ^:private npc-components {:entity/state [:state/npc :npc-sleeping]
+                               :entity/faction :evil})
+
+; player-creature needs mana & inventory
+; till then hardcode :creatures/vampire
+(defn- world->player-creature [{:keys [context/start-position]}
+                               {:keys [world/player-creature]}]
+  {:position start-position
+   :creature-id :creatures/vampire #_(:property/id player-creature)
+   :components player-components})
+
+(defn- world->enemy-creatures [{:keys [context/tiled-map]}]
+  (for [[position creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
+    {:position position
+     :creature-id (keyword creature-id)
+     :components npc-components}))
+
+(defn spawn-creatures! [ctx tiled-level]
+  (effect! ctx
+           (for [creature (cons (world->player-creature ctx tiled-level)
+                                (when spawn-enemies?
+                                  (world->enemy-creatures ctx)))]
+             [:tx/creature (update creature :position tile->middle)])))
+
+; TODO https://github.com/damn/core/issues/57
+; (check-not-allowed-diagonals grid)
+; done at module-gen? but not custom tiledmap?
+(defn ->world-map [{:keys [tiled-map start-position]}] ; == one object make ?! like graphics?
+  ; grep context/grid -> all dependent stuff?
+  (create-into {:context/tiled-map tiled-map
+                :context/start-position start-position}
+               {:context/grid [(tiled/width  tiled-map)
+                               (tiled/height tiled-map)
+                               #(case (tiled/movement-property tiled-map %)
+                                  "none" :none
+                                  "air"  :air
+                                  "all"  :all)]
+                :context/raycaster blocks-vision?
+                content-grid [16 16]
+                :context/explored-tile-corners true}))
+
+(defcomponent :tx/add-to-world
+  (do! [[_ entity] ctx]
+    (content-grid-update-entity! ctx entity)
+    ; https://github.com/damn/core/issues/58
+    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
+    (grid-add-entity! ctx entity)
+    ctx))
+
+(defcomponent :tx/remove-from-world
+  (do! [[_ entity] ctx]
+    (content-grid-remove-entity! ctx entity)
+    (grid-remove-entity! ctx entity)
+    ctx))
+
+(defcomponent :tx/position-changed
+  (do! [[_ entity] ctx]
+    (content-grid-update-entity! ctx entity)
+    (grid-entity-position-changed! ctx entity)
+    ctx))

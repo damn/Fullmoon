@@ -2940,7 +2940,7 @@ Default method returns true."
   (->mk [_ _ctx]
     {}))
 
-(defn- entities [ctx] (context-ecs ctx))
+(defn- entities [ctx] (context-ecs ctx)) ; dangerous name!
 
 (defcomponent :entity/uid
   {:let uid}
