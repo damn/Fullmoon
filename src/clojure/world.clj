@@ -9,15 +9,17 @@
                    [error :as me]
                    [generator :as mg]))
   (:import java.util.Random
-           (com.badlogic.gdx Gdx Application Files Input Input$Keys)
+           org.lwjgl.system.Configuration
+           (com.badlogic.gdx Gdx Application ApplicationAdapter Files Input Input$Keys)
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
+           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.files.FileHandle
            [com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector]
            (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format OrthographicCamera Camera)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
-           (com.badlogic.gdx.utils Align Scaling Disposable)
+           (com.badlogic.gdx.utils Align Scaling Disposable ScreenUtils SharedLibraryLoader)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
@@ -216,7 +218,7 @@ Example:
          ^{:tag Input}                     gdx-input
          ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
 
-(defn bind-gdx-statics! []
+(defn- bind-gdx-statics! []
   (.bindRoot #'gdx-app      Gdx/app)
   (.bindRoot #'gdx-files    Gdx/files)
   (.bindRoot #'gdx-input    Gdx/input)
@@ -629,7 +631,7 @@ Default method returns true."
 (defsystem screen-exit  "FIXME" [_ ctx])
 (defmethod screen-exit :default  [_ ctx])
 
-(defsystem screen-render! "FIXME" [_ app-state])
+(defsystem ^:private screen-render! "FIXME" [_])
 
 (defsystem screen-render "FIXME" [_ ctx])
 (defmethod screen-render :default [_ ctx]
@@ -1790,7 +1792,7 @@ Default method returns true."
     (.setInputProcessor gdx-input nil)
     (screen-exit sub-screen context))
 
-  (screen-render! [_ app-state]
+  (screen-render! [_]
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
@@ -2268,12 +2270,14 @@ Default method returns true."
                       {:property property
                        :schema (m/form schema)})))))
 
-(defn validate-and-create [file]
-  (let [properties (-> file slurp edn/read-string)]
+(defn- ->ctx-properties
+  "Validates all properties."
+  [properties-edn-file]
+  (let [properties (-> properties-edn-file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id properties)))
     (run! validate properties)
-    {:file file
-     :db (zipmap (map :property/id properties) properties)}))
+    {:context/properties {:file properties-edn-file
+                          :db (zipmap (map :property/id properties) properties)}}))
 
 (defn- async-pprint-spit! [ctx file data]
   (.start
@@ -4184,3 +4188,105 @@ Default method returns true."
           [:tx/add-text-effect target (str "[RED]" dmg-amount)]
           [:e/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
           [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))
+
+(defn- set-first-screen [context]
+  (->> context
+       :context/screens
+       :first-screen
+       (change-screen context)))
+
+(defn- ->application-listener [context]
+  (proxy [ApplicationAdapter] []
+    (create []
+      (bind-gdx-statics!)
+      (->> context
+           ; screens require vis-ui / properties (map-editor, property editor uses properties)
+           (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
+           (create-into context)
+           set-first-screen
+           (reset! app-state)))
+
+    (dispose []
+      (run! destroy! @app-state))
+
+    (render []
+      (ScreenUtils/clear Color/BLACK)
+      (screen-render! (current-screen @app-state)))
+
+    (resize [w h]
+      ; TODO fix mac screen resize bug again
+      (on-resize @app-state w h))))
+
+(defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
+  ; can remove :pre, we are having a schema now
+  ; move schema here too ?
+  {:pre [title
+         width
+         height
+         (boolean? full-screen?)
+         (or (nil? fps) (int? fps))]}
+  ; https://github.com/libgdx/libgdx/pull/7361
+  ; Maybe can delete this when using that new libgdx version
+  ; which includes this PR.
+  (when SharedLibraryLoader/isMac
+    (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set Configuration/GLFW_CHECK_THREAD0 false))
+  (let [config (doto (Lwjgl3ApplicationConfiguration.)
+                 (.setTitle title)
+                 (.setForegroundFPS (or fps 60)))]
+    (if full-screen?
+      (.setFullscreenMode config (Lwjgl3ApplicationConfiguration/getDisplayMode))
+      (.setWindowedMode config width height))
+    ; See https://libgdx.com/wiki/graphics/querying-and-configuring-graphics
+    ; but makes no difference
+    #_com.badlogic.gdx.graphics.glutils.HdpiMode
+    #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
+    config))
+
+(def-attributes
+  :fps          :nat-int
+  :full-screen? :boolean
+  :width        :nat-int
+  :height       :nat-int
+  :title        :string
+  :app/lwjgl3 [:map [:fps
+                     :full-screen?
+                     :width
+                     :height
+                     :title]]
+  :app/context [:map [assets
+                      :context/config
+                      :context/graphics
+                      :context/screens
+                      :context/vis-ui
+                      :context/tiled-map-renderer]])
+
+(def-type :properties/app
+  {:schema [:app/lwjgl3
+            :app/context]
+   :overview {:title "Apps" ; - only 1 ? - no overview - ?
+              :columns 10}})
+
+(defn start-app! [properties-edn-file]
+  (let [ctx (map->Ctx (->ctx-properties properties-edn-file))
+        app (build-property ctx :app/core)]
+    (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
+                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
+
+(def-type :properties/audiovisuals
+  {:schema [:tx/sound
+            :entity/animation]
+   :overview {:title "Audiovisuals"
+              :columns 10
+              :image/scale 2}})
+
+(defcomponent :tx/audiovisual
+  (do! [[_ position id] ctx]
+    (let [{:keys [tx/sound
+                  entity/animation]} (build-property ctx id)]
+      [[:tx/sound sound]
+       [:e/create
+        position
+        effect-body-props
+        {:entity/animation animation
+         :entity/delete-after-animation-stopped? true}]])))
