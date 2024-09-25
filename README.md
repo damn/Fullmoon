@@ -2,8 +2,7 @@
 
 A domain-specific language for creating worlds based on [clojure](https://clojure.org/), [libgdx](https://libgdx.com/), [vis-ui](https://github.com/kotcrab/vis-ui) and [malli](https://github.com/metosin/malli).
 
-![moon](https://github.com/user-attachments/assets/e3f7ea4b-f8b4-49c9-af0f-3dc1bf603c20)
-
+[![YouTube](http://i.ytimg.com/vi/_gp51lt9kdA/hqdefault.jpg)](https://www.youtube.com/watch?v=_gp51lt9kdA)
 
 # Screenshots
 
