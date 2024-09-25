@@ -1,6 +1,6 @@
 (def libgdx-version "1.12.1")
 
-(defproject core "-SNAPSHOT"
+(defproject clojure.gdx "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [metosin/malli "0.13.0"]
