@@ -54,8 +54,8 @@ lein dev
 It will start the application and also:
 * Starts an NREPL-Server
 * On application close (ESC in the main menu), clojure.tools.namespace will do  refresh on any changed files and restart the app.
-* On any error the JVM does not have to be restarted, you can fix the error and call `core.interactive/restart!` I have bound it on my VIM to F5 with:
-  `nmap <F5> :Eval (do (in-ns 'core.interactive)(restart!))`
+* On any error the JVM does not have to be restarted, you can fix the error and call `dev.interactive/restart!` I have bound it on my VIM to F5 with:
+  `nmap <F5> :Eval (do (in-ns 'dev.interactive)(restart!))`
 
 # [API Docs](https://damn.github.io/core/)
 
