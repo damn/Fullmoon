@@ -342,8 +342,8 @@
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
 (extend-type core.ctx.Entity
-  entity/State
-  (state [entity*]
+  State
+  (entity-state [entity*]
     (-> entity* :entity/state :state))
 
   (state-obj [entity*]
@@ -511,7 +511,7 @@
 
   (tick [_ eid context]
     (let [entity* @eid
-          cell ((:context/grid context) (entity/tile entity*))]
+          cell ((:context/grid context) (entity-tile entity*))]
       (when-let [distance (nearest-entity-distance @cell (enemy-faction entity*))]
         (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))

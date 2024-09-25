@@ -456,7 +456,7 @@ Default method returns true."
    :maxrange
    :entity-effects])
 
-(defn- sort-by-order [components]
+(defn- sort-k-order [components]
   (sort-by (fn [[k _]] (or (index-of k k-order) 99))
            components))
 
@@ -473,7 +473,7 @@ Default method returns true."
   "Recursively generates info-text via [[core.info-text]]."
   [components ctx]
   (->> components
-       sort-by-order
+       sort-k-order
        (keep (fn [{v 1 :as component}]
                (str (try (info-text component (assoc ctx :info-text/entity* components))
                          (catch Throwable t
@@ -2916,7 +2916,7 @@ Default method returns true."
   (shape-collides? entity* other-entity*))
 
 (defprotocol State
-  (entity-state [_]) ; ??
+  (entity-state [_])
   (state-obj [_]))
 
 (defprotocol Inventory

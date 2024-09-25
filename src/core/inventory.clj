@@ -114,7 +114,7 @@
     (pickup-item @entity item)))
 
 (extend-type core.ctx.Entity
-  entity/Inventory
+  Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 

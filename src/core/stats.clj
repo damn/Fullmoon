@@ -331,7 +331,7 @@
 
 
 (extend-type core.ctx.Entity
-  entity/Stats
+  Stats
   (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]
       (->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
