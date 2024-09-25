@@ -2,7 +2,8 @@
 
 A programming language for creating worlds based on [clojure](https://clojure.org/) and [libgdx](https://libgdx.com/).
 
-![moon](https://github.com/user-attachments/assets/8bf2227d-74c1-4eb5-85a5-4df926f4ea1b)
+![moon](https://github.com/user-attachments/assets/e3f7ea4b-f8b4-49c9-af0f-3dc1bf603c20)
+
 
 # Screenshots
 
