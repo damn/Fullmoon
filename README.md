@@ -2,7 +2,7 @@
 
 A domain-specific language for creating worlds based on [clojure](https://clojure.org/), [libgdx](https://libgdx.com/), [vis-ui](https://github.com/kotcrab/vis-ui) and [malli](https://github.com/metosin/malli).
 
-# Screenshots
+## Screenshots
 
 <img width="1437" alt="Screenshot 2024-09-11 at 10 59 32 PM" src="https://github.com/user-attachments/assets/19c2a342-0e70-4925-a203-2e8c229e4ea0">
 
@@ -19,13 +19,13 @@ A domain-specific language for creating worlds based on [clojure](https://clojur
 
 </details>
 
-# How to start
+## How to start
 
 ```
 lein run
 ```
 
-## Interactive dev-loop
+### Interactive dev-loop
 
 ```
 lein dev
@@ -37,10 +37,9 @@ It will start the application and also:
 * On any error the JVM does not have to be restarted, you can fix the error and call `dev.interactive/restart!`
     * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'dev.interactive)(restart!))`
 
-# [API Docs](https://damn.github.io/clojure.world/)
+## [API Docs](https://damn.github.io/clojure.world/)
 
-
-# License
+## License
 
 * Code Licensed under MIT License
 
