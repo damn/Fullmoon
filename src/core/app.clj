@@ -14,6 +14,12 @@
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)
            (com.badlogic.gdx.utils ScreenUtils SharedLibraryLoader)))
 
+(def-type :properties/app
+  {:schema [:app/lwjgl3
+            :app/context]
+   :overview {:title "Apps"
+              :columns 10}})
+
 ;; potential-fields
 
 ; Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
@@ -1408,12 +1414,6 @@
                 :context/screens
                 [:context/vis-ui {:optional true}]
                 [:context/tiled-map-renderer {:optional true}]]]})
-
-(def-type :properties/app
-  {:schema [:app/lwjgl3
-            :app/context]
-   :overview {:title "Apps"
-              :columns 10}})
 
 (defn -main []
   ; https://github.com/libgdx/libgdx/pull/7361

@@ -7,6 +7,16 @@
            com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
 
+(def-type :properties/worlds
+  {:schema [:world/generator
+            :world/player-creature
+            [:world/tiled-map {:optional true}]
+            [:world/map-size {:optional true}]
+            [:world/max-area-level {:optional true}]
+            [:world/spawn-rate {:optional true}]]
+   :overview {:title "Worlds"
+              :columns 10}})
+
 (defn assoc-ks [m ks v]
   (if (empty? ks)
     m
@@ -711,16 +721,6 @@
 (defcomponent :world/generator {:data [:enum [:world.generator/tiled-map
                                               :world.generator/modules
                                               :world.generator/uf-caves]]})
-
-(def-type :properties/worlds
-  {:schema [:world/generator
-            :world/player-creature
-            [:world/tiled-map {:optional true}]
-            [:world/map-size {:optional true}]
-            [:world/max-area-level {:optional true}]
-            [:world/spawn-rate {:optional true}]]
-   :overview {:title "Worlds"
-              :columns 10}})
 
 (defmulti generate (fn [_ctx world] (:world/generator world)))
 
