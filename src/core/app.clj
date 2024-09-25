@@ -3,6 +3,7 @@
             [core.ctx :refer :all]
             [core.inventory :as inventory]
             [core.tiled :as tiled]
+            core.audiovisual
             core.entity-state
             core.world)
   (:import org.lwjgl.system.Configuration
@@ -348,7 +349,7 @@
 
 ; we want min/max explored tiles X / Y and show the whole explored area....
 
-(defn- calculate-zoom [{:keys [context/explored-tile-corners] :as ctx}]
+(defn- minimap-zoom [{:keys [context/explored-tile-corners] :as ctx}]
   (let [positions-explored (map first
                                 (remove (fn [[position value]]
                                           (false? value))
@@ -371,7 +372,7 @@
 
 #_(deftype Screen []
     (show [_ ctx]
-      (set-zoom! (world-camera ctx) (calculate-zoom ctx)))
+      (set-zoom! (world-camera ctx) (minimap-zoom ctx)))
 
     (hide [_ ctx]
       (reset-zoom! (world-camera ctx)))
@@ -876,9 +877,9 @@
 
 (defn- update-world [ctx]
   (let [ctx (update-time ctx (min (.getDeltaTime gdx-graphics) max-delta-time))
-        active-entities (active-entities ctx)]
-    (potential-fields-update! ctx active-entities)
-    (try (tick-entities! ctx active-entities)
+        entities (active-entities ctx)]
+    (potential-fields-update! ctx entities)
+    (try (tick-entities! ctx entities)
          (catch Throwable t
            (-> ctx
                (error-window! t)
