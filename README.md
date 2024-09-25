@@ -1,7 +1,5 @@
 # clojure.world
 
-A programming language for creating worlds based on [clojure](https://clojure.org/) and [libgdx](https://libgdx.com/).
-
 ![moon](https://github.com/user-attachments/assets/e3f7ea4b-f8b4-49c9-af0f-3dc1bf603c20)
 
 
