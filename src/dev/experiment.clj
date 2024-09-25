@@ -1,4 +1,4 @@
-(ns core.dev
+(ns dev.experiment
   (:require [core.ctx :refer :all]
             [core.ui :as ui]
             core.property)

@@ -169,7 +169,7 @@
   [s]
   (map vector (iterate inc 0) s))
 
-(defn utils-positions ; from clojure.contrib.seq-utils (discontinued in 1.3)
+(defn- utils-positions ; from clojure.contrib.seq-utils (discontinued in 1.3)
   "Returns a lazy sequence containing the positions at which pred
 	 is true for items in coll."
   [pred coll]
@@ -207,7 +207,7 @@
              %)
           adjacent-cells)))
 
-(defmacro when-seq [[aseq bind] & body]
+(defmacro ^:private when-seq [[aseq bind] & body]
   `(let [~aseq ~bind]
      (when (seq ~aseq)
        ~@body)))
@@ -1276,10 +1276,10 @@
     {:sub-screen [:main/sub-screen]
      :stage (ui/->stage ctx (->actors ctx))}))
 
-(defprotocol StatusCheckBox
-  (get-text [this])
-  (get-state [this])
-  (set-state [this is-selected]))
+(defprotocol ^:private StatusCheckBox
+  (^:private get-text [this])
+  (^:private get-state [this])
+  (^:private set-state [this is-selected]))
 
 (deftype VarStatusCheckBox [^clojure.lang.Var avar]
   StatusCheckBox
@@ -1392,19 +1392,6 @@
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
 
-(defn -main []
-  ; https://github.com/libgdx/libgdx/pull/7361
-  ; Maybe can delete this when using that new libgdx version
-  ; which includes this PR.
-  (when (SharedLibraryLoader/isMac)
-    (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
-    (.set Configuration/GLFW_CHECK_THREAD0 false))
-  (let [ctx (map->Context {:context/properties
-                           (property/validate-and-create "resources/properties.edn")})
-        app (build-property ctx :app/core)]
-    (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
-                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
-
 (def-attributes
   :fps          :nat-int
   :full-screen? :boolean
@@ -1431,3 +1418,17 @@
             :app/context]
    :overview {:title "Apps"
               :columns 10}})
+
+(defn -main []
+  ; https://github.com/libgdx/libgdx/pull/7361
+  ; Maybe can delete this when using that new libgdx version
+  ; which includes this PR.
+  (when (SharedLibraryLoader/isMac)
+    (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set Configuration/GLFW_CHECK_THREAD0 false))
+  (let [ctx (map->Context {:context/properties
+                           (property/validate-and-create "resources/properties.edn")})
+        app (build-property ctx :app/core)]
+    (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
+                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
+

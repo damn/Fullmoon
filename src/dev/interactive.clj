@@ -1,4 +1,4 @@
-(ns core.interactive
+(ns dev.interactive
   "Starts a dev loop using clojure.tools.namespace.repl/refresh in order to restart the app without
   restarting the JVM.
   Also starts an nrepl server which will keep up even between app crashes and restarts.
@@ -8,7 +8,7 @@
 
   You can bind this on a key for smooth dev experience, here in VIM:
   ``` vimscript
-  nmap <F5> :Eval (do (in-ns 'core.interactive)(restart!))
+  nmap <F5> :Eval (do (in-ns 'dev.interactive)(restart!))
   ```"
   (:require [clojure.java.io :as io]
             [nrepl.server :refer [start-server]]
@@ -59,7 +59,7 @@
   (loop []
     (when-not @thrown
       (do
-       (.bindRoot #'refresh-error (refresh :after 'core.interactive/dev-loop))
+       (.bindRoot #'refresh-error (refresh :after 'dev.interactive/dev-loop))
        (handle-throwable! refresh-error)))
     (wait!)
     (recur)))

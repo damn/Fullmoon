@@ -560,7 +560,7 @@
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))
-(defn create [context]
+(defn ->skill-window [context]
   (->window {:title "Skills"
              :id :skill-window
              :visible? false
