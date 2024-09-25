@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [data.grid2d :as g]
             [core.ctx :refer :all]
-            [core.tiled :as tiled]
-            [core.property :as property])
+            [core.tiled :as tiled])
   (:import java.util.Random
            com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
@@ -499,7 +498,7 @@
   (memoize
    (fn [{:keys [property/id] :as prop}]
      (assert id)
-     (let [image (property/prop->image prop)
+     (let [image (prop->image prop)
            tile (tiled/->static-tiled-map-tile (:texture-region image))]
        (tiled/put! (tiled/m-props tile) "id" id)
        tile))))
@@ -508,7 +507,7 @@
 
 (defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
   (let [layer (tiled/add-layer! tiled-map :name "creatures" :visible false)
-        creature-properties (property/all-properties context :properties/creatures)]
+        creature-properties (all-properties context :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
               :let [area-level (get area-level-grid position)]
@@ -600,7 +599,7 @@
 
 (defn- uf-place-creatures! [context spawn-rate tiled-map spawn-positions]
   (let [layer (tiled/add-layer! tiled-map :name "creatures" :visible false)
-        creatures (property/all-properties context :properties/creatures)
+        creatures (all-properties context :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
     ;(println "Level: " level)

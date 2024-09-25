@@ -3,7 +3,6 @@
             [core.ctx :refer :all]
             [core.entity :as entity]
             [core.inventory :as inventory]
-            [core.property :as property]
             [core.tiled :as tiled]
             core.entity-state
             core.world)
@@ -1247,7 +1246,7 @@
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (->table {:rows (remove nil? (concat
-                                   (for [{:keys [property/id]} (property/all-properties ctx :properties/worlds)]
+                                   (for [{:keys [property/id]} (all-properties ctx :properties/worlds)]
                                      [(->text-button (str "Start " id) (start-game! id))])
                                    [(when (safe-get config :map-editor?)
                                       [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
@@ -1426,7 +1425,7 @@
     (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
     (.set Configuration/GLFW_CHECK_THREAD0 false))
   (let [ctx (map->Context {:context/properties
-                           (property/validate-and-create "resources/properties.edn")})
+                           (validate-and-create "resources/properties.edn")})
         app (build-property ctx :app/core)]
     (Lwjgl3Application. (->application (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))

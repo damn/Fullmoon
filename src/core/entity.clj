@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [clj-commons.pretty.repl :as p]
             [malli.core :as m]
-            [core.ctx :refer :all]
-            [core.property :as property])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defn define-order [order-k-vector]
@@ -376,14 +375,14 @@
             [:frame-duration pos?]
             [:looping? :boolean]]})
 
-(defmethod property/edn->value :data/animation [_ animation ctx]
+(defmethod edn->value :data/animation [_ animation ctx]
   (edn->animation animation ctx))
 
 ; looping? - click on widget restart
 ; frame-duration
 ; frames ....
 ; hidden actor act tick atom animation & set current frame image drawable
-(defmethod property/->widget :data/animation [_ animation ctx]
+(defmethod ->widget :data/animation [_ animation ctx]
   (->table {:rows [(for [image (:frames animation)]
                         (->image-widget (edn->image image ctx) {}))]
                :cell-defaults {:pad 1}}))

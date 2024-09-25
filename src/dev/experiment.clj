@@ -1,6 +1,5 @@
 (ns dev.experiment
-  (:require [core.ctx :refer :all]
-            core.property)
+  (:require [core.ctx :refer :all])
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
 (comment
@@ -133,7 +132,7 @@
 (defn- data-components []
   (sort
    (concat
-    (keys (methods core.property/->value))
+    (keys (methods ->value))
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))
