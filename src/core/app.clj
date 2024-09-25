@@ -1,7 +1,6 @@
 (ns core.app
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]
-            [core.entity :as entity]
             [core.inventory :as inventory]
             [core.tiled :as tiled]
             core.entity-state
@@ -62,7 +61,7 @@
                                        (filter   #(:entity/faction @%))
                                        (group-by #(:entity/faction @%)))]
            [faction
-            (zipmap (map #(entity/tile @%) entities)
+            (zipmap (map #(entity-tile @%) entities)
                     entities)])))
 
  (def max-iterations 1)
@@ -140,7 +139,7 @@
 (defn- tiles->entities [entities faction]
   (let [entities (filter #(= (:entity/faction @%) faction)
                          entities)]
-    (zipmap (map #(entity/tile @%) entities)
+    (zipmap (map #(entity-tile @%) entities)
             entities)))
 
 (defn- update-faction-potential-field [grid faction entities max-iterations]
@@ -225,7 +224,7 @@
 (defn- find-next-cell
   "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
   [grid entity own-cell]
-  (let [faction (entity/enemy-faction @entity)
+  (let [faction (enemy-faction @entity)
         distance-to    #(nearest-entity-distance @% faction)
         nearest-entity #(nearest-entity          @% faction)
         own-dist (distance-to own-cell)
@@ -310,7 +309,7 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get (:context/grid context) (entity/tile @body))
+    (let [occupied-cell (get (:context/grid context) (entity-tile @body))
           own-dist (distance-to occupied-cell)
           adj-cells (cached-adjacent-cells grid occupied-cell)
           potential-cells (filter distance-to
@@ -876,10 +875,10 @@
                             (update :logic-frame inc))))
 
 (defn- update-world [ctx]
-  (let [ctx (update-time ctx (min (.getDeltaTime gdx-graphics) entity/max-delta-time))
+  (let [ctx (update-time ctx (min (.getDeltaTime gdx-graphics) max-delta-time))
         active-entities (active-entities ctx)]
     (potential-fields-update! ctx active-entities)
-    (try (entity/tick-entities! ctx active-entities)
+    (try (tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx
                (error-window! t)
@@ -889,12 +888,12 @@
 
 (defmethod game-loop :game-loop/normal [ctx]
   (effect! ctx [player-update-state
-                entity/update-mouseover-entity ; this do always so can get debug info even when game not running
+                update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (:context/paused? %)
                    %
                    (update-world %))
-                entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ]))
 
 (defn- replay-frame! [ctx]
@@ -918,10 +917,7 @@
   (render-world-view ctx
                      (fn [g]
                        (before-entities ctx g)
-                       (entity/render-entities! ctx
-                                                g
-                                                (->> (active-entities ctx)
-                                                     (map deref)))
+                       (render-entities! ctx g (map deref (active-entities ctx)))
                        (after-entities ctx g))))
 
 (defn- render-infostr-on-bar [g infostr x y h]
@@ -947,8 +943,8 @@
     (->actor {:draw (fn [g ctx]
                          (let [player-entity* (player-entity* ctx)
                                x (- x (/ rahmenw 2))]
-                           (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
-                           (render-hpmana-bar g ctx x y-mana manacontent (entity/stat player-entity* :stats/mana) "MP")))})))
+                           (render-hpmana-bar g ctx x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
+                           (render-hpmana-bar g ctx x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"

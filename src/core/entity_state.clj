@@ -1,7 +1,6 @@
 (ns core.entity-state
   (:require [reduce-fsm :as fsm]
             [core.ctx :refer :all]
-            [core.entity :as entity]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
@@ -16,7 +15,7 @@
 (defn- creatures-in-los-of-player [ctx]
   (->> (active-entities ctx)
        (filter #(:creature/species @%))
-       (filter #(entity/line-of-sight? ctx (player-entity* ctx) @%))
+       (filter #(line-of-sight? ctx (player-entity* ctx) @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!
@@ -82,12 +81,12 @@
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
   (v-add (:position entity*)
-         (v-scale (entity/direction entity* target*)
+         (v-scale (direction entity* target*)
                   (:radius entity*))))
 
 (defn- end-point [entity* target* maxrange]
   (v-add (start-point entity* target*)
-         (v-scale (entity/direction entity* target*)
+         (v-scale (direction entity* target*)
                   maxrange)))
 
 (defcomponent :maxrange {:data :pos}
@@ -145,7 +144,7 @@
   (update ctx :effect/target (fn [target]
                                (when (and target
                                           (not (:entity/destroyed? @target))
-                                          (entity/line-of-sight? ctx @source @target))
+                                          (line-of-sight? ctx @source @target))
                                  target))))
 
 (defn- effect-applicable? [ctx effects]
@@ -153,7 +152,7 @@
     (some #(applicable? % ctx) effects)))
 
 (defn- mana-value [entity*]
-  (if-let [mana (entity/stat entity* :stats/mana)]
+  (if-let [mana (entity-stat entity* :stats/mana)]
     (mana 0)
     0))
 
@@ -186,16 +185,16 @@
 ;  * direction  = always available (from mouse world position)
 
 (defn- nearest-enemy [{:keys [context/grid]} entity*]
-  (nearest-entity @(grid (entity/tile entity*))
-                  (entity/enemy-faction entity*)))
+  (nearest-entity @(grid (entity-tile entity*))
+                  (enemy-faction entity*)))
 
 (defn- ->npc-effect-ctx [ctx entity*]
   (let [target (nearest-enemy ctx entity*)
-        target (when (and target (entity/line-of-sight? ctx entity* @target))
+        target (when (and target (line-of-sight? ctx entity* @target))
                  target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
-     :effect/direction (when target (entity/direction entity* @target))}))
+     :effect/direction (when target (direction entity* @target))}))
 
 (defn- ->player-effect-ctx [ctx entity*]
   (let [target* (mouseover-entity* ctx)
@@ -335,20 +334,20 @@
             :state/player player-fsm
             :state/npc npc-fsm)})
 
-  (entity/create [[k {:keys [fsm initial-state]}] eid ctx]
+  (create [[k {:keys [fsm initial-state]}] eid ctx]
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
      [:e/assoc eid initial-state (->mk [initial-state eid] ctx)]])
 
   (info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(extend-type core.entity.Entity
+(extend-type core.ctx.Entity
   entity/State
   (state [entity*]
     (-> entity* :entity/state :state))
 
   (state-obj [entity*]
-    (let [state-k (entity/state entity*)]
+    (let [state-k (entity-state entity*)]
       [state-k (state-k entity*)])))
 
 (defn- send-event! [ctx eid event params]
@@ -357,7 +356,7 @@
           new-fsm (fsm/fsm-event fsm event)
           new-state-k (:state new-fsm)]
       (when-not (= old-state-k new-state-k)
-        (let [old-state-obj (entity/state-obj @eid)
+        (let [old-state-obj (state-obj @eid)
               new-state-obj [new-state-k (->mk [new-state-k eid params] ctx)]]
           [#(exit old-state-obj %)
            #(enter new-state-obj %)
@@ -386,7 +385,7 @@
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
-     (or (entity/stat entity* (:skill/action-time-modifier-key skill))
+     (or (entity-stat entity* (:skill/action-time-modifier-key skill))
          1)))
 
 (defcomponent :active-skill
@@ -413,7 +412,7 @@
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (entity/tick [_ eid context]
+  (tick [_ eid context]
     (cond
      (not (effect-applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
@@ -424,7 +423,7 @@
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (entity/render-info [_ entity* g ctx]
+  (render-info [_ entity* g ctx]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
       (run! #(render-effect % g (merge ctx effect-ctx)) effects))))
@@ -473,7 +472,7 @@
   (->mk [[_ eid] _ctx]
     {:eid eid})
 
-  (entity/tick [_ eid ctx]
+  (tick [_ eid ctx]
     (let [entity* @eid
           effect-ctx (->npc-effect-ctx ctx entity*)]
       (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]
@@ -488,16 +487,16 @@
   (->mk [[_ eid movement-vector] ctx]
     {:eid eid
      :movement-vector movement-vector
-     :counter (->counter ctx (* (entity/stat @eid :stats/reaction-time) 0.016))})
+     :counter (->counter ctx (* (entity-stat @eid :stats/reaction-time) 0.016))})
 
   (enter [_ _ctx]
     [[:tx/set-movement eid {:direction movement-vector
-                            :speed (or (entity/stat @eid :stats/movement-speed) 0)}]])
+                            :speed (or (entity-stat @eid :stats/movement-speed) 0)}]])
 
   (exit [_ _ctx]
     [[:tx/set-movement eid nil]])
 
-  (entity/tick [_ eid ctx]
+  (tick [_ eid ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :timer-finished]])))
 
@@ -510,14 +509,14 @@
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
-  (entity/tick [_ eid context]
+  (tick [_ eid context]
     (let [entity* @eid
           cell ((:context/grid context) (entity/tile entity*))]
-      (when-let [distance (nearest-entity-distance @cell (entity/enemy-faction entity*))]
-        (when (<= distance (entity/stat entity* :stats/aggro-range))
+      (when-let [distance (nearest-entity-distance @cell (enemy-faction entity*))]
+        (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 
-  (entity/render-above [_ entity* g _ctx]
+  (render-above [_ entity* g _ctx]
     (let [[x y] (:position entity*)]
       (draw-text g
                  {:text "zzz"
@@ -579,7 +578,7 @@
       [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
 
-     (entity/can-pickup-item? player-entity* item)
+     (can-pickup-item? player-entity* item)
      [[:tx/sound "sounds/bfxr_pickup.wav"]
       [:e/destroy clicked-entity]
       [:tx/pickup-item (:entity/id player-entity*) item]]
@@ -686,7 +685,7 @@
     (let [free-skill-points (:entity/free-skill-points @eid)]
       ; TODO no else case, no visible free-skill-points
       (when (and (pos? free-skill-points)
-                 (not (entity/has-skill? @eid skill)))
+                 (not (has-skill? @eid skill)))
         [[:e/assoc eid :entity/free-skill-points (dec free-skill-points)]
          [:tx/add-skill eid skill]]))))
 
@@ -773,7 +772,7 @@
          [:tx/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
          [:e/dissoc eid :entity/item-on-cursor]])))
 
-  (entity/render-below [_ entity* g ctx]
+  (render-below [_ entity* g ctx]
     (when (world-item? ctx)
       (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
@@ -781,7 +780,7 @@
   DrawItemOnCursor
   (draw-item-on-cursor [g ctx]
     (let [player-entity* (player-entity* ctx)]
-      (when (and (= :player-item-on-cursor (entity/state player-entity*))
+      (when (and (= :player-item-on-cursor (entity-state player-entity*))
                  (not (world-item? ctx)))
         (draw-centered-image g
                              (:entity/image (:entity/item-on-cursor player-entity*))
@@ -801,15 +800,15 @@
 
   (enter [_ _ctx]
     [[:tx/set-movement eid {:direction movement-vector
-                            :speed (entity/stat @eid :stats/movement-speed)}]])
+                            :speed (entity-stat @eid :stats/movement-speed)}]])
 
   (exit [_ _ctx]
     [[:tx/set-movement eid nil]])
 
-  (entity/tick [_ eid context]
+  (tick [_ eid context]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/set-movement eid {:direction movement-vector
-                              :speed (entity/stat @eid :stats/movement-speed)}]]
+                              :speed (entity-stat @eid :stats/movement-speed)}]]
       [[:tx/event eid :no-movement-input]])))
 
 (defcomponent :stunned
@@ -824,21 +823,21 @@
   (pause-game? [_]
     false)
 
-  (entity/tick [_ eid ctx]
+  (tick [_ eid ctx]
     (when (stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (entity/render-below [_ entity* g _ctx]
+  (render-below [_ entity* g _ctx]
     (draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))
 
 (def ^{:doc "Returns the player-entity atom." :private true} ctx-player :context/player-entity)
 
 (defcomponent :entity/player?
-  (entity/create [_ eid ctx]
+  (create [_ eid ctx]
     (assoc ctx ctx-player eid)))
 
 (defn- p-state-obj [ctx]
-  (-> ctx player-entity* entity/state-obj))
+  (-> ctx player-entity* state-obj))
 
 (extend-type core.ctx.Context
   Player

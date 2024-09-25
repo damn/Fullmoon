@@ -1,7 +1,6 @@
 (ns core.inventory
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]
-            [core.entity :as entity]
             [core.stats :refer [mod-info-text]])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
@@ -114,14 +113,14 @@
   (do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
-(extend-type core.entity.Entity
+(extend-type core.ctx.Entity
   entity/Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
 (defcomponent :entity/inventory
   {:data [:one-to-many :properties/items]}
-  (entity/create [[_ items] eid _ctx]
+  (create [[_ items] eid _ctx]
     (cons [:e/assoc eid :entity/inventory empty-inventory]
           (for [item items]
             [:tx/pickup-item eid item]))))
@@ -172,7 +171,7 @@
 (defn- draw-cell-rect [g player-entity* x y mouseover? cell]
   (draw-rectangle g x y cell-size cell-size Color/GRAY)
   (when (and mouseover?
-             (= :player-item-on-cursor (entity/state player-entity*)))
+             (= :player-item-on-cursor (entity-state player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)
           color (if (valid-slot? cell item)
                   droppable-color

@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.math :as math]
             [malli.core :as m]
-            [core.ctx :refer :all]
-            [core.entity :as entity])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defsystem op-value-text "FIXME" [_])
@@ -171,8 +170,8 @@
       (when (seq modifiers)
         (mod-info-text modifiers)))))
 
-(extend-type core.entity.Entity
-  core.entity/Modifiers
+(extend-type core.ctx.Entity
+  Modifiers
   (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
     {:pre [(= "modifier" (namespace modifier-k))]}
     (->> modifiers
@@ -183,9 +182,9 @@
                  base-value))))
 
 (comment
- (require '[core.entity :refer [->modified-value]])
+
  (let [->entity (fn [modifiers]
-                  (core.entity/map->Entity {:entity/modifiers modifiers}))]
+                  (map->Entity {:entity/modifiers modifiers}))]
    (and
     (= (->modified-value (->entity {:modifier/damage-deal {:op/val-inc [30]
                                                            :op/val-mult [0.5]}})
@@ -197,7 +196,7 @@
                          :modifier/damage-deal
                          [5 10])
        [35 35])
-    (= (->modified-value (core.entity/map->Entity {})
+    (= (->modified-value (map->Entity {})
                          :modifier/damage-deal
                          [5 10])
        [5 10])
@@ -235,14 +234,14 @@
 
   (applicable? [[k _] {:keys [effect/target]}]
     (and target
-         (entity/stat @target (effect-k->stat-k k))))
+         (entity-stat @target (effect-k->stat-k k))))
 
   (useful? [_ _effect-ctx]
     true)
 
   (do! [[effect-k operations] {:keys [effect/target]}]
     (let [stat-k (effect-k->stat-k effect-k)]
-      (when-let [effective-value (entity/stat @target stat-k)]
+      (when-let [effective-value (entity-stat @target stat-k)]
         [[:e/assoc-in target [:entity/stats stat-k]
           ; TODO similar to components.entity.modifiers/->modified-value
           ; but operations not sort-by op/order ??
@@ -331,11 +330,11 @@
    :modifier-ops [:op/inc]})
 
 
-(extend-type core.entity.Entity
+(extend-type core.ctx.Entity
   entity/Stats
-  (stat [entity* stat-k]
+  (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]
-      (entity/->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
+      (->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
@@ -368,7 +367,7 @@
   (defn- stats-info-texts [entity*]
     (str/join "\n"
               (for [stat-k stats-order
-                    :let [value (entity/stat entity* stat-k)]
+                    :let [value (entity-stat entity* stat-k)]
                     :when value]
                 (str (k->pretty-name stat-k) ": " value)))))
 
@@ -394,15 +393,15 @@
   (info-text [_ {:keys [info-text/entity*]}]
     (stats-info-texts entity*))
 
-  (entity/render-info [_ entity* g _ctx]
-    (when-let [hp (entity/stat entity* :stats/hp)]
+  (render-info [_ entity* g _ctx]
+    (when-let [hp (entity-stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
             {:keys [position width half-width half-height entity/mouseover?]} entity*
             [x y] position]
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
-                height (pixels->world-units g entity/hpbar-height-px)
+                height (pixels->world-units g hpbar-height-px)
                 border (pixels->world-units g borders-px)]
             (draw-filled-rectangle g x y width height Color/BLACK)
             (draw-filled-rectangle g
@@ -414,13 +413,13 @@
 
 (defcomponent :tx.entity.stats/pay-mana-cost
   (do! [[_ entity cost] _ctx]
-    (let [mana-val ((entity/stat @entity :stats/mana) 0)]
+    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
 
 (comment
  (let [mana-val 4
-       entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       entity (atom (map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
    (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
@@ -434,7 +433,7 @@
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
 (defn- entity*->melee-damage [entity*]
-  (let [strength (or (entity/stat entity* :stats/strength) 0)]
+  (let [strength (or (entity-stat entity* :stats/strength) 0)]
     {:damage/min-max [strength strength]}))
 
 (defn- damage-effect [{:keys [effect/source]}]
@@ -454,8 +453,8 @@
     [(damage-effect ctx)]))
 
 (defn- effective-armor-save [source* target*]
-  (max (- (or (entity/stat target* :stats/armor-save) 0)
-          (or (entity/stat source* :stats/armor-pierce) 0))
+  (max (- (or (entity-stat target* :stats/armor-save) 0)
+          (or (entity-stat source* :stats/armor-pierce) 0))
        0))
 
 (comment
@@ -469,7 +468,7 @@
   (< (rand) (effective-armor-save source* target*)))
 
 (defn- ->effective-damage [damage source*]
-  (update damage :damage/min-max #(entity/->modified-value source* :modifier/damage-deal %)))
+  (update damage :damage/min-max #(->modified-value source* :modifier/damage-deal %)))
 
 (comment
  (let [->source (fn [mods] {:entity/modifiers mods})]
@@ -510,12 +509,12 @@
 
   (applicable? [_ {:keys [effect/target]}]
     (and target
-         (entity/stat @target :stats/hp)))
+         (entity-stat @target :stats/hp)))
 
   (do! [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target
-          hp (entity/stat target* :stats/hp)]
+          hp (entity-stat target* :stats/hp)]
       (cond
        (zero? (hp 0))
        []
@@ -527,7 +526,7 @@
        (let [;_ (println "Source unmodified damage:" damage)
              {:keys [damage/min-max]} (->effective-damage damage source*)
              ;_ (println "\nSource modified: min-max:" min-max)
-             min-max (entity/->modified-value target* :modifier/damage-receive min-max)
+             min-max (->modified-value target* :modifier/damage-receive min-max)
              ;_ (println "effective min-max: " min-max)
              dmg-amount (rand-int-between min-max)
              ;_ (println "dmg-amount: " dmg-amount)
