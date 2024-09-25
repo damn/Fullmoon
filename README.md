@@ -1,3 +1,7 @@
+# clojure.world
+
+A programming language for writing worlds based on [clojure](https://clojure.org/) and [libgdx](https://libgdx.com/).
+
 ![moon](https://github.com/user-attachments/assets/8bf2227d-74c1-4eb5-85a5-4df926f4ea1b)
 
 # Screenshots
