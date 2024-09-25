@@ -1,5 +1,4 @@
-![logo](https://github.com/user-attachments/assets/c9349d79-dd61-4d6f-90fd-96a7a262b124)
-
+![moon_background](https://github.com/user-attachments/assets/004b9c16-d47e-409c-ae27-55a6340d1685)
 
 # Screenshots
 <details>
