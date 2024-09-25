@@ -645,7 +645,7 @@
 
  (defn get-all-entities-of-current-map [context]
    (mapcat (comp :entities deref)
-           (grid2d/cells (core.context/content-grid context))))
+           (grid2d/cells (content-grid context))))
 
  (count
   (get-all-entities-of-current-map @app/state))
@@ -1017,7 +1017,7 @@
                                               (.setText label
                                                         (str (when-let [entity* (mouseover-entity* ctx)]
                                                                (->info-text
-                                                                ; don't use select-keys as it loses core.entity.Entity record type
+                                                                ; don't use select-keys as it loses Entity record type
                                                                 (apply dissoc entity* disallowed-keys)
                                                                 ctx))))
                                               (.pack window))}))

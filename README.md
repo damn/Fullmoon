@@ -1,24 +1,3 @@
-<p align="center">
-
-![core](https://github.com/user-attachments/assets/274f2c3c-0375-4e67-ac5a-196f64744f10)
-
-
-</p>
-
-# What is core?
-
-* An action-RPG roguelike game
-* A GUI-Tool for editing the game itself
-* A framework for writing such games
-* A modular engine which can be used as a library too
-
-Please note that it is very experimental and work-in-progress at the moment.
-I would appreciate very much any feedback!
-
-# Data Architecture
-
-The whole application state is stored in one clojure record `core.context/Context`.
-
 # Screenshots
 <details>
   <summary>Ingame</summary>

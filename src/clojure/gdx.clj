@@ -109,7 +109,7 @@
     (defmulti ~(vary-meta sys-name
                           assoc
                           :params (list 'quote params)
-                          :doc (str "[[core.component/defsystem]] with params: `" params "` \n\n " docstring))
+                          :doc (str "[[defsystem]] with params: `" params "` \n\n " docstring))
       (fn ~(symbol (str (name sys-name))) [& args#]
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
@@ -127,7 +127,7 @@
           components))
 
 (defn create-into
-  "For every component `[k v]`  `(core.->mk [k v] ctx)` is non-nil
+  "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
   or false, assoc's at ctx k v"
   [ctx components]
   (assert (map? ctx))
@@ -447,7 +447,7 @@ Default method returns true."
       (remove-newlines new-s))))
 
 (defn ->info-text
-  "Recursively generates info-text via [[core.info-text]]."
+  "Recursively generates info-text via [[info-text]]."
   [components ctx]
   (->> components
        sort-k-order
@@ -1490,7 +1490,7 @@ Default method returns true."
   (draw-item-on-cursor [g ctx]))
 
 (defprotocol WorldGen
-  (->world [ctx world-id])) ; pointless? core.world not required at all now
+  (->world [ctx world-id]))
 
 (defn- check-cleanup-visui! []
   ; app crashes during startup before VisUI/dispose and we do clojure.tools.namespace.refresh-> gui elements not showing.
@@ -2371,7 +2371,6 @@ Default method returns true."
 ; * what is missing to remove the button once the last optional key was added (not so important)
 ; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
 
-; put together with core.components info-text-order ?
 (def ^:private k-sort-order [:property/id
                              :property/pretty-name
                              :app/lwjgl3
