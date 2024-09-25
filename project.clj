@@ -47,7 +47,7 @@
                 ;*assert* false
                 *print-level* 3
                 }
-  :aliases {"dev" ["run" "-m" "core.interactive"]}
+  :aliases {"dev" ["run" "-m" "dev.interactive"]}
   :main core.app)
 
 ; * Notes
