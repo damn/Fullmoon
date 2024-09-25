@@ -26,7 +26,7 @@
 lein run
 ```
 
-# How to start interactive session
+## Interactive dev-loop
 
 ```
 lein dev
@@ -39,11 +39,6 @@ It will start the application and also:
     * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'dev.interactive)(restart!))`
 
 # [API Docs](https://damn.github.io/clojure.world/)
-
-# Namespaces
-
-![namespaces](https://github.com/user-attachments/assets/433026d4-84ff-4a05-82ba-698a654bffc7)
-
 
 # Code Licensed under MIT License.
 
