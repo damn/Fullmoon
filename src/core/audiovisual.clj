@@ -1,5 +1,5 @@
-(ns core.audiovisual
-  (:require [core.ctx :refer :all]))
+(ns ^:no-doc core.audiovisual
+  (:require [clojure.gdx :refer :all]))
 
 (def-type :properties/audiovisuals
   {:schema [:tx/sound

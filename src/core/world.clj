@@ -1,7 +1,7 @@
 (ns core.world
-  (:require [clojure.string :as str]
+  (:require [clojure.gdx :refer :all]
+            [clojure.string :as str]
             [data.grid2d :as g]
-            [core.ctx :refer :all]
             [core.tiled :as tiled])
   (:import java.util.Random
            com.badlogic.gdx.Input$Keys
@@ -734,7 +734,7 @@
 (defmethod generate :world.generator/uf-caves [ctx world]
   (uf-caves ctx world))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   WorldGen
   (->world [ctx world-id]
     (let [prop (build-property ctx world-id)]

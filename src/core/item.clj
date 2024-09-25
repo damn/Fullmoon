@@ -1,6 +1,6 @@
 (ns core.item
-  (:require [data.grid2d :as grid2d]
-            [core.ctx :refer :all])
+  (:require [clojure.gdx :refer :all]
+            [data.grid2d :as grid2d])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
@@ -59,7 +59,7 @@
                                      :entity/clickable {:type :clickable/item
                                                         :text (:property/pretty-name item)}}]]))
 
-(defn cells-and-items [inventory slot]
+(defn- cells-and-items [inventory slot]
   (for [[position item] (slot inventory)]
     [[slot position] item]))
 
@@ -67,7 +67,7 @@
   (or (= :inventory.slot/bag slot)
       (= (:item/slot item) slot)))
 
-(defn applies-modifiers? [[slot _]]
+(defn- applies-modifiers? [[slot _]]
   (not= :inventory.slot/bag slot))
 
 (defn stackable? [item-a item-b]
@@ -147,7 +147,7 @@
   (do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
-(extend-type core.ctx.Entity
+(extend-type clojure.gdx.Entity
   Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))

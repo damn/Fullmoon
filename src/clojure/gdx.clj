@@ -1,28 +1,4 @@
-; one ns for each type (app, audiovisual, etc.)
-; and core.ctx comes in a separate folder
-; gdl.lang or something
-; clj.game
-
-;; the name of the project/main ns => google it and grep and no results
-
-; TODO:
-; !! * chekc all names _unique_ so can easily rename, e.g. check 'texture', 'cached-texture'
-; => shouldnt make any regex stuff
-; * maybe systems in another color and also here?
-; or s/foo or c/bar
-; * clone vim clojure static
-; * add a different color (clj-green, or anything unused, gold) for ctx functions
-; ( * and 'ctx' can also have a special color?! )
-; * gdl.core or ctx.core (like clojure.core)
-; or * damn.core ?
-; * clojure game development extension(s)  ?
-; cljgdx
-; 'ctx' makes more sense ...
-; * defcomponent also!! here ??
-; * and build components ... then only here defcomponents
-; crazy ...
-; 'gdl'
-(ns core.ctx
+(ns clojure.gdx
   (:require [clojure.set :as set]
             [clojure.string :as str]
             [clojure.edn :as edn]
@@ -660,8 +636,8 @@ Default method returns true."
          rotation)
   (if color (.setColor batch Color/WHITE)))
 
-(extend-type core.ctx.Graphics
-  core.ctx/ImageDraw
+(extend-type clojure.gdx.Graphics
+  clojure.gdx/ImageDraw
   (draw-image [{:keys [batch unit-scale]}
                {:keys [texture-region color] :as image}
                position]
@@ -793,8 +769,8 @@ Default method returns true."
       count
       (* (.getLineHeight font))))
 
-(extend-type core.ctx.Graphics
-  core.ctx/TextDrawer
+(extend-type clojure.gdx.Graphics
+  clojure.gdx/TextDrawer
   (draw-text [{:keys [default-font unit-scale batch]}
               {:keys [x y text font h-align up? scale]}]
     (let [^BitmapFont font (or font default-font)
@@ -835,8 +811,8 @@ Default method returns true."
 (defn- set-color [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (munge-color color)))
 
-(extend-type core.ctx.Graphics
-  core.ctx/PShapeDrawer
+(extend-type clojure.gdx.Graphics
+  clojure.gdx/PShapeDrawer
   (draw-ellipse [{:keys [^ShapeDrawer shape-drawer]} [x y] radius-x radius-y color]
     (set-color shape-drawer color)
     (.ellipse shape-drawer (float x) (float y) (float radius-x) (float radius-y)) )
@@ -911,8 +887,8 @@ Default method returns true."
   {:gui-view (->gui-view gui-view)
    :world-view (->world-view world-view)})
 
-(extend-type core.ctx.Graphics
-  core.ctx/WorldView
+(extend-type clojure.gdx.Graphics
+  clojure.gdx/WorldView
   (world-unit-scale [{:keys [world-view]}]
     (:unit-scale world-view))
 
@@ -948,7 +924,7 @@ Default method returns true."
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   Views
   (gui-mouse-position    [ctx] (gui-mouse-position*             (gr ctx)))
   (world-mouse-position  [ctx] (world-mouse-position*           (gr ctx)))
@@ -1025,7 +1001,7 @@ Default method returns true."
   [ctx render-fn]
   (render-view ctx :gui-view render-fn))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   RenderWorldView
   (render-world-view [ctx render-fn]
     (render-view ctx :world-view render-fn)) )
@@ -1805,7 +1781,7 @@ Default method returns true."
 (defmethod ->vis-image Drawable [^Drawable drawable]
   (VisImage. drawable))
 
-(defmethod ->vis-image core.ctx.Image
+(defmethod ->vis-image clojure.gdx.Image
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
@@ -2195,7 +2171,7 @@ Default method returns true."
                            (if (map? v) (build ctx v) v)
                            ctx))))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   Property
   (build-property [{{:keys [db]} :context/properties :as ctx} id]
     (build ctx (safe-get db id))))
@@ -3044,7 +3020,7 @@ Default method returns true."
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   Entities
   (all-entities [ctx] (vals (entities ctx)))
   (get-entity [ctx uid] (get (entities ctx) uid)))
@@ -3647,7 +3623,7 @@ Default method returns true."
 
 (def ^:private ctx-mouseover-entity :context/mouseover-entity)
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   MouseOverEntity
   (mouseover-entity* [ctx]
     (when-let [entity (ctx-mouseover-entity ctx)]
@@ -3899,7 +3875,7 @@ Default method returns true."
       (when (seq modifiers)
         (mod-info-text modifiers)))))
 
-(extend-type core.ctx.Entity
+(extend-type clojure.gdx.Entity
   Modifiers
   (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
     {:pre [(= "modifier" (namespace modifier-k))]}
@@ -4058,7 +4034,7 @@ Default method returns true."
   {:data :number
    :modifier-ops [:op/inc]})
 
-(extend-type core.ctx.Entity
+(extend-type clojure.gdx.Entity
   Stats
   (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]

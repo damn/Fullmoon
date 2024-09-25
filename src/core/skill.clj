@@ -1,5 +1,5 @@
 (ns core.skill
-  (:require [core.ctx :refer :all])
+  (:require [clojure.gdx :refer :all])
   (:import com.badlogic.gdx.Input$Buttons
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
@@ -60,7 +60,7 @@
                      (stopped? ctx cooling-down?))]
       [:e/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
 
-(defn has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
+(defn- has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
   (contains? skills id))
 
 (defcomponent :tx/add-skill
@@ -77,7 +77,7 @@
      (when (:entity/player? @entity)
        [:tx.action-bar/remove skill])]))
 
-(defsystem render-effect "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
+(defsystem ^:private render-effect "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
 (defmethod render-effect :default [_ g ctx])
 
 (defcomponent :entity-effects {:data [:components-ns :effect.entity]})

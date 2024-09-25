@@ -1,6 +1,6 @@
 (ns core.app
-  (:require [data.grid2d :as grid2d]
-            [core.ctx :refer :all]
+  (:require [clojure.gdx :refer :all]
+            [data.grid2d :as grid2d]
             [core.item :as inventory]
             [core.tiled :as tiled]
             core.audiovisual
@@ -291,7 +291,7 @@
   (doseq [[faction max-iterations] factions-iterations]
     (update-faction-potential-field grid faction entities max-iterations)))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   Pathfinding
   (potential-fields-follow-to-enemy [{:keys [context/grid]} entity]
     (potential-field-follow-to-enemy* grid entity)))
@@ -436,7 +436,7 @@
         target2 (v-add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   PRayCaster
   (ray-blocked? [{:keys [context/raycaster]} start target]
     (fast-ray-blocked? raycaster start target))
@@ -526,7 +526,7 @@
 
 (def ^:private this :context/grid)
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   GridPointEntities
   (point->entities [ctx position]
     (when-let [cell (get (this ctx) (->tile position))]
@@ -625,7 +625,7 @@
          (keep grid)
          (mapcat (comp :entities deref)))))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   ActiveEntities
   (active-entities [ctx]
     (active-entities* ctx (player-entity* ctx))))

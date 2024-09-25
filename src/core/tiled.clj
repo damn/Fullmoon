@@ -1,6 +1,6 @@
 (ns core.tiled
-  (:require [data.grid2d :as grid]
-            [core.ctx :refer :all :exclude [visible?]])
+  (:require [clojure.gdx :refer :all :exclude [visible?]]
+            [data.grid2d :as grid])
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.maps MapLayer MapLayers MapProperties)
            [com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell]

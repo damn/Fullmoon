@@ -1,6 +1,6 @@
-(ns core.creature
-  (:require [reduce-fsm :as fsm]
-            [core.ctx :refer :all]
+(ns ^:no-doc core.creature
+  (:require [clojure.gdx :refer :all]
+            [reduce-fsm :as fsm]
             [core.item :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)))
 
@@ -103,7 +103,7 @@
   (info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(extend-type core.ctx.Entity
+(extend-type clojure.gdx.Entity
   State
   (entity-state [entity*]
     (-> entity* :entity/state :state))
@@ -286,7 +286,7 @@
     (when (world-item? ctx)
       (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
-(extend-type core.ctx.Graphics
+(extend-type clojure.gdx.Graphics
   DrawItemOnCursor
   (draw-item-on-cursor [g ctx]
     (let [player-entity* (player-entity* ctx)]
@@ -349,7 +349,7 @@
 (defn- p-state-obj [ctx]
   (-> ctx player-entity* state-obj))
 
-(extend-type core.ctx.Context
+(extend-type clojure.gdx.Context
   Player
   (player-entity  [ctx]  (ctx-player ctx))
   (player-entity* [ctx] @(ctx-player ctx))
