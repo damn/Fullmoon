@@ -1,4 +1,4 @@
-# 👽 clojure.world 🎮
+# 👽 clojure.world 🌏
 
 A domain-specific language for creating worlds based on [clojure](https://clojure.org/), [libgdx](https://libgdx.com/), [vis-ui](https://github.com/kotcrab/vis-ui) and [malli](https://github.com/metosin/malli).
 
