@@ -3,8 +3,7 @@
             [data.grid2d :as g]
             [core.ctx :refer :all]
             [core.tiled :as tiled]
-            [core.property :as property]
-            [core.ui :as ui])
+            [core.property :as property])
   (:import java.util.Random
            com.badlogic.gdx.Input$Keys
            com.badlogic.gdx.graphics.Color))
@@ -800,12 +799,12 @@ direction keys: move")
 
 ; same as debug-window
 (defn- ->info-window [ctx]
-  (let [label (ui/->label "")
-        window (ui/->window {:title "Info" :rows [[label]]})]
-    (ui/add-actor! window (ui/->actor {:act #(do
+  (let [label (->label "")
+        window (->window {:title "Info" :rows [[label]]})]
+    (add-actor! window (->actor {:act #(do
                                               (.setText label (debug-infos %))
                                               (.pack window))}))
-    (ui/set-position! window 0 (gui-viewport-height ctx))
+    (set-position! window 0 (gui-viewport-height ctx))
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
@@ -879,14 +878,14 @@ direction keys: move")
     context))
 
 (defn ->generate-map-window [ctx level-id]
-  (ui/->window {:title "Properties"
+  (->window {:title "Properties"
                 :cell-defaults {:pad 10}
-                :rows [[(ui/->label (with-out-str
+                :rows [[(->label (with-out-str
                                      (clojure.pprint/pprint
                                       (build-property ctx level-id))))]
-                       [(ui/->text-button "Generate" #(try (generate-screen-ctx % (build-property % level-id))
+                       [(->text-button "Generate" #(try (generate-screen-ctx % (build-property % level-id))
                                                            (catch Throwable t
-                                                             (ui/error-window! % t)
+                                                             (error-window! % t)
                                                              (println t)
                                                              %)))]]
                 :pack? true}))
@@ -923,5 +922,5 @@ direction keys: move")
                   (atom {:tiled-map (tiled/load-map modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
-     :stage (ui/->stage ctx [(->generate-map-window ctx world-id)
+     :stage (->stage ctx [(->generate-map-window ctx world-id)
                              (->info-window ctx)])}))

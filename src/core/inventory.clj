@@ -1,7 +1,6 @@
 (ns core.inventory
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]
-            [core.ui :as ui]
             [core.entity :as entity]
             [core.stats :refer [mod-info-text]])
   (:import com.badlogic.gdx.graphics.Color
@@ -199,15 +198,15 @@
                         (.getX this)
                         (.getY this)
                         (mouseover? this (gui-mouse-position ctx))
-                        (ui/actor-id (ui/parent this)))))))
+                        (actor-id (parent this)))))))
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
-        image-widget (ui/->image-widget (slot->background slot) {:id :image})
-        stack (ui/->stack [(draw-rect-actor) image-widget])]
-    (ui/set-name! stack "inventory-cell")
-    (ui/set-id! stack cell)
-    (ui/add-listener! stack (proxy [ClickListener] []
+        image-widget (->image-widget (slot->background slot) {:id :image})
+        stack (->stack [(draw-rect-actor) image-widget])]
+    (set-name! stack "inventory-cell")
+    (set-id! stack cell)
+    (add-listener! stack (proxy [ClickListener] []
                                  (clicked [event x y]
                                    (swap! app-state #(effect! % (player-clicked-inventory % cell))))))
     stack))
@@ -226,7 +225,7 @@
                            :boot     9
                            :bag      10} ; transparent
          (map (fn [[slot y]]
-                (let [drawable (ui/->texture-region-drawable (:texture-region (sprite ctx sheet [21 (+ y 2)])))]
+                (let [drawable (->texture-region-drawable (:texture-region (sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
                    (.tint ^TextureRegionDrawable drawable (->color 1 1 1 0.4))])))
@@ -259,9 +258,9 @@
       (.row table))))
 
 (defn ->build [ctx {:keys [slot->background]}]
-  (let [table (ui/->table {:id ::table})]
+  (let [table (->table {:id ::table})]
     (redo-table! table slot->background)
-    (ui/->window {:title "Inventory"
+    (->window {:title "Inventory"
                   :id :inventory-window
                   :visible? false
                   :pack? true
@@ -273,7 +272,7 @@
   (slot->background ctx))
 
 (defn- get-inventory [ctx]
-  {:table (::table (get (:windows (ui/stage-get ctx)) :inventory-window))
+  {:table (::table (get (:windows (stage-get ctx)) :inventory-window))
    :slot->background (:slot->background (:context/widgets ctx))})
 
 (defcomponent :tx/set-item-image-in-widget
@@ -281,10 +280,10 @@
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)
-          drawable (ui/->texture-region-drawable (:texture-region (:entity/image item)))]
+          drawable (->texture-region-drawable (:texture-region (:entity/image item)))]
       (.setMinSize drawable (float cell-size) (float cell-size))
       (.setDrawable image-widget drawable)
-      (ui/add-tooltip! cell-widget #(->info-text item %))
+      (add-tooltip! cell-widget #(->info-text item %))
       ctx)))
 
 (defcomponent :tx/remove-item-from-widget
@@ -293,5 +292,5 @@
           cell-widget (get table cell)
           ^Image image-widget (get cell-widget :image)]
       (.setDrawable image-widget (slot->background (cell 0)))
-      (ui/remove-tooltip! cell-widget)
+      (remove-tooltip! cell-widget)
       ctx)))

@@ -3,8 +3,7 @@
             [clj-commons.pretty.repl :as p]
             [malli.core :as m]
             [core.ctx :refer :all]
-            [core.property :as property]
-            [core.ui :as ui])
+            [core.property :as property])
   (:import com.badlogic.gdx.graphics.Color))
 
 (defn define-order [order-k-vector]
@@ -385,8 +384,8 @@
 ; frames ....
 ; hidden actor act tick atom animation & set current frame image drawable
 (defmethod property/->widget :data/animation [_ animation ctx]
-  (ui/->table {:rows [(for [image (:frames animation)]
-                        (ui/->image-widget (edn->image image ctx) {}))]
+  (->table {:rows [(for [image (:frames animation)]
+                        (->image-widget (edn->image image ctx) {}))]
                :cell-defaults {:pad 1}}))
 
 (defn- tx-assoc-image-current-frame [eid animation]
@@ -958,7 +957,7 @@
       @entity)))
 
 (defn update-mouseover-entity [ctx]
-  (let [entity (if (ui/mouse-on-actor? ctx)
+  (let [entity (if (mouse-on-actor? ctx)
                  nil
                  (calculate-mouseover-entity ctx))]
     [(when-let [old-entity (ctx-mouseover-entity ctx)]

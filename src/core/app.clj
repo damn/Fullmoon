@@ -5,7 +5,6 @@
             [core.inventory :as inventory]
             [core.property :as property]
             [core.tiled :as tiled]
-            [core.ui :as ui]
             core.entity-state
             core.world)
   (:import org.lwjgl.system.Configuration
@@ -884,7 +883,7 @@
     (try (entity/tick-entities! ctx active-entities)
          (catch Throwable t
            (-> ctx
-               (ui/error-window! t)
+               (error-window! t)
                (assoc :context/entity-tick-error t))))))
 
 (defmulti ^:private game-loop :context/game-loop-mode)
@@ -946,7 +945,7 @@
                                         (sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                         [x y])
                             (render-infostr-on-bar g (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
-    (ui/->actor {:draw (fn [g ctx]
+    (->actor {:draw (fn [g ctx]
                          (let [player-entity* (player-entity* ctx)
                                x (- x (/ rahmenw 2))]
                            (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/stat player-entity* :stats/hp) "HP")
@@ -975,19 +974,19 @@
      (when-let [entity* (mouseover-entity* ctx)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
-     #_(when-let [actor (ui/mouse-on-actor? ctx)]
+     #_(when-let [actor (mouse-on-actor? ctx)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (ui/actor-id actor)
+              "id: " (actor-id actor)
               )))))
 
 (defn- ->debug-window [context]
-  (let [label (ui/->label "")
-        window (ui/->window {:title "Debug"
+  (let [label (->label "")
+        window (->window {:title "Debug"
                              :id :debug-window
                              :visible? false
                              :position [0 (gui-viewport-height context)]
                              :rows [[label]]})]
-    (ui/add-actor! window (ui/->actor {:act #(do
+    (add-actor! window (->actor {:act #(do
                                               (.setText label (debug-infos %))
                                               (.pack window))}))
     window))
@@ -998,15 +997,15 @@
                                 :active-skill])
 
 (defn- ->entity-info-window [context]
-  (let [label (ui/->label "")
-        window (ui/->window {:title "Info"
+  (let [label (->label "")
+        window (->window {:title "Info"
                              :id :entity-info-window
                              :visible? false
                              :position [(gui-viewport-width context) 0]
                              :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
-    (ui/add-actor! window (ui/->actor {:act (fn update-label-text [ctx]
+    (add-actor! window (->actor {:act (fn update-label-text [ctx]
                                               ; items then have 2x pretty-name
                                               #_(.setText (.getTitleLabel window)
                                                           (if-let [entity* (mouseover-entity* ctx)]
@@ -1024,26 +1023,26 @@
 (def ^:private image-scale 2)
 
 (defn- ->action-bar []
-  (let [group (ui/->horizontal-group {:pad 2 :space 2})]
-    (ui/set-id! group ::action-bar)
+  (let [group (->horizontal-group {:pad 2 :space 2})]
+    (set-id! group ::action-bar)
     group))
 
 (defn- ->action-bar-button-group []
-  (ui/->button-group {:max-check-count 1
+  (->button-group {:max-check-count 1
                       :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
-  {:horizontal-group (::action-bar (:action-bar-table (ui/stage-get ctx)))
+  {:horizontal-group (::action-bar (:action-bar-table (stage-get ctx)))
    :button-group (:action-bar (:context/widgets ctx))})
 
 (defcomponent :tx.action-bar/add
   (do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
-          button (ui/->image-button image identity {:scale image-scale})]
-      (ui/set-id! button id)
-      (ui/add-tooltip! button
+          button (->image-button image identity {:scale image-scale})]
+      (set-id! button id)
+      (add-tooltip! button
                           #(->info-text skill (assoc % :effect/source (player-entity %))))
-      (ui/add-actor! horizontal-group button)
+      (add-actor! horizontal-group button)
       (.add ^ButtonGroup button-group ^Button button)
       ctx)))
 
@@ -1051,7 +1050,7 @@
   (do! [[_ {:keys [property/id]}] ctx]
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
-      (ui/remove! button)
+      (remove! button)
       (.remove ^ButtonGroup button-group ^Button button)
       ctx)))
 
@@ -1123,18 +1122,18 @@
  )
 
 (defn- ->ui-actors [ctx widget-data]
-  [(ui/->table {:rows [[{:actor (->action-bar)
+  [(->table {:rows [[{:actor (->action-bar)
                          :expand? true
                          :bottom? true}]]
                 :id :action-bar-table
                 :cell-defaults {:pad 2}
                 :fill-parent? true})
    (->hp-mana-bars ctx)
-   (ui/->group {:id :windows
+   (->group {:id :windows
                 :actors [(->debug-window ctx)
                          (->entity-info-window ctx)
                          (inventory/->build ctx widget-data)]})
-   (ui/->actor {:draw draw-item-on-cursor})
+   (->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
 
 
@@ -1142,7 +1141,7 @@
   (->mk [_ ctx]
     (let [widget-data {:action-bar (->action-bar-button-group)
                        :slot->background (inventory/->data ctx)}
-          stage (ui/stage-get ctx)]
+          stage (stage-get ctx)]
       (.clear stage)
       (run! #(.addActor stage %) (->ui-actors ctx widget-data))
       widget-data)))
@@ -1156,13 +1155,13 @@
 (defn- check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
           :when (.isKeyJustPressed gdx-input hotkey)]
-    (ui/toggle-visible! (get (:windows (ui/stage-get ctx)) window-id))))
+    (toggle-visible! (get (:windows (stage-get ctx)) window-id))))
 
 (defn- close-windows?! [context]
-  (let [windows (ui/children (:windows (ui/stage-get context)))]
-    (if (some ui/visible? windows)
+  (let [windows (children (:windows (stage-get context)))]
+    (if (some visible? windows)
       (do
-       (run! #(ui/set-visible! % false) windows)
+       (run! #(set-visible! % false) windows)
        true))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
@@ -1203,7 +1202,7 @@
 (derive :screens/world :screens/stage)
 (defcomponent :screens/world
   (->mk [_ ctx]
-    {:stage (ui/->stage ctx [])
+    {:stage (->stage ctx [])
      :sub-screen [:world/sub-screen]}))
 
 (comment
@@ -1247,14 +1246,14 @@
         (start-new-game (->world ctx world-id)))))
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
-  (ui/->table {:rows (remove nil? (concat
+  (->table {:rows (remove nil? (concat
                                    (for [{:keys [property/id]} (property/all-properties ctx :properties/worlds)]
-                                     [(ui/->text-button (str "Start " id) (start-game! id))])
+                                     [(->text-button (str "Start " id) (start-game! id))])
                                    [(when (safe-get config :map-editor?)
-                                      [(ui/->text-button "Map editor" #(change-screen % :screens/map-editor))])
+                                      [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
-                                      [(ui/->text-button "Property editor" #(change-screen % :screens/property-editor))])
-                                    [(ui/->text-button "Exit" (fn [ctx] (.exit gdx-app) ctx))]]))
+                                      [(->text-button "Property editor" #(change-screen % :screens/property-editor))])
+                                    [(->text-button "Exit" (fn [ctx] (.exit gdx-app) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
 
@@ -1264,9 +1263,9 @@
     (set-cursor! ctx :cursors/default)))
 
 (defn- ->actors [ctx]
-  [(ui/->background-image ctx)
+  [(->background-image ctx)
    (->buttons ctx)
-   (ui/->actor {:act (fn [_ctx]
+   (->actor {:act (fn [_ctx]
                        (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
                          (.exit gdx-app)))})])
 
@@ -1274,7 +1273,7 @@
 (defcomponent :screens/main-menu
   (->mk [[k _] ctx]
     {:sub-screen [:main/sub-screen]
-     :stage (ui/->stage ctx (->actors ctx))}))
+     :stage (->stage ctx (->actors ctx))}))
 
 (defprotocol ^:private StatusCheckBox
   (^:private get-text [this])
@@ -1307,21 +1306,21 @@
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
 
 (defn- create-table [{:keys [context/config] :as ctx}]
-  (ui/->table {:rows (concat
-                      [[(ui/->label key-help-text)]]
+  (->table {:rows (concat
+                      [[(->label key-help-text)]]
 
                       (when (safe-get config :debug-window?)
-                        [[(ui/->label "[Z] - Debug window")]])
+                        [[(->label "[Z] - Debug window")]])
 
                       (when (safe-get config :debug-options?)
                         (for [check-box debug-flags]
-                          [(ui/->check-box (get-text check-box)
+                          [(->check-box (get-text check-box)
                                            (partial set-state check-box)
                                            (boolean (get-state check-box)))]))
 
-                      [[(ui/->text-button "Resume" #(change-screen % :screens/world))]
+                      [[(->text-button "Resume" #(change-screen % :screens/world))]
 
-                       [(ui/->text-button "Exit" #(change-screen % :screens/main-menu))]])
+                       [(->text-button "Exit" #(change-screen % :screens/main-menu))]])
 
                :fill-parent? true
                :cell-defaults {:pad-bottom 10}}))
@@ -1335,7 +1334,7 @@
 (derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
   (->mk [_ ctx]
-    {:stage (ui/->stage ctx [(ui/->background-image ctx) (create-table ctx)])
+    {:stage (->stage ctx [(->background-image ctx) (create-table ctx)])
      :sub-screen [:options/sub-screen]}))
 
 (defn- set-first-screen [context]

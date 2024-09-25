@@ -2,7 +2,6 @@
   (:require [reduce-fsm :as fsm]
             [core.ctx :refer :all]
             [core.entity :as entity]
-            [core.ui :as ui]
             [core.inventory :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
@@ -556,10 +555,10 @@
 (defn- selected-skill [ctx]
   (let [button-group (:action-bar (:context/widgets ctx))]
     (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
-      (ui/actor-id skill-button))))
+      (actor-id skill-button))))
 
 (defn- inventory-window [ctx]
-  (get (:windows (ui/stage-get ctx)) :inventory-window))
+  (get (:windows (stage-get ctx)) :inventory-window))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
@@ -575,7 +574,7 @@
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
-     (ui/visible? (inventory-window context))
+     (visible? (inventory-window context))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
@@ -591,7 +590,7 @@
 
 (defmethod on-clicked :clickable/player
   [ctx _clicked-entity*]
-  (ui/toggle-visible! (inventory-window ctx))) ; TODO no tx
+  (toggle-visible! (inventory-window ctx))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
@@ -608,23 +607,23 @@
 
 ; TODO move to inventory-window extend Context
 (defn- inventory-cell-with-item? [ctx actor]
-  (and (ui/parent actor)
-       (= "inventory-cell" (ui/actor-name (ui/parent actor)))
+  (and (parent actor)
+       (= "inventory-cell" (actor-name (parent actor)))
        (get-in (:entity/inventory (player-entity* ctx))
-               (ui/actor-id (ui/parent actor)))))
+               (actor-id (parent actor)))))
 
 (defn- mouseover-actor->cursor [ctx]
-  (let [actor (ui/mouse-on-actor? ctx)]
+  (let [actor (mouse-on-actor? ctx)]
     (cond
      (inventory-cell-with-item? ctx actor) :cursors/hand-before-grab
-     (ui/window-title-bar? actor) :cursors/move-window
-     (ui/button? actor) :cursors/over-button
+     (window-title-bar? actor) :cursors/move-window
+     (button? actor) :cursors/over-button
      :else :cursors/default)))
 
 (defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (mouseover-entity* context)]
     (cond
-     (ui/mouse-on-actor? context)
+     (mouse-on-actor? context)
      [(mouseover-actor->cursor context)
       (fn []
         nil)] ; handled by actors themself, they check player state
@@ -740,7 +739,7 @@
                    (- (:entity/click-distance-tiles entity*) 0.1)))
 
 (defn- world-item? [ctx]
-  (not (ui/mouse-on-actor? ctx)))
+  (not (mouse-on-actor? ctx)))
 
 (defcomponent :player-item-on-cursor
   {:let {:keys [eid item]}}

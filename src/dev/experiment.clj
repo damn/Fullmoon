@@ -1,6 +1,5 @@
 (ns dev.experiment
   (:require [core.ctx :refer :all]
-            [core.ui :as ui]
             core.property)
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
@@ -205,7 +204,7 @@
 
 (defn- add-elements! [node elements]
   (doseq [element elements
-          :let [el-node (->node (ui/->label (str (->v-str element))))]]
+          :let [el-node (->node (->label (str (->v-str element))))]]
     (.add node el-node)))
 
 (declare add-map-nodes!)
@@ -222,14 +221,14 @@
     (add-elements! node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! node (children->str-map (ui/children (.getRoot v))) level))
+    (add-map-nodes! node (children->str-map (children (.getRoot v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
-    (add-map-nodes! node (children->str-map (ui/children v)) level))
+    (add-map-nodes! node (children->str-map (children v)) level))
   )
 
 (comment
- (let [vis-image (first (ui/children (.getRoot (ui/stage-get @app-state))))]
+ (let [vis-image (first (children (.getRoot (stage-get @app-state))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -241,14 +240,14 @@
     (doseq [[k v] (into (sorted-map) m)]
       ;(println "add-map-nodes! k " k)
       (try
-       (let [node (->node (ui/->label (->labelstr k v)))]
+       (let [node (->node (->label (->labelstr k v)))]
          (.add parent-node node)
          #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
            (->nested-nodes node level @v))
          (->nested-nodes node level v))
        (catch Throwable t
          (throw (ex-info "" {:k k :v v} t))
-         #_(.add parent-node (->node (ui/->label (str "[RED] "k " - " t))))
+         #_(.add parent-node (->node (->label (str "[RED] "k " - " t))))
 
          )))))
 
@@ -258,15 +257,15 @@
     tree))
 
 (defn- ->scroll-pane-cell [ctx rows]
-  (let [table (ui/->table {:rows rows
+  (let [table (->table {:rows rows
                            :cell-defaults {:pad 1}
                            :pack? true})
-        scroll-pane (ui/->scroll-pane table)]
+        scroll-pane (->scroll-pane table)]
     {:actor scroll-pane
      :width (/ (gui-viewport-width ctx) 2)
      :height
      (- (gui-viewport-height ctx) 50)
-     #_(min (- (gui-viewport-height ctx) 50) (ui/height table))}))
+     #_(min (- (gui-viewport-height ctx) 50) (height table))}))
 
 (defn- show-tree-view! [obj]
   (let [ctx @app-state
@@ -274,10 +273,10 @@
                  :ctx ctx
                  :entity (mouseover-entity* ctx)
                  :tile @(get (:context/grid ctx) (mapv int (world-mouse-position ctx))))]
-    (ui/stage-add! ctx
-                   (ui/->window {:title "Tree View"
-                                 :close-button? true
-                                 :close-on-escape? true
-                                 :center? true
-                                 :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
-                                 :pack? true}))))
+    (stage-add! ctx
+                (->window {:title "Tree View"
+                           :close-button? true
+                           :close-on-escape? true
+                           :center? true
+                           :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
+                           :pack? true}))))
