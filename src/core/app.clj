@@ -4,7 +4,7 @@
             [core.item :as inventory]
             [core.tiled :as tiled]
             core.audiovisual
-            core.entity-state
+            core.creature
             core.skill
             core.world)
   (:import org.lwjgl.system.Configuration

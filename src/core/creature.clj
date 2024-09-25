@@ -1,4 +1,4 @@
-(ns core.entity-state
+(ns core.creature
   (:require [reduce-fsm :as fsm]
             [core.ctx :refer :all]
             [core.item :as inventory])
