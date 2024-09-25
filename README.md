@@ -1,4 +1,4 @@
-![moon_background](https://github.com/user-attachments/assets/004b9c16-d47e-409c-ae27-55a6340d1685)
+![moon](https://github.com/user-attachments/assets/8bf2227d-74c1-4eb5-85a5-4df926f4ea1b)
 
 # Screenshots
 
