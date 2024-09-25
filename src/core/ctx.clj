@@ -3407,80 +3407,6 @@ Default method returns true."
        {:counter (->counter ctx delay-seconds)
         :faction faction}}]]))
 
-(defcomponent :skill/action-time {:data :pos}
-  (info-text [[_ v] _ctx]
-    (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
-
-(defcomponent :skill/cooldown {:data :nat-int}
-  (info-text [[_ v] _ctx]
-    (when-not (zero? v)
-      (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
-
-(defcomponent :skill/cost {:data :nat-int}
-  (info-text [[_ v] _ctx]
-    (when-not (zero? v)
-      (str "[CYAN]Cost: " v " Mana[]"))))
-
-(defcomponent :skill/effects
-  {:data [:components-ns :effect]})
-
-(defcomponent :skill/start-action-sound {:data :sound})
-
-(defcomponent :skill/action-time-modifier-key
-  {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
-  (info-text [[_ v] _ctx]
-    (str "[VIOLET]" (case v
-                      :stats/cast-speed "Spell"
-                      :stats/attack-speed "Attack") "[]")))
-
-(def-type :properties/skills
-  {:schema [:entity/image
-            :property/pretty-name
-            :skill/action-time-modifier-key
-            :skill/action-time
-            :skill/start-action-sound
-            :skill/effects
-            [:skill/cooldown {:optional true}]
-            [:skill/cost {:optional true}]]
-   :overview {:title "Skills"
-              :columns 16
-              :image/scale 2}})
-
-(defcomponent :entity/skills
-  {:data [:one-to-many :properties/skills]}
-  (create [[k skills] eid ctx]
-    (cons [:e/assoc eid k nil]
-          (for [skill skills]
-            [:tx/add-skill eid skill])))
-
-  (info-text [[_ skills] _ctx]
-    ; => recursive info-text leads to endless text wall
-    #_(when (seq skills)
-        (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
-
-  (tick [[k skills] eid ctx]
-    (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
-          :when (and cooling-down?
-                     (stopped? ctx cooling-down?))]
-      [:e/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
-
-(defn has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
-  (contains? skills id))
-
-(defcomponent :tx/add-skill
-  (do! [[_ entity {:keys [property/id] :as skill}] _ctx]
-    (assert (not (has-skill? @entity skill)))
-    [[:e/assoc-in entity [:entity/skills id] skill]
-     (when (:entity/player? @entity)
-       [:tx.action-bar/add skill])]))
-
-(defcomponent :tx/remove-skill
-  (do! [[_ entity {:keys [property/id] :as skill}] _ctx]
-    (assert (has-skill? @entity skill))
-    [[:e/dissoc-in entity [:entity/skills id]]
-     (when (:entity/player? @entity)
-       [:tx.action-bar/remove skill])]))
-
 (defcomponent :entity/string-effect
   (tick [[k {:keys [counter]}] eid context]
     (when (stopped? context counter)
@@ -3770,3 +3696,40 @@ Default method returns true."
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                  :counter (->counter ctx duration)}]]))))
+
+(defsystem enter "FIXME" [_ ctx])
+(defmethod enter :default [_ ctx])
+
+(defsystem exit  "FIXME" [_ ctx])
+(defmethod exit :default  [_ ctx])
+
+;; Player-State
+
+(defsystem player-enter "FIXME" [_])
+(defmethod player-enter :default [_])
+
+(defsystem pause-game? "FIXME" [_])
+(defmethod pause-game? :default [_])
+
+(defsystem manual-tick "FIXME" [_ ctx])
+(defmethod manual-tick :default [_ ctx])
+
+(defsystem clicked-inventory-cell "FIXME" [_ cell])
+(defmethod clicked-inventory-cell :default [_ cell])
+
+(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
+(defmethod clicked-skillmenu-skill :default [_ skill])
+
+(defn- add-vs [vs]
+  (v-normalise (reduce v-add [0 0] vs)))
+
+(defn WASD-movement-vector []
+  (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
+        l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
+        u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
+        d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
+    (when (or r l u d)
+      (let [v (add-vs (remove nil? [r l u d]))]
+        (when (pos? (v-length v))
+          v)))))
+
