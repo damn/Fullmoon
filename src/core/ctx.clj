@@ -756,7 +756,10 @@ Default method returns true."
   (spit "vimstuff"
         (apply str
                (remove #{"defcomponent" "defsystem"}
-                       (interpose " , " (map str (keys (ns-publics 'core.ctx))))))))
+                       (interpose " , " (map str (keys
+                                                  (remove (fn [[k v]]
+                                                            (instance? java.lang.Class @v))
+                                                          (ns-publics *ns*)))))))))
 ; TODO no anonym class, macros
 ; Graphics & Image not highlighted
 
