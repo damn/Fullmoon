@@ -1,7 +1,7 @@
 (ns core.entity-state
   (:require [reduce-fsm :as fsm]
             [core.ctx :refer :all]
-            [core.inventory :as inventory])
+            [core.item :as inventory])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)))
 
 (comment

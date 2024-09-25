@@ -1,10 +1,11 @@
 (ns core.app
   (:require [data.grid2d :as grid2d]
             [core.ctx :refer :all]
-            [core.inventory :as inventory]
+            [core.item :as inventory]
             [core.tiled :as tiled]
             core.audiovisual
             core.entity-state
+            core.skill
             core.world)
   (:import org.lwjgl.system.Configuration
            (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)

@@ -1,13 +1,25 @@
-(ns core.inventory
+(ns core.item
   (:require [data.grid2d :as grid2d]
-            [core.ctx :refer :all]
-            [core.stats :refer [mod-info-text]])
+            [core.ctx :refer :all])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
            com.badlogic.gdx.scenes.scene2d.utils.ClickListener
            com.badlogic.gdx.math.Vector2))
+
+(def-type :properties/items
+  {:schema [:property/pretty-name
+            :entity/image
+            :item/slot
+            [:item/modifiers {:optional true}]]
+   :overview {:title "Items"
+              :columns 20
+              :image/scale 1.1
+              :sort-by-fn #(vector (if-let [slot (:item/slot %)]
+                                     (name slot)
+                                     "")
+                             (name (:property/id %)))}})
 
 (def ^:private empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
@@ -24,6 +36,28 @@
        (map (fn [[slot [width height]]]
               [slot (grid2d/create-grid width height (constantly nil))]))
        (into {})))
+
+(defcomponent :item/modifiers
+  {:data [:components-ns :modifier]
+   :let modifiers}
+  (info-text [_ _ctx]
+    (when (seq modifiers)
+      (mod-info-text modifiers))))
+
+(defcomponent :item/slot
+  {:data [:enum (keys empty-inventory)]})
+
+(def ^:private body-props
+  {:width 0.75
+   :height 0.75
+   :z-order :z-order/on-ground})
+
+(defcomponent :tx/item
+  (do! [[_ position item] _ctx]
+    [[:e/create position body-props {:entity/image (:entity/image item)
+                                     :entity/item item
+                                     :entity/clickable {:type :clickable/item
+                                                        :text (:property/pretty-name item)}}]]))
 
 (defn cells-and-items [inventory slot]
   (for [[position item] (slot inventory)]
@@ -125,40 +159,6 @@
           (for [item items]
             [:tx/pickup-item eid item]))))
 
-(defcomponent :item/modifiers
-  {:data [:components-ns :modifier]
-   :let modifiers}
-  (info-text [_ _ctx]
-    (when (seq modifiers)
-      (mod-info-text modifiers))))
-
-(defcomponent :item/slot
-  {:data [:enum (keys empty-inventory)]})
-
-(def-type :properties/items
-  {:schema [:property/pretty-name
-            :entity/image
-            :item/slot
-            [:item/modifiers {:optional true}]]
-   :overview {:title "Items"
-              :columns 20
-              :image/scale 1.1
-              :sort-by-fn #(vector (if-let [slot (:item/slot %)]
-                                     (name slot)
-                                     "")
-                             (name (:property/id %)))}})
-
-(def ^:private body-props
-  {:width 0.75
-   :height 0.75
-   :z-order :z-order/on-ground})
-
-(defcomponent :tx/item
-  (do! [[_ position item] _ctx]
-    [[:e/create position body-props {:entity/image (:entity/image item)
-                                     :entity/item item
-                                     :entity/clickable {:type :clickable/item
-                                                        :text (:property/pretty-name item)}}]]))
 
 ; Items are also smaller than 48x48 all of them
 ; so wasting space ...
