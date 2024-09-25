@@ -414,9 +414,6 @@
 
  )
 
-;; world widgets/ui ?
-; what context?!
-
 (defn- ->ui-actors [ctx widget-data]
   [(->table {:rows [[{:actor (->action-bar)
                       :expand? true
@@ -431,7 +428,6 @@
                       (inventory/->build ctx widget-data)]})
    (->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
-
 
 (defcomponent :context/widgets
   (->mk [_ ctx]
@@ -566,8 +562,8 @@
   [(->background-image ctx)
    (->buttons ctx)
    (->actor {:act (fn [_ctx]
-                       (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
-                         (.exit gdx-app)))})])
+                    (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
+                      (.exit gdx-app)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu
@@ -592,6 +588,8 @@
   (set-state [this is-selected]
     (.bindRoot avar is-selected)))
 
+; TODO not using clojure.world ns ... only core
+
 (defn- debug-flags [] ;
   (apply concat
          ; TODO
@@ -607,23 +605,23 @@
 
 (defn- create-table [{:keys [context/config] :as ctx}]
   (->table {:rows (concat
-                      [[(->label key-help-text)]]
+                   [[(->label key-help-text)]]
 
-                      (when (safe-get config :debug-window?)
-                        [[(->label "[Z] - Debug window")]])
+                   (when (safe-get config :debug-window?)
+                     [[(->label "[Z] - Debug window")]])
 
-                      (when (safe-get config :debug-options?)
-                        (for [check-box debug-flags]
-                          [(->check-box (get-text check-box)
-                                           (partial set-state check-box)
-                                           (boolean (get-state check-box)))]))
+                   (when (safe-get config :debug-options?)
+                     (for [check-box debug-flags]
+                       [(->check-box (get-text check-box)
+                                     (partial set-state check-box)
+                                     (boolean (get-state check-box)))]))
 
-                      [[(->text-button "Resume" #(change-screen % :screens/world))]
+                   [[(->text-button "Resume" #(change-screen % :screens/world))]
 
-                       [(->text-button "Exit" #(change-screen % :screens/main-menu))]])
+                    [(->text-button "Exit" #(change-screen % :screens/main-menu))]])
 
-               :fill-parent? true
-               :cell-defaults {:pad-bottom 10}}))
+            :fill-parent? true
+            :cell-defaults {:pad-bottom 10}}))
 
 (defcomponent :options/sub-screen
   (screen-render [_ ctx]
@@ -634,5 +632,6 @@
 (derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
   (->mk [_ ctx]
-    {:stage (->stage ctx [(->background-image ctx) (create-table ctx)])
+    {:stage (->stage ctx [(->background-image ctx)
+                          (create-table ctx)])
      :sub-screen [:options/sub-screen]}))
