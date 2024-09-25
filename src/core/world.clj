@@ -499,7 +499,7 @@
   (memoize
    (fn [{:keys [property/id] :as prop}]
      (assert id)
-     (let [image (property/->image prop)
+     (let [image (property/prop->image prop)
            tile (tiled/->static-tiled-map-tile (:texture-region image))]
        (tiled/put! (tiled/m-props tile) "id" id)
        tile))))

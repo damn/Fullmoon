@@ -46,7 +46,7 @@
 (defn- ->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
-(defn ->image [{:keys [entity/image entity/animation]}] ; FIXME replaces ctx var
+(defn prop->image [{:keys [entity/image entity/animation]}]
   (or image
       (first (:frames animation))))
 
@@ -277,7 +277,7 @@
 ; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
   (for [file (sort (:texture-files (assets ctx)))]
-    [(->image-button (->image ctx file) identity)]
+    [(->image-button (prop->image ctx file) identity)]
     #_[(->text-button file identity)]))
 
 (defmethod ->widget :image [_ image ctx]
@@ -518,7 +518,7 @@
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn % id)
-        button (if-let [image (->image props)]
+        button (if-let [image (prop->image props)]
                  (->image-button image on-clicked {:scale scale})
                  (->text-button (name id) on-clicked))
         top-widget (->label (or (and extra-info-text (extra-info-text props)) ""))
@@ -652,7 +652,7 @@
                              (stage-add! ctx window))))]
       (for [property-id property-ids]
         (let [property (build-property ctx property-id)
-              image-widget (->image-widget (->image property)
+              image-widget (->image-widget (prop->image property)
                                               {:id property-id})]
           (add-tooltip! image-widget #(->info-text property %))
           image-widget))
@@ -696,7 +696,7 @@
                                (stage-add! ctx window)))))]
       [(when property-id
          (let [property (build-property ctx property-id)
-               image-widget (->image-widget (->image property)
+               image-widget (->image-widget (prop->image property)
                                                {:id property-id})]
            (add-tooltip! image-widget #(->info-text property %))
            image-widget))]
