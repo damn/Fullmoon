@@ -1,3 +1,7 @@
+; one ns for each type (app, audiovisual, etc.)
+; and core.ctx comes in a separate folder
+; gdl.lang or something
+; clj.game
 
 ;; the name of the project/main ns => google it and grep and no results
 
@@ -737,8 +741,11 @@ Default method returns true."
     (screen-enter [new-screen-key screen-v] new-context)
     new-context))
 
-(defn ns-publics-comma-separated []
-  (apply str (interpose " , " (map str (keys (ns-publics 'core.ctx))))))
+(defn vimstuff []
+  (spit "vimstuff"
+        (apply str
+               (remove #{"defcomponent" "defsystem"}
+                       (interpose " , " (map str (keys (ns-publics 'core.ctx))))))))
 ; TODO no anonym class, macros
 ; Graphics & Image not highlighted
 

@@ -738,24 +738,6 @@
         {:text text
          :counter (->counter ctx 0.4)})]]))
 
-(def-type :properties/audiovisuals
-  {:schema [:tx/sound
-            :entity/animation]
-   :overview {:title "Audiovisuals"
-              :columns 10
-              :image/scale 2}})
-
-(defcomponent :tx/audiovisual
-  (do! [[_ position id] ctx]
-    (let [{:keys [tx/sound
-                  entity/animation]} (build-property ctx id)]
-      [[:tx/sound sound]
-       [:e/create
-        position
-        effect-body-props
-        {:entity/animation animation
-         :entity/delete-after-animation-stopped? true}]])))
-
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
@@ -1019,3 +1001,21 @@
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                  :counter (->counter ctx duration)}]]))))
+
+(def-type :properties/audiovisuals
+  {:schema [:tx/sound
+            :entity/animation]
+   :overview {:title "Audiovisuals"
+              :columns 10
+              :image/scale 2}})
+
+(defcomponent :tx/audiovisual
+  (do! [[_ position id] ctx]
+    (let [{:keys [tx/sound
+                  entity/animation]} (build-property ctx id)]
+      [[:tx/sound sound]
+       [:e/create
+        position
+        effect-body-props
+        {:entity/animation animation
+         :entity/delete-after-animation-stopped? true}]])))

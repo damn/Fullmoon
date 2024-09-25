@@ -621,7 +621,7 @@
      (ui/button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn ->interaction-state [context entity*]
+(defn- ->interaction-state [context entity*]
   (let [mouseover-entity* (mouseover-entity* context)]
     (cond
      (ui/mouse-on-actor? context)
@@ -832,7 +832,7 @@
   (entity/render-below [_ entity* g _ctx]
     (draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))
 
-(def ^{:doc "Returns the player-entity atom."} ctx-player :context/player-entity)
+(def ^{:doc "Returns the player-entity atom." :private true} ctx-player :context/player-entity)
 
 (defcomponent :entity/player?
   (entity/create [_ eid ctx]
