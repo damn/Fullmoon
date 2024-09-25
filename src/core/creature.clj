@@ -2,7 +2,7 @@
   (:require [clojure.world :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
-            [core.item :as inventory])
+            [core.item :as item])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)))
 
 (def-type :properties/creatures
@@ -299,27 +299,28 @@
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)
-        item (get-in inventory cell)
+        item-in-cell (get-in inventory cell)
         item-on-cursor (:entity/item-on-cursor entity*)]
     (cond
      ; PUT ITEM IN EMPTY CELL
-     (and (not item)
-          (inventory/valid-slot? cell item-on-cursor))
+     (and (not item-in-cell)
+          (item/valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/set-item id cell item-on-cursor]
       [:e/dissoc id :entity/item-on-cursor]
       [:tx/event id :dropped-item]]
 
      ; STACK ITEMS
-     (and item (inventory/stackable? item item-on-cursor))
+     (and item-in-cell
+          (item/stackable? item-in-cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/stack-item id cell item-on-cursor]
       [:e/dissoc id :entity/item-on-cursor]
       [:tx/event id :dropped-item]]
 
      ; SWAP ITEMS
-     (and item
-          (inventory/valid-slot? cell item-on-cursor))
+     (and item-in-cell
+          (item/valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/remove-item id cell]
       [:tx/set-item id cell item-on-cursor]
@@ -327,7 +328,7 @@
       ; TODO? coud handle pickup-item from item-on-cursor state also
       [:e/dissoc id :entity/item-on-cursor]
       [:tx/event id :dropped-item]
-      [:tx/event id :pickup-item item]])))
+      [:tx/event id :pickup-item item-in-cell]])))
 
 ; It is possible to put items out of sight, losing them.
 ; Because line of sight checks center of entity only, not corners
