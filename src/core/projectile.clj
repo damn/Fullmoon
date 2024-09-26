@@ -51,7 +51,7 @@
 (defcomponent :projectile/piercing? {:data :boolean}
   (info-text [_ ctx] "[LIME]Piercing[]"))
 
-(defn- projectile-size [projectile]
+(defn projectile-size [projectile]
   {:pre [(:entity/image projectile)]}
   (first (:world-unit-dimensions (:entity/image projectile))))
 
@@ -79,56 +79,3 @@
          :entity/destroy-audiovisual :audiovisuals/hit-wall
          :entity/projectile-collision {:entity-effects entity-effects
                                        :piercing? piercing?}}]])))
-
-(defn- start-point [entity* direction size]
-  (v-add (:position entity*)
-         (v-scale direction
-                  (+ (:radius entity*) size 0.1))))
-
-; TODO effect/text ... shouldn't have source/target dmg stuff ....
-; as it is just sent .....
-; or we adjust the effect when we send it ....
-
-(defcomponent :effect/projectile
-  {:data [:one-to-one :properties/projectiles]
-   :let {:keys [entity-effects projectile/max-range] :as projectile}}
-  ; TODO for npcs need target -- anyway only with direction
-  (applicable? [_ {:keys [effect/direction]}]
-    direction) ; faction @ source also ?
-
-  ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (useful? [_ {:keys [effect/source effect/target] :as ctx}]
-    (let [source-p (:position @source)
-          target-p (:position @target)]
-      (and (not (path-blocked? ctx ; TODO test
-                               source-p
-                               target-p
-                               (projectile-size projectile)))
-           ; TODO not taking into account body sizes
-           (< (v-distance source-p ; entity/distance function protocol EntityPosition
-                          target-p)
-              max-range))))
-
-  (do! [_ {:keys [effect/source effect/direction] :as ctx}]
-    [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
-     [:tx/projectile
-      {:position (start-point @source direction (projectile-size projectile))
-       :direction direction
-       :faction (:entity/faction @source)}
-      projectile]]))
-
-(comment
- ; mass shooting
- (for [direction (map math.vector/normalise
-                      [[1 0]
-                       [1 1]
-                       [1 -1]
-                       [0 1]
-                       [0 -1]
-                       [-1 -1]
-                       [-1 1]
-                       [-1 0]])]
-   [:tx/projectile projectile-id ...]
-   )
- )
-

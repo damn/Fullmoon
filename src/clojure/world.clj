@@ -2206,6 +2206,10 @@ Returns ctx."
   (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
   widget)
 
+(defn- ->edn-str [v]
+  (binding [*print-level* nil]
+    (pr-str v)))
+
 (defmethod ->widget :boolean [_ checked? _ctx]
   (assert (boolean? checked?))
   (->check-box "" (fn [_]) checked?))
@@ -2219,10 +2223,6 @@ Returns ctx."
 
 (defmethod widget->value :string [_ widget]
   (.getText ^VisTextField widget))
-
-(defn- ->edn-str [v]
-  (binding [*print-level* nil]
-    (pr-str v)))
 
 (defmethod ->widget :number [[_ data] v _ctx]
   (add-schema-tooltip! (->text-field (->edn-str v) {})
@@ -3127,20 +3127,6 @@ Returns ctx."
 (defn ^{:metadoc/categories #{:cat/entity}} friendly-faction [{:keys [entity/faction]}]
   faction)
 
-(defcomponent :effect.entity/convert
-  {:data :some}
-  (info-text [_ _effect-ctx]
-    "Converts target to your side.")
-
-  (applicable? [_ {:keys [effect/source effect/target]}]
-    (and target
-         (= (:entity/faction @target)
-            (enemy-faction @source))))
-
-  (do! [_ {:keys [effect/source effect/target]}]
-    [[:tx/audiovisual (:position @target) :audiovisuals/convert]
-     [:e/assoc target :entity/faction (friendly-faction @source)]]))
-
 (defcomponent :entity/image
   {:data :image
    :let image}
@@ -3315,29 +3301,6 @@ Returns ctx."
   (render-above [_ entity* g ctx]
     (draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
-(let [modifiers {:modifier/movement-speed {:op/mult -0.5}}
-      duration 5]
-  (defcomponent :effect.entity/spiderweb
-    {:data :some}
-    (info-text [_ _effect-ctx]
-      "Spiderweb slows 50% for 5 seconds."
-      ; modifiers same like item/modifiers has info-text
-      ; counter ?
-      )
-
-    (applicable? [_ {:keys [effect/source effect/target]}]
-      ; ?
-      true)
-
-    ; TODO stacking? (if already has k ?) or reset counter ? (see string-effect too)
-    (do! [_ {:keys [effect/source effect/target] :as ctx}]
-      (when-not (:entity/temp-modifier @target)
-        [[:tx/apply-modifiers target modifiers]
-         [:e/assoc target :entity/temp-modifier {:modifiers modifiers
-                                                 :counter (->counter ctx duration)}]]))))
-
-;; entity (-state)
-
 
 (defn- add-vs [vs]
   (v-normalise (reduce v-add [0 0] vs)))
@@ -3360,7 +3323,7 @@ Returns ctx."
     1.0 "+"
     -1.0 ""))
 
-(defn- op-info-text [{value 1 :as operation}]
+(defn op-info-text [{value 1 :as operation}]
   (str (+? value) (op-value-text operation)))
 
 (defcomponent :op/inc
@@ -3490,7 +3453,7 @@ Returns ctx."
 (def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
 (def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
 
-(defn- k->pretty-name [k]
+(defn k->pretty-name [k]
   (str/capitalize (name k)))
 
 (defn mod-info-text [modifiers]
@@ -3565,34 +3528,8 @@ Returns ctx."
 (defn- stat-k->effect-k [k]
   (keyword "effect.entity" (name k)))
 
-(defn- effect-k->stat-k [effect-k]
+(defn effect-k->stat-k [effect-k]
   (keyword "stats" (name effect-k)))
-
-; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
-; for :skill/effects
-(defcomponent :base/stat-effect
-  (info-text [[k operations] _effect-ctx]
-    (str/join "\n"
-              (for [operation operations]
-                (str (op-info-text operation) " " (k->pretty-name k)))))
-
-  (applicable? [[k _] {:keys [effect/target]}]
-    (and target
-         (entity-stat @target (effect-k->stat-k k))))
-
-  (useful? [_ _effect-ctx]
-    true)
-
-  (do! [[effect-k operations] {:keys [effect/target]}]
-    (let [stat-k (effect-k->stat-k effect-k)]
-      (when-let [effective-value (entity-stat @target stat-k)]
-        [[:e/assoc-in target [:entity/stats stat-k]
-          ; TODO similar to components.entity.modifiers/->modified-value
-          ; but operations not sort-by op/order ??
-          ; op-apply reuse fn over operations to get effectiv value
-          (reduce (fn [value operation] (op-apply operation value))
-                  effective-value
-                  operations)]]))))
 
 (defn- defstat [k {:keys [modifier-ops effect-ops] :as attr-m}]
   (defcomponent* k attr-m)
@@ -3754,130 +3691,10 @@ Returns ctx."
                                    (- height (* 2 border))
                                    (hpbar-color ratio))))))))
 
-(defcomponent :tx.entity.stats/pay-mana-cost
-  (do! [[_ entity cost] _ctx]
-    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
-      (assert (<= cost mana-val))
-      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
-
-(comment
- (let [mana-val 4
-       entity (atom (map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
-       mana-cost 3
-       resulting-mana (- mana-val mana-cost)]
-   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
-      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
- )
-
-
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
-
-(defn- entity*->melee-damage [entity*]
-  (let [strength (or (entity-stat entity* :stats/strength) 0)]
-    {:damage/min-max [strength strength]}))
-
-(defn- damage-effect [{:keys [effect/source]}]
-  [:effect.entity/damage (entity*->melee-damage @source)])
-
-(defcomponent :effect.entity/melee-damage
-  {:data :some}
-  (info-text [_ {:keys [effect/source] :as effect-ctx}]
-    (str "Damage based on entity strength."
-         (when source
-           (str "\n" (info-text (damage-effect effect-ctx) effect-ctx)))))
-
-  (applicable? [_ effect-ctx]
-    (applicable? (damage-effect effect-ctx) effect-ctx))
-
-  (do! [_ ctx]
-    [(damage-effect ctx)]))
-
-(defn- effective-armor-save [source* target*]
-  (max (- (or (entity-stat target* :stats/armor-save) 0)
-          (or (entity-stat source* :stats/armor-pierce) 0))
-       0))
-
-(comment
- ; broken
- (let [source* {:entity/stats {:stats/armor-pierce 0.4}}
-       target* {:entity/stats {:stats/armor-save   0.5}}]
-   (effective-armor-save source* target*))
- )
-
-(defn- armor-saves? [source* target*]
-  (< (rand) (effective-armor-save source* target*)))
-
-(defn- ->effective-damage [damage source*]
-  (update damage :damage/min-max #(->modified-value source* :modifier/damage-deal %)))
-
-(comment
- (let [->source (fn [mods] {:entity/modifiers mods})]
-   (and
-    (= (->effective-damage {:damage/min-max [5 10]}
-                           (->source {:modifier/damage-deal {:op/val-inc [1 5 10]
-                                                            :op/val-mult [0.2 0.3]
-                                                            :op/max-mult [1]}}))
-       {:damage/min-max [31 62]})
-
-    (= (->effective-damage {:damage/min-max [5 10]}
-                           (->source {:modifier/damage-deal {:op/val-inc [1]}}))
-       {:damage/min-max [6 10]})
-
-    (= (->effective-damage {:damage/min-max [5 10]}
-                           (->source {:modifier/damage-deal {:op/max-mult [2]}}))
-       {:damage/min-max [5 30]})
-
-    (= (->effective-damage {:damage/min-max [5 10]}
-                           (->source nil))
-       {:damage/min-max [5 10]}))))
-
-(defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
-  (str min-dmg "-" max-dmg " damage"))
-
-(defcomponent :damage/min-max {:data :val-max})
-
-(defcomponent :effect.entity/damage
-  {:let damage
-   :data [:map [:damage/min-max]]}
-  (info-text [_ {:keys [effect/source]}]
-    (if source
-      (let [modified (->effective-damage damage @source)]
-        (if (= damage modified)
-          (damage->text damage)
-          (str (damage->text damage) "\nModified: " (damage->text modified))))
-      (damage->text damage))) ; property menu no source,modifiers
-
-  (applicable? [_ {:keys [effect/target]}]
-    (and target
-         (entity-stat @target :stats/hp)))
-
-  (do! [_ {:keys [effect/source effect/target]}]
-    (let [source* @source
-          target* @target
-          hp (entity-stat target* :stats/hp)]
-      (cond
-       (zero? (hp 0))
-       []
-
-       (armor-saves? source* target*)
-       [[:tx/add-text-effect target "[WHITE]ARMOR"]] ; TODO !_!_!_!_!_!
-
-       :else
-       (let [;_ (println "Source unmodified damage:" damage)
-             {:keys [damage/min-max]} (->effective-damage damage source*)
-             ;_ (println "\nSource modified: min-max:" min-max)
-             min-max (->modified-value target* :modifier/damage-receive min-max)
-             ;_ (println "effective min-max: " min-max)
-             dmg-amount (rand-int-between min-max)
-             ;_ (println "dmg-amount: " dmg-amount)
-             new-hp-val (max (- (hp 0) dmg-amount) 0)]
-         [[:tx/audiovisual (:position target*) :audiovisuals/damage]
-          [:tx/add-text-effect target (str "[RED]" dmg-amount)]
-          [:e/assoc-in target [:entity/stats :stats/hp 0] new-hp-val]
-          [:tx/event target (if (zero? new-hp-val) :kill :alert)]])))))
 
 (defn- set-first-screen [context]
   (->> context
@@ -4157,6 +3974,22 @@ Sets [[app-state]] atom to the context."
 (defcomponent :tx/player-modal
   (do! [[_ params] ctx]
     (show-player-modal! ctx params)))
+
+(defcomponent :tx.entity.stats/pay-mana-cost
+  (do! [[_ entity cost] _ctx]
+    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
+      (assert (<= cost mana-val))
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
+
+(comment
+ (let [mana-val 4
+       entity (atom (map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       mana-cost 3
+       resulting-mana (- mana-val mana-cost)]
+   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+ )
+
 
 ;;;;
 

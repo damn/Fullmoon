@@ -75,33 +75,6 @@
             (assoc :entity/destroy-audiovisual :audiovisuals/creature-die)
             (safe-merge components))]])))
 
-; TODO https://github.com/damn/core/issues/29
-; spawning on player both without error ?! => not valid position checked
-; also what if someone moves on the target posi ? find nearby valid cell ?
-; BLOCKING PLAYER MOVEMENT ! (summons no-clip with player ?)
-; check not blocked position // line of sight. (part of target-position make)
-; limit max. spawns
-; animation/sound
-; proper icon (grayscaled ?)
-; keep in player movement range priority ( follow player if too far, otherwise going for enemies)
-; => so they follow you around
-; not try-spawn, but check valid-params & then spawn !
-; new UI -> show creature body & then place
-; >> but what if it is blocked the area during action-time ?? <<
-(defcomponent :effect/spawn
-  {:data [:one-to-one :properties/creatures]
-   :let {:keys [property/id]}}
-  (applicable? [_ {:keys [effect/source effect/target-position]}]
-    (and (:entity/faction @source)
-         target-position))
-
-  (do! [_ {:keys [effect/source effect/target-position]}]
-    [[:tx/sound "sounds/bfxr_shield_consume.wav"]
-     [:tx/creature {:position target-position
-                    :creature-id id ; already properties/get called through one-to-one, now called again.
-                    :components {:entity/state [:state/npc :npc-idle]
-                                 :entity/faction (:entity/faction @source)}}]]))
-
 (comment
  ; graphviz required in path
  (fsm/show-fsm player-fsm)
@@ -155,32 +128,6 @@
     :kill -> :npc-dead
     :effect-wears-off -> :npc-idle]
    [:npc-dead]])
-
-(defcomponent :effect.entity/stun
-  {:data :pos
-   :let duration}
-  (info-text [_ _effect-ctx]
-    (str "Stuns for " (readable-number duration) " seconds"))
-
-  (applicable? [_ {:keys [effect/target]}]
-    (and target
-         (:entity/state @target)))
-
-  (do! [_ {:keys [effect/target]}]
-    [[:tx/event target :stun duration]]))
-
-(defcomponent :effect.entity/kill
-  {:data :some}
-  (info-text [_ _effect-ctx]
-    "Kills target")
-
-  (applicable? [_ {:keys [effect/source effect/target]}]
-    (and target
-         (:entity/state @target)))
-
-  (do! [_ {:keys [effect/target]}]
-    [[:tx/event target :kill]]))
-
 
 ; fsm throws when initial-state is not part of states, so no need to assert initial-state
 ; initial state is nil, so associng it. make bug report at reduce-fsm?
