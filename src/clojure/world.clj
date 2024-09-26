@@ -1969,7 +1969,7 @@ Returns ctx."
   [actor]
   (when (instance? Label actor)
     (when-let [p (parent actor)]
-      (when-let [p (parent parent)]
+      (when-let [p (parent p)]
         (and (instance? VisWindow p)
              (= (.getTitleLabel ^Window p) actor))))))
 
