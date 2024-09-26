@@ -1,5 +1,11 @@
 The name ctx comes from context and the idea of keeping the whole application state and game world in one data structure.
 
+## Special operators
+
+## Side effects
+
+## Content
+
 The whole game content is stored in `resources/properties.edn` and can be configured in the GUI-editor.
 
 There are 7 property-types:
