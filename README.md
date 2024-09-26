@@ -1,6 +1,6 @@
-# 👽 clojure.world 🌏
-
 A domain-specific language for creating worlds based on [clojure](https://clojure.org/), [libgdx](https://libgdx.com/), [vis-ui](https://github.com/kotcrab/vis-ui) and [malli](https://github.com/metosin/malli).
+
+It is based around the idea to keep the state of a game in one data structure named context/ctx.
 
 The whole game content is stored in `resources/properties.edn` and can be configured in the GUI-editor.
 
