@@ -1,5 +1,6 @@
 (ns core.item
   (:require [clojure.world :refer :all]
+            [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d])
   (:import com.badlogic.gdx.graphics.Color
            com.badlogic.gdx.scenes.scene2d.Actor

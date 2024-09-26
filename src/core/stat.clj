@@ -1,10 +1,319 @@
-(ns core.effect
+(ns core.stat
   (:require [clojure.world :refer :all]
             [core.projectile :refer [projectile-size]]
             [core.skill :refer [has-skill?]]
             [clojure.string :as str])
-  (:import com.badlogic.gdx.Input$Buttons
-           com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
+  (:import com.badlogic.gdx.graphics.Color
+           com.badlogic.gdx.Input$Buttons
+           com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup) )
+
+; TODO define op-order here ...
+
+(defn- txs-update-modifiers [entity modifiers f]
+  (for [[modifier-k operations] modifiers
+        [operation-k value] operations]
+    [:e/update-in entity [:entity/modifiers modifier-k operation-k] (f value)]))
+
+(defn- conj-value [value]
+  (fn [values]
+    (conj values value)))
+
+(defn- remove-one [coll item]
+  (let [[n m] (split-with (partial not= item) coll)]
+    (concat n (rest m))))
+
+(defn- remove-value [value]
+  (fn [values]
+    {:post [(= (count %) (dec (count values)))]}
+    (remove-one values value)))
+
+(defcomponent :tx/apply-modifiers
+  (do! [[_ entity modifiers] _ctx]
+    (txs-update-modifiers entity modifiers conj-value)))
+
+(defcomponent :tx/reverse-modifiers
+  (do! [[_ entity modifiers] _ctx]
+    (txs-update-modifiers entity modifiers remove-value)))
+
+(comment
+ (= (txs-update-modifiers :entity
+                         {:modifier/hp {:op/max-inc 5
+                                        :op/max-mult 0.3}
+                          :modifier/movement-speed {:op/mult 0.1}}
+                         (fn [_value] :fn))
+    [[:e/update-in :entity [:entity/modifiers :modifier/hp :op/max-inc] :fn]
+     [:e/update-in :entity [:entity/modifiers :modifier/hp :op/max-mult] :fn]
+     [:e/update-in :entity [:entity/modifiers :modifier/movement-speed :op/mult] :fn]])
+ )
+
+; DRY ->effective-value (summing)
+; also: sort-by op/order @ modifier/info-text itself (so player will see applied order)
+(defn- sum-operation-values [modifiers]
+  (for [[modifier-k operations] modifiers
+        :let [operations (for [[operation-k values] operations
+                               :let [value (apply + values)]
+                               :when (not (zero? value))]
+                           [operation-k value])]
+        :when (seq operations)]
+    [modifier-k operations]))
+
+(com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
+                                      Color/CYAN
+                                      ; maybe can be used in tooltip background is darker (from D2 copied color)
+                                      #_(com.badlogic.gdx.graphics.Color. (float 0.48)
+                                                                          (float 0.57)
+                                                                          (float 1)
+                                                                          (float 1)))
+
+; For now no green/red color for positive/negative numbers
+; as :stats/damage-receive negative value would be red but actually a useful buff
+; -> could give damage reduce 10% like in diablo 2
+; and then make it negative .... @ applicator
+(def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
+(def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
+
+(defn k->pretty-name [k]
+  (str/capitalize (name k)))
+
+(defn mod-info-text [modifiers]
+  (str "[MODIFIER_BLUE]"
+       (str/join "\n"
+                 (for [[modifier-k operations] modifiers
+                       operation operations]
+                   (str (op-info-text operation) " " (k->pretty-name modifier-k))))
+       "[]"))
+
+(defcomponent :entity/modifiers
+  {:data [:components-ns :modifier]
+   :let modifiers}
+  (->mk [_ _ctx]
+    (into {} (for [[modifier-k operations] modifiers]
+               [modifier-k (into {} (for [[operation-k value] operations]
+                                      [operation-k [value]]))])))
+
+  (info-text [_ _ctx]
+    (let [modifiers (sum-operation-values modifiers)]
+      (when (seq modifiers)
+        (mod-info-text modifiers)))))
+
+(extend-type clojure.world.Entity
+  Modifiers
+  (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
+    {:pre [(= "modifier" (namespace modifier-k))]}
+    (->> modifiers
+         modifier-k
+         (sort-by op-order)
+         (reduce (fn [base-value [operation-k values]]
+                   (op-apply [operation-k (apply + values)] base-value))
+                 base-value))))
+
+(comment
+
+ (let [->entity (fn [modifiers]
+                  (map->Entity {:entity/modifiers modifiers}))]
+   (and
+    (= (->modified-value (->entity {:modifier/damage-deal {:op/val-inc [30]
+                                                           :op/val-mult [0.5]}})
+                         :modifier/damage-deal
+                         [5 10])
+       [52 52])
+    (= (->modified-value (->entity {:modifier/damage-deal {:op/val-inc [30]}
+                                    :stats/fooz-barz {:op/babu [1 2 3]}})
+                         :modifier/damage-deal
+                         [5 10])
+       [35 35])
+    (= (->modified-value (map->Entity {})
+                         :modifier/damage-deal
+                         [5 10])
+       [5 10])
+    (= (->modified-value (->entity {:modifier/hp {:op/max-inc [10 1]
+                                                  :op/max-mult [0.5]}})
+                         :modifier/hp
+                         [100 100])
+       [100 166])
+    (= (->modified-value (->entity {:modifier/movement-speed {:op/inc [2]
+                                                              :op/mult [0.1 0.2]}})
+                         :modifier/movement-speed
+                         3)
+       6.5)))
+ )
+
+(defn- defmodifier [k operations]
+  (defcomponent* k {:data [:map-optional operations]}))
+
+(defn- stat-k->modifier-k [k]
+  (keyword "modifier" (name k)))
+
+(defn- stat-k->effect-k [k]
+  (keyword "effect.entity" (name k)))
+
+(defn effect-k->stat-k [effect-k]
+  (keyword "stats" (name effect-k)))
+
+(defn defstat [k {:keys [modifier-ops effect-ops] :as attr-m}]
+  (defcomponent* k attr-m)
+  (when modifier-ops
+    (defmodifier (stat-k->modifier-k k) modifier-ops))
+  (when effect-ops
+    (let [effect-k (stat-k->effect-k k)]
+      (defcomponent* effect-k {:data [:map-optional effect-ops]})
+      (derive effect-k :base/stat-effect))))
+
+; TODO needs to be there for each npc - make non-removable (added to all creatures)
+; and no need at created player (npc controller component?)
+(defstat :stats/aggro-range   {:data :nat-int})
+(defstat :stats/reaction-time {:data :pos-int})
+
+; TODO
+; @ hp says here 'Minimum' hp instead of just 'HP'
+; Sets to 0 but don't kills
+; Could even set to a specific value ->
+; op/set-to-ratio 0.5 ....
+; sets the hp to 50%...
+(defstat :stats/hp
+  {:data :pos-int
+   :modifier-ops [:op/max-inc :op/max-mult]
+   :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
+
+(defstat :stats/mana
+  {:data :nat-int
+   :modifier-ops [:op/max-inc :op/max-mult]
+   :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
+
+; * TODO clamp/post-process effective-values @ stat-k->effective-value
+; * just don't create movement-speed increases too much?
+; * dont remove strength <0 or floating point modifiers  (op/int-inc ?)
+; * cast/attack speed dont decrease below 0 ??
+
+; TODO clamp between 0 and max-speed ( same as movement-speed-schema )
+(defstat :stats/movement-speed
+  {:data :pos;(m/form entity/movement-speed-schema)
+   :modifier-ops [:op/inc :op/mult]})
+
+; TODO show the stat in different color red/green if it was permanently modified ?
+; or an icon even on the creature
+; also we want audiovisuals always ...
+(defcomponent :effect.entity/movement-speed
+  {:data [:map [:op/mult]]})
+(derive :effect.entity/movement-speed :base/stat-effect)
+
+; TODO clamp into ->pos-int
+(defstat :stats/strength
+  {:data :nat-int
+   :modifier-ops [:op/inc]})
+
+; TODO here >0
+(let [doc "action-time divided by this stat when a skill is being used.
+          Default value 1.
+
+          For example:
+          attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
+      data :pos
+      operations [:op/inc]]
+  (defstat :stats/cast-speed
+    {:data data
+     :editor/doc doc
+     :modifier-ops operations})
+
+  (defstat :stats/attack-speed
+    {:data data
+     :editor/doc doc
+     :modifier-ops operations}))
+
+; TODO bounds
+(defstat :stats/armor-save
+  {:data :number
+   :modifier-ops [:op/inc]})
+
+(defstat :stats/armor-pierce
+  {:data :number
+   :modifier-ops [:op/inc]})
+
+(extend-type clojure.world.Entity
+  Stats
+  (entity-stat [entity* stat-k]
+    (when-let [base-value (stat-k (:entity/stats entity*))]
+      (->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
+
+(def ^:private hpbar-colors
+  {:green     [0 0.8 0]
+   :darkgreen [0 0.5 0]
+   :yellow    [0.5 0.5 0]
+   :red       [0.5 0 0]})
+
+(defn- hpbar-color [ratio]
+  (let [ratio (float ratio)
+        color (cond
+                (> ratio 0.75) :green
+                (> ratio 0.5)  :darkgreen
+                (> ratio 0.25) :yellow
+                :else          :red)]
+    (color hpbar-colors)))
+
+(def ^:private borders-px 1)
+
+(let [stats-order [:stats/hp
+                   :stats/mana
+                   ;:stats/movement-speed
+                   :stats/strength
+                   :stats/cast-speed
+                   :stats/attack-speed
+                   :stats/armor-save
+                   ;:stats/armor-pierce
+                   ;:stats/aggro-range
+                   ;:stats/reaction-time
+                   ]]
+  (defn- stats-info-texts [entity*]
+    (str/join "\n"
+              (for [stat-k stats-order
+                    :let [value (entity-stat entity* stat-k)]
+                    :when value]
+                (str (k->pretty-name stat-k) ": " value)))))
+
+; TODO mana optional? / armor-save / armor-pierce (anyway wrong here)
+; cast/attack-speed optional ?
+(defcomponent :entity/stats
+  {:data [:map [:stats/hp
+                :stats/movement-speed
+                :stats/aggro-range
+                :stats/reaction-time
+                [:stats/mana          {:optional true}]
+                [:stats/strength      {:optional true}]
+                [:stats/cast-speed    {:optional true}]
+                [:stats/attack-speed  {:optional true}]
+                [:stats/armor-save    {:optional true}]
+                [:stats/armor-pierce  {:optional true}]]]
+   :let stats}
+  (->mk [_ _ctx]
+    (-> stats
+        (update :stats/hp (fn [hp] (when hp [hp hp])))
+        (update :stats/mana (fn [mana] (when mana [mana mana])))))
+
+  (info-text [_ {:keys [info-text/entity*]}]
+    (stats-info-texts entity*))
+
+  (render-info [_ entity* g _ctx]
+    (when-let [hp (entity-stat entity* :stats/hp)]
+      (let [ratio (val-max-ratio hp)
+            {:keys [position width half-width half-height entity/mouseover?]} entity*
+            [x y] position]
+        (when (or (< ratio 1) mouseover?)
+          (let [x (- x half-width)
+                y (+ y half-height)
+                height (pixels->world-units g hpbar-height-px)
+                border (pixels->world-units g borders-px)]
+            (draw-filled-rectangle g x y width height Color/BLACK)
+            (draw-filled-rectangle g
+                                   (+ x border)
+                                   (+ y border)
+                                   (- (* width ratio) (* 2 border))
+                                   (- height (* 2 border))
+                                   (hpbar-color ratio))))))))
+
+; TODO negate this value also @ use
+; so can make positiive modifeirs green , negative red....
+(defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
+(defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
 (defsystem ^:private render-effect "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
 (defmethod render-effect :default [_ g ctx])
