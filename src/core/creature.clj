@@ -370,7 +370,7 @@
 (defn- p-state-obj [ctx]
   (-> ctx player-entity* state-obj))
 
-(extend-type clojure.ctx.Ctx
+(extend-type clojure.ctx.Context
   Player
   (player-entity  [ctx]  (ctx-player ctx))
   (player-entity* [ctx] @(ctx-player ctx))

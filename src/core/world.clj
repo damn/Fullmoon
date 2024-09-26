@@ -989,7 +989,7 @@ Renders only visible layers."
 (defmethod generate :world.generator/uf-caves [ctx world]
   (uf-caves ctx world))
 
-(extend-type clojure.ctx.Ctx
+(extend-type clojure.ctx.Context
   WorldGen
   (->world [ctx world-id]
     (let [prop (build-property ctx world-id)]
@@ -1450,7 +1450,7 @@ direction keys: move")
   (doseq [[faction max-iterations] factions-iterations]
     (update-faction-potential-field grid faction entities max-iterations)))
 
-(extend-type clojure.ctx.Ctx
+(extend-type clojure.ctx.Context
   Pathfinding
   (potential-fields-follow-to-enemy [{:keys [context/grid]} entity]
     (potential-field-follow-to-enemy* grid entity)))
@@ -1538,7 +1538,7 @@ direction keys: move")
         target2 (v-add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
-(extend-type clojure.ctx.Ctx
+(extend-type clojure.ctx.Context
   PRayCaster
   (ray-blocked? [{:keys [context/raycaster]} start target]
     (fast-ray-blocked? raycaster start target))
@@ -1628,7 +1628,7 @@ direction keys: move")
 
 (def ^:private this :context/grid)
 
-(extend-type clojure.ctx.Ctx
+(extend-type clojure.ctx.Context
   GridPointEntities
   (point->entities [ctx position]
     (when-let [cell (get (this ctx) (->tile position))]
@@ -1727,7 +1727,7 @@ direction keys: move")
          (keep grid)
          (mapcat (comp :entities deref)))))
 
-(extend-type clojure.ctx.Ctx
+(extend-type clojure.ctx.Context
   ActiveEntities
   (active-entities [ctx]
     (active-entities* ctx (player-entity* ctx))))

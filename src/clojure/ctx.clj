@@ -6,9 +6,8 @@
 
   | Symbol           | Meaning                                        |
   | ---------------  | -----------------------------------------------|
-  | `ctx`            | The whole app is in one clojure record :Context - `clojure.ctx/Ctx`, consits of 'components', extendable                  |
-  | `component`      | vector `[k v]` or `[k]` or `[k v1 v2 ..]`, can be configured in editor if data schema is given      |
-  | `system`         | multimethod dispatching on ffirst              |
+  | `component`      | vector `[k v]` |
+  | `system`         | multimethod dispatching on component k |
   | `eid` , `entity` | entity atom                                    |
   | `entity*`        | entity value (defrecord `clojure.ctx/Entity`), consists of components, extendable |
   | `actor`          | A UI actor, not immutable, from libgdx scene2d: `com.badlogic.gdx.scenes.scene2d.Actor`        |
@@ -1623,7 +1622,7 @@ Returns ctx."
 (def
   ^{:metadoc/categories #{:cat/app}}
   app-state
-  "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging.
+  "An atom referencing the current Context. Only use by ui-callbacks or for development/debugging.
   Use only with (post-runnable! & exprs) for making manual changes to the ctx."
   (atom nil))
 
@@ -3514,14 +3513,14 @@ Returns ctx."
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
 
-(defrecord Ctx [])
+(defrecord Context [])
 
 (defn start-app!
   "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
 Sets [[app-state]] atom to the context."
   {:metadoc/categories #{:cat/app}}
   [properties-edn-file]
-  (let [ctx (map->Ctx (->ctx-properties properties-edn-file))
+  (let [ctx (map->Context (->ctx-properties properties-edn-file))
         app (build-property ctx :app/core)]
     (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))
