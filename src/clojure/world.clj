@@ -72,11 +72,7 @@
   Use only with (.postRunnable gdx-app f) for making manual changes to the ctx."
   (atom nil))
 
-;;;;
-;;;;
 ;;;; 🔧 Utils
-;;;;
-;;;;
 
 (defn
   find-first
@@ -141,11 +137,102 @@
       nil
       idx)))
 
-;;;;
-;;;;
+(defn ^{:metadoc/categories #{:cat/utils}} get-namespaces [packages]
+  (filter #(packages (first (str/split (name (ns-name %)) #"\.")))
+          (all-ns)))
+
+(defn ^{:metadoc/categories #{:cat/utils}} get-vars [nmspace condition]
+  (for [[sym avar] (ns-interns nmspace)
+        :when (condition avar)]
+    avar))
+
+;; rename to 'shuffle', rand and rand-int without the 's'-> just use with require :as.
+;; maybe even remove the when coll pred?
+;; also maybe *random* instead passing it everywhere? but not sure about that
+(defn ^{:metadoc/categories #{:cat/utils}} sshuffle
+  "Return a random permutation of coll"
+  ([coll random]
+    (when coll
+      (let [al (java.util.ArrayList. ^java.util.Collection coll)]
+        (java.util.Collections/shuffle al random)
+        (clojure.lang.RT/vector (.toArray al)))))
+  ([coll]
+    (sshuffle coll (Random.))))
+
+(defn ^{:metadoc/categories #{:cat/utils}} srand
+  ([random] (.nextFloat ^Random random))
+  ([n random] (* n (srand random))))
+
+(defn ^{:metadoc/categories #{:cat/utils}} srand-int [n random]
+  (int (srand n random)))
+
+(defn ^{:metadoc/categories #{:cat/utils}} create-seed []
+  (.nextLong (Random.)))
+
+; TODO assert int?
+(defn ^{:metadoc/categories #{:cat/utils}} rand-int-between
+  "returns a random integer between lower and upper bounds inclusive."
+  ([[lower upper]]
+    (rand-int-between lower upper))
+  ([lower upper]
+    (+ lower (rand-int (inc (- upper lower))))))
+
+(defn ^{:metadoc/categories #{:cat/utils}} rand-float-between [[lower upper]]
+  (+ lower (rand (- upper lower))))
+
+; TODO use 0-1 not 0-100 internally ? just display it different?
+; TODO assert the number between 0 and 100
+(defn ^{:metadoc/categories #{:cat/utils}} percent-chance
+  "perc is number between 0 and 100."
+  ([perc random]
+    (< (srand random)
+       (/ perc 100)))
+  ([perc]
+    (percent-chance perc (Random.))))
+; TODO Random. does not return a number between 0 and 100?
+
+(defmacro ^{:metadoc/categories #{:cat/utils}} if-chance
+  ([n then]
+    `(if-chance ~n ~then nil))
+  ([n then else]
+    `(if (percent-chance ~n) ~then ~else)))
+
+(defmacro ^{:metadoc/categories #{:cat/utils}} when-chance [n & more]
+  `(when (percent-chance ~n)
+     ~@more))
+
+(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-item
+  "given a sequence of items and their weight, returns a weighted random item.
+ for example {:a 5 :b 1} returns b only in about 1 of 6 cases"
+  [weights]
+  (let [result (rand-int (reduce + (map #(% 1) weights)))]
+    (loop [r 0
+           items weights]
+      (let [[item weight] (first items)
+            r (+ r weight)]
+        (if (> r result)
+          item
+          (recur (int r) (rest items)))))))
+
+(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-items [n group]
+  (repeatedly n #(get-rand-weighted-item group)))
+
+(comment
+  (frequencies (get-rand-weighted-items 1000 {:a 1 :b 5 :c 4}))
+  (frequencies (repeatedly 1000 #(percent-chance 90))))
+
+(defn ^{:metadoc/categories #{:cat/utils}} high-weighted "for values of x 0-1 returns y values 0-1 with higher value of y than a linear function"
+  [x]
+  (- 1 (Math/pow (- 1 x) 2)))
+
+(defn- high-weighted-rand-int [n]
+  (int (* n (high-weighted (rand)))))
+
+(defn ^{:metadoc/categories #{:cat/utils}} high-weighted-rand-nth [coll]
+  (nth coll (high-weighted-rand-int (count coll))))
+
+
 ;;;; 👽 Alien Technology
-;;;;
-;;;;
 
 (def
   ^{:metadoc/categories #{:cat/component}}
@@ -287,11 +374,7 @@ Example:
 (defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
 (defmethod destroy! :default [_])
 
-;;;;
-;;;;
 ;;;; 💥 Effects
-;;;;
-;;;;
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -392,11 +475,7 @@ Example:
           ctx
           txs))
 
-;;;;
-;;;;
 ;;;; 🌀 Assets
-;;;;
-;;;;
 
 (defn- ->asset-manager ^AssetManager []
   (proxy [AssetManager clojure.lang.ILookup] []
@@ -555,11 +634,7 @@ Default method returns true."
   (^{:metadoc/categories #{:cat/entity}} all-entities [_])
   (^{:metadoc/categories #{:cat/entity}} get-entity [_ uid] "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."))
 
-;;;;
-;;;;
 ;;;; 💾 Properties
-;;;;
-;;;;
 
 (defn ^{:metadoc/categories #{:cat/props}} def-attributes [& attributes-data]
   {:pre [(even? (count attributes-data))]}
@@ -576,11 +651,7 @@ Default method returns true."
 (defprotocol Property
   (^{:metadoc/categories #{:cat/props}} build-property [_ id]))
 
-;;;;
-;;;;
 ;;;; 🎨 Graphics
-;;;;
-;;;;
 
 (defn ^{:metadoc/categories #{:cat/g}} ->color
   ([r g b]
@@ -809,11 +880,7 @@ Default method returns true."
                (int (/ sprite-y tileh))]))
     (->image ctx file)))
 
-;;;;
-;;;;
 ;;;; 🖥️ Screens
-;;;;
-;;;;
 
 (defcomponent :context/screens
   {:data :some
@@ -1149,11 +1216,7 @@ Default method returns true."
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update (world-viewport g) w h false))
 
-;;;;
-;;;;
 ;;;; ⏳️ Time
-;;;;
-;;;;
 
 (def ctx-time :context/time)
 
@@ -1196,11 +1259,7 @@ Default method returns true."
     ; min 1 because floating point math inaccuracies
     (min 1 (/ (- stop-time (elapsed-time ctx)) duration))))
 
-;;;;
-;;;;
 ;;;;️ 🌍 World
-;;;;
-;;;;
 
 (defprotocol Grid
   (^{:metadoc/categories #{:cat/world}} cached-adjacent-cells [grid cell])
@@ -1418,11 +1477,7 @@ Default method returns true."
     (g/draw-line start2screenx start2screeny target2screenx target2screeny color)))
 
 
-;;;;
-;;;;
 ;;;;️ 📐 Geometry
-;;;;
-;;;;
 
 ;; vector2d
 
@@ -1476,118 +1531,6 @@ Default method returns true."
      (get-angle-from-vector (->v v))]))
 
  )
-
-;; ns-utils
-
-(defn ^{:metadoc/categories #{:cat/utils}} get-namespaces [packages]
-  (filter #(packages (first (str/split (name (ns-name %)) #"\.")))
-          (all-ns)))
-
-(defn ^{:metadoc/categories #{:cat/utils}} get-vars [nmspace condition]
-  (for [[sym avar] (ns-interns nmspace)
-        :when (condition avar)]
-    avar))
-
-(comment
- (pprint
-  (enumeration-seq (.getResources (ClassLoader/getSystemClassLoader) "components")))
-
- (pprint
-  (seq (.getDefinedPackages (ClassLoader/getSystemClassLoader))))
-
- )
-
-;; RANDOM utils
-
-;; Seed
-
-;; rename to 'shuffle', rand and rand-int without the 's'-> just use with require :as.
-;; maybe even remove the when coll pred?
-;; also maybe *random* instead passing it everywhere? but not sure about that
-
-(defn ^{:metadoc/categories #{:cat/utils}} sshuffle
-  "Return a random permutation of coll"
-  ([coll random]
-    (when coll
-      (let [al (java.util.ArrayList. ^java.util.Collection coll)]
-        (java.util.Collections/shuffle al random)
-        (clojure.lang.RT/vector (.toArray al)))))
-  ([coll]
-    (sshuffle coll (Random.))))
-
-(defn ^{:metadoc/categories #{:cat/utils}} srand
-  ([random] (.nextFloat ^Random random))
-  ([n random] (* n (srand random))))
-
-(defn ^{:metadoc/categories #{:cat/utils}} srand-int [n random]
-  (int (srand n random)))
-
-(defn ^{:metadoc/categories #{:cat/utils}} create-seed []
-  (.nextLong (Random.)))
-
-;; Utils
-
-; TODO assert int?
-(defn ^{:metadoc/categories #{:cat/utils}} rand-int-between
-  "returns a random integer between lower and upper bounds inclusive."
-  ([[lower upper]]
-    (rand-int-between lower upper))
-  ([lower upper]
-    (+ lower (rand-int (inc (- upper lower))))))
-
-(defn ^{:metadoc/categories #{:cat/utils}} rand-float-between [[lower upper]]
-  (+ lower (rand (- upper lower))))
-
-; TODO use 0-1 not 0-100 internally ? just display it different?
-; TODO assert the number between 0 and 100
-(defn ^{:metadoc/categories #{:cat/utils}} percent-chance
-  "perc is number between 0 and 100."
-  ([perc random]
-    (< (srand random)
-       (/ perc 100)))
-  ([perc]
-    (percent-chance perc (Random.))))
-; TODO Random. does not return a number between 0 and 100?
-
-(defmacro ^{:metadoc/categories #{:cat/utils}} if-chance
-  ([n then]
-    `(if-chance ~n ~then nil))
-  ([n then else]
-    `(if (percent-chance ~n) ~then ~else)))
-
-(defmacro ^{:metadoc/categories #{:cat/utils}} when-chance [n & more]
-  `(when (percent-chance ~n)
-     ~@more))
-
-(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-item
-  "given a sequence of items and their weight, returns a weighted random item.
- for example {:a 5 :b 1} returns b only in about 1 of 6 cases"
-  [weights]
-  (let [result (rand-int (reduce + (map #(% 1) weights)))]
-    (loop [r 0
-           items weights]
-      (let [[item weight] (first items)
-            r (+ r weight)]
-        (if (> r result)
-          item
-          (recur (int r) (rest items)))))))
-
-(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-items [n group]
-  (repeatedly n #(get-rand-weighted-item group)))
-
-(comment
-  (frequencies (get-rand-weighted-items 1000 {:a 1 :b 5 :c 4}))
-  (frequencies (repeatedly 1000 #(percent-chance 90))))
-
-(defn ^{:metadoc/categories #{:cat/utils}} high-weighted "for values of x 0-1 returns y values 0-1 with higher value of y than a linear function"
-  [x]
-  (- 1 (Math/pow (- 1 x) 2)))
-
-(defn- high-weighted-rand-int [n]
-  (int (* n (high-weighted (rand)))))
-
-(defn ^{:metadoc/categories #{:cat/utils}} high-weighted-rand-nth [coll]
-  (nth coll (high-weighted-rand-int (count coll))))
 
 ;; CAMERA (is only world, see use cases )
 
@@ -1665,13 +1608,7 @@ Default method returns true."
 (defprotocol WorldGen
   (->world [ctx world-id])) ; ???
 
-;; ctx/vis-ui
-
-;;;;
-;;;;
 ;;;;️ 🎛️ UI
-;;;;
-;;;;
 
 (defn- check-cleanup-visui! []
   ; app crashes during startup before VisUI/dispose and we do clojure.tools.namespace.refresh-> gui elements not showing.
@@ -2932,11 +2869,7 @@ Default method returns true."
 
 (defcomponent :val-max {:schema (m/form val-max-schema)})
 
-;;;;
-;;;;
 ;;;;️ 👾️ Entities
-;;;;
-;;;;
 
 (defn- define-order [order-k-vector]
   (apply hash-map
@@ -3673,11 +3606,7 @@ Default method returns true."
         (when (pos? (v-length v))
           v)))))
 
-;;;;
-;;;;
 ;;;; ⚔️  Stats
-;;;;
-;;;;
 
 (defsystem ^{:metadoc/categories #{:cat/op-sys}} op-value-text "FIXME" [_])
 (defsystem ^{:metadoc/categories #{:cat/op-sys}} op-apply "FIXME" [_ base-value])
