@@ -4107,6 +4107,16 @@ Sets [[app-state]] atom to the context."}
               :columns 10
               :image/scale 2}})
 
+;;;; Transactions
+
+; => every tx calls a function (anyway move to the code logic, keep wiring separate ... ?)
+; can make it a one-liner
+; or even def-txs?
+; or even mark the function with a metadata
+; omg
+; then components will disappear too ....???
+; but then multimethod redeffing doesnt work -> can use vars in development ?
+
 (defcomponent :e/create
   (do! [[_ position body components] ctx]
     (assert (and (not (contains? components :position))
