@@ -20,19 +20,30 @@
   | `position`       | `[x y]` vector                                 |"
   {:metadoc/categories {:cat/app "Application"
                         :cat/component "Component"
-                        :cat/effect "Effects"
+                        :cat/ctx "Context"
+
                         :cat/entity "Entity"
+
                         :cat/g "Graphics"
+
                         :cat/gdx "Libgdx"
+
                         :cat/geom "Geometry"
+
                         :cat/player "Player"
+
                         :cat/props "Properties"
-                        :cat/sound "Sound"
+
                         :cat/systems "Systems"
+
                         :cat/time "Time"
+
                         :cat/ui "User Interface"
+
                         :cat/utils "Utilities"
-                        :cat/world "World"}}
+
+                        :cat/world "World"
+                        }}
   (:require (clojure [set :as set]
                      [string :as str]
                      [edn :as edn]
@@ -79,7 +90,6 @@
          ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
 
 (defn- bind-gdx-statics! []
-  (.bindRoot #'gdx-files    Gdx/files)
   (.bindRoot #'gdx-input    Gdx/input)
   (.bindRoot #'gdx-graphics Gdx/graphics))
 
@@ -495,7 +505,7 @@ Default method returns true."
        result)
       (effect! ctx result))))
 
-(defn ^{:metadoc/categories #{:cat/effect}} effect! [ctx txs]
+(defn ^{:metadoc/categories #{:cat/ctx}} effect! [ctx txs]
   (reduce (fn [ctx tx]
             (if (nil? tx)
               ctx
@@ -548,7 +558,7 @@ Default method returns true."
 (defn play-sound!
   "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
 Returns ctx."
-  {:metadoc/categories #{:cat/sound}}
+  {:metadoc/categories #{:cat/ctx}}
   [ctx file]
   (.play ^Sound (get-asset ctx file))
   ctx)
@@ -590,7 +600,7 @@ Returns ctx."
       s
       (remove-newlines new-s))))
 
-(defn ^{:metadoc/categories #{:cat/component}} ->info-text
+(defn ->info-text
   "Recursively generates info-text via [[info-text]]."
   [components ctx]
   (->> components
@@ -662,7 +672,7 @@ Returns ctx."
 (defn dispose {:metadoc/categories #{:cat/gdx}} [obj] (Disposable/.dispose obj))
 
 (defprotocol ActiveEntities
-  (^{:metadoc/categories #{:cat/entity}} active-entities [_]))
+  (^{:metadoc/categories #{:cat/ctx}} active-entities [_]))
 
 ;; graphics
 
@@ -685,8 +695,8 @@ Returns ctx."
 ;; raycaster
 
 (defprotocol PRayCaster
-  (^{:metadoc/categories #{:cat/world}} ray-blocked? [ctx start target])
-  (^{:metadoc/categories #{:cat/world}} path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
+  (^{:metadoc/categories #{:cat/ctx}} ray-blocked? [ctx start target])
+  (^{:metadoc/categories #{:cat/ctx}} path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
 
 ;;;; Image
 
@@ -808,7 +818,6 @@ Returns ctx."
 
 (defn create-vs
   "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
-  {:metadoc/categories #{:cat/component}}
   [components ctx]
   (reduce (fn [m [k v]]
             (assoc m k (->mk [k v] ctx)))
@@ -816,10 +825,10 @@ Returns ctx."
           components))
 
 
-(defn ^{:metadoc/categories #{:cat/app}} current-screen-key [{{:keys [current]} :context/screens}]
+(defn ^{:metadoc/categories #{:cat/ctx}} current-screen-key [{{:keys [current]} :context/screens}]
   current)
 
-(defn ^{:metadoc/categories #{:cat/app}} current-screen [{{:keys [current screens]} :context/screens}]
+(defn ^{:metadoc/categories #{:cat/ctx}} current-screen [{{:keys [current screens]} :context/screens}]
   [current (get screens current)])
 
 (defn change-screen
@@ -827,7 +836,7 @@ Returns ctx."
   Throws AssertionError when the context does not have a screen with screen-key.
   Calls `screen-enter` on the new screen and
   returns the context with current-screen set to new-screen."
-  {:metadoc/categories #{:cat/app}
+  {:metadoc/categories #{:cat/ctx}
    :arglists '([ctx screen-key])}
   [{{:keys [current screens]} :context/screens :as context}
    new-screen-key]
@@ -1044,13 +1053,13 @@ Returns ctx."
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(defn gui-mouse-position    {:metadoc/categories #{:cat/g}} [ctx] (gui-mouse-position*             (gr ctx)))
-(defn world-mouse-position  {:metadoc/categories #{:cat/g}} [ctx] (world-mouse-position*           (gr ctx)))
-(defn gui-viewport-width    {:metadoc/categories #{:cat/g}} [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
-(defn gui-viewport-height   {:metadoc/categories #{:cat/g}} [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
-(defn world-camera          {:metadoc/categories #{:cat/g}} [ctx] (.getCamera      (world-viewport (gr ctx))))
-(defn world-viewport-width  {:metadoc/categories #{:cat/g}} [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-(defn world-viewport-height {:metadoc/categories #{:cat/g}} [ctx] (.getWorldHeight (world-viewport (gr ctx))))
+(defn gui-mouse-position    {:metadoc/categories #{:cat/ctx}} [ctx] (gui-mouse-position*             (gr ctx)))
+(defn world-mouse-position  {:metadoc/categories #{:cat/ctx}} [ctx] (world-mouse-position*           (gr ctx)))
+(defn gui-viewport-width    {:metadoc/categories #{:cat/ctx}} [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
+(defn gui-viewport-height   {:metadoc/categories #{:cat/ctx}} [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
+(defn world-camera          {:metadoc/categories #{:cat/ctx}} [ctx] (.getCamera      (world-viewport (gr ctx))))
+(defn world-viewport-width  {:metadoc/categories #{:cat/ctx}} [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
+(defn world-viewport-height {:metadoc/categories #{:cat/ctx}} [ctx] (.getWorldHeight (world-viewport (gr ctx))))
 
 ;; graphics cursors
 
@@ -1088,13 +1097,13 @@ Returns ctx."
 
 (defn render-gui-view
   "render-fn is a function of param 'g', graphics context."
-  {:metadoc/categories #{:cat/g}}
+  {:metadoc/categories #{:cat/ctx}}
   [ctx render-fn]
   (render-view ctx :gui-view render-fn))
 
 (defn render-world-view
   "render-fn is a function of param 'g', graphics context."
-  {:metadoc/categories #{:cat/g}}
+  {:metadoc/categories #{:cat/ctx}}
   [ctx render-fn]
   (render-view ctx :world-view render-fn))
 
@@ -1107,39 +1116,41 @@ Returns ctx."
 
 (def ctx-time :context/time)
 
-(defn ^{:metadoc/categories #{:cat/time}} delta-time
+(defn delta-time
   "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
   [ctx]
   (:delta-time (ctx-time ctx)))
 
-(defn ^{:metadoc/categories #{:cat/time}} elapsed-time ; world-time, not counting different screens or paused world....
+(defn elapsed-time ; world-time, not counting different screens or paused world....
   "The elapsed in-game-time (not counting when game is paused)."
   [ctx]
   (:elapsed (ctx-time ctx)))
 
-(defn ^{:metadoc/categories #{:cat/time}} logic-frame ; starting with 0 ... ? when not doing anything
+(defn logic-frame ; starting with 0 ... ? when not doing anything
   "The game-logic frame number, starting with 1. (not counting when game is paused)"
   [ctx]
   (:logic-frame (ctx-time ctx)))
 
 (defrecord Counter [duration stop-time])
 
-(defn ^{:metadoc/categories #{:cat/time}} ->counter [ctx duration]
+(defn ->counter [ctx duration]
   {:pre [(>= duration 0)]}
   (->Counter duration (+ (elapsed-time ctx) duration)))
 
-(defn ^{:metadoc/categories #{:cat/time}} stopped? [ctx {:keys [stop-time]}]
+(defn stopped? [ctx {:keys [stop-time]}]
   (>= (elapsed-time ctx) stop-time))
 
-(defn ^{:metadoc/categories #{:cat/time}} reset [ctx {:keys [duration] :as counter}]
+(defn reset [ctx {:keys [duration] :as counter}]
   (assoc counter :stop-time (+ (elapsed-time ctx) duration)))
 
-(defn ^{:metadoc/categories #{:cat/time}} finished-ratio [ctx {:keys [duration stop-time] :as counter}]
+(defn finished-ratio [ctx {:keys [duration stop-time] :as counter}]
   {:post [(<= 0 % 1)]}
   (if (stopped? ctx counter)
     0
     ; min 1 because floating point math inaccuracies
     (min 1 (/ (- stop-time (elapsed-time ctx)) duration))))
+
+(conclude-section! :cat/ctx)
 
 ;;;;️ 🌍 World
 
@@ -1150,7 +1161,7 @@ Returns ctx."
   (^{:metadoc/categories #{:cat/world}} circle->entities [grid circle]))
 
 (defprotocol GridPointEntities
-  (^{:metadoc/categories #{:cat/world}} point->entities [ctx position]))
+  (^{:metadoc/categories #{:cat/ctx}} point->entities [ctx position]))
 
 (defprotocol GridCell
   (^{:metadoc/categories #{:cat/world}} blocked? [cell* z-order])
@@ -2167,11 +2178,11 @@ Returns ctx."
                            ctx))))
 
 (defn build-property
-  {:metadoc/categories #{:cat/props}}
+  {:metadoc/categories #{:cat/ctx}}
   [{{:keys [db]} :context/properties :as ctx} id]
   (build ctx (safe-get db id)))
 
-(defn ^{:metadoc/categories #{:cat/props}} all-properties [{{:keys [db]} :context/properties :as ctx} type]
+(defn ^{:metadoc/categories #{:cat/ctx}} all-properties [{{:keys [db]} :context/properties :as ctx} type]
   (->> (vals db)
        (filter #(= type (->type %)))
        (map #(build ctx %))))
@@ -2970,13 +2981,13 @@ Returns ctx."
      ctx)))
 
 (defn all-entities
-  {:metadoc/categories #{:cat/entity}}
+  {:metadoc/categories #{:cat/ctx}}
   [ctx]
   (vals (entities ctx)))
 
 (defn get-entity
   "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
-  {:metadoc/categories #{:cat/entity}}
+  {:metadoc/categories #{:cat/ctx}}
   [ctx uid]
   (get (entities ctx) uid))
 
@@ -3137,7 +3148,7 @@ Returns ctx."
 (def ^:private ctx-mouseover-entity :context/mouseover-entity)
 
 (defn mouseover-entity*
-  {:metadoc/categories #{:cat/world}}
+  {:metadoc/categories #{:cat/ctx}}
   [ctx]
   (when-let [entity (ctx-mouseover-entity ctx)]
     @entity))
@@ -3408,7 +3419,6 @@ Returns ctx."
 (defn create-into
   "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
   or false, assoc's at ctx k v"
-  {:metadoc/categories #{:cat/component}}
   [ctx components]
   (assert (map? ctx))
   (reduce (fn [ctx [k v]]
