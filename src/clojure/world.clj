@@ -425,30 +425,6 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
-;;;; Unnamed category - ->mk and destroy!
-
-(defn create-vs
-  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
-  {:metadoc/categories #{:cat/component}}
-  [components ctx]
-  (reduce (fn [m [k v]]
-            (assoc m k (->mk [k v] ctx)))
-          {}
-          components))
-
-(defn create-into
-  "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
-  or false, assoc's at ctx k v"
-  {:metadoc/categories #{:cat/component}}
-  [ctx components]
-  (assert (map? ctx))
-  (reduce (fn [ctx [k v]]
-            (if-let [v (->mk [k v] ctx)]
-              (assoc ctx k v)
-              ctx))
-          ctx
-          components))
-
 ;;;; 💥 Effects
 
 (def ^:private record-txs? false)
@@ -898,6 +874,16 @@ Returns ctx."
     (->image ctx file)))
 
 ;;;; 🖥️ Screens
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
+  {:metadoc/categories #{:cat/component}}
+  [components ctx]
+  (reduce (fn [m [k v]]
+            (assoc m k (->mk [k v] ctx)))
+          {}
+          components))
+
 
 (defcomponent :context/screens
   {:data :some
@@ -4125,6 +4111,19 @@ Returns ctx."
        :context/screens
        :first-screen
        (change-screen context)))
+
+(defn create-into
+  "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
+  or false, assoc's at ctx k v"
+  {:metadoc/categories #{:cat/component}}
+  [ctx components]
+  (assert (map? ctx))
+  (reduce (fn [ctx [k v]]
+            (if-let [v (->mk [k v] ctx)]
+              (assoc ctx k v)
+              ctx))
+          ctx
+          components))
 
 (defn- ->application-listener [context]
   (proxy [ApplicationAdapter] []
