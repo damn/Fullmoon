@@ -1,4 +1,38 @@
 (ns clojure.world
+  "## Glossary
+
+  | Symbol           | Meaning                                        |
+  | ---------------  | -----------------------------------------------|
+  | `actor`          | `com.badlogic.gdx.scenes.scene2d.Actor`        |
+  | `ctx`            | Context - `clojure.world/Ctx`                  |
+  | `component`      | vector `[k v]` or `[k]` or `[k v1 v2 ..]`      |
+  | `cell`/`cell*`   | Cells of the grid `clojure.world.GridCell`     |
+  | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
+  | `eid` , `entity` | entity atom                                    |
+  | `entity*`        | entity value (defrecord `clojure.world/Entity`)|
+  | `g`              | `clojure.world.Graphics`                       |
+  | `grid`           | `data.grid2d.Grid`                             |
+  | `image`          | `clojure.world.Image`                          |
+  | `system`         | multimethod dispatching on ffirst              |
+  | `position`       | `[x y]` vector                                 |"
+  {:metadoc/categories {:cat/app "Application"
+                        :cat/component "Component"
+                        :cat/ctx-sys "Context System"
+                        :cat/effect "Effects"
+                        :cat/entity "Entity"
+                        :cat/entity-state-sys "Entity-State Systems"
+                        :cat/g "Graphics"
+                        :cat/gdx "Libgdx"
+                        :cat/geom "Geometry"
+                        :cat/op-sys "Operations"
+                        :cat/player "Player"
+                        :cat/props "Properties"
+                        :cat/sound "Sound"
+                        :cat/sys "Systems"
+                        :cat/time "Time"
+                        :cat/ui "User Interface"
+                        :cat/utils "Utilities"
+                        :cat/world "World"}}
   (:require (clojure [set :as set]
                      [string :as str]
                      [edn :as edn]
@@ -31,18 +65,12 @@
 
 (defrecord Ctx [])
 
-(def ^{:doc "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging."}
-  app-state (atom nil))
-
-; Use (.postRunnable gdx-app f-with-no-args) for altering the state atom
-; => write a macro/fn for that?
-
-; also I want to have docs somewhere else?
-; code easier to read?
-
-; in another file ?
-; and with a macro read in?
-; then can write as much as I want there
+(def
+  ^{:metadoc/categories #{:cat/app}}
+  app-state
+  "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging.
+  Use only with (.postRunnable gdx-app f) for making manual changes to the ctx."
+  (atom nil))
 
 ;;;;
 ;;;;
@@ -50,38 +78,36 @@
 ;;;;
 ;;;;
 
-(defn remove-one [coll item]
-  (let [[n m] (split-with (partial not= item) coll)]
-    (concat n (rest m))))
-
-(defn mapvals [f m]
-  (into {} (for [[k v] m]
-             [k (f v)])))
-
-(defn k->pretty-name [k]
-  (str/capitalize (name k)))
-
-(defn find-first ; from clojure.contrib.seq-utils (discontinued in 1.3)
+(defn
+  find-first
   "Returns the first item of coll for which (pred item) returns logical true.
   Consumes sequences up to the first match, will consume the entire sequence
   and return nil if no match is found."
+  {:metadoc/categories #{:cat/utils}}
   [pred coll]
   (first (filter pred coll)))
 
-(defn ->tile [position]
+(defn ->tile
+  {:metadoc/categories #{:cat/utils}}
+  [position]
   (mapv int position))
 
-(defn tile->middle [position]
+(defn tile->middle
+  {:metadoc/categories #{:cat/utils}}
+  [position]
   (mapv (partial + 0.5) position))
 
-(let [obj (Object.)]
-  (defn safe-get [m k]
-    (let [result (get m k obj)]
-      (if (= result obj)
-        (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
-        result))))
+(defn safe-get
+  {:metadoc/categories #{:cat/utils}}
+  [m k]
+  (let [result (get m k ::not-found)]
+    (if (= result ::not-found)
+      (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
+      result)))
 
-(defn safe-merge [m1 m2]
+(defn safe-merge
+  {:metadoc/categories #{:cat/utils}}
+  [m1 m2]
   {:pre [(not-any? #(contains? m1 %) (keys m2))]}
   (merge m1 m2))
 
@@ -99,7 +125,9 @@
         (Math/round (float (* x z)))
         z))))
 
-(defn readable-number [^double x]
+(defn readable-number
+  {:metadoc/categories #{:cat/utils}}
+  [^double x]
   {:pre [(number? x)]} ; do not assert (>= x 0) beacuse when using floats x may become -0.000...000something
   (if (or
         (> x 5)
@@ -107,7 +135,7 @@
     (int x)
     (round-n-decimals x 2)))
 
-(defn index-of [k ^clojure.lang.PersistentVector v]
+(defn- index-of [k ^clojure.lang.PersistentVector v]
   (let [idx (.indexOf v k)]
     (if (= -1 idx)
       nil
@@ -119,11 +147,16 @@
 ;;;;
 ;;;;
 
-(def ^{:doc "Map of all systems as key of name-string to var."} defsystems {})
+(def
+  ^{:metadoc/categories #{:cat/component}}
+  defsystems
+  "Map of all systems as key of name-string to var."
+  {})
 
 (defmacro defsystem
   "A system is a multimethod which dispatches on ffirst.
   So for a component `[k v]` it dispatches on the component-keyword `k`."
+  {:metadoc/categories #{:cat/component}}
   [sys-name docstring params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
@@ -139,7 +172,7 @@
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def component-attributes {})
+(def ^{:metadoc/categories #{:cat/component}} component-attributes {})
 
 (def ^:private warn-name-ns-mismatch? false)
 
@@ -152,20 +185,20 @@
              (not= (k->component-ns k) (ns-name *ns*)))
     (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
 
-(defn defcomponent*
+(defn ^{:metadoc/categories #{:cat/component}} defcomponent*
   "Defines a component without systems methods, so only to set metadata."
   [k attr-map]
   (when (get component-attributes k)
     (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'component-attributes assoc k attr-map))
 
-(defmacro defcomponent
+(defmacro ^{:metadoc/categories #{:cat/component}} defcomponent
   "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
 
 attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
 
 Example:
-```
+```clojure
 (defsystem foo \"foo docstring.\" [_])
 
 (defcomponent :foo/bar
@@ -213,10 +246,10 @@ Example:
 
 ;; Gdx statics
 
-(declare ^{:tag Application}               gdx-app
-         ^{:tag Files}                     gdx-files
-         ^{:tag Input}                     gdx-input
-         ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
+(declare ^{:tag Application               :metadoc/categories #{:cat/gdx}} gdx-app
+         ^{:tag Files                     :metadoc/categories #{:cat/gdx}} gdx-files
+         ^{:tag Input                     :metadoc/categories #{:cat/gdx}} gdx-input
+         ^{:tag com.badlogic.gdx.Graphics :metadoc/categories #{:cat/gdx}} gdx-graphics)
 
 (defn- bind-gdx-statics! []
   (.bindRoot #'gdx-app      Gdx/app)
@@ -226,11 +259,12 @@ Example:
 
 ;; Create & Destroy systems & helper fns
 
-(defsystem ->mk "Create component value. Default returns v." [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/sys :cat/ctx-sys}} ->mk "Create component value. Default returns v." [_ ctx])
 (defmethod ->mk :default [[_ v] _ctx] v)
 
 (defn create-vs
   "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
+  {:metadoc/categories #{:cat/component}}
   [components ctx]
   (reduce (fn [m [k v]]
             (assoc m k (->mk [k v] ctx)))
@@ -240,6 +274,7 @@ Example:
 (defn create-into
   "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
   or false, assoc's at ctx k v"
+  {:metadoc/categories #{:cat/component}}
   [ctx components]
   (assert (map? ctx))
   (reduce (fn [ctx [k v]]
@@ -249,7 +284,7 @@ Example:
           ctx
           components))
 
-(defsystem destroy! "Side effect destroy resources. Default do nothing." [_])
+(defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
 (defmethod destroy! :default [_])
 
 ;;;;
@@ -330,7 +365,7 @@ Example:
 ; and that means that transaction will be recorded and done double with all the sub-transactions
 ; in the replay mode
 ; we only want to record actual side effects, not transactions returning other lower level transactions
-(defsystem do! "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/effect}} do! "FIXME" [_ ctx])
 
 (declare effect!)
 
@@ -344,7 +379,7 @@ Example:
        result)
       (effect! ctx result))))
 
-(defn effect! [ctx txs]
+(defn ^{:metadoc/categories #{:cat/effect}} effect! [ctx txs]
   (reduce (fn [ctx tx]
             (if (nil? tx)
               ctx
@@ -415,14 +450,14 @@ Example:
 (defn- get-asset [ctx file]
   (get (:manager (assets ctx)) file))
 
-(defn play-sound!
+(defn ^{:metadoc/categories #{:cat/sound}} play-sound!
   "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
 Returns ctx."
   [ctx file]
   (.play ^Sound (get-asset ctx file))
   ctx)
 
-(defn texture
+(defn ^{:metadoc/categories #{:cat/g}} texture
   "Is already cached and loaded."
   [ctx file]
   (get-asset ctx file))
@@ -435,27 +470,27 @@ Returns ctx."
 ;; ???
 
 (defprotocol RenderWorldView
-  (render-world-view [ctx render-fn] "render-fn is a function of param 'g', graphics context."))
+  (^{:metadoc/categories #{:cat/g}} render-world-view [ctx render-fn] "render-fn is a function of param 'g', graphics context."))
 
 (defprotocol MouseOverEntity
-  (mouseover-entity* [ctx]))
+  (^{:metadoc/categories #{:cat/world}} mouseover-entity* [ctx]))
 
 (defprotocol Player
-  (player-entity [ctx])
-  (player-entity* [ctx])
-  (player-update-state      [ctx])
-  (player-state-pause-game? [ctx])
-  (player-clicked-inventory [ctx cell])
-  (player-clicked-skillmenu [ctx skill]))
+  (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-entity* [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-update-state      [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-state-pause-game? [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-clicked-inventory [ctx cell])
+  (^{:metadoc/categories #{:cat/player}} player-clicked-skillmenu [ctx skill]))
 
 ;; effect systems -> move to effect
 
-(defsystem applicable?
+(defsystem ^{:metadoc/categories #{:cat/effect}} applicable?
   "An effect will only be done (with do!) if this function returns truthy.
 Required system for every effect, no default."
   [_ ctx])
 
-(defsystem useful?
+(defsystem ^{:metadoc/categories #{:cat/effect}} useful?
   "Used for NPC AI.
 Called only if applicable? is truthy.
 For example use for healing effect is only useful if hitpoints is < max.
@@ -465,7 +500,7 @@ Default method returns true."
 
 ;; info-text system
 
-(defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/component}} info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
 (defmethod info-text :default [_ ctx])
 
 (def ^:private k-order
@@ -497,7 +532,7 @@ Default method returns true."
       s
       (remove-newlines new-s))))
 
-(defn ->info-text
+(defn ^{:metadoc/categories #{:cat/component}} ->info-text
   "Recursively generates info-text via [[info-text]]."
   [components ctx]
   (->> components
@@ -517,8 +552,8 @@ Default method returns true."
 ;;
 
 (defprotocol Entities
-  (all-entities [_])
-  (get-entity [_ uid]))
+  (^{:metadoc/categories #{:cat/entity}} all-entities [_])
+  (^{:metadoc/categories #{:cat/entity}} get-entity [_ uid] "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."))
 
 ;;;;
 ;;;;
@@ -526,20 +561,20 @@ Default method returns true."
 ;;;;
 ;;;;
 
-(defn def-attributes [& attributes-data]
+(defn ^{:metadoc/categories #{:cat/props}} def-attributes [& attributes-data]
   {:pre [(even? (count attributes-data))]}
   (doseq [[k data] (partition 2 attributes-data)]
     (defcomponent* k {:data data})))
 
 (defcomponent :property/id {:data [:qualified-keyword]})
 
-(defn def-type [k {:keys [schema overview]}]
+(defn ^{:metadoc/categories #{:cat/props}} def-type [k {:keys [schema overview]}]
   (defcomponent k
     {:data [:map (conj schema :property/id)]
      :overview overview}))
 
 (defprotocol Property
-  (build-property [_ id]))
+  (^{:metadoc/categories #{:cat/props}} build-property [_ id]))
 
 ;;;;
 ;;;;
@@ -547,7 +582,7 @@ Default method returns true."
 ;;;;
 ;;;;
 
-(defn ->color
+(defn ^{:metadoc/categories #{:cat/g}} ->color
   ([r g b]
    (->color r g b 1))
   ([r g b a]
@@ -562,42 +597,42 @@ Default method returns true."
                      cursors])
 
 (defprotocol WorldView
-  (pixels->world-units [_ pixels])
-  (world-unit-scale [_]))
+  (^{:metadoc/categories #{:cat/g}} pixels->world-units [_ pixels])
+  (^{:metadoc/categories #{:cat/g}} world-unit-scale [_]))
 
 (defprotocol PShapeDrawer
-  (draw-ellipse [_ position radius-x radius-y color])
-  (draw-filled-ellipse [_ position radius-x radius-y color])
-  (draw-circle [_ position radius color])
-  (draw-filled-circle [_ position radius color])
-  (draw-arc [_ center-position radius start-angle degree color])
-  (draw-sector [_ center-position radius start-angle degree color])
-  (draw-rectangle [_ x y w h color])
-  (draw-filled-rectangle [_ x y w h color])
-  (draw-line [_ start-position end-position color])
-  (draw-grid [drawer leftx bottomy gridw gridh cellw cellh color])
-  (with-shape-line-width [_ width draw-fn]))
+  (^{:metadoc/categories #{:cat/g}} draw-ellipse [_ position radius-x radius-y color])
+  (^{:metadoc/categories #{:cat/g}} draw-filled-ellipse [_ position radius-x radius-y color])
+  (^{:metadoc/categories #{:cat/g}} draw-circle [_ position radius color])
+  (^{:metadoc/categories #{:cat/g}} draw-filled-circle [_ position radius color])
+  (^{:metadoc/categories #{:cat/g}} draw-arc [_ center-position radius start-angle degree color])
+  (^{:metadoc/categories #{:cat/g}} draw-sector [_ center-position radius start-angle degree color])
+  (^{:metadoc/categories #{:cat/g}} draw-rectangle [_ x y w h color])
+  (^{:metadoc/categories #{:cat/g}} draw-filled-rectangle [_ x y w h color])
+  (^{:metadoc/categories #{:cat/g}} draw-line [_ start-position end-position color])
+  (^{:metadoc/categories #{:cat/g}} draw-grid [drawer leftx bottomy gridw gridh cellw cellh color])
+  (^{:metadoc/categories #{:cat/g}} with-shape-line-width [_ width draw-fn]))
 
 (defprotocol TextDrawer
-  (draw-text [_ {:keys [x y text font h-align up? scale]}]
+  (^{:metadoc/categories #{:cat/g}} draw-text [_ {:keys [x y text font h-align up? scale]}]
              "font, h-align, up? and scale are optional.
              h-align one of: :center, :left, :right. Default :center.
              up? renders the font over y, otherwise under.
              scale will multiply the drawn text size with the scale."))
 
 (defprotocol ImageDraw
-  (draw-image [_ image position])
-  (draw-centered-image [_ image position])
-  (draw-rotated-centered-image [_ image rotation position]))
+  (^{:metadoc/categories #{:cat/g}} draw-image [_ image position])
+  (^{:metadoc/categories #{:cat/g}} draw-centered-image [_ image position])
+  (^{:metadoc/categories #{:cat/g}} draw-rotated-centered-image [_ image rotation position]))
 
 (defprotocol Views
-  (gui-mouse-position    [_])
-  (world-mouse-position  [_])
-  (gui-viewport-width    [_])
-  (gui-viewport-height   [_])
-  (world-camera          [_])
-  (world-viewport-width  [_])
-  (world-viewport-height [_]))
+  (^{:metadoc/categories #{:cat/g}} gui-mouse-position    [_])
+  (^{:metadoc/categories #{:cat/g}} world-mouse-position  [_])
+  (^{:metadoc/categories #{:cat/g}} gui-viewport-width    [_])
+  (^{:metadoc/categories #{:cat/g}} gui-viewport-height   [_])
+  (^{:metadoc/categories #{:cat/g}} world-camera          [_])
+  (^{:metadoc/categories #{:cat/g}} world-viewport-width  [_])
+  (^{:metadoc/categories #{:cat/g}} world-viewport-height [_]))
 
 ;; ctx/config
 
@@ -613,27 +648,27 @@ Default method returns true."
 
 ;; gdx helper fns
 
-(defn dispose [obj] (Disposable/.dispose obj))
+(defn ^{:metadoc/categories #{:cat/gdx}} dispose [obj] (Disposable/.dispose obj))
 
 (defprotocol ActiveEntities
-  (active-entities [_]))
+  (^{:metadoc/categories #{:cat/entity}} active-entities [_]))
 
 ;; graphics
 
-(def color-black Color/BLACK)
-(def color-white Color/WHITE)
+(def ^{:metadoc/categories #{:cat/g}} color-black Color/BLACK)
+(def ^{:metadoc/categories #{:cat/g}} color-white Color/WHITE)
 
 ;; screen systems
 
-(defsystem screen-enter "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/app}} screen-enter "FIXME" [_ ctx])
 (defmethod screen-enter :default [_ ctx])
 
-(defsystem screen-exit  "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/app}} screen-exit  "FIXME" [_ ctx])
 (defmethod screen-exit :default  [_ ctx])
 
 (defsystem ^:private screen-render! "FIXME" [_])
 
-(defsystem screen-render "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/app}} screen-render "FIXME" [_ ctx])
 (defmethod screen-render :default [_ ctx]
   ctx)
 
@@ -655,12 +690,12 @@ Default method returns true."
 ;; raycaster
 
 (defprotocol PRayCaster
-  (ray-blocked? [ctx start target])
-  (path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
+  (^{:metadoc/categories #{:cat/world}} ray-blocked? [ctx start target])
+  (^{:metadoc/categories #{:cat/world}} path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
 
 ;; image
 
-(defn ->texture-region
+(defn ^{:metadoc/categories #{:cat/g}} ->texture-region
   ([^Texture tex]
    (TextureRegion. tex))
 
@@ -748,18 +783,18 @@ Default method returns true."
       (assoc-dimensions g 1)
       map->Image))
 
-(defn ->image [{g :context/graphics :as ctx} file]
+(defn ^{:metadoc/categories #{:cat/g}} ->image [{g :context/graphics :as ctx} file]
   (->image* g (->texture-region (texture ctx file)))) ; TODO why doesnt texture work?
 
-(defn sub-image [{g :context/graphics} {:keys [texture-region]} bounds]
+(defn ^{:metadoc/categories #{:cat/g}} sub-image [{g :context/graphics} {:keys [texture-region]} bounds]
   (->image* g (->texture-region texture-region bounds)))
 
-(defn sprite-sheet [ctx file tilew tileh]
+(defn ^{:metadoc/categories #{:cat/g}} sprite-sheet [ctx file tilew tileh]
   {:image (->image ctx file)
    :tilew tilew
    :tileh tileh})
 
-(defn sprite
+(defn ^{:metadoc/categories #{:cat/g}} sprite
   "x,y index starting top-left"
   [ctx {:keys [image tilew tileh]} [x y]]
   (sub-image ctx image [(* x tilew) (* y tileh) tilew tileh]))
@@ -791,17 +826,19 @@ Default method returns true."
     ; TODO screens not disposed https://github.com/damn/core/issues/41
     ))
 
-(defn current-screen-key [{{:keys [current]} :context/screens}]
+(defn ^{:metadoc/categories #{:cat/app}} current-screen-key [{{:keys [current]} :context/screens}]
   current)
 
-(defn current-screen [{{:keys [current screens]} :context/screens}]
+(defn ^{:metadoc/categories #{:cat/app}} current-screen [{{:keys [current screens]} :context/screens}]
   [current (get screens current)])
 
 (defn change-screen
-  "Calls screen-exit on the current-screen (if there is one).
-  Throws AssertionError when the context does not have a new-screen.
-  Calls screen-enter on the new screen and
+  "Calls `screen-exit` on the current-screen (if there is one).
+  Throws AssertionError when the context does not have a screen with screen-key.
+  Calls `screen-enter` on the new screen and
   returns the context with current-screen set to new-screen."
+  {:metadoc/categories #{:cat/app}
+   :arglists '([ctx screen-key])}
   [{{:keys [current screens]} :context/screens :as context}
    new-screen-key]
   (when-let [screen-v (and current
@@ -1035,12 +1072,16 @@ Default method returns true."
     (.dispose pixmap)
     cursor))
 
+(defn- mapvals [f m]
+  (into {} (for [[k v] m]
+             [k (f v)])))
+
 (defn- ->cursors [cursors]
   {:cursors (mapvals (fn [[file hotspot]]
                        (->cursor (str "cursors/" file ".png") hotspot))
                      cursors)})
 
-(defn set-cursor! [{g :context/graphics} cursor-key]
+(defn ^{:metadoc/categories #{:cat/g}} set-cursor! [{g :context/graphics} cursor-key]
   (.setCursor gdx-graphics (safe-get (:cursors g) cursor-key)))
 
 (defcomponent :tx/cursor
@@ -1093,7 +1134,7 @@ Default method returns true."
       #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
-(defn render-gui-view
+(defn ^{:metadoc/categories #{:cat/g}} render-gui-view
   "render-fn is a function of param 'g', graphics context."
   [ctx render-fn]
   (render-view ctx :gui-view render-fn))
@@ -1103,7 +1144,7 @@ Default method returns true."
   (render-world-view [ctx render-fn]
     (render-view ctx :world-view render-fn)) )
 
-(defn on-resize [{g :context/graphics} w h]
+(defn- on-resize [{g :context/graphics} w h]
   (.update (gui-viewport g) w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update (world-viewport g) w h false))
@@ -1121,34 +1162,34 @@ Default method returns true."
     {:elapsed 0
      :logic-frame 0}))
 
-(defn delta-time
+(defn ^{:metadoc/categories #{:cat/time}} delta-time
   "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
   [ctx]
   (:delta-time (ctx-time ctx)))
 
-(defn elapsed-time ; world-time, not counting different screens or paused world....
+(defn ^{:metadoc/categories #{:cat/time}} elapsed-time ; world-time, not counting different screens or paused world....
   "The elapsed in-game-time (not counting when game is paused)."
   [ctx]
   (:elapsed (ctx-time ctx)))
 
-(defn logic-frame ; starting with 0 ... ? when not doing anything
+(defn ^{:metadoc/categories #{:cat/time}} logic-frame ; starting with 0 ... ? when not doing anything
   "The game-logic frame number, starting with 1. (not counting when game is paused)"
   [ctx]
   (:logic-frame (ctx-time ctx)))
 
 (defrecord Counter [duration stop-time])
 
-(defn ->counter [ctx duration]
+(defn ^{:metadoc/categories #{:cat/time}} ->counter [ctx duration]
   {:pre [(>= duration 0)]}
   (->Counter duration (+ (elapsed-time ctx) duration)))
 
-(defn stopped? [ctx {:keys [stop-time]}]
+(defn ^{:metadoc/categories #{:cat/time}} stopped? [ctx {:keys [stop-time]}]
   (>= (elapsed-time ctx) stop-time))
 
-(defn reset [ctx {:keys [duration] :as counter}]
+(defn ^{:metadoc/categories #{:cat/time}} reset [ctx {:keys [duration] :as counter}]
   (assoc counter :stop-time (+ (elapsed-time ctx) duration)))
 
-(defn finished-ratio [ctx {:keys [duration stop-time] :as counter}]
+(defn ^{:metadoc/categories #{:cat/time}} finished-ratio [ctx {:keys [duration stop-time] :as counter}]
   {:post [(<= 0 % 1)]}
   (if (stopped? ctx counter)
     0
@@ -1162,29 +1203,29 @@ Default method returns true."
 ;;;;
 
 (defprotocol Grid
-  (cached-adjacent-cells [grid cell])
-  (rectangle->cells [grid rectangle])
-  (circle->cells    [grid circle])
-  (circle->entities [grid circle]))
+  (^{:metadoc/categories #{:cat/world}} cached-adjacent-cells [grid cell])
+  (^{:metadoc/categories #{:cat/world}} rectangle->cells [grid rectangle])
+  (^{:metadoc/categories #{:cat/world}} circle->cells    [grid circle])
+  (^{:metadoc/categories #{:cat/world}} circle->entities [grid circle]))
 
 (defprotocol GridPointEntities
-  (point->entities [ctx position]))
+  (^{:metadoc/categories #{:cat/world}} point->entities [ctx position]))
 
 (defprotocol GridCell
-  (blocked? [cell* z-order])
-  (blocks-vision? [cell*])
-  (occupied-by-other? [cell* entity]
+  (^{:metadoc/categories #{:cat/world}} blocked? [cell* z-order])
+  (^{:metadoc/categories #{:cat/world}} blocks-vision? [cell*])
+  (^{:metadoc/categories #{:cat/world}} occupied-by-other? [cell* entity]
                       "returns true if there is some occupying body with center-tile = this cell
                       or a multiple-cell-size body which touches this cell.")
-  (nearest-entity          [cell* faction])
-  (nearest-entity-distance [cell* faction]))
+  (^{:metadoc/categories #{:cat/world}} nearest-entity          [cell* faction])
+  (^{:metadoc/categories #{:cat/world}} nearest-entity-distance [cell* faction]))
 
-(defn cells->entities [cells*]
+(defn ^{:metadoc/categories #{:cat/world}} cells->entities [cells*]
   (into #{} (mapcat :entities) cells*))
 
 ;; data/val-max
 
-(def val-max-schema
+(def ^:private val-max-schema
   (m/schema [:and
              [:vector {:min 2 :max 2} [:int {:min 0}]]
              [:fn {:error/fn (fn [{[^int v ^int mx] :value} _]
@@ -1192,7 +1233,7 @@ Default method returns true."
                                  (format "Expected max (%d) to be smaller than val (%d)" v mx)))}
               (fn [[^int a ^int b]] (<= a b))]]))
 
-(defn val-max-ratio
+(defn ^{:metadoc/categories #{:cat/utils}} val-max-ratio
   "If mx and v is 0, returns 0, otherwise (/ v mx)"
   [[^int v ^int mx]]
   {:pre [(m/validate val-max-schema [v mx])]}
@@ -1253,13 +1294,13 @@ Default method returns true."
 
    :else (throw (Error. (str m)))))
 
-(defn shape-collides? [a b]
+(defn ^{:metadoc/categories #{:cat/geom}} shape-collides? [a b]
   (overlaps? (m->shape a) (m->shape b)))
 
-(defn point-in-rect? [point rectangle]
+(defn ^{:metadoc/categories #{:cat/geom}} point-in-rect? [point rectangle]
   (rect-contains? (m->shape rectangle) point))
 
-(defn circle->outer-rectangle [{[x y] :position :keys [radius] :as circle}]
+(defn ^{:metadoc/categories #{:cat/geom}} circle->outer-rectangle [{[x y] :position :keys [radius] :as circle}]
   {:pre [(circle? circle)]}
   (let [radius (float radius)
         size (* radius 2)]
@@ -1271,7 +1312,7 @@ Default method returns true."
 ;; again raycaster, move together
 
 (defprotocol PFastRayCaster
-  (fast-ray-blocked? [_ start target]))
+  (^{:metadoc/categories #{:cat/geom}} fast-ray-blocked? [_ start target]))
 
 ; boolean array used because 10x faster than access to clojure grid data structure
 
@@ -1396,25 +1437,25 @@ Default method returns true."
   [(.x ^Vector2 v)
    (.y ^Vector2 v)])
 
-(defn v-scale     [v n]    (->p (.scl ^Vector2 (->v v) (float n)))) ; TODO just (mapv (partial * 2) v)
-(defn v-normalise [v]      (->p (.nor ^Vector2 (->v v))))
-(defn v-add       [v1 v2]  (->p (.add ^Vector2 (->v v1) ^Vector2 (->v v2))))
-(defn v-length    [v]      (.len ^Vector2 (->v v)))
-(defn v-distance  [v1 v2]  (.dst ^Vector2 (->v v1) ^Vector2 (->v v2)))
+(defn ^{:metadoc/categories #{:cat/geom}} v-scale     [v n]    (->p (.scl ^Vector2 (->v v) (float n)))) ; TODO just (mapv (partial * 2) v)
+(defn ^{:metadoc/categories #{:cat/geom}} v-normalise [v]      (->p (.nor ^Vector2 (->v v))))
+(defn ^{:metadoc/categories #{:cat/geom}} v-add       [v1 v2]  (->p (.add ^Vector2 (->v v1) ^Vector2 (->v v2))))
+(defn ^{:metadoc/categories #{:cat/geom}} v-length    [v]      (.len ^Vector2 (->v v)))
+(defn ^{:metadoc/categories #{:cat/geom}} v-distance  [v1 v2]  (.dst ^Vector2 (->v v1) ^Vector2 (->v v2)))
 
-(defn v-normalised? [v]
+(defn ^{:metadoc/categories #{:cat/geom}} v-normalised? [v]
   ; Returns true if a is nearly equal to b.
   (MathUtils/isEqual 1 (v-length v)))
 
-(defn v-get-normal-vectors [[x y]]
+(defn ^{:metadoc/categories #{:cat/geom}} v-get-normal-vectors [[x y]]
   [[(- (float y))         x]
    [          y (- (float x))]])
 
-(defn v-direction [[sx sy] [tx ty]]
+(defn ^{:metadoc/categories #{:cat/geom}} v-direction [[sx sy] [tx ty]]
   (v-normalise [(- (float tx) (float sx))
                 (- (float ty) (float sy))]))
 
-(defn v-get-angle-from-vector
+(defn ^{:metadoc/categories #{:cat/geom}} v-get-angle-from-vector
   "converts theta of Vector2 to angle from top (top is 0 degree, moving left is 90 degree etc.), ->counterclockwise"
   [v]
   (.angleDeg (->v v) (Vector2. 0 1)))
@@ -1438,11 +1479,11 @@ Default method returns true."
 
 ;; ns-utils
 
-(defn get-namespaces [packages]
+(defn ^{:metadoc/categories #{:cat/utils}} get-namespaces [packages]
   (filter #(packages (first (str/split (name (ns-name %)) #"\.")))
           (all-ns)))
 
-(defn get-vars [nmspace condition]
+(defn ^{:metadoc/categories #{:cat/utils}} get-vars [nmspace condition]
   (for [[sym avar] (ns-interns nmspace)
         :when (condition avar)]
     avar))
@@ -1464,7 +1505,7 @@ Default method returns true."
 ;; maybe even remove the when coll pred?
 ;; also maybe *random* instead passing it everywhere? but not sure about that
 
-(defn sshuffle
+(defn ^{:metadoc/categories #{:cat/utils}} sshuffle
   "Return a random permutation of coll"
   ([coll random]
     (when coll
@@ -1474,32 +1515,32 @@ Default method returns true."
   ([coll]
     (sshuffle coll (Random.))))
 
-(defn srand
+(defn ^{:metadoc/categories #{:cat/utils}} srand
   ([random] (.nextFloat ^Random random))
   ([n random] (* n (srand random))))
 
-(defn srand-int [n random]
+(defn ^{:metadoc/categories #{:cat/utils}} srand-int [n random]
   (int (srand n random)))
 
-(defn create-seed []
+(defn ^{:metadoc/categories #{:cat/utils}} create-seed []
   (.nextLong (Random.)))
 
 ;; Utils
 
 ; TODO assert int?
-(defn rand-int-between
+(defn ^{:metadoc/categories #{:cat/utils}} rand-int-between
   "returns a random integer between lower and upper bounds inclusive."
   ([[lower upper]]
     (rand-int-between lower upper))
   ([lower upper]
     (+ lower (rand-int (inc (- upper lower))))))
 
-(defn rand-float-between [[lower upper]]
+(defn ^{:metadoc/categories #{:cat/utils}} rand-float-between [[lower upper]]
   (+ lower (rand (- upper lower))))
 
 ; TODO use 0-1 not 0-100 internally ? just display it different?
 ; TODO assert the number between 0 and 100
-(defn percent-chance
+(defn ^{:metadoc/categories #{:cat/utils}} percent-chance
   "perc is number between 0 and 100."
   ([perc random]
     (< (srand random)
@@ -1508,17 +1549,17 @@ Default method returns true."
     (percent-chance perc (Random.))))
 ; TODO Random. does not return a number between 0 and 100?
 
-(defmacro if-chance
+(defmacro ^{:metadoc/categories #{:cat/utils}} if-chance
   ([n then]
     `(if-chance ~n ~then nil))
   ([n then else]
     `(if (percent-chance ~n) ~then ~else)))
 
-(defmacro when-chance [n & more]
+(defmacro ^{:metadoc/categories #{:cat/utils}} when-chance [n & more]
   `(when (percent-chance ~n)
      ~@more))
 
-(defn get-rand-weighted-item
+(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-item
   "given a sequence of items and their weight, returns a weighted random item.
  for example {:a 5 :b 1} returns b only in about 1 of 6 cases"
   [weights]
@@ -1531,39 +1572,39 @@ Default method returns true."
           item
           (recur (int r) (rest items)))))))
 
-(defn get-rand-weighted-items [n group]
+(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-items [n group]
   (repeatedly n #(get-rand-weighted-item group)))
 
 (comment
   (frequencies (get-rand-weighted-items 1000 {:a 1 :b 5 :c 4}))
   (frequencies (repeatedly 1000 #(percent-chance 90))))
 
-(defn high-weighted "for values of x 0-1 returns y values 0-1 with higher value of y than a linear function"
+(defn ^{:metadoc/categories #{:cat/utils}} high-weighted "for values of x 0-1 returns y values 0-1 with higher value of y than a linear function"
   [x]
   (- 1 (Math/pow (- 1 x) 2)))
 
 (defn- high-weighted-rand-int [n]
   (int (* n (high-weighted (rand)))))
 
-(defn high-weighted-rand-nth [coll]
+(defn ^{:metadoc/categories #{:cat/utils}} high-weighted-rand-nth [coll]
   (nth coll (high-weighted-rand-int (count coll))))
 
 ;; CAMERA (is only world, see use cases )
 
-(defn camera-position
+(defn ^{:metadoc/categories #{:cat/g}} camera-position
   "Returns camera position as [x y] vector."
   [^Camera camera]
   [(.x (.position camera))
    (.y (.position camera))])
 
-(defn camera-set-position!
+(defn ^{:metadoc/categories #{:cat/g}} camera-set-position!
   "Sets x and y and calls update on the camera."
   [^Camera camera [x y]]
   (set! (.x (.position camera)) (float x))
   (set! (.y (.position camera)) (float y))
   (.update camera))
 
-(defn frustum [^Camera camera]
+(defn ^{:metadoc/categories #{:cat/g}} frustum [^Camera camera]
   (let [frustum-points (for [^Vector3 point (take 4 (.planePoints (.frustum camera)))
                              :let [x (.x point)
                                    y (.y point)]]
@@ -1574,13 +1615,13 @@ Default method returns true."
         top-y    (apply max (map second frustum-points))]
     [left-x right-x bottom-y top-y]))
 
-(defn visible-tiles [camera]
+(defn ^{:metadoc/categories #{:cat/g}} visible-tiles [camera]
   (let [[left-x right-x bottom-y top-y] (frustum camera)]
     (for  [x (range (int left-x)   (int right-x))
            y (range (int bottom-y) (+ 2 (int top-y)))]
       [x y])))
 
-(defn calculate-zoom
+(defn ^{:metadoc/categories #{:cat/g}} calculate-zoom
   "calculates the zoom value for camera to see all the 4 points."
   [^Camera camera & {:keys [left top right bottom]}]
   (let [viewport-width  (.viewportWidth  camera)
@@ -1599,16 +1640,16 @@ Default method returns true."
         new-zoom (max vp-ratio-w vp-ratio-h)]
     new-zoom))
 
-(defn zoom [^OrthographicCamera camera]
+(defn ^{:metadoc/categories #{:cat/g}} zoom [^OrthographicCamera camera]
   (.zoom camera))
 
-(defn set-zoom!
+(defn ^{:metadoc/categories #{:cat/g}} set-zoom!
   "Sets the zoom value and updates."
   [^OrthographicCamera camera amount]
   (set! (.zoom camera) amount)
   (.update camera))
 
-(defn reset-zoom!
+(defn ^{:metadoc/categories #{:cat/g}} reset-zoom!
   "Sets the zoom value to 1."
   [camera]
   (set-zoom! camera 1))
@@ -1616,13 +1657,13 @@ Default method returns true."
 ;;
 
 (defprotocol Pathfinding
-  (potential-fields-follow-to-enemy [ctx eid]))
+  (^{:metadoc/categories #{:cat/world}} potential-fields-follow-to-enemy [ctx eid])) ; private?!
 
 (defprotocol DrawItemOnCursor
-  (draw-item-on-cursor [g ctx]))
+  (draw-item-on-cursor [g ctx])) ; TODO should be private
 
 (defprotocol WorldGen
-  (->world [ctx world-id]))
+  (->world [ctx world-id])) ; ???
 
 ;; ctx/vis-ui
 
@@ -1670,36 +1711,36 @@ Default method returns true."
 
 ;; gdx scene2d helper
 
-(defn actor-id [^Actor actor]
+(defn ^{:metadoc/categories #{:cat/ui}} actor-id [^Actor actor]
   (.getUserObject actor))
 
-(defn set-id! [^Actor actor id]
+(defn ^{:metadoc/categories #{:cat/ui}} set-id! [^Actor actor id]
   (.setUserObject actor id))
 
-(defn set-name! [^Actor actor name]
+(defn ^{:metadoc/categories #{:cat/ui}} set-name! [^Actor actor name]
   (.setName actor name))
 
-(defn actor-name [^Actor actor]
+(defn ^{:metadoc/categories #{:cat/ui}} actor-name [^Actor actor]
   (.getName actor))
 
-(defn visible? [^Actor actor] ; used
+(defn ^{:metadoc/categories #{:cat/ui}} visible? [^Actor actor] ; used
   (.isVisible actor))
 
-(defn set-visible! [^Actor actor bool]
+(defn ^{:metadoc/categories #{:cat/ui}} set-visible! [^Actor actor bool]
   (.setVisible actor (boolean bool)))
 
-(defn toggle-visible! [actor] ; used
+(defn ^{:metadoc/categories #{:cat/ui}} toggle-visible! [actor] ; used
   (set-visible! actor (not (visible? actor))))
 
-(defn set-position! [^Actor actor x y]
+(defn ^{:metadoc/categories #{:cat/ui}} set-position! [^Actor actor x y]
   (.setPosition actor x y))
 
-(defn set-center! [^Actor actor x y]
+(defn ^{:metadoc/categories #{:cat/ui}} set-center! [^Actor actor x y]
   (set-position! actor
                  (- x (/ (.getWidth actor) 2))
                  (- y (/ (.getHeight actor) 2))))
 
-(defn set-touchable!
+(defn ^{:metadoc/categories #{:cat/ui}} set-touchable!
   ":children-only, :disabled or :enabled."
   [^Actor actor touchable]
   (.setTouchable actor (case touchable
@@ -1707,22 +1748,22 @@ Default method returns true."
                          :disabled      Touchable/disabled
                          :enabled       Touchable/enabled)))
 
-(defn add-listener! [^Actor actor listener]
+(defn ^{:metadoc/categories #{:cat/ui}} add-listener! [^Actor actor listener]
   (.addListener actor listener))
 
-(defn remove!
+(defn ^{:metadoc/categories #{:cat/ui}} remove!
   "Removes this actor from its parent, if it has a parent."
   [^Actor actor]
   (.remove actor))
 
-(defn parent
+(defn ^{:metadoc/categories #{:cat/ui}} parent
   "Returns the parent actor, or null if not in a group."
   [^Actor actor]
   (.getParent actor))
 
 ;; vis-tooltip
 
-(defn add-tooltip!
+(defn ^{:metadoc/categories #{:cat/ui}} add-tooltip!
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
   [^Actor actor tooltip-text]
   (let [text? (string? tooltip-text)
@@ -1742,30 +1783,30 @@ Default method returns true."
     (.setTarget  tooltip ^Actor actor)
     (.setContent tooltip ^Actor label)))
 
-(defn remove-tooltip! [^Actor actor]
+(defn ^{:metadoc/categories #{:cat/ui}} remove-tooltip! [^Actor actor]
   (Tooltip/removeTooltip actor))
 
-(defn find-ancestor-window ^Window [^Actor actor]
+(defn ^{:metadoc/categories #{:cat/ui}} find-ancestor-window ^Window [^Actor actor]
   (if-let [p (parent actor)]
     (if (instance? Window p)
       p
       (find-ancestor-window p))
     (throw (Error. (str "Actor has no parent window " actor)))))
 
-(defn pack-ancestor-window! [^Actor actor]
+(defn ^{:metadoc/categories #{:cat/ui}} pack-ancestor-window! [^Actor actor]
   (.pack (find-ancestor-window actor)))
 
-(defn children
+(defn ^{:metadoc/categories #{:cat/ui}} children
   "Returns an ordered list of child actors in this group."
   [^Group group]
   (seq (.getChildren group)))
 
-(defn clear-children!
+(defn ^{:metadoc/categories #{:cat/ui}} clear-children!
   "Removes all actors from this group and unfocuses them."
   [^Group group]
   (.clearChildren group))
 
-(defn add-actor!
+(defn ^{:metadoc/categories #{:cat/ui}} add-actor!
   "Adds an actor as a child of this group, removing it from its previous parent. If the actor is already a child of this group, no changes are made."
   [^Group group actor]
   (.addActor group actor))
@@ -1808,28 +1849,28 @@ Default method returns true."
       ([id not-found]
        (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
 
-(defn ->stage
+(defn ^{:metadoc/categories #{:cat/ui}} ->stage
   "Stage implements clojure.lang.ILookup (get) on actor id."
   [{{:keys [gui-view batch]} :context/graphics} actors]
   (let [stage (->stage* (:viewport gui-view) batch)]
     (run! #(.addActor stage %) actors)
     stage))
 
-(defn stage-get ^Stage [context]
+(defn ^{:metadoc/categories #{:cat/ui}} stage-get ^Stage [context]
   (:stage ((current-screen context) 1)))
 
-(defn mouse-on-actor? [context]
+(defn ^{:metadoc/categories #{:cat/ui}} mouse-on-actor? [context]
   (let [[x y] (gui-mouse-position context)
         touchable? true]
     (.hit (stage-get context) x y touchable?)))
 
-(defn stage-add! [ctx actor]
+(defn ^{:metadoc/categories #{:cat/ui}} stage-add! [ctx actor]
   (-> ctx stage-get (.addActor actor))
   ctx)
 
 ;; ui
 
-(defn set-cell-opts [^Cell cell opts]
+(defn ^{:metadoc/categories #{:cat/ui}} set-cell-opts [^Cell cell opts]
   (doseq [[option arg] opts]
     (case option
       :fill-x?    (.fillX     cell)
@@ -1847,7 +1888,7 @@ Default method returns true."
       :right?     (.right     cell)
       :left?      (.left      cell))))
 
-(defn add-rows!
+(defn ^{:metadoc/categories #{:cat/ui}} add-rows!
   "rows is a seq of seqs of columns.
   Elements are actors or nil (for just adding empty cells ) or a map of
   {:actor :expand? :bottom?  :colspan int :pad :pad-bottom}. Only :actor is required."
@@ -1861,11 +1902,11 @@ Default method returns true."
     (.row table))
   table)
 
-(defn set-table-opts [^Table table {:keys [rows cell-defaults]}]
+(defn ^{:metadoc/categories #{:cat/ui}} set-table-opts [^Table table {:keys [rows cell-defaults]}]
   (set-cell-opts (.defaults table) cell-defaults)
   (add-rows! table rows))
 
-(defn ->horizontal-separator-cell [colspan]
+(defn ^{:metadoc/categories #{:cat/ui}} ->horizontal-separator-cell [colspan]
   {:actor (Separator. "default")
    :pad-top 2
    :pad-bottom 2
@@ -1873,7 +1914,7 @@ Default method returns true."
    :fill-x? true
    :expand-x? true})
 
-(defn ->vertical-separator-cell []
+(defn ^{:metadoc/categories #{:cat/ui}} ->vertical-separator-cell []
   {:actor (Separator. "vertical")
    :pad-top 2
    :pad-bottom 2
@@ -1933,7 +1974,7 @@ Default method returns true."
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defn ->actor
+(defn ^{:metadoc/categories #{:cat/ui}} ->actor
   "[com.badlogic.gdx.scenes.scene2d.Actor](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/Actor.html)"
   [{:keys [draw act]}]
   (proxy [Actor] []
@@ -1956,23 +1997,23 @@ Default method returns true."
        ([id# not-found#]
         (or (find-actor-with-id ~'this id#) not-found#)))))
 
-(defn ->group [{:keys [actors] :as opts}]
+(defn ^{:metadoc/categories #{:cat/ui}} ->group [{:keys [actors] :as opts}]
   (let [group (proxy-ILookup Group [])]
     (run! #(add-actor! group %) actors)
     (set-opts group opts)))
 
-(defn ->horizontal-group [{:keys [space pad]}]
+(defn ^{:metadoc/categories #{:cat/ui}} ->horizontal-group [{:keys [space pad]}]
   (let [group (proxy-ILookup HorizontalGroup [])]
     (when space (.space group (float space)))
     (when pad   (.pad   group (float pad)))
     group))
 
-(defn ->vertical-group [actors]
+(defn ^{:metadoc/categories #{:cat/ui}} ->vertical-group [actors]
   (let [group (proxy-ILookup VerticalGroup [])]
     (run! #(add-actor! group %) actors)
     group))
 
-(defn ->button-group
+(defn ^{:metadoc/categories #{:cat/ui}} ->button-group
   "https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/ButtonGroup.html"
   [{:keys [max-check-count min-check-count]}]
   (let [button-group (ButtonGroup.)]
@@ -1980,12 +2021,12 @@ Default method returns true."
     (.setMinCheckCount button-group min-check-count)
     button-group))
 
-(defn ->text-button [text on-clicked]
+(defn ^{:metadoc/categories #{:cat/ui}} ->text-button [text on-clicked]
   (let [button (VisTextButton. ^String text)]
     (.addListener button (->change-listener on-clicked))
     button))
 
-(defn ->check-box
+(defn ^{:metadoc/categories #{:cat/ui}} ->check-box
   "on-clicked is a fn of one arg, taking the current isChecked state
   [com.kotcrab.vis.ui.widget.VisCheckBox](https://www.javadoc.io/static/com.kotcrab.vis/vis-ui/1.5.3/com/kotcrab/vis/ui/widget/VisCheckBox.html)"
   [text on-clicked checked?]
@@ -1997,14 +2038,14 @@ Default method returns true."
                       (on-clicked (.isChecked actor)))))
     button))
 
-(defn ->select-box [{:keys [items selected]}]
+(defn ^{:metadoc/categories #{:cat/ui}} ->select-box [{:keys [items selected]}]
   (doto (VisSelectBox.)
     (.setItems (into-array items))
     (.setSelected selected)))
 
 ; TODO give directly texture-region
 ; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
-(defn ->image-button
+(defn ^{:metadoc/categories #{:cat/ui}} ->image-button
   ([image on-clicked]
    (->image-button image on-clicked {}))
 
@@ -2017,11 +2058,11 @@ Default method returns true."
      (.addListener button (->change-listener on-clicked))
      button)))
 
-(defn ->table ^Table [opts]
+(defn ^{:metadoc/categories #{:cat/ui}} ->table ^Table [opts]
   (-> (proxy-ILookup VisTable [])
       (set-opts opts)))
 
-(defn ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
+(defn ^{:metadoc/categories #{:cat/ui}} ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
   (-> (let [window (doto (proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
                      (.setModal (boolean modal?)))]
         (when close-button?    (.addCloseButton window))
@@ -2030,25 +2071,25 @@ Default method returns true."
         window)
       (set-opts opts)))
 
-(defn ->label ^VisLabel [text]
+(defn ^{:metadoc/categories #{:cat/ui}} ->label ^VisLabel [text]
   (VisLabel. ^CharSequence text))
 
-(defn ->text-field [^String text opts]
+(defn ^{:metadoc/categories #{:cat/ui}} ->text-field [^String text opts]
   (-> (VisTextField. text)
       (set-opts opts)))
 
 ; TODO is not decendend of SplitPane anymore => check all type hints here
-(defn ->split-pane [{:keys [^Actor first-widget
+(defn ^{:metadoc/categories #{:cat/ui}} ->split-pane [{:keys [^Actor first-widget
                             ^Actor second-widget
                             ^Boolean vertical?] :as opts}]
   (-> (VisSplitPane. first-widget second-widget vertical?)
       (set-actor-opts opts)))
 
-(defn ->stack [actors]
+(defn ^{:metadoc/categories #{:cat/ui}} ->stack [actors]
   (proxy-ILookup Stack [(into-array Actor actors)]))
 
 ; TODO widget also make, for fill parent
-(defn ->image-widget
+(defn ^{:metadoc/categories #{:cat/ui}} ->image-widget
   "Takes either an image or drawable. Opts are :scaling, :align and actor opts."
   [object {:keys [scaling align fill-parent?] :as opts}]
   (-> (let [^com.badlogic.gdx.scenes.scene2d.ui.Image image (->vis-image object)]
@@ -2059,10 +2100,10 @@ Default method returns true."
       (set-opts opts)))
 
 ; => maybe with VisImage not necessary anymore?
-(defn ->texture-region-drawable [^TextureRegion texture-region]
+(defn ^{:metadoc/categories #{:cat/ui}} ->texture-region-drawable [^TextureRegion texture-region]
   (TextureRegionDrawable. texture-region))
 
-(defn ->scroll-pane [actor]
+(defn ^{:metadoc/categories #{:cat/ui}} ->scroll-pane [actor]
   (let [scroll-pane (VisScrollPane. actor)]
     (.setFlickScroll scroll-pane false)
     (.setFadeScrollBars scroll-pane false)
@@ -2071,7 +2112,7 @@ Default method returns true."
 ; TODO set to preferred width/height ??? why layouting not working properly?
 ; use a tree?
 ; make example with plain data
-(defn ->scroll-pane-cell [ctx rows]
+(defn ^{:metadoc/categories #{:cat/ui}} ->scroll-pane-cell [ctx rows]
   (let [table (->table {:rows rows
                         :cell-defaults {:pad 1}
                         :pack? true})
@@ -2083,14 +2124,14 @@ Default method returns true."
 (defn- button-class? [actor]
   (some #(= Button %) (supers (class actor))))
 
-(defn button?
+(defn ^{:metadoc/categories #{:cat/ui}} button?
   "Returns true if the actor or its parent is a button."
   [actor]
   (or (button-class? actor)
       (and (parent actor)
            (button-class? (parent actor)))))
 
-(defn window-title-bar?
+(defn ^{:metadoc/categories #{:cat/ui}} window-title-bar?
   "Returns true if the actor is a window title bar."
   [actor]
   (when (instance? Label actor)
@@ -2101,7 +2142,7 @@ Default method returns true."
 
 (def ^:private image-file "images/moon_background.png")
 
-(defn ->background-image [ctx]
+(defn ^{:metadoc/categories #{:cat/ui}} ->background-image [ctx]
   (->image-widget (->image ctx image-file)
                   {:fill-parent? true
                    :scaling :fill
@@ -2118,7 +2159,7 @@ Default method returns true."
        ~@body
        (str s#))))
 
-(defn error-window! [ctx throwable]
+(defn ^{:metadoc/categories #{:cat/ui}} error-window! [ctx throwable]
   (binding [*print-level* 5]
     (pretty-pst throwable 24))
   (stage-add! ctx (->window {:title "Error"
@@ -2185,28 +2226,6 @@ Default method returns true."
   (->mk [_ _ctx]
     (->actor {:draw draw-player-message
               :act check-remove-message})))
-
-; TODO render text label free-skill-points
-; (str "Free points: " (:entity/free-skill-points @player-entity))
-(defn ->skill-window [context]
-  (->window {:title "Skills"
-             :id :skill-window
-             :visible? false
-             :cell-defaults {:pad 10}
-             :rows [(for [id [:skills/projectile
-                              :skills/meditation
-                              :skills/spawn
-                              :skills/melee-attack]
-                          :let [; get-property in callbacks if they get changed, this is part of context permanently
-                                button (->image-button ; TODO reuse actionbar button scale?
-                                                       (:entity/image (build-property context id)) ; TODO here anyway taken
-                                                       ; => should probably build this window @ game start
-                                                       (fn [ctx]
-                                                         (effect! ctx (player-clicked-skillmenu ctx (build-property ctx id)))))]]
-                      (do
-                       (add-tooltip! button #(->info-text (build-property % id) %)) ; TODO no player modifiers applied (see actionbar)
-                       button))]
-             :pack? true}))
 
 ;; properties
 
@@ -2337,12 +2356,12 @@ Default method returns true."
   (build-property [{{:keys [db]} :context/properties :as ctx} id]
     (build ctx (safe-get db id))))
 
-(defn all-properties [{{:keys [db]} :context/properties :as ctx} type]
+(defn ^{:metadoc/categories #{:cat/props}} all-properties [{{:keys [db]} :context/properties :as ctx} type]
   (->> (vals db)
        (filter #(= type (->type %)))
        (map #(build ctx %))))
 
-(defn update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
+(defn- update! [{{:keys [db]} :context/properties :as ctx} {:keys [property/id] :as property}]
   {:pre [(contains? property :property/id)
          (contains? db id)]}
   (validate property)
@@ -2350,7 +2369,7 @@ Default method returns true."
       (update-in [:context/properties :db] assoc id property)
       async-write-to-file!))
 
-(defn delete! [{{:keys [db]} :context/properties :as ctx} property-id]
+(defn- delete! [{{:keys [db]} :context/properties :as ctx} property-id]
   {:pre [(contains? db property-id)]}
   (-> ctx
       (update-in [:context/properties :db] dissoc property-id)
@@ -2488,12 +2507,12 @@ Default method returns true."
 
 (defn- ->scrollable-choose-window [ctx rows]
   (->window {:title "Choose"
-                :modal? true
-                :close-button? true
-                :center? true
-                :close-on-escape? true
-                :rows [[(->scroll-pane-cell ctx rows)]]
-                :pack? true}))
+             :modal? true
+             :close-button? true
+             :center? true
+             :close-on-escape? true
+             :rows [[(->scroll-pane-cell ctx rows)]]
+             :pack? true}))
 
 (defn- ->play-sound-button [sound-file]
   (->text-button "play!" #(play-sound! % sound-file)))
@@ -2946,14 +2965,14 @@ Default method returns true."
       (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
       '(:c :b :a :null :null))))
 
-(defsystem create "Create entity with eid for txs side-effects. Default nil."
+(defsystem ^{:metadoc/categories #{:cat/entity}} create "Create entity with eid for txs side-effects. Default nil."
   [_ entity ctx])
 (defmethod create :default [_ entity ctx])
 
-(defsystem destroy "FIXME" [_ entity ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity}} destroy "FIXME" [_ entity ctx])
 (defmethod destroy :default [_ entity ctx])
 
-(defsystem tick "FIXME" [_ entity ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity}} tick "FIXME" [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
 ; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
@@ -2966,16 +2985,16 @@ Default method returns true."
 ; then fetch all components which implement render-below
 ; and have parent-id in entity-ids, etc.
 
-(defsystem render-below "FIXME" [_ entity* g ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity}} render-below "FIXME" [_ entity* g ctx])
 (defmethod render-below :default [_ entity* g ctx])
 
-(defsystem render "FIXME" [_ entity* g ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity}} render "FIXME" [_ entity* g ctx])
 (defmethod render :default [_ entity* g ctx])
 
-(defsystem render-above "FIXME" [_ entity* g ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity}} render-above "FIXME" [_ entity* g ctx])
 (defmethod render-above :default [_ entity* g ctx])
 
-(defsystem render-info "FIXME" [_ entity* g ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity}} render-info "FIXME" [_ entity* g ctx])
 (defmethod render-info :default [_ entity* g ctx])
 
 (def ^:private render-systems [render-below
@@ -2998,12 +3017,12 @@ Default method returns true."
 
 (def hpbar-height-px 5)
 
-(def z-orders [:z-order/on-ground
-               :z-order/ground
-               :z-order/flying
-               :z-order/effect])
+(def ^:private z-orders [:z-order/on-ground
+                         :z-order/ground
+                         :z-order/flying
+                         :z-order/effect])
 
-(def render-order (define-order z-orders))
+(def ^:private render-order (define-order z-orders))
 
 (defrecord Entity [position
                    left-bottom
@@ -3016,13 +3035,13 @@ Default method returns true."
                    z-order
                    rotation-angle])
 
-(defn ->Body [{[x y] :position
-               :keys [position
-                      width
-                      height
-                      collides?
-                      z-order
-                      rotation-angle]}]
+(defn- ->Body [{[x y] :position
+                :keys [position
+                       width
+                       height
+                       collides?
+                       z-order
+                       rotation-angle]}]
   (assert position)
   (assert width)
   (assert height)
@@ -3046,33 +3065,34 @@ Default method returns true."
     :z-order z-order
     :rotation-angle (or rotation-angle 0)}))
 
-(def ^{:doc "For effects just to have a mouseover body size for debugging purposes."}
+(def ^{:doc "For effects just to have a mouseover body size for debugging purposes."
+       :private true}
   effect-body-props
   {:width 0.5
    :height 0.5
    :z-order :z-order/effect})
 
-(defn entity-tile [entity*]
+(defn ^{:metadoc/categories #{:cat/entity}} entity-tile [entity*]
   (->tile (:position entity*)))
 
-(defn direction [entity* other-entity*]
+(defn ^{:metadoc/categories #{:cat/entity}} direction [entity* other-entity*]
   (v-direction (:position entity*) (:position other-entity*)))
 
-(defn collides? [entity* other-entity*]
+(defn ^{:metadoc/categories #{:cat/entity}} collides? [entity* other-entity*]
   (shape-collides? entity* other-entity*))
 
 (defprotocol State
-  (entity-state [_])
-  (state-obj [_]))
+  (^{:metadoc/categories #{:cat/entity}} entity-state [_])
+  (^{:metadoc/categories #{:cat/entity}} state-obj [_]))
 
 (defprotocol Inventory
-  (can-pickup-item? [_ item]))
+  (^{:metadoc/categories #{:cat/entity}} can-pickup-item? [_ item]))
 
 (defprotocol Stats
-  (entity-stat [_ stat] "Calculating value of the stat w. modifiers"))
+  (^{:metadoc/categories #{:cat/entity}} entity-stat [_ stat] "Calculating value of the stat w. modifiers"))
 
 (defprotocol Modifiers
-  (->modified-value [_ modifier-k base-value]))
+  (^{:metadoc/categories #{:cat/entity}} ->modified-value [_ modifier-k base-value]))
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?
@@ -3095,7 +3115,7 @@ Default method returns true."
 
 ; does not take into account size of entity ...
 ; => assert bodies <1 width then
-(defn line-of-sight? [context source* target*]
+(defn ^{:metadoc/categories #{:cat/entity}} line-of-sight? [context source* target*]
   (and (or (not (:entity/player? source*))
            (on-screen? target* context))
        (not (and los-checks?
@@ -3246,10 +3266,10 @@ Default method returns true."
     ctx))
 
 (defprotocol Animation
-  (anim-tick [_ delta])
-  (restart [_])
-  (anim-stopped? [_])
-  (current-frame [_]))
+  (^:private anim-tick [_ delta])
+  (^:private restart [_])
+  (^:private anim-stopped? [_])
+  (^:private current-frame [_]))
 
 (defrecord ImmutableAnimation [frames frame-duration looping? cnt maxcnt]
   Animation
@@ -3358,12 +3378,12 @@ Default method returns true."
   (info-text [_ _ctx]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
-(defn enemy-faction [{:keys [entity/faction]}]
+(defn ^{:metadoc/categories #{:cat/entity}} enemy-faction [{:keys [entity/faction]}]
   (case faction
     :evil :good
     :good :evil))
 
-(defn friendly-faction [{:keys [entity/faction]}]
+(defn ^{:metadoc/categories #{:cat/entity}} friendly-faction [{:keys [entity/faction]}]
   faction)
 
 (defcomponent :effect.entity/convert
@@ -3617,33 +3637,33 @@ Default method returns true."
 
 ;; entity (-state)
 
-(defsystem enter "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 
-(defsystem exit  "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} exit  "FIXME" [_ ctx])
 (defmethod exit :default  [_ ctx])
 
 ;; Player-State
 
-(defsystem player-enter "FIXME" [_])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} player-enter "FIXME" [_])
 (defmethod player-enter :default [_])
 
-(defsystem pause-game? "FIXME" [_])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} pause-game? "FIXME" [_])
 (defmethod pause-game? :default [_])
 
-(defsystem manual-tick "FIXME" [_ ctx])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} manual-tick "FIXME" [_ ctx])
 (defmethod manual-tick :default [_ ctx])
 
-(defsystem clicked-inventory-cell "FIXME" [_ cell])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} clicked-inventory-cell "FIXME" [_ cell])
 (defmethod clicked-inventory-cell :default [_ cell])
 
-(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
+(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} clicked-skillmenu-skill "FIXME" [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
 (defn- add-vs [vs]
   (v-normalise (reduce v-add [0 0] vs)))
 
-(defn WASD-movement-vector []
+(defn ^{:metadoc/categories #{:cat/utils}} WASD-movement-vector []
   (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
         l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
         u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
@@ -3659,9 +3679,9 @@ Default method returns true."
 ;;;;
 ;;;;
 
-(defsystem op-value-text "FIXME" [_])
-(defsystem op-apply "FIXME" [_ base-value])
-(defsystem op-order "FIXME" [_])
+(defsystem ^{:metadoc/categories #{:cat/op-sys}} op-value-text "FIXME" [_])
+(defsystem ^{:metadoc/categories #{:cat/op-sys}} op-apply "FIXME" [_ base-value])
+(defsystem ^{:metadoc/categories #{:cat/op-sys}} op-order "FIXME" [_])
 
 (defn- +? [n]
   (case (math/signum n)
@@ -3753,6 +3773,10 @@ Default method returns true."
   (fn [values]
     (conj values value)))
 
+(defn- remove-one [coll item]
+  (let [[n m] (split-with (partial not= item) coll)]
+    (concat n (rest m))))
+
 (defn- remove-value [value]
   (fn [values]
     {:post [(= (count %) (dec (count values)))]}
@@ -3802,6 +3826,9 @@ Default method returns true."
 ; and then make it negative .... @ applicator
 (def ^:private positive-modifier-color "[MODIFIER_BLUE]" #_"[LIME]")
 (def ^:private negative-modifier-color "[MODIFIER_BLUE]" #_"[SCARLET]")
+
+(defn- k->pretty-name [k]
+  (str/capitalize (name k)))
 
 (defn mod-info-text [modifiers]
   (str "[MODIFIER_BLUE]"
@@ -4267,7 +4294,11 @@ Default method returns true."
    :overview {:title "Apps" ; - only 1 ? - no overview - ?
               :columns 10}})
 
-(defn start-app! [properties-edn-file]
+(defn ^{:metadoc/categories #{:cat/app}
+        :doc "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
+Sets [[app-state]] atom to the context."}
+  start-app!
+  [properties-edn-file]
   (let [ctx (map->Ctx (->ctx-properties properties-edn-file))
         app (build-property ctx :app/core)]
     (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
