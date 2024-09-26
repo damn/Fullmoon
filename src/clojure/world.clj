@@ -6,17 +6,17 @@
 
   | Symbol           | Meaning                                        |
   | ---------------  | -----------------------------------------------|
-  | `actor`          | A UI actor, not immutable, from libgdx scene2d: `com.badlogic.gdx.scenes.scene2d.Actor`        |
   | `ctx`            | The whole app is in one clojure record :Context - `clojure.world/Ctx`, consits of 'components', extendable                  |
   | `component`      | vector `[k v]` or `[k]` or `[k v1 v2 ..]`, can be configured in editor if data schema is given      |
-  | `cell`/`cell*`   | Cells of the grid `clojure.world.GridCell`     |
-  | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
+  | `system`         | multimethod dispatching on ffirst              |
   | `eid` , `entity` | entity atom                                    |
   | `entity*`        | entity value (defrecord `clojure.world/Entity`), consists of components, extendable |
+  | `actor`          | A UI actor, not immutable, from libgdx scene2d: `com.badlogic.gdx.scenes.scene2d.Actor`        |
+  | `cell`/`cell*`   | Cells of the grid `clojure.world.GridCell`     |
+  | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
   | `g`              | `clojure.world.Graphics`, consists of graphics components, extendable                       |
   | `grid`           | `data.grid2d.Grid`                             |
   | `image`          | `clojure.world.Image`                          |
-  | `system`         | multimethod dispatching on ffirst              |
   | `position`       | `[x y]` vector                                 |"
   {:metadoc/categories {:cat/app "Application"
                         :cat/component "Component"
@@ -536,7 +536,9 @@ Default method returns true."
        result)
       (effect! ctx result))))
 
-(defn ^{:metadoc/categories #{:cat/ctx}} effect! [ctx txs]
+(defn effect!
+  {:metadoc/categories #{:cat/ctx}}
+  [ctx txs]
   (reduce (fn [ctx tx]
             (if (nil? tx)
               ctx
