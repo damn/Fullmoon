@@ -1,6 +1,4 @@
-A programming language for game development.
-
-It is based around the idea to keep the state of a game in one data structure named context/ctx.
+The name ctx comes from context and the idea of keeping the whole application state and game world in one data structure.
 
 The whole game content is stored in `resources/properties.edn` and can be configured in the GUI-editor.
 
