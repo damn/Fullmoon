@@ -88,6 +88,19 @@
 
 ;;;; 🔧 Utils
 
+(defn- add-vs [vs]
+  (v-normalise (reduce v-add [0 0] vs)))
+
+(defn WASD-movement-vector []
+  (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
+        l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
+        u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
+        d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
+    (when (or r l u d)
+      (let [v (add-vs (remove nil? [r l u d]))]
+        (when (pos? (v-length v))
+          v)))))
+
 (defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.
   Consumes sequences up to the first match, will consume the entire sequence
@@ -2916,23 +2929,9 @@ Returns ctx."
 
 (defn- entities [ctx] (context-ecs ctx)) ; dangerous name!
 
-(defcomponent :entity/uid
-  {:let uid}
-  (create [_ entity ctx]
-    (assert (number? uid))
-    (update ctx context-ecs assoc uid entity))
-
-  (destroy [_ _entity ctx]
-    (assert (contains? (entities ctx) uid))
-    (update ctx context-ecs dissoc uid)))
-
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
-
-(defcomponent :entity/id
-  (create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
-  (destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
 
 (defn- create-e-system [eid]
   (for [component @eid]
@@ -3065,60 +3064,6 @@ Returns ctx."
 (defn- tx-assoc-image-current-frame [eid animation]
   [:e/assoc eid :entity/image (current-frame animation)])
 
-(defcomponent :entity/animation
-  {:data :data/animation
-   :let animation}
-  (create [_ eid _ctx]
-    [(tx-assoc-image-current-frame eid animation)])
-
-  (tick [[k _] eid ctx]
-    [(tx-assoc-image-current-frame eid animation)
-     [:e/assoc eid k (anim-tick animation (delta-time ctx))]]))
-
-(defcomponent :entity/delete-after-animation-stopped?
-  (create [_ entity _ctx]
-    (-> @entity :entity/animation :looping? not assert))
-
-  (tick [_ entity _ctx]
-    (when (anim-stopped? (:entity/animation @entity))
-      [[:e/destroy entity]])))
-
-(defcomponent :entity/clickable
-  (render [[_ {:keys [text]}]
-           {:keys [entity/mouseover?] :as entity*}
-           g
-           _ctx]
-    (when (and mouseover? text)
-      (let [[x y] (:position entity*)]
-        (draw-text g
-                   {:text text
-                    :x x
-                    :y (+ y (:half-height entity*))
-                    :up? true})))))
-
-(defcomponent :entity/delete-after-duration
-  {:let counter}
-  (->mk [[_ duration] ctx]
-    (->counter ctx duration))
-
-  (info-text [_ ctx]
-    (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio ctx counter)) "/1[]"))
-
-  (tick [_ eid ctx]
-    (when (stopped? ctx counter)
-      [[:e/destroy eid]])))
-
-(defcomponent :entity/destroy-audiovisual
-  {:let audiovisuals-id}
-  (destroy [_ entity ctx]
-    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
-
-(defcomponent :entity/faction
-  {:let faction
-   :data [:enum [:good :evil]]}
-  (info-text [_ _ctx]
-    (str "[SLATE]Faction: " (name faction) "[]")))
-
 (defn ^{:metadoc/categories #{:cat/entity}} enemy-faction [{:keys [entity/faction]}]
   (case faction
     :evil :good
@@ -3127,42 +3072,10 @@ Returns ctx."
 (defn ^{:metadoc/categories #{:cat/entity}} friendly-faction [{:keys [entity/faction]}]
   faction)
 
-(defcomponent :entity/image
-  {:data :image
-   :let image}
-  (render [_ entity* g _ctx]
-    (draw-rotated-centered-image g
-                                 image
-                                 (or (:rotation-angle entity*) 0)
-                                 (:position entity*))))
-
-(defcomponent :entity/line-render
-  {:let {:keys [thick? end color]}}
-  (render [_ entity* g _ctx]
-    (let [position (:position entity*)]
-      (if thick?
-        (with-shape-line-width g 4 #(draw-line g position end color))
-        (draw-line g position end color)))))
-
 (def ^:private outline-alpha 0.4)
 (def ^:private enemy-color    [1 0 0 outline-alpha])
 (def ^:private friendly-color [0 1 0 outline-alpha])
 (def ^:private neutral-color  [1 1 1 outline-alpha])
-
-(defcomponent :entity/mouseover?
-  (render-below [_ {:keys [entity/faction] :as entity*} g ctx]
-    (let [player-entity* (player-entity* ctx)]
-      (with-shape-line-width g 3
-        #(draw-ellipse g
-                       (:position entity*)
-                       (:half-width entity*)
-                       (:half-height entity*)
-                       (cond (= faction (enemy-faction player-entity*))
-                             enemy-color
-                             (= faction (friendly-faction player-entity*))
-                             friendly-color
-                             :else
-                             neutral-color))))))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
@@ -3200,26 +3113,6 @@ Returns ctx."
         (try-move grid body (assoc movement :direction [xdir 0]))
         (try-move grid body (assoc movement :direction [0 ydir])))))
 
-(defcomponent :entity/movement
-  {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
-  (tick [_ eid ctx]
-    (assert (m/validate movement-speed-schema speed))
-    (assert (or (zero? (v-length direction))
-                (v-normalised? direction)))
-    (when-not (or (zero? (v-length direction))
-                  (nil? speed)
-                  (zero? speed))
-      (let [movement (assoc movement :delta-time (delta-time ctx))
-            body @eid]
-        (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
-                          (try-move-solid-body (:context/grid ctx) body movement)
-                          (move-body body movement))]
-          [[:e/assoc eid :position    (:position    body)]
-           [:e/assoc eid :left-bottom (:left-bottom body)]
-           (when rotate-in-movement-direction?
-             [:e/assoc eid :rotation-angle (v-get-angle-from-vector direction)])
-           [:tx/position-changed eid]])))))
-
 ; TODO add teleport effect ~ or tx
 
 (def ^:private shout-radius 4)
@@ -3231,30 +3124,6 @@ Returns ctx."
        (map deref)
        (filter #(= (:entity/faction %) faction))
        (map :entity/id)))
-
-(defcomponent :entity/alert-friendlies-after-duration
-  {:let {:keys [counter faction]}}
-  (tick [_ eid ctx]
-    (when (stopped? ctx counter)
-      (cons [:e/destroy eid]
-            (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
-              [:tx/event friendly-eid :alert])))))
-
-(defcomponent :entity/string-effect
-  (tick [[k {:keys [counter]}] eid context]
-    (when (stopped? context counter)
-      [[:e/dissoc eid k]]))
-
-  (render-above [[_ {:keys [text]}] entity* g _ctx]
-    (let [[x y] (:position entity*)]
-      (draw-text g
-                 {:text text
-                  :x x
-                  :y (+ y (:half-height entity*) (pixels->world-units g hpbar-height-px))
-                  :scale 2
-                  :up? true}))))
-
-;; ctx
 
 (defn- calculate-mouseover-entity [ctx]
   (let [player-entity* (player-entity* ctx)
@@ -3288,6 +3157,128 @@ Returns ctx."
      (fn [ctx]
        (assoc ctx ctx-mouseover-entity entity))]))
 
+;;;; Entity Components
+
+(defcomponent :entity/id
+  (create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
+  (destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
+
+(defcomponent :entity/uid
+  {:let uid}
+  (create [_ entity ctx]
+    (assert (number? uid))
+    (update ctx context-ecs assoc uid entity))
+
+  (destroy [_ _entity ctx]
+    (assert (contains? (entities ctx) uid))
+    (update ctx context-ecs dissoc uid)))
+
+(defcomponent :entity/movement
+  {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
+  (tick [_ eid ctx]
+    (assert (m/validate movement-speed-schema speed))
+    (assert (or (zero? (v-length direction))
+                (v-normalised? direction)))
+    (when-not (or (zero? (v-length direction))
+                  (nil? speed)
+                  (zero? speed))
+      (let [movement (assoc movement :delta-time (delta-time ctx))
+            body @eid]
+        (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
+                          (try-move-solid-body (:context/grid ctx) body movement)
+                          (move-body body movement))]
+          [[:e/assoc eid :position    (:position    body)]
+           [:e/assoc eid :left-bottom (:left-bottom body)]
+           (when rotate-in-movement-direction?
+             [:e/assoc eid :rotation-angle (v-get-angle-from-vector direction)])
+           [:tx/position-changed eid]])))))
+
+(defcomponent :entity/image
+  {:data :image
+   :let image}
+  (render [_ entity* g _ctx]
+    (draw-rotated-centered-image g
+                                 image
+                                 (or (:rotation-angle entity*) 0)
+                                 (:position entity*))))
+
+(defcomponent :entity/animation
+  {:data :data/animation
+   :let animation}
+  (create [_ eid _ctx]
+    [(tx-assoc-image-current-frame eid animation)])
+
+  (tick [[k _] eid ctx]
+    [(tx-assoc-image-current-frame eid animation)
+     [:e/assoc eid k (anim-tick animation (delta-time ctx))]]))
+
+(defcomponent :entity/clickable
+  (render [[_ {:keys [text]}]
+           {:keys [entity/mouseover?] :as entity*}
+           g
+           _ctx]
+    (when (and mouseover? text)
+      (let [[x y] (:position entity*)]
+        (draw-text g
+                   {:text text
+                    :x x
+                    :y (+ y (:half-height entity*))
+                    :up? true})))))
+
+(defcomponent :entity/delete-after-duration
+  {:let counter}
+  (->mk [[_ duration] ctx]
+    (->counter ctx duration))
+
+  (info-text [_ ctx]
+    (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio ctx counter)) "/1[]"))
+
+  (tick [_ eid ctx]
+    (when (stopped? ctx counter)
+      [[:e/destroy eid]])))
+
+(defcomponent :entity/destroy-audiovisual
+  {:let audiovisuals-id}
+  (destroy [_ entity ctx]
+    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
+
+(defcomponent :entity/faction
+  {:let faction
+   :data [:enum [:good :evil]]}
+  (info-text [_ _ctx]
+    (str "[SLATE]Faction: " (name faction) "[]")))
+
+(defcomponent :entity/delete-after-animation-stopped?
+  (create [_ entity _ctx]
+    (-> @entity :entity/animation :looping? not assert))
+
+  (tick [_ entity _ctx]
+    (when (anim-stopped? (:entity/animation @entity))
+      [[:e/destroy entity]])))
+
+(defcomponent :entity/line-render
+  {:let {:keys [thick? end color]}}
+  (render [_ entity* g _ctx]
+    (let [position (:position entity*)]
+      (if thick?
+        (with-shape-line-width g 4 #(draw-line g position end color))
+        (draw-line g position end color)))))
+
+(defcomponent :entity/mouseover?
+  (render-below [_ {:keys [entity/faction] :as entity*} g ctx]
+    (let [player-entity* (player-entity* ctx)]
+      (with-shape-line-width g 3
+        #(draw-ellipse g
+                       (:position entity*)
+                       (:half-width entity*)
+                       (:half-height entity*)
+                       (cond (= faction (enemy-faction player-entity*))
+                             enemy-color
+                             (= faction (friendly-faction player-entity*))
+                             friendly-color
+                             :else
+                             neutral-color))))))
+
 (defcomponent :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
   (info-text [_ ctx]
@@ -3301,21 +3292,28 @@ Returns ctx."
   (render-above [_ entity* g ctx]
     (draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
+(defcomponent :entity/alert-friendlies-after-duration
+  {:let {:keys [counter faction]}}
+  (tick [_ eid ctx]
+    (when (stopped? ctx counter)
+      (cons [:e/destroy eid]
+            (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
+              [:tx/event friendly-eid :alert])))))
 
-(defn- add-vs [vs]
-  (v-normalise (reduce v-add [0 0] vs)))
+(defcomponent :entity/string-effect
+  (tick [[k {:keys [counter]}] eid context]
+    (when (stopped? context counter)
+      [[:e/dissoc eid k]]))
 
-(defn ^{:metadoc/categories #{:cat/utils}} WASD-movement-vector []
-  (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
-        l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
-        u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
-        d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
-    (when (or r l u d)
-      (let [v (add-vs (remove nil? [r l u d]))]
-        (when (pos? (v-length v))
-          v)))))
-
-;;;;️
+  (render-above [[_ {:keys [text]}] entity* g _ctx]
+    (let [[x y] (:position entity*)]
+      (draw-text g
+                 {:text text
+                  :x x
+                  :y (+ y (:half-height entity*) (pixels->world-units g hpbar-height-px))
+                  :scale 2
+                  :up? true}))))
+;;;;️ Operations
 
 (defn- +? [n]
   (case (math/signum n)
@@ -3398,6 +3396,8 @@ Returns ctx."
   (= (op-apply [:op/max-mult -0.9] [5 10]) [0 0]))
  )
 
+;;;;️ Application
+
 (defn- set-first-screen [context]
   (->> context
        :context/screens
@@ -3465,7 +3465,19 @@ Returns ctx."
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
 
-;;;;
+(defrecord Ctx [])
+
+(defn start-app!
+  "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
+Sets [[app-state]] atom to the context."
+  {:metadoc/categories #{:cat/app}}
+  [properties-edn-file]
+  (let [ctx (map->Ctx (->ctx-properties properties-edn-file))
+        app (build-property ctx :app/core)]
+    (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
+                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
+
+;;;; def-attributes
 
 (defn def-attributes
   {:metadoc/categories #{:cat/props}}
@@ -3514,19 +3526,7 @@ Returns ctx."
   :body/height  :pos
   :body/flying? :boolean)
 
-(defrecord Ctx [])
-
-(defn start-app!
-  "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
-Sets [[app-state]] atom to the context."
-  {:metadoc/categories #{:cat/app}}
-  [properties-edn-file]
-  (let [ctx (map->Ctx (->ctx-properties properties-edn-file))
-        app (build-property ctx :app/core)]
-    (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
-                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
-
-;;;;
+;;;; def-type
 
 (defn def-type
  {:metadoc/categories #{:cat/props}}
@@ -3755,7 +3755,7 @@ Sets [[app-state]] atom to the context."
  )
 
 
-;;;;
+;;;; Context Components
 
 (defcomponent :context/screens
   {:data :some
