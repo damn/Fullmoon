@@ -2,6 +2,25 @@
 
 A domain-specific language for creating worlds based on [clojure](https://clojure.org/), [libgdx](https://libgdx.com/), [vis-ui](https://github.com/kotcrab/vis-ui) and [malli](https://github.com/metosin/malli).
 
+The whole game content is stored in `resources/properties.edn` and can be configured in the GUI-editor.
+
+There are 7 property-types:
+
+## 🖥️ App 
+
+## 💥 Audiovisuals 
+
+## 🐉 Creatures 
+
+## ⚔️ Items 
+
+## 🚀 Projectiles 
+
+## 🪄 Skills 
+
+## 🌎 Worlds 
+
+
 ## Screenshots
 
 <img width="1437" alt="Screenshot 2024-09-11 at 10 59 32 PM" src="https://github.com/user-attachments/assets/19c2a342-0e70-4925-a203-2e8c229e4ea0">
