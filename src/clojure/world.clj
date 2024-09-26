@@ -282,8 +282,7 @@
 (def defsystems "Map of all systems as key of name-string to var." {})
 
 (defmacro defsystem
-  "A system is a multimethod which dispatches on ffirst.
-  So for a component `[k v]` it dispatches on the component-keyword `k`."
+  "A system is a multimethod which takes a component `[k v]` and dispatches on k."
   [sys-name docstring params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
@@ -292,8 +291,7 @@
   `(do
     (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
       ~(str "[[defsystem]] with params: `" params "` \n\n " docstring)
-      (fn ~(symbol (str (name sys-name))) [& args#]
-        (ffirst args#)))
+      (fn ~(symbol (str (name sys-name))) [[k# _#] & args#] k#))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
