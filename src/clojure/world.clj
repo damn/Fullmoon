@@ -1949,7 +1949,7 @@ Returns ctx."
   (when (instance? Label actor)
     (when-let [p (parent actor)]
       (when-let [p (parent parent)]
-        (and (instance? VisWindow parent)
+        (and (instance? VisWindow p)
              (= (.getTitleLabel ^Window p) actor))))))
 
 (def ^:private image-file "images/moon_background.png")
