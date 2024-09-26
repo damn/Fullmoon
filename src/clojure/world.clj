@@ -436,7 +436,7 @@ Default method returns true."
 (defsystem ^{:metadoc/categories #{:cat/sys}} clicked-skillmenu-skill "FIXME" [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
-;;;; 💥 Effects
+;;;; effect!
 
 (def ^:private record-txs? false)
 (def ^:private frame->txs (atom nil))
@@ -509,7 +509,7 @@ Default method returns true."
           ctx
           txs))
 
-;;;; 🌀 Assets
+;;;; ctx-assets
 
 (defn- ->asset-manager ^AssetManager []
   (proxy [AssetManager clojure.lang.ILookup] []
@@ -560,42 +560,7 @@ Returns ctx."
   [ctx file]
   (get-asset ctx file))
 
-;;;; Context Components (these will go very much down then ?)
-;; => only called after app-start !!
-
-(defcomponent ctx-assets
-  {:data :some
-   :let {:keys [folder
-                sound-file-extensions
-                image-file-extensions
-                log?]}}
-  (->mk [_ _ctx]
-    (let [manager (->asset-manager)
-          sound-files   (search-files folder sound-file-extensions)
-          texture-files (search-files folder image-file-extensions)]
-      (load-assets! manager sound-files   Sound   log?)
-      (load-assets! manager texture-files Texture log?)
-      (.finishLoading manager)
-      {:manager manager
-       :sound-files sound-files
-       :texture-files texture-files})))
-
-(defcomponent :context/effect-handler
-  (->mk [[_ [game-loop-mode record-transactions?]] _ctx]
-    (case game-loop-mode
-      :game-loop/normal (when record-transactions?
-                          (clear-recorded-txs!)
-                          (.bindRoot #'record-txs? true))
-      :game-loop/replay (do
-                         (assert record-txs?)
-                         (.bindRoot #'record-txs? false)
-                         ;(println "Initial entity txs:")
-                         ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
-                         ))
-    nil))
-
-
-;;;;
+;;;; ???
 
 (defprotocol Player
   (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
@@ -715,12 +680,6 @@ Returns ctx."
 (def-attributes
   :tag [:enum [:dev :prod]]
   :configs :some)
-
-(defcomponent :context/config
-  {:data [:map [:tag :configs]]
-   :let {:keys [tag configs]}}
-  (->mk [_ _ctx]
-    (get configs tag)))
 
 ;; gdx helper fns
 
@@ -882,17 +841,6 @@ Returns ctx."
           {}
           components))
 
-
-(defcomponent :context/screens
-  {:data :some
-   :let screen-ks}
-  (->mk [_ ctx]
-    {:screens (create-vs (zipmap screen-ks (repeat nil)) ctx)
-     :first-screen (first screen-ks)})
-
-  (destroy! [_]
-    ; TODO screens not disposed https://github.com/damn/core/issues/41
-    ))
 
 (defn ^{:metadoc/categories #{:cat/app}} current-screen-key [{{:keys [current]} :context/screens}]
   current)
@@ -1165,24 +1113,6 @@ Returns ctx."
   :size :pos-int
   :cursors :some)
 
-(defcomponent :context/graphics
-  {:data [:map [:cursors :default-font :views]]
-   :let {:keys [views default-font cursors]}}
-  (->mk [_ _ctx]
-    (map->Graphics
-     (let [batch (SpriteBatch.)]
-       (merge {:batch batch}
-              (->shape-drawer batch)
-              (->default-font default-font)
-              (->views views)
-              (->cursors cursors)))))
-
-  (destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
-    (dispose batch)
-    (dispose shape-drawer-texture)
-    (dispose default-font)
-    (run! dispose (vals cursors))))
-
 (defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
                     view-key
                     draw-fn]
@@ -1215,11 +1145,6 @@ Returns ctx."
 ;;;; ⏳️ Time
 
 (def ctx-time :context/time)
-
-(defcomponent ctx-time
-  (->mk [_ _ctx]
-    {:elapsed 0
-     :logic-frame 0}))
 
 (defn ^{:metadoc/categories #{:cat/time}} delta-time
   "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
@@ -1626,21 +1551,6 @@ Returns ctx."
   ;Controls whether to fade out tooltip when mouse was moved. (default false)
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
-
-(defcomponent :context/vis-ui
-  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
-   :let skin-scale}
-  (->mk [_ _ctx]
-    (check-cleanup-visui!)
-    (VisUI/load (case skin-scale
-                  :skin-scale/x1 VisUI$SkinScale/X1
-                  :skin-scale/x2 VisUI$SkinScale/X2))
-    (font-enable-markup!)
-    (set-tooltip-config!)
-    :loaded)
-
-  (destroy! [_]
-    (VisUI/dispose)))
 
 ;; gdx scene2d helper
 
@@ -3023,10 +2933,6 @@ Returns ctx."
 
 (def ^:private context-ecs :context/ecs)
 
-(defcomponent context-ecs
-  (->mk [_ _ctx]
-    {}))
-
 (defn- entities [ctx] (context-ecs ctx)) ; dangerous name!
 
 (defcomponent :entity/uid
@@ -4082,12 +3988,6 @@ Returns ctx."
                       :context/vis-ui
                       :context/tiled-map-renderer]])
 
-(def-type :properties/app
-  {:schema [:app/lwjgl3
-            :app/context]
-   :overview {:title "Apps" ; - only 1 ? - no overview - ?
-              :columns 10}})
-
 (defrecord Ctx [])
 
 (defn ^{:metadoc/categories #{:cat/app}
@@ -4099,6 +3999,14 @@ Sets [[app-state]] atom to the context."}
         app (build-property ctx :app/core)]
     (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))
+
+;;;;
+
+(def-type :properties/app
+  {:schema [:app/lwjgl3
+            :app/context]
+   :overview {:title "Apps" ; - only 1 ? - no overview - ?
+              :columns 10}})
 
 (def-type :properties/audiovisuals
   {:schema [:tx/sound
@@ -4240,3 +4148,95 @@ Sets [[app-state]] atom to the context."}
 (defcomponent :tx/player-modal
   (do! [[_ params] ctx]
     (show-player-modal! ctx params)))
+
+;;;;
+
+(defcomponent :context/screens
+  {:data :some
+   :let screen-ks}
+  (->mk [_ ctx]
+    {:screens (create-vs (zipmap screen-ks (repeat nil)) ctx)
+     :first-screen (first screen-ks)})
+
+  (destroy! [_]
+    ; TODO screens not disposed https://github.com/damn/core/issues/41
+    ))
+
+(defcomponent :context/config
+  {:data [:map [:tag :configs]]
+   :let {:keys [tag configs]}}
+  (->mk [_ _ctx]
+    (get configs tag)))
+
+(defcomponent ctx-assets
+  {:data :some
+   :let {:keys [folder
+                sound-file-extensions
+                image-file-extensions
+                log?]}}
+  (->mk [_ _ctx]
+    (let [manager (->asset-manager)
+          sound-files   (search-files folder sound-file-extensions)
+          texture-files (search-files folder image-file-extensions)]
+      (load-assets! manager sound-files   Sound   log?)
+      (load-assets! manager texture-files Texture log?)
+      (.finishLoading manager)
+      {:manager manager
+       :sound-files sound-files
+       :texture-files texture-files})))
+
+(defcomponent :context/effect-handler
+  (->mk [[_ [game-loop-mode record-transactions?]] _ctx]
+    (case game-loop-mode
+      :game-loop/normal (when record-transactions?
+                          (clear-recorded-txs!)
+                          (.bindRoot #'record-txs? true))
+      :game-loop/replay (do
+                         (assert record-txs?)
+                         (.bindRoot #'record-txs? false)
+                         ;(println "Initial entity txs:")
+                         ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
+                         ))
+    nil))
+
+(defcomponent :context/graphics
+  {:data [:map [:cursors :default-font :views]]
+   :let {:keys [views default-font cursors]}}
+  (->mk [_ _ctx]
+    (map->Graphics
+     (let [batch (SpriteBatch.)]
+       (merge {:batch batch}
+              (->shape-drawer batch)
+              (->default-font default-font)
+              (->views views)
+              (->cursors cursors)))))
+
+  (destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
+    (dispose batch)
+    (dispose shape-drawer-texture)
+    (dispose default-font)
+    (run! dispose (vals cursors))))
+
+(defcomponent ctx-time
+  (->mk [_ _ctx]
+    {:elapsed 0
+     :logic-frame 0}))
+
+(defcomponent :context/vis-ui
+  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
+   :let skin-scale}
+  (->mk [_ _ctx]
+    (check-cleanup-visui!)
+    (VisUI/load (case skin-scale
+                  :skin-scale/x1 VisUI$SkinScale/X1
+                  :skin-scale/x2 VisUI$SkinScale/X2))
+    (font-enable-markup!)
+    (set-tooltip-config!)
+    :loaded)
+
+  (destroy! [_]
+    (VisUI/dispose)))
+
+(defcomponent context-ecs
+  (->mk [_ _ctx]
+    {}))
