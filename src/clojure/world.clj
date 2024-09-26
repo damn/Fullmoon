@@ -75,8 +75,7 @@
 
 ; TODO those shouldn't be public ....
 
-(declare ^{:tag Files}                     gdx-files
-         ^{:tag Input}                     gdx-input
+(declare ^{:tag Input}                     gdx-input
          ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
 
 (defn- bind-gdx-statics! []
@@ -517,7 +516,7 @@ Default method returns true."
       (.get ^AssetManager this ^String file))))
 
 (defn- recursively-search [folder extensions]
-  (loop [[^FileHandle file & remaining] (.list (.internal gdx-files folder))
+  (loop [[^FileHandle file & remaining] (.list (.internal Gdx/files folder))
          result []]
     (cond (nil? file)
           result
@@ -868,7 +867,7 @@ Returns ctx."
     params))
 
 (defn- generate-ttf [{:keys [file size quality-scaling]}]
-  (let [generator (FreeTypeFontGenerator. (.internal gdx-files file))
+  (let [generator (FreeTypeFontGenerator. (.internal Gdx/files file))
         font (.generateFont generator (->params size quality-scaling))]
     (.dispose generator)
     (.setScale (.getData font) (float (/ quality-scaling)))
@@ -1056,7 +1055,7 @@ Returns ctx."
 ;; graphics cursors
 
 (defn- ->cursor [file [hotspot-x hotspot-y]]
-  (let [pixmap (Pixmap. (.internal gdx-files file))
+  (let [pixmap (Pixmap. (.internal Gdx/files file))
         cursor (.newCursor gdx-graphics pixmap hotspot-x hotspot-y)]
     (.dispose pixmap)
     cursor))
