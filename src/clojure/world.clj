@@ -610,20 +610,15 @@ Returns ctx."
 
 ;;;; 🎨 Graphics
 
+(def ^{:metadoc/categories #{:cat/g}} color-black Color/BLACK)
+(def ^{:metadoc/categories #{:cat/g}} color-white Color/WHITE)
+
 (defn ->color
   {:metadoc/categories #{:cat/g}}
   ([r g b]
    (->color r g b 1))
   ([r g b a]
    (Color. (float r) (float g) (float b) (float a))))
-
-(defrecord Graphics [batch
-                     shape-drawer
-                     gui-view
-                     world-view
-                     default-font
-                     unit-scale
-                     cursors])
 
 (defprotocol WorldView
   (^{:metadoc/categories #{:cat/g}} pixels->world-units [_ pixels])
@@ -654,17 +649,24 @@ Returns ctx."
   (^{:metadoc/categories #{:cat/g}} draw-centered-image [_ image position])
   (^{:metadoc/categories #{:cat/g}} draw-rotated-centered-image [_ image rotation position]))
 
+(defrecord Graphics [batch
+                     shape-drawer
+                     gui-view
+                     world-view
+                     default-font
+                     unit-scale
+                     cursors])
+
+
 ;; gdx helper fns
 
-(defn ^{:metadoc/categories #{:cat/gdx}} dispose [obj] (Disposable/.dispose obj))
+(defn dispose {:metadoc/categories #{:cat/gdx}} [obj] (Disposable/.dispose obj))
 
 (defprotocol ActiveEntities
   (^{:metadoc/categories #{:cat/entity}} active-entities [_]))
 
 ;; graphics
 
-(def ^{:metadoc/categories #{:cat/g}} color-black Color/BLACK)
-(def ^{:metadoc/categories #{:cat/g}} color-white Color/WHITE)
 
 ;; property/pretty-name
 
@@ -687,7 +689,7 @@ Returns ctx."
   (^{:metadoc/categories #{:cat/world}} ray-blocked? [ctx start target])
   (^{:metadoc/categories #{:cat/world}} path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
 
-;; image
+;;;; Image
 
 (defn ^{:metadoc/categories #{:cat/g}} ->texture-region
   ([^Texture tex]
