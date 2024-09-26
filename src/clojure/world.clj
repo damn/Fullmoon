@@ -63,15 +63,6 @@
            space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster))
 
-(defrecord Ctx [])
-
-(def
-  ^{:metadoc/categories #{:cat/app}}
-  app-state
-  "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging.
-  Use only with (.postRunnable gdx-app f) for making manual changes to the ctx."
-  (atom nil))
-
 ;;;; 🔧 Utils
 
 (defn
@@ -548,12 +539,6 @@ Returns ctx."
 
 ;; ???
 
-(defprotocol RenderWorldView
-  (^{:metadoc/categories #{:cat/g}} render-world-view [ctx render-fn] "render-fn is a function of param 'g', graphics context."))
-
-(defprotocol MouseOverEntity
-  (^{:metadoc/categories #{:cat/world}} mouseover-entity* [ctx]))
-
 (defprotocol Player
   (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
   (^{:metadoc/categories #{:cat/player}} player-entity* [ctx])
@@ -628,12 +613,6 @@ Default method returns true."
        (str/join "\n")
        remove-newlines))
 
-;;
-
-(defprotocol Entities
-  (^{:metadoc/categories #{:cat/entity}} all-entities [_])
-  (^{:metadoc/categories #{:cat/entity}} get-entity [_ uid] "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."))
-
 ;;;; 💾 Properties
 
 (defn ^{:metadoc/categories #{:cat/props}} def-attributes [& attributes-data]
@@ -647,9 +626,6 @@ Default method returns true."
   (defcomponent k
     {:data [:map (conj schema :property/id)]
      :overview overview}))
-
-(defprotocol Property
-  (^{:metadoc/categories #{:cat/props}} build-property [_ id]))
 
 ;;;; 🎨 Graphics
 
@@ -695,15 +671,6 @@ Default method returns true."
   (^{:metadoc/categories #{:cat/g}} draw-image [_ image position])
   (^{:metadoc/categories #{:cat/g}} draw-centered-image [_ image position])
   (^{:metadoc/categories #{:cat/g}} draw-rotated-centered-image [_ image rotation position]))
-
-(defprotocol Views
-  (^{:metadoc/categories #{:cat/g}} gui-mouse-position    [_])
-  (^{:metadoc/categories #{:cat/g}} world-mouse-position  [_])
-  (^{:metadoc/categories #{:cat/g}} gui-viewport-width    [_])
-  (^{:metadoc/categories #{:cat/g}} gui-viewport-height   [_])
-  (^{:metadoc/categories #{:cat/g}} world-camera          [_])
-  (^{:metadoc/categories #{:cat/g}} world-viewport-width  [_])
-  (^{:metadoc/categories #{:cat/g}} world-viewport-height [_]))
 
 ;; ctx/config
 
@@ -1121,15 +1088,13 @@ Default method returns true."
 
 (defn- gr [ctx] (:context/graphics ctx))
 
-(extend-type Ctx
-  Views
-  (gui-mouse-position    [ctx] (gui-mouse-position*             (gr ctx)))
-  (world-mouse-position  [ctx] (world-mouse-position*           (gr ctx)))
-  (gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
-  (gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
-  (world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
-  (world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-  (world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx)))))
+(defn gui-mouse-position    {:metadoc/categories #{:cat/g}} [ctx] (gui-mouse-position*             (gr ctx)))
+(defn world-mouse-position  {:metadoc/categories #{:cat/g}} [ctx] (world-mouse-position*           (gr ctx)))
+(defn gui-viewport-width    {:metadoc/categories #{:cat/g}} [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
+(defn gui-viewport-height   {:metadoc/categories #{:cat/g}} [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
+(defn world-camera          {:metadoc/categories #{:cat/g}} [ctx] (.getCamera      (world-viewport (gr ctx))))
+(defn world-viewport-width  {:metadoc/categories #{:cat/g}} [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
+(defn world-viewport-height {:metadoc/categories #{:cat/g}} [ctx] (.getWorldHeight (world-viewport (gr ctx))))
 
 ;; graphics cursors
 
@@ -1201,15 +1166,17 @@ Default method returns true."
       #(draw-fn (assoc g :unit-scale unit-scale)))
     (.end batch)))
 
-(defn ^{:metadoc/categories #{:cat/g}} render-gui-view
+(defn render-gui-view
   "render-fn is a function of param 'g', graphics context."
+  {:metadoc/categories #{:cat/g}}
   [ctx render-fn]
   (render-view ctx :gui-view render-fn))
 
-(extend-type Ctx
-  RenderWorldView
-  (render-world-view [ctx render-fn]
-    (render-view ctx :world-view render-fn)) )
+(defn render-world-view
+  "render-fn is a function of param 'g', graphics context."
+  {:metadoc/categories #{:cat/g}}
+  [ctx render-fn]
+  (render-view ctx :world-view render-fn))
 
 (defn- on-resize [{g :context/graphics} w h]
   (.update (gui-viewport g) w h true)
@@ -1698,7 +1665,12 @@ Default method returns true."
   [^Actor actor]
   (.getParent actor))
 
-;; vis-tooltip
+(def
+  ^{:metadoc/categories #{:cat/app}}
+  app-state
+  "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging.
+  Use only with (.postRunnable gdx-app f) for making manual changes to the ctx."
+  (atom nil))
 
 (defn ^{:metadoc/categories #{:cat/ui}} add-tooltip!
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
@@ -2288,10 +2260,10 @@ Default method returns true."
                            (if (map? v) (build ctx v) v)
                            ctx))))
 
-(extend-type Ctx
-  Property
-  (build-property [{{:keys [db]} :context/properties :as ctx} id]
-    (build ctx (safe-get db id))))
+(defn build-property
+  {:metadoc/categories #{:cat/props}}
+  [{{:keys [db]} :context/properties :as ctx} id]
+  (build ctx (safe-get db id)))
 
 (defn ^{:metadoc/categories #{:cat/props}} all-properties [{{:keys [db]} :context/properties :as ctx} type]
   (->> (vals db)
@@ -3139,10 +3111,16 @@ Default method returns true."
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
 
-(extend-type Ctx
-  Entities
-  (all-entities [ctx] (vals (entities ctx)))
-  (get-entity [ctx uid] (get (entities ctx) uid)))
+(defn all-entities
+  {:metadoc/categories #{:cat/entity}}
+  [ctx]
+  (vals (entities ctx)))
+
+(defn get-entity
+  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
+  {:metadoc/categories #{:cat/entity}}
+  [ctx uid]
+  (get (entities ctx) uid))
 
 (defn tick-entities!
   "Calls tick system on all components of entities."
@@ -3517,11 +3495,11 @@ Default method returns true."
 
 (def ^:private ctx-mouseover-entity :context/mouseover-entity)
 
-(extend-type Ctx
-  MouseOverEntity
-  (mouseover-entity* [ctx]
-    (when-let [entity (ctx-mouseover-entity ctx)]
-      @entity)))
+(defn mouseover-entity*
+  {:metadoc/categories #{:cat/world}}
+  [ctx]
+  (when-let [entity (ctx-mouseover-entity ctx)]
+    @entity))
 
 (defn update-mouseover-entity [ctx]
   (let [entity (if (mouse-on-actor? ctx)
@@ -4222,6 +4200,8 @@ Default method returns true."
             :app/context]
    :overview {:title "Apps" ; - only 1 ? - no overview - ?
               :columns 10}})
+
+(defrecord Ctx [])
 
 (defn ^{:metadoc/categories #{:cat/app}
         :doc "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
