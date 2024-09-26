@@ -1,4 +1,4 @@
-A domain-specific language for creating games.
+A programming language for game development.
 
 It is based around the idea to keep the state of a game in one data structure named context/ctx.
 
