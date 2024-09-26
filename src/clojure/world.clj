@@ -88,19 +88,6 @@
 
 ;;;; 🔧 Utils
 
-(defn- add-vs [vs]
-  (v-normalise (reduce v-add [0 0] vs)))
-
-(defn WASD-movement-vector []
-  (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
-        l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
-        u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
-        d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
-    (when (or r l u d)
-      (let [v (add-vs (remove nil? [r l u d]))]
-        (when (pos? (v-length v))
-          v)))))
-
 (defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.
   Consumes sequences up to the first match, will consume the entire sequence
@@ -1372,10 +1359,7 @@ Returns ctx."
     (g/draw-line start1screenx start1screeny target1screenx target1screeny color)
     (g/draw-line start2screenx start2screeny target2screenx target2screeny color)))
 
-
 ;;;;️ 📐 Geometry
-
-;; vector2d
 
 ; TODO not important badlogic, using clojure vectors
 ; could extend some protocol by clojure vectors and just require the protocol
@@ -1427,6 +1411,20 @@ Returns ctx."
      (get-angle-from-vector (->v v))]))
 
  )
+
+(defn- add-vs [vs]
+  (v-normalise (reduce v-add [0 0] vs)))
+
+(defn WASD-movement-vector []
+  (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
+        l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
+        u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
+        d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
+    (when (or r l u d)
+      (let [v (add-vs (remove nil? [r l u d]))]
+        (when (pos? (v-length v))
+          v)))))
+
 
 ;; CAMERA (is only world, see use cases )
 
