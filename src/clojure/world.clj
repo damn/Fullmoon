@@ -1024,10 +1024,10 @@ Returns ctx."
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [^Viewport viewport]
-  (let [mouse-x (clamp (.getX gdx-input)
+  (let [mouse-x (clamp (.getX Gdx/input)
                        (.getLeftGutterWidth viewport)
                        (.getRightGutterX viewport))
-        mouse-y (clamp (.getY gdx-input)
+        mouse-y (clamp (.getY Gdx/input)
                        (.getTopGutterHeight viewport)
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
@@ -1415,10 +1415,10 @@ Returns ctx."
   (v-normalise (reduce v-add [0 0] vs)))
 
 (defn WASD-movement-vector []
-  (let [r (if (.isKeyPressed gdx-input Input$Keys/D) [1  0])
-        l (if (.isKeyPressed gdx-input Input$Keys/A) [-1 0])
-        u (if (.isKeyPressed gdx-input Input$Keys/W) [0  1])
-        d (if (.isKeyPressed gdx-input Input$Keys/S) [0 -1])]
+  (let [r (if (.isKeyPressed Gdx/input Input$Keys/D) [1  0])
+        l (if (.isKeyPressed Gdx/input Input$Keys/A) [-1 0])
+        u (if (.isKeyPressed Gdx/input Input$Keys/W) [0  1])
+        d (if (.isKeyPressed Gdx/input Input$Keys/S) [0 -1])]
     (when (or r l u d)
       (let [v (add-vs (remove nil? [r l u d]))]
         (when (pos? (v-length v))
@@ -1648,11 +1648,11 @@ Returns ctx."
 (defcomponent :screens/stage
   {:let {:keys [^Stage stage sub-screen]}}
   (screen-enter [_ context]
-    (.setInputProcessor gdx-input stage)
+    (.setInputProcessor Gdx/input stage)
     (screen-enter sub-screen context))
 
   (screen-exit [_ context]
-    (.setInputProcessor gdx-input nil)
+    (.setInputProcessor Gdx/input nil)
     (screen-exit sub-screen context))
 
   (screen-render! [_]
@@ -2554,10 +2554,9 @@ Returns ctx."
     (add-rows! window [[(->scroll-pane-cell ctx [[{:actor widgets :colspan 2}]
                                                        [(->text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                         (->text-button "Delete" delete!)]])]])
-    (add-actor! window
-                      (->actor {:act (fn [_ctx]
-                                          (when (.isKeyJustPressed gdx-input Input$Keys/ENTER)
-                                            (swap! app-state save!)))}))
+    (add-actor! window (->actor {:act (fn [_ctx]
+                                        (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
+                                          (swap! app-state save!)))}))
     (.pack window)
     window))
 
