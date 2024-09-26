@@ -28,7 +28,7 @@
                         :cat/player "Player"
                         :cat/props "Properties"
                         :cat/sound "Sound"
-                        :cat/sys "Systems"
+                        :cat/systems "Systems"
                         :cat/time "Time"
                         :cat/ui "User Interface"
                         :cat/utils "Utilities"
@@ -63,12 +63,20 @@
            space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster))
 
+; TODO only on first load of the file ? ?
+(defn- set-doc-category-for-unmarked-public-vars! [cat-k]
+  (doseq [[_sym avar] (ns-publics *ns*)]
+    (alter-meta! avar (fn [m]
+                        (if (:metadoc/categories m)
+                          m
+                          (assoc m :metadoc/categories #{cat-k}))))))
+
 ;;;; 🎮 libgdx
 
-(declare ^{:tag Application               :metadoc/categories #{:cat/gdx}} gdx-app
-         ^{:tag Files                     :metadoc/categories #{:cat/gdx}} gdx-files
-         ^{:tag Input                     :metadoc/categories #{:cat/gdx}} gdx-input
-         ^{:tag com.badlogic.gdx.Graphics :metadoc/categories #{:cat/gdx}} gdx-graphics)
+(declare ^{:tag Application}               gdx-app
+         ^{:tag Files}                     gdx-files
+         ^{:tag Input}                     gdx-input
+         ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
 
 (defn- bind-gdx-statics! []
   (.bindRoot #'gdx-app      Gdx/app)
@@ -76,37 +84,30 @@
   (.bindRoot #'gdx-input    Gdx/input)
   (.bindRoot #'gdx-graphics Gdx/graphics))
 
+(set-doc-category-for-unmarked-public-vars! :cat/libgdx)
+
 ;;;; 🔧 Utils
 
 (defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.
   Consumes sequences up to the first match, will consume the entire sequence
   and return nil if no match is found."
-  {:metadoc/categories #{:cat/utils}}
   [pred coll]
   (first (filter pred coll)))
 
-(defn ->tile
-  {:metadoc/categories #{:cat/utils}}
-  [position]
+(defn ->tile [position]
   (mapv int position))
 
-(defn tile->middle
-  {:metadoc/categories #{:cat/utils}}
-  [position]
+(defn tile->middle [position]
   (mapv (partial + 0.5) position))
 
-(defn safe-get
-  {:metadoc/categories #{:cat/utils}}
-  [m k]
+(defn safe-get [m k]
   (let [result (get m k ::not-found)]
     (if (= result ::not-found)
       (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
       result)))
 
-(defn safe-merge
-  {:metadoc/categories #{:cat/utils}}
-  [m1 m2]
+(defn safe-merge [m1 m2]
   {:pre [(not-any? #(contains? m1 %) (keys m2))]}
   (merge m1 m2))
 
@@ -124,9 +125,7 @@
         (Math/round (float (* x z)))
         z))))
 
-(defn readable-number
-  {:metadoc/categories #{:cat/utils}}
-  [^double x]
+(defn readable-number [^double x]
   {:pre [(number? x)]} ; do not assert (>= x 0) beacuse when using floats x may become -0.000...000something
   (if (or
         (> x 5)
@@ -140,11 +139,11 @@
       nil
       idx)))
 
-(defn ^{:metadoc/categories #{:cat/utils}} get-namespaces [packages]
+(defn get-namespaces [packages]
   (filter #(packages (first (str/split (name (ns-name %)) #"\.")))
           (all-ns)))
 
-(defn ^{:metadoc/categories #{:cat/utils}} get-vars [nmspace condition]
+(defn get-vars [nmspace condition]
   (for [[sym avar] (ns-interns nmspace)
         :when (condition avar)]
     avar))
@@ -152,7 +151,7 @@
 ;; rename to 'shuffle', rand and rand-int without the 's'-> just use with require :as.
 ;; maybe even remove the when coll pred?
 ;; also maybe *random* instead passing it everywhere? but not sure about that
-(defn ^{:metadoc/categories #{:cat/utils}} sshuffle
+(defn sshuffle
   "Return a random permutation of coll"
   ([coll random]
     (when coll
@@ -162,30 +161,30 @@
   ([coll]
     (sshuffle coll (Random.))))
 
-(defn ^{:metadoc/categories #{:cat/utils}} srand
+(defn srand
   ([random] (.nextFloat ^Random random))
   ([n random] (* n (srand random))))
 
-(defn ^{:metadoc/categories #{:cat/utils}} srand-int [n random]
+(defn srand-int [n random]
   (int (srand n random)))
 
-(defn ^{:metadoc/categories #{:cat/utils}} create-seed []
+(defn create-seed []
   (.nextLong (Random.)))
 
 ; TODO assert int?
-(defn ^{:metadoc/categories #{:cat/utils}} rand-int-between
+(defn rand-int-between
   "returns a random integer between lower and upper bounds inclusive."
   ([[lower upper]]
     (rand-int-between lower upper))
   ([lower upper]
     (+ lower (rand-int (inc (- upper lower))))))
 
-(defn ^{:metadoc/categories #{:cat/utils}} rand-float-between [[lower upper]]
+(defn rand-float-between [[lower upper]]
   (+ lower (rand (- upper lower))))
 
 ; TODO use 0-1 not 0-100 internally ? just display it different?
 ; TODO assert the number between 0 and 100
-(defn ^{:metadoc/categories #{:cat/utils}} percent-chance
+(defn percent-chance
   "perc is number between 0 and 100."
   ([perc random]
     (< (srand random)
@@ -194,17 +193,17 @@
     (percent-chance perc (Random.))))
 ; TODO Random. does not return a number between 0 and 100?
 
-(defmacro ^{:metadoc/categories #{:cat/utils}} if-chance
+(defmacro if-chance
   ([n then]
     `(if-chance ~n ~then nil))
   ([n then else]
     `(if (percent-chance ~n) ~then ~else)))
 
-(defmacro ^{:metadoc/categories #{:cat/utils}} when-chance [n & more]
+(defmacro when-chance [n & more]
   `(when (percent-chance ~n)
      ~@more))
 
-(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-item
+(defn get-rand-weighted-item
   "given a sequence of items and their weight, returns a weighted random item.
  for example {:a 5 :b 1} returns b only in about 1 of 6 cases"
   [weights]
@@ -217,35 +216,32 @@
           item
           (recur (int r) (rest items)))))))
 
-(defn ^{:metadoc/categories #{:cat/utils}} get-rand-weighted-items [n group]
+(defn get-rand-weighted-items [n group]
   (repeatedly n #(get-rand-weighted-item group)))
 
 (comment
   (frequencies (get-rand-weighted-items 1000 {:a 1 :b 5 :c 4}))
   (frequencies (repeatedly 1000 #(percent-chance 90))))
 
-(defn ^{:metadoc/categories #{:cat/utils}} high-weighted "for values of x 0-1 returns y values 0-1 with higher value of y than a linear function"
+(defn high-weighted "for values of x 0-1 returns y values 0-1 with higher value of y than a linear function"
   [x]
   (- 1 (Math/pow (- 1 x) 2)))
 
 (defn- high-weighted-rand-int [n]
   (int (* n (high-weighted (rand)))))
 
-(defn ^{:metadoc/categories #{:cat/utils}} high-weighted-rand-nth [coll]
+(defn high-weighted-rand-nth [coll]
   (nth coll (high-weighted-rand-int (count coll))))
 
-;;;; 👽 Alien Technology
+(set-doc-category-for-unmarked-public-vars! :cat/utils)
 
-(def
-  ^{:metadoc/categories #{:cat/component}}
-  defsystems
-  "Map of all systems as key of name-string to var."
-  {})
+;;;; defsystem & defcomponent
+
+(def defsystems "Map of all systems as key of name-string to var." {})
 
 (defmacro defsystem
   "A system is a multimethod which dispatches on ffirst.
   So for a component `[k v]` it dispatches on the component-keyword `k`."
-  {:metadoc/categories #{:cat/component}}
   [sys-name docstring params]
   (when (zero? (count params))
     (throw (IllegalArgumentException. "First argument needs to be component.")))
@@ -259,7 +255,7 @@
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def ^{:metadoc/categories #{:cat/component}} component-attributes {})
+(def component-attributes {})
 
 (def ^:private warn-name-ns-mismatch? false)
 
@@ -272,14 +268,14 @@
              (not= (k->component-ns k) (ns-name *ns*)))
     (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
 
-(defn ^{:metadoc/categories #{:cat/component}} defcomponent*
+(defn defcomponent*
   "Defines a component without systems methods, so only to set metadata."
   [k attr-map]
   (when (get component-attributes k)
     (println "WARNING: Overwriting defcomponent" k "attr-map"))
   (alter-var-root #'component-attributes assoc k attr-map))
 
-(defmacro ^{:metadoc/categories #{:cat/component}} defcomponent
+(defmacro defcomponent
   "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
 
 attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
@@ -331,32 +327,34 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
+(set-doc-category-for-unmarked-public-vars! :cat/component)
+
 ;;;; ⚙️  Systems
 
 (defsystem ->value "..." [_])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} ->mk "Create component value. Default returns v." [_ ctx])
+(defsystem ->mk "Create component value. Default returns v." [_ ctx])
 (defmethod ->mk :default [[_ v] _ctx] v)
 
 (defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
 (defmethod destroy! :default [_])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
+(defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
 (defmethod info-text :default [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} screen-enter "FIXME" [_ ctx])
+(defsystem screen-enter "FIXME" [_ ctx])
 (defmethod screen-enter :default [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} screen-exit  "FIXME" [_ ctx])
+(defsystem screen-exit  "FIXME" [_ ctx])
 (defmethod screen-exit :default  [_ ctx])
 
 (defsystem ^:private screen-render! "FIXME" [_])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} screen-render "FIXME" [_ ctx])
+(defsystem screen-render "FIXME" [_ ctx])
 (defmethod screen-render :default [_ ctx]
   ctx)
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} do!
+(defsystem do!
   " 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
   when returning a 'map?'
 
@@ -371,12 +369,12 @@ Example:
   we only want to record actual side effects, not transactions returning other lower level transactions"
   [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} applicable?
+(defsystem applicable?
   "An effect will only be done (with do!) if this function returns truthy.
 Required system for every effect, no default."
   [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} useful?
+(defsystem useful?
   "Used for NPC AI.
 Called only if applicable? is truthy.
 For example use for healing effect is only useful if hitpoints is < max.
@@ -384,26 +382,26 @@ Default method returns true."
   [_ ctx])
 (defmethod useful? :default [_ ctx] true)
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} create "Create entity with eid for txs side-effects. Default nil."
+(defsystem create "Create entity with eid for txs side-effects. Default nil."
   [_ entity ctx])
 (defmethod create :default [_ entity ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} destroy "FIXME" [_ entity ctx])
+(defsystem destroy "FIXME" [_ entity ctx])
 (defmethod destroy :default [_ entity ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} tick "FIXME" [_ entity ctx])
+(defsystem tick "FIXME" [_ entity ctx])
 (defmethod tick :default [_ entity ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} render-below "FIXME" [_ entity* g ctx])
+(defsystem render-below "FIXME" [_ entity* g ctx])
 (defmethod render-below :default [_ entity* g ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} render "FIXME" [_ entity* g ctx])
+(defsystem render "FIXME" [_ entity* g ctx])
 (defmethod render :default [_ entity* g ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} render-above "FIXME" [_ entity* g ctx])
+(defsystem render-above "FIXME" [_ entity* g ctx])
 (defmethod render-above :default [_ entity* g ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} render-info "FIXME" [_ entity* g ctx])
+(defsystem render-info "FIXME" [_ entity* g ctx])
 (defmethod render-info :default [_ entity* g ctx])
 
 (def ^:private render-systems [render-below
@@ -411,30 +409,32 @@ Default method returns true."
                                render-above
                                render-info])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} enter "FIXME" [_ ctx])
+(defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} exit  "FIXME" [_ ctx])
+(defsystem exit  "FIXME" [_ ctx])
 (defmethod exit :default  [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} op-value-text "FIXME" [_])
-(defsystem ^{:metadoc/categories #{:cat/sys}} op-apply "FIXME" [_ base-value])
-(defsystem ^{:metadoc/categories #{:cat/sys}} op-order "FIXME" [_])
+(defsystem op-value-text "FIXME" [_])
+(defsystem op-apply "FIXME" [_ base-value])
+(defsystem op-order "FIXME" [_])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} player-enter "FIXME" [_])
+(defsystem player-enter "FIXME" [_])
 (defmethod player-enter :default [_])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} pause-game? "FIXME" [_])
+(defsystem pause-game? "FIXME" [_])
 (defmethod pause-game? :default [_])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} manual-tick "FIXME" [_ ctx])
+(defsystem manual-tick "FIXME" [_ ctx])
 (defmethod manual-tick :default [_ ctx])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} clicked-inventory-cell "FIXME" [_ cell])
+(defsystem clicked-inventory-cell "FIXME" [_ cell])
 (defmethod clicked-inventory-cell :default [_ cell])
 
-(defsystem ^{:metadoc/categories #{:cat/sys}} clicked-skillmenu-skill "FIXME" [_ skill])
+(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
+
+(set-doc-category-for-unmarked-public-vars! :cat/systems)
 
 ;;;; effect!
 
@@ -610,44 +610,43 @@ Returns ctx."
 
 ;;;; 🎨 Graphics
 
-(def ^{:metadoc/categories #{:cat/g}} color-black Color/BLACK)
-(def ^{:metadoc/categories #{:cat/g}} color-white Color/WHITE)
+(def color-black Color/BLACK)
+(def color-white Color/WHITE)
 
 (defn ->color
-  {:metadoc/categories #{:cat/g}}
   ([r g b]
    (->color r g b 1))
   ([r g b a]
    (Color. (float r) (float g) (float b) (float a))))
 
 (defprotocol WorldView
-  (^{:metadoc/categories #{:cat/g}} pixels->world-units [_ pixels])
-  (^{:metadoc/categories #{:cat/g}} world-unit-scale [_]))
+  (pixels->world-units [_ pixels])
+  (world-unit-scale [_]))
 
 (defprotocol PShapeDrawer
-  (^{:metadoc/categories #{:cat/g}} draw-ellipse [_ position radius-x radius-y color])
-  (^{:metadoc/categories #{:cat/g}} draw-filled-ellipse [_ position radius-x radius-y color])
-  (^{:metadoc/categories #{:cat/g}} draw-circle [_ position radius color])
-  (^{:metadoc/categories #{:cat/g}} draw-filled-circle [_ position radius color])
-  (^{:metadoc/categories #{:cat/g}} draw-arc [_ center-position radius start-angle degree color])
-  (^{:metadoc/categories #{:cat/g}} draw-sector [_ center-position radius start-angle degree color])
-  (^{:metadoc/categories #{:cat/g}} draw-rectangle [_ x y w h color])
-  (^{:metadoc/categories #{:cat/g}} draw-filled-rectangle [_ x y w h color])
-  (^{:metadoc/categories #{:cat/g}} draw-line [_ start-position end-position color])
-  (^{:metadoc/categories #{:cat/g}} draw-grid [drawer leftx bottomy gridw gridh cellw cellh color])
-  (^{:metadoc/categories #{:cat/g}} with-shape-line-width [_ width draw-fn]))
+  (draw-ellipse [_ position radius-x radius-y color])
+  (draw-filled-ellipse [_ position radius-x radius-y color])
+  (draw-circle [_ position radius color])
+  (draw-filled-circle [_ position radius color])
+  (draw-arc [_ center-position radius start-angle degree color])
+  (draw-sector [_ center-position radius start-angle degree color])
+  (draw-rectangle [_ x y w h color])
+  (draw-filled-rectangle [_ x y w h color])
+  (draw-line [_ start-position end-position color])
+  (draw-grid [drawer leftx bottomy gridw gridh cellw cellh color])
+  (with-shape-line-width [_ width draw-fn]))
 
 (defprotocol TextDrawer
-  (^{:metadoc/categories #{:cat/g}} draw-text [_ {:keys [x y text font h-align up? scale]}]
+  (draw-text [_ {:keys [x y text font h-align up? scale]}]
              "font, h-align, up? and scale are optional.
              h-align one of: :center, :left, :right. Default :center.
              up? renders the font over y, otherwise under.
              scale will multiply the drawn text size with the scale."))
 
 (defprotocol ImageDraw
-  (^{:metadoc/categories #{:cat/g}} draw-image [_ image position])
-  (^{:metadoc/categories #{:cat/g}} draw-centered-image [_ image position])
-  (^{:metadoc/categories #{:cat/g}} draw-rotated-centered-image [_ image rotation position]))
+  (draw-image [_ image position])
+  (draw-centered-image [_ image position])
+  (draw-rotated-centered-image [_ image rotation position]))
 
 (defrecord Graphics [batch
                      shape-drawer
@@ -657,6 +656,7 @@ Returns ctx."
                      unit-scale
                      cursors])
 
+(set-doc-category-for-unmarked-public-vars! :cat/g)
 
 ;; gdx helper fns
 
