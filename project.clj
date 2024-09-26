@@ -40,7 +40,7 @@
              ;"-Dcom.sun.management.jmxremote.ssl=false"
              ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
-  :codox {:source-uri "https://github.com/damn/ctx/blob/main/{filepath}#L{line}"
+  :codox {:source-uri "https://github.com/damn/clojure.ctx/blob/main/{filepath}#L{line}"
           :metadata {:doc/format :markdown}
           ;:exclude-vars #"(map)?->\p{Upper}" ; TODO not working
           :writer metadoc.writers.codox/write-docs}
