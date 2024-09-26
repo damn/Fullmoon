@@ -1,22 +1,22 @@
 (comment
  (sort (set (mapcat (comp :metadoc/categories meta second) (ns-publics *ns*))))
  )
-(ns clojure.world
+(ns clojure.ctx
   "## Glossary
 
   | Symbol           | Meaning                                        |
   | ---------------  | -----------------------------------------------|
-  | `ctx`            | The whole app is in one clojure record :Context - `clojure.world/Ctx`, consits of 'components', extendable                  |
+  | `ctx`            | The whole app is in one clojure record :Context - `clojure.ctx/Ctx`, consits of 'components', extendable                  |
   | `component`      | vector `[k v]` or `[k]` or `[k v1 v2 ..]`, can be configured in editor if data schema is given      |
   | `system`         | multimethod dispatching on ffirst              |
   | `eid` , `entity` | entity atom                                    |
-  | `entity*`        | entity value (defrecord `clojure.world/Entity`), consists of components, extendable |
+  | `entity*`        | entity value (defrecord `clojure.ctx/Entity`), consists of components, extendable |
   | `actor`          | A UI actor, not immutable, from libgdx scene2d: `com.badlogic.gdx.scenes.scene2d.Actor`        |
-  | `cell`/`cell*`   | Cells of the grid `clojure.world.GridCell`     |
+  | `cell`/`cell*`   | Cells of the grid `clojure.ctx.GridCell`     |
   | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
-  | `g`              | `clojure.world.Graphics`, consists of graphics components, extendable                       |
+  | `g`              | `clojure.ctx.Graphics`, consists of graphics components, extendable                       |
   | `grid`           | `data.grid2d.Grid`                             |
-  | `image`          | `clojure.world.Image`                          |
+  | `image`          | `clojure.ctx.Image`                          |
   | `position`       | `[x y]` vector                                 |"
   {:metadoc/categories {:cat/app "Application"
                         :cat/component "Component"

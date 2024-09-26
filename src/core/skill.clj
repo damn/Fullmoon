@@ -1,5 +1,5 @@
 (ns core.skill
-  (:require [clojure.world :refer :all]))
+  (:require [clojure.ctx :refer :all]))
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))

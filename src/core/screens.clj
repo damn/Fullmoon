@@ -1,5 +1,5 @@
 (ns core.screens
-  (:require [clojure.world :refer :all]
+  (:require [clojure.ctx :refer :all]
             [core.item :as inventory]
             [core.world :as world])
   ; TODO remove bad logic
@@ -587,7 +587,7 @@
   (set-state [this is-selected]
     (.bindRoot avar is-selected)))
 
-; TODO not using clojure.world ns ... only core
+; TODO not using clojure.ctx ns ... only core
 
 (defn- debug-flags [] ;
   (apply concat

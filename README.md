@@ -10,19 +10,19 @@ The whole game content is stored in `resources/properties.edn` and can be config
 
 There are 7 property-types:
 
-## 🖥️ App 
+## 🖥️ App
 
-## 💥 Audiovisuals 
+## 💥 Audiovisuals
 
-## 🐉 Creatures 
+## 🐉 Creatures
 
-## ⚔️ Items 
+## ⚔️ Items
 
-## 🚀 Projectiles 
+## 🚀 Projectiles
 
-## 🪄 Skills 
+## 🪄 Skills
 
-## 🌎 Worlds 
+## 🌎 Worlds
 
 
 ## Screenshots
@@ -60,7 +60,7 @@ It will start the application and also:
 * On any error the JVM does not have to be restarted, you can fix the error and call `dev.interactive/restart!`
     * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'dev.interactive)(restart!))`
 
-## [API Docs](https://damn.github.io/clojure.world/)
+## [API Docs](https://damn.github.io/ctx/)
 
 ## License
 

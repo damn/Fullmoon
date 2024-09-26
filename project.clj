@@ -1,6 +1,6 @@
 (def libgdx-version "1.12.1")
 
-(defproject clojure.world "-SNAPSHOT"
+(defproject clojure.ctx "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [metosin/malli "0.13.0"]
@@ -40,7 +40,7 @@
              ;"-Dcom.sun.management.jmxremote.ssl=false"
              ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
-  :codox {:source-uri "https://github.com/damn/clojure.world/blob/main/{filepath}#L{line}"
+  :codox {:source-uri "https://github.com/damn/ctx/blob/main/{filepath}#L{line}"
           :metadata {:doc/format :markdown}
           ;:exclude-vars #"(map)?->\p{Upper}" ; TODO not working
           :writer metadoc.writers.codox/write-docs}

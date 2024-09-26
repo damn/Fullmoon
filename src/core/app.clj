@@ -1,5 +1,5 @@
 (ns core.app
-  (:require [clojure.world :refer [start-app!]]
+  (:require [clojure.ctx :refer [start-app!]]
             core.creature
             core.projectile
             core.screens

@@ -1,5 +1,5 @@
 (ns core.stat
-  (:require [clojure.world :refer :all]
+  (:require [clojure.ctx :refer :all]
             [core.projectile :refer [projectile-size]]
             [core.skill :refer [has-skill?]]
             [clojure.string :as str])
@@ -96,7 +96,7 @@
       (when (seq modifiers)
         (mod-info-text modifiers)))))
 
-(extend-type clojure.world.Entity
+(extend-type clojure.ctx.Entity
   Modifiers
   (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
     {:pre [(= "modifier" (namespace modifier-k))]}
@@ -229,7 +229,7 @@
   {:data :number
    :modifier-ops [:op/inc]})
 
-(extend-type clojure.world.Entity
+(extend-type clojure.ctx.Entity
   Stats
   (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]
