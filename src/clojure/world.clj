@@ -63,7 +63,7 @@
            space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster))
 
-; TODO only on first load of the file ? ?
+; only on first load of the file ? ?
 (defn- conclude-section! [cat-k]
   (doseq [[_sym avar] (ns-publics *ns*)]
     (alter-meta! avar (fn [m]
@@ -73,13 +73,13 @@
 
 ;;;; 🎮 libgdx
 
-(declare ^{:tag Application}               gdx-app
-         ^{:tag Files}                     gdx-files
+; TODO those shouldn't be public ....
+
+(declare ^{:tag Files}                     gdx-files
          ^{:tag Input}                     gdx-input
          ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
 
 (defn- bind-gdx-statics! []
-  (.bindRoot #'gdx-app      Gdx/app)
   (.bindRoot #'gdx-files    Gdx/files)
   (.bindRoot #'gdx-input    Gdx/input)
   (.bindRoot #'gdx-graphics Gdx/graphics))
@@ -1581,7 +1581,7 @@ Returns ctx."
   ^{:metadoc/categories #{:cat/app}}
   app-state
   "An atom referencing the current Ctx. Only use by ui-callbacks or for development/debugging.
-  Use only with (.postRunnable gdx-app f) for making manual changes to the ctx."
+  Use only with (post-runnable! & exprs) for making manual changes to the ctx."
   (atom nil))
 
 (defn add-tooltip!
@@ -3395,6 +3395,11 @@ Returns ctx."
  )
 
 ;;;;️ Application
+
+(defmacro post-runnable! [& forms]
+  `(.postRunnable Gdx/app (fn [] ~@forms)))
+
+(defn exit-app [] (.exit Gdx/app))
 
 (defn- set-first-screen [context]
   (->> context

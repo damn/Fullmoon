@@ -525,9 +525,8 @@
    (.setInputProcessor gdx-input nil)
    (init-game-context ctx :mode :game-loop/replay))
 
- (.postRunnable gdx-app
-  (fn []
-    (swap! app-state start-replay-mode!)))
+ (post-runnable!
+  (swap! app-state start-replay-mode!))
 
  )
 
@@ -549,7 +548,7 @@
                                       [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
                                       [(->text-button "Property editor" #(change-screen % :screens/property-editor))])
-                                    [(->text-button "Exit" (fn [ctx] (.exit gdx-app) ctx))]]))
+                                    [(->text-button "Exit" (fn [ctx] (exit-app) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
 
@@ -563,7 +562,7 @@
    (->buttons ctx)
    (->actor {:act (fn [_ctx]
                     (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
-                      (.exit gdx-app)))})])
+                      (exit-app)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu
