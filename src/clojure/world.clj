@@ -63,10 +63,22 @@
            space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster))
 
+;;;; 🎮 libgdx
+
+(declare ^{:tag Application               :metadoc/categories #{:cat/gdx}} gdx-app
+         ^{:tag Files                     :metadoc/categories #{:cat/gdx}} gdx-files
+         ^{:tag Input                     :metadoc/categories #{:cat/gdx}} gdx-input
+         ^{:tag com.badlogic.gdx.Graphics :metadoc/categories #{:cat/gdx}} gdx-graphics)
+
+(defn- bind-gdx-statics! []
+  (.bindRoot #'gdx-app      Gdx/app)
+  (.bindRoot #'gdx-files    Gdx/files)
+  (.bindRoot #'gdx-input    Gdx/input)
+  (.bindRoot #'gdx-graphics Gdx/graphics))
+
 ;;;; 🔧 Utils
 
-(defn
-  find-first
+(defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.
   Consumes sequences up to the first match, will consume the entire sequence
   and return nil if no match is found."
@@ -222,8 +234,7 @@
 (defn ^{:metadoc/categories #{:cat/utils}} high-weighted-rand-nth [coll]
   (nth coll (high-weighted-rand-int (count coll))))
 
-
-;;;; ⚙️  Systems
+;;;; 👽 Alien Technology
 
 (def
   ^{:metadoc/categories #{:cat/component}}
@@ -247,6 +258,80 @@
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
+
+(def ^{:metadoc/categories #{:cat/component}} component-attributes {})
+
+(def ^:private warn-name-ns-mismatch? false)
+
+(defn- k->component-ns [k] ;
+  (symbol (str "components." (name (namespace k)) "." (name k))))
+
+(defn- check-warn-ns-name-mismatch [k]
+  (when (and warn-name-ns-mismatch?
+             (namespace k)
+             (not= (k->component-ns k) (ns-name *ns*)))
+    (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
+
+(defn ^{:metadoc/categories #{:cat/component}} defcomponent*
+  "Defines a component without systems methods, so only to set metadata."
+  [k attr-map]
+  (when (get component-attributes k)
+    (println "WARNING: Overwriting defcomponent" k "attr-map"))
+  (alter-var-root #'component-attributes assoc k attr-map))
+
+(defmacro ^{:metadoc/categories #{:cat/component}} defcomponent
+  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
+
+attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
+
+Example:
+```clojure
+(defsystem foo \"foo docstring.\" [_])
+
+(defcomponent :foo/bar
+  {:let {:keys [a b]}}
+  (foo [_]
+    (+ a b)))
+
+(foo [:foo/bar {:a 1 :b 2}])
+=> 3
+```"
+  [k & sys-impls]
+  (check-warn-ns-name-mismatch k)
+  (let [attr-map? (not (list? (first sys-impls)))
+        attr-map  (if attr-map? (first sys-impls) {})
+        sys-impls (if attr-map? (rest sys-impls) sys-impls)
+        let-bindings (:let attr-map)
+        attr-map (dissoc attr-map :let)]
+    `(do
+      (when ~attr-map?
+        (defcomponent* ~k ~attr-map))
+      #_(alter-meta! *ns* #(update % :doc str "\n* defcomponent `" ~k "`"))
+      ~@(for [[sys & fn-body] sys-impls
+              :let [sys-var (resolve sys)
+                    sys-params (:params (meta sys-var))
+                    fn-params (first fn-body)
+                    fn-exprs (rest fn-body)]]
+          (do
+           (when-not sys-var
+             (throw (IllegalArgumentException. (str sys " does not exist."))))
+           (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
+             (throw (IllegalArgumentException.
+                     (str sys-var " requires " (count sys-params) " args: " sys-params "."
+                          " Given " (count fn-params)  " args: " fn-params))))
+           `(do
+             (assert (keyword? ~k) (pr-str ~k))
+             (alter-var-root #'component-attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
+             (when (get (methods @~sys-var) ~k)
+               (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
+             (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
+               [& params#]
+               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
+                     ~fn-params params#]
+                 ~@fn-exprs)))))
+      ~k)))
+
+;;;; ⚙️  Systems
 
 (defsystem ->value "..." [_])
 
@@ -351,80 +436,6 @@ Default method returns true."
 (defsystem ^{:metadoc/categories #{:cat/sys}} clicked-skillmenu-skill "FIXME" [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
-;;; 📦 Components
-
-(def ^{:metadoc/categories #{:cat/component}} component-attributes {})
-
-(def ^:private warn-name-ns-mismatch? false)
-
-(defn- k->component-ns [k] ;
-  (symbol (str "components." (name (namespace k)) "." (name k))))
-
-(defn- check-warn-ns-name-mismatch [k]
-  (when (and warn-name-ns-mismatch?
-             (namespace k)
-             (not= (k->component-ns k) (ns-name *ns*)))
-    (println "WARNING: defcomponent " k " is not matching with namespace name " (ns-name *ns*))))
-
-(defn ^{:metadoc/categories #{:cat/component}} defcomponent*
-  "Defines a component without systems methods, so only to set metadata."
-  [k attr-map]
-  (when (get component-attributes k)
-    (println "WARNING: Overwriting defcomponent" k "attr-map"))
-  (alter-var-root #'component-attributes assoc k attr-map))
-
-(defmacro ^{:metadoc/categories #{:cat/component}} defcomponent
-  "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
-
-attr-map may contain `:let` binding which is let over the value part of a component `[k value]`.
-
-Example:
-```clojure
-(defsystem foo \"foo docstring.\" [_])
-
-(defcomponent :foo/bar
-  {:let {:keys [a b]}}
-  (foo [_]
-    (+ a b)))
-
-(foo [:foo/bar {:a 1 :b 2}])
-=> 3
-```"
-  [k & sys-impls]
-  (check-warn-ns-name-mismatch k)
-  (let [attr-map? (not (list? (first sys-impls)))
-        attr-map  (if attr-map? (first sys-impls) {})
-        sys-impls (if attr-map? (rest sys-impls) sys-impls)
-        let-bindings (:let attr-map)
-        attr-map (dissoc attr-map :let)]
-    `(do
-      (when ~attr-map?
-        (defcomponent* ~k ~attr-map))
-      #_(alter-meta! *ns* #(update % :doc str "\n* defcomponent `" ~k "`"))
-      ~@(for [[sys & fn-body] sys-impls
-              :let [sys-var (resolve sys)
-                    sys-params (:params (meta sys-var))
-                    fn-params (first fn-body)
-                    fn-exprs (rest fn-body)]]
-          (do
-           (when-not sys-var
-             (throw (IllegalArgumentException. (str sys " does not exist."))))
-           (when-not (= (count sys-params) (count fn-params)) ; defmethods do not check this, that's why we check it here.
-             (throw (IllegalArgumentException.
-                     (str sys-var " requires " (count sys-params) " args: " sys-params "."
-                          " Given " (count fn-params)  " args: " fn-params))))
-           `(do
-             (assert (keyword? ~k) (pr-str ~k))
-             (alter-var-root #'component-attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
-             (when (get (methods @~sys-var) ~k)
-               (println "WARNING: Overwriting defcomponent" ~k "on" ~sys-var))
-             (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
-               [& params#]
-               (let [~(if let-bindings let-bindings '_) (get (first params#) 1) ; get because maybe component is just [:foo] without v.
-                     ~fn-params params#]
-                 ~@fn-exprs)))))
-      ~k)))
-
 ;;;; 💥 Effects
 
 (def ^:private record-txs? false)
@@ -440,20 +451,6 @@ Example:
 
 #_(defn frame->txs [_ frame-number]
   (@frame->txs frame-number))
-
-(defcomponent :context/effect-handler
-  (->mk [[_ [game-loop-mode record-transactions?]] _ctx]
-    (case game-loop-mode
-      :game-loop/normal (when record-transactions?
-                          (clear-recorded-txs!)
-                          (.bindRoot #'record-txs? true))
-      :game-loop/replay (do
-                         (assert record-txs?)
-                         (.bindRoot #'record-txs? false)
-                         ;(println "Initial entity txs:")
-                         ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
-                         ))
-    nil))
 
 (defn- add-tx-to-frame [frame->txs frame-num tx]
   (update frame->txs frame-num (fn [txs-at-frame]
@@ -487,7 +484,6 @@ Example:
                  (not= (first tx) :tx/effect))
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
-
 (declare effect!)
 
 (defn- handle-tx! [ctx tx]
@@ -512,19 +508,6 @@ Example:
                                  t))))))
           ctx
           txs))
-
-;;;; 🎮 libgdx
-
-(declare ^{:tag Application               :metadoc/categories #{:cat/gdx}} gdx-app
-         ^{:tag Files                     :metadoc/categories #{:cat/gdx}} gdx-files
-         ^{:tag Input                     :metadoc/categories #{:cat/gdx}} gdx-input
-         ^{:tag com.badlogic.gdx.Graphics :metadoc/categories #{:cat/gdx}} gdx-graphics)
-
-(defn- bind-gdx-statics! []
-  (.bindRoot #'gdx-app      Gdx/app)
-  (.bindRoot #'gdx-files    Gdx/files)
-  (.bindRoot #'gdx-input    Gdx/input)
-  (.bindRoot #'gdx-graphics Gdx/graphics))
 
 ;;;; 🌀 Assets
 
@@ -554,31 +537,14 @@ Example:
       (println "load-assets" (str "[" (.getSimpleName class) "] - [" file "]")))
     (.load ^AssetManager manager ^String file class)))
 
-(defn- asset-files [folder file-extensions]
+(defn- search-files [folder file-extensions]
   (map #(str/replace-first % folder "")
        (recursively-search folder file-extensions)))
 
-(def assets :context/assets)
-
-(defcomponent assets
-  {:data :some
-   :let {:keys [folder
-                sound-file-extensions
-                image-file-extensions
-                log?]}}
-  (->mk [_ _ctx]
-    (let [manager (->asset-manager)
-          sound-files   (asset-files folder sound-file-extensions)
-          texture-files (asset-files folder image-file-extensions)]
-      (load-assets! manager sound-files   Sound   log?)
-      (load-assets! manager texture-files Texture log?)
-      (.finishLoading manager)
-      {:manager manager
-       :sound-files sound-files
-       :texture-files texture-files})))
+(def ctx-assets :context/assets)
 
 (defn- get-asset [ctx file]
-  (get (:manager (assets ctx)) file))
+  (get (:manager (ctx-assets ctx)) file))
 
 (defn play-sound!
   "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
@@ -594,10 +560,42 @@ Returns ctx."
   [ctx file]
   (get-asset ctx file))
 
-(defcomponent :tx/sound
-  {:data :sound}
-  (do! [[_ file] ctx]
-    (play-sound! ctx file)))
+;;;; Context Components (these will go very much down then ?)
+;; => only called after app-start !!
+
+(defcomponent ctx-assets
+  {:data :some
+   :let {:keys [folder
+                sound-file-extensions
+                image-file-extensions
+                log?]}}
+  (->mk [_ _ctx]
+    (let [manager (->asset-manager)
+          sound-files   (search-files folder sound-file-extensions)
+          texture-files (search-files folder image-file-extensions)]
+      (load-assets! manager sound-files   Sound   log?)
+      (load-assets! manager texture-files Texture log?)
+      (.finishLoading manager)
+      {:manager manager
+       :sound-files sound-files
+       :texture-files texture-files})))
+
+(defcomponent :context/effect-handler
+  (->mk [[_ [game-loop-mode record-transactions?]] _ctx]
+    (case game-loop-mode
+      :game-loop/normal (when record-transactions?
+                          (clear-recorded-txs!)
+                          (.bindRoot #'record-txs? true))
+      :game-loop/replay (do
+                         (assert record-txs?)
+                         (.bindRoot #'record-txs? false)
+                         ;(println "Initial entity txs:")
+                         ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
+                         ))
+    nil))
+
+
+;;;;
 
 (defprotocol Player
   (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
@@ -1151,11 +1149,6 @@ Returns ctx."
 
 (defn ^{:metadoc/categories #{:cat/g}} set-cursor! [{g :context/graphics} cursor-key]
   (.setCursor gdx-graphics (safe-get (:cursors g) cursor-key)))
-
-(defcomponent :tx/cursor
-  (do! [[_ cursor-key] ctx]
-    (set-cursor! ctx cursor-key)
-    ctx))
 
 ;; ctx/graphics
 
@@ -2139,17 +2132,10 @@ Returns ctx."
                                            (* (gui-viewport-height ctx) (/ 3 4))]
                          :pack? true})))
 
-(defcomponent :tx/player-modal
-  (do! [[_ params] ctx]
-    (show-player-modal! ctx params)))
 
 ;; context msg yo player
 
 (def ^:private ctx-msg-player :context/msg-to-player)
-
-(defcomponent :tx/msg-to-player
-  (do! [[_ message] ctx]
-    (assoc ctx ctx-msg-player {:message message :counter 0})))
 
 (def ^:private duration-seconds 1.5)
 
@@ -2436,7 +2422,7 @@ Returns ctx."
 ; too many ! too big ! scroll ... only show files first & preview?
 ; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
-  (for [file (sort (:texture-files (assets ctx)))]
+  (for [file (sort (:texture-files (ctx-assets ctx)))]
     [(->image-button (prop->image ctx file) identity)]
     #_[(->text-button file identity)]))
 
@@ -2463,7 +2449,7 @@ Returns ctx."
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [ctx table]
-  (let [rows (for [sound-file (:sound-files (assets ctx))]
+  (let [rows (for [sound-file (:sound-files (ctx-assets ctx))]
                [(->text-button (str/replace-first sound-file "sounds/" "")
                                   (fn [{:keys [context/actor] :as ctx}]
                                     (clear-children! table)
@@ -3068,25 +3054,6 @@ Returns ctx."
       ; thats why we reuse component and not fetch each time again for key
       (create component eid ctx))))
 
-(defcomponent :e/create
-  (do! [[_ position body components] ctx]
-    (assert (and (not (contains? components :position))
-                 (not (contains? components :entity/id))
-                 (not (contains? components :entity/uid))))
-    (let [eid (atom nil)]
-      (reset! eid (-> body
-                      (assoc :position position)
-                      ->Body
-                      (safe-merge (-> components
-                                      (assoc :entity/id eid
-                                             :entity/uid (unique-number!))
-                                      (create-vs ctx)))))
-      (create-e-system eid))))
-
-(defcomponent :e/destroy
-  (do! [[_ entity] ctx]
-    [[:e/assoc entity :entity/destroyed? true]]))
-
 (def ^:private ^:dbg-flag show-body-bounds false)
 
 (defn- draw-body-rect [g entity* color]
@@ -3156,34 +3123,6 @@ Returns ctx."
         component @entity]
     (fn [ctx]
       (destroy component entity ctx))))
-
-(defcomponent :e/assoc
-  (do! [[_ entity k v] ctx]
-    (assert (keyword? k))
-    (swap! entity assoc k v)
-    ctx))
-
-(defcomponent :e/assoc-in
-  (do! [[_ entity ks v] ctx]
-    (swap! entity assoc-in ks v)
-    ctx))
-
-(defcomponent :e/dissoc
-  (do! [[_ entity k] ctx]
-    (assert (keyword? k))
-    (swap! entity dissoc k)
-    ctx))
-
-(defcomponent :e/dissoc-in
-  (do! [[_ entity ks] ctx]
-    (assert (> (count ks) 1))
-    (swap! entity update-in (drop-last ks) dissoc (last ks))
-    ctx))
-
-(defcomponent :e/update-in
-  (do! [[_ entity ks f] ctx]
-    (swap! entity update-in ks f)
-    ctx))
 
 (defprotocol Animation
   (^:private anim-tick [_ delta])
@@ -3337,14 +3276,6 @@ Returns ctx."
         (with-shape-line-width g 4 #(draw-line g position end color))
         (draw-line g position end color)))))
 
-(defcomponent :tx/line-render
-  (do! [[_ {:keys [start end duration color thick?]}] _ctx]
-    [[:e/create
-      start
-      effect-body-props
-      #:entity {:line-render {:thick? thick? :end end :color color}
-                :delete-after-duration duration}]]))
-
 (def ^:private outline-alpha 0.4)
 (def ^:private enemy-color    [1 0 0 outline-alpha])
 (def ^:private friendly-color [0 1 0 outline-alpha])
@@ -3421,17 +3352,6 @@ Returns ctx."
              [:e/assoc eid :rotation-angle (v-get-angle-from-vector direction)])
            [:tx/position-changed eid]])))))
 
-(defcomponent :tx/set-movement
-  (do! [[_ entity movement] ctx]
-    (assert (or (nil? movement)
-                (nil? (:direction movement))
-                (and (:direction movement) ; continue schema of that ...
-                     #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
-    [(if (or (nil? movement)
-             (nil? (:direction movement)))
-       [:e/dissoc entity :entity/movement]
-       [:e/assoc entity :entity/movement movement])]))
-
 ; TODO add teleport effect ~ or tx
 
 (def ^:private shout-radius 4)
@@ -3452,15 +3372,6 @@ Returns ctx."
             (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
               [:tx/event friendly-eid :alert])))))
 
-(defcomponent :tx/shout
-  (do! [[_ position faction delay-seconds] ctx]
-    [[:e/create
-      position
-      effect-body-props
-      {:entity/alert-friendlies-after-duration
-       {:counter (->counter ctx delay-seconds)
-        :faction faction}}]]))
-
 (defcomponent :entity/string-effect
   (tick [[k {:keys [counter]}] eid context]
     (when (stopped? context counter)
@@ -3474,18 +3385,6 @@ Returns ctx."
                   :y (+ y (:half-height entity*) (pixels->world-units g hpbar-height-px))
                   :scale 2
                   :up? true}))))
-
-(defcomponent :tx/add-text-effect
-  (do! [[_ entity text] ctx]
-    [[:e/assoc
-      entity
-      :entity/string-effect
-      (if-let [string-effect (:entity/string-effect @entity)]
-        (-> string-effect
-            (update :text str "\n" text)
-            (update :counter #(reset ctx %)))
-        {:text text
-         :counter (->counter ctx 0.4)})]]))
 
 ;; ctx
 
@@ -3682,14 +3581,6 @@ Returns ctx."
      [:e/update-in :entity [:entity/modifiers :modifier/hp :op/max-mult] :fn]
      [:e/update-in :entity [:entity/modifiers :modifier/movement-speed :op/mult] :fn]])
  )
-
-(defcomponent :tx/apply-modifiers
-  (do! [[_ entity modifiers] _ctx]
-    (txs-update-modifiers entity modifiers conj-value)))
-
-(defcomponent :tx/reverse-modifiers
-  (do! [[_ entity modifiers] _ctx]
-    (txs-update-modifiers entity modifiers remove-value)))
 
 ; DRY ->effective-value (summing)
 ; also: sort-by op/order @ modifier/info-text itself (so player will see applied order)
@@ -4184,7 +4075,7 @@ Returns ctx."
                      :width
                      :height
                      :title]]
-  :app/context [:map [assets
+  :app/context [:map [ctx-assets
                       :context/config
                       :context/graphics
                       :context/screens
@@ -4216,6 +4107,101 @@ Sets [[app-state]] atom to the context."}
               :columns 10
               :image/scale 2}})
 
+(defcomponent :e/create
+  (do! [[_ position body components] ctx]
+    (assert (and (not (contains? components :position))
+                 (not (contains? components :entity/id))
+                 (not (contains? components :entity/uid))))
+    (let [eid (atom nil)]
+      (reset! eid (-> body
+                      (assoc :position position)
+                      ->Body
+                      (safe-merge (-> components
+                                      (assoc :entity/id eid
+                                             :entity/uid (unique-number!))
+                                      (create-vs ctx)))))
+      (create-e-system eid))))
+
+(defcomponent :e/destroy
+  (do! [[_ entity] ctx]
+    [[:e/assoc entity :entity/destroyed? true]]))
+
+(defcomponent :e/assoc
+  (do! [[_ entity k v] ctx]
+    (assert (keyword? k))
+    (swap! entity assoc k v)
+    ctx))
+
+(defcomponent :e/assoc-in
+  (do! [[_ entity ks v] ctx]
+    (swap! entity assoc-in ks v)
+    ctx))
+
+(defcomponent :e/dissoc
+  (do! [[_ entity k] ctx]
+    (assert (keyword? k))
+    (swap! entity dissoc k)
+    ctx))
+
+(defcomponent :e/dissoc-in
+  (do! [[_ entity ks] ctx]
+    (assert (> (count ks) 1))
+    (swap! entity update-in (drop-last ks) dissoc (last ks))
+    ctx))
+
+(defcomponent :e/update-in
+  (do! [[_ entity ks f] ctx]
+    (swap! entity update-in ks f)
+    ctx))
+
+(defcomponent :tx/line-render
+  (do! [[_ {:keys [start end duration color thick?]}] _ctx]
+    [[:e/create
+      start
+      effect-body-props
+      #:entity {:line-render {:thick? thick? :end end :color color}
+                :delete-after-duration duration}]]))
+
+(defcomponent :tx/set-movement
+  (do! [[_ entity movement] ctx]
+    (assert (or (nil? movement)
+                (nil? (:direction movement))
+                (and (:direction movement) ; continue schema of that ...
+                     #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
+    [(if (or (nil? movement)
+             (nil? (:direction movement)))
+       [:e/dissoc entity :entity/movement]
+       [:e/assoc entity :entity/movement movement])]))
+
+(defcomponent :tx/shout
+  (do! [[_ position faction delay-seconds] ctx]
+    [[:e/create
+      position
+      effect-body-props
+      {:entity/alert-friendlies-after-duration
+       {:counter (->counter ctx delay-seconds)
+        :faction faction}}]]))
+
+(defcomponent :tx/add-text-effect
+  (do! [[_ entity text] ctx]
+    [[:e/assoc
+      entity
+      :entity/string-effect
+      (if-let [string-effect (:entity/string-effect @entity)]
+        (-> string-effect
+            (update :text str "\n" text)
+            (update :counter #(reset ctx %)))
+        {:text text
+         :counter (->counter ctx 0.4)})]]))
+
+(defcomponent :tx/apply-modifiers
+  (do! [[_ entity modifiers] _ctx]
+    (txs-update-modifiers entity modifiers conj-value)))
+
+(defcomponent :tx/reverse-modifiers
+  (do! [[_ entity modifiers] _ctx]
+    (txs-update-modifiers entity modifiers remove-value)))
+
 (defcomponent :tx/audiovisual
   (do! [[_ position id] ctx]
     (let [{:keys [tx/sound
@@ -4226,3 +4212,21 @@ Sets [[app-state]] atom to the context."}
         effect-body-props
         {:entity/animation animation
          :entity/delete-after-animation-stopped? true}]])))
+
+(defcomponent :tx/msg-to-player
+  (do! [[_ message] ctx]
+    (assoc ctx ctx-msg-player {:message message :counter 0})))
+
+(defcomponent :tx/sound
+  {:data :sound}
+  (do! [[_ file] ctx]
+    (play-sound! ctx file)))
+
+(defcomponent :tx/cursor
+  (do! [[_ cursor-key] ctx]
+    (set-cursor! ctx cursor-key)
+    ctx))
+
+(defcomponent :tx/player-modal
+  (do! [[_ params] ctx]
+    (show-player-modal! ctx params)))
