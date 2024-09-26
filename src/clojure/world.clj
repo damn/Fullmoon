@@ -6,14 +6,14 @@
 
   | Symbol           | Meaning                                        |
   | ---------------  | -----------------------------------------------|
-  | `actor`          | `com.badlogic.gdx.scenes.scene2d.Actor`        |
-  | `ctx`            | Context - `clojure.world/Ctx`                  |
-  | `component`      | vector `[k v]` or `[k]` or `[k v1 v2 ..]`      |
+  | `actor`          | A UI actor, not immutable, from libgdx scene2d: `com.badlogic.gdx.scenes.scene2d.Actor`        |
+  | `ctx`            | The whole app is in one clojure record :Context - `clojure.world/Ctx`, consits of 'components', extendable                  |
+  | `component`      | vector `[k v]` or `[k]` or `[k v1 v2 ..]`, can be configured in editor if data schema is given      |
   | `cell`/`cell*`   | Cells of the grid `clojure.world.GridCell`     |
   | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
   | `eid` , `entity` | entity atom                                    |
-  | `entity*`        | entity value (defrecord `clojure.world/Entity`)|
-  | `g`              | `clojure.world.Graphics`                       |
+  | `entity*`        | entity value (defrecord `clojure.world/Entity`), consists of components, extendable |
+  | `g`              | `clojure.world.Graphics`, consists of graphics components, extendable                       |
   | `grid`           | `data.grid2d.Grid`                             |
   | `image`          | `clojure.world.Image`                          |
   | `system`         | multimethod dispatching on ffirst              |
