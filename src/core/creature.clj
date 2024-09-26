@@ -2,9 +2,7 @@
   (:require [clojure.world :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
-            [core.item :as item])
-  (:import (com.badlogic.gdx Input$Buttons Input$Keys)))
-
+            [core.item :as item]))
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
@@ -284,8 +282,7 @@
     true)
 
   (manual-tick [_ ctx]
-    (when (and (.isButtonJustPressed gdx-input Input$Buttons/LEFT)
-               (world-item? ctx))
+    (when (and (button-just-pressed? :left) (world-item? ctx))
       [[:tx/event eid :drop-item]]))
 
   (clicked-inventory-cell [_ cell]
@@ -339,7 +336,7 @@
   (exit [_ _ctx]
     [[:tx/set-movement eid nil]])
 
-  (tick [_ eid context]
+  (tick [_ eid _ctx]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/set-movement eid {:direction movement-vector
                               :speed (entity-stat @eid :stats/movement-speed)}]]

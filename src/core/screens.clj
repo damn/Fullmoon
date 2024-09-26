@@ -2,8 +2,8 @@
   (:require [clojure.world :refer :all]
             [core.item :as inventory]
             [core.world :as world])
-  (:import com.badlogic.gdx.Input$Keys
-           com.badlogic.gdx.graphics.Color
+  ; TODO remove bad logic
+  (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 ; 28.4 viewportwidth
@@ -54,8 +54,8 @@
                                                (camera-position (world-camera context))
                                                0.5
                                                Color/GREEN)))
-      (if (or (.isKeyJustPressed gdx-input Input$Keys/TAB)
-              (.isKeyJustPressed gdx-input Input$Keys/ESCAPE))
+      (if (or (key-just-pressed? :keys/tab)
+              (key-just-pressed? :keys/escape))
         (change-screen context :screens/world)
         context)))
 
@@ -157,8 +157,8 @@
 ; context/world ... ?
 
 (defn- player-unpaused? []
-  (or (.isKeyJustPressed gdx-input Input$Keys/P)
-      (.isKeyPressed     gdx-input Input$Keys/SPACE)))
+  (or (key-just-pressed? :keys/p)
+      (key-pressed? :keys/space)))
 
 (defn- update-game-paused [ctx]
   (assoc ctx :context/paused? (or (:context/entity-tick-error ctx)
@@ -362,7 +362,7 @@
  (defn up-skill-hotkeys []
    #_(doseq [slot slot-keys
              :let [skill-id (slot @slot->skill-id)]
-             :when (and (.isKeyJustPressed gdx-input (number-str->input-key (name slot)))
+             :when (and (key-just-pressed? (number-str->input-key (name slot)))
                         skill-id)]
        (.setChecked ^Button (.findActor horizontal-group (str skill-id)) true)))
 
@@ -439,14 +439,14 @@
       widget-data)))
 
 (defn- hotkey->window-id [{:keys [context/config]}]
-  (merge {Input$Keys/I :inventory-window
-          Input$Keys/E :entity-info-window}
+  (merge {:keys/i :inventory-window
+          :keys/e :entity-info-window}
          (when (safe-get config :debug-window?)
-           {Input$Keys/Z :debug-window})))
+           {:keys/z :debug-window})))
 
 (defn- check-window-hotkeys [ctx]
   (doseq [[hotkey window-id] (hotkey->window-id ctx)
-          :when (.isKeyJustPressed gdx-input hotkey)]
+          :when (key-just-pressed? hotkey)]
     (toggle-visible! (get (:windows (stage-get ctx)) window-id))))
 
 (defn- close-windows?! [context]
@@ -463,19 +463,19 @@
 
 (defn- check-zoom-keys [ctx]
   (let [camera (world-camera ctx)]
-    (when (.isKeyPressed gdx-input Input$Keys/MINUS)  (adjust-zoom camera    zoom-speed))
-    (when (.isKeyPressed gdx-input Input$Keys/EQUALS) (adjust-zoom camera (- zoom-speed)))))
+    (when (key-pressed? :keys/minus)  (adjust-zoom camera    zoom-speed))
+    (when (key-pressed? :keys/equals) (adjust-zoom camera (- zoom-speed)))))
 
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
   (check-zoom-keys ctx)
   (check-window-hotkeys ctx)
-  (cond (and (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
+  (cond (and (key-just-pressed? :keys/escape)
              (not (close-windows?! ctx)))
         (change-screen ctx :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen-render!
-        #_(.isKeyJustPressed gdx-input Input$Keys/TAB)
+        #_(key-just-pressed? :keys/tab)
         #_(change-screen ctx :screens/minimap)
 
         :else
@@ -561,7 +561,7 @@
   [(->background-image ctx)
    (->buttons ctx)
    (->actor {:act (fn [_ctx]
-                    (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
+                    (when (key-just-pressed? :keys/escape)
                       (exit-app!)))})])
 
 (derive :screens/main-menu :screens/stage)
@@ -624,7 +624,7 @@
 
 (defcomponent :options/sub-screen
   (screen-render [_ ctx]
-    (if (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
+    (if (key-just-pressed? :keys/escape)
       (change-screen ctx :screens/world)
       ctx)))
 

@@ -3,8 +3,8 @@
             [core.projectile :refer [projectile-size]]
             [core.skill :refer [has-skill?]]
             [clojure.string :as str])
+  ; TODO remove bad logic
   (:import com.badlogic.gdx.graphics.Color
-           com.badlogic.gdx.Input$Buttons
            com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup) )
 
 ; TODO define op-order here ...
@@ -1018,7 +1018,7 @@
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state ctx @eid)]
         (cons [:tx/cursor cursor]
-              (when (.isButtonJustPressed gdx-input Input$Buttons/LEFT)
+              (when (button-just-pressed? :left)
                 (on-click))))))
 
   (clicked-inventory-cell [_ cell]
