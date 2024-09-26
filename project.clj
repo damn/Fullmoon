@@ -20,6 +20,7 @@
                  [com.kotcrab.vis/vis-ui "1.5.2"]
 
                  [metadoc "0.2.9"]
+
                  [lein-hiera "2.0.0"]]
   :plugins [[jonase/eastwood "1.2.2"]
             [lein-ancient "1.0.0-RC3"]

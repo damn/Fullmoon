@@ -3405,10 +3405,15 @@ Returns ctx."
 
 ;;;;️ Application
 
-(defmacro post-runnable! [& forms]
+(defmacro post-runnable!
+  {:metadoc/categories #{:cat/app}}
+  [& forms]
   `(.postRunnable Gdx/app (fn [] ~@forms)))
 
-(defn exit-app [] (.exit Gdx/app))
+(defn exit-app!
+  {:metadoc/categories #{:cat/app}}
+  []
+  (.exit Gdx/app))
 
 (defn- set-first-screen [context]
   (->> context

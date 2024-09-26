@@ -548,7 +548,7 @@
                                       [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
                                       [(->text-button "Property editor" #(change-screen % :screens/property-editor))])
-                                    [(->text-button "Exit" (fn [ctx] (exit-app) ctx))]]))
+                                    [(->text-button "Exit" (fn [ctx] (exit-app!) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
 
@@ -562,7 +562,7 @@
    (->buttons ctx)
    (->actor {:act (fn [_ctx]
                     (when (.isKeyJustPressed gdx-input Input$Keys/ESCAPE)
-                      (exit-app)))})])
+                      (exit-app!)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu
