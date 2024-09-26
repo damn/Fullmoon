@@ -1,4 +1,4 @@
-A domain-specific language for creating worlds based on [clojure](https://clojure.org/), [libgdx](https://libgdx.com/), [vis-ui](https://github.com/kotcrab/vis-ui) and [malli](https://github.com/metosin/malli).
+A domain-specific language for creating games.
 
 It is based around the idea to keep the state of a game in one data structure named context/ctx.
 
