@@ -64,7 +64,7 @@
            gdl.RayCaster))
 
 ; TODO only on first load of the file ? ?
-(defn- set-doc-category-for-unmarked-public-vars! [cat-k]
+(defn- conclude-section! [cat-k]
   (doseq [[_sym avar] (ns-publics *ns*)]
     (alter-meta! avar (fn [m]
                         (if (:metadoc/categories m)
@@ -84,7 +84,7 @@
   (.bindRoot #'gdx-input    Gdx/input)
   (.bindRoot #'gdx-graphics Gdx/graphics))
 
-(set-doc-category-for-unmarked-public-vars! :cat/libgdx)
+(conclude-section! :cat/libgdx)
 
 ;;;; 🔧 Utils
 
@@ -233,7 +233,7 @@
 (defn high-weighted-rand-nth [coll]
   (nth coll (high-weighted-rand-int (count coll))))
 
-(set-doc-category-for-unmarked-public-vars! :cat/utils)
+(conclude-section! :cat/utils)
 
 ;;;; defsystem & defcomponent
 
@@ -327,7 +327,7 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
-(set-doc-category-for-unmarked-public-vars! :cat/component)
+(conclude-section! :cat/component)
 
 ;;;; ⚙️  Systems
 
@@ -434,7 +434,7 @@ Default method returns true."
 (defsystem clicked-skillmenu-skill "FIXME" [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
-(set-doc-category-for-unmarked-public-vars! :cat/systems)
+(conclude-section! :cat/systems)
 
 ;;;; effect!
 
@@ -656,7 +656,7 @@ Returns ctx."
                      unit-scale
                      cursors])
 
-(set-doc-category-for-unmarked-public-vars! :cat/g)
+(conclude-section! :cat/g)
 
 ;; gdx helper fns
 
@@ -1516,36 +1516,36 @@ Returns ctx."
 
 ;; gdx scene2d helper
 
-(defn ^{:metadoc/categories #{:cat/ui}} actor-id [^Actor actor]
+(defn actor-id [^Actor actor]
   (.getUserObject actor))
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-id! [^Actor actor id]
+(defn set-id! [^Actor actor id]
   (.setUserObject actor id))
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-name! [^Actor actor name]
+(defn set-name! [^Actor actor name]
   (.setName actor name))
 
-(defn ^{:metadoc/categories #{:cat/ui}} actor-name [^Actor actor]
+(defn actor-name [^Actor actor]
   (.getName actor))
 
-(defn ^{:metadoc/categories #{:cat/ui}} visible? [^Actor actor] ; used
+(defn visible? [^Actor actor] ; used
   (.isVisible actor))
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-visible! [^Actor actor bool]
+(defn set-visible! [^Actor actor bool]
   (.setVisible actor (boolean bool)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} toggle-visible! [actor] ; used
+(defn toggle-visible! [actor] ; used
   (set-visible! actor (not (visible? actor))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-position! [^Actor actor x y]
+(defn set-position! [^Actor actor x y]
   (.setPosition actor x y))
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-center! [^Actor actor x y]
+(defn set-center! [^Actor actor x y]
   (set-position! actor
                  (- x (/ (.getWidth actor) 2))
                  (- y (/ (.getHeight actor) 2))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-touchable!
+(defn set-touchable!
   ":children-only, :disabled or :enabled."
   [^Actor actor touchable]
   (.setTouchable actor (case touchable
@@ -1553,15 +1553,15 @@ Returns ctx."
                          :disabled      Touchable/disabled
                          :enabled       Touchable/enabled)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} add-listener! [^Actor actor listener]
+(defn add-listener! [^Actor actor listener]
   (.addListener actor listener))
 
-(defn ^{:metadoc/categories #{:cat/ui}} remove!
+(defn remove!
   "Removes this actor from its parent, if it has a parent."
   [^Actor actor]
   (.remove actor))
 
-(defn ^{:metadoc/categories #{:cat/ui}} parent
+(defn parent
   "Returns the parent actor, or null if not in a group."
   [^Actor actor]
   (.getParent actor))
@@ -1573,7 +1573,7 @@ Returns ctx."
   Use only with (.postRunnable gdx-app f) for making manual changes to the ctx."
   (atom nil))
 
-(defn ^{:metadoc/categories #{:cat/ui}} add-tooltip!
+(defn add-tooltip!
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
   [^Actor actor tooltip-text]
   (let [text? (string? tooltip-text)
@@ -1593,30 +1593,30 @@ Returns ctx."
     (.setTarget  tooltip ^Actor actor)
     (.setContent tooltip ^Actor label)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} remove-tooltip! [^Actor actor]
+(defn remove-tooltip! [^Actor actor]
   (Tooltip/removeTooltip actor))
 
-(defn ^{:metadoc/categories #{:cat/ui}} find-ancestor-window ^Window [^Actor actor]
+(defn find-ancestor-window ^Window [^Actor actor]
   (if-let [p (parent actor)]
     (if (instance? Window p)
       p
       (find-ancestor-window p))
     (throw (Error. (str "Actor has no parent window " actor)))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} pack-ancestor-window! [^Actor actor]
+(defn pack-ancestor-window! [^Actor actor]
   (.pack (find-ancestor-window actor)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} children
+(defn children
   "Returns an ordered list of child actors in this group."
   [^Group group]
   (seq (.getChildren group)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} clear-children!
+(defn clear-children!
   "Removes all actors from this group and unfocuses them."
   [^Group group]
   (.clearChildren group))
 
-(defn ^{:metadoc/categories #{:cat/ui}} add-actor!
+(defn add-actor!
   "Adds an actor as a child of this group, removing it from its previous parent. If the actor is already a child of this group, no changes are made."
   [^Group group actor]
   (.addActor group actor))
@@ -1629,6 +1629,8 @@ Returns ctx."
             (str "Actor ids are not distinct: " (vec ids)))
     (first (filter #(= id (actor-id %))
                    actors))))
+
+(conclude-section! :cat/ui)
 
 ;; screens/stage
 
@@ -1659,28 +1661,28 @@ Returns ctx."
       ([id not-found]
        (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->stage
+(defn ->stage
   "Stage implements clojure.lang.ILookup (get) on actor id."
   [{{:keys [gui-view batch]} :context/graphics} actors]
   (let [stage (->stage* (:viewport gui-view) batch)]
     (run! #(.addActor stage %) actors)
     stage))
 
-(defn ^{:metadoc/categories #{:cat/ui}} stage-get ^Stage [context]
+(defn stage-get ^Stage [context]
   (:stage ((current-screen context) 1)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} mouse-on-actor? [context]
+(defn mouse-on-actor? [context]
   (let [[x y] (gui-mouse-position context)
         touchable? true]
     (.hit (stage-get context) x y touchable?)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} stage-add! [ctx actor]
+(defn stage-add! [ctx actor]
   (-> ctx stage-get (.addActor actor))
   ctx)
 
 ;; ui
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-cell-opts [^Cell cell opts]
+(defn set-cell-opts [^Cell cell opts]
   (doseq [[option arg] opts]
     (case option
       :fill-x?    (.fillX     cell)
@@ -1698,7 +1700,7 @@ Returns ctx."
       :right?     (.right     cell)
       :left?      (.left      cell))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} add-rows!
+(defn add-rows!
   "rows is a seq of seqs of columns.
   Elements are actors or nil (for just adding empty cells ) or a map of
   {:actor :expand? :bottom?  :colspan int :pad :pad-bottom}. Only :actor is required."
@@ -1712,11 +1714,11 @@ Returns ctx."
     (.row table))
   table)
 
-(defn ^{:metadoc/categories #{:cat/ui}} set-table-opts [^Table table {:keys [rows cell-defaults]}]
+(defn set-table-opts [^Table table {:keys [rows cell-defaults]}]
   (set-cell-opts (.defaults table) cell-defaults)
   (add-rows! table rows))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->horizontal-separator-cell [colspan]
+(defn ->horizontal-separator-cell [colspan]
   {:actor (Separator. "default")
    :pad-top 2
    :pad-bottom 2
@@ -1724,7 +1726,7 @@ Returns ctx."
    :fill-x? true
    :expand-x? true})
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->vertical-separator-cell []
+(defn ->vertical-separator-cell []
   {:actor (Separator. "vertical")
    :pad-top 2
    :pad-bottom 2
@@ -1784,7 +1786,7 @@ Returns ctx."
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->actor
+(defn ->actor
   "[com.badlogic.gdx.scenes.scene2d.Actor](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/Actor.html)"
   [{:keys [draw act]}]
   (proxy [Actor] []
@@ -1807,23 +1809,23 @@ Returns ctx."
        ([id# not-found#]
         (or (find-actor-with-id ~'this id#) not-found#)))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->group [{:keys [actors] :as opts}]
+(defn ->group [{:keys [actors] :as opts}]
   (let [group (proxy-ILookup Group [])]
     (run! #(add-actor! group %) actors)
     (set-opts group opts)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->horizontal-group [{:keys [space pad]}]
+(defn ->horizontal-group [{:keys [space pad]}]
   (let [group (proxy-ILookup HorizontalGroup [])]
     (when space (.space group (float space)))
     (when pad   (.pad   group (float pad)))
     group))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->vertical-group [actors]
+(defn ->vertical-group [actors]
   (let [group (proxy-ILookup VerticalGroup [])]
     (run! #(add-actor! group %) actors)
     group))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->button-group
+(defn ->button-group
   "https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/ButtonGroup.html"
   [{:keys [max-check-count min-check-count]}]
   (let [button-group (ButtonGroup.)]
@@ -1831,12 +1833,12 @@ Returns ctx."
     (.setMinCheckCount button-group min-check-count)
     button-group))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->text-button [text on-clicked]
+(defn ->text-button [text on-clicked]
   (let [button (VisTextButton. ^String text)]
     (.addListener button (->change-listener on-clicked))
     button))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->check-box
+(defn ->check-box
   "on-clicked is a fn of one arg, taking the current isChecked state
   [com.kotcrab.vis.ui.widget.VisCheckBox](https://www.javadoc.io/static/com.kotcrab.vis/vis-ui/1.5.3/com/kotcrab/vis/ui/widget/VisCheckBox.html)"
   [text on-clicked checked?]
@@ -1848,14 +1850,14 @@ Returns ctx."
                       (on-clicked (.isChecked actor)))))
     button))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->select-box [{:keys [items selected]}]
+(defn ->select-box [{:keys [items selected]}]
   (doto (VisSelectBox.)
     (.setItems (into-array items))
     (.setSelected selected)))
 
 ; TODO give directly texture-region
 ; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
-(defn ^{:metadoc/categories #{:cat/ui}} ->image-button
+(defn ->image-button
   ([image on-clicked]
    (->image-button image on-clicked {}))
 
@@ -1868,11 +1870,11 @@ Returns ctx."
      (.addListener button (->change-listener on-clicked))
      button)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->table ^Table [opts]
+(defn ->table ^Table [opts]
   (-> (proxy-ILookup VisTable [])
       (set-opts opts)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
+(defn ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
   (-> (let [window (doto (proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
                      (.setModal (boolean modal?)))]
         (when close-button?    (.addCloseButton window))
@@ -1881,25 +1883,25 @@ Returns ctx."
         window)
       (set-opts opts)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->label ^VisLabel [text]
+(defn ->label ^VisLabel [text]
   (VisLabel. ^CharSequence text))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->text-field [^String text opts]
+(defn ->text-field [^String text opts]
   (-> (VisTextField. text)
       (set-opts opts)))
 
 ; TODO is not decendend of SplitPane anymore => check all type hints here
-(defn ^{:metadoc/categories #{:cat/ui}} ->split-pane [{:keys [^Actor first-widget
+(defn ->split-pane [{:keys [^Actor first-widget
                             ^Actor second-widget
                             ^Boolean vertical?] :as opts}]
   (-> (VisSplitPane. first-widget second-widget vertical?)
       (set-actor-opts opts)))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->stack [actors]
+(defn ->stack [actors]
   (proxy-ILookup Stack [(into-array Actor actors)]))
 
 ; TODO widget also make, for fill parent
-(defn ^{:metadoc/categories #{:cat/ui}} ->image-widget
+(defn ->image-widget
   "Takes either an image or drawable. Opts are :scaling, :align and actor opts."
   [object {:keys [scaling align fill-parent?] :as opts}]
   (-> (let [^com.badlogic.gdx.scenes.scene2d.ui.Image image (->vis-image object)]
@@ -1910,10 +1912,10 @@ Returns ctx."
       (set-opts opts)))
 
 ; => maybe with VisImage not necessary anymore?
-(defn ^{:metadoc/categories #{:cat/ui}} ->texture-region-drawable [^TextureRegion texture-region]
+(defn ->texture-region-drawable [^TextureRegion texture-region]
   (TextureRegionDrawable. texture-region))
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->scroll-pane [actor]
+(defn ->scroll-pane [actor]
   (let [scroll-pane (VisScrollPane. actor)]
     (.setFlickScroll scroll-pane false)
     (.setFadeScrollBars scroll-pane false)
@@ -1922,7 +1924,7 @@ Returns ctx."
 ; TODO set to preferred width/height ??? why layouting not working properly?
 ; use a tree?
 ; make example with plain data
-(defn ^{:metadoc/categories #{:cat/ui}} ->scroll-pane-cell [ctx rows]
+(defn ->scroll-pane-cell [ctx rows]
   (let [table (->table {:rows rows
                         :cell-defaults {:pad 1}
                         :pack? true})
@@ -1934,14 +1936,14 @@ Returns ctx."
 (defn- button-class? [actor]
   (some #(= Button %) (supers (class actor))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} button?
+(defn button?
   "Returns true if the actor or its parent is a button."
   [actor]
   (or (button-class? actor)
       (and (parent actor)
            (button-class? (parent actor)))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} window-title-bar?
+(defn window-title-bar?
   "Returns true if the actor is a window title bar."
   [actor]
   (when (instance? Label actor)
@@ -1952,7 +1954,7 @@ Returns ctx."
 
 (def ^:private image-file "images/moon_background.png")
 
-(defn ^{:metadoc/categories #{:cat/ui}} ->background-image [ctx]
+(defn ->background-image [ctx]
   (->image-widget (->image ctx image-file)
                   {:fill-parent? true
                    :scaling :fill
@@ -1969,7 +1971,7 @@ Returns ctx."
        ~@body
        (str s#))))
 
-(defn ^{:metadoc/categories #{:cat/ui}} error-window! [ctx throwable]
+(defn error-window! [ctx throwable]
   (binding [*print-level* 5]
     (pretty-pst throwable 24))
   (stage-add! ctx (->window {:title "Error"
