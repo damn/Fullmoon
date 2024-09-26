@@ -1,3 +1,6 @@
+(comment
+ (sort (set (mapcat (comp :metadoc/categories meta second) (ns-publics *ns*))))
+ )
 (ns clojure.world
   "## Glossary
 
@@ -17,14 +20,11 @@
   | `position`       | `[x y]` vector                                 |"
   {:metadoc/categories {:cat/app "Application"
                         :cat/component "Component"
-                        :cat/ctx-sys "Context System"
                         :cat/effect "Effects"
                         :cat/entity "Entity"
-                        :cat/entity-state-sys "Entity-State Systems"
                         :cat/g "Graphics"
                         :cat/gdx "Libgdx"
                         :cat/geom "Geometry"
-                        :cat/op-sys "Operations"
                         :cat/player "Player"
                         :cat/props "Properties"
                         :cat/sound "Sound"
@@ -223,7 +223,7 @@
   (nth coll (high-weighted-rand-int (count coll))))
 
 
-;;;; 👽 Alien Technology
+;;;; ⚙️  Systems
 
 (def
   ^{:metadoc/categories #{:cat/component}}
@@ -241,14 +241,117 @@
   (when-let [avar (resolve sys-name)]
     (println "WARNING: Overwriting defsystem:" avar))
   `(do
-    (defmulti ~(vary-meta sys-name
-                          assoc
-                          :params (list 'quote params)
-                          :doc (str "[[defsystem]] with params: `" params "` \n\n " docstring))
+    (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
+      ~(str "[[defsystem]] with params: `" params "` \n\n " docstring)
       (fn ~(symbol (str (name sys-name))) [& args#]
         (ffirst args#)))
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
+
+(defsystem ->value "..." [_])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} ->mk "Create component value. Default returns v." [_ ctx])
+(defmethod ->mk :default [[_ v] _ctx] v)
+
+(defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
+(defmethod destroy! :default [_])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
+(defmethod info-text :default [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} screen-enter "FIXME" [_ ctx])
+(defmethod screen-enter :default [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} screen-exit  "FIXME" [_ ctx])
+(defmethod screen-exit :default  [_ ctx])
+
+(defsystem ^:private screen-render! "FIXME" [_])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} screen-render "FIXME" [_ ctx])
+(defmethod screen-render :default [_ ctx]
+  ctx)
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} do!
+  " 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
+  when returning a 'map?'
+
+  2. return seq of txs -> those txs will be done recursively
+  2.1 also seq of fns wih [ctx] param can be passed.
+
+  3. return nil in case of doing nothing -> will just continue with existing ctx.
+
+  do NOT do a effect/do inside a effect/do! because then we have to return a context
+  and that means that transaction will be recorded and done double with all the sub-transactions
+  in the replay mode
+  we only want to record actual side effects, not transactions returning other lower level transactions"
+  [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} applicable?
+  "An effect will only be done (with do!) if this function returns truthy.
+Required system for every effect, no default."
+  [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} useful?
+  "Used for NPC AI.
+Called only if applicable? is truthy.
+For example use for healing effect is only useful if hitpoints is < max.
+Default method returns true."
+  [_ ctx])
+(defmethod useful? :default [_ ctx] true)
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} create "Create entity with eid for txs side-effects. Default nil."
+  [_ entity ctx])
+(defmethod create :default [_ entity ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} destroy "FIXME" [_ entity ctx])
+(defmethod destroy :default [_ entity ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} tick "FIXME" [_ entity ctx])
+(defmethod tick :default [_ entity ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} render-below "FIXME" [_ entity* g ctx])
+(defmethod render-below :default [_ entity* g ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} render "FIXME" [_ entity* g ctx])
+(defmethod render :default [_ entity* g ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} render-above "FIXME" [_ entity* g ctx])
+(defmethod render-above :default [_ entity* g ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} render-info "FIXME" [_ entity* g ctx])
+(defmethod render-info :default [_ entity* g ctx])
+
+(def ^:private render-systems [render-below
+                               render
+                               render-above
+                               render-info])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} enter "FIXME" [_ ctx])
+(defmethod enter :default [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} exit  "FIXME" [_ ctx])
+(defmethod exit :default  [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} op-value-text "FIXME" [_])
+(defsystem ^{:metadoc/categories #{:cat/sys}} op-apply "FIXME" [_ base-value])
+(defsystem ^{:metadoc/categories #{:cat/sys}} op-order "FIXME" [_])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} player-enter "FIXME" [_])
+(defmethod player-enter :default [_])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} pause-game? "FIXME" [_])
+(defmethod pause-game? :default [_])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} manual-tick "FIXME" [_ ctx])
+(defmethod manual-tick :default [_ ctx])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} clicked-inventory-cell "FIXME" [_ cell])
+(defmethod clicked-inventory-cell :default [_ cell])
+
+(defsystem ^{:metadoc/categories #{:cat/sys}} clicked-skillmenu-skill "FIXME" [_ skill])
+(defmethod clicked-skillmenu-skill :default [_ skill])
+
+;;; 📦 Components
 
 (def ^{:metadoc/categories #{:cat/component}} component-attributes {})
 
@@ -322,23 +425,7 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
-;; Gdx statics
-
-(declare ^{:tag Application               :metadoc/categories #{:cat/gdx}} gdx-app
-         ^{:tag Files                     :metadoc/categories #{:cat/gdx}} gdx-files
-         ^{:tag Input                     :metadoc/categories #{:cat/gdx}} gdx-input
-         ^{:tag com.badlogic.gdx.Graphics :metadoc/categories #{:cat/gdx}} gdx-graphics)
-
-(defn- bind-gdx-statics! []
-  (.bindRoot #'gdx-app      Gdx/app)
-  (.bindRoot #'gdx-files    Gdx/files)
-  (.bindRoot #'gdx-input    Gdx/input)
-  (.bindRoot #'gdx-graphics Gdx/graphics))
-
-;; Create & Destroy systems & helper fns
-
-(defsystem ^{:metadoc/categories #{:cat/sys :cat/ctx-sys}} ->mk "Create component value. Default returns v." [_ ctx])
-(defmethod ->mk :default [[_ v] _ctx] v)
+;;;; Unnamed category - ->mk and destroy!
 
 (defn create-vs
   "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
@@ -361,9 +448,6 @@ Example:
               ctx))
           ctx
           components))
-
-(defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
-(defmethod destroy! :default [_])
 
 ;;;; 💥 Effects
 
@@ -427,19 +511,6 @@ Example:
                  (not= (first tx) :tx/effect))
         (swap! frame->txs add-tx-to-frame logic-frame tx)))))
 
-; 1. return new ctx if we change something in the ctx or have side effect -> will be recorded
-; when returning a 'map?'
-
-; 2. return seq of txs -> those txs will be done recursively
-; 2.1 also seq of fns wih [ctx] param can be passed.
-
-; 3. return nil in case of doing nothing -> will just continue with existing ctx.
-
-; do NOT do a effect/do inside a effect/do! because then we have to return a context
-; and that means that transaction will be recorded and done double with all the sub-transactions
-; in the replay mode
-; we only want to record actual side effects, not transactions returning other lower level transactions
-(defsystem ^{:metadoc/categories #{:cat/effect}} do! "FIXME" [_ ctx])
 
 (declare effect!)
 
@@ -465,6 +536,19 @@ Example:
                                  t))))))
           ctx
           txs))
+
+;;;; 🎮 libgdx
+
+(declare ^{:tag Application               :metadoc/categories #{:cat/gdx}} gdx-app
+         ^{:tag Files                     :metadoc/categories #{:cat/gdx}} gdx-files
+         ^{:tag Input                     :metadoc/categories #{:cat/gdx}} gdx-input
+         ^{:tag com.badlogic.gdx.Graphics :metadoc/categories #{:cat/gdx}} gdx-graphics)
+
+(defn- bind-gdx-statics! []
+  (.bindRoot #'gdx-app      Gdx/app)
+  (.bindRoot #'gdx-files    Gdx/files)
+  (.bindRoot #'gdx-input    Gdx/input)
+  (.bindRoot #'gdx-graphics Gdx/graphics))
 
 ;;;; 🌀 Assets
 
@@ -520,15 +604,17 @@ Example:
 (defn- get-asset [ctx file]
   (get (:manager (assets ctx)) file))
 
-(defn ^{:metadoc/categories #{:cat/sound}} play-sound!
+(defn play-sound!
   "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
 Returns ctx."
+  {:metadoc/categories #{:cat/sound}}
   [ctx file]
   (.play ^Sound (get-asset ctx file))
   ctx)
 
-(defn ^{:metadoc/categories #{:cat/g}} texture
+(defn texture
   "Is already cached and loaded."
+  {:metadoc/categories #{:cat/g}}
   [ctx file]
   (get-asset ctx file))
 
@@ -537,8 +623,6 @@ Returns ctx."
   (do! [[_ file] ctx]
     (play-sound! ctx file)))
 
-;; ???
-
 (defprotocol Player
   (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
   (^{:metadoc/categories #{:cat/player}} player-entity* [ctx])
@@ -546,26 +630,6 @@ Returns ctx."
   (^{:metadoc/categories #{:cat/player}} player-state-pause-game? [ctx])
   (^{:metadoc/categories #{:cat/player}} player-clicked-inventory [ctx cell])
   (^{:metadoc/categories #{:cat/player}} player-clicked-skillmenu [ctx skill]))
-
-;; effect systems -> move to effect
-
-(defsystem ^{:metadoc/categories #{:cat/effect}} applicable?
-  "An effect will only be done (with do!) if this function returns truthy.
-Required system for every effect, no default."
-  [_ ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/effect}} useful?
-  "Used for NPC AI.
-Called only if applicable? is truthy.
-For example use for healing effect is only useful if hitpoints is < max.
-Default method returns true."
-  [_ ctx])
-(defmethod useful? :default [_ ctx] true)
-
-;; info-text system
-
-(defsystem ^{:metadoc/categories #{:cat/component}} info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
-(defmethod info-text :default [_ ctx])
 
 (def ^:private k-order
   [:property/pretty-name
@@ -695,20 +759,6 @@ Default method returns true."
 
 (def ^{:metadoc/categories #{:cat/g}} color-black Color/BLACK)
 (def ^{:metadoc/categories #{:cat/g}} color-white Color/WHITE)
-
-;; screen systems
-
-(defsystem ^{:metadoc/categories #{:cat/app}} screen-enter "FIXME" [_ ctx])
-(defmethod screen-enter :default [_ ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/app}} screen-exit  "FIXME" [_ ctx])
-(defmethod screen-exit :default  [_ ctx])
-
-(defsystem ^:private screen-render! "FIXME" [_])
-
-(defsystem ^{:metadoc/categories #{:cat/app}} screen-render "FIXME" [_ ctx])
-(defmethod screen-render :default [_ ctx]
-  ctx)
 
 ;; property/pretty-name
 
@@ -2138,8 +2188,6 @@ Default method returns true."
 
 ;; properties
 
-(defsystem ->value "..." [_])
-
 (defn- data-component [k]
   (try (let [data (:data (safe-get component-attributes k))]
          (if (vector? data)
@@ -2870,15 +2918,6 @@ Default method returns true."
       (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
       '(:c :b :a :null :null))))
 
-(defsystem ^{:metadoc/categories #{:cat/entity}} create "Create entity with eid for txs side-effects. Default nil."
-  [_ entity ctx])
-(defmethod create :default [_ entity ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity}} destroy "FIXME" [_ entity ctx])
-(defmethod destroy :default [_ entity ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity}} tick "FIXME" [_ entity ctx])
-(defmethod tick :default [_ entity ctx])
 
 ; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
 ; actually we dont want this to be called over that
@@ -2890,22 +2929,6 @@ Default method returns true."
 ; then fetch all components which implement render-below
 ; and have parent-id in entity-ids, etc.
 
-(defsystem ^{:metadoc/categories #{:cat/entity}} render-below "FIXME" [_ entity* g ctx])
-(defmethod render-below :default [_ entity* g ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity}} render "FIXME" [_ entity* g ctx])
-(defmethod render :default [_ entity* g ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity}} render-above "FIXME" [_ entity* g ctx])
-(defmethod render-above :default [_ entity* g ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity}} render-info "FIXME" [_ entity* g ctx])
-(defmethod render-info :default [_ entity* g ctx])
-
-(def ^:private render-systems [render-below
-                               render
-                               render-above
-                               render-info])
 
 ; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
 (def max-delta-time 0.04)
@@ -3548,28 +3571,6 @@ Default method returns true."
 
 ;; entity (-state)
 
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} enter "FIXME" [_ ctx])
-(defmethod enter :default [_ ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} exit  "FIXME" [_ ctx])
-(defmethod exit :default  [_ ctx])
-
-;; Player-State
-
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} player-enter "FIXME" [_])
-(defmethod player-enter :default [_])
-
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} pause-game? "FIXME" [_])
-(defmethod pause-game? :default [_])
-
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} manual-tick "FIXME" [_ ctx])
-(defmethod manual-tick :default [_ ctx])
-
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} clicked-inventory-cell "FIXME" [_ cell])
-(defmethod clicked-inventory-cell :default [_ cell])
-
-(defsystem ^{:metadoc/categories #{:cat/entity-state-sys}} clicked-skillmenu-skill "FIXME" [_ skill])
-(defmethod clicked-skillmenu-skill :default [_ skill])
 
 (defn- add-vs [vs]
   (v-normalise (reduce v-add [0 0] vs)))
@@ -3585,10 +3586,6 @@ Default method returns true."
           v)))))
 
 ;;;; ⚔️  Stats
-
-(defsystem ^{:metadoc/categories #{:cat/op-sys}} op-value-text "FIXME" [_])
-(defsystem ^{:metadoc/categories #{:cat/op-sys}} op-apply "FIXME" [_ base-value])
-(defsystem ^{:metadoc/categories #{:cat/op-sys}} op-order "FIXME" [_])
 
 (defn- +? [n]
   (case (math/signum n)
