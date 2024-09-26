@@ -1,5 +1,5 @@
 (ns core.world
-  (:require [clojure.ctx :refer :all]
+  (:require [clojure.ctx :refer :all :exclude [visible?]]
             [clojure.string :as str]
             [data.grid2d :as g])
   (:import java.util.Random
