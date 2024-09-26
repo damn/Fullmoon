@@ -8,19 +8,19 @@ The whole game content is stored in `resources/properties.edn` and can be config
 
 There are 7 property-types:
 
-## App 🖥️
+### App 🖥️
 
-## Audiovisuals 💥
+### Audiovisuals 💥
 
-## Creatures 🐉
+### Creatures 🐉
 
-## Items ⚔️
+### Items ⚔️
 
-## Projectiles 🚀
+### Projectiles 🚀
 
-## Skills 🪄
+### Skills 🪄
 
-## Worlds 🌎
+### Worlds 🌎
 
 
 ## Screenshots
