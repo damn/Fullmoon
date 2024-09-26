@@ -560,15 +560,7 @@ Returns ctx."
   [ctx file]
   (get-asset ctx file))
 
-;;;; ???
-
-(defprotocol Player
-  (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
-  (^{:metadoc/categories #{:cat/player}} player-entity* [ctx])
-  (^{:metadoc/categories #{:cat/player}} player-update-state      [ctx])
-  (^{:metadoc/categories #{:cat/player}} player-state-pause-game? [ctx])
-  (^{:metadoc/categories #{:cat/player}} player-clicked-inventory [ctx cell])
-  (^{:metadoc/categories #{:cat/player}} player-clicked-skillmenu [ctx skill]))
+;;;; ->info-text
 
 (def ^:private k-order
   [:property/pretty-name
@@ -616,23 +608,10 @@ Returns ctx."
        (str/join "\n")
        remove-newlines))
 
-;;;; 💾 Properties
-
-(defn ^{:metadoc/categories #{:cat/props}} def-attributes [& attributes-data]
-  {:pre [(even? (count attributes-data))]}
-  (doseq [[k data] (partition 2 attributes-data)]
-    (defcomponent* k {:data data})))
-
-(defcomponent :property/id {:data [:qualified-keyword]})
-
-(defn ^{:metadoc/categories #{:cat/props}} def-type [k {:keys [schema overview]}]
-  (defcomponent k
-    {:data [:map (conj schema :property/id)]
-     :overview overview}))
-
 ;;;; 🎨 Graphics
 
-(defn ^{:metadoc/categories #{:cat/g}} ->color
+(defn ->color
+  {:metadoc/categories #{:cat/g}}
   ([r g b]
    (->color r g b 1))
   ([r g b a]
@@ -674,12 +653,6 @@ Returns ctx."
   (^{:metadoc/categories #{:cat/g}} draw-image [_ image position])
   (^{:metadoc/categories #{:cat/g}} draw-centered-image [_ image position])
   (^{:metadoc/categories #{:cat/g}} draw-rotated-centered-image [_ image rotation position]))
-
-;; ctx/config
-
-(def-attributes
-  :tag [:enum [:dev :prod]]
-  :configs :some)
 
 ;; gdx helper fns
 
@@ -1099,19 +1072,6 @@ Returns ctx."
   (.setCursor gdx-graphics (safe-get (:cursors g) cursor-key)))
 
 ;; ctx/graphics
-
-(def-attributes
-  :views [:map [:gui-view :world-view]]
-  :gui-view [:map [:world-width :world-height]]
-  :world-view [:map [:tile-size :world-width :world-height]]
-  :world-width :pos-int
-  :world-height :pos-int
-  :tile-size :pos-int
-  :default-font [:map [:file :quality-scaling :size]]
-  :file :string
-  :quality-scaling :pos-int
-  :size :pos-int
-  :cursors :some)
 
 (defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
                     view-key
@@ -2128,6 +2088,8 @@ Returns ctx."
                       {:property property
                        :schema (m/form schema)})))))
 
+(defcomponent :property/id {:data [:qualified-keyword]})
+
 (defn- ->ctx-properties
   "Validates all properties."
   [properties-edn-file]
@@ -2930,6 +2892,14 @@ Returns ctx."
            (on-screen? target* context))
        (not (and los-checks?
                  (ray-blocked? context (:position source*) (:position target*))))))
+
+(defprotocol Player
+  (^{:metadoc/categories #{:cat/player}} player-entity [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-entity* [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-update-state      [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-state-pause-game? [ctx])
+  (^{:metadoc/categories #{:cat/player}} player-clicked-inventory [ctx cell])
+  (^{:metadoc/categories #{:cat/player}} player-clicked-skillmenu [ctx skill]))
 
 (def ^:private context-ecs :context/ecs)
 
@@ -3970,6 +3940,32 @@ Returns ctx."
     #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
     config))
 
+;;;;
+
+(defn def-attributes
+  {:metadoc/categories #{:cat/props}}
+  [& attributes-data]
+  {:pre [(even? (count attributes-data))]}
+  (doseq [[k data] (partition 2 attributes-data)]
+    (defcomponent* k {:data data})))
+
+(def-attributes
+  :tag [:enum [:dev :prod]]
+  :configs :some)
+
+(def-attributes
+  :views [:map [:gui-view :world-view]]
+  :gui-view [:map [:world-width :world-height]]
+  :world-view [:map [:tile-size :world-width :world-height]]
+  :world-width :pos-int
+  :world-height :pos-int
+  :tile-size :pos-int
+  :default-font [:map [:file :quality-scaling :size]]
+  :file :string
+  :quality-scaling :pos-int
+  :size :pos-int
+  :cursors :some)
+
 (def-attributes
   :fps          :nat-int
   :full-screen? :boolean
@@ -3990,10 +3986,10 @@ Returns ctx."
 
 (defrecord Ctx [])
 
-(defn ^{:metadoc/categories #{:cat/app}
-        :doc "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
-Sets [[app-state]] atom to the context."}
-  start-app!
+(defn start-app!
+  "Validates all properties, then creates the context record and starts a libgdx application with the desktop (lwjgl3) backend.
+Sets [[app-state]] atom to the context."
+  {:metadoc/categories #{:cat/app}}
   [properties-edn-file]
   (let [ctx (map->Ctx (->ctx-properties properties-edn-file))
         app (build-property ctx :app/core)]
@@ -4001,6 +3997,13 @@ Sets [[app-state]] atom to the context."}
                         (->lwjgl3-app-config (:app/lwjgl3 app)))))
 
 ;;;;
+
+(defn def-type
+ {:metadoc/categories #{:cat/props}}
+ [k {:keys [schema overview]}]
+  (defcomponent k
+    {:data [:map (conj schema :property/id)]
+     :overview overview}))
 
 (def-type :properties/app
   {:schema [:app/lwjgl3
