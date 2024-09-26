@@ -5,32 +5,10 @@
             [core.item :as item])
   (:import (com.badlogic.gdx Input$Buttons Input$Keys)))
 
-(def-type :properties/creatures
-  {:schema [:entity/body
-            :property/pretty-name
-            :creature/species
-            :creature/level
-            :entity/animation
-            :entity/stats
-            :entity/skills
-            [:entity/modifiers {:optional true}]
-            [:entity/inventory {:optional true}]]
-   :overview {:title "Creatures"
-              :columns 15
-              :image/scale 1.5
-              :sort-by-fn #(vector (:creature/level %)
-                                   (name (:creature/species %))
-                                   (name (:property/id %)))
-              :extra-info-text #(str (:creature/level %))}})
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
-
-(def-attributes
-  :body/width   :pos
-  :body/height  :pos
-  :body/flying? :boolean)
 
 (defcomponent :entity/body
   {:data [:map [:body/width

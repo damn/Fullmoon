@@ -11,16 +11,6 @@
            com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile
            [gdl OrthogonalTiledMapRenderer ColorSetter]))
 
-(def-type :properties/worlds
-  {:schema [:world/generator
-            :world/player-creature
-            [:world/tiled-map {:optional true}]
-            [:world/map-size {:optional true}]
-            [:world/max-area-level {:optional true}]
-            [:world/spawn-rate {:optional true}]]
-   :overview {:title "Worlds"
-              :columns 10}})
-
 (defn load-map
   "Has to be disposed."
   [file]

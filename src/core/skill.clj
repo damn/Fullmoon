@@ -23,19 +23,6 @@
                        button))]
              :pack? true}))
 
-(def-type :properties/skills
-  {:schema [:entity/image
-            :property/pretty-name
-            :skill/action-time-modifier-key
-            :skill/action-time
-            :skill/start-action-sound
-            :skill/effects
-            [:skill/cooldown {:optional true}]
-            [:skill/cost {:optional true}]]
-   :overview {:title "Skills"
-              :columns 16
-              :image/scale 2}})
-
 (defcomponent :skill/action-time {:data :pos}
   (info-text [[_ v] _ctx]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))

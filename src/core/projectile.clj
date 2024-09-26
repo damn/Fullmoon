@@ -1,16 +1,6 @@
 (ns core.projectile
   (:require [clojure.world :refer :all]))
 
-(def-type :properties/projectiles
-  {:schema [:entity/image
-            :projectile/max-range
-            :projectile/speed
-            :projectile/piercing?
-            :entity-effects]
-   :overview {:title "Projectiles"
-              :columns 16
-              :image/scale 2}})
-
 (defcomponent :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}
   (->mk [[_ v] _ctx]

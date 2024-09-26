@@ -3807,6 +3807,11 @@ Returns ctx."
                       :context/vis-ui
                       :context/tiled-map-renderer]])
 
+(def-attributes
+  :body/width   :pos
+  :body/height  :pos
+  :body/flying? :boolean)
+
 (defrecord Ctx [])
 
 (defn start-app!
@@ -3840,6 +3845,71 @@ Sets [[app-state]] atom to the context."
    :overview {:title "Audiovisuals"
               :columns 10
               :image/scale 2}})
+
+(def-type :properties/items
+  {:schema [:property/pretty-name
+            :entity/image
+            :item/slot
+            [:item/modifiers {:optional true}]]
+   :overview {:title "Items"
+              :columns 20
+              :image/scale 1.1
+              :sort-by-fn #(vector (if-let [slot (:item/slot %)]
+                                     (name slot)
+                                     "")
+                             (name (:property/id %)))}})
+
+(def-type :properties/creatures
+  {:schema [:entity/body
+            :property/pretty-name
+            :creature/species
+            :creature/level
+            :entity/animation
+            :entity/stats
+            :entity/skills
+            [:entity/modifiers {:optional true}]
+            [:entity/inventory {:optional true}]]
+   :overview {:title "Creatures"
+              :columns 15
+              :image/scale 1.5
+              :sort-by-fn #(vector (:creature/level %)
+                                   (name (:creature/species %))
+                                   (name (:property/id %)))
+              :extra-info-text #(str (:creature/level %))}})
+
+(def-type :properties/projectiles
+  {:schema [:entity/image
+            :projectile/max-range
+            :projectile/speed
+            :projectile/piercing?
+            :entity-effects]
+   :overview {:title "Projectiles"
+              :columns 16
+              :image/scale 2}})
+
+(def-type :properties/skills
+  {:schema [:entity/image
+            :property/pretty-name
+            :skill/action-time-modifier-key
+            :skill/action-time
+            :skill/start-action-sound
+            :skill/effects
+            [:skill/cooldown {:optional true}]
+            [:skill/cost {:optional true}]]
+   :overview {:title "Skills"
+              :columns 16
+              :image/scale 2}})
+
+(def-type :properties/worlds
+  {:schema [:world/generator
+            :world/player-creature
+            [:world/tiled-map {:optional true}]
+            [:world/map-size {:optional true}]
+            [:world/max-area-level {:optional true}]
+            [:world/spawn-rate {:optional true}]]
+   :overview {:title "Worlds"
+              :columns 10}})
+
 
 ;;;; Transactions
 
