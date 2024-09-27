@@ -334,26 +334,10 @@
 ; * what is missing to remove the button once the last optional key was added (not so important)
 ; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
 
-(def ^:private k-sort-order [:property/id
-                             :property/pretty-name
-                             :app/lwjgl3
-                             :entity/image
-                             :entity/animation
-                             :creature/species
-                             :creature/level
-                             :entity/body
-                             :item/slot
-                             :projectile/speed
-                             :projectile/max-range
-                             :projectile/piercing?
-                             :skill/action-time-modifier-key
-                             :skill/action-time
-                             :skill/start-action-sound
-                             :skill/cost
-                             :skill/cooldown])
+(declare property-k-sort-order)
 
 (defn- component-order [[k _v]]
-  (or (index-of k k-sort-order) 99))
+  (or (index-of k property-k-sort-order) 99))
 
 (defn- truncate [s limit]
   (if (> (count s) limit)

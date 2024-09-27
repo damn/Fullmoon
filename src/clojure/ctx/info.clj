@@ -1,23 +1,9 @@
 (in-ns 'clojure.ctx)
 
-(def ^:private k-order
-  [:property/pretty-name
-   :skill/action-time-modifier-key
-   :skill/action-time
-   :skill/cooldown
-   :skill/cost
-   :skill/effects
-   :creature/species
-   :creature/level
-   :entity/stats
-   :entity/delete-after-duration
-   :projectile/piercing?
-   :entity/projectile-collision
-   :maxrange
-   :entity-effects])
+(declare info-text-k-order)
 
 (defn- sort-k-order [components]
-  (sort-by (fn [[k _]] (or (index-of k k-order) 99))
+  (sort-by (fn [[k _]] (or (index-of k info-text-k-order) 99))
            components))
 
 (defn- remove-newlines [s]
