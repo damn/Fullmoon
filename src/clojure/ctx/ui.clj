@@ -519,7 +519,7 @@
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (ctx-msg-player ctx)]
-    (swap! app-state update ctx-msg-player update :counter + (.getDeltaTime gdx-graphics))
+    (swap! app-state update ctx-msg-player update :counter + (.getDeltaTime Gdx/graphics))
     (when (>= counter duration-seconds)
       (swap! app-state assoc ctx-msg-player nil))))
 
