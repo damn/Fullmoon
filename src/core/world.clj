@@ -1655,13 +1655,13 @@ direction keys: move")
       (set-occupied-cells! grid entity))))
 
 (defrecord RCell [position
-                 middle ; only used @ potential-field-follow-to-enemy -> can remove it.
-                 adjacent-cells
-                 movement
-                 entities
-                 occupied
-                 good
-                 evil]
+                  middle ; only used @ potential-field-follow-to-enemy -> can remove it.
+                  adjacent-cells
+                  movement
+                  entities
+                  occupied
+                  good
+                  evil]
   GridCell
   (blocked? [_ z-order]
     (case movement

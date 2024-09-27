@@ -1,48 +1,33 @@
-(comment
- (sort (set (mapcat (comp :metadoc/categories meta second) (ns-publics *ns*))))
- )
 (ns clojure.ctx
   "## Glossary
 
-  | Symbol           | Meaning                                        |
+  | Name             | Meaning                                        |
   | ---------------  | -----------------------------------------------|
   | `component`      | vector `[k v]` |
   | `system`         | multimethod dispatching on component k |
   | `eid` , `entity` | entity atom                                    |
-  | `entity*`        | entity value (defrecord `clojure.ctx/Entity`), consists of components, extendable |
-  | `actor`          | A UI actor, not immutable, from libgdx scene2d: `com.badlogic.gdx.scenes.scene2d.Actor`        |
-  | `cell`/`cell*`   | Cells of the grid `clojure.ctx.GridCell`     |
+  | `entity*`        | entity value (defrecord `clojure.ctx.Entity`), |
+  | `actor`          | A UI actor, not immutable `com.badlogic.gdx.scenes.scene2d.Actor`        |
+  | `cell`/`cell*`   | Cell of the world grid or inventory  |
   | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
-  | `g`              | `clojure.ctx.Graphics`, consists of graphics components, extendable                       |
+  | `g`              | `clojure.ctx.Graphics`                        |
   | `grid`           | `data.grid2d.Grid`                             |
   | `image`          | `clojure.ctx.Image`                          |
   | `position`       | `[x y]` vector                                 |"
   {:metadoc/categories {:cat/app "Application"
                         :cat/component "Component"
+                        :cat/systems "Component Systems"
                         :cat/ctx "Context"
-
                         :cat/entity "Entity"
-
                         :cat/g "Graphics"
-
                         :cat/gdx "Libgdx"
-
                         :cat/geom "Geometry"
-
                         :cat/player "Player"
-
                         :cat/props "Properties"
-
-                        :cat/systems "Systems"
-
                         :cat/time "Time"
-
                         :cat/ui "User Interface"
-
                         :cat/utils "Utilities"
-
-                        :cat/world "World"
-                        }}
+                        :cat/world "World"}}
   (:require (clojure [set :as set]
                      [string :as str]
                      [edn :as edn]
@@ -54,7 +39,7 @@
                    [generator :as mg]))
   (:import java.util.Random
            org.lwjgl.system.Configuration
-           (com.badlogic.gdx Gdx Application ApplicationAdapter Files Input Input$Keys)
+           (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -72,6 +57,10 @@
            (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator)
            space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster))
+
+(comment
+ (sort (set (mapcat (comp :metadoc/categories meta second) (ns-publics *ns*))))
+ )
 
 ; only on first load of the file ? ?
 (defn- conclude-section! [cat-k]
