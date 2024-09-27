@@ -30,3 +30,6 @@
 
 (defprotocol ActiveEntities
   (active-entities [_]))
+
+(defprotocol WorldGen
+  (->world [ctx world-id]))
