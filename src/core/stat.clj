@@ -534,7 +534,7 @@
   (do! [_ {:keys [effect/target]}]
     [[:tx/event target :kill]]))
 
-(defn- start-point [entity* direction size]
+(defn- projectile-start-point [entity* direction size]
   (v-add (:position entity*)
          (v-scale direction
                   (+ (:radius entity*) size 0.1))))
@@ -566,7 +566,7 @@
   (do! [_ {:keys [effect/source effect/direction] :as ctx}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
-      {:position (start-point @source direction (projectile-size projectile))
+      {:position (projectile-start-point @source direction (projectile-size projectile))
        :direction direction
        :faction (:entity/faction @source)}
       projectile]]))
