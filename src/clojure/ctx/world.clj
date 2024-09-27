@@ -20,3 +20,11 @@
 
 (defn cells->entities [cells*]
   (into #{} (mapcat :entities) cells*))
+
+(defprotocol PRayCaster
+  (ray-blocked? [ctx start target])
+  (path-blocked? [ctx start target path-w] "path-w in tiles. casts two rays."))
+
+(defprotocol Pathfinding
+  (potential-fields-follow-to-enemy [ctx eid]))
+
