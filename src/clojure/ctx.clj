@@ -65,6 +65,10 @@
          "ctx/assets"
          "ctx/info"
          "ctx/graphics"
+         "ctx/time"
+         "ctx/world"
+         "ctx/geometry"
+         "ctx/val_max"
          ))
 
 (def ^:private add-metadoc? true)
@@ -228,155 +232,6 @@
     (screen-enter [new-screen-key screen-v] new-context)
     new-context))
 
-;;;; ⏳️ Time
-
-(def ctx-time :context/time)
-
-(defn delta-time
-  "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
-  [ctx]
-  (:delta-time (ctx-time ctx)))
-
-(defn elapsed-time ; world-time, not counting different screens or paused world....
-  "The elapsed in-game-time (not counting when game is paused)."
-  [ctx]
-  (:elapsed (ctx-time ctx)))
-
-(defn logic-frame ; starting with 0 ... ? when not doing anything
-  "The game-logic frame number, starting with 1. (not counting when game is paused)"
-  [ctx]
-  (:logic-frame (ctx-time ctx)))
-
-(defrecord Counter [duration stop-time])
-
-(defn ->counter [ctx duration]
-  {:pre [(>= duration 0)]}
-  (->Counter duration (+ (elapsed-time ctx) duration)))
-
-(defn stopped? [ctx {:keys [stop-time]}]
-  (>= (elapsed-time ctx) stop-time))
-
-(defn reset [ctx {:keys [duration] :as counter}]
-  (assoc counter :stop-time (+ (elapsed-time ctx) duration)))
-
-(defn finished-ratio [ctx {:keys [duration stop-time] :as counter}]
-  {:post [(<= 0 % 1)]}
-  (if (stopped? ctx counter)
-    0
-    ; min 1 because floating point math inaccuracies
-    (min 1 (/ (- stop-time (elapsed-time ctx)) duration))))
-
-;;;;️ 🌍 World
-
-(defprotocol Grid
-  (cached-adjacent-cells [grid cell])
-  (rectangle->cells [grid rectangle])
-  (circle->cells    [grid circle])
-  (circle->entities [grid circle]))
-
-(defprotocol GridPointEntities
-  (point->entities [ctx position]))
-
-(defprotocol GridCell
-  (blocked? [cell* z-order])
-  (blocks-vision? [cell*])
-  (occupied-by-other? [cell* entity]
-                      "returns true if there is some occupying body with center-tile = this cell
-                      or a multiple-cell-size body which touches this cell.")
-  (nearest-entity          [cell* faction])
-  (nearest-entity-distance [cell* faction]))
-
-(defn cells->entities [cells*]
-  (into #{} (mapcat :entities) cells*))
-
-;; data/val-max
-
-(def ^:private val-max-schema
-  (m/schema [:and
-             [:vector {:min 2 :max 2} [:int {:min 0}]]
-             [:fn {:error/fn (fn [{[^int v ^int mx] :value} _]
-                               (when (< mx v)
-                                 (format "Expected max (%d) to be smaller than val (%d)" v mx)))}
-              (fn [[^int a ^int b]] (<= a b))]]))
-
-(defn val-max-ratio
-  "If mx and v is 0, returns 0, otherwise (/ v mx)"
-  [[^int v ^int mx]]
-  {:pre [(m/validate val-max-schema [v mx])]}
-  (if (and (zero? v) (zero? mx))
-    0
-    (/ v mx)))
-
-#_(defn lower-than-max? [[^int v ^int mx]]
-  {:pre [(m/validate val-max-schema [v mx])]}
-  (< v mx))
-
-#_(defn set-to-max [[v mx]]
-  {:pre [(m/validate val-max-schema [v mx])]}
-  [mx mx])
-
-;; intersections/geometry/shapes
-
-(defn- ->circle [[x y] radius]
-  (Circle. x y radius))
-
-(defn- ->rectangle [[x y] width height]
-  (Rectangle. x y width height))
-
-(defn- rect-contains? [^Rectangle rectangle [x y]]
-  (.contains rectangle x y))
-
-(defmulti ^:private overlaps? (fn [a b] [(class a) (class b)]))
-
-(defmethod overlaps? [Circle Circle]
-  [^Circle a ^Circle b]
-  (Intersector/overlaps a b))
-
-(defmethod overlaps? [Rectangle Rectangle]
-  [^Rectangle a ^Rectangle b]
-  (Intersector/overlaps a b))
-
-(defmethod overlaps? [Rectangle Circle]
-  [^Rectangle rect ^Circle circle]
-  (Intersector/overlaps circle rect))
-
-(defmethod overlaps? [Circle Rectangle]
-  [^Circle circle ^Rectangle rect]
-  (Intersector/overlaps circle rect))
-
-(defn- rectangle? [{[x y] :left-bottom :keys [width height]}]
-  (and x y width height))
-
-(defn- circle? [{[x y] :position :keys [radius]}]
-  (and x y radius))
-
-(defn- m->shape [m]
-  (cond
-   (rectangle? m) (let [{:keys [left-bottom width height]} m]
-                    (->rectangle left-bottom width height))
-
-   (circle? m) (let [{:keys [position radius]} m]
-                 (->circle position radius))
-
-   :else (throw (Error. (str m)))))
-
-(defn shape-collides? [a b]
-  (overlaps? (m->shape a) (m->shape b)))
-
-(defn point-in-rect? [point rectangle]
-  (rect-contains? (m->shape rectangle) point))
-
-(defn circle->outer-rectangle [{[x y] :position :keys [radius] :as circle}]
-  {:pre [(circle? circle)]}
-  (let [radius (float radius)
-        size (* radius 2)]
-    {:left-bottom [(- (float x) radius)
-                   (- (float y) radius)]
-     :width  size
-     :height size}))
-
-;; again raycaster, move together
-
 (defprotocol PFastRayCaster
   (fast-ray-blocked? [_ start target]))
 
@@ -485,69 +340,6 @@
 
 ;;;;️ 📐 Geometry
 
-; TODO not important badlogic, using clojure vectors
-; could extend some protocol by clojure vectors and just require the protocol
-; also call vector2 v2/add ? v2/scale ?
-
-(defn- ^Vector2 ->v [[x y]]
-  (Vector2. x y))
-
-(defn- ->p [^Vector2 v]
-  [(.x ^Vector2 v)
-   (.y ^Vector2 v)])
-
-(defn v-scale     [v n]    (->p (.scl ^Vector2 (->v v) (float n)))) ; TODO just (mapv (partial * 2) v)
-(defn v-normalise [v]      (->p (.nor ^Vector2 (->v v))))
-(defn v-add       [v1 v2]  (->p (.add ^Vector2 (->v v1) ^Vector2 (->v v2))))
-(defn v-length    [v]      (.len ^Vector2 (->v v)))
-(defn v-distance  [v1 v2]  (.dst ^Vector2 (->v v1) ^Vector2 (->v v2)))
-
-(defn v-normalised? [v]
-  ; Returns true if a is nearly equal to b.
-  (MathUtils/isEqual 1 (v-length v)))
-
-(defn v-get-normal-vectors [[x y]]
-  [[(- (float y))         x]
-   [          y (- (float x))]])
-
-(defn v-direction [[sx sy] [tx ty]]
-  (v-normalise [(- (float tx) (float sx))
-                (- (float ty) (float sy))]))
-
-(defn v-get-angle-from-vector
-  "converts theta of Vector2 to angle from top (top is 0 degree, moving left is 90 degree etc.), ->counterclockwise"
-  [v]
-  (.angleDeg (->v v) (Vector2. 0 1)))
-
-(comment
-
- (pprint
-  (for [v [[0 1]
-           [1 1]
-           [1 0]
-           [1 -1]
-           [0 -1]
-           [-1 -1]
-           [-1 0]
-           [-1 1]]]
-    [v
-     (.angleDeg (->v v) (Vector2. 0 1))
-     (get-angle-from-vector (->v v))]))
-
- )
-
-(defn- add-vs [vs]
-  (v-normalise (reduce v-add [0 0] vs)))
-
-(defn WASD-movement-vector []
-  (let [r (if (.isKeyPressed Gdx/input Input$Keys/D) [1  0])
-        l (if (.isKeyPressed Gdx/input Input$Keys/A) [-1 0])
-        u (if (.isKeyPressed Gdx/input Input$Keys/W) [0  1])
-        d (if (.isKeyPressed Gdx/input Input$Keys/S) [0 -1])]
-    (when (or r l u d)
-      (let [v (add-vs (remove nil? [r l u d]))]
-        (when (pos? (v-length v))
-          v)))))
 
 
 ;; CAMERA (is only world, see use cases )
