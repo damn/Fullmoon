@@ -404,3 +404,7 @@
   (.update (gui-viewport g) w h true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (.update (world-viewport g) w h false))
+
+
+(defprotocol DrawItemOnCursor
+  (draw-item-on-cursor [g ctx]))

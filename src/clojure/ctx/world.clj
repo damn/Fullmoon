@@ -28,3 +28,5 @@
 (defprotocol Pathfinding
   (potential-fields-follow-to-enemy [ctx eid]))
 
+(defprotocol ActiveEntities
+  (active-entities [_]))
