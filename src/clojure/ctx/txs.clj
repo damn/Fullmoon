@@ -8,6 +8,14 @@
 ; then components will disappear too ....???
 ; but then multimethod redeffing doesnt work -> can use vars in development ?
 
+(defn create-vs
+  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
+  [components ctx]
+  (reduce (fn [m [k v]]
+            (assoc m k (->mk [k v] ctx)))
+          {}
+          components))
+
 (defcomponent :e/create
   (do! [[_ position body components] ctx]
     (assert (and (not (contains? components :position))
@@ -108,7 +116,7 @@
 
 (defcomponent :tx/msg-to-player
   (do! [[_ message] ctx]
-    (assoc ctx ctx-msg-player {:message message :counter 0})))
+    (assoc ctx :context/msg-to-player {:message message :counter 0})))
 
 (defcomponent :tx/sound
   {:data :sound}

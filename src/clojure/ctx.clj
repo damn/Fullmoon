@@ -135,8 +135,6 @@
   (str asym " "(:arglists (meta avar)))
   )
 
-(defn dispose [obj]
-  (Disposable/.dispose obj))
 
 (defprotocol ActiveEntities
   (active-entities [_]))
@@ -153,14 +151,6 @@
    :let value}
   (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
-
-(defn create-vs
-  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
-  [components ctx]
-  (reduce (fn [m [k v]]
-            (assoc m k (->mk [k v] ctx)))
-          {}
-          components))
 
 (defprotocol DrawItemOnCursor
   (draw-item-on-cursor [g ctx]))

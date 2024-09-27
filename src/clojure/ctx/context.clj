@@ -48,6 +48,9 @@
                          ))
     nil))
 
+(defn dispose [obj]
+  (Disposable/.dispose obj))
+
 (defcomponent :context/graphics
   {:data [:map [:cursors :default-font :views]]
    :let {:keys [views default-font cursors]}}
