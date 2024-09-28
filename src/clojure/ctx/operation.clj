@@ -6,8 +6,13 @@
     1.0 "+"
     -1.0 ""))
 
+(defsystem op-value-text "FIXME" [_])
+
 (defn op-info-text [{value 1 :as operation}]
   (str (+? value) (op-value-text operation)))
+
+(defsystem op-apply "FIXME" [_ base-value])
+(defsystem op-order "FIXME" [_])
 
 (defcomponent :op/inc
   {:data :number
