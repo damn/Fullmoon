@@ -3,8 +3,7 @@
             [clojure.gdx :refer :all]
             [core.item :as inventory]
             [core.world :as world])
-  (:import com.badlogic.gdx.graphics.Color
-           (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
+  (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -32,9 +31,7 @@
 
 (defn- ->tile-corner-color-setter [explored?]
   (fn tile-corner-color-setter [color x y]
-    (if (get explored? [x y])
-      Color/WHITE
-      Color/BLACK)))
+    (if (get explored? [x y]) white black)))
 
 #_(deftype Screen []
     (show [_ ctx]

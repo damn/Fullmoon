@@ -4,9 +4,7 @@
             [core.projectile :refer [projectile-size]]
             [core.skill :refer [has-skill?]]
             [clojure.string :as str])
-  ; TODO remove bad logic
-  (:import com.badlogic.gdx.graphics.Color
-           com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup) )
+  (:import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
 
 ; TODO define op-order here ...
 

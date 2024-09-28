@@ -3,8 +3,7 @@
             [clojure.gdx :refer :all]
             [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d])
-  (:import com.badlogic.gdx.graphics.Color
-           com.badlogic.gdx.scenes.scene2d.Actor
+  (:import com.badlogic.gdx.scenes.scene2d.Actor
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
            com.badlogic.gdx.scenes.scene2d.utils.ClickListener

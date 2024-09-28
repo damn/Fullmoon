@@ -1,6 +1,5 @@
 #_(ns gdl.simple-screen
-  (:require [])
-  (:import com.badlogic.gdx.graphics.Color))
+  (:require []))
 
 #_(defn draw-test [g {{:keys [special-font logo]} :gdl/simple :as ctx}]
   (let [[wx wy] (map #(format "%.2f" %) (ctx/world-mouse-position g))

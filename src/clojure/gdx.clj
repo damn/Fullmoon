@@ -439,12 +439,22 @@
       (= Color/LIGHT_GRAY (kw->color :light-gray)))
  )
 
+(def white Color/WHITE)
+(def black Color/BLACK)
+
 (defn- munge-color ^Color [color]
   (cond
    (= Color (class color)) color
    (keyword? color) (kw->color color)
    (vector? color) (apply ->color color)
    :else (throw (ex-info "Cannot understand color" {:color color}))))
+
+(defn def-markup-color
+  "A general purpose class containing named colors that can be changed at will. For example, the markup language defined by the BitmapFontCache class uses this class to retrieve colors and the user can define his own colors.
+
+  [javadoc](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/graphics/Colors.html)"
+  [name-str color]
+  (Colors/put name-str (munge-color color)))
 
 (defn set-color! [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (munge-color color)))
@@ -493,10 +503,3 @@
     (.setDefaultLineWidth sd (float (* (float width) old-line-width)))
     (draw-fn)
     (.setDefaultLineWidth sd (float old-line-width))))
-
-(defn def-markup-color
-  "A general purpose class containing named colors that can be changed at will. For example, the markup language defined by the BitmapFontCache class uses this class to retrieve colors and the user can define his own colors.
-
-  [javadoc](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/graphics/Colors.html)"
-  [name-str color]
-  (Colors/put name-str (munge-color color)))

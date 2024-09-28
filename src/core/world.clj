@@ -4,8 +4,7 @@
             [clojure.gdx.tiled :refer :all]
             [clojure.string :as str]
             [data.grid2d :as g])
-  (:import com.badlogic.gdx.graphics.Color
-           (gdl OrthogonalTiledMapRenderer ColorSetter)))
+  (:import (gdl OrthogonalTiledMapRenderer ColorSetter)))
 
 ; OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
 ; and when a batch is passed to the constructor
@@ -997,7 +996,7 @@ direction keys: move")
     (reset-zoom! (world-camera ctx)))
 
   (screen-render [_ context]
-    (render! context (:tiled-map @current-data) (constantly Color/WHITE))
+    (render! context (:tiled-map @current-data) (constantly white))
     (render-world-view context #(render-on-map % context))
     (if (key-just-pressed? :keys/l)
       (swap! current-data update :show-grid-lines not))
@@ -1621,7 +1620,7 @@ direction keys: move")
   (fn tile-color-setter [_color x y]
     (let [position [(int x) (int y)]
           explored? (get @explored-tile-corners position) ; TODO needs int call ?
-          base-color (if explored? explored-tile-color Color/BLACK)
+          base-color (if explored? explored-tile-color black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
                      (let [blocked? (fast-ray-blocked? raycaster light-position position)]
@@ -1631,10 +1630,10 @@ direction keys: move")
       #_(when @do-once
           (swap! ray-positions conj position))
       (if blocked?
-        (if see-all-tiles? Color/WHITE base-color)
+        (if see-all-tiles? white base-color)
         (do (when-not explored?
               (swap! explored-tile-corners assoc (->tile position) true))
-            Color/WHITE)))))
+            white)))))
 
 (defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
   (render! ctx
