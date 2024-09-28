@@ -39,7 +39,6 @@
                    [error :as me]
                    [generator :as mg]))
   (:import java.util.Random
-           org.lwjgl.system.Configuration
            (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager

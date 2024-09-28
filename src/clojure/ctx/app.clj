@@ -63,8 +63,8 @@
   ; Maybe can delete this when using that new libgdx version
   ; which includes this PR.
   (when SharedLibraryLoader/isMac
-    (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
-    (.set Configuration/GLFW_CHECK_THREAD0 false))
+    (.set org.lwjgl.system.Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set org.lwjgl.system.Configuration/GLFW_CHECK_THREAD0 false))
   (let [config (doto (Lwjgl3ApplicationConfiguration.)
                  (.setTitle title)
                  (.setForegroundFPS (or fps 60)))]
