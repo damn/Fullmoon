@@ -627,8 +627,7 @@
                              (stage-add! ctx window))))]
       (for [property-id property-ids]
         (let [property (build-property ctx property-id)
-              image-widget (->image-widget (prop->image property)
-                                              {:id property-id})]
+              image-widget (->image-widget (prop->image property) {:id property-id})]
           (add-tooltip! image-widget #(->info-text property %))
           image-widget))
       (for [id property-ids]
@@ -671,8 +670,7 @@
                                (stage-add! ctx window)))))]
       [(when property-id
          (let [property (build-property ctx property-id)
-               image-widget (->image-widget (prop->image property)
-                                               {:id property-id})]
+               image-widget (->image-widget (prop->image property) {:id property-id})]
            (add-tooltip! image-widget #(->info-text property %))
            image-widget))]
       [(when property-id

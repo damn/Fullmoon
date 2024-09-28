@@ -39,9 +39,7 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:load "ctx/utils"
-         "ctx/component"
-         "ctx/systems"
+  (:load "ctx/systems"
          "ctx/effect"
          "ctx/assets"
          "ctx/info"
