@@ -561,21 +561,14 @@
     {:title (:title (overview property-type))
      :content (->overview-table ctx property-type open-property-editor-window!)}))
 
-(import 'com.badlogic.gdx.scenes.scene2d.InputListener)
-
 (derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
   (->mk [_ ctx]
-    {:stage (let [stage (->stage ctx [(->background-image ctx)
-                                      (->tabbed-pane (->tabs-data ctx))])]
-              (.addListener stage (proxy [InputListener] []
-                                    (keyDown [event keycode]
-                                      (if (= keycode com.badlogic.gdx.Input$Keys/SHIFT_LEFT)
-                                        (do
-                                         (swap! app-state change-screen :screens/main-menu)
-                                         true)
-                                        false))))
-              stage)}))
+    {:stage (->stage ctx [(->background-image ctx)
+                          (->tabbed-pane (->tabs-data ctx))
+                          (->actor {:act (fn [_ctx]
+                                           (when (key-just-pressed? :shift-left)
+                                             (swap! app-state change-screen :screens/main-menu)))})])}))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59
