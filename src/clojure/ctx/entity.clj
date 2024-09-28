@@ -1,5 +1,37 @@
 (in-ns 'clojure.ctx)
 
+(defcomponent :e/destroy
+  (do! [[_ entity] ctx]
+    [[:e/assoc entity :entity/destroyed? true]]))
+
+(defcomponent :e/assoc
+  (do! [[_ entity k v] ctx]
+    (assert (keyword? k))
+    (swap! entity assoc k v)
+    ctx))
+
+(defcomponent :e/assoc-in
+  (do! [[_ entity ks v] ctx]
+    (swap! entity assoc-in ks v)
+    ctx))
+
+(defcomponent :e/dissoc
+  (do! [[_ entity k] ctx]
+    (assert (keyword? k))
+    (swap! entity dissoc k)
+    ctx))
+
+(defcomponent :e/dissoc-in
+  (do! [[_ entity ks] ctx]
+    (assert (> (count ks) 1))
+    (swap! entity update-in (drop-last ks) dissoc (last ks))
+    ctx))
+
+(defcomponent :e/update-in
+  (do! [[_ entity ks f] ctx]
+    (swap! entity update-in ks f)
+    ctx))
+
 (defn- define-order [order-k-vector]
   (apply hash-map
          (interleave order-k-vector (range))))
@@ -208,6 +240,21 @@
       ; thats why we reuse component and not fetch each time again for key
       (create component eid ctx))))
 
+(defcomponent :e/create
+  (do! [[_ position body components] ctx]
+    (assert (and (not (contains? components :position))
+                 (not (contains? components :entity/id))
+                 (not (contains? components :entity/uid))))
+    (let [eid (atom nil)]
+      (reset! eid (-> body
+                      (assoc :position position)
+                      ->Body
+                      (safe-merge (-> components
+                                      (assoc :entity/id eid
+                                             :entity/uid (unique-number!))
+                                      (create-vs ctx)))))
+      (create-e-system eid))))
+
 (def ^:private ^:dbg-flag show-body-bounds false)
 
 (defn- draw-body-rect [g entity* color]
@@ -380,16 +427,6 @@
 
 ; TODO add teleport effect ~ or tx
 
-(def ^:private shout-radius 4)
-
-(defn- friendlies-in-radius [ctx position faction]
-  (->> {:position position
-        :radius shout-radius}
-       (circle->entities (:context/grid ctx))
-       (map deref)
-       (filter #(= (:entity/faction %) faction))
-       (map :entity/id)))
-
 (defn- calculate-mouseover-entity [ctx]
   (let [player-entity* (player-entity* ctx)
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
@@ -455,6 +492,17 @@
            (when rotate-in-movement-direction?
              [:e/assoc eid :rotation-angle (v-get-angle-from-vector direction)])
            [:tx/position-changed eid]])))))
+
+(defcomponent :tx/set-movement
+  (do! [[_ entity movement] ctx]
+    (assert (or (nil? movement)
+                (nil? (:direction movement))
+                (and (:direction movement) ; continue schema of that ...
+                     #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
+    [(if (or (nil? movement)
+             (nil? (:direction movement)))
+       [:e/dissoc entity :entity/movement]
+       [:e/assoc entity :entity/movement movement])]))
 
 (defcomponent :entity/image
   {:data :image
@@ -527,6 +575,14 @@
         (with-shape-line-width g 4 #(draw-line g position end color))
         (draw-line g position end color)))))
 
+(defcomponent :tx/line-render
+  (do! [[_ {:keys [start end duration color thick?]}] _ctx]
+    [[:e/create
+      start
+      effect-body-props
+      #:entity {:line-render {:thick? thick? :end end :color color}
+                :delete-after-duration duration}]]))
+
 (defcomponent :entity/mouseover?
   (render-below [_ {:keys [entity/faction] :as entity*} g ctx]
     (let [player-entity* (player-entity* ctx)]
@@ -555,6 +611,16 @@
   (render-above [_ entity* g _ctx]
     (draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
+(def ^:private shout-radius 4)
+
+(defn- friendlies-in-radius [ctx position faction]
+  (->> {:position position
+        :radius shout-radius}
+       (circle->entities (:context/grid ctx))
+       (map deref)
+       (filter #(= (:entity/faction %) faction))
+       (map :entity/id)))
+
 (defcomponent :entity/alert-friendlies-after-duration
   {:let {:keys [counter faction]}}
   (tick [_ eid ctx]
@@ -562,6 +628,15 @@
       (cons [:e/destroy eid]
             (for [friendly-eid (friendlies-in-radius ctx (:position @eid) faction)]
               [:tx/event friendly-eid :alert])))))
+
+(defcomponent :tx/shout
+  (do! [[_ position faction delay-seconds] ctx]
+    [[:e/create
+      position
+      effect-body-props
+      {:entity/alert-friendlies-after-duration
+       {:counter (->counter ctx delay-seconds)
+        :faction faction}}]]))
 
 (defcomponent :entity/string-effect
   (tick [[k {:keys [counter]}] eid ctx]
@@ -576,6 +651,18 @@
                   :y (+ y (:half-height entity*) (pixels->world-units g hpbar-height-px))
                   :scale 2
                   :up? true}))))
+
+(defcomponent :tx/add-text-effect
+  (do! [[_ entity text] ctx]
+    [[:e/assoc
+      entity
+      :entity/string-effect
+      (if-let [string-effect (:entity/string-effect @entity)]
+        (-> string-effect
+            (update :text str "\n" text)
+            (update :counter #(reset ctx %)))
+        {:text text
+         :counter (->counter ctx 0.4)})]]))
 
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])

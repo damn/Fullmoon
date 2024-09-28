@@ -222,6 +222,11 @@
 (defn set-cursor! [{g :context/graphics} cursor-key]
   (g-set-cursor! (safe-get (:cursors g) cursor-key)))
 
+(defcomponent :tx/cursor
+  (do! [[_ cursor-key] ctx]
+    (set-cursor! ctx cursor-key)
+    ctx))
+
 (defn- render-view [{{:keys [batch] :as g} :context/graphics} view-key draw-fn]
   (let [{:keys [viewport unit-scale]} (view-key g)]
     (draw-with! batch
@@ -248,6 +253,19 @@
 
 (defprotocol DrawItemOnCursor
   (draw-item-on-cursor [g ctx]))
+
+(def-attributes
+  :views [:map [:gui-view :world-view]]
+  :gui-view [:map [:world-width :world-height]]
+  :world-view [:map [:tile-size :world-width :world-height]]
+  :world-width :pos-int
+  :world-height :pos-int
+  :tile-size :pos-int
+  :default-font [:map [:file :quality-scaling :size]]
+  :file :string
+  :quality-scaling :pos-int
+  :size :pos-int
+  :cursors :some)
 
 (defcomponent :context/graphics
   {:data [:map [:cursors :default-font :views]]

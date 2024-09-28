@@ -40,15 +40,18 @@
   (:load "ctx/effect"
          "ctx/component"
          "ctx/assets"
+         "ctx/schema"
          "ctx/graphics"
+
          "ctx/time"
          "ctx/world"
          "ctx/val_max"
+
          "ctx/ui"
          "ctx/properties"
+
          "ctx/entity"
          "ctx/operation"
+
          "ctx/app"
-         "ctx/types"
-         "ctx/txs"
          "ctx/doc"))

@@ -4,6 +4,19 @@
             [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d]))
 
+(def-type :properties/items
+  {:schema [:property/pretty-name
+            :entity/image
+            :item/slot
+            [:item/modifiers {:optional true}]]
+   :overview {:title "Items"
+              :columns 20
+              :image/scale 1.1
+              :sort-by-fn #(vector (if-let [slot (:item/slot %)]
+                                     (name slot)
+                                     "")
+                             (name (:property/id %)))}})
+
 (def ^:private empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
                         :weapon   [1 1]

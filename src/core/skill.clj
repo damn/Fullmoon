@@ -2,6 +2,19 @@
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]))
 
+(def-type :properties/skills
+  {:schema [:entity/image
+            :property/pretty-name
+            :skill/action-time-modifier-key
+            :skill/action-time
+            :skill/start-action-sound
+            :skill/effects
+            [:skill/cooldown {:optional true}]
+            [:skill/cost {:optional true}]]
+   :overview {:title "Skills"
+              :columns 16
+              :image/scale 2}})
+
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @player-entity))
 (defn ->skill-window [context]
@@ -84,3 +97,18 @@
     [[:e/dissoc-in entity [:entity/skills id]]
      (when (:entity/player? @entity)
        [:tx.action-bar/remove skill])]))
+
+(defcomponent :tx.entity.stats/pay-mana-cost
+  (do! [[_ entity cost] _ctx]
+    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
+      (assert (<= cost mana-val))
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
+
+(comment
+ (let [mana-val 4
+       entity (atom (map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       mana-cost 3
+       resulting-mana (- mana-val mana-cost)]
+   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+ )

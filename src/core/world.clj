@@ -5,6 +5,16 @@
             [clojure.string :as str]
             [data.grid2d :as g]))
 
+(def-type :properties/worlds
+  {:schema [:world/generator
+            :world/player-creature
+            [:world/tiled-map {:optional true}]
+            [:world/map-size {:optional true}]
+            [:world/max-area-level {:optional true}]
+            [:world/spawn-rate {:optional true}]]
+   :overview {:title "Worlds"
+              :columns 10}})
+
 (defn render!
   "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
   Color-setter is a (fn [color x y]) which is called for every tile-corner to set the color.

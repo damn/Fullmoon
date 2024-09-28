@@ -1,5 +1,11 @@
 (in-ns 'clojure.ctx)
 
+(defcomponent :context/vis-ui
+  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
+   :let skin-scale}
+  (->mk [_ _ctx] (load-ui! skin-scale) :loaded)
+  (destroy! [_] (dispose-ui!)))
+
 (declare info-text-k-order)
 
 (defn- sort-k-order [components]
@@ -222,8 +228,6 @@
                                            (* (gui-viewport-height ctx) (/ 3 4))]
                          :pack? true})))
 
-(defcomponent :context/vis-ui
-  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
-   :let skin-scale}
-  (->mk [_ _ctx] (load-ui! skin-scale) :loaded)
-  (destroy! [_] (dispose-ui!)))
+(defcomponent :tx/player-modal
+  (do! [[_ params] ctx]
+    (show-player-modal! ctx params)))

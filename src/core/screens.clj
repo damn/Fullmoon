@@ -395,6 +395,10 @@
     (when (>= counter duration-seconds)
       (swap! app-state assoc ctx-msg-player nil))))
 
+(defcomponent :tx/msg-to-player
+  (do! [[_ message] ctx]
+    (assoc ctx :context/msg-to-player {:message message :counter 0})))
+
 (defcomponent :widgets/player-message
   (->mk [_ _ctx]
     (->actor {:draw draw-player-message

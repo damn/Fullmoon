@@ -1,11 +1,19 @@
 (ns core.app
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer [defcomponent]]
+            [clojure.gdx :refer :all]
             core.creature
             core.projectile
             core.screens
             core.stat
             core.skill))
+
+(def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
+
+(defcomponent :property/pretty-name
+  {:data :string
+   :let value}
+  (info-text [_ _ctx]
+    (str "[ITEM_GOLD]"value"[]")))
 
 (def-type :properties/audiovisuals
   {:schema [:tx/sound

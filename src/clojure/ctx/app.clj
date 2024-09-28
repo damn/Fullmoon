@@ -1,5 +1,9 @@
 (in-ns 'clojure.ctx)
 
+(def-attributes
+  :tag [:enum [:dev :prod]]
+  :configs :some)
+
 (defcomponent :context/config
   {:data [:map [:tag :configs]]
    :let {:keys [tag configs]}}
