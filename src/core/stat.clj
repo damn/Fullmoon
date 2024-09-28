@@ -307,6 +307,19 @@
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
+(defsystem applicable?
+  "An effect will only be done (with do!) if this function returns truthy.
+Required system for every effect, no default."
+  [_ ctx])
+
+(defsystem useful?
+  "Used for NPC AI.
+Called only if applicable? is truthy.
+For example use for healing effect is only useful if hitpoints is < max.
+Default method returns true."
+  [_ ctx])
+(defmethod useful? :default [_ ctx] true)
+
 (defsystem ^:private render-effect "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
 (defmethod render-effect :default [_ g ctx])
 

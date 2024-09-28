@@ -563,6 +563,9 @@
     {:title (:title (overview property-type))
      :content (->overview-table ctx property-type open-property-editor-window!)}))
 
+(defsystem ->mk "Create component value. Default returns v." [_ ctx])
+(defmethod ->mk :default [[_ v] _ctx] v)
+
 (derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
   (->mk [_ ctx]

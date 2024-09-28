@@ -18,6 +18,9 @@
           ctx
           components))
 
+(defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
+(defmethod destroy! :default [_])
+
 (defn- ->app-listener [ctx]
   (reify clojure.gdx/AppListener
     (on-create [_]

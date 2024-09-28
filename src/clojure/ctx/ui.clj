@@ -13,6 +13,12 @@
   [actor tooltip-text]
   (ui-add-tooltip! app-state actor tooltip-text))
 
+(defsystem ^:private screen-render! "FIXME" [_])
+
+(defsystem screen-render "FIXME" [_ ctx])
+(defmethod screen-render :default [_ ctx]
+  ctx)
+
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
   {:let {:keys [stage sub-screen]}}
@@ -128,26 +134,3 @@
                          :center-position [(/ (gui-viewport-width ctx) 2)
                                            (* (gui-viewport-height ctx) (/ 3 4))]
                          :pack? true})))
-
-(def ^:private ctx-msg-player :context/msg-to-player)
-
-(def ^:private duration-seconds 1.5)
-
-(defn- draw-player-message [g ctx]
-  (when-let [{:keys [message]} (ctx-msg-player ctx)]
-    (draw-text g {:x (/ (gui-viewport-width ctx) 2)
-                  :y (+ (/ (gui-viewport-height ctx) 2) 200)
-                  :text message
-                  :scale 2.5
-                  :up? true})))
-
-(defn- check-remove-message [ctx]
-  (when-let [{:keys [counter]} (ctx-msg-player ctx)]
-    (swap! app-state update ctx-msg-player update :counter + (delta-time))
-    (when (>= counter duration-seconds)
-      (swap! app-state assoc ctx-msg-player nil))))
-
-(defcomponent :widgets/player-message
-  (->mk [_ _ctx]
-    (->actor {:draw draw-player-message
-              :act check-remove-message})))

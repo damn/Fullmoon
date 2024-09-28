@@ -6,6 +6,12 @@
 (defn current-screen [{{:keys [current screens]} :context/screens}]
   [current (get screens current)])
 
+(defsystem screen-enter "FIXME" [_ ctx])
+(defmethod screen-enter :default [_ ctx])
+
+(defsystem screen-exit  "FIXME" [_ ctx])
+(defmethod screen-exit :default  [_ ctx])
+
 (defn change-screen
   "Calls `screen-exit` on the current-screen (if there is one).
   Throws AssertionError when the context does not have a screen with screen-key.
