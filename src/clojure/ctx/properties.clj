@@ -1,5 +1,7 @@
 (in-ns 'clojure.ctx)
 
+(defsystem ->value "..." [_])
+
 (defn- data-component [k]
   (try (let [data (:data (safe-get component-attributes k))]
          (if (vector? data)

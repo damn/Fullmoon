@@ -1,7 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(defsystem ->value "..." [_])
-
 (defsystem ->mk "Create component value. Default returns v." [_ ctx])
 (defmethod ->mk :default [[_ v] _ctx] v)
 
