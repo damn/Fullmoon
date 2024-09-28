@@ -1,11 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(defmacro post-runnable! [& exprs]
-  `(.postRunnable Gdx/app (fn [] ~@exprs)))
-
-(defn exit-app! []
-  (.exit Gdx/app))
-
 (defn- set-first-screen [context]
   (->> context
        :context/screens

@@ -1,9 +1,9 @@
 (ns core.screens
   (:require [clojure.ctx :refer :all]
+            [clojure.gdx :as gdx]
             [core.item :as inventory]
             [core.world :as world])
-  (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.graphics.Color
+  (:import com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 ; 28.4 viewportwidth
@@ -158,7 +158,7 @@
                             (update :logic-frame inc))))
 
 (defn- update-world [ctx]
-  (let [ctx (update-time ctx (min (.getDeltaTime Gdx/graphics) max-delta-time))
+  (let [ctx (update-time ctx (min (gdx/delta-time) max-delta-time))
         entities (active-entities ctx)]
     (world/potential-fields-update! ctx entities)
     (try (tick-entities! ctx entities)
@@ -223,7 +223,7 @@
   (let [world-mouse (world-mouse-position ctx)]
     (str
      "logic-frame: " (logic-frame ctx) "\n"
-     "FPS: " (.getFramesPerSecond Gdx/graphics)  "\n"
+     "FPS: " (gdx/frames-per-second)  "\n"
      "Zoom: " (zoom (world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
@@ -483,7 +483,7 @@
                                       [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)
                                       [(->text-button "Property editor" #(change-screen % :screens/property-editor))])
-                                    [(->text-button "Exit" (fn [ctx] (exit-app!) ctx))]]))
+                                    [(->text-button "Exit" (fn [ctx] (gdx/exit-app!) ctx))]]))
                :cell-defaults {:pad-bottom 25}
                :fill-parent? true}))
 
@@ -497,7 +497,7 @@
    (->buttons ctx)
    (->actor {:act (fn [_ctx]
                     (when (key-just-pressed? :keys/escape)
-                      (exit-app!)))})])
+                      (gdx/exit-app!)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defcomponent :screens/main-menu

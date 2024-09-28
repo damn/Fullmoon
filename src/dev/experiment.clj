@@ -1,10 +1,11 @@
 (ns dev.experiment
-  (:require [clojure.ctx :refer :all])
+  (:require [clojure.ctx :refer :all]
+            [clojure.gdx :as gdx])
   (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
            com.kotcrab.vis.ui.widget.VisTree))
 (comment
 
- (post-runnable! (show-tree-view! :ctx))
+ (gdx/post-runnable! (show-tree-view! :ctx))
 
  (show-tree-view! :entity)
  (show-tree-view! :tile)
@@ -58,9 +59,8 @@
 
  )
 
-
 (defn- post-tx! [tx]
-  (post-runnable! (swap! app-state effect! [tx])))
+  (gdx/post-runnable! (swap! app-state effect! [tx])))
 
 (defn- learn-skill! [skill-id] (post-tx! (fn [ctx] [[:tx/add-skill (:entity/id (player-entity* ctx)) (build-property ctx skill-id)]])))
 (defn- create-item! [item-id]  (post-tx! (fn [ctx] [[:tx/item (:position (player-entity* ctx))       (build-property ctx item-id)]])))
