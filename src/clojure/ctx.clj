@@ -38,13 +38,10 @@
                    [error :as me]
                    [generator :as mg]))
   (:load "ctx/effect"
-         "ctx/assets"
-         "ctx/info"
          "ctx/graphics"
          "ctx/time"
          "ctx/world"
          "ctx/val_max"
-         "ctx/screens"
          "ctx/ui"
          "ctx/properties"
          "ctx/entity"
