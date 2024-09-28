@@ -4,6 +4,7 @@
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
+           com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color Texture)
            com.badlogic.gdx.utils.SharedLibraryLoader
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
@@ -131,4 +132,25 @@
     (doseq [file files]
       (.load manager ^String file klass))))
 
+(defn finish-loading! [^AssetManager m] (.finishLoading m))
+
 (defn play! [sound] (Sound/.play sound))
+
+(defn- recursively-search [folder extensions]
+  (loop [[^FileHandle file & remaining] (.list (internal-file folder))
+         result []]
+    (cond (nil? file)
+          result
+
+          (.isDirectory file)
+          (recur (concat remaining (.list file)) result)
+
+          (extensions (.extension file))
+          (recur remaining (conj result (.path file)))
+
+          :else
+          (recur remaining result))))
+
+(defn search-files [folder file-extensions]
+  (map #(str/replace-first % folder "")
+       (recursively-search folder file-extensions)))

@@ -26,7 +26,7 @@
           texture-files (search-files folder image-file-extensions)]
       (load-assets! manager sound-files   :sound)
       (load-assets! manager texture-files :texture)
-      (.finishLoading manager)
+      (finish-loading! manager)
       {:manager manager
        :sound-files sound-files
        :texture-files texture-files})))

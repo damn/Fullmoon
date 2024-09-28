@@ -29,7 +29,7 @@
                         :ui "🎛️ UI"
                         :utils "🔧 Utils"
                         :world "🌎 World"}}
-  (:require (clojure [gdx :as gdx :refer [->color key-pressed? key-just-pressed? internal-file set-input-processor! ->lwjgl3-app ->asset-manager load-assets! play!]]
+  (:require (clojure [gdx :as gdx :refer [->color key-pressed? key-just-pressed? internal-file set-input-processor! ->lwjgl3-app ->asset-manager load-assets! finish-loading! play! search-files]]
                      [set :as set]
                      [string :as str]
                      [edn :as edn]
@@ -39,8 +39,7 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:import com.badlogic.gdx.files.FileHandle
-           [com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector]
+  (:import [com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector]
            (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format OrthographicCamera Camera)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
