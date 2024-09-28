@@ -39,12 +39,7 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:import [com.badlogic.gdx.math
-            Vector2 ; we don't need gdx for this
-            Circle
-            Rectangle
-            Intersector]
-           (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format)
+  (:import (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
            (com.badlogic.gdx.utils Align Scaling)
@@ -65,7 +60,6 @@
          "ctx/graphics"
          "ctx/time"
          "ctx/world"
-         "ctx/geometry"
          "ctx/val_max"
          "ctx/screens"
          "ctx/ui"

@@ -308,18 +308,6 @@
 (defn- gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
 (defn- world-viewport ^Viewport [g] (-> g :world-view :viewport))
 
-; touch coordinates are y-down, while screen coordinates are y-up
-; so the clamping of y is reverse, but as black bars are equal it does not matter
-(defn- unproject-mouse-posi [^Viewport viewport]
-  (let [mouse-x (clamp (input-x)
-                       (.getLeftGutterWidth viewport)
-                       (.getRightGutterX viewport))
-        mouse-y (clamp (input-y)
-                       (.getTopGutterHeight viewport)
-                       (.getTopGutterY viewport))
-        coords (.unproject viewport (Vector2. mouse-x mouse-y))]
-    [(.x coords) (.y coords)]))
-
 (defn- gui-mouse-position* [g]
   ; TODO mapv int needed?
   (mapv int (unproject-mouse-posi (gui-viewport g))))

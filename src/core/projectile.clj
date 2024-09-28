@@ -1,5 +1,6 @@
 (ns core.projectile
-  (:require [clojure.ctx :refer :all]))
+  (:require [clojure.ctx :refer :all]
+            [clojure.gdx :refer :all]))
 
 (defcomponent :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}
