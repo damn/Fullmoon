@@ -492,7 +492,7 @@
                                                        [(->text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                         (->text-button "Delete" delete!)]])]])
     (add-actor! window (->actor {:act (fn [_ctx]
-                                        (when (.isKeyJustPressed Gdx/input Input$Keys/ENTER)
+                                        (when (key-just-pressed? :enter)
                                           (swap! app-state save!)))}))
     (.pack window)
     window))
@@ -570,7 +570,7 @@
                                       (->tabbed-pane (->tabs-data ctx))])]
               (.addListener stage (proxy [InputListener] []
                                     (keyDown [event keycode]
-                                      (if (= keycode Input$Keys/SHIFT_LEFT)
+                                      (if (= keycode com.badlogic.gdx.Input$Keys/SHIFT_LEFT)
                                         (do
                                          (swap! app-state change-screen :screens/main-menu)
                                          true)

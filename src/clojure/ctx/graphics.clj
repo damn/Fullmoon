@@ -1,11 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(defn ->color
-  ([r g b]
-   (->color r g b 1))
-  ([r g b a]
-   (Color. (float r) (float g) (float b) (float a))))
-
 (defprotocol WorldView
   (pixels->world-units [_ pixels])
   (world-unit-scale [_]))

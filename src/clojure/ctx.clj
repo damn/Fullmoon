@@ -29,7 +29,8 @@
                         :ui "🎛️ UI"
                         :utils "🔧 Utils"
                         :world "🌎 World"}}
-  (:require (clojure [set :as set]
+  (:require (clojure [gdx :refer [->color key-pressed? key-just-pressed?]]
+                     [set :as set]
                      [string :as str]
                      [edn :as edn]
                      [math :as math]
@@ -39,7 +40,7 @@
                    [error :as me]
                    [generator :as mg]))
   (:import java.util.Random
-           (com.badlogic.gdx Gdx ApplicationAdapter Input$Keys)
+           (com.badlogic.gdx Gdx ApplicationAdapter)
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
@@ -77,7 +78,6 @@
          "ctx/operation"
          "ctx/app"
          "ctx/types"
-         "ctx/input"
          "ctx/txs"
          "ctx/context"
          "ctx/doc"))

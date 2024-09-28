@@ -6,8 +6,6 @@
  :ctx-properties [all-properties build-property ]
  :schema [def-type def-attributes]
  :camera [reset-zoom! set-zoom! calculate-zoom camera-position camera-set-position! zoom visible-tiles frustum]
- :color [->color color-black color-white]
- :input [key-just-pressed? key-pressed? button-just-pressed?]
  :component [component-attributes defcomponent defcomponent* defsystem defsystems]
  :graphics [pixels->world-units world-unit-scale with-shape-line-width draw-arc draw-centered-image draw-circle draw-ellipse draw-filled-circle draw-filled-ellipse draw-filled-rectangle draw-grid draw-image draw-item-on-cursor draw-line draw-rectangle draw-rotated-centered-image draw-sector draw-text]
  :entity [state-obj enemy-faction entity-stat entity-state entity-tile ->modified-value can-pickup-item?  direction collides?  friendly-faction]

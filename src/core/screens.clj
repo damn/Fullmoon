@@ -1,6 +1,6 @@
 (ns core.screens
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :as gdx]
+            [clojure.gdx :as gdx :refer [key-just-pressed? key-pressed?]]
             [core.item :as inventory]
             [core.world :as world])
   (:import com.badlogic.gdx.graphics.Color

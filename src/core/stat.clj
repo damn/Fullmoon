@@ -1,5 +1,6 @@
 (ns core.stat
   (:require [clojure.ctx :refer :all]
+            [clojure.gdx :refer [button-just-pressed?]]
             [core.projectile :refer [projectile-size]]
             [core.skill :refer [has-skill?]]
             [clojure.string :as str])
