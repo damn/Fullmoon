@@ -37,7 +37,7 @@
 
     (on-resize [_ dim]
       ; TODO fix mac screen resize bug again
-      (on-resize @app-state dim))))
+      (update-viewports! @app-state dim))))
 
 (defrecord Context [])
 

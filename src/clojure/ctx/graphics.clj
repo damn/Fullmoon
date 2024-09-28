@@ -241,7 +241,7 @@
   [ctx render-fn]
   (render-view ctx :world-view render-fn))
 
-(defn- on-resize [{g :context/graphics} dim]
+(defn- update-viewports! [{g :context/graphics} dim]
   (vp-update! (gui-viewport g) dim :center-camera? true)
   ; Do not center the camera on world-viewport. We set the position there manually.
   (vp-update! (world-viewport g) dim))

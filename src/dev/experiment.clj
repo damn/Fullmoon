@@ -201,7 +201,7 @@
 (defn- add-elements! [node elements]
   (doseq [element elements
           :let [el-node (->t-node (->label (str (->v-str element))))]]
-    (.add node el-node)))
+    (t-node-add! node el-node)))
 
 (declare add-map-nodes!)
 
@@ -217,14 +217,13 @@
     (add-elements! node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! node (children->str-map (children (.getRoot v))) level))
+    (add-map-nodes! node (children->str-map (children (s-root v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
-    (add-map-nodes! node (children->str-map (children v)) level))
-  )
+    (add-map-nodes! node (children->str-map (children v)) level)))
 
 (comment
- (let [vis-image (first (children (.getRoot (stage-get @app-state))))]
+ (let [vis-image (first (children (s-root (stage-get @app-state))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -237,7 +236,7 @@
       ;(println "add-map-nodes! k " k)
       (try
        (let [node (->t-node (->label (->labelstr k v)))]
-         (.add parent-node node)
+         (t-node-add! parent-node node)
          #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
            (->nested-nodes node level @v))
          (->nested-nodes node level v))
