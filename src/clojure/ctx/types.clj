@@ -1,6 +1,6 @@
 (in-ns 'clojure.ctx)
 
-(Colors/put "ITEM_GOLD" (->color 0.84 0.8 0.52))
+(def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
 
 (defcomponent :property/pretty-name
   {:data :string

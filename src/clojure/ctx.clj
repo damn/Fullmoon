@@ -39,7 +39,7 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:import (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter)
+  (:import (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter)
            (com.badlogic.gdx.graphics.g2d TextureRegion BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
            (com.badlogic.gdx.utils Align Scaling)

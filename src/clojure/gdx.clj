@@ -4,7 +4,7 @@
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera Pixmap Pixmap$Format)
+           (com.badlogic.gdx.graphics Color Colors Texture OrthographicCamera Camera Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch TextureRegion)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
@@ -493,3 +493,10 @@
     (.setDefaultLineWidth sd (float (* (float width) old-line-width)))
     (draw-fn)
     (.setDefaultLineWidth sd (float old-line-width))))
+
+(defn def-markup-color
+  "A general purpose class containing named colors that can be changed at will. For example, the markup language defined by the BitmapFontCache class uses this class to retrieve colors and the user can define his own colors.
+
+  [javadoc](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/graphics/Colors.html)"
+  [name-str color]
+  (Colors/put name-str (munge-color color)))

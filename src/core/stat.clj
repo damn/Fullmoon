@@ -58,13 +58,13 @@
         :when (seq operations)]
     [modifier-k operations]))
 
-(com.badlogic.gdx.graphics.Colors/put "MODIFIER_BLUE"
-                                      Color/CYAN
-                                      ; maybe can be used in tooltip background is darker (from D2 copied color)
-                                      #_(com.badlogic.gdx.graphics.Color. (float 0.48)
-                                                                          (float 0.57)
-                                                                          (float 1)
-                                                                          (float 1)))
+; maybe can be used in tooltip background is darker (from D2 copied color)
+#_(com.badlogic.gdx.graphics.Color. (float 0.48)
+                                    (float 0.57)
+                                    (float 1)
+                                    (float 1))
+
+(def-markup-color "MODIFIER_BLUE" :cyan)
 
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
