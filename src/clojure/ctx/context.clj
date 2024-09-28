@@ -31,9 +31,6 @@
        :sound-files sound-files
        :texture-files texture-files})))
 
-(defn dispose [obj]
-  (Disposable/.dispose obj))
-
 (defcomponent :context/graphics
   {:data [:map [:cursors :default-font :views]]
    :let {:keys [views default-font cursors]}}
@@ -47,10 +44,10 @@
               (->cursors cursors)))))
 
   (destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
-    (dispose batch)
-    (dispose shape-drawer-texture)
-    (dispose default-font)
-    (run! dispose (vals cursors))))
+    (dispose! batch)
+    (dispose! shape-drawer-texture)
+    (dispose! default-font)
+    (run! dispose! (vals cursors))))
 
 (defcomponent ctx-time
   (->mk [_ _ctx]

@@ -130,7 +130,7 @@
 
 (defn start-new-game! [ctx tiled-level]
   (when-let [tiled-map (:context/tiled-map ctx)]
-    (dispose tiled-map))
+    (dispose! tiled-map))
   (-> ctx
       (dissoc :context/entity-tick-error)
       (create-into {:context/ecs true

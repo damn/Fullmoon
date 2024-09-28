@@ -164,7 +164,7 @@
 (defn- generate-ttf [{:keys [file size quality-scaling]}]
   (let [generator (FreeTypeFontGenerator. (internal-file file))
         font (.generateFont generator (->params size quality-scaling))]
-    (.dispose generator)
+    (dispose! generator)
     (.setScale (.getData font) (float (/ quality-scaling)))
     (set! (.markupEnabled (.getData font)) true)
     (.setUseIntegerPositions font false) ; otherwise scaling to world-units (/ 1 48)px not visible
@@ -208,7 +208,7 @@
                            (.setColor ^Color Color/WHITE)
                            (.drawPixel 0 0))
                   tex (Texture. pixmap)]
-              (.dispose pixmap)
+              (dispose! pixmap)
               tex)]
     {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
      :shape-drawer-texture tex}))
@@ -342,7 +342,7 @@
 (defn- ->cursor [file hotspot]
   (let [pixmap (Pixmap. (internal-file file))
         cursor (gdx/->cursor pixmap hotspot)]
-    (.dispose pixmap)
+    (dispose! pixmap)
     cursor))
 
 (defn- mapvals [f m]

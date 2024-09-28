@@ -964,7 +964,7 @@ direction keys: move")
   (let [;{:keys [tiled-map area-level-grid start-position]} (generate-modules context properties)
         {:keys [tiled-map start-position]} (->world context world-id)
         atom-data (current-data context)]
-    (dispose (:tiled-map @atom-data))
+    (dispose! (:tiled-map @atom-data))
     (swap! atom-data assoc
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
@@ -989,9 +989,8 @@ direction keys: move")
 (defcomponent ::sub-screen
   {:let current-data}
   ; TODO ?
-  ;com.badlogic.gdx.utils.Disposable
   #_(dispose [_]
-      (dispose (:tiled-map @current-data)))
+      (dispose! (:tiled-map @current-data)))
 
   (screen-enter [_ ctx]
     (show-whole-map! (world-camera ctx) (:tiled-map @current-data)))
