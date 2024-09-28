@@ -6,7 +6,7 @@
       (.get ^AssetManager this ^String file))))
 
 (defn- recursively-search [folder extensions]
-  (loop [[^FileHandle file & remaining] (.list (.internal Gdx/files folder))
+  (loop [[^FileHandle file & remaining] (.list (internal-file folder))
          result []]
     (cond (nil? file)
           result

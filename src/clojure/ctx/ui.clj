@@ -139,11 +139,11 @@
 (defcomponent :screens/stage
   {:let {:keys [^Stage stage sub-screen]}}
   (screen-enter [_ context]
-    (.setInputProcessor Gdx/input stage)
+    (set-input-processor! stage)
     (screen-enter sub-screen context))
 
   (screen-exit [_ context]
-    (.setInputProcessor Gdx/input nil)
+    (set-input-processor! nil)
     (screen-exit sub-screen context))
 
   (screen-render! [_]
@@ -519,7 +519,7 @@
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (ctx-msg-player ctx)]
-    (swap! app-state update ctx-msg-player update :counter + (.getDeltaTime Gdx/graphics))
+    (swap! app-state update ctx-msg-player update :counter + (gdx/delta-time))
     (when (>= counter duration-seconds)
       (swap! app-state assoc ctx-msg-player nil))))
 

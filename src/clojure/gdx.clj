@@ -1,7 +1,7 @@
 (ns clojure.gdx
   "API for [libgdx](https://libgdx.com/)"
   (:require [clojure.string :as str])
-  (:import (com.badlogic.gdx Gdx)
+  (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.graphics.Color))
 
 (defn exit-app!
@@ -79,3 +79,20 @@
   Numbers via :num-3, etc."
   [k]
   (.isKeyPressed Gdx/input (->gdx-input-key k)))
+
+(defn input-x [] (.getX Gdx/input))
+(defn input-y [] (.getY Gdx/input))
+
+(defn set-input-processor! [processor]
+  (.setInputProcessor Gdx/input processor))
+
+(defn internal-file
+  "Path relative to the asset directory on Android and to the application's root directory on the desktop. On the desktop, if the file is not found, then the classpath is checked. This enables files to be found when using JWS or applets. Internal files are always readonly."
+  [path]
+  (.internal Gdx/files path))
+
+(defn ->cursor [pixmap [hotspot-x hotspot-y]]
+  (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y))
+
+(defn set-cursor! [cursor]
+  (.setCursor Gdx/graphics cursor))

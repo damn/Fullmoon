@@ -19,7 +19,7 @@
           components))
 
 (defn- ->application-listener [context]
-  (proxy [ApplicationAdapter] []
+  (proxy [com.badlogic.gdx.ApplicationAdapter] []
     (create []
       (->> context
            ; screens require vis-ui / properties (map-editor, property editor uses properties)

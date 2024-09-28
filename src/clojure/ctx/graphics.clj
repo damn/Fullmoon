@@ -162,7 +162,7 @@
     params))
 
 (defn- generate-ttf [{:keys [file size quality-scaling]}]
-  (let [generator (FreeTypeFontGenerator. (.internal Gdx/files file))
+  (let [generator (FreeTypeFontGenerator. (internal-file file))
         font (.generateFont generator (->params size quality-scaling))]
     (.dispose generator)
     (.setScale (.getData font) (float (/ quality-scaling)))
@@ -319,10 +319,10 @@
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [^Viewport viewport]
-  (let [mouse-x (clamp (.getX Gdx/input)
+  (let [mouse-x (clamp (gdx/input-x)
                        (.getLeftGutterWidth viewport)
                        (.getRightGutterX viewport))
-        mouse-y (clamp (.getY Gdx/input)
+        mouse-y (clamp (gdx/input-y)
                        (.getTopGutterHeight viewport)
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
@@ -347,11 +347,9 @@
 (defn world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
 (defn world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))
 
-;; graphics cursors
-
-(defn- ->cursor [file [hotspot-x hotspot-y]]
-  (let [pixmap (Pixmap. (.internal Gdx/files file))
-        cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
+(defn- ->cursor [file hotspot]
+  (let [pixmap (Pixmap. (internal-file file))
+        cursor (gdx/->cursor pixmap hotspot)]
     (.dispose pixmap)
     cursor))
 
@@ -365,7 +363,7 @@
                      cursors)})
 
 (defn set-cursor! [{g :context/graphics} cursor-key]
-  (.setCursor Gdx/graphics (safe-get (:cursors g) cursor-key)))
+  (gdx/set-cursor! (safe-get (:cursors g) cursor-key)))
 
 ;; ctx/graphics
 
