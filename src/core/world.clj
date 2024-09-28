@@ -1133,16 +1133,16 @@ direction keys: move")
 
 (defn ->generate-map-window [ctx level-id]
   (->window {:title "Properties"
-                :cell-defaults {:pad 10}
-                :rows [[(->label (with-out-str
-                                     (clojure.pprint/pprint
-                                      (build-property ctx level-id))))]
-                       [(->text-button "Generate" #(try (generate-screen-ctx % (build-property % level-id))
-                                                           (catch Throwable t
-                                                             (error-window! % t)
-                                                             (println t)
-                                                             %)))]]
-                :pack? true}))
+             :cell-defaults {:pad 10}
+             :rows [[(->label (with-out-str
+                               (clojure.pprint/pprint
+                                (build-property ctx level-id))))]
+                    [(->text-button "Generate" #(try (generate-screen-ctx % (build-property % level-id))
+                                                     (catch Throwable t
+                                                       (error-window! % t)
+                                                       (println t)
+                                                       %)))]]
+             :pack? true}))
 
 (defcomponent ::sub-screen
   {:let current-data}
@@ -1695,8 +1695,8 @@ direction keys: move")
 (defcomponent this
   (->mk [[_ [width height position->value]] _world]
     (g/create-grid width
-                        height
-                        #(atom (create-cell % (position->value %))))))
+                   height
+                   #(atom (create-cell % (position->value %))))))
 
 (def ^:private content-grid :context/content-grid)
 
@@ -1799,11 +1799,11 @@ direction keys: move")
 
 (defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
   (render! ctx
-                 tiled-map
-                 (->tile-color-setter (atom nil)
-                                      light-position
-                                      (:context/raycaster ctx)
-                                      (:context/explored-tile-corners ctx)))
+           tiled-map
+           (->tile-color-setter (atom nil)
+                                light-position
+                                (:context/raycaster ctx)
+                                (:context/explored-tile-corners ctx)))
   #_(reset! do-once false))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)

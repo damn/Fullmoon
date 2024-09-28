@@ -429,8 +429,7 @@
 (defn- ->component-widget [ctx [k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
         value-widget (->widget (data-component k) v ctx)
-        table (->table {:id k
-                           :cell-defaults {:pad 4}})
+        table (->table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
                           (->text-button "-" (fn [ctx]

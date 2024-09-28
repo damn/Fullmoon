@@ -525,7 +525,7 @@
       [[:e/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
-  (render-above [_ entity* g ctx]
+  (render-above [_ entity* g _ctx]
     (draw-filled-circle g (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
 (defcomponent :entity/alert-friendlies-after-duration
@@ -537,8 +537,8 @@
               [:tx/event friendly-eid :alert])))))
 
 (defcomponent :entity/string-effect
-  (tick [[k {:keys [counter]}] eid context]
-    (when (stopped? context counter)
+  (tick [[k {:keys [counter]}] eid ctx]
+    (when (stopped? ctx counter)
       [[:e/dissoc eid k]]))
 
   (render-above [[_ {:keys [text]}] entity* g _ctx]

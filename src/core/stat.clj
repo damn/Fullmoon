@@ -839,14 +839,14 @@
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (tick [_ eid context]
+  (tick [_ eid ctx]
     (cond
-     (not (effect-applicable? (safe-merge context effect-ctx) (:skill/effects skill)))
+     (not (effect-applicable? (safe-merge ctx effect-ctx) (:skill/effects skill)))
      [[:tx/event eid :action-done]
       ; TODO some sound ?
       ]
 
-     (stopped? context counter)
+     (stopped? ctx counter)
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 

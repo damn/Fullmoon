@@ -51,7 +51,7 @@
 
 (defcomponent :entity/skills
   {:data [:one-to-many :properties/skills]}
-  (create [[k skills] eid ctx]
+  (create [[k skills] eid _ctx]
     (cons [:e/assoc eid k nil]
           (for [skill skills]
             [:tx/add-skill eid skill])))

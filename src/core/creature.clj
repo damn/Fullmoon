@@ -191,9 +191,9 @@
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
-  (tick [_ eid context]
+  (tick [_ eid ctx]
     (let [entity* @eid
-          cell ((:context/grid context) (entity-tile entity*))]
+          cell ((:context/grid ctx) (entity-tile entity*))]
       (when-let [distance (nearest-entity-distance @cell (enemy-faction entity*))]
         (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
