@@ -55,12 +55,6 @@
         :when (seq operations)]
     [modifier-k operations]))
 
-; maybe can be used in tooltip background is darker (from D2 copied color)
-#_(com.badlogic.gdx.graphics.Color. (float 0.48)
-                                    (float 0.57)
-                                    (float 1)
-                                    (float 1))
-
 (def-markup-color "MODIFIER_BLUE" :cyan)
 
 ; For now no green/red color for positive/negative numbers
@@ -898,7 +892,7 @@
 
 (defn- selected-skill [ctx]
   (let [button-group (:action-bar (:context/widgets ctx))]
-    (when-let [skill-button (.getChecked ^com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup button-group)]
+    (when-let [skill-button (bg-checked button-group)]
       (actor-id skill-button))))
 
 (defn- inventory-window [ctx]

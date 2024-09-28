@@ -1,8 +1,6 @@
 (ns dev.experiment
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all])
-  (:import com.badlogic.gdx.scenes.scene2d.ui.Tree$Node
-           com.kotcrab.vis.ui.widget.VisTree))
+            [clojure.gdx :refer :all]))
 (comment
 
  (post-runnable! (show-tree-view! :ctx))
@@ -178,8 +176,7 @@
 ; TODO expand only on click ... save bandwidth ....
 ; crash only on expanding big one ...
 
-(defn- ->node [actor]
-  (proxy [Tree$Node] [actor]))
+
 
 (defn- ->v-str [v]
   (cond
@@ -203,7 +200,7 @@
 
 (defn- add-elements! [node elements]
   (doseq [element elements
-          :let [el-node (->node (->label (str (->v-str element))))]]
+          :let [el-node (->t-node (->label (str (->v-str element))))]]
     (.add node el-node)))
 
 (declare add-map-nodes!)
@@ -239,23 +236,23 @@
     (doseq [[k v] (into (sorted-map) m)]
       ;(println "add-map-nodes! k " k)
       (try
-       (let [node (->node (->label (->labelstr k v)))]
+       (let [node (->t-node (->label (->labelstr k v)))]
          (.add parent-node node)
          #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
            (->nested-nodes node level @v))
          (->nested-nodes node level v))
        (catch Throwable t
          (throw (ex-info "" {:k k :v v} t))
-         #_(.add parent-node (->node (->label (str "[RED] "k " - " t))))
+         #_(.add parent-node (->t-node (->label (str "[RED] "k " - " t))))
 
          )))))
 
 (defn- ->prop-tree [prop]
-  (let [tree (VisTree.)]
+  (let [tree (->ui-tree)]
     (add-map-nodes! tree prop 0)
     tree))
 
-(defn- ->scroll-pane-cell [ctx rows]
+(defn- scroll-pane-cell [ctx rows]
   (let [table (->table {:rows rows
                            :cell-defaults {:pad 1}
                            :pack? true})
@@ -277,6 +274,6 @@
                            :close-button? true
                            :close-on-escape? true
                            :center? true
-                           :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
+                           :rows [[(scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
                            :pack? true}))
     nil))

@@ -2,8 +2,7 @@
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
             [core.item :as inventory]
-            [core.world :as world])
-  (:import (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
+            [core.world :as world]))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -298,10 +297,9 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (->image-button image identity {:scale image-scale})]
       (set-id! button id)
-      (add-tooltip! button
-                          #(->info-text skill (assoc % :effect/source (player-entity %))))
+      (add-tooltip! button #(->info-text skill (assoc % :effect/source (player-entity %))))
       (add-actor! horizontal-group button)
-      (.add ^ButtonGroup button-group ^Button button)
+      (bg-add! button-group button)
       ctx)))
 
 (defcomponent :tx.action-bar/remove
@@ -309,7 +307,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
           button (get horizontal-group id)]
       (remove! button)
-      (.remove ^ButtonGroup button-group ^Button button)
+      (bg-remove! button-group button)
       ctx)))
 
 (comment
