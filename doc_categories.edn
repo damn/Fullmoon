@@ -16,7 +16,7 @@
  :ui-actor [set-center! set-id! set-name! set-position! set-touchable! set-visible! remove! parent visible? remove-tooltip! toggle-visible! actor-id actor-name add-tooltip!]
  :ui-widgets [->actor ->button-group ->check-box ->group ->horizontal-group ->horizontal-separator-cell ->image-button ->image-widget ->label ->scroll-pane ->scroll-pane-cell ->select-box ->split-pane ->stack ->stage ->table ->text-button ->text-field ->texture-region-drawable ->vertical-group ->vertical-separator-cell ->window]
  :ui [window-title-bar?  set-cell-opts set-table-opts pack-ancestor-window!  find-ancestor-window add-actor!  add-listener!  add-rows!  button?  children clear-children!]
- :utils [create-into ->info-text create-vs dispose val-max-ratio vimstuff WASD-movement-vector safe-get safe-merge srand srand-int sshuffle rand-float-between rand-int-between readable-number tile->middle create-seed ->tile when-chance find-first get-namespaces get-rand-weighted-item get-rand-weighted-items get-vars high-weighted high-weighted-rand-nth if-chance percent-chance]
+ :utils [create-into ->info-text create-vs val-max-ratio vimstuff WASD-movement-vector safe-get safe-merge srand srand-int sshuffle rand-float-between rand-int-between readable-number tile->middle create-seed ->tile when-chance find-first get-namespaces get-rand-weighted-item get-rand-weighted-items get-vars high-weighted high-weighted-rand-nth if-chance percent-chance]
  :world [rectangle->cells
          point->entities
          nearest-entity

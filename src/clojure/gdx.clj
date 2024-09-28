@@ -5,7 +5,7 @@
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera)
+           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera Pixmap)
            (com.badlogic.gdx.math MathUtils Vector3)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
@@ -97,7 +97,9 @@
   [path]
   (.internal Gdx/files path))
 
-(defn ->cursor [file hotspot]
+(defn dispose! [obj] (Disposable/.dispose obj))
+
+(defn ->cursor [file [hotspot-x hotspot-y]]
   (let [pixmap (Pixmap. (internal-file file))
         cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
     (dispose! pixmap)
@@ -235,5 +237,3 @@
 (defn ->camera [] (OrthographicCamera.))
 
 (defn clear-screen! [] (ScreenUtils/clear Color/BLACK))
-
-(defn dispose! [obj] (Disposable/.dispose obj))
