@@ -15,7 +15,7 @@
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
-  {:let {:keys [^com.badlogic.gdx.scenes.scene2d.Stage stage sub-screen]}}
+  {:let {:keys [stage sub-screen]}}
   (screen-enter [_ context]
     (set-input-processor! stage)
     (screen-enter sub-screen context))
@@ -28,27 +28,23 @@
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
-    (.act stage)
+    (s-act! stage)
     (swap! app-state #(screen-render sub-screen %))
-    (.draw stage)))
+    (s-draw! stage)))
 
-(defn ->stage
-  "Stage implements clojure.lang.ILookup (get) on actor id."
-  [{{:keys [gui-view batch]} :context/graphics} actors]
+(defn ->stage [{{:keys [gui-view batch]} :context/graphics} actors]
   (let [stage (->ui-stage (:viewport gui-view) batch)]
-    (run! #(.addActor stage %) actors)
+    (run! #(s-add! stage %) actors)
     stage))
 
-(defn stage-get ^com.badlogic.gdx.scenes.scene2d.Stage [context]
+(defn stage-get [context]
   (:stage ((current-screen context) 1)))
 
 (defn mouse-on-actor? [context]
-  (let [[x y] (gui-mouse-position context)
-        touchable? true]
-    (.hit (stage-get context) x y touchable?)))
+  (s-hit (stage-get context) (gui-mouse-position context) :touchable? true))
 
 (defn stage-add! [ctx actor]
-  (-> ctx stage-get (.addActor actor))
+  (-> ctx stage-get (s-add! actor))
   ctx)
 
 (defn ->actor

@@ -399,8 +399,8 @@
     (let [widget-data {:action-bar (->action-bar-button-group)
                        :slot->background (inventory/->data ctx)}
           stage (stage-get ctx)]
-      (.clear stage)
-      (run! #(.addActor stage %) (->ui-actors ctx widget-data))
+      (s-clear! stage)
+      (run! #(s-add! stage %) (->ui-actors ctx widget-data))
       widget-data)))
 
 (defn- hotkey->window-id [{:keys [context/config]}]
