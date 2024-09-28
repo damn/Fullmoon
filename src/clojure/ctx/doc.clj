@@ -55,5 +55,5 @@
     (str asym " "(:arglists (meta avar)))
     )
 
-(when add-metadoc?
+#_(when add-metadoc?
   (add-metadoc!))

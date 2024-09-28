@@ -1,21 +1,24 @@
 (in-ns 'clojure.ctx)
 
-(def ctx-time :context/time)
+(defcomponent :context/time
+  (->mk [_ _ctx]
+    {:elapsed 0
+     :logic-frame 0}))
 
 (defn world-delta
   "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
   [ctx]
-  (:delta-time (ctx-time ctx)))
+  (:delta-time (:context/time ctx)))
 
 (defn elapsed-time ; world-time, not counting different screens or paused world....
   "The elapsed in-game-time (not counting when game is paused)."
   [ctx]
-  (:elapsed (ctx-time ctx)))
+  (:elapsed (:context/time ctx)))
 
 (defn logic-frame ; starting with 0 ... ? when not doing anything
   "The game-logic frame number, starting with 1. (not counting when game is paused)"
   [ctx]
-  (:logic-frame (ctx-time ctx)))
+  (:logic-frame (:context/time ctx)))
 
 (defrecord Counter [duration stop-time])
 

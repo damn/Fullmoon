@@ -75,11 +75,36 @@
     (screen-enter [new-screen-key screen-v] new-context)
     new-context))
 
+(defn- set-first-screen [context]
+  (->> context
+       :context/screens
+       :first-screen
+       (change-screen context)))
+
 (defsystem ^:private screen-render! "FIXME" [_])
 
 (defsystem screen-render "FIXME" [_ ctx])
 (defmethod screen-render :default [_ ctx]
   ctx)
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (->mk [k v] ctx)]`."
+  [components ctx]
+  (reduce (fn [m [k v]]
+            (assoc m k (->mk [k v] ctx)))
+          {}
+          components))
+
+(defcomponent :context/screens
+  {:data :some
+   :let screen-ks}
+  (->mk [_ ctx]
+    {:screens (create-vs (zipmap screen-ks (repeat nil)) ctx)
+     :first-screen (first screen-ks)})
+
+  (destroy! [_]
+    ; TODO screens not disposed https://github.com/damn/core/issues/41
+    ))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
@@ -196,3 +221,9 @@
                          :center-position [(/ (gui-viewport-width ctx) 2)
                                            (* (gui-viewport-height ctx) (/ 3 4))]
                          :pack? true})))
+
+(defcomponent :context/vis-ui
+  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
+   :let skin-scale}
+  (->mk [_ _ctx] (load-ui! skin-scale) :loaded)
+  (destroy! [_] (dispose-ui!)))

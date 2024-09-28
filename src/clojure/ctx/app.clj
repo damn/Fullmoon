@@ -1,10 +1,10 @@
 (in-ns 'clojure.ctx)
 
-(defn- set-first-screen [context]
-  (->> context
-       :context/screens
-       :first-screen
-       (change-screen context)))
+(defcomponent :context/config
+  {:data [:map [:tag :configs]]
+   :let {:keys [tag configs]}}
+  (->mk [_ _ctx]
+    (get configs tag)))
 
 (defn create-into
   "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
@@ -17,9 +17,6 @@
               ctx))
           ctx
           components))
-
-(defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
-(defmethod destroy! :default [_])
 
 (defn- ->app-listener [ctx]
   (reify clojure.gdx/AppListener
@@ -64,7 +61,7 @@ Sets [[app-state]] atom to the context."
                      :width
                      :height
                      :title]]
-  :app/context [:map [ctx-assets
+  :app/context [:map [:context/assets
                       :context/config
                       :context/graphics
                       :context/screens

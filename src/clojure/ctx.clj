@@ -38,6 +38,8 @@
                    [error :as me]
                    [generator :as mg]))
   (:load "ctx/effect"
+         "ctx/component"
+         "ctx/assets"
          "ctx/graphics"
          "ctx/time"
          "ctx/world"
@@ -49,5 +51,4 @@
          "ctx/app"
          "ctx/types"
          "ctx/txs"
-         "ctx/context"
          "ctx/doc"))

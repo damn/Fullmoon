@@ -248,3 +248,21 @@
 
 (defprotocol DrawItemOnCursor
   (draw-item-on-cursor [g ctx]))
+
+(defcomponent :context/graphics
+  {:data [:map [:cursors :default-font :views]]
+   :let {:keys [views default-font cursors]}}
+  (->mk [_ _ctx]
+    (map->Graphics
+     (let [batch (->sprite-batch)]
+       (merge {:batch batch}
+              (->shape-drawer batch)
+              (->default-font default-font)
+              (->views views)
+              (->cursors cursors)))))
+
+  (destroy! [[_ {:keys [batch shape-drawer-texture default-font cursors]}]]
+    (dispose! batch)
+    (dispose! shape-drawer-texture)
+    (dispose! default-font)
+    (run! dispose! (vals cursors))))

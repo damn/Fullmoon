@@ -191,9 +191,11 @@
                                render-above
                                render-info])
 
-(def ^:private context-ecs :context/ecs)
+(defcomponent :context/ecs
+  (->mk [_ _ctx]
+    {}))
 
-(defn- entities [ctx] (context-ecs ctx)) ; dangerous name!
+(defn- entities [ctx] (:context/ecs ctx)) ; dangerous name!
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
@@ -428,11 +430,11 @@
   {:let uid}
   (create [_ entity ctx]
     (assert (number? uid))
-    (update ctx context-ecs assoc uid entity))
+    (update ctx :context/ecs assoc uid entity))
 
   (destroy [_ _entity ctx]
     (assert (contains? (entities ctx) uid))
-    (update ctx context-ecs dissoc uid)))
+    (update ctx :context/ecs dissoc uid)))
 
 (defcomponent :entity/movement
   {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}

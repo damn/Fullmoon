@@ -148,10 +148,10 @@
                                        (not (player-unpaused?))))))
 
 (defn- update-time [ctx delta]
-  (update ctx ctx-time #(-> %
-                            (assoc :delta-time delta)
-                            (update :elapsed + delta)
-                            (update :logic-frame inc))))
+  (update ctx :context/time #(-> %
+                                 (assoc :delta-time delta)
+                                 (update :elapsed + delta)
+                                 (update :logic-frame inc))))
 
 (defn- update-world [ctx]
   (let [ctx (update-time ctx (min (delta-time) max-delta-time))

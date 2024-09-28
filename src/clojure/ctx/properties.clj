@@ -289,7 +289,7 @@
 ; too many ! too big ! scroll ... only show files first & preview?
 ; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows [ctx]
-  (for [file (sort (:texture-files (ctx-assets ctx)))]
+  (for [file (sort (:texture-files (:context/assets ctx)))]
     [(->image-button (prop->image ctx file) identity)]
     #_[(->text-button file identity)]))
 
@@ -315,7 +315,7 @@
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [ctx table]
-  (let [rows (for [sound-file (:sound-files (ctx-assets ctx))]
+  (let [rows (for [sound-file (:sound-files (:context/assets ctx))]
                [(->text-button (str/replace-first sound-file "sounds/" "")
                                   (fn [{:keys [context/actor] :as ctx}]
                                     (clear-children! table)
@@ -572,9 +572,6 @@
   (for [property-type (sort (types))]
     {:title (:title (overview property-type))
      :content (->overview-table ctx property-type open-property-editor-window!)}))
-
-(defsystem ->mk "Create component value. Default returns v." [_ ctx])
-(defmethod ->mk :default [[_ v] _ctx] v)
 
 (derive :screens/property-editor :screens/stage)
 (defcomponent :screens/property-editor
