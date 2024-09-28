@@ -1,10 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(defn- ->asset-manager ^AssetManager []
-  (proxy [AssetManager clojure.lang.ILookup] []
-    (valAt [file]
-      (.get ^AssetManager this ^String file))))
-
 (defn- recursively-search [folder extensions]
   (loop [[^FileHandle file & remaining] (.list (internal-file folder))
          result []]
@@ -19,12 +14,6 @@
 
           :else
           (recur remaining result))))
-
-(defn- load-assets! [manager files ^Class class log?]
-  (doseq [file files]
-    (when log?
-      (println "load-assets" (str "[" (.getSimpleName class) "] - [" file "]")))
-    (.load ^AssetManager manager ^String file class)))
 
 (defn- search-files [folder file-extensions]
   (map #(str/replace-first % folder "")

@@ -19,16 +19,13 @@
 
 (defcomponent ctx-assets
   {:data :some
-   :let {:keys [folder
-                sound-file-extensions
-                image-file-extensions
-                log?]}}
+   :let {:keys [folder sound-file-extensions image-file-extensions]}}
   (->mk [_ _ctx]
     (let [manager (->asset-manager)
           sound-files   (search-files folder sound-file-extensions)
           texture-files (search-files folder image-file-extensions)]
-      (load-assets! manager sound-files   Sound   log?)
-      (load-assets! manager texture-files Texture log?)
+      (load-assets! manager sound-files   :sound)
+      (load-assets! manager texture-files :texture)
       (.finishLoading manager)
       {:manager manager
        :sound-files sound-files

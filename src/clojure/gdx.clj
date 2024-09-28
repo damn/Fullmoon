@@ -2,7 +2,9 @@
   "API for [libgdx](https://libgdx.com/)"
   (:require [clojure.string :as str])
   (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.graphics.Color
+           com.badlogic.gdx.assets.AssetManager
+           com.badlogic.gdx.audio.Sound
+           (com.badlogic.gdx.graphics Color Texture)
            com.badlogic.gdx.utils.SharedLibraryLoader
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
 
@@ -118,3 +120,13 @@
 
 (defn ->lwjgl3-app [listener config]
   (Lwjgl3Application. listener (->lwjgl3-app-config config)))
+
+(defn ->asset-manager ^AssetManager []
+  (proxy [AssetManager clojure.lang.ILookup] []
+    (valAt [file]
+      (.get ^AssetManager this ^String file))))
+
+(defn load-assets! [^AssetManager manager files class-k]
+  (let [^Class klass (case class-k :sound Sound :texture Texture)]
+    (doseq [file files]
+      (.load manager ^String file klass))))
