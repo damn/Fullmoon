@@ -188,8 +188,8 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (world-unit-scale g))))
 
-(defn- gui-viewport   ^com.badlogic.gdx.utils.viewport.Viewport [g] (-> g :gui-view   :viewport))
-(defn- world-viewport ^com.badlogic.gdx.utils.viewport.Viewport [g] (-> g :world-view :viewport))
+(defn- gui-viewport   [g] (-> g :gui-view   :viewport))
+(defn- world-viewport [g] (-> g :world-view :viewport))
 
 (defn- gui-mouse-position* [g]
   ; TODO mapv int needed?
@@ -204,11 +204,11 @@
 
 (defn gui-mouse-position    [ctx] (gui-mouse-position*             (gr ctx)))
 (defn world-mouse-position  [ctx] (world-mouse-position*           (gr ctx)))
-(defn gui-viewport-width    [ctx] (.getWorldWidth  (gui-viewport   (gr ctx))))
-(defn gui-viewport-height   [ctx] (.getWorldHeight (gui-viewport   (gr ctx))))
-(defn world-camera          [ctx] (.getCamera      (world-viewport (gr ctx))))
-(defn world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
-(defn world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))
+(defn gui-viewport-width    [ctx] (vp-world-width  (gui-viewport   (gr ctx))))
+(defn gui-viewport-height   [ctx] (vp-world-height (gui-viewport   (gr ctx))))
+(defn world-camera          [ctx] (vp-camera       (world-viewport (gr ctx))))
+(defn world-viewport-width  [ctx] (vp-world-width  (world-viewport (gr ctx))))
+(defn world-viewport-height [ctx] (vp-world-height (world-viewport (gr ctx))))
 
 (defn- mapvals [f m]
   (into {} (for [[k v] m]
@@ -241,10 +241,10 @@
   [ctx render-fn]
   (render-view ctx :world-view render-fn))
 
-(defn- on-resize [{g :context/graphics} [w h]]
-  (.update (gui-viewport g) w h true)
+(defn- on-resize [{g :context/graphics} dim]
+  (vp-update! (gui-viewport g) dim :center-camera? true)
   ; Do not center the camera on world-viewport. We set the position there manually.
-  (.update (world-viewport g) w h false))
+  (vp-update! (world-viewport g) dim))
 
 (defprotocol DrawItemOnCursor
   (draw-item-on-cursor [g ctx]))
