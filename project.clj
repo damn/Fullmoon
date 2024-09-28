@@ -5,7 +5,6 @@
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.github.damn/clojure.gdx "-SNAPSHOT"]
                  [metosin/malli "0.13.0"]
-                 [org.clj-commons/pretty "2.0.1"]
                  [lein-hiera "2.0.0"]]
   :plugins [[jonase/eastwood "1.2.2"]
             [lein-ancient "1.0.0-RC3"]
