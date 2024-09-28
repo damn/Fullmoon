@@ -2,7 +2,9 @@
   "API for [libgdx](https://libgdx.com/)"
   (:require [clojure.string :as str])
   (:import com.badlogic.gdx.Gdx
-           com.badlogic.gdx.graphics.Color))
+           com.badlogic.gdx.graphics.Color
+           com.badlogic.gdx.utils.SharedLibraryLoader
+           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
 
 (defn exit-app!
   "Schedule an exit from the application. On android, this will cause a call to pause() and dispose() some time in the future, it will not immediately finish your application. On iOS this should be avoided in production as it breaks Apples guidelines
@@ -96,3 +98,23 @@
 
 (defn set-cursor! [cursor]
   (.setCursor Gdx/graphics cursor))
+
+(defn- ->lwjgl3-app-config
+  [{:keys [title width height full-screen? fps]}]
+  {:pre [title width height (boolean? full-screen?) (or (nil? fps) (int? fps))]}
+  ; https://github.com/libgdx/libgdx/pull/7361
+  ; Maybe can delete this when using that new libgdx version
+  ; which includes this PR.
+  (when SharedLibraryLoader/isMac
+    (.set org.lwjgl.system.Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set org.lwjgl.system.Configuration/GLFW_CHECK_THREAD0 false))
+  (let [config (doto (Lwjgl3ApplicationConfiguration.)
+                 (.setTitle title)
+                 (.setForegroundFPS (or fps 60)))]
+    (if full-screen?
+      (.setFullscreenMode config (Lwjgl3ApplicationConfiguration/getDisplayMode))
+      (.setWindowedMode config width height))
+    config))
+
+(defn ->lwjgl3-app [listener config]
+  (Lwjgl3Application. listener (->lwjgl3-app-config config)))

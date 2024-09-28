@@ -39,32 +39,6 @@
       ; TODO fix mac screen resize bug again
       (on-resize @app-state w h))))
 
-(defn- ->lwjgl3-app-config [{:keys [title width height full-screen? fps]}]
-  ; can remove :pre, we are having a schema now
-  ; move schema here too ?
-  {:pre [title
-         width
-         height
-         (boolean? full-screen?)
-         (or (nil? fps) (int? fps))]}
-  ; https://github.com/libgdx/libgdx/pull/7361
-  ; Maybe can delete this when using that new libgdx version
-  ; which includes this PR.
-  (when SharedLibraryLoader/isMac
-    (.set org.lwjgl.system.Configuration/GLFW_LIBRARY_NAME "glfw_async")
-    (.set org.lwjgl.system.Configuration/GLFW_CHECK_THREAD0 false))
-  (let [config (doto (Lwjgl3ApplicationConfiguration.)
-                 (.setTitle title)
-                 (.setForegroundFPS (or fps 60)))]
-    (if full-screen?
-      (.setFullscreenMode config (Lwjgl3ApplicationConfiguration/getDisplayMode))
-      (.setWindowedMode config width height))
-    ; See https://libgdx.com/wiki/graphics/querying-and-configuring-graphics
-    ; but makes no difference
-    #_com.badlogic.gdx.graphics.glutils.HdpiMode
-    #_(.setHdpiMode config #_HdpiMode/Pixels HdpiMode/Logical)
-    config))
-
 (defrecord Context [])
 
 (defn start-app!
@@ -73,5 +47,5 @@ Sets [[app-state]] atom to the context."
   [properties-edn-file]
   (let [ctx (map->Context (->ctx-properties properties-edn-file))
         app (build-property ctx :app/core)]
-    (Lwjgl3Application. (->application-listener (safe-merge ctx (:app/context app)))
-                        (->lwjgl3-app-config (:app/lwjgl3 app)))))
+    (->lwjgl3-app (->application-listener (safe-merge ctx (:app/context app)))
+                  (:app/lwjgl3 app))))

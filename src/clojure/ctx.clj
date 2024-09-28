@@ -29,7 +29,7 @@
                         :ui "🎛️ UI"
                         :utils "🔧 Utils"
                         :world "🌎 World"}}
-  (:require (clojure [gdx :as gdx :refer [->color key-pressed? key-just-pressed? internal-file set-input-processor!]]
+  (:require (clojure [gdx :as gdx :refer [->color key-pressed? key-just-pressed? internal-file set-input-processor! ->lwjgl3-app]]
                      [set :as set]
                      [string :as str]
                      [edn :as edn]
@@ -42,13 +42,12 @@
   (:import java.util.Random
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.assets.AssetManager
-           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            com.badlogic.gdx.files.FileHandle
            [com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector]
            (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format OrthographicCamera Camera)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
-           (com.badlogic.gdx.utils Align Scaling Disposable ScreenUtils SharedLibraryLoader)
+           (com.badlogic.gdx.utils Align Scaling Disposable ScreenUtils)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
