@@ -189,7 +189,7 @@
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
-        image-widget (->image-widget (slot->background slot) {:id :image})
+        image-widget (->ui-image-widget (slot->background slot) {:id :image})
         stack (->stack [(draw-rect-actor) image-widget])]
     (set-name! stack "inventory-cell")
     (set-id! stack cell)

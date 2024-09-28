@@ -1,5 +1,8 @@
 (in-ns 'clojure.ctx)
 
+(defn ->image-widget [image opts]
+  (->ui-image-widget (:texture-region image) opts))
+
 (def app-state
   "An atom referencing the current Context. Only use by ui-callbacks or for development/debugging.
   Use only with (post-runnable! & exprs) for making manual changes to the ctx."
