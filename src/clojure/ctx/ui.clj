@@ -1,9 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(defmethod ->vis-image Image
-  [{:keys [^TextureRegion texture-region]}]
-  (VisImage. texture-region))
-
 (def app-state
   "An atom referencing the current Context. Only use by ui-callbacks or for development/debugging.
   Use only with (post-runnable! & exprs) for making manual changes to the ctx."
@@ -11,23 +7,8 @@
 
 (defn add-tooltip!
   "tooltip-text is a (fn [context] ) or a string. If it is a function will be-recalculated every show."
-  [^Actor actor tooltip-text]
-  (let [text? (string? tooltip-text)
-        label (VisLabel. (if text? tooltip-text ""))
-        tooltip (proxy [Tooltip] []
-                  ; hooking into getWidth because at
-                  ; https://github.com/kotcrab/vis-blob/master/ui/src/main/java/com/kotcrab/vis/ui/widget/Tooltip.java#L271
-                  ; when tooltip position gets calculated we setText (which calls pack) before that
-                  ; so that the size is correct for the newly calculated text.
-                  (getWidth []
-                    (let [^Tooltip this this]
-                      (when-not text?
-                        (when-let [ctx @app-state]  ; initial tooltip creation when app context is getting built.
-                          (.setText this (str (tooltip-text ctx)))))
-                      (proxy-super getWidth))))]
-    (.setAlignment label Align/center)
-    (.setTarget  tooltip ^Actor actor)
-    (.setContent tooltip ^Actor label)))
+  [actor tooltip-text]
+  (ui-add-tooltip! app-state actor tooltip-text))
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
@@ -48,18 +29,10 @@
     (swap! app-state #(screen-render sub-screen %))
     (.draw stage)))
 
-(defn- ->stage* ^Stage [viewport batch]
-  (proxy [Stage clojure.lang.ILookup] [viewport batch]
-    (valAt
-      ([id]
-       (find-actor-with-id (.getRoot ^Stage this) id))
-      ([id not-found]
-       (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
-
 (defn ->stage
   "Stage implements clojure.lang.ILookup (get) on actor id."
   [{{:keys [gui-view batch]} :context/graphics} actors]
-  (let [stage (->stage* (:viewport gui-view) batch)]
+  (let [stage (->ui-stage (:viewport gui-view) batch)]
     (run! #(.addActor stage %) actors)
     stage))
 
@@ -75,14 +48,6 @@
   (-> ctx stage-get (.addActor actor))
   ctx)
 
-(defn- ->change-listener [on-clicked]
-  (proxy [ChangeListener] []
-    (changed [event actor]
-      (swap! app-state #(-> %
-                            (assoc :context/actor actor)
-                            on-clicked
-                            (dissoc :context/actor))))))
-
 (defn ->actor
   "[com.badlogic.gdx.scenes.scene2d.Actor](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/Actor.html)"
   [{:keys [draw act]}]
@@ -97,32 +62,21 @@
         (act @app-state)))))
 
 (defn ->text-button [text on-clicked]
-  (let [button (VisTextButton. ^String text)]
-    (.addListener button (->change-listener on-clicked))
-    button))
+  (->ui-text-button app-state text on-clicked))
 
-; TODO give directly texture-region
 ; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
 (defn ->image-button
   ([image on-clicked]
    (->image-button image on-clicked {}))
 
   ([image on-clicked {:keys [scale]}]
-   (let [drawable (TextureRegionDrawable. ^TextureRegion (:texture-region image))
-         button (VisImageButton. drawable)]
-     (when scale
-       (let [[w h] (:pixel-dimensions image)]
-         (.setMinSize drawable (float (* scale w)) (float (* scale h)))))
-     (.addListener button (->change-listener on-clicked))
-     button)))
+   (->ui-image-button app-state (:texture-region image) scale on-clicked)))
 
 ; TODO set to preferred width/height ??? why layouting not working properly?
 ; use a tree?
 ; make example with plain data
 (defn ->scroll-pane-cell [ctx rows]
-  (let [table (->table {:rows rows
-                        :cell-defaults {:pad 1}
-                        :pack? true})
+  (let [table (->table {:rows rows :cell-defaults {:pad 1} :pack? true})
         scroll-pane (->scroll-pane table)]
     {:actor scroll-pane
      :width (- (gui-viewport-width ctx) 600) ;(+ (actor/width table) 200)

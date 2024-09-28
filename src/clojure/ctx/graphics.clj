@@ -76,6 +76,10 @@
                   world-unit-dimensions
                   color]) ; optional
 
+(defmethod ->vis-image Image
+  [{:keys [^com.badlogic.gdx.graphics.g2d.TextureRegion texture-region]}]
+  (com.kotcrab.vis.ui.widget.VisImage. texture-region))
+
 (defn- unit-dimensions [image unit-scale]
   (if (= unit-scale 1)
     (:pixel-dimensions image)

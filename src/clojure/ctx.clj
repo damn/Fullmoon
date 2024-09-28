@@ -40,13 +40,18 @@
                    [error :as me]
                    [generator :as mg]))
   (:import (com.badlogic.gdx.graphics.g2d TextureRegion)
-           (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.utils.viewport Viewport)
-           (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
-           (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
-           (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
-           (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
-           (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator))
+           (com.badlogic.gdx.scenes.scene2d Actor Stage)
+           (com.badlogic.gdx.scenes.scene2d.ui Button ; screens
+                                               Table
+                                               ButtonGroup )
+           (com.badlogic.gdx.scenes.scene2d.utils TextureRegionDrawable ; item
+                                                  Drawable) ; item
+           (com.kotcrab.vis.ui.widget VisCheckBox ; ctx/prperties
+                                      VisSelectBox ;ctx/properties
+                                      VisTextField  ; properties
+                                      VisTable ; properties
+                                      ))
   (:load "ctx/utils"
          "ctx/component"
          "ctx/systems"

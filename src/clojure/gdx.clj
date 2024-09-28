@@ -992,3 +992,51 @@
   nil)
 
 (defn dispose-ui! [] (VisUI/dispose))
+
+(defn ui-add-tooltip! [state ^Actor actor tooltip-text]
+  (let [text? (string? tooltip-text)
+        label (VisLabel. (if text? tooltip-text ""))
+        tooltip (proxy [Tooltip] []
+                  ; hooking into getWidth because at
+                  ; https://github.com/kotcrab/vis-blob/master/ui/src/main/java/com/kotcrab/vis/ui/widget/Tooltip.java#L271
+                  ; when tooltip position gets calculated we setText (which calls pack) before that
+                  ; so that the size is correct for the newly calculated text.
+                  (getWidth []
+                    (let [^Tooltip this this]
+                      (when-not text?
+                        (when-let [ctx @state]  ; initial tooltip creation when app context is getting built.
+                          (.setText this (str (tooltip-text ctx)))))
+                      (proxy-super getWidth))))]
+    (.setAlignment label Align/center)
+    (.setTarget  tooltip ^Actor actor)
+    (.setContent tooltip ^Actor label)))
+
+(defn ->ui-stage ^Stage [viewport batch]
+  (proxy [Stage clojure.lang.ILookup] [viewport batch]
+    (valAt
+      ([id]
+       (find-actor-with-id (.getRoot ^Stage this) id))
+      ([id not-found]
+       (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
+
+(defn- ->change-listener [state on-clicked]
+  (proxy [ChangeListener] []
+    (changed [event actor]
+      (swap! state #(-> %
+                        (assoc :context/actor actor)
+                        on-clicked
+                        (dissoc :context/actor))))))
+
+(defn ->ui-text-button [state text on-clicked]
+  (let [button (VisTextButton. ^String text)]
+    (.addListener button (->change-listener state on-clicked))
+    button))
+
+(defn ->ui-image-button [state texture-region scale on-clicked]
+  (let [drawable (TextureRegionDrawable. ^TextureRegion texture-region)
+        button (VisImageButton. drawable)]
+    (when scale
+      (let [[w h] (texture-region-dimensions texture-region)]
+        (.setMinSize drawable (float (* scale w)) (float (* scale h)))))
+    (.addListener button (->change-listener state on-clicked))
+    button))
