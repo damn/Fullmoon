@@ -6,7 +6,7 @@
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color Texture TextureRegion OrthographicCamera Camera Pixmap)
-           com.badlogic.gdx.graphics.g2d.SpriteBatch
+           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
@@ -394,3 +394,20 @@
    (.getRegionHeight texture-region)])
 
 (defn ->sprite-batch [] (SpriteBatch.))
+
+; TODO [x y] is center or left-bottom ?
+; why rotation origin calculations ?!
+(defn draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
+  (if color (.setColor batch color)) ; TODO move out, simplify ....
+  (.draw batch
+         texture-region
+         x
+         y
+         (/ (float w) 2) ; rotation origin
+         (/ (float h) 2)
+         w ; width height
+         h
+         1 ; scaling factor
+         1
+         rotation)
+  (if color (.setColor batch Color/WHITE)))

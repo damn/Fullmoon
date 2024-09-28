@@ -64,23 +64,6 @@
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions (world-unit-scale g)))))
 
-; TODO [x y] is center or left-bottom ?
-; why rotation origin calculations ?!
-(defn- draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
-  (if color (.setColor batch color)) ; TODO move out, simplify ....
-  (.draw batch
-         texture-region
-         x
-         y
-         (/ (float w) 2) ; rotation origin
-         (/ (float h) 2)
-         w ; width height
-         h
-         1 ; scaling factor
-         1
-         rotation)
-  (if color (.setColor batch Color/WHITE)))
-
 (extend-type Graphics
   ImageDraw
   (draw-image [{:keys [batch unit-scale]}
