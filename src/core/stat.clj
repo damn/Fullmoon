@@ -303,7 +303,7 @@
                 y (+ y half-height)
                 height (pixels->world-units g hpbar-height-px)
                 border (pixels->world-units g borders-px)]
-            (draw-filled-rectangle g x y width height Color/BLACK)
+            (draw-filled-rectangle g x y width height :black)
             (draw-filled-rectangle g
                                    (+ x border)
                                    (+ y border)

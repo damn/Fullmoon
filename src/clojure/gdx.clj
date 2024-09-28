@@ -432,10 +432,19 @@
     {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
      :shape-drawer-texture tex}))
 
+(defn- kw->color [k] (->gdx-field "graphics.Color" k))
+
+(comment
+ (and (= Color/WHITE      (kw->color :white))
+      (= Color/LIGHT_GRAY (kw->color :light-gray)))
+ )
+
 (defn- munge-color ^Color [color]
-  (if (= Color (class color))
-    color
-    (apply ->color color)))
+  (cond
+   (= Color (class color)) color
+   (keyword? color) (kw->color color)
+   (vector? color) (apply ->color color)
+   :else (throw (ex-info "Cannot understand color" {:color color}))))
 
 (defn set-color! [^ShapeDrawer shape-drawer color]
   (.setColor shape-drawer (munge-color color)))

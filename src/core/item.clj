@@ -158,7 +158,7 @@
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
 (defn- draw-cell-rect [g player-entity* x y mouseover? cell]
-  (draw-rectangle g x y cell-size cell-size Color/GRAY)
+  (draw-rectangle g x y cell-size cell-size :gray)
   (when (and mouseover?
              (= :player-item-on-cursor (entity-state player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)

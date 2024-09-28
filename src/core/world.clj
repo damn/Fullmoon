@@ -939,22 +939,20 @@ direction keys: move")
                 show-grid-lines]} @(current-data ctx)
         visible-tiles (visible-tiles (world-camera ctx))
         [x y] (->tile (world-mouse-position ctx))]
-    (draw-rectangle g x y 1 1 Color/WHITE)
+    (draw-rectangle g x y 1 1 :white)
     (when start-position
       (draw-filled-rectangle g (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
               :let [movement-property (movement-property tiled-map [x y])]]
-        (draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
-                            0.08
-                            Color/BLACK)
+        (draw-filled-circle g [(+ x 0.5) (+ y 0.5)] 0.08 :black)
         (draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
                             0.05
                             (case movement-property
-                              "all"   Color/GREEN
-                              "air"   Color/ORANGE
-                              "none"  Color/RED))))
+                              "all"   :green
+                              "air"   :orange
+                              "none"  :red))))
     (when show-grid-lines
       (draw-grid g 0 0 (width  tiled-map) (height tiled-map) 1 1 [1 1 1 0.5]))))
 

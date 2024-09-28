@@ -53,7 +53,7 @@
                            (draw-filled-circle g
                                                (camera-position (world-camera context))
                                                0.5
-                                               Color/GREEN)))
+                                               :green)))
       (if (or (key-just-pressed? :keys/tab)
               (key-just-pressed? :keys/escape))
         (change-screen context :screens/world)

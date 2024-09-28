@@ -190,10 +190,10 @@
 (defn- render-entity* [system entity* g ctx]
   (try
    (when show-body-bounds
-     (draw-body-rect g entity* (if (:collides? entity*) Color/WHITE Color/GRAY)))
+     (draw-body-rect g entity* (if (:collides? entity*) :white :gray)))
    (run! #(system % entity* g ctx) entity*)
    (catch Throwable t
-     (draw-body-rect g entity* Color/RED)
+     (draw-body-rect g entity* :red)
      (pretty-pst t 12))))
 
 (defn- tick-system [ctx entity]
