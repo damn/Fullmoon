@@ -2,10 +2,7 @@
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
             [core.stat :refer [mod-info-text]]
-            [data.grid2d :as grid2d])
-  (:import (com.badlogic.gdx.scenes.scene2d.ui Image)
-           com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-           com.badlogic.gdx.scenes.scene2d.utils.ClickListener))
+            [data.grid2d :as grid2d]))
 
 (def ^:private empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
@@ -186,7 +183,7 @@
         stack (->stack [(draw-rect-actor) image-widget])]
     (set-name! stack "inventory-cell")
     (set-id! stack cell)
-    (add-listener! stack (proxy [ClickListener] []
+    (add-listener! stack (->click-listener
                            (clicked [event x y]
                              (swap! app-state #(effect! % (player-clicked-inventory % cell))))))
     stack))
@@ -208,7 +205,7 @@
                 (let [drawable (->texture-region-drawable (:texture-region (sprite ctx sheet [21 (+ y 2)])))]
                   (.setMinSize drawable (float cell-size) (float cell-size))
                   [slot
-                   (.tint ^TextureRegionDrawable drawable (->color 1 1 1 0.4))])))
+                   (->tinted-drawable drawable (->color 1 1 1 0.4))])))
          (into {}))))
 
 ; TODO move together with empty-inventory definition ?
@@ -259,10 +256,10 @@
   (do! [[_ cell item] ctx]
     (let [{:keys [table]} (get-inventory ctx)
           cell-widget (get table cell)
-          ^Image image-widget (get cell-widget :image)
+          image-widget (get cell-widget :image)
           drawable (->texture-region-drawable (:texture-region (:entity/image item)))]
-      (.setMinSize drawable (float cell-size) (float cell-size))
-      (.setDrawable image-widget drawable)
+      (set-min-size! drawable cell-size)
+      (set-drawable! image-widget drawable)
       (add-tooltip! cell-widget #(->info-text item %))
       ctx)))
 
@@ -270,7 +267,7 @@
   (do! [[_ cell] ctx]
     (let [{:keys [table slot->background]} (get-inventory ctx)
           cell-widget (get table cell)
-          ^Image image-widget (get cell-widget :image)]
-      (.setDrawable image-widget (slot->background (cell 0)))
+          image-widget (get cell-widget :image)]
+      (set-drawable! image-widget (slot->background (cell 0)))
       (remove-tooltip! cell-widget)
       ctx)))
