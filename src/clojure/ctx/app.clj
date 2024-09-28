@@ -18,26 +18,26 @@
           ctx
           components))
 
-(defn- ->application-listener [context]
-  (proxy [com.badlogic.gdx.ApplicationAdapter] []
-    (create []
-      (->> context
+(defn- ->app-listener [ctx]
+  (reify clojure.gdx/AppListener
+    (on-create [_]
+      (->> ctx
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
-           (create-into context)
+           (create-into ctx)
            set-first-screen
            (reset! app-state)))
 
-    (dispose []
+    (on-dispose [_]
       (run! destroy! @app-state))
 
-    (render []
+    (on-render [_]
       (clear-screen!)
       (screen-render! (current-screen @app-state)))
 
-    (resize [w h]
+    (on-resize [_ dim]
       ; TODO fix mac screen resize bug again
-      (on-resize @app-state w h))))
+      (on-resize @app-state dim))))
 
 (defrecord Context [])
 
@@ -47,5 +47,5 @@ Sets [[app-state]] atom to the context."
   [properties-edn-file]
   (let [ctx (map->Context (->ctx-properties properties-edn-file))
         app (build-property ctx :app/core)]
-    (->lwjgl3-app (->application-listener (safe-merge ctx (:app/context app)))
+    (->lwjgl3-app (->app-listener (safe-merge ctx (:app/context app)))
                   (:app/lwjgl3 app))))
