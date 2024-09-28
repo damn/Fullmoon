@@ -17,9 +17,7 @@
 (defn v-length    [v]      (.len ^Vector2 (->v v)))
 (defn v-distance  [v1 v2]  (.dst ^Vector2 (->v v1) ^Vector2 (->v v2)))
 
-(defn v-normalised? [v]
-  ; Returns true if a is nearly equal to b.
-  (MathUtils/isEqual 1 (v-length v)))
+(defn v-normalised? [v] (equal? 1 (v-length v)))
 
 (defn v-get-normal-vectors [[x y]]
   [[(- (float y))         x]

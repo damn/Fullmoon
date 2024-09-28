@@ -213,9 +213,6 @@
     {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
      :shape-drawer-texture tex}))
 
-(defn- degree->radians [degree]
-  (* (float degree) MathUtils/degreesToRadians))
-
 (defn- munge-color ^Color [color]
   (if (= Color (class color))
     color
@@ -312,9 +309,6 @@
 
 (defn- gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
 (defn- world-viewport ^Viewport [g] (-> g :world-view :viewport))
-
-(defn- clamp [value min max]
-  (MathUtils/clamp (float value) (float min) (float max)))
 
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter

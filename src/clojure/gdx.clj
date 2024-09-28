@@ -6,6 +6,7 @@
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color Texture)
+           (com.badlogic.gdx.math MathUtils)
            com.badlogic.gdx.utils.SharedLibraryLoader
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
 
@@ -154,3 +155,14 @@
 (defn search-files [folder file-extensions]
   (map #(str/replace-first % folder "")
        (recursively-search folder file-extensions)))
+
+(defn equal?
+  "Returns true if a is nearly equal to b."
+  [a b]
+  (MathUtils/isEqual a b))
+
+(defn degree->radians [degree]
+  (* (float degree) MathUtils/degreesToRadians))
+
+(defn clamp [value min max]
+  (MathUtils/clamp (float value) (float min) (float max)))
