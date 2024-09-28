@@ -3,11 +3,9 @@
             [clojure.gdx :refer :all]
             [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d])
-  (:import com.badlogic.gdx.scenes.scene2d.Actor
-           (com.badlogic.gdx.scenes.scene2d.ui Widget Image Table)
+  (:import (com.badlogic.gdx.scenes.scene2d.ui Image)
            com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
-           com.badlogic.gdx.scenes.scene2d.utils.ClickListener
-           com.badlogic.gdx.math.Vector2))
+           com.badlogic.gdx.scenes.scene2d.utils.ClickListener))
 
 (def ^:private empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
@@ -166,26 +164,21 @@
                   not-allowed-color)]
       (draw-filled-rectangle g (inc x) (inc y) (- cell-size 2) (- cell-size 2) color))))
 
-(defn- mouseover? [^Actor actor [x y]]
-  (let [v (.stageToLocalCoordinates actor (Vector2. x y))]
-    (.hit actor (.x v) (.y v) true)))
-
 ; TODO why do I need to call getX ?
 ; is not layouted automatically to cell , use 0/0 ??
 ; (maybe (.setTransform stack true) ? , but docs say it should work anyway
-(defn- draw-rect-actor ^Widget []
-  (proxy [Widget] []
-    (draw [_batch _parent-alpha]
-      (let [{g :context/graphics :as ctx} @app-state
-            g (assoc g :unit-scale 1)
-            player-entity* (player-entity* ctx)
-            ^Widget this this]
-        (draw-cell-rect g
-                        player-entity*
-                        (.getX this)
-                        (.getY this)
-                        (mouseover? this (gui-mouse-position ctx))
-                        (actor-id (parent this)))))))
+(defn- draw-rect-actor []
+  (->ui-widget
+   (fn [this]
+     (let [{g :context/graphics :as ctx} @app-state
+           g (assoc g :unit-scale 1)
+           player-entity* (player-entity* ctx)]
+       (draw-cell-rect g
+                       player-entity*
+                       (actor-x this)
+                       (actor-y this)
+                       (a-mouseover? this (gui-mouse-position ctx))
+                       (actor-id (parent this)))))))
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
@@ -194,8 +187,8 @@
     (set-name! stack "inventory-cell")
     (set-id! stack cell)
     (add-listener! stack (proxy [ClickListener] []
-                                 (clicked [event x y]
-                                   (swap! app-state #(effect! % (player-clicked-inventory % cell))))))
+                           (clicked [event x y]
+                             (swap! app-state #(effect! % (player-clicked-inventory % cell))))))
     stack))
 
 (defn- slot->background [ctx]
@@ -219,30 +212,30 @@
          (into {}))))
 
 ; TODO move together with empty-inventory definition ?
-(defn- redo-table! [^Table table slot->background]
+(defn- redo-table! [table slot->background]
   ; cannot do add-rows, need bag :position idx
-  (let [cell (fn [& args] (apply ->cell slot->background args))] ; TODO cell just return type hint ^Actor
-    (.clear table) ; no need as we create new table ... TODO
-    (doto table .add .add
-      (.add ^Actor (cell :inventory.slot/helm))
-      (.add ^Actor (cell :inventory.slot/necklace)) .row)
-    (doto table .add
-      (.add ^Actor (cell :inventory.slot/weapon))
-      (.add ^Actor (cell :inventory.slot/chest))
-      (.add ^Actor (cell :inventory.slot/cloak))
-      (.add ^Actor (cell :inventory.slot/shield)) .row)
-    (doto table .add .add
-      (.add ^Actor (cell :inventory.slot/leg)) .row)
-    (doto table .add
-      (.add ^Actor (cell :inventory.slot/glove))
-      (.add ^Actor (cell :inventory.slot/rings :position [0 0]))
-      (.add ^Actor (cell :inventory.slot/rings :position [1 0]))
-      (.add ^Actor (cell :inventory.slot/boot)) .row)
+  (let [cell (fn [& args] (apply ->cell slot->background args))]
+    (t-clear! table) ; no need as we create new table ... TODO
+    (doto table t-add! t-add!
+      (t-add! (cell :inventory.slot/helm))
+      (t-add! (cell :inventory.slot/necklace)) t-row!)
+    (doto table t-add!
+      (t-add! (cell :inventory.slot/weapon))
+      (t-add! (cell :inventory.slot/chest))
+      (t-add! (cell :inventory.slot/cloak))
+      (t-add! (cell :inventory.slot/shield)) t-row!)
+    (doto table t-add! t-add!
+      (t-add! (cell :inventory.slot/leg)) t-row!)
+    (doto table t-add!
+      (t-add! (cell :inventory.slot/glove))
+      (t-add! (cell :inventory.slot/rings :position [0 0]))
+      (t-add! (cell :inventory.slot/rings :position [1 0]))
+      (t-add! (cell :inventory.slot/boot)) t-row!)
     ; TODO add separator
     (doseq [y (range (grid2d/height (:inventory.slot/bag empty-inventory)))]
       (doseq [x (range (grid2d/width (:inventory.slot/bag empty-inventory)))]
-        (.add table ^Actor (cell :inventory.slot/bag :position [x y])))
-      (.row table))))
+        (t-add! table (cell :inventory.slot/bag :position [x y])))
+      (t-row! table))))
 
 (defn ->build [ctx {:keys [slot->background]}]
   (let [table (->table {:id ::table})]

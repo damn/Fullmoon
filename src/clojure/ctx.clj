@@ -7,9 +7,7 @@
   | `system`         | multimethod dispatching on component k |
   | `eid` , `entity` | entity atom                                    |
   | `entity*`        | entity value (defrecord `clojure.ctx.Entity`), |
-  | `actor`          | A UI actor, not immutable `com.badlogic.gdx.scenes.scene2d.Actor`        |
   | `cell`/`cell*`   | Cell of the world grid or inventory  |
-  | `camera`         | `com.badlogic.gdx.graphics.Camera`             |
   | `g`              | `clojure.ctx.Graphics`                        |
   | `grid`           | `data.grid2d.Grid`                             |
   | `image`          | `clojure.ctx.Image`                          |

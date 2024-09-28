@@ -47,18 +47,12 @@
   (-> ctx stage-get (s-add! actor))
   ctx)
 
-(defn ->actor
-  "[com.badlogic.gdx.scenes.scene2d.Actor](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/Actor.html)"
-  [{:keys [draw act]}]
-  (proxy [com.badlogic.gdx.scenes.scene2d.Actor] []
-    (draw [_batch _parent-alpha]
-      (when draw
-        (let [ctx @app-state
-              g (assoc (:context/graphics ctx) :unit-scale 1)]
-          (draw g ctx))))
-    (act [_delta]
-      (when act
-        (act @app-state)))))
+(defn ->actor [{:keys [draw act]}]
+  (->ui-actor (fn [] (when draw
+                       (let [ctx @app-state
+                             g (assoc (:context/graphics ctx) :unit-scale 1)]
+                         (draw g ctx))))
+              (fn [] (when act (act @app-state)))))
 
 (defn ->text-button [text on-clicked]
   (->ui-text-button app-state text on-clicked))
