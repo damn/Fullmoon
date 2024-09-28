@@ -3,8 +3,7 @@
             [clojure.gdx :refer :all]
             [core.projectile :refer [projectile-size]]
             [core.skill :refer [has-skill?]]
-            [clojure.string :as str])
-  (:import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup))
+            [clojure.string :as str]))
 
 ; TODO define op-order here ...
 
@@ -899,7 +898,7 @@
 
 (defn- selected-skill [ctx]
   (let [button-group (:action-bar (:context/widgets ctx))]
-    (when-let [skill-button (.getChecked ^ButtonGroup button-group)]
+    (when-let [skill-button (.getChecked ^com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup button-group)]
       (actor-id skill-button))))
 
 (defn- inventory-window [ctx]

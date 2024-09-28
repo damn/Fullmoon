@@ -3,24 +3,13 @@
 (defproject clojure.ctx "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
   :dependencies [[org.clojure/clojure "1.12.0"]
+                 [com.github.damn/clojure.gdx "863c4053be"]
                  [metosin/malli "0.13.0"]
                  [reduce-fsm "0.1.4"]
-
                  [nrepl "0.9.0"]
                  [org.clojure/tools.namespace "1.3.0"]
                  [org.clj-commons/pretty "2.0.1"]
-
-                 [com.github.damn/grid2d "1.0"]
-                 [com.badlogicgames.gdx/gdx                   ~libgdx-version]
-                 [com.badlogicgames.gdx/gdx-platform          ~libgdx-version :classifier "natives-desktop"]
-                 [com.badlogicgames.gdx/gdx-backend-lwjgl3    ~libgdx-version]
-                 [com.badlogicgames.gdx/gdx-freetype          ~libgdx-version]
-                 [com.badlogicgames.gdx/gdx-freetype-platform ~libgdx-version :classifier "natives-desktop"]
-                 [space.earlygrey/shapedrawer "2.5.0"]
-                 [com.kotcrab.vis/vis-ui "1.5.2"]
-
                  [metadoc "0.2.9"]
-
                  [lein-hiera "2.0.0"]]
   :plugins [[jonase/eastwood "1.2.2"]
             [lein-ancient "1.0.0-RC3"]
