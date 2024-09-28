@@ -4,10 +4,11 @@
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Colors Texture OrthographicCamera Camera Pixmap Pixmap$Format)
-           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch TextureRegion)
+           (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter OrthographicCamera Camera Pixmap Pixmap$Format)
+           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
+           (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
-           (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
+           (com.badlogic.gdx.utils Align SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            space.earlygrey.shapedrawer.ShapeDrawer))
@@ -93,7 +94,7 @@
 
 (defn internal-file
   "Path relative to the asset directory on Android and to the application's root directory on the desktop. On the desktop, if the file is not found, then the classpath is checked. This enables files to be found when using JWS or applets. Internal files are always readonly."
-  [path]
+  ^FileHandle [path]
   (.internal Gdx/files path))
 
 (defn dispose! [obj] (Disposable/.dispose obj))
@@ -233,7 +234,7 @@
   [camera]
   (set-zoom! camera 1))
 
-(defn- ->camera [] (OrthographicCamera.))
+(defn- ->camera ^OrthographicCamera [] (OrthographicCamera.))
 
 (defn clear-screen! [] (ScreenUtils/clear Color/BLACK))
 
@@ -419,7 +420,7 @@
   (draw-fn)
   (.end batch))
 
-(defn- ->shape-drawer-texture []
+(defn- ->shape-drawer-texture ^Texture []
   (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
                  (.setColor Color/WHITE)
                  (.drawPixel 0 0))
@@ -503,3 +504,50 @@
     (.setDefaultLineWidth sd (float (* (float width) old-line-width)))
     (draw-fn)
     (.setDefaultLineWidth sd (float old-line-width))))
+
+(defn- ->ttf-params [size quality-scaling]
+  (let [params (FreeTypeFontGenerator$FreeTypeFontParameter.)]
+    (set! (.size params) (* size quality-scaling))
+    ; .color and this:
+    ;(set! (.borderWidth parameter) 1)
+    ;(set! (.borderColor parameter) red)
+    (set! (.minFilter params) Texture$TextureFilter/Linear) ; because scaling to world-units
+    (set! (.magFilter params) Texture$TextureFilter/Linear)
+    params))
+
+(defn generate-ttf [{:keys [file size quality-scaling]}]
+  (let [generator (FreeTypeFontGenerator. (internal-file file))
+        font (.generateFont generator (->ttf-params size quality-scaling))]
+    (dispose! generator)
+    (.setScale (.getData font) (float (/ quality-scaling)))
+    (set! (.markupEnabled (.getData font)) true)
+    (.setUseIntegerPositions font false) ; otherwise scaling to world-units (/ 1 48)px not visible
+    font))
+
+(defn gdx-default-font [] (BitmapFont.))
+
+(defn- text-height [^BitmapFont font text]
+  (-> text
+      (str/split #"\n")
+      count
+      (* (.getLineHeight font))))
+
+(defn font-draw [^BitmapFont font
+                 unit-scale
+                 batch
+                 {:keys [x y text h-align up? scale]}]
+  (let [data (.getData font)
+        old-scale (float (.scaleX data))]
+    (.setScale data (* old-scale (float unit-scale) (float (or scale 1))))
+    (.draw font
+           batch
+           (str text)
+           (float x)
+           (+ (float y) (float (if up? (text-height font text) 0)))
+           (float 0) ; target-width
+           (case (or h-align :center)
+             :center Align/center
+             :left   Align/left
+             :right  Align/right)
+           false) ; wrap false, no need target-width
+    (.setScale data old-scale)))
