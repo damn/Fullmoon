@@ -1,8 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(def color-black Color/BLACK)
-(def color-white Color/WHITE)
-
 (defn ->color
   ([r g b]
    (->color r g b 1))
