@@ -192,8 +192,8 @@
   (pixels->world-units [g pixels]
     (* (int pixels) (world-unit-scale g))))
 
-(defn- gui-viewport   ^Viewport [g] (-> g :gui-view   :viewport))
-(defn- world-viewport ^Viewport [g] (-> g :world-view :viewport))
+(defn- gui-viewport   ^com.badlogic.gdx.utils.viewport.Viewport [g] (-> g :gui-view   :viewport))
+(defn- world-viewport ^com.badlogic.gdx.utils.viewport.Viewport [g] (-> g :world-view :viewport))
 
 (defn- gui-mouse-position* [g]
   ; TODO mapv int needed?

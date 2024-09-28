@@ -12,7 +12,7 @@
 
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defcomponent :screens/stage
-  {:let {:keys [^Stage stage sub-screen]}}
+  {:let {:keys [^com.badlogic.gdx.scenes.scene2d.Stage stage sub-screen]}}
   (screen-enter [_ context]
     (set-input-processor! stage)
     (screen-enter sub-screen context))
@@ -36,7 +36,7 @@
     (run! #(.addActor stage %) actors)
     stage))
 
-(defn stage-get ^Stage [context]
+(defn stage-get ^com.badlogic.gdx.scenes.scene2d.Stage [context]
   (:stage ((current-screen context) 1)))
 
 (defn mouse-on-actor? [context]
@@ -51,7 +51,7 @@
 (defn ->actor
   "[com.badlogic.gdx.scenes.scene2d.Actor](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/Actor.html)"
   [{:keys [draw act]}]
-  (proxy [Actor] []
+  (proxy [com.badlogic.gdx.scenes.scene2d.Actor] []
     (draw [_batch _parent-alpha]
       (when draw
         (let [ctx @app-state

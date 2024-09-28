@@ -179,28 +179,28 @@
   (->check-box "" (fn [_]) checked?))
 
 (defmethod widget->value :boolean [_ widget]
-  (.isChecked ^VisCheckBox widget))
+  (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
 (defmethod ->widget :string [[_ data] v _ctx]
   (add-schema-tooltip! (->text-field v {})
                        data))
 
 (defmethod widget->value :string [_ widget]
-  (.getText ^VisTextField widget))
+  (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
 
 (defmethod ->widget :number [[_ data] v _ctx]
   (add-schema-tooltip! (->text-field (->edn-str v) {})
                        data))
 
 (defmethod widget->value :number [_ widget]
-  (edn/read-string (.getText ^VisTextField widget)))
+  (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
 (defmethod ->widget :enum [[_ data] v _ctx]
   (->select-box {:items (map ->edn-str (rest (:schema data)))
                     :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]
-  (edn/read-string (.getSelected ^VisSelectBox widget)))
+  (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
 (defn- attribute-schema
   "Can define keys as just keywords or with properties like [:foo {:optional true}]."

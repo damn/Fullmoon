@@ -39,19 +39,6 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:import (com.badlogic.gdx.graphics.g2d TextureRegion)
-           (com.badlogic.gdx.utils.viewport Viewport)
-           (com.badlogic.gdx.scenes.scene2d Actor Stage)
-           (com.badlogic.gdx.scenes.scene2d.ui Button ; screens
-                                               Table
-                                               ButtonGroup )
-           (com.badlogic.gdx.scenes.scene2d.utils TextureRegionDrawable ; item
-                                                  Drawable) ; item
-           (com.kotcrab.vis.ui.widget VisCheckBox ; ctx/prperties
-                                      VisSelectBox ;ctx/properties
-                                      VisTextField  ; properties
-                                      VisTable ; properties
-                                      ))
   (:load "ctx/utils"
          "ctx/component"
          "ctx/systems"
