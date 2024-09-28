@@ -130,3 +130,5 @@
   (let [^Class klass (case class-k :sound Sound :texture Texture)]
     (doseq [file files]
       (.load manager ^String file klass))))
+
+(defn play! [sound] (Sound/.play sound))

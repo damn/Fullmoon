@@ -28,7 +28,7 @@
   "Sound is already loaded from file, this will perform only a lookup for the sound and play it.
 Returns ctx."
   [ctx file]
-  (.play ^Sound (get-asset ctx file))
+  (play! (get-asset ctx file))
   ctx)
 
 (defn texture "Is already cached and loaded." [ctx file]
