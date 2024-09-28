@@ -32,7 +32,7 @@
       (run! destroy! @app-state))
 
     (render []
-      (ScreenUtils/clear Color/BLACK)
+      (clear-screen!)
       (screen-render! (current-screen @app-state)))
 
     (resize [w h]

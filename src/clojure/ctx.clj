@@ -47,7 +47,7 @@
            (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
-           (com.badlogic.gdx.utils Align Scaling Disposable ScreenUtils)
+           (com.badlogic.gdx.utils Align Scaling Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)

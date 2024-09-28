@@ -7,7 +7,7 @@
            com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera)
            (com.badlogic.gdx.math MathUtils Vector3)
-           com.badlogic.gdx.utils.SharedLibraryLoader
+           (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
 
 (defn exit-app!
@@ -231,3 +231,5 @@
   (set-zoom! camera 1))
 
 (defn ->camera [] (OrthographicCamera.))
+
+(defn clear-screen! [] (ScreenUtils/clear Color/BLACK))
