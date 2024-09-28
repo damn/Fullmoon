@@ -281,17 +281,12 @@
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
-   :viewport (FitViewport. world-width world-height (->camera))})
+   :viewport (->gui-viewport world-width world-height)})
 
 (defn- ->world-view [{:keys [world-width world-height tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
-     :viewport (let [world-width  (* world-width  unit-scale)
-                     world-height (* world-height unit-scale)
-                     camera (->camera)
-                     y-down? false]
-                 (.setToOrtho camera y-down? world-width world-height)
-                 (FitViewport. world-width world-height camera))}))
+     :viewport (->world-viewport world-width world-height unit-scale)}))
 
 (defn- ->views [{:keys [gui-view world-view]}]
   {:gui-view (->gui-view gui-view)

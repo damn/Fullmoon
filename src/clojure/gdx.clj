@@ -232,7 +232,7 @@
   [camera]
   (set-zoom! camera 1))
 
-(defn ->camera [] (OrthographicCamera.))
+(defn- ->camera [] (OrthographicCamera.))
 
 (defn clear-screen! [] (ScreenUtils/clear Color/BLACK))
 
@@ -369,3 +369,14 @@
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
+
+(defn ->gui-viewport [world-width world-height]
+  (FitViewport. world-width world-height (->camera)))
+
+(defn ->world-viewport [world-width world-height unit-scale]
+  (let [world-width  (* world-width  unit-scale)
+        world-height (* world-height unit-scale)
+        camera (->camera)
+        y-down? false]
+    (.setToOrtho camera y-down? world-width world-height)
+    (FitViewport. world-width world-height camera)))

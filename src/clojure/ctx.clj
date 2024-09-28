@@ -43,7 +43,7 @@
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
            (com.badlogic.gdx.utils Align Scaling)
-           (com.badlogic.gdx.utils.viewport Viewport FitViewport)
+           (com.badlogic.gdx.utils.viewport Viewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
