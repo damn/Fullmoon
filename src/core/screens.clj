@@ -2,8 +2,8 @@
   (:require [clojure.ctx :refer :all]
             [core.item :as inventory]
             [core.world :as world])
-  ; TODO remove bad logic
-  (:import com.badlogic.gdx.graphics.Color
+  (:import com.badlogic.gdx.Gdx
+           com.badlogic.gdx.graphics.Color
            (com.badlogic.gdx.scenes.scene2d.ui Button ButtonGroup)))
 
 ; 28.4 viewportwidth
@@ -158,7 +158,7 @@
                             (update :logic-frame inc))))
 
 (defn- update-world [ctx]
-  (let [ctx (update-time ctx (min (.getDeltaTime gdx-graphics) max-delta-time))
+  (let [ctx (update-time ctx (min (.getDeltaTime Gdx/graphics) max-delta-time))
         entities (active-entities ctx)]
     (world/potential-fields-update! ctx entities)
     (try (tick-entities! ctx entities)
@@ -223,7 +223,7 @@
   (let [world-mouse (world-mouse-position ctx)]
     (str
      "logic-frame: " (logic-frame ctx) "\n"
-     "FPS: " (.getFramesPerSecond gdx-graphics)  "\n"
+     "FPS: " (.getFramesPerSecond Gdx/graphics)  "\n"
      "Zoom: " (zoom (world-camera ctx)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"

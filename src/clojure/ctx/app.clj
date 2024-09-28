@@ -1,10 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(declare ^{:tag com.badlogic.gdx.Graphics} gdx-graphics)
-
-(defn- bind-gdx-statics! []
-  (.bindRoot #'gdx-graphics Gdx/graphics))
-
 (defmacro post-runnable! [& exprs]
   `(.postRunnable Gdx/app (fn [] ~@exprs)))
 
@@ -32,7 +27,6 @@
 (defn- ->application-listener [context]
   (proxy [ApplicationAdapter] []
     (create []
-      (bind-gdx-statics!)
       (->> context
            ; screens require vis-ui / properties (map-editor, property editor uses properties)
            (sort-by (fn [[k _]] (if (= k :context/screens) 1 0)))
