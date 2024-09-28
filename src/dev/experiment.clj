@@ -278,4 +278,5 @@
                            :close-on-escape? true
                            :center? true
                            :rows [[(->scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
-                           :pack? true}))))
+                           :pack? true}))
+    nil))
