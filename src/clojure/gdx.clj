@@ -5,8 +5,8 @@
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Texture TextureRegion OrthographicCamera Camera Pixmap)
-           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch)
+           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera Pixmap)
+           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch TextureRegion)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
@@ -411,3 +411,10 @@
          1
          rotation)
   (if color (.setColor batch Color/WHITE)))
+
+(defn draw-with! [^Batch batch ^Viewport viewport draw-fn]
+  (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
+  (.setProjectionMatrix batch (.combined (.getCamera viewport)))
+  (.begin batch)
+  (draw-fn)
+  (.end batch))

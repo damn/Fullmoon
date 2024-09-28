@@ -306,19 +306,14 @@
 (defn set-cursor! [{g :context/graphics} cursor-key]
   (g-set-cursor! (safe-get (:cursors g) cursor-key)))
 
-;; ctx/graphics
-
-(defn- render-view [{{:keys [^Batch batch] :as g} :context/graphics}
-                    view-key
-                    draw-fn]
-  (let [{:keys [^Viewport viewport unit-scale]} (view-key g)]
-    (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-    (.setProjectionMatrix batch (.combined (.getCamera viewport)))
-    (.begin batch)
-    (with-shape-line-width g
-      unit-scale
-      #(draw-fn (assoc g :unit-scale unit-scale)))
-    (.end batch)))
+(defn- render-view [{{:keys [batch] :as g} :context/graphics} view-key draw-fn]
+  (let [{:keys [viewport unit-scale]} (view-key g)]
+    (draw-with! batch
+                viewport
+                (fn []
+                  (with-shape-line-width g
+                    unit-scale
+                    #(draw-fn (assoc g :unit-scale unit-scale)))))))
 
 (defn render-gui-view
   "render-fn is a function of param 'g', graphics context."
