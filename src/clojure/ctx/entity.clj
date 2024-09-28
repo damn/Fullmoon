@@ -418,7 +418,7 @@
     (when-not (or (zero? (v-length direction))
                   (nil? speed)
                   (zero? speed))
-      (let [movement (assoc movement :delta-time (delta-time ctx))
+      (let [movement (assoc movement :delta-time (world-delta ctx))
             body @eid]
         (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
                           (try-move-solid-body (:context/grid ctx) body movement)
@@ -446,7 +446,7 @@
 
   (tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
-     [:e/assoc eid k (anim-tick animation (delta-time ctx))]]))
+     [:e/assoc eid k (anim-tick animation (world-delta ctx))]]))
 
 (defcomponent :entity/clickable
   (render [[_ {:keys [text]}]

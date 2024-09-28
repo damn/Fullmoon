@@ -1,6 +1,6 @@
 (ns core.item
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer [->color]]
+            [clojure.gdx :refer :all :exclude [->cursor set-cursor!]]
             [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d])
   (:import com.badlogic.gdx.graphics.Color

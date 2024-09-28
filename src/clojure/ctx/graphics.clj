@@ -281,16 +281,14 @@
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
-   :viewport (FitViewport. world-width
-                           world-height
-                           (OrthographicCamera.))})
+   :viewport (FitViewport. world-width world-height (->camera))})
 
 (defn- ->world-view [{:keys [world-width world-height tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
      :viewport (let [world-width  (* world-width  unit-scale)
                      world-height (* world-height unit-scale)
-                     camera (OrthographicCamera.)
+                     camera (->camera)
                      y-down? false]
                  (.setToOrtho camera y-down? world-width world-height)
                  (FitViewport. world-width world-height camera))}))
@@ -313,10 +311,10 @@
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi [^Viewport viewport]
-  (let [mouse-x (clamp (gdx/input-x)
+  (let [mouse-x (clamp (input-x)
                        (.getLeftGutterWidth viewport)
                        (.getRightGutterX viewport))
-        mouse-y (clamp (gdx/input-y)
+        mouse-y (clamp (input-y)
                        (.getTopGutterHeight viewport)
                        (.getTopGutterY viewport))
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]

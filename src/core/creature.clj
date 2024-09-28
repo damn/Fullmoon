@@ -1,6 +1,6 @@
 (ns core.creature
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer [button-just-pressed?]]
+            [clojure.gdx :refer :all :exclude [->cursor set-cursor!]]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
             [core.item :as item]))

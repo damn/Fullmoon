@@ -2,7 +2,7 @@
 
 (def ctx-time :context/time)
 
-(defn delta-time
+(defn world-delta
   "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."
   [ctx]
   (:delta-time (ctx-time ctx)))

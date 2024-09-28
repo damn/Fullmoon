@@ -1,6 +1,6 @@
 (ns core.world
   (:require [clojure.ctx :refer :all :exclude [visible?]]
-            [clojure.gdx :refer [->color key-pressed? key-just-pressed?]]
+            [clojure.gdx :refer :all :exclude [->cursor set-cursor!]]
             [clojure.gdx.tiled :refer :all]
             [clojure.string :as str]
             [data.grid2d :as g])
