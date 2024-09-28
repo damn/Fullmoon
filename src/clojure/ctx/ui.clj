@@ -4,27 +4,6 @@
   [{:keys [^TextureRegion texture-region]}]
   (VisImage. texture-region))
 
-(defn- check-cleanup-visui! []
-  ; app crashes during startup before VisUI/dispose and we do clojure.tools.namespace.refresh-> gui elements not showing.
-  ; => actually there is a deeper issue at play
-  ; we need to dispose ALL resources which were loaded already ...
-  (when (VisUI/isLoaded)
-    (VisUI/dispose)))
-
-(defn- font-enable-markup! []
-  (-> (VisUI/getSkin)
-      (.getFont "default-font")
-      .getData
-      .markupEnabled
-      (set! true)))
-
-(defn- set-tooltip-config! []
-  (set! Tooltip/DEFAULT_APPEAR_DELAY_TIME (float 0))
-  ;(set! Tooltip/DEFAULT_FADE_TIME (float 0.3))
-  ;Controls whether to fade out tooltip when mouse was moved. (default false)
-  ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
-  )
-
 (def app-state
   "An atom referencing the current Context. Only use by ui-callbacks or for development/debugging.
   Use only with (post-runnable! & exprs) for making manual changes to the ctx."

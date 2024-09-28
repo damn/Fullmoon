@@ -5,12 +5,12 @@
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [metosin/malli "0.13.0"]
                  [reduce-fsm "0.1.4"]
-                 [com.github.damn/grid2d "1.0"]
 
                  [nrepl "0.9.0"]
                  [org.clojure/tools.namespace "1.3.0"]
                  [org.clj-commons/pretty "2.0.1"]
 
+                 [com.github.damn/grid2d "1.0"]
                  [com.badlogicgames.gdx/gdx                   ~libgdx-version]
                  [com.badlogicgames.gdx/gdx-platform          ~libgdx-version :classifier "natives-desktop"]
                  [com.badlogicgames.gdx/gdx-backend-lwjgl3    ~libgdx-version]

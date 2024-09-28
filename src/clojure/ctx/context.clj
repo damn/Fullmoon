@@ -57,17 +57,8 @@
 (defcomponent :context/vis-ui
   {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
    :let skin-scale}
-  (->mk [_ _ctx]
-    (check-cleanup-visui!)
-    (VisUI/load (case skin-scale
-                  :skin-scale/x1 VisUI$SkinScale/X1
-                  :skin-scale/x2 VisUI$SkinScale/X2))
-    (font-enable-markup!)
-    (set-tooltip-config!)
-    :loaded)
-
-  (destroy! [_]
-    (VisUI/dispose)))
+  (->mk [_ _ctx] (load-ui! skin-scale) :loaded)
+  (destroy! [_] (dispose-ui!)))
 
 (defcomponent context-ecs
   (->mk [_ _ctx]
