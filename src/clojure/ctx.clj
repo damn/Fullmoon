@@ -49,7 +49,6 @@
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
            (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator)
-           space.earlygrey.shapedrawer.ShapeDrawer
            gdl.RayCaster)
   (:load "ctx/utils"
          "ctx/component"
