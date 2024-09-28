@@ -15,6 +15,9 @@
       s
       (remove-newlines new-s))))
 
+(defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
+(defmethod info-text :default [_ ctx])
+
 (defn ->info-text
   "Recursively generates info-text via [[info-text]]."
   [components ctx]

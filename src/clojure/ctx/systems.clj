@@ -6,9 +6,6 @@
 (defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
 (defmethod destroy! :default [_])
 
-(defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_ ctx])
-(defmethod info-text :default [_ ctx])
-
 (defsystem screen-enter "FIXME" [_ ctx])
 (defmethod screen-enter :default [_ ctx])
 
