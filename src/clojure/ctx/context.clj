@@ -36,7 +36,7 @@
    :let {:keys [views default-font cursors]}}
   (->mk [_ _ctx]
     (map->Graphics
-     (let [batch (SpriteBatch.)]
+     (let [batch (->sprite-batch)]
        (merge {:batch batch}
               (->shape-drawer batch)
               (->default-font default-font)

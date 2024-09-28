@@ -6,6 +6,7 @@
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
            (com.badlogic.gdx.graphics Color Texture TextureRegion OrthographicCamera Camera Pixmap)
+           com.badlogic.gdx.graphics.g2d.SpriteBatch
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
@@ -391,3 +392,5 @@
 (defn texture-region-dimensions [^TextureRegion texture-region]
   [(.getRegionWidth  texture-region)
    (.getRegionHeight texture-region)])
+
+(defn ->sprite-batch [] (SpriteBatch.))

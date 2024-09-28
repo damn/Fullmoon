@@ -40,7 +40,7 @@
                    [error :as me]
                    [generator :as mg]))
   (:import (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format)
-           (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)
+           (com.badlogic.gdx.graphics.g2d TextureRegion Batch BitmapFont)
            [com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter]
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.utils.viewport Viewport)
