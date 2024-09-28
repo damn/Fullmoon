@@ -39,8 +39,7 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:import java.util.Random
-           com.badlogic.gdx.files.FileHandle
+  (:import com.badlogic.gdx.files.FileHandle
            [com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector]
            (com.badlogic.gdx.graphics Color Texture Texture$TextureFilter Pixmap Pixmap$Format OrthographicCamera Camera)
            (com.badlogic.gdx.graphics.g2d TextureRegion Batch SpriteBatch BitmapFont)

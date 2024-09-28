@@ -60,6 +60,8 @@
         :when (condition avar)]
     avar))
 
+(defn- ->rand [] (java.util.Random.))
+
 ;; rename to 'shuffle', rand and rand-int without the 's'-> just use with require :as.
 ;; maybe even remove the when coll pred?
 ;; also maybe *random* instead passing it everywhere? but not sure about that
@@ -71,17 +73,17 @@
         (java.util.Collections/shuffle al random)
         (clojure.lang.RT/vector (.toArray al)))))
   ([coll]
-    (sshuffle coll (Random.))))
+    (sshuffle coll (->rand))))
 
 (defn srand
-  ([random] (.nextFloat ^Random random))
+  ([random] (.nextFloat ^java.util.Random random))
   ([n random] (* n (srand random))))
 
 (defn srand-int [n random]
   (int (srand n random)))
 
 (defn create-seed []
-  (.nextLong (Random.)))
+  (.nextLong (->rand)))
 
 ; TODO assert int?
 (defn rand-int-between
@@ -102,7 +104,7 @@
     (< (srand random)
        (/ perc 100)))
   ([perc]
-    (percent-chance perc (Random.))))
+    (percent-chance perc (->rand))))
 ; TODO Random. does not return a number between 0 and 100?
 
 (defmacro if-chance
