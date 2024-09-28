@@ -5,7 +5,7 @@
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera Pixmap)
+           (com.badlogic.gdx.graphics Color Texture TextureRegion OrthographicCamera Camera Pixmap)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
@@ -380,3 +380,14 @@
         y-down? false]
     (.setToOrtho camera y-down? world-width world-height)
     (FitViewport. world-width world-height camera)))
+
+(defn ->texture-region
+  ([^Texture tex]
+   (TextureRegion. tex))
+
+  ([^TextureRegion texture-region [x y w h]]
+   (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
+
+(defn texture-region-dimensions [^TextureRegion texture-region]
+  [(.getRegionWidth  texture-region)
+   (.getRegionHeight texture-region)])

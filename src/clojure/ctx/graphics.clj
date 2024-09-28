@@ -37,13 +37,6 @@
                      unit-scale
                      cursors])
 
-(defn ->texture-region
-  ([^Texture tex]
-   (TextureRegion. tex))
-
-  ([^TextureRegion texture-region [x y w h]]
-   (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
-
 (defrecord Image [texture-region
                   pixel-dimensions
                   world-unit-dimensions
@@ -56,10 +49,6 @@
 
 (defn- scale-dimensions [dimensions scale]
   (mapv (comp float (partial * scale)) dimensions))
-
-(defn- texture-region-dimensions [^TextureRegion texture-region]
-  [(.getRegionWidth  texture-region)
-   (.getRegionHeight texture-region)])
 
 (defn- assoc-dimensions
   "scale can be a number for multiplying the texture-region-dimensions or [w h]."
