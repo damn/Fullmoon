@@ -46,8 +46,7 @@
            (com.badlogic.gdx.scenes.scene2d.ui Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
-           (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator)
-           gdl.RayCaster)
+           (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator))
   (:load "ctx/utils"
          "ctx/component"
          "ctx/systems"
@@ -60,7 +59,6 @@
          "ctx/val_max"
          "ctx/screens"
          "ctx/ui"
-         "ctx/raycaster"
          "ctx/properties"
          "ctx/entity"
          "ctx/operation"
