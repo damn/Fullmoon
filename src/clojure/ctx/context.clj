@@ -34,20 +34,6 @@
        :sound-files sound-files
        :texture-files texture-files})))
 
-(defcomponent :context/effect-handler
-  (->mk [[_ [game-loop-mode record-transactions?]] _ctx]
-    (case game-loop-mode
-      :game-loop/normal (when record-transactions?
-                          (clear-recorded-txs!)
-                          (.bindRoot #'record-txs? true))
-      :game-loop/replay (do
-                         (assert record-txs?)
-                         (.bindRoot #'record-txs? false)
-                         ;(println "Initial entity txs:")
-                         ;(ctx/summarize-txs ctx (ctx/frame->txs ctx 0))
-                         ))
-    nil))
-
 (defn dispose [obj]
   (Disposable/.dispose obj))
 

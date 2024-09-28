@@ -1,32 +1,5 @@
 (in-ns 'clojure.ctx)
 
-(def ^:private record-txs? false)
-(def ^:private frame->txs (atom nil))
-
-(defn- clear-recorded-txs! []
-  (reset! frame->txs {}))
-
-#_(defn summarize-txs [_ txs]
-  (pprint
-   (for [[txkey txs] (group-by first txs)]
-     [txkey (count txs)])))
-
-#_(defn frame->txs [_ frame-number]
-  (@frame->txs frame-number))
-
-(defn- add-tx-to-frame [frame->txs frame-num tx]
-  (update frame->txs frame-num (fn [txs-at-frame]
-                                 (if txs-at-frame
-                                   (conj txs-at-frame tx)
-                                   [tx]))))
-
-(comment
- (= (-> {}
-        (add-tx-to-frame 1 [:foo1 :bar1])
-        (add-tx-to-frame 1 [:foo2 :bar2]))
-    {1 [[:foo1 :bar1] [:foo2 :bar2]]})
- )
-
 (def ^:private ^:dbg-flag debug-print-txs? false)
 
 (defn- debug-print-tx [tx]
@@ -41,10 +14,7 @@
          (not= :tx/cursor (first tx)))
     (let [logic-frame (time/logic-frame ctx)] ; only if debug or record deref this?
       (when debug-print-txs?
-        (println logic-frame "." (debug-print-tx tx)))
-      (when (and record-txs?
-                 (not= (first tx) :tx/effect))
-        (swap! frame->txs add-tx-to-frame logic-frame tx)))))
+        (println logic-frame "." (debug-print-tx tx))))))
 
 (declare effect!)
 

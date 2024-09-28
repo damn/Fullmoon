@@ -128,33 +128,18 @@
   #_(geom-test g ctx)
   (highlight-mouseover-tile g ctx))
 
-(defn- init-game-context [ctx & {:keys [mode record-transactions? tiled-level]}]
-  (let [ctx (dissoc ctx :context/entity-tick-error)
-        ctx (-> ctx
-                (merge {:context/game-loop-mode mode}
-                       (create-into ctx
-                                    {:context/ecs true
-                                     :context/time true
-                                     :context/widgets true
-                                     :context/effect-handler [mode record-transactions?]})))]
-    (case mode
-      :game-loop/normal (do
-                         (when-let [tiled-map (:context/tiled-map ctx)]
-                           (dispose tiled-map))
-                         (-> ctx
-                             (merge (world/->world-map tiled-level))
-                             (world/spawn-creatures! tiled-level)))
-      :game-loop/replay (merge ctx (world/->world-map (select-keys ctx [:context/tiled-map
-                                                                        :context/start-position]))))))
+(defn start-new-game! [ctx tiled-level]
+  (when-let [tiled-map (:context/tiled-map ctx)]
+    (dispose tiled-map))
+  (-> ctx
+      (dissoc :context/entity-tick-error)
+      (create-into {:context/ecs true
+                    :context/time true
+                    :context/widgets true})
+      (merge (world/->world-map tiled-level))
+      (world/spawn-creatures! tiled-level)))
 
-(defn- start-new-game [ctx tiled-level]
-  (init-game-context ctx
-                     :mode :game-loop/normal
-                     :record-transactions? false ; TODO top level flag ?
-                     :tiled-level tiled-level))
-
-(def ^:private ^:dbg-flag pausing? true) ; allow setting @ app/game config?
-; context/world ... ?
+(def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
   (or (key-just-pressed? :keys/p)
@@ -182,9 +167,7 @@
                (error-window! t)
                (assoc :context/entity-tick-error t))))))
 
-(defmulti ^:private game-loop :context/game-loop-mode)
-
-(defmethod game-loop :game-loop/normal [ctx]
+(defn- game-loop [ctx]
   (effect! ctx [player-update-state
                 update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
@@ -193,21 +176,6 @@
                    (update-world %))
                 remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ]))
-
-(defn- replay-frame! [ctx]
-  (let [frame-number (logic-frame ctx)
-        txs [:foo]#_(ctx/frame->txs ctx frame-number)]
-    ;(println frame-number ". " (count txs))
-    (-> ctx
-        (effect! txs)
-        #_(update :world.time/logic-frame inc))))  ; this is probably broken now (also frame->txs contains already time, so no need to inc ?)
-
-(def ^:private replay-speed 2)
-
-(defmethod game-loop :game-loop/replay [ctx]
-  (reduce (fn [ctx _] (replay-frame! ctx))
-          ctx
-          (range replay-speed)))
 
 (defn- render-world! [ctx]
   (camera-set-position! (world-camera ctx) (:position (player-entity* ctx)))
@@ -497,44 +465,11 @@
     {:stage (->stage ctx [])
      :sub-screen [:world/sub-screen]}))
 
-(comment
-
- ; https://github.com/damn/core/issues/32
- ; grep :game-loop/replay
- ; unused code & not working
- ; record only top-lvl txs or save world state every x minutes/seconds
-
- ; TODO @replay-mode
- ; * do I need check-key-input from screens/world?
- ; adjust sound speed also equally ? pitch ?
- ; player message, player modals, etc. all game related state handle ....
- ; game timer is not reset  - continues as if
- ; check other atoms , try to remove atoms ...... !?
- ; replay mode no window hotkeys working
- ; buttons working
- ; can remove items from inventory ! changes cursor but does not change back ..
- ; => deactivate all input somehow (set input processor nil ?)
- ; works but ESC is separate from main input processor and on re-entry
- ; again stage is input-processor
- ; also cursor is from previous game replay
- ; => all hotkeys etc part of stage input processor make.
- ; set nil for non idle/item in hand states .
- ; for some reason he calls end of frame checks but cannot open windows with hotkeys
-
- (defn- start-replay-mode! [ctx]
-   (.setInputProcessor gdx-input nil)
-   (init-game-context ctx :mode :game-loop/replay))
-
- (post-runnable!
-  (swap! app-state start-replay-mode!))
-
- )
-
 (defn- start-game! [world-id]
   (fn [ctx]
     (-> ctx
         (change-screen :screens/world)
-        (start-new-game (->world ctx world-id)))))
+        (start-new-game! (->world ctx world-id)))))
 
 ;; we are in 'world' namespace?
 ; then where does main-menu/minimap/etc go
