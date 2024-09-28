@@ -39,8 +39,7 @@
             (malli [core :as m]
                    [error :as me]
                    [generator :as mg]))
-  (:import (com.badlogic.gdx.graphics Texture)
-           (com.badlogic.gdx.graphics.g2d TextureRegion)
+  (:import (com.badlogic.gdx.graphics.g2d TextureRegion)
            (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.utils.viewport Viewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
