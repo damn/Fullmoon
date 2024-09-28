@@ -27,7 +27,6 @@
       (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
       '(:c :b :a :null :null))))
 
-
 ; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
 ; actually we dont want this to be called over that
 ; it should be :components? then ?
@@ -165,6 +164,33 @@
   (player-state-pause-game? [ctx])
   (player-clicked-inventory [ctx cell])
   (player-clicked-skillmenu [ctx skill]))
+
+(defsystem create "Create entity with eid for txs side-effects. Default nil."
+  [_ entity ctx])
+(defmethod create :default [_ entity ctx])
+
+(defsystem destroy "FIXME" [_ entity ctx])
+(defmethod destroy :default [_ entity ctx])
+
+(defsystem tick "FIXME" [_ entity ctx])
+(defmethod tick :default [_ entity ctx])
+
+(defsystem render-below "FIXME" [_ entity* g ctx])
+(defmethod render-below :default [_ entity* g ctx])
+
+(defsystem render "FIXME" [_ entity* g ctx])
+(defmethod render :default [_ entity* g ctx])
+
+(defsystem render-above "FIXME" [_ entity* g ctx])
+(defmethod render-above :default [_ entity* g ctx])
+
+(defsystem render-info "FIXME" [_ entity* g ctx])
+(defmethod render-info :default [_ entity* g ctx])
+
+(def ^:private render-systems [render-below
+                               render
+                               render-above
+                               render-info])
 
 (def ^:private context-ecs :context/ecs)
 

@@ -31,33 +31,6 @@ Default method returns true."
   [_ ctx])
 (defmethod useful? :default [_ ctx] true)
 
-(defsystem create "Create entity with eid for txs side-effects. Default nil."
-  [_ entity ctx])
-(defmethod create :default [_ entity ctx])
-
-(defsystem destroy "FIXME" [_ entity ctx])
-(defmethod destroy :default [_ entity ctx])
-
-(defsystem tick "FIXME" [_ entity ctx])
-(defmethod tick :default [_ entity ctx])
-
-(defsystem render-below "FIXME" [_ entity* g ctx])
-(defmethod render-below :default [_ entity* g ctx])
-
-(defsystem render "FIXME" [_ entity* g ctx])
-(defmethod render :default [_ entity* g ctx])
-
-(defsystem render-above "FIXME" [_ entity* g ctx])
-(defmethod render-above :default [_ entity* g ctx])
-
-(defsystem render-info "FIXME" [_ entity* g ctx])
-(defmethod render-info :default [_ entity* g ctx])
-
-(def ^:private render-systems [render-below
-                               render
-                               render-above
-                               render-info])
-
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 
