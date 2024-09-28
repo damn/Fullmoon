@@ -8,11 +8,6 @@
   (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
 
-(defn def-attributes [& attributes-data]
-  {:pre [(even? (count attributes-data))]}
-  (doseq [[k data] (partition 2 attributes-data)]
-    (defcomponent* k {:data data})))
-
 (def-attributes
   :tag [:enum [:dev :prod]]
   :configs :some)
@@ -30,49 +25,6 @@
   :size :pos-int
   :cursors :some)
 
-(def-attributes
-  :fps          :nat-int
-  :full-screen? :boolean
-  :width        :nat-int
-  :height       :nat-int
-  :title        :string
-  :app/lwjgl3 [:map [:fps
-                     :full-screen?
-                     :width
-                     :height
-                     :title]]
-  :app/context [:map [ctx-assets
-                      :context/config
-                      :context/graphics
-                      :context/screens
-                      :context/vis-ui
-                      :context/tiled-map-renderer]])
-
-(def-attributes
-  :body/width   :pos
-  :body/height  :pos
-  :body/flying? :boolean)
-
-;;;; def-type
-
-(defn def-type [k {:keys [schema overview]}]
-  (defcomponent k
-    {:data [:map (conj schema :property/id)]
-     :overview overview}))
-
-(def-type :properties/app
-  {:schema [:app/lwjgl3
-            :app/context]
-   :overview {:title "Apps" ; - only 1 ? - no overview - ?
-              :columns 10}})
-
-(def-type :properties/audiovisuals
-  {:schema [:tx/sound
-            :entity/animation]
-   :overview {:title "Audiovisuals"
-              :columns 10
-              :image/scale 2}})
-
 (def-type :properties/items
   {:schema [:property/pretty-name
             :entity/image
@@ -85,24 +37,6 @@
                                      (name slot)
                                      "")
                              (name (:property/id %)))}})
-
-(def-type :properties/creatures
-  {:schema [:entity/body
-            :property/pretty-name
-            :creature/species
-            :creature/level
-            :entity/animation
-            :entity/stats
-            :entity/skills
-            [:entity/modifiers {:optional true}]
-            [:entity/inventory {:optional true}]]
-   :overview {:title "Creatures"
-              :columns 15
-              :image/scale 1.5
-              :sort-by-fn #(vector (:creature/level %)
-                                   (name (:creature/species %))
-                                   (name (:property/id %)))
-              :extra-info-text #(str (:creature/level %))}})
 
 (def-type :properties/projectiles
   {:schema [:entity/image

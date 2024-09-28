@@ -103,17 +103,6 @@
         {:text text
          :counter (->counter ctx 0.4)})]]))
 
-(defcomponent :tx/audiovisual
-  (do! [[_ position id] ctx]
-    (let [{:keys [tx/sound
-                  entity/animation]} (build-property ctx id)]
-      [[:tx/sound sound]
-       [:e/create
-        position
-        effect-body-props
-        {:entity/animation animation
-         :entity/delete-after-animation-stopped? true}]])))
-
 (defcomponent :tx/msg-to-player
   (do! [[_ message] ctx]
     (assoc ctx :context/msg-to-player {:message message :counter 0})))

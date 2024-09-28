@@ -52,3 +52,27 @@ Sets [[app-state]] atom to the context."
         app (build-property ctx :app/core)]
     (->lwjgl3-app (->app-listener (safe-merge ctx (:app/context app)))
                   (:app/lwjgl3 app))))
+
+(def-attributes
+  :fps          :nat-int
+  :full-screen? :boolean
+  :width        :nat-int
+  :height       :nat-int
+  :title        :string
+  :app/lwjgl3 [:map [:fps
+                     :full-screen?
+                     :width
+                     :height
+                     :title]]
+  :app/context [:map [ctx-assets
+                      :context/config
+                      :context/graphics
+                      :context/screens
+                      :context/vis-ui
+                      :context/tiled-map-renderer]])
+
+(def-type :properties/app
+  {:schema [:app/lwjgl3
+            :app/context]
+   :overview {:title "Apps" ; - only 1 ? - no overview - ?
+              :columns 10}})
