@@ -1,9 +1,9 @@
 (ns core.stat
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
+            [clojure.string :as str]
             [core.projectile :refer [projectile-size]]
-            [core.skill :refer [has-skill?]]
-            [clojure.string :as str]))
+            [core.skill :refer [has-skill?]]))
 
 ; TODO define op-order here ...
 
