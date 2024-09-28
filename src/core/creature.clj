@@ -1,6 +1,6 @@
 (ns core.creature
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all :exclude [->cursor set-cursor!]]
+            [clojure.gdx :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
             [core.item :as item]))

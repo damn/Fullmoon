@@ -97,11 +97,13 @@
   [path]
   (.internal Gdx/files path))
 
-(defn ->cursor [pixmap [hotspot-x hotspot-y]]
-  (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y))
+(defn ->cursor [file hotspot]
+  (let [pixmap (Pixmap. (internal-file file))
+        cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
+    (dispose! pixmap)
+    cursor))
 
-(defn set-cursor! [cursor]
-  (.setCursor Gdx/graphics cursor))
+(defn g-set-cursor! [cursor] (.setCursor Gdx/graphics cursor))
 
 (defn- ->lwjgl3-app-config
   [{:keys [title width height full-screen? fps]}]

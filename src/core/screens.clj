@@ -1,6 +1,6 @@
 (ns core.screens
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all :exclude [->cursor set-cursor!]]
+            [clojure.gdx :refer :all]
             [core.item :as inventory]
             [core.world :as world])
   (:import com.badlogic.gdx.graphics.Color

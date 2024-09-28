@@ -339,12 +339,6 @@
 (defn world-viewport-width  [ctx] (.getWorldWidth  (world-viewport (gr ctx))))
 (defn world-viewport-height [ctx] (.getWorldHeight (world-viewport (gr ctx))))
 
-(defn- ->cursor [file hotspot]
-  (let [pixmap (Pixmap. (internal-file file))
-        cursor (gdx/->cursor pixmap hotspot)]
-    (dispose! pixmap)
-    cursor))
-
 (defn- mapvals [f m]
   (into {} (for [[k v] m]
              [k (f v)])))
@@ -355,7 +349,7 @@
                      cursors)})
 
 (defn set-cursor! [{g :context/graphics} cursor-key]
-  (gdx/set-cursor! (safe-get (:cursors g) cursor-key)))
+  (g-set-cursor! (safe-get (:cursors g) cursor-key)))
 
 ;; ctx/graphics
 

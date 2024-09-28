@@ -29,7 +29,7 @@
                         :ui "🎛️ UI"
                         :utils "🔧 Utils"
                         :world "🌎 World"}}
-  (:require (clojure [gdx :as gdx :refer :all :exclude [->cursor set-cursor!]]
+  (:require (clojure [gdx :refer :all]
                      [set :as set]
                      [string :as str]
                      [edn :as edn]
