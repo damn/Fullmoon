@@ -173,18 +173,6 @@
              false) ; wrap false, no need target-width
       (.setScale data old-scale))))
 
-;; graphics/shape
-
-(defn- ->shape-drawer [batch]
-  (let [tex (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                           (.setColor ^Color Color/WHITE)
-                           (.drawPixel 0 0))
-                  tex (Texture. pixmap)]
-              (dispose! pixmap)
-              tex)]
-    {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
-     :shape-drawer-texture tex}))
-
 (defn- munge-color ^Color [color]
   (if (= Color (class color))
     color

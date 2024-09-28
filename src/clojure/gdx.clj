@@ -1,16 +1,16 @@
 (ns clojure.gdx
-  "API for [libgdx](https://libgdx.com/)"
   (:require [clojure.string :as str])
   (:import com.badlogic.gdx.Gdx
            com.badlogic.gdx.assets.AssetManager
            com.badlogic.gdx.audio.Sound
            com.badlogic.gdx.files.FileHandle
-           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera Pixmap)
+           (com.badlogic.gdx.graphics Color Texture OrthographicCamera Camera Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch TextureRegion)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
-           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)))
+           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
+           space.earlygrey.shapedrawer.ShapeDrawer))
 
 (defn exit-app!
   "Schedule an exit from the application. On android, this will cause a call to pause() and dispose() some time in the future, it will not immediately finish your application. On iOS this should be avoided in production as it breaks Apples guidelines
@@ -418,3 +418,16 @@
   (.begin batch)
   (draw-fn)
   (.end batch))
+
+(defn- ->shape-drawer-texture []
+  (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
+                 (.setColor Color/WHITE)
+                 (.drawPixel 0 0))
+        tex (Texture. pixmap)]
+    (dispose! pixmap)
+    tex))
+
+(defn ->shape-drawer [batch]
+  (let [tex (->shape-drawer-texture)]
+    {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
+     :shape-drawer-texture tex}))
