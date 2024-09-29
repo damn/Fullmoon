@@ -1,6 +1,7 @@
 (ns core.entity
   (:require [clojure.gdx :refer :all]
             [clojure.ctx :refer :all]
+            [clojure.string :as str]
             [malli.core :as m]
             [clj-commons.pretty.repl :refer [pretty-pst]])
   (:load "entity/base"
@@ -18,6 +19,7 @@
          "entity/temp_modifier"
          "entity/alert"
          "entity/string_effect"
+         "entity/modifiers"
          ))
 
 (defn- calculate-mouseover-entity [ctx]

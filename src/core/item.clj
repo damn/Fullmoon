@@ -2,7 +2,6 @@
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
             [core.entity :refer :all]
-            [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d]))
 
 (def-type :properties/items
