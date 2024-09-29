@@ -4,7 +4,7 @@
             [clojure.gdx.tiled :refer :all]
             [clojure.string :as str]
             [data.grid2d :as g]
-            [core.entity :refer :all])
+            [core.entity :as entity])
   (:load "world/helper"
          "world/modules"
          "world/caves"

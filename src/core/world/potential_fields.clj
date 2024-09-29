@@ -125,7 +125,7 @@
 (defn- tiles->entities [entities faction]
   (let [entities (filter #(= (:entity/faction @%) faction)
                          entities)]
-    (zipmap (map #(entity-tile @%) entities)
+    (zipmap (map #(entity/entity-tile @%) entities)
             entities)))
 
 (defn- update-faction-potential-field [grid faction entities max-iterations]
@@ -137,10 +137,10 @@
       (doseq [cell (get-in @pf-cache marked-cells)]
         (remove-field-data! cell faction))
       (swap! pf-cache assoc-in marked-cells (generate-potential-field
-                                          grid
-                                          faction
-                                          tiles->entities
-                                          max-iterations)))))
+                                             grid
+                                             faction
+                                             tiles->entities
+                                             max-iterations)))))
 
 ;; MOVEMENT AI
 
@@ -157,7 +157,6 @@
 	 is true for items in coll."
   [pred coll]
   (for [[idx elt] (indexed coll) :when (pred elt)] idx))
-
 
 (let [order (g/get-8-neighbour-positions [0 0])]
   (def ^:private diagonal-check-indizes
@@ -210,7 +209,7 @@
 (defn- find-next-cell
   "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
   [grid entity own-cell]
-  (let [faction (enemy-faction @entity)
+  (let [faction (entity/enemy-faction @entity)
         distance-to    #(nearest-entity-distance @% faction)
         nearest-entity #(nearest-entity          @% faction)
         own-dist (distance-to own-cell)
