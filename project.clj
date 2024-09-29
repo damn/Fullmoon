@@ -1,21 +1,16 @@
 (defproject clojure.ctx "-SNAPSHOT"
-
   :repositories [["jitpack" "https://jitpack.io"]]
 
-  ; this works for codox ...
-  ; if reduce-fsm / nrepl / pretty / tools.namespace in clojure.gdx it doesnt work
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.github.damn/clojure.gdx "-SNAPSHOT"]
                  [metosin/malli "0.13.0"]
-                 [metadoc "0.2.9"]
-                 [lein-hiera "2.0.0"]
-                 [lein-codox "0.10.8"]
                  [reduce-fsm "0.1.4"]
 
-                 [nrepl "0.9.0"]
-                 [org.clj-commons/pretty "2.0.1"]
+                 ; this is already dependency in clojure.gdx
+                 ; but if I remove it lein codox does not work anymore
                  [org.clojure/tools.namespace "1.3.0"]
-                 ]
+
+                 [metadoc "0.2.9"]]
 
   :plugins [[lein-hiera "2.0.0"]
             [lein-codox "0.10.8"]]
