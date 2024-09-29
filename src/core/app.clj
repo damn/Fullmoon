@@ -3,9 +3,7 @@
             [clojure.gdx :refer :all]
             [core.entity :refer :all]
             core.creature
-            core.projectile
             core.stat
-            core.skill
             [core.item :as inventory]
             [core.world :as world])
   (:load "screens/minimap"

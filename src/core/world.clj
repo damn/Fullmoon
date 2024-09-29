@@ -1,11 +1,10 @@
-(ns core.world
+(ns ^:no-doc core.world
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all :exclude [visible?]]
             [clojure.gdx.tiled :refer :all]
             [clojure.string :as str]
             [data.grid2d :as g]
-            [core.entity :refer :all]
-            )
+            [core.entity :refer :all])
   (:load "world/helper"
          "world/modules"
          "world/caves"

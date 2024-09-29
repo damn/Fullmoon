@@ -686,6 +686,196 @@
         {:text text
          :counter (->counter ctx 0.4)})]]))
 
+(def-type :properties/projectiles
+  {:schema [:entity/image
+            :projectile/max-range
+            :projectile/speed
+            :projectile/piercing?
+            :entity-effects]
+   :overview {:title "Projectiles"
+              :columns 16
+              :image/scale 2}})
+
+(defcomponent :entity/projectile-collision
+  {:let {:keys [entity-effects already-hit-bodies piercing?]}}
+  (->mk [[_ v] _ctx]
+    (assoc v :already-hit-bodies #{}))
+
+  ; TODO probably belongs to body
+  (tick [[k _] entity ctx]
+    ; TODO this could be called from body on collision
+    ; for non-solid
+    ; means non colliding with other entities
+    ; but still collding with other stuff here ? o.o
+    (let [entity* @entity
+          cells* (map deref (rectangle->cells (:context/grid ctx) entity*)) ; just use cached-touched -cells
+          hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
+                                       (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
+                                             (:entity/faction @%))
+                                       (:collides? @%)
+                                       (collides? entity* @%))
+                                 (cells->entities cells*))
+          destroy? (or (and hit-entity (not piercing?))
+                       (some #(blocked? % (:z-order entity*)) cells*))
+          id (:entity/id entity*)]
+      [(when hit-entity
+         [:e/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
+       (when destroy?
+         [:e/destroy id])
+       (when hit-entity
+         [:tx/effect {:effect/source id :effect/target hit-entity} entity-effects])])))
+
+
+; TODO speed is 10 tiles/s but I checked moves 8 tiles/sec ... after delta time change ?
+
+; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
+; -> first range check then ray ! otherwise somewhere in contentfield out of sight
+(defcomponent :projectile/max-range {:data :pos-int})
+(defcomponent :projectile/speed     {:data :pos-int})
+
+(defcomponent :projectile/piercing? {:data :boolean}
+  (info-text [_ ctx] "[LIME]Piercing[]"))
+
+(defn projectile-size [projectile]
+  {:pre [(:entity/image projectile)]}
+  (first (:world-unit-dimensions (:entity/image projectile))))
+
+(defcomponent :tx/projectile
+  (do! [[_
+            {:keys [position direction faction]}
+            {:keys [entity/image
+                    projectile/max-range
+                    projectile/speed
+                    entity-effects
+                    projectile/piercing?] :as projectile}]
+           ctx]
+    (let [size (projectile-size projectile)]
+      [[:e/create
+        position
+        {:width size
+         :height size
+         :z-order :z-order/flying
+         :rotation-angle (v-get-angle-from-vector direction)}
+        {:entity/movement {:direction direction
+                           :speed speed}
+         :entity/image image
+         :entity/faction faction
+         :entity/delete-after-duration (/ max-range speed)
+         :entity/destroy-audiovisual :audiovisuals/hit-wall
+         :entity/projectile-collision {:entity-effects entity-effects
+                                       :piercing? piercing?}}]])))
+
+(def-type :properties/skills
+  {:schema [:entity/image
+            :property/pretty-name
+            :skill/action-time-modifier-key
+            :skill/action-time
+            :skill/start-action-sound
+            :skill/effects
+            [:skill/cooldown {:optional true}]
+            [:skill/cost {:optional true}]]
+   :overview {:title "Skills"
+              :columns 16
+              :image/scale 2}})
+
+; TODO render text label free-skill-points
+; (str "Free points: " (:entity/free-skill-points @player-entity))
+#_(defn ->skill-window [context]
+  (->window {:title "Skills"
+             :id :skill-window
+             :visible? false
+             :cell-defaults {:pad 10}
+             :rows [(for [id [:skills/projectile
+                              :skills/meditation
+                              :skills/spawn
+                              :skills/melee-attack]
+                          :let [; get-property in callbacks if they get changed, this is part of context permanently
+                                button (->image-button ; TODO reuse actionbar button scale?
+                                                       (:entity/image (build-property context id)) ; TODO here anyway taken
+                                                       ; => should probably build this window @ game start
+                                                       (fn [ctx]
+                                                         (effect! ctx (player-clicked-skillmenu ctx (build-property ctx id)))))]]
+                      (do
+                       (add-tooltip! button #(->info-text (build-property % id) %)) ; TODO no player modifiers applied (see actionbar)
+                       button))]
+             :pack? true}))
+
+(defcomponent :skill/action-time {:data :pos}
+  (info-text [[_ v] _ctx]
+    (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
+
+(defcomponent :skill/cooldown {:data :nat-int}
+  (info-text [[_ v] _ctx]
+    (when-not (zero? v)
+      (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
+
+(defcomponent :skill/cost {:data :nat-int}
+  (info-text [[_ v] _ctx]
+    (when-not (zero? v)
+      (str "[CYAN]Cost: " v " Mana[]"))))
+
+(defcomponent :skill/effects
+  {:data [:components-ns :effect]})
+
+(defcomponent :skill/start-action-sound {:data :sound})
+
+(defcomponent :skill/action-time-modifier-key
+  {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
+  (info-text [[_ v] _ctx]
+    (str "[VIOLET]" (case v
+                      :stats/cast-speed "Spell"
+                      :stats/attack-speed "Attack") "[]")))
+
+(defcomponent :entity/skills
+  {:data [:one-to-many :properties/skills]}
+  (create [[k skills] eid _ctx]
+    (cons [:e/assoc eid k nil]
+          (for [skill skills]
+            [:tx/add-skill eid skill])))
+
+  (info-text [[_ skills] _ctx]
+    ; => recursive info-text leads to endless text wall
+    #_(when (seq skills)
+        (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
+
+  (tick [[k skills] eid ctx]
+    (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
+          :when (and cooling-down?
+                     (stopped? ctx cooling-down?))]
+      [:e/assoc-in eid [k (:property/id skill) :skill/cooling-down?] false])))
+
+(defn has-skill? [{:keys [entity/skills]} {:keys [property/id]}]
+  (contains? skills id))
+
+(defcomponent :tx/add-skill
+  (do! [[_ entity {:keys [property/id] :as skill}] _ctx]
+    (assert (not (has-skill? @entity skill)))
+    [[:e/assoc-in entity [:entity/skills id] skill]
+     (when (:entity/player? @entity)
+       [:tx.action-bar/add skill])]))
+
+(defcomponent :tx/remove-skill
+  (do! [[_ entity {:keys [property/id] :as skill}] _ctx]
+    (assert (has-skill? @entity skill))
+    [[:e/dissoc-in entity [:entity/skills id]]
+     (when (:entity/player? @entity)
+       [:tx.action-bar/remove skill])]))
+
+(defcomponent :tx.entity.stats/pay-mana-cost
+  (do! [[_ entity cost] _ctx]
+    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
+      (assert (<= cost mana-val))
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
+
+(comment
+ (let [mana-val 4
+       entity (atom (map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       mana-cost 3
+       resulting-mana (- mana-val mana-cost)]
+   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+ )
+
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 

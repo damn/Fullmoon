@@ -2,9 +2,7 @@
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
             [clojure.string :as str]
-            [core.entity :refer :all]
-            [core.projectile :refer [projectile-size]]
-            [core.skill :refer [has-skill?]]))
+            [core.entity :refer :all]))
 
 ; TODO define op-order here ...
 
