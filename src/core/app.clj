@@ -1,7 +1,7 @@
 (ns core.app
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
-            [core.entity :refer :all]
+            [core.entity :as entity]
             core.creature
             core.stat
             [core.world :as world])
@@ -32,7 +32,7 @@
       [[:tx/sound sound]
        [:e/create
         position
-        effect-body-props
+        entity/effect-body-props
         {:entity/animation animation
          :entity/delete-after-animation-stopped? true}]])))
 

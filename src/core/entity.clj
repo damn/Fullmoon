@@ -37,10 +37,6 @@
          first
          :entity/id)))
 
-(defn mouseover-entity* [ctx]
-  (when-let [entity (:context/mouseover-entity ctx)]
-    @entity))
-
 (defn update-mouseover-entity [ctx]
   (let [entity (if (mouse-on-actor? ctx)
                  nil

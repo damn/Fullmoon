@@ -316,14 +316,6 @@
   [ctx entities]
   (reduce tick-system ctx entities))
 
-(defprotocol Player
-  (player-entity [ctx])
-  (player-entity* [ctx])
-  (player-update-state      [ctx])
-  (player-state-pause-game? [ctx])
-  (player-clicked-inventory [ctx cell])
-  (player-clicked-skillmenu [ctx skill]))
-
 (defn render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [ctx g entities*]

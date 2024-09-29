@@ -5,6 +5,18 @@
 
 ;;;; -> Down there move to separate World object, not part of ctx.
 
+(defprotocol Player
+  (player-entity [ctx])
+  (player-entity* [ctx])
+  (player-update-state      [ctx])
+  (player-state-pause-game? [ctx])
+  (player-clicked-inventory [ctx cell])
+  (player-clicked-skillmenu [ctx skill]))
+
+(defn mouseover-entity* [ctx]
+  (when-let [entity (:context/mouseover-entity ctx)]
+    @entity))
+
 (defprotocol Grid
   (cached-adjacent-cells [grid cell])
   (rectangle->cells [grid rectangle])

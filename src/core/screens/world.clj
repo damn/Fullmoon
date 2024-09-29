@@ -15,10 +15,10 @@
                                        (player-state-pause-game? ctx)
                                        (not (player-unpaused?))))))
 (defn- update-world [ctx]
-  (let [ctx (world/update-time ctx (min (delta-time) max-delta-time))
+  (let [ctx (world/update-time ctx (min (delta-time) entity/max-delta-time))
         entities (active-entities ctx)]
     (world/potential-fields-update! ctx entities)
-    (try (tick-entities! ctx entities)
+    (try (entity/tick-entities! ctx entities)
          (catch Throwable t
            (-> ctx
                (error-window! t)
@@ -26,12 +26,12 @@
 
 (defn- game-loop [ctx]
   (effect! ctx [player-update-state
-                update-mouseover-entity ; this do always so can get debug info even when game not running
+                entity/update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (:context/paused? %)
                    %
                    (update-world %))
-                remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ]))
 
 (defn- render-world! [ctx]
@@ -40,7 +40,7 @@
   (render-world-view ctx
                      (fn [g]
                        (before-entities ctx g)
-                       (render-entities! ctx g (map deref (active-entities ctx)))
+                       (entity/render-entities! ctx g (map deref (active-entities ctx)))
                        (after-entities ctx g))))
 
 
