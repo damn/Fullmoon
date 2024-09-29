@@ -23,7 +23,7 @@
           components))
 
 (defn- ->app-listener [ctx]
-  (reify clojure.gdx/AppListener
+  (reify AppListener
     (on-create [_]
       (->> ctx
            ; screens require vis-ui / properties (map-editor, property editor uses properties)

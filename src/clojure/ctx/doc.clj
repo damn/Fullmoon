@@ -2,7 +2,9 @@
 
 (def ^:private add-metadoc? true)
 
-(defn- add-metadoc! []
+; TODO now already in gdx stuff
+
+#_(defn- add-metadoc! []
   (doseq [[doc-cat syms] (edn/read-string (slurp "doc_categories.edn"))
           sym syms]
     (try (alter-meta! (resolve sym) assoc :metadoc/categories #{doc-cat})
@@ -16,9 +18,6 @@
 (defn- anony-class? [[sym avar]]
   (instance? java.lang.Class @avar))
 
-(defn- record-constructor? [[sym avar]]
-  (re-find #"(map)?->\p{Upper}" (name sym)))
-
 ; TODO only funcs, no macros
 ; what about record constructors, refer-all -> need to make either private or
 ; also highlight them ....
@@ -29,6 +28,10 @@
                (remove #{"defcomponent" "defsystem"}
                        (interpose " , " (map str (keys (->> (ns-publics *ns*)
                                                             (remove anony-class?)))))))))
+
+(defn- record-constructor? [[sym avar]]
+  (re-find #"(map)?->\p{Upper}" (name sym)))
+
 
 (defn- relevant-ns-publics []
   (->> (ns-publics *ns*)
@@ -57,5 +60,5 @@
     (str asym " "(:arglists (meta avar)))
     )
 
-#_(when add-metadoc?
-  (add-metadoc!))
+(when add-metadoc?
+  (add-metadoc! "doc_categories.edn"))

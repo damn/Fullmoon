@@ -3,8 +3,11 @@
 (defcomponent :context/vis-ui
   {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
    :let skin-scale}
-  (->mk [_ _ctx] (load-ui! skin-scale) :loaded)
-  (destroy! [_] (dispose-ui!)))
+  (->mk [_ _ctx]
+    (load-ui! skin-scale)
+    :loaded)
+  (destroy! [_]
+    (dispose-ui!)))
 
 (declare info-text-k-order)
 

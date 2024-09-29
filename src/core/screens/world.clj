@@ -219,8 +219,7 @@
     group))
 
 (defn- ->action-bar-button-group []
-  (->button-group {:max-check-count 1
-                      :min-check-count 0}))
+  (->button-group {:max-check-count 1 :min-check-count 0}))
 
 (defn- get-action-bar [ctx]
   {:horizontal-group (::action-bar (:action-bar-table (stage-get ctx)))
