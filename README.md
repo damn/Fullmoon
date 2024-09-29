@@ -1,8 +1,6 @@
 ## clojure.ctx
 
-An Action-RPG in development, an RPG Property editor (for skills, effects, item modifiers, entities and projectiles).
-
-Also trying to create an engine and a language for writing such games. 
+An Action-RPG in development, a RPG Property editor (for skills, effects, item modifiers, entities and projectiles) and also trying to create an engine and a language for writing such games. 
 
 ## Screenshots
 
