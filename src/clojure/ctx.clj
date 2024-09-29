@@ -43,7 +43,6 @@
          "ctx/schema"
          "ctx/graphics"
 
-         "ctx/world" ; -> world
          "ctx/val_max" ; -> utils
 
          "ctx/ui" ; confusing
@@ -52,4 +51,5 @@
          "ctx/operation" ; -> before modifier/stats/effects
 
          "ctx/app" ; w. screens?
+         "ctx/world"
          "ctx/doc"))
