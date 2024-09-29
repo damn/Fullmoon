@@ -41,7 +41,7 @@
   (add-world-ctx [ctx world-property-id]
     (when-let [tiled-map (:context/tiled-map ctx)]
       (dispose! tiled-map))
-    (let [tiled-level (generate-level world-property-id)]
+    (let [tiled-level (generate-level ctx world-property-id)]
       (-> ctx
           (dissoc :context/entity-tick-error)
           (create-into {:context/ecs true
