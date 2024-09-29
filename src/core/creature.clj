@@ -402,5 +402,3 @@
   (player-state-pause-game? [ctx]       (pause-game?             (p-state-obj ctx)))
   (player-clicked-inventory [ctx cell]  (clicked-inventory-cell  (p-state-obj ctx) cell))
   (player-clicked-skillmenu [ctx skill] (clicked-skillmenu-skill (p-state-obj ctx) skill)))
-
-

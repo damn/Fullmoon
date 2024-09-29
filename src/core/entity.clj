@@ -13,15 +13,15 @@
          "entity/destroy_audiovisual"
          "entity/line"
          "entity/projectile"
-         "entity/skills"
-         "entity/faction"
+         "entity/skills" ; -> Creature?
+         "entity/faction"   ; -> Creature?
          "entity/clickable"
          "entity/mouseover"
-         "entity/temp_modifier"
-         "entity/alert"
-         "entity/string_effect"
-         "entity/modifiers"
-         "entity/inventory"
+         "entity/temp_modifier"   ; -> Creature?
+         "entity/alert"   ; -> Creature?
+         "entity/string_effect"   ; -> Creature?
+         "entity/modifiers"   ; -> Creature?
+         "entity/inventory"   ; -> Creature?
          ))
 
 (defn- calculate-mouseover-entity [ctx]
