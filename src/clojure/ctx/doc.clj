@@ -47,7 +47,9 @@
                   )
         )
 
-#_(spit "foooo"(str/join "\n" (sort (map first (relevant-ns-publics)))))
+(comment
+ (spit "relevant_ns_publics"
+       (str/join "\n" (sort (map first (relevant-ns-publics))))))
 ; = 264 public vars
 ; next remove ->Foo and map->Foo
 

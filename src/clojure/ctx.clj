@@ -43,15 +43,15 @@
          "ctx/schema"
          "ctx/graphics"
 
-         "ctx/time"
-         "ctx/world"
-         "ctx/val_max"
+         "ctx/time" ; -> world
+         "ctx/world" ; -> world
+         "ctx/val_max" ; -> utils
 
-         "ctx/ui"
-         "ctx/properties"
+         "ctx/ui" ; confusing
+         "ctx/properties" ; confusing
 
-         "ctx/entity"
-         "ctx/operation"
+         "ctx/entity" ; -> world
+         "ctx/operation" ; -> before modifier/stats/effects
 
-         "ctx/app"
+         "ctx/app" ; w. screens?
          "ctx/doc"))
