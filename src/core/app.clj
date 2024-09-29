@@ -1,11 +1,17 @@
 (ns core.app
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
+            [core.entity :refer :all]
             core.creature
             core.projectile
-            core.screens
             core.stat
-            core.skill))
+            core.skill
+            [core.item :as inventory]
+            [core.world :as world])
+  (:load "screens/minimap"
+         "screens/world"
+         "screens/main_menu"
+         "screens/options"))
 
 (def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
 

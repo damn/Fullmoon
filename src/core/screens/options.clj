@@ -1,4 +1,4 @@
-(in-ns 'core.screens)
+(in-ns 'core.app)
 
 (defprotocol ^:private StatusCheckBox
   (^:private get-text [this])

@@ -1,4 +1,4 @@
-(in-ns 'core.screens)
+(in-ns 'core.app)
 
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (->table {:rows (remove nil? (concat

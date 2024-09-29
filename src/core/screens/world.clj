@@ -1,4 +1,4 @@
-(in-ns 'core.screens)
+(in-ns 'core.app)
 
 (defn- geom-test [g ctx]
   (let [position (world-mouse-position ctx)

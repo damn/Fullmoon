@@ -1,6 +1,7 @@
 (ns core.item
   (:require [clojure.ctx :refer :all]
             [clojure.gdx :refer :all]
+            [core.entity :refer :all]
             [core.stat :refer [mod-info-text]]
             [data.grid2d :as grid2d]))
 
@@ -143,7 +144,7 @@
   (do! [[_ entity item] _ctx]
     (pickup-item @entity item)))
 
-(extend-type clojure.ctx.Entity
+(extend-type core.entity.Entity
   Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))

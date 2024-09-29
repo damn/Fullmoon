@@ -1,6 +1,7 @@
 (ns core.projectile
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]))
+            [clojure.gdx :refer :all]
+            [core.entity :refer :all]))
 
 (def-type :properties/projectiles
   {:schema [:entity/image

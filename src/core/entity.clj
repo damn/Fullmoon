@@ -1,4 +1,8 @@
-(in-ns 'clojure.ctx)
+(ns core.entity
+  (:require [clojure.gdx :refer :all]
+            [clojure.ctx :refer :all]
+            [malli.core :as m]
+            [clj-commons.pretty.repl :refer [pretty-pst]]))
 
 (defcomponent :e/destroy
   (do! [[_ entity] ctx]

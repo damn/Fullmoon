@@ -6,7 +6,7 @@
   | `component`      | vector `[k v]` |
   | `system`         | multimethod dispatching on component k |
   | `eid` , `entity` | entity atom                                    |
-  | `entity*`        | entity value (defrecord `clojure.ctx.Entity`), |
+  | `entity*`        | entity value |
   | `cell`/`cell*`   | Cell of the world grid or inventory  |
   | `g`              | `clojure.ctx.Graphics`                        |
   | `grid`           | `data.grid2d.Grid`                             |
@@ -50,7 +50,6 @@
          "ctx/ui" ; confusing
          "ctx/properties" ; confusing
 
-         "ctx/entity" ; -> world
          "ctx/operation" ; -> before modifier/stats/effects
 
          "ctx/app" ; w. screens?

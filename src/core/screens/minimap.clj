@@ -1,4 +1,4 @@
-(in-ns 'core.screens)
+(in-ns 'core.app)
 
 ; 28.4 viewportwidth
 ; 16 viewportheight

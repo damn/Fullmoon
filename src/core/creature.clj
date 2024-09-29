@@ -3,6 +3,7 @@
             [clojure.gdx :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
+            [core.entity :refer :all]
             [core.item :as item]))
 
 (def-type :properties/creatures
@@ -148,7 +149,7 @@
   (info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(extend-type clojure.ctx.Entity
+(extend-type core.entity.Entity
   State
   (entity-state [entity*]
     (-> entity* :entity/state :state))

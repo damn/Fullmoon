@@ -1,6 +1,8 @@
 (ns core.skill
   (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]))
+            [clojure.gdx :refer :all]
+            [core.entity :refer :all]
+            ))
 
 (def-type :properties/skills
   {:schema [:entity/image
