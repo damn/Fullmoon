@@ -303,9 +303,6 @@
 (defmethod generate :world.generator/uf-caves [ctx world]
   (uf-caves ctx world))
 
-(extend-type clojure.ctx.Context
-  WorldGen
-  (->world [ctx world-id]
-    (let [prop (build-property ctx world-id)]
-      (assoc (generate ctx prop)
-             :world/player-creature (:world/player-creature prop)))))
+(defn- generate-level [ctx world-id]
+  (let [prop (build-property ctx world-id)]
+    (assoc (generate ctx prop) :world/player-creature (:world/player-creature prop))))

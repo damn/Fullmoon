@@ -1,9 +1,15 @@
 (in-ns 'core.app)
 
+(defn- start-game-fn [world-id]
+  (fn [ctx]
+    (-> ctx
+        (change-screen :screens/world)
+        (add-world-ctx world-id))))
+
 (defn- ->buttons [{:keys [context/config] :as ctx}]
   (->table {:rows (remove nil? (concat
                                    (for [{:keys [property/id]} (all-properties ctx :properties/worlds)]
-                                     [(->text-button (str "Start " id) (start-game! id))])
+                                     [(->text-button (str "Start " id) (start-game-fn id))])
                                    [(when (safe-get config :map-editor?)
                                       [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
                                     (when (safe-get config :property-editor?)

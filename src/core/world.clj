@@ -22,7 +22,7 @@
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 ; done at module-gen? but not custom tiledmap?
-(defn ->world-map [{:keys [tiled-map start-position]}] ; == one object make ?! like graphics?
+(defn- ->world-map [{:keys [tiled-map start-position]}] ; == one object make ?! like graphics?
   ; grep context/grid -> all dependent stuff?
   (create-into {:context/tiled-map tiled-map
                 :context/start-position start-position}
@@ -35,6 +35,20 @@
                 :context/raycaster blocks-vision?
                 content-grid [16 16]
                 :context/explored-tile-corners true}))
+
+(extend-type clojure.ctx.Context
+  WorldContext
+  (add-world-ctx [ctx world-property-id]
+    (when-let [tiled-map (:context/tiled-map ctx)]
+      (dispose! tiled-map))
+    (let [tiled-level (generate-level world-property-id)]
+      (-> ctx
+          (dissoc :context/entity-tick-error)
+          (create-into {:context/ecs true
+                        :context/time true
+                        :context/widgets true})
+          (merge (->world-map tiled-level))
+          (spawn-creatures! tiled-level)))))
 
 (defcomponent :tx/add-to-world
   (do! [[_ entity] ctx]

@@ -122,7 +122,7 @@ direction keys: move")
 
 (defn- generate-screen-ctx [context properties]
   (let [;{:keys [tiled-map area-level-grid start-position]} (generate-modules context properties)
-        {:keys [tiled-map start-position]} (->world context world-id)
+        {:keys [tiled-map start-position]} (generate-level context world-id)
         atom-data (current-data context)]
     (dispose! (:tiled-map @atom-data))
     (swap! atom-data assoc

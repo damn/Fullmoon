@@ -1,5 +1,10 @@
 (in-ns 'clojure.ctx)
 
+(defprotocol WorldContext
+  (add-world-ctx [ctx world-id]))
+
+;;;; -> Down there move to separate World object, not part of ctx.
+
 (defprotocol Grid
   (cached-adjacent-cells [grid cell])
   (rectangle->cells [grid rectangle])
@@ -30,9 +35,6 @@
 
 (defprotocol ActiveEntities
   (active-entities [_]))
-
-(defprotocol WorldGen
-  (->world [ctx world-id]))
 
 (defn world-delta
   "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."

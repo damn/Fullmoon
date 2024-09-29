@@ -3,17 +3,6 @@
 (load "screens/world/debug_render")
 (load "screens/world/widgets")
 
-(defn start-new-game! [ctx tiled-level]
-  (when-let [tiled-map (:context/tiled-map ctx)]
-    (dispose! tiled-map))
-  (-> ctx
-      (dissoc :context/entity-tick-error)
-      (create-into {:context/ecs true
-                    :context/time true
-                    :context/widgets true})
-      (merge (world/->world-map tiled-level))
-      (world/spawn-creatures! tiled-level)))
-
 (def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
@@ -113,9 +102,3 @@
   (->mk [_ ctx]
     {:stage (->stage ctx [])
      :sub-screen [:world/sub-screen]}))
-
-(defn- start-game! [world-id]
-  (fn [ctx]
-    (-> ctx
-        (change-screen :screens/world)
-        (start-new-game! (->world ctx world-id)))))
