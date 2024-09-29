@@ -1,9 +1,10 @@
 (ns core.entity
-  (:require [clojure.gdx :refer :all]
+  (:require [clj-commons.pretty.repl :refer [pretty-pst]]
+            [clojure.gdx :refer :all]
             [clojure.ctx :refer :all]
             [clojure.string :as str]
-            [malli.core :as m]
-            [clj-commons.pretty.repl :refer [pretty-pst]])
+            [data.grid2d :as grid2d]
+            [malli.core :as m])
   (:load "entity/base"
          "entity/image"
          "entity/animation"
@@ -20,6 +21,7 @@
          "entity/alert"
          "entity/string_effect"
          "entity/modifiers"
+         "entity/inventory"
          ))
 
 (defn- calculate-mouseover-entity [ctx]

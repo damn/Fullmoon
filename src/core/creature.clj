@@ -3,8 +3,7 @@
             [clojure.gdx :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
-            [core.entity :refer :all]
-            [core.item :as item]))
+            [core.entity :refer :all]))
 
 (def-type :properties/creatures
   {:schema [:entity/body
@@ -252,7 +251,7 @@
     (cond
      ; PUT ITEM IN EMPTY CELL
      (and (not item-in-cell)
-          (item/valid-slot? cell item-on-cursor))
+          (valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/set-item id cell item-on-cursor]
       [:e/dissoc id :entity/item-on-cursor]
@@ -260,7 +259,7 @@
 
      ; STACK ITEMS
      (and item-in-cell
-          (item/stackable? item-in-cell item-on-cursor))
+          (stackable? item-in-cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/stack-item id cell item-on-cursor]
       [:e/dissoc id :entity/item-on-cursor]
@@ -268,7 +267,7 @@
 
      ; SWAP ITEMS
      (and item-in-cell
-          (item/valid-slot? cell item-on-cursor))
+          (valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
       [:tx/remove-item id cell]
       [:tx/set-item id cell item-on-cursor]

@@ -4,7 +4,6 @@
             [core.entity :refer :all]
             core.creature
             core.stat
-            [core.item :as inventory]
             [core.world :as world])
   (:load "screens/minimap"
          "screens/world"

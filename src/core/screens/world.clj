@@ -348,14 +348,14 @@
    (->group {:id :windows
              :actors [(->debug-window ctx)
                       (->entity-info-window ctx)
-                      (inventory/->build ctx widget-data)]})
+                      (->inventory-window ctx widget-data)]})
    (->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
 
 (defcomponent :context/widgets
   (->mk [_ ctx]
     (let [widget-data {:action-bar (->action-bar-button-group)
-                       :slot->background (inventory/->data ctx)}
+                       :slot->background (->inventory-window-data ctx)}
           stage (stage-get ctx)]
       (s-clear! stage)
       (run! #(s-add! stage %) (->ui-actors ctx widget-data))

@@ -1,8 +1,4 @@
-(ns core.item
-  (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]
-            [core.entity :refer :all]
-            [data.grid2d :as grid2d]))
+(in-ns 'core.entity)
 
 (def-type :properties/items
   {:schema [:property/pretty-name
@@ -247,18 +243,18 @@
         (t-add! table (cell :inventory.slot/bag :position [x y])))
       (t-row! table))))
 
-(defn ->build [ctx {:keys [slot->background]}]
+(defn ->inventory-window [ctx {:keys [slot->background]}]
   (let [table (->table {:id ::table})]
     (redo-table! table slot->background)
     (->window {:title "Inventory"
-                  :id :inventory-window
-                  :visible? false
-                  :pack? true
-                  :position [(gui-viewport-width ctx)
-                             (gui-viewport-height ctx)]
-                  :rows [[{:actor table :pad 4}]]})))
+               :id :inventory-window
+               :visible? false
+               :pack? true
+               :position [(gui-viewport-width ctx)
+                          (gui-viewport-height ctx)]
+               :rows [[{:actor table :pad 4}]]})))
 
-(defn ->data [ctx]
+(defn ->inventory-window-data [ctx]
   (slot->background ctx))
 
 (defn- get-inventory [ctx]
