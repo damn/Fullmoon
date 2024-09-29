@@ -63,3 +63,11 @@
   (tick [[k _] eid ctx]
     [(tx-assoc-image-current-frame eid animation)
      [:e/assoc eid k (anim-tick animation (world-delta ctx))]]))
+
+(defcomponent :entity/delete-after-animation-stopped?
+  (create [_ entity _ctx]
+    (-> @entity :entity/animation :looping? not assert))
+
+  (tick [_ entity _ctx]
+    (when (anim-stopped? (:entity/animation @entity))
+      [[:e/destroy entity]])))
