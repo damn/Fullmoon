@@ -1,29 +1,8 @@
-The name ctx comes from context and the idea of keeping the whole application state and game world in one data structure.
+## clojure.ctx
 
-## Special operators
+An Action-RPG in development, an RPG Property editor (for skills, effects, item modifiers, entities and projectiles).
 
-## Side effects
-
-## Content
-
-The whole game content is stored in `resources/properties.edn` and can be configured in the GUI-editor.
-
-There are 7 property-types:
-
-## 🖥️ App
-
-## 💥 Audiovisuals
-
-## 🐉 Creatures
-
-## ⚔️ Items
-
-## 🚀 Projectiles
-
-## 🪄 Skills
-
-## 🌎 Worlds
-
+Also trying to create an engine and a language for writing such games. 
 
 ## Screenshots
 
