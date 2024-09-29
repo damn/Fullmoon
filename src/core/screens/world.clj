@@ -87,15 +87,8 @@
                                   (and pausing?
                                        (player-state-pause-game? ctx)
                                        (not (player-unpaused?))))))
-
-(defn- update-time [ctx delta]
-  (update ctx :context/time #(-> %
-                                 (assoc :delta-time delta)
-                                 (update :elapsed + delta)
-                                 (update :logic-frame inc))))
-
 (defn- update-world [ctx]
-  (let [ctx (update-time ctx (min (delta-time) max-delta-time))
+  (let [ctx (world/update-time ctx (min (delta-time) max-delta-time))
         entities (active-entities ctx)]
     (world/potential-fields-update! ctx entities)
     (try (tick-entities! ctx entities)

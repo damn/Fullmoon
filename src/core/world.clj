@@ -17,7 +17,8 @@
          "world/raycaster"
          "world/grid"
          "world/content_grid"
-         "world/spawn"))
+         "world/spawn"
+         "world/time"))
 
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
