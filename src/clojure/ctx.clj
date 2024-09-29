@@ -40,15 +40,15 @@
   (:load "ctx/effect"
          "ctx/component"
          "ctx/assets"
-         "ctx/schema"
+         "ctx/schema" ; => not part of ctx
          "ctx/graphics"
 
-         "ctx/val_max" ; -> utils (but then clojure.gdx depends on malli)
+         "ctx/val_max" ; => not part of ctx -> utils (but then clojure.gdx depends on malli)
 
          "ctx/ui" ; confusing
          "ctx/properties" ; confusing
 
-         "ctx/operation" ; -> before modifier/stats/effects
+         "ctx/operation" ; -> before modifier/stats/effects (not part of ctx)
 
          "ctx/app" ; w. screens?
          "ctx/world"

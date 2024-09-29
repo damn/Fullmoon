@@ -38,6 +38,7 @@
           :metadata {:doc/format :markdown}
           ;:exclude-vars #"(map)?->\p{Upper}" ; TODO not working
           :writer metadoc.writers.codox/write-docs}
+
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :global-vars {*warn-on-reflection* true

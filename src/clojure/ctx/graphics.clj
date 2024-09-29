@@ -254,6 +254,11 @@
 (defprotocol DrawItemOnCursor
   (draw-item-on-cursor [g ctx]))
 
+; TODO data-component & ->value defmulti can be moved to properties
+; def-attributes gdx?
+
+; def-type to properties
+
 (def-attributes
   :views [:map [:gui-view :world-view]]
   :gui-view [:map [:world-width :world-height]]
@@ -261,14 +266,18 @@
   :world-width :pos-int
   :world-height :pos-int
   :tile-size :pos-int
+
   :default-font [:map [:file :quality-scaling :size]]
   :file :string
   :quality-scaling :pos-int
   :size :pos-int
+
   :cursors :some)
 
 (defcomponent :context/graphics
-  {:data [:map [:cursors :default-font :views]]
+  {:data [:map [:cursors
+                :default-font
+                :views]]
    :let {:keys [views default-font cursors]}}
   (->mk [_ _ctx]
     (map->Graphics
