@@ -4,41 +4,10 @@
             [malli.core :as m]
             [clj-commons.pretty.repl :refer [pretty-pst]]))
 
-(defcomponent :e/destroy
-  (do! [[_ entity] ctx]
-    [[:e/assoc entity :entity/destroyed? true]]))
-
-(defcomponent :e/assoc
-  (do! [[_ entity k v] ctx]
-    (assert (keyword? k))
-    (swap! entity assoc k v)
-    ctx))
-
-(defcomponent :e/assoc-in
-  (do! [[_ entity ks v] ctx]
-    (swap! entity assoc-in ks v)
-    ctx))
-
-(defcomponent :e/dissoc
-  (do! [[_ entity k] ctx]
-    (assert (keyword? k))
-    (swap! entity dissoc k)
-    ctx))
-
-(defcomponent :e/dissoc-in
-  (do! [[_ entity ks] ctx]
-    (assert (> (count ks) 1))
-    (swap! entity update-in (drop-last ks) dissoc (last ks))
-    ctx))
-
-(defcomponent :e/update-in
-  (do! [[_ entity ks f] ctx]
-    (swap! entity update-in ks f)
-    ctx))
+;;;; To clojure.gdx.utils ?
 
 (defn- define-order [order-k-vector]
-  (apply hash-map
-         (interleave order-k-vector (range))))
+  (apply hash-map (interleave order-k-vector (range))))
 
 (defn- sort-by-order [coll get-item-order-k order]
   (sort-by #((get-item-order-k %) order) < coll))
@@ -63,6 +32,8 @@
       (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
       '(:c :b :a :null :null))))
 
+;;;; ?
+
 ; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
 ; actually we dont want this to be called over that
 ; it should be :components? then ?
@@ -73,6 +44,7 @@
 ; then fetch all components which implement render-below
 ; and have parent-id in entity-ids, etc.
 
+;;;; Body
 
 ; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
 (def max-delta-time 0.04)
@@ -152,6 +124,8 @@
 (defn collides? [entity* other-entity*]
   (shape-collides? entity* other-entity*))
 
+;;;; ?
+
 (defprotocol State
   (entity-state [_])
   (state-obj [_]))
@@ -164,6 +138,8 @@
 
 (defprotocol Modifiers
   (->modified-value [_ modifier-k base-value]))
+
+;;;; line-of-sight
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?
@@ -192,6 +168,8 @@
        (not (and los-checks?
                  (ray-blocked? context (:position source*) (:position target*))))))
 
+;;;; ? to world ctx ?
+
 (defprotocol Player
   (player-entity [ctx])
   (player-entity* [ctx])
@@ -199,6 +177,9 @@
   (player-state-pause-game? [ctx])
   (player-clicked-inventory [ctx cell])
   (player-clicked-skillmenu [ctx skill]))
+
+
+;;;; systems
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil."
   [_ entity ctx])
@@ -227,11 +208,35 @@
                                render-above
                                render-info])
 
+;;;; to world ctx?
+
 (defcomponent :context/ecs
   (->mk [_ _ctx]
     {}))
 
 (defn- entities [ctx] (:context/ecs ctx)) ; dangerous name!
+
+(defn all-entities [ctx]
+  (vals (entities ctx)))
+
+(defn get-entity
+  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
+  [ctx uid]
+  (get (entities ctx) uid))
+
+(defcomponent :entity/id
+  (create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
+  (destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
+
+(defcomponent :entity/uid
+  {:let uid}
+  (create [_ entity ctx]
+    (assert (number? uid))
+    (update ctx :context/ecs assoc uid entity))
+
+  (destroy [_ _entity ctx]
+    (assert (contains? (entities ctx) uid))
+    (update ctx :context/ecs dissoc uid)))
 
 (let [cnt (atom 0)]
   (defn- unique-number! []
@@ -258,6 +263,39 @@
                                              :entity/uid (unique-number!))
                                       (create-vs ctx)))))
       (create-e-system eid))))
+
+(defcomponent :e/destroy
+  (do! [[_ entity] ctx]
+    [[:e/assoc entity :entity/destroyed? true]]))
+
+(defcomponent :e/assoc
+  (do! [[_ entity k v] ctx]
+    (assert (keyword? k))
+    (swap! entity assoc k v)
+    ctx))
+
+(defcomponent :e/assoc-in
+  (do! [[_ entity ks v] ctx]
+    (swap! entity assoc-in ks v)
+    ctx))
+
+(defcomponent :e/dissoc
+  (do! [[_ entity k] ctx]
+    (assert (keyword? k))
+    (swap! entity dissoc k)
+    ctx))
+
+(defcomponent :e/dissoc-in
+  (do! [[_ entity ks] ctx]
+    (assert (> (count ks) 1))
+    (swap! entity update-in (drop-last ks) dissoc (last ks))
+    ctx))
+
+(defcomponent :e/update-in
+  (do! [[_ entity ks f] ctx]
+    (swap! entity update-in ks f)
+    ctx))
+
 
 (def ^:private ^:dbg-flag show-body-bounds false)
 
@@ -291,14 +329,6 @@
    (catch Throwable t
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t))
      ctx)))
-
-(defn all-entities [ctx]
-  (vals (entities ctx)))
-
-(defn get-entity
-  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
-  [ctx uid]
-  (get (entities ctx) uid))
 
 (defn tick-entities!
   "Calls tick system on all components of entities."
@@ -444,6 +474,8 @@
          first
          :entity/id)))
 
+;; to ctx ?
+
 (def ^:private ctx-mouseover-entity :context/mouseover-entity)
 
 (defn mouseover-entity* [ctx]
@@ -462,20 +494,6 @@
        (assoc ctx ctx-mouseover-entity entity))]))
 
 ;;;; Entity Components
-
-(defcomponent :entity/id
-  (create  [[_ id] _eid _ctx] [[:tx/add-to-world      id]])
-  (destroy [[_ id] _eid _ctx] [[:tx/remove-from-world id]]))
-
-(defcomponent :entity/uid
-  {:let uid}
-  (create [_ entity ctx]
-    (assert (number? uid))
-    (update ctx :context/ecs assoc uid entity))
-
-  (destroy [_ _entity ctx]
-    (assert (contains? (entities ctx) uid))
-    (update ctx :context/ecs dissoc uid)))
 
 (defcomponent :entity/movement
   {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}

@@ -43,7 +43,7 @@
          "ctx/schema"
          "ctx/graphics"
 
-         "ctx/val_max" ; -> utils
+         "ctx/val_max" ; -> utils (but then clojure.gdx depends on malli)
 
          "ctx/ui" ; confusing
          "ctx/properties" ; confusing
