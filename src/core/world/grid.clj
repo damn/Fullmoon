@@ -1,2 +1,0 @@
-(in-ns 'core.world)
-
