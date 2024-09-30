@@ -2,19 +2,16 @@
 
 (load "screens/world/debug_render")
 
-; add player-entity* to language
-; => have process with steps for changing core language names
-
 (defn- calculate-mouseover-entity [ctx]
   (let [player-entity* (player-entity* ctx)
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities ctx
                                            (world-mouse-position ctx))))]
-    (->> entity/render-order
-         (entity/sort-by-order hits :z-order)
+    (->> render-order
+         (sort-by-order hits :z-order)
          reverse
-         (filter #(entity/line-of-sight? ctx player-entity* %))
+         (filter #(line-of-sight? ctx player-entity* %))
          first
          :entity/id)))
 
@@ -41,10 +38,10 @@
                                        (player-state-pause-game? ctx)
                                        (not (player-unpaused?))))))
 (defn- update-world [ctx]
-  (let [ctx (world/update-time ctx (min (delta-time) entity/max-delta-time))
+  (let [ctx (world/update-time ctx (min (delta-time) max-delta-time))
         entities (active-entities ctx)]
     (world/potential-fields-update! ctx entities)
-    (try (entity/tick-entities! ctx entities)
+    (try (tick-entities! ctx entities)
          (catch Throwable t
            (-> ctx
                (error-window! t)
@@ -57,7 +54,7 @@
                 #(if (:context/paused? %)
                    %
                    (update-world %))
-                entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ]))
 
 (defn- render-world! [ctx]
@@ -66,7 +63,7 @@
   (render-world-view ctx
                      (fn [g]
                        (before-entities ctx g)
-                       (entity/render-entities! ctx g (map deref (active-entities ctx)))
+                       (render-entities! ctx g (map deref (active-entities ctx)))
                        (after-entities ctx g))))
 
 

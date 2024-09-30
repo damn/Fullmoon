@@ -125,7 +125,7 @@
 (defn- tiles->entities [entities faction]
   (let [entities (filter #(= (:entity/faction @%) faction)
                          entities)]
-    (zipmap (map #(entity/entity-tile @%) entities)
+    (zipmap (map #(entity-tile @%) entities)
             entities)))
 
 (defn- update-faction-potential-field [grid faction entities max-iterations]
@@ -209,7 +209,7 @@
 (defn- find-next-cell
   "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
   [grid entity own-cell]
-  (let [faction (entity/enemy-faction @entity)
+  (let [faction (enemy-faction @entity)
         distance-to    #(nearest-entity-distance @% faction)
         nearest-entity #(nearest-entity          @% faction)
         own-dist (distance-to own-cell)

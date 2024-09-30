@@ -23,8 +23,8 @@
     (->actor {:draw (fn [g ctx]
                          (let [player-entity* (player-entity* ctx)
                                x (- x (/ rahmenw 2))]
-                           (render-hpmana-bar g ctx x y-hp   hpcontent   (entity/entity-stat player-entity* :stats/hp) "HP")
-                           (render-hpmana-bar g ctx x y-mana manacontent (entity/entity-stat player-entity* :stats/mana) "MP")))})))
+                           (render-hpmana-bar g ctx x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
+                           (render-hpmana-bar g ctx x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -232,13 +232,13 @@
    (->group {:id :windows
              :actors [(->debug-window ctx)
                       (->entity-info-window ctx)
-                      (entity/->inventory-window ctx widget-data)]})
+                      (->inventory-window ctx widget-data)]})
    (->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
 
 (defn ->world-widgets [ctx]
   (let [widget-data {:action-bar (->action-bar-button-group)
-                     :slot->background (entity/->inventory-window-data ctx)}
+                     :slot->background (->inventory-window-data ctx)}
         stage (stage-get ctx)]
     (s-clear! stage)
     (run! #(s-add! stage %) (->ui-actors ctx widget-data))

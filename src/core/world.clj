@@ -58,7 +58,7 @@
     (let [tiled-level (generate-level ctx world-property-id)]
       (-> ctx
           (dissoc :context/entity-tick-error)
-          (assoc :context/ecs (entity/->uids-entities)
+          (assoc :context/ecs (->uids-entities)
                  :context/time (->world-time)
                  :context/widgets (->world-widgets ctx))
           (merge (->world-map tiled-level))
