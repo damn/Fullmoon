@@ -1,5 +1,6 @@
 (ns core.stat
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.string :as str]))
 
 (defn- defmodifier [k operations]

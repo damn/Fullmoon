@@ -1,5 +1,6 @@
 (ns core.world
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.gdx.tiled :as t]
             [clojure.string :as str]
             [data.grid2d :as g])
