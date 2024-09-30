@@ -40,7 +40,7 @@
 (defn- update-world [ctx]
   (let [ctx (world/update-time ctx (min (delta-time) max-delta-time))
         entities (active-entities ctx)]
-    (world/potential-fields-update! ctx entities)
+    (potential-fields-update! ctx entities)
     (try (tick-entities! ctx entities)
          (catch Throwable t
            (-> ctx

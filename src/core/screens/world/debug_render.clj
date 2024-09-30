@@ -43,7 +43,7 @@
         (let [faction :good
               {:keys [distance entity]} (faction cell*)]
           (when distance
-            (let [ratio (/ distance (world/factions-iterations faction))]
+            (let [ratio (/ distance (factions-iterations faction))]
               (draw-filled-rectangle g x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
 (def ^:private ^:dbg-flag highlight-blocked-cell? true)

@@ -71,11 +71,6 @@
         (t/set-tile! layer position (position->tile position))))
     tiled-map))
 
-(defn assoc-ks [m ks v]
-  (if (empty? ks)
-    m
-    (apply assoc m (interleave ks (repeat v)))))
-
 (defn scale-grid [grid [w h]]
   (g/create-grid (* (g/width grid)  w)
                  (* (g/height grid) h)
