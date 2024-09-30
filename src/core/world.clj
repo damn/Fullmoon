@@ -5,13 +5,12 @@
             [data.grid2d :as g])
   (:load "world/helper"
          "world/modules"
-
          "world/areas"
          "world/generators"
          "world/cached_renderer"
          "world/editor_screen"
          "world/potential_fields"
-         "world/raycaster"
+         ; used @ txs ...
          "world/grid"
          "world/content_grid"
          "world/spawn"
@@ -46,6 +45,9 @@
     {:context/tiled-map tiled-map
      :context/start-position start-position
      :context/grid grid
+
+     ; TODO the keyword needs to be in ->raycaster
+     ; as the code there depends on that k specifically
      :context/raycaster (->raycaster grid blocks-vision?)
      content-grid (->content-grid :cell-size 16 :width w :height h)
      :context/explored-tile-corners (->explored-tile-corners w h)}))
