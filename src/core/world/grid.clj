@@ -77,29 +77,30 @@
          cells->entities
          (filter #(shape-collides? circle @%)))))
 
-(def ^:private this :context/grid)
+(def ^:private world-grid-k :context/grid)
 
 (extend-type clojure.ctx.Context
   GridPointEntities
   (point->entities [ctx position]
-    (when-let [cell (get (this ctx) (->tile position))]
+    (when-let [cell (get (world-grid-k ctx) (->tile position))]
       (filter #(point-in-rect? position @%)
               (:entities @cell)))))
 
 (defn- grid-add-entity! [ctx entity]
-  (let [grid (this ctx)]
+  (let [grid (world-grid-k ctx)]
     (set-cells! grid entity)
     (when (:collides? @entity)
       (set-occupied-cells! grid entity))))
 
 (defn- grid-remove-entity! [ctx entity]
-  (let [grid (this ctx)]
+  (let [grid (world-grid-k ctx)]
     (remove-from-cells! entity)
     (when (:collides? @entity)
       (remove-from-occupied-cells! entity))))
 
 (defn- grid-entity-position-changed! [ctx entity]
-  (let [grid (this ctx)] (remove-from-cells! entity)
+  (let [grid (world-grid-k ctx)]
+    (remove-from-cells! entity)
     (set-cells! grid entity)
     (when (:collides? @entity)
       (remove-from-occupied-cells! entity)
