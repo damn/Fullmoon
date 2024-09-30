@@ -14,8 +14,13 @@
 
  (print-app-values-tree)
 
+ ; We mostly want to know abouts txs, entity and schema
+ ; the rest not so important?
+
  (print-txs "txs.md")
+
  (print-components "components.md")
+
  (spit-out "data-components.md" (data-components))
 
  ; TODO items dont refresh on clicking tab -!
