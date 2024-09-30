@@ -5,7 +5,7 @@
             [data.grid2d :as g])
   (:load "world/helper"
          "world/modules"
-         "world/caves"
+
          "world/areas"
          "world/generators"
          "world/cached_renderer"
