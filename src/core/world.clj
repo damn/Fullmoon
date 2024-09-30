@@ -8,10 +8,6 @@
          "world/generators"
          "world/cached_renderer"
          "world/editor_screen"
-         ; used @ txs ...
-         "world/grid"
-         "world/content_grid"
-         ;
          "world/spawn"
          "world/widgets"))
 
