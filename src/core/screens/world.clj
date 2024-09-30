@@ -2,6 +2,33 @@
 
 (load "screens/world/debug_render")
 
+; add player-entity* to language
+; => have process with steps for changing core language names
+
+(defn- calculate-mouseover-entity [ctx]
+  (let [player-entity* (player-entity* ctx)
+        hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
+                     (map deref
+                          (point->entities ctx
+                                           (world-mouse-position ctx))))]
+    (->> entity/render-order
+         (entity/sort-by-order hits :z-order)
+         reverse
+         (filter #(entity/line-of-sight? ctx player-entity* %))
+         first
+         :entity/id)))
+
+(defn- update-mouseover-entity [ctx]
+  (let [entity (if (mouse-on-actor? ctx)
+                 nil
+                 (calculate-mouseover-entity ctx))]
+    [(when-let [old-entity (:context/mouseover-entity ctx)]
+       [:e/dissoc old-entity :entity/mouseover?])
+     (when entity
+       [:e/assoc entity :entity/mouseover? true])
+     (fn [ctx]
+       (assoc ctx :context/mouseover-entity entity))]))
+
 (def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-unpaused? []
@@ -25,7 +52,7 @@
 
 (defn- game-loop [ctx]
   (effect! ctx [player-update-state
-                entity/update-mouseover-entity ; this do always so can get debug info even when game not running
+                update-mouseover-entity ; this do always so can get debug info even when game not running
                 update-game-paused
                 #(if (:context/paused? %)
                    %

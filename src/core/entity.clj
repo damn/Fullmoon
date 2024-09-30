@@ -24,30 +24,6 @@
          "entity/inventory"   ; -> Creature?
          ))
 
-(defn- calculate-mouseover-entity [ctx]
-  (let [player-entity* (player-entity* ctx)
-        hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
-                     (map deref
-                          (point->entities ctx
-                                           (world-mouse-position ctx))))]
-    (->> render-order
-         (sort-by-order hits :z-order)
-         reverse
-         (filter #(line-of-sight? ctx player-entity* %))
-         first
-         :entity/id)))
-
-(defn update-mouseover-entity [ctx]
-  (let [entity (if (mouse-on-actor? ctx)
-                 nil
-                 (calculate-mouseover-entity ctx))]
-    [(when-let [old-entity (:context/mouseover-entity ctx)]
-       [:e/dissoc old-entity :entity/mouseover?])
-     (when entity
-       [:e/assoc entity :entity/mouseover? true])
-     (fn [ctx]
-       (assoc ctx :context/mouseover-entity entity))]))
-
 (defsystem enter "FIXME" [_ ctx])
 (defmethod enter :default [_ ctx])
 

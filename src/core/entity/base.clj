@@ -3,7 +3,7 @@
 (defn- define-order [order-k-vector]
   (apply hash-map (interleave order-k-vector (range))))
 
-(defn- sort-by-order [coll get-item-order-k order]
+(defn sort-by-order [coll get-item-order-k order]
   (sort-by #((get-item-order-k %) order) < coll))
 
 #_(defn order-contains? [order k]
@@ -60,7 +60,7 @@
                          :z-order/flying
                          :z-order/effect])
 
-(def ^:private render-order (define-order z-orders))
+(def render-order (define-order z-orders))
 
 (defrecord Entity [position
                    left-bottom
