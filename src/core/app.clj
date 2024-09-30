@@ -2,7 +2,6 @@
   (:require [clojure.gdx :refer :all]
             core.config
             core.creature
-            [core.entity :as entity]
             core.stat
             [core.world :as world])
   (:load "screens/minimap"

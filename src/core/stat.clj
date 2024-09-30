@@ -1,7 +1,6 @@
 (ns core.stat
   (:require [clojure.gdx :refer :all]
-            [clojure.string :as str]
-            [core.entity :refer :all]))
+            [clojure.string :as str]))
 
 (defn- defmodifier [k operations]
   (defcomponent* k {:data [:map-optional operations]}))
@@ -94,7 +93,7 @@
   {:data :number
    :modifier-ops [:op/inc]})
 
-(extend-type core.entity.Entity
+(extend-type clojure.gdx.Entity
   Stats
   (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]

@@ -2,8 +2,7 @@
   (:require [clojure.gdx :refer :all :exclude [visible?]]
             [clojure.gdx.tiled :refer :all]
             [clojure.string :as str]
-            [data.grid2d :as g]
-            [core.entity :as entity])
+            [data.grid2d :as g])
   (:load "world/helper"
          "world/modules"
          "world/caves"

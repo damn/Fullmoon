@@ -1,6 +1,5 @@
 (ns dev.experiment
-  (:require [clojure.gdx :refer :all]
-            [core.entity :refer :all]))
+  (:require [clojure.gdx :refer :all]))
 (comment
 
  (post-runnable! (show-tree-view! :ctx))

@@ -1,8 +1,7 @@
 (ns core.creature
   (:require [clojure.gdx :refer :all]
             [clojure.string :as str]
-            [reduce-fsm :as fsm]
-            [core.entity :refer :all]))
+            [reduce-fsm :as fsm]))
 
 (def-type :properties/creatures
   {:schema [:entity/body
@@ -147,7 +146,7 @@
   (info-text [[_ fsm] _ctx]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(extend-type core.entity.Entity
+(extend-type clojure.gdx.Entity
   State
   (entity-state [entity*]
     (-> entity* :entity/state :state))
