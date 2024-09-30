@@ -106,6 +106,11 @@
 ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
 ; -> and after each 'build' I can have a bash script which uploads the components go github
 
+; => component-attributes private
+; => move component docs in here
+; => I need also an internal documentation ??
+; of private fns?!
+
 (defn- print-txs [file]
   (spit file
         (binding [*print-level* nil]
@@ -135,7 +140,7 @@
 (defn- data-components []
   (sort
    (concat
-    (keys (methods ->value))
+    (keys (methods @#'clojure.gdx/->value))
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))
