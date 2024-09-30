@@ -36,7 +36,7 @@
                      & {:keys [transition?
                                transition-neighbor?]}]
   (let [idxvalue (if transition?
-                   (transition-idx-value unscaled-position transition-neighbor?)
+                   (t/transition-idx-value unscaled-position transition-neighbor?)
                    floor-idxvalue)
         tiled-map-positions (module-index->tiled-map-positions
                              (if transition?
@@ -73,6 +73,4 @@
                                                                     (get unscaled-grid %))))
                             scaled-grid
                             unscaled-transition-positions)]
-    (grid->tiled-map modules-tiled-map scaled-grid)))
-
-
+    (t/grid->tiled-map modules-tiled-map scaled-grid)))

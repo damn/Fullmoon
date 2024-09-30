@@ -50,8 +50,8 @@ direction keys: move")
             (let [level (get area-level-grid tile)]
               (when (number? level)
                 (str "Area level:" level))))
-          (str "Movement properties " (movement-property tiled-map tile) "\n"
-               (apply vector (movement-properties tiled-map tile)))]
+          (str "Movement properties " (t/movement-property tiled-map tile) "\n"
+               (apply vector (t/movement-properties tiled-map tile)))]
          (remove nil?)
          (str/join "\n"))))
 
@@ -107,7 +107,7 @@ direction keys: move")
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
-              :let [movement-property (movement-property tiled-map [x y])]]
+              :let [movement-property (t/movement-property tiled-map [x y])]]
         (draw-filled-circle g [(+ x 0.5) (+ y 0.5)] 0.08 :black)
         (draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
                             0.05

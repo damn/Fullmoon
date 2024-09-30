@@ -25,7 +25,7 @@
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
-    (case (movement-property tiled-map position)
+    (case (t/movement-property tiled-map position)
       "none" :none
       "air"  :air
       "all"  :all)))

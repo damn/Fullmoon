@@ -4,8 +4,8 @@
 ; TODO can use different turn-ratio/depth/etc. params
 ; (printgrid (:grid (->cave-grid :size 800)))
 (defn- ->cave-grid [& {:keys [size]}]
-  (let [{:keys [start grid]} (cave-gridgen (java.util.Random.) size size :wide)
-        grid (fix-not-allowed-diagonals grid)]
+  (let [{:keys [start grid]} (t/cave-gridgen (java.util.Random.) size size :wide)
+        grid (t/fix-not-allowed-diagonals grid)]
     (assert (= #{:wall :ground} (set (g/cells grid))))
     {:start start
      :grid grid}))
@@ -40,11 +40,11 @@
                       (mapcat g/get-8-neighbour-positions
                               next-positions)))
              (concat filled next-positions)
-             (assoc-ks grid next-positions nil))
+             (t/assoc-ks grid next-positions nil))
       filled)))
 
 (comment
- (let [{:keys [start grid]} (->cave-grid :size 15)
+ (let [{:keys [start grid]} (t/->cave-grid :size 15)
        _ (println "BASE GRID:\n")
        _ (printgrid grid)
        ;_ (println)
@@ -103,30 +103,30 @@
                    (= #{:ground :transition} (set (g/cells grid))))
                   (str "(set (g/cells grid)): " (set (g/cells grid))))
         scale modules-scale
-        scaled-grid (scale-grid grid scale)
+        scaled-grid (t/scale-grid grid scale)
         tiled-map (place-modules (t/load-map modules-file)
                                  scaled-grid
                                  grid
                                  (filter #(= :ground     (get grid %)) (g/posis grid))
                                  (filter #(= :transition (get grid %)) (g/posis grid)))
         start-position (mapv * start scale)
-        can-spawn? #(= "all" (movement-property tiled-map %))
+        can-spawn? #(= "all" (t/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
         spawn-positions (flood-fill scaled-grid start-position can-spawn?)
         ;_ (println "scaled grid with filled nil: '?' \n")
         ;_ (printgrid (reduce #(assoc %1 %2 nil) scaled-grid spawn-positions))
         ;_ (println "\n")
-        {:keys [steps area-level-grid]} (->area-level-grid :grid grid
-                                                           :start start
-                                                           :max-level max-area-level
-                                                           :walk-on #{:ground :transition})
+        {:keys [steps area-level-grid]} (t/->area-level-grid :grid grid
+                                                             :start start
+                                                             :max-level max-area-level
+                                                             :walk-on #{:ground :transition})
         ;_ (printgrid area-level-grid)
         _ (assert (or
                    (= (set (concat [max-area-level] (range max-area-level)))
                       (set (g/cells area-level-grid)))
                    (= (set (concat [:wall max-area-level] (range max-area-level)))
                       (set (g/cells area-level-grid)))))
-        scaled-area-level-grid (scale-grid area-level-grid scale)
+        scaled-area-level-grid (t/scale-grid area-level-grid scale)
         get-free-position-in-area-level (fn [area-level]
                                           (rand-nth
                                            (filter
@@ -141,7 +141,7 @@
      :area-level-grid scaled-area-level-grid}))
 
 (defn uf-transition [position grid]
-  (transition-idx-value position (= :transition (get grid position))))
+  (t/transition-idx-value position (= :transition (get grid position))))
 
 (defn rand-0-3 []
   (get-rand-weighted-item {0 60 1 1 2 1 3 1}))
@@ -232,7 +232,7 @@
         ;_ (printgrid grid)
         ;_ (println)
         scale uf-caves-scale
-        grid (scalegrid grid scale)
+        grid (t/scalegrid grid scale)
         ;_ (printgrid grid)
         ;_ (println)
         start-position (mapv #(* % scale) start)
@@ -254,9 +254,8 @@
                                          (->transition-tile ctx transition-idx)
                                          (->wall-tile ctx wall-idx))
                            :ground (->ground-tile ctx ground-idx)))
-        tiled-map (wgt-grid->tiled-map grid position->tile)
-
-        can-spawn? #(= "all" (movement-property tiled-map %))
+        tiled-map (t/wgt-grid->tiled-map grid position->tile)
+        can-spawn? #(= "all" (t/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
         spawn-positions (flood-fill grid start-position can-spawn?)
         ]
