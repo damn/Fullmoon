@@ -17,7 +17,17 @@
          "world/grid"
          "world/content_grid"
          "world/spawn"
-         "world/time"))
+         "world/widgets"))
+
+(defn- ->world-time []
+  {:elapsed 0
+   :logic-frame 0})
+
+(defn update-time [ctx delta]
+  (update ctx :context/time #(-> %
+                                 (assoc :delta-time delta)
+                                 (update :elapsed + delta)
+                                 (update :logic-frame inc))))
 
 (defn- ->explored-tile-corners [width height]
   (atom (g/create-grid width height (constantly false))))
@@ -50,9 +60,9 @@
     (let [tiled-level (generate-level ctx world-property-id)]
       (-> ctx
           (dissoc :context/entity-tick-error)
-          (create-into {:context/ecs true
-                        :context/time true
-                        :context/widgets true})
+          (assoc :context/ecs (entity/->uids-entities)
+                 :context/time (->world-time)
+                 :context/widgets (->world-widgets ctx))
           (merge (->world-map tiled-level))
           (spawn-creatures! tiled-level)))))
 

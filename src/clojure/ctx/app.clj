@@ -10,7 +10,7 @@
   (->mk [_ _ctx]
     (get configs tag)))
 
-(defn create-into
+(defn- create-into
   "For every component `[k v]`  `(->mk [k v] ctx)` is non-nil
   or false, assoc's at ctx k v"
   [ctx components]

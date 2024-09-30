@@ -1,4 +1,4 @@
-(in-ns 'core.app)
+(in-ns 'core.world)
 
 (defn- render-infostr-on-bar [g infostr x y h]
   (draw-text g {:text infostr
@@ -236,11 +236,10 @@
    (->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
 
-(defcomponent :context/widgets
-  (->mk [_ ctx]
-    (let [widget-data {:action-bar (->action-bar-button-group)
-                       :slot->background (entity/->inventory-window-data ctx)}
-          stage (stage-get ctx)]
-      (s-clear! stage)
-      (run! #(s-add! stage %) (->ui-actors ctx widget-data))
-      widget-data)))
+(defn ->world-widgets [ctx]
+  (let [widget-data {:action-bar (->action-bar-button-group)
+                     :slot->background (entity/->inventory-window-data ctx)}
+        stage (stage-get ctx)]
+    (s-clear! stage)
+    (run! #(s-add! stage %) (->ui-actors ctx widget-data))
+    widget-data))

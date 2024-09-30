@@ -189,11 +189,8 @@
                                render-above
                                render-info])
 
-;;;; to world ctx?
-
-(defcomponent :context/ecs
-  (->mk [_ _ctx]
-    {}))
+(defn ->uids-entities []
+  {})
 
 (defn- entities [ctx] (:context/ecs ctx)) ; dangerous name!
 
@@ -276,7 +273,6 @@
   (do! [[_ entity ks f] ctx]
     (swap! entity update-in ks f)
     ctx))
-
 
 (def ^:private ^:dbg-flag show-body-bounds false)
 

@@ -1,7 +1,6 @@
 (in-ns 'core.app)
 
 (load "screens/world/debug_render")
-(load "screens/world/widgets")
 
 (def ^:private ^:dbg-flag pausing? true)
 
