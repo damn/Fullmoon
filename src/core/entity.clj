@@ -1,7 +1,6 @@
 (ns core.entity
   (:require [clj-commons.pretty.repl :refer [pretty-pst]]
             [clojure.gdx :refer :all]
-            [clojure.ctx :refer :all]
             [clojure.string :as str]
             [data.grid2d :as grid2d]
             [malli.core :as m])

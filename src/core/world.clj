@@ -1,6 +1,5 @@
 (ns ^:no-doc core.world
-  (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all :exclude [visible?]]
+  (:require [clojure.gdx :refer :all :exclude [visible?]]
             [clojure.gdx.tiled :refer :all]
             [clojure.string :as str]
             [data.grid2d :as g]
@@ -52,7 +51,7 @@
      content-grid (->content-grid :cell-size 16 :width w :height h)
      :context/explored-tile-corners (->explored-tile-corners w h)}))
 
-(extend-type clojure.ctx.Context
+(extend-type clojure.gdx.Context
   WorldContext
   (add-world-ctx [ctx world-property-id]
     (when-let [tiled-map (:context/tiled-map ctx)]

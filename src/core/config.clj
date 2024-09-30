@@ -1,6 +1,5 @@
 (ns core.config
-  (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]))
+  (:require [clojure.gdx :refer :all]))
 
 (def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
 
@@ -10,7 +9,7 @@
   (info-text [_ _ctx]
     (str "[ITEM_GOLD]"value"[]")))
 
-(.bindRoot #'clojure.ctx/info-text-k-order
+(.bindRoot #'clojure.gdx/info-text-k-order
            [:property/pretty-name
             :skill/action-time-modifier-key
             :skill/action-time
@@ -26,7 +25,7 @@
             :maxrange
             :entity-effects])
 
-(.bindRoot #'clojure.ctx/property-k-sort-order
+(.bindRoot #'clojure.gdx/property-k-sort-order
            [:property/id
             :property/pretty-name
             :app/lwjgl3

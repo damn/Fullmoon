@@ -1,6 +1,5 @@
 (ns core.creature
-  (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.string :as str]
             [reduce-fsm :as fsm]
             [core.entity :refer :all]))
@@ -331,7 +330,7 @@
     (when (world-item? ctx)
       (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
 
-(extend-type clojure.ctx.Graphics
+(extend-type clojure.gdx.Graphics
   DrawItemOnCursor
   (draw-item-on-cursor [g ctx]
     (let [player-entity* (player-entity* ctx)]
@@ -394,7 +393,7 @@
 (defn- p-state-obj [ctx]
   (-> ctx player-entity* state-obj))
 
-(extend-type clojure.ctx.Context
+(extend-type clojure.gdx.Context
   Player
   (player-entity  [ctx]  (ctx-player ctx))
   (player-entity* [ctx] @(ctx-player ctx))

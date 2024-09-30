@@ -17,7 +17,7 @@
   (set-state [this is-selected]
     (.bindRoot avar is-selected)))
 
-; TODO not using clojure.ctx ns ... only core
+; TODO not using clojure.gdx ns ... only core
 
 (defn- debug-flags [] ;
   (apply concat

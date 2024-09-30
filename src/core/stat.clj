@@ -1,6 +1,5 @@
 (ns core.stat
-  (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.string :as str]
             [core.entity :refer :all]))
 

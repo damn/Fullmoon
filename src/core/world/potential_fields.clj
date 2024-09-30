@@ -268,7 +268,7 @@
   (doseq [[faction max-iterations] factions-iterations]
     (update-faction-potential-field grid faction entities max-iterations)))
 
-(extend-type clojure.ctx.Context
+(extend-type clojure.gdx.Context
   Pathfinding
   (potential-fields-follow-to-enemy [{:keys [context/grid]} entity]
     (potential-field-follow-to-enemy* grid entity)))

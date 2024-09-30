@@ -1,6 +1,5 @@
 (ns core.app
-  (:require [clojure.ctx :refer :all]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             core.config
             core.creature
             [core.entity :as entity]

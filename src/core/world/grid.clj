@@ -79,7 +79,7 @@
 
 (def ^:private world-grid-k :context/grid)
 
-(extend-type clojure.ctx.Context
+(extend-type clojure.gdx.Context
   GridPointEntities
   (point->entities [ctx position]
     (when-let [cell (get (world-grid-k ctx) (->tile position))]

@@ -3,19 +3,11 @@
 
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.github.damn/clojure.gdx "-SNAPSHOT"]
-                 [metosin/malli "0.13.0"]
-                 [reduce-fsm "0.1.4"]
-
                  ; this is already dependency in clojure.gdx
                  ; but if I remove it lein codox does not work anymore
-                 [org.clojure/tools.namespace "1.3.0"]
-
-                 [metadoc "0.2.9"]]
-
+                 [org.clojure/tools.namespace "1.3.0"]]
   :plugins [[lein-hiera "2.0.0"]
             [lein-codox "0.10.8"]]
-
-  :java-source-paths ["java-src"]
   :target-path "target/%s/" ; https://stackoverflow.com/questions/44246924/clojure-tools-namespace-refresh-fails-with-no-namespace-foo
   :uberjar-name "cdq_3.jar"
   :omit-source true

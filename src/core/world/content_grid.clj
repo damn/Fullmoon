@@ -29,7 +29,7 @@
          (keep grid)
          (mapcat (comp :entities deref)))))
 
-(extend-type clojure.ctx.Context
+(extend-type clojure.gdx.Context
   ActiveEntities
   (active-entities [ctx]
     (active-entities* ctx (player-entity* ctx))))

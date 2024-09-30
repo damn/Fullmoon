@@ -31,7 +31,7 @@
         target2 (v-add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
-(extend-type clojure.ctx.Context
+(extend-type clojure.gdx.Context
   PRayCaster
   (ray-blocked? [{:keys [context/raycaster]} start target]
     (fast-ray-blocked? raycaster start target))
