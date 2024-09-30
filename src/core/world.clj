@@ -19,22 +19,28 @@
          "world/spawn"
          "world/time"))
 
+(defn- ->explored-tile-corners [width height]
+  (atom (g/create-grid width height (constantly false))))
+
+(defn- world-grid-position->value-fn [tiled-map]
+  (fn [position]
+    (case (movement-property tiled-map position)
+      "none" :none
+      "air"  :air
+      "all"  :all)))
+
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
-; done at module-gen? but not custom tiledmap?
-(defn- ->world-map [{:keys [tiled-map start-position]}] ; == one object make ?! like graphics?
-  ; grep context/grid -> all dependent stuff?
-  (create-into {:context/tiled-map tiled-map
-                :context/start-position start-position}
-               {:context/grid [(width  tiled-map)
-                               (height tiled-map)
-                               #(case (movement-property tiled-map %)
-                                  "none" :none
-                                  "air"  :air
-                                  "all"  :all)]
-                :context/raycaster blocks-vision?
-                content-grid [16 16]
-                :context/explored-tile-corners true}))
+(defn- ->world-map [{:keys [tiled-map start-position]}]
+  (let [w (width  tiled-map)
+        h (height tiled-map)
+        grid (->world-grid w h (world-grid-position->value-fn tiled-map))]
+    {:context/tiled-map tiled-map
+     :context/start-position start-position
+     :context/grid grid
+     :context/raycaster (->raycaster grid blocks-vision?)
+     content-grid (->content-grid :cell-size 16 :width w :height h)
+     :context/explored-tile-corners (->explored-tile-corners w h)}))
 
 (extend-type clojure.ctx.Context
   WorldContext

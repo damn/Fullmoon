@@ -34,16 +34,14 @@
   (active-entities [ctx]
     (active-entities* ctx (player-entity* ctx))))
 
-(defcomponent content-grid
-  {:let [cell-w cell-h]}
-  (->mk [_ {:keys [context/grid]}]
-    {:grid (g/create-grid (inc (int (/ (g/width grid) cell-w))) ; inc because corners
-                               (inc (int (/ (g/height grid) cell-h)))
-                               (fn [idx]
-                                 (atom {:idx idx,
-                                        :entities #{}})))
-     :cell-w cell-w
-     :cell-h cell-h}))
+(defn ->content-grid [& {:keys [cell-size width height]}]
+  {:grid (g/create-grid (inc (int (/ width cell-size))) ; inc because corners
+                        (inc (int (/ height cell-size)))
+                        (fn [idx]
+                          (atom {:idx idx,
+                                 :entities #{}})))
+   :cell-w cell-size
+   :cell-h cell-size})
 
 (comment
 

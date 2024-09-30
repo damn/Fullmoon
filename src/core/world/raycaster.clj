@@ -4,16 +4,15 @@
   (let [[x y] (:position cell*)]
     (aset arr x y (boolean (cell*->blocked? cell*)))))
 
-(defcomponent :context/raycaster
-  (->mk [[_ position->blocked?] {:keys [context/grid]}]
-    (let [width  (g/width  grid)
-          height (g/height grid)
-          arr (make-array Boolean/TYPE width height)]
-      (doseq [cell (g/cells grid)]
-        (set-arr arr @cell position->blocked?))
-      (map->ArrRayCaster {:arr arr
-                          :width width
-                          :height height}))))
+(defn ->raycaster [grid position->blocked?]
+  (let [width  (g/width  grid)
+        height (g/height grid)
+        arr (make-array Boolean/TYPE width height)]
+    (doseq [cell (g/cells grid)]
+      (set-arr arr @cell position->blocked?))
+    (map->ArrRayCaster {:arr arr
+                        :width width
+                        :height height})))
 
 ; TO math.... // not tested
 (defn- create-double-ray-endpositions

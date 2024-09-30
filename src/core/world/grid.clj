@@ -143,8 +143,7 @@
     :entities #{}
     :occupied #{}}))
 
-(defcomponent this
-  (->mk [[_ [width height position->value]] _world]
-    (g/create-grid width
-                   height
-                   #(atom (create-cell % (position->value %))))))
+(defn ->world-grid [width height position->value]
+  (g/create-grid width
+                 height
+                 #(atom (create-cell % (position->value %)))))

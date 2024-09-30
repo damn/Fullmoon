@@ -26,12 +26,6 @@
   (->mk [_ _ctx]
     (memoize ->tiled-map-renderer)))
 
-(defcomponent :context/explored-tile-corners
-  (->mk [_ {:keys [context/grid]}]
-    (atom (g/create-grid (g/width grid)
-                         (g/height grid)
-                         (constantly false)))))
-
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
 
 (def ^:private ^:dbg-flag see-all-tiles? false)
