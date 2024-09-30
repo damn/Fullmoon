@@ -3,13 +3,12 @@
             [clojure.gdx.tiled :as t]
             [clojure.string :as str]
             [data.grid2d :as g])
-  (:load "world/helper"
-         "world/modules"
-         "world/generators"
-         "world/cached_renderer"
-         "world/editor_screen"
-         "world/spawn"
-         "world/widgets"))
+  (:load "world/modules" ; very specific and hardcoded stuff
+         "world/generators" ; unfinished
+         "world/cached_renderer" ; move ?
+         "world/editor_screen" ; move, but very raw
+         "world/spawn" ; ?
+         "world/widgets")) ; ?
 
 (defn- ->world-time []
   {:elapsed 0
