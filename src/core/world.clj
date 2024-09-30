@@ -5,13 +5,13 @@
             [data.grid2d :as g])
   (:load "world/helper"
          "world/modules"
-         "world/areas"
          "world/generators"
          "world/cached_renderer"
          "world/editor_screen"
          ; used @ txs ...
          "world/grid"
          "world/content_grid"
+         ;
          "world/spawn"
          "world/widgets"))
 
