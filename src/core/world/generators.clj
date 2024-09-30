@@ -68,14 +68,14 @@
    (fn [{:keys [property/id] :as prop}]
      (assert id)
      (let [image (prop->image prop)
-           tile (->static-tiled-map-tile (:texture-region image))]
-       (put! (m-props tile) "id" id)
+           tile (t/->static-tiled-map-tile (:texture-region image))]
+       (t/put! (t/m-props tile) "id" id)
        tile))))
 
 (def ^:private spawn-creatures? true)
 
 (defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
-  (let [layer (add-layer! tiled-map :name "creatures" :visible false)
+  (let [layer (t/add-layer! tiled-map :name "creatures" :visible false)
         creature-properties (all-properties context :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
@@ -84,7 +84,7 @@
                          (<= (rand) spawn-rate))]
         (let [creatures (creatures-with-level creature-properties area-level)]
           (when (seq creatures)
-            (set-tile! layer position (creature->tile (rand-nth creatures)))))))))
+            (t/set-tile! layer position (creature->tile (rand-nth creatures)))))))))
 
 (defn generate-modules
   "The generated tiled-map needs to be disposed."
@@ -104,7 +104,7 @@
                   (str "(set (g/cells grid)): " (set (g/cells grid))))
         scale modules-scale
         scaled-grid (scale-grid grid scale)
-        tiled-map (place-modules (load-map modules-file)
+        tiled-map (place-modules (t/load-map modules-file)
                                  scaled-grid
                                  grid
                                  (filter #(= :ground     (get grid %)) (g/posis grid))
@@ -133,7 +133,7 @@
                                             (fn [p]
                                               (and (= area-level (get scaled-area-level-grid p))
                                                    (#{:no-cell :undefined}
-                                                    (property-value tiled-map :creatures p :id))))
+                                                    (t/property-value tiled-map :creatures p :id))))
                                             spawn-positions)))]
     (place-creatures! context spawn-rate tiled-map spawn-positions scaled-area-level-grid)
     {:tiled-map tiled-map
@@ -167,7 +167,7 @@
 ; can use different algorithms(e.g. cave, module-gen-uf-terrain, room-gen? , differnt cave algorithm ...)
 
 (defn- uf-place-creatures! [context spawn-rate tiled-map spawn-positions]
-  (let [layer (add-layer! tiled-map :name "creatures" :visible false)
+  (let [layer (t/add-layer! tiled-map :name "creatures" :visible false)
         creatures (all-properties context :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
@@ -175,14 +175,14 @@
     ;(println "Creatures with level: " (count creatures))
     (doseq [position spawn-positions
             :when (<= (rand) spawn-rate)]
-      (set-tile! layer position (creature->tile (rand-nth creatures))))))
+      (t/set-tile! layer position (creature->tile (rand-nth creatures))))))
 
 (def ^:private ->tm-tile
   (memoize
    (fn ->tm-tile [texture-region movement]
      {:pre [#{"all" "air" "none"} movement]}
-     (let [tile (->static-tiled-map-tile texture-region)]
-       (put! (m-props tile) "movement" movement)
+     (let [tile (t/->static-tiled-map-tile texture-region)]
+       (t/put! (t/m-props tile) "movement" movement)
        tile))))
 
 (def ^:private sprite-size 48)
@@ -294,7 +294,7 @@
 (defmulti generate (fn [_ctx world] (:world/generator world)))
 
 (defmethod generate :world.generator/tiled-map [ctx world]
-  {:tiled-map (load-map (:world/tiled-map world))
+  {:tiled-map (t/load-map (:world/tiled-map world))
    :start-position [32 71]})
 
 (defmethod generate :world.generator/modules [ctx world]

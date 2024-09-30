@@ -11,15 +11,15 @@
     :as ctx}
    tiled-map
    color-setter]
-  (render-tm! (cached-map-renderer g tiled-map)
-              color-setter
-              (world-camera ctx)
-              tiled-map))
+  (t/render-tm! (cached-map-renderer g tiled-map)
+                color-setter
+                (world-camera ctx)
+                tiled-map))
 
 (defn ->tiled-map-renderer [{:keys [batch] :as g} tiled-map]
-  (->orthogonal-tiled-map-renderer tiled-map
-                                   (world-unit-scale g)
-                                   batch))
+  (t/->orthogonal-tiled-map-renderer tiled-map
+                                     (world-unit-scale g)
+                                     batch))
 
 (defcomponent :context/tiled-map-renderer
   {:data :some}

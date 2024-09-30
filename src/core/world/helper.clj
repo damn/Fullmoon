@@ -5,24 +5,24 @@
 ; lazy seqs??
 
 (defn- tile-movement-property [tiled-map layer position]
-  (let [value (property-value tiled-map layer position :movement)]
+  (let [value (t/property-value tiled-map layer position :movement)]
     (assert (not= value :undefined)
             (str "Value for :movement at position "
                  position  " / mapeditor inverted position: " [(position 0)
-                                                               (- (dec (height tiled-map))
+                                                               (- (dec (t/height tiled-map))
                                                                   (position 1))]
-                 " and layer " (layer-name layer) " is undefined."))
+                 " and layer " (t/layer-name layer) " is undefined."))
     (when-not (= :no-cell value)
       value)))
 
 (defn- movement-property-layers [tiled-map]
-  (filter #(get-property % :movement-properties)
+  (filter #(t/get-property % :movement-properties)
           (reverse
-           (layers tiled-map))))
+           (t/layers tiled-map))))
 
 (defn movement-properties [tiled-map position]
   (for [layer (movement-property-layers tiled-map)]
-    [(layer-name layer)
+    [(t/layer-name layer)
      (tile-movement-property tiled-map layer position)]))
 
 (defn movement-property [tiled-map position]
@@ -35,40 +35,40 @@
   "Creates an empty new tiled-map with same layers and properties as schema-tiled-map.
   The size of the map is as of the grid, which contains also the tile information from the schema-tiled-map."
   [schema-tiled-map grid]
-  (let [tiled-map (->empty-tiled-map)
-        properties (m-props tiled-map)]
-    (put-all! properties (m-props schema-tiled-map))
-    (put! properties "width"  (g/width  grid))
-    (put! properties "height" (g/height grid))
-    (doseq [layer (layers schema-tiled-map)
-            :let [new-layer (add-layer! tiled-map
-                                        :name (layer-name layer)
-                                        :visible (visible? layer)
-                                        :properties (m-props layer))]]
+  (let [tiled-map (t/->empty-tiled-map)
+        properties (t/m-props tiled-map)]
+    (t/put-all! properties (t/m-props schema-tiled-map))
+    (t/put! properties "width"  (g/width  grid))
+    (t/put! properties "height" (g/height grid))
+    (doseq [layer (t/layers schema-tiled-map)
+            :let [new-layer (t/add-layer! tiled-map
+                                          :name (t/layer-name layer)
+                                          :visible (t/visible? layer)
+                                          :properties (t/m-props layer))]]
       (doseq [position (g/posis grid)
               :let [local-position (get grid position)]
               :when local-position]
         (when (vector? local-position)
-          (when-let [cell (cell-at schema-tiled-map layer local-position)]
-            (set-tile! new-layer
-                       position
-                       (copy-tile (cell->tile cell)))))))
+          (when-let [cell (t/cell-at schema-tiled-map layer local-position)]
+            (t/set-tile! new-layer
+                         position
+                         (t/copy-tile (t/cell->tile cell)))))))
     tiled-map))
 
 (defn wgt-grid->tiled-map [grid position->tile]
-  (let [tiled-map (->empty-tiled-map)
-        properties (m-props tiled-map)]
-    (put! properties "width"  (g/width  grid))
-    (put! properties "height" (g/height grid))
-    (put! properties "tilewidth" 48)
-    (put! properties "tileheight" 48)
-    (let [layer (add-layer! tiled-map :name "ground" :visible true)
-          properties (m-props layer)]
-      (put! properties "movement-properties" true)
+  (let [tiled-map (t/->empty-tiled-map)
+        properties (t/m-props tiled-map)]
+    (t/put! properties "width"  (g/width  grid))
+    (t/put! properties "height" (g/height grid))
+    (t/put! properties "tilewidth" 48)
+    (t/put! properties "tileheight" 48)
+    (let [layer (t/add-layer! tiled-map :name "ground" :visible true)
+          properties (t/m-props layer)]
+      (t/put! properties "movement-properties" true)
       (doseq [position (g/posis grid)
               :let [value (get grid position)
-                    cell (cell-at tiled-map layer position)]]
-        (set-tile! layer position (position->tile position))))
+                    cell (t/cell-at tiled-map layer position)]]
+        (t/set-tile! layer position (position->tile position))))
     tiled-map))
 
 (defn assoc-ks [m ks v]

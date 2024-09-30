@@ -21,7 +21,7 @@
    :components player-components})
 
 (defn- world->enemy-creatures [{:keys [context/tiled-map]}]
-  (for [[position creature-id] (positions-with-property tiled-map :creatures :id)]
+  (for [[position creature-id] (t/positions-with-property tiled-map :creatures :id)]
     {:position position
      :creature-id (keyword creature-id)
      :components npc-components}))

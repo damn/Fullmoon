@@ -59,9 +59,9 @@
                      unscaled-grid
                      unscaled-floor-positions
                      unscaled-transition-positions]
-  (let [_ (assert (and (= (width modules-tiled-map)
+  (let [_ (assert (and (= (t/width modules-tiled-map)
                           (* number-modules-x (+ module-width module-offset-tiles)))
-                       (= (height modules-tiled-map)
+                       (= (t/height modules-tiled-map)
                           (* number-modules-y (+ module-height module-offset-tiles)))))
         scaled-grid (reduce (fn [scaled-grid unscaled-position]
                               (place-module scaled-grid unscaled-position :transition? false))

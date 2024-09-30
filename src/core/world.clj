@@ -1,6 +1,6 @@
-(ns ^:no-doc core.world
-  (:require [clojure.gdx :refer :all :exclude [visible?]]
-            [clojure.gdx.tiled :refer :all]
+(ns core.world
+  (:require [clojure.gdx :refer :all]
+            [clojure.gdx.tiled :as t]
             [clojure.string :as str]
             [data.grid2d :as g])
   (:load "world/helper"
@@ -40,8 +40,8 @@
 ; TODO https://github.com/damn/core/issues/57
 ; (check-not-allowed-diagonals grid)
 (defn- ->world-map [{:keys [tiled-map start-position]}]
-  (let [w (width  tiled-map)
-        h (height tiled-map)
+  (let [w (t/width  tiled-map)
+        h (t/height tiled-map)
         grid (->world-grid w h (world-grid-position->value-fn tiled-map))]
     {:context/tiled-map tiled-map
      :context/start-position start-position

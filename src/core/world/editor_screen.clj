@@ -11,13 +11,13 @@
 
 (defn- show-whole-map! [camera tiled-map]
   (camera-set-position! camera
-                        [(/ (width  tiled-map) 2)
-                         (/ (height tiled-map) 2)])
+                        [(/ (t/width  tiled-map) 2)
+                         (/ (t/height tiled-map) 2)])
   (set-zoom! camera
              (calculate-zoom camera
                              :left [0 0]
-                             :top [0 (height tiled-map)]
-                             :right [(width tiled-map) 0]
+                             :top [0 (t/height tiled-map)]
+                             :right [(t/width tiled-map) 0]
                              :bottom [0 0])))
 
 (defn- current-data [ctx]
@@ -45,7 +45,7 @@ direction keys: move")
                                  (world-mouse-position ctx)
                                  [module-width module-height])))
           (when area-level-grid
-            (str "Creature id: " (property-value tiled-map :creatures tile :id)))
+            (str "Creature id: " (t/property-value tiled-map :creatures tile :id)))
           (when area-level-grid
             (let [level (get area-level-grid tile)]
               (when (number? level)
@@ -116,7 +116,7 @@ direction keys: move")
                               "air"   :orange
                               "none"  :red))))
     (when show-grid-lines
-      (draw-grid g 0 0 (width  tiled-map) (height tiled-map) 1 1 [1 1 1 0.5]))))
+      (draw-grid g 0 0 (t/width  tiled-map) (t/height tiled-map) 1 1 [1 1 1 0.5]))))
 
 (def ^:private world-id :worlds/modules)
 
@@ -130,7 +130,7 @@ direction keys: move")
            ;:area-level-grid area-level-grid
            :start-position start-position)
     (show-whole-map! (world-camera context) tiled-map)
-    (.setVisible (get-layer tiled-map "creatures") true)
+    (.setVisible (t/get-layer tiled-map "creatures") true)
     context))
 
 (defn ->generate-map-window [ctx level-id]
@@ -174,7 +174,7 @@ direction keys: move")
 (defcomponent :screens/map-editor
   (->mk [_ ctx]
     {:sub-screen [::sub-screen
-                  (atom {:tiled-map (load-map modules-file)
+                  (atom {:tiled-map (t/load-map modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
      :stage (->stage ctx [(->generate-map-window ctx world-id)
