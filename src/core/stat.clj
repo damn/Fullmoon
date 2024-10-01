@@ -149,7 +149,7 @@
                 [:stats/armor-save    {:optional true}]
                 [:stats/armor-pierce  {:optional true}]]]
    :let stats}
-  (->mk [_ _ctx]
+  (->mk [_]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
@@ -157,7 +157,7 @@
   (info-text [_ {:keys [info-text/entity*]}]
     (stats-info-texts entity*))
 
-  (render-info [_ entity* _ctx]
+  (render-info [_ entity*]
     (when-let [hp (entity-stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
             {:keys [position width half-width half-height entity/mouseover?]} entity*
@@ -182,25 +182,25 @@
 (defsystem applicable?
   "An effect will only be done (with do!) if this function returns truthy.
 Required system for every effect, no default."
-  [_ ctx])
+  [_])
 
 (defsystem useful?
   "Used for NPC AI.
 Called only if applicable? is truthy.
 For example use for healing effect is only useful if hitpoints is < max.
 Default method returns true."
-  [_ ctx])
-(defmethod useful? :default [_ ctx] true)
+  [_])
+(defmethod useful? :default [_] true)
 
 (defsystem ^:private render-effect
   "Renders effect during active-skill state while active till done?. Default do nothing."
-  [_ ctx])
-(defmethod render-effect :default [_ ctx])
+  [_])
+(defmethod render-effect :default [_])
 
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defcomponent :base/stat-effect
-  (info-text [[k operations] _effect-ctx]
+  (info-text [[k operations]]
     (str/join "\n"
               (for [operation operations]
                 (str (op-info-text operation) " " (k->pretty-name k)))))
@@ -240,8 +240,8 @@ Default method returns true."
   (applicable? [_ effect-ctx]
     (applicable? (damage-effect effect-ctx) effect-ctx))
 
-  (do! [_ ctx]
-    [(damage-effect ctx)]))
+  (do! [_]
+    [(damage-effect)]))
 
 (defn- effective-armor-save [source* target*]
   (max (- (or (entity-stat target* :stats/armor-save) 0)
@@ -342,11 +342,11 @@ Default method returns true."
       true)
 
     ; TODO stacking? (if already has k ?) or reset counter ? (see string-effect too)
-    (do! [_ {:keys [effect/source effect/target] :as ctx}]
+    (do! [_ {:keys [effect/source effect/target]}]
       (when-not (:entity/temp-modifier @target)
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
-                                                 :counter (->counter ctx duration)}]]))))
+                                                 :counter (->counter duration)}]]))))
 (defcomponent :effect.entity/convert
   {:data :some}
   (info-text [_ _effect-ctx]
@@ -430,10 +430,10 @@ Default method returns true."
     direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (useful? [_ {:keys [effect/source effect/target] :as ctx}]
+  (useful? [_ {:keys [effect/source effect/target]}]
     (let [source-p (:position @source)
           target-p (:position @target)]
-      (and (not (path-blocked? ctx ; TODO test
+      (and (not (path-blocked? ; TODO test
                                source-p
                                target-p
                                (projectile-size projectile)))
@@ -442,7 +442,7 @@ Default method returns true."
                           target-p)
               max-range))))
 
-  (do! [_ {:keys [effect/source effect/direction] :as ctx}]
+  (do! [_ {:keys [effect/source effect/direction]}]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
       {:position (projectile-start-point @source direction (projectile-size projectile))
@@ -469,10 +469,10 @@ Default method returns true."
 
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
-(defn- creatures-in-los-of-player [ctx]
-  (->> (active-entities ctx)
+(defn- creatures-in-los-of-player []
+  (->> (active-entities)
        (filter #(:creature/species @%))
-       (filter #(line-of-sight? ctx (player-entity* ctx) @%))
+       (filter #(line-of-sight? (player-entity*) @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!
@@ -482,7 +482,7 @@ Default method returns true."
  ; maybe world view port is cut
  ; not quite showing correctly.
  (let [ctx @app/state
-       targets (creatures-in-los-of-player ctx)]
+       targets (creatures-in-los-of-player)]
    (count targets)
    #_(sort-by #(% 1) (map #(vector (:entity.creature/name @%)
                                    (:position @%)) targets)))
@@ -492,21 +492,21 @@ Default method returns true."
 (defcomponent :effect/target-all
   {:data [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
-  (info-text [_ ctx]
+  (info-text [_]
     "[LIGHT_GRAY]All visible targets[]")
 
-  (applicable? [_ _ctx]
+  (applicable? [_]
     true)
 
-  (useful? [_ _ctx]
+  (useful? [_]
     ; TODO
     false
     )
 
-  (do! [_ {:keys [effect/source] :as ctx}]
+  (do! [_ {:keys [effect/source]}]
     (let [source* @source]
       (apply concat
-             (for [target (creatures-in-los-of-player ctx)]
+             (for [target (creatures-in-los-of-player)]
                [[:tx/line-render {:start (:position source*) #_(start-point source* target*)
                                   :end (:position @target)
                                   :duration 0.05
@@ -520,9 +520,9 @@ Default method returns true."
                 ; find a way to pass ctx / effect-ctx separate ?
                 [:tx/effect {:effect/source source :effect/target target} entity-effects]]))))
 
-  (render-effect [_ {:keys [effect/source] :as ctx}]
+  (render-effect [_ {:keys [effect/source]}]
     (let [source* @source]
-      (doseq [target* (map deref (creatures-in-los-of-player ctx))]
+      (doseq [target* (map deref (creatures-in-los-of-player))]
         (draw-line (:position source*) #_(start-point source* target*)
                    (:position target*)
                    [1 0 0 0.5])))))
@@ -546,7 +546,7 @@ Default method returns true."
                   maxrange)))
 
 (defcomponent :maxrange {:data :pos}
-  (info-text [[_ maxrange] _ctx]
+  (info-text [[_ maxrange]]
     (str "[LIGHT_GRAY]Range " maxrange " meters[]")))
 
 (defcomponent :effect/target-entity
@@ -555,9 +555,9 @@ Default method returns true."
    :editor/doc "Applies entity-effects to a target if they are inside max-range & in line of sight.
                Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
 
-  (applicable? [_ {:keys [effect/target] :as ctx}]
+  (applicable? [_ {:keys [effect/target]}]
     (and target
-         (some #(applicable? % ctx) entity-effects)))
+         (some applicable? entity-effects)))
 
   (useful? [_ {:keys [effect/source effect/target]}]
     (assert source)
@@ -595,16 +595,17 @@ Default method returns true."
                    [1 1 0 0.5])))))
 
 ; would have to do this only if effect even needs target ... ?
-(defn- check-remove-target [{:keys [effect/source] :as ctx}]
+(defn- check-remove-target [{:keys [effect/source]}]
+  ;FIXME
   (update ctx :effect/target (fn [target]
                                (when (and target
                                           (not (:entity/destroyed? @target))
-                                          (line-of-sight? ctx @source @target))
+                                          (line-of-sight? @source @target))
                                  target))))
 
-(defn- effect-applicable? [ctx effects]
-  (let [ctx (check-remove-target ctx)]
-    (some #(applicable? % ctx) effects)))
+(defn- effect-applicable? [effects]
+  (check-remove-target!)
+  (some applicable? effects))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity-stat entity* :stats/mana)]
@@ -615,7 +616,7 @@ Default method returns true."
   (> cost (mana-value entity*)))
 
 (defn- skill-usable-state
-  [ctx entity* {:keys [skill/cooling-down? skill/effects] :as skill}]
+  [entity* {:keys [skill/cooling-down? skill/effects] :as skill}]
   (cond
    cooling-down?
    :cooldown
@@ -623,7 +624,7 @@ Default method returns true."
    (not-enough-mana? entity* skill)
    :not-enough-mana
 
-   (not (effect-applicable? ctx effects))
+   (not (effect-applicable? effects))
    :invalid-params
 
    :else
@@ -639,20 +640,20 @@ Default method returns true."
 ;  * target-position  = always available (mouse world position)
 ;  * direction  = always available (from mouse world position)
 
-(defn- nearest-enemy [{:keys [context/grid]} entity*]
-  (nearest-entity @(grid (entity-tile entity*))
+(defn- nearest-enemy [entity*]
+  (nearest-entity @(world-grid (entity-tile entity*))
                   (enemy-faction entity*)))
 
-(defn- ->npc-effect-ctx [ctx entity*]
-  (let [target (nearest-enemy ctx entity*)
-        target (when (and target (line-of-sight? ctx entity* @target))
+(defn- ->npc-effect-ctx [entity*]
+  (let [target (nearest-enemy entity*)
+        target (when (and target (line-of-sight? entity* @target))
                  target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
      :effect/direction (when target (direction entity* @target))}))
 
-(defn- ->player-effect-ctx [ctx entity*]
-  (let [target* (mouseover-entity* ctx)
+(defn- ->player-effect-ctx [entity*]
+  (let [target* (mouseover-entity*)
         target-position (or (and target* (:position target*))
                             (world-mouse-position))]
     {:effect/source (:entity/id entity*)
@@ -661,7 +662,7 @@ Default method returns true."
      :effect/direction (v-direction (:position entity*) target-position)}))
 
 (defcomponent :tx/effect
-  (do! [[_ effect-ctx effects] ctx]
+  (do! [[_ effect-ctx effects]]
     (-> ctx
         (merge effect-ctx)
         (effect! (filter #(applicable? % effect-ctx) effects))
@@ -694,14 +695,14 @@ Default method returns true."
 
 (defcomponent :active-skill
   {:let {:keys [eid skill effect-ctx counter]}}
-  (->mk [[_ eid [skill effect-ctx]] ctx]
+  (->mk [[_ eid [skill effect-ctx]]]
     {:eid eid
      :skill skill
      :effect-ctx effect-ctx
      :counter (->> skill
                    :skill/action-time
                    (apply-action-speed-modifier @eid skill)
-                   (->counter ctx))})
+                   (->counter))})
 
   (player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
@@ -709,39 +710,39 @@ Default method returns true."
   (pause-game? [_]
     false)
 
-  (enter [_ ctx]
+  (enter [_]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
-       [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter ctx (:skill/cooldown skill))])
+       [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (tick [_ eid ctx]
+  (tick [_ eid]
     (cond
-     (not (effect-applicable? (safe-merge ctx effect-ctx) (:skill/effects skill)))
+     (not (effect-applicable? effect-ctx (:skill/effects skill)))
      [[:tx/event eid :action-done]
       ; TODO some sound ?
       ]
 
-     (stopped? ctx counter)
+     (stopped? counter)
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (render-info [_ entity* ctx]
+  (render-info [_ entity*]
     (let [{:keys [entity/image skill/effects]} skill]
-      (draw-skill-icon image entity* (:position entity*) (finished-ratio ctx counter))
-      (run! #(render-effect % (merge ctx effect-ctx)) effects))))
+      (draw-skill-icon image entity* (:position entity*) (finished-ratio counter))
+      (run! #(render-effect % effect-ctx) effects))))
 
 ; TODO
 ; split it into 3 parts
 ; applicable
 ; useful
 ; usable?
-(defn- effect-useful? [ctx effects]
+(defn- effect-useful? [effects]
   ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter #(applicable? % ctx) effects)
+  (let [applicable-effects (filter applicable? effects)
         ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some #(useful? % ctx) applicable-effects)]
+        useful-effect (some useful? applicable-effects)]
     ;(println "Useful: " useful-effect)
     useful-effect))
 
@@ -751,7 +752,7 @@ Default method returns true."
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable (skill-usable-state ctx entity* %))
+       (filter #(and (= :usable (skill-usable-state entity* %))
                      (effect-useful? ctx (:skill/effects %))))
        first))
 
@@ -765,39 +766,38 @@ Default method returns true."
 
 (defcomponent :npc-idle
   {:let {:keys [eid]}}
-  (->mk [[_ eid] _ctx]
+  (->mk [[_ eid]]
     {:eid eid})
 
-  (tick [_ eid ctx]
+  (tick [_ eid]
     (let [entity* @eid
-          effect-ctx (->npc-effect-ctx ctx entity*)]
-      (if-let [skill (npc-choose-skill (safe-merge ctx effect-ctx) entity*)]
+          effect-ctx (->npc-effect-ctx entity*)]
+      (if-let [skill (npc-choose-skill effect-ctx entity*)]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (potential-fields-follow-to-enemy ctx eid)]]))))
+        [[:tx/event eid :movement-direction (potential-fields-follow-to-enemy eid)]]))))
 
-(defn- selected-skill [ctx]
-  (let [button-group (:action-bar (:context/widgets ctx))]
+(defn- selected-skill []
+  (let [button-group (:action-bar (:context/widgets))]
     (when-let [skill-button (bg-checked button-group)]
       (actor-id skill-button))))
 
-(defn- inventory-window [ctx]
-  (get (:windows (stage-get ctx)) :inventory-window))
+(defn- inventory-window []
+  (get (:windows (stage-get)) :inventory-window))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]
    [:tx/msg-to-player text]])
 
 (defmulti ^:private on-clicked
-  (fn [_context entity*]
+  (fn [entity*]
     (:type (:entity/clickable entity*))))
 
-(defmethod on-clicked :clickable/item
-  [context clicked-entity*]
-  (let [player-entity* (player-entity* context)
+(defmethod on-clicked :clickable/item [clicked-entity*]
+  (let [player-entity* (player-entity*)
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
-     (visible? (inventory-window context))
+     (visible? (inventory-window))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
@@ -812,8 +812,8 @@ Default method returns true."
       [:tx/msg-to-player "Your Inventory is full"]])))
 
 (defmethod on-clicked :clickable/player
-  [ctx _clicked-entity*]
-  (toggle-visible! (inventory-window ctx))) ; TODO no tx
+  [_clicked-entity*]
+  (toggle-visible! (inventory-window))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-entity* too-far-away?]
   (case (:type (:entity/clickable mouseover-entity*))
@@ -822,44 +822,44 @@ Default method returns true."
                       :cursors/hand-before-grab)
     :clickable/player :cursors/bag))
 
-(defn- ->clickable-mouseover-entity-interaction [ctx player-entity* mouseover-entity*]
+(defn- ->clickable-mouseover-entity-interaction [player-entity* mouseover-entity*]
   (if (< (v-distance (:position player-entity*) (:position mouseover-entity*))
          (:entity/click-distance-tiles player-entity*))
-    [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked ctx mouseover-entity*))]
+    [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked mouseover-entity*))]
     [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
 
 ; TODO move to inventory-window extend Ctx
-(defn- inventory-cell-with-item? [ctx actor]
+(defn- inventory-cell-with-item? [actor]
   (and (parent actor)
        (= "inventory-cell" (actor-name (parent actor)))
-       (get-in (:entity/inventory (player-entity* ctx))
+       (get-in (:entity/inventory (player-entity*))
                (actor-id (parent actor)))))
 
-(defn- mouseover-actor->cursor [ctx]
-  (let [actor (mouse-on-actor? ctx)]
+(defn- mouseover-actor->cursor []
+  (let [actor (mouse-on-actor?)]
     (cond
-     (inventory-cell-with-item? ctx actor) :cursors/hand-before-grab
+     (inventory-cell-with-item? actor) :cursors/hand-before-grab
      (window-title-bar? actor) :cursors/move-window
      (button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn- ->interaction-state [context entity*]
-  (let [mouseover-entity* (mouseover-entity* context)]
+(defn- ->interaction-state [entity*]
+  (let [mouseover-entity* (mouseover-entity*)]
     (cond
-     (mouse-on-actor? context)
-     [(mouseover-actor->cursor context)
+     (mouse-on-actor?)
+     [(mouseover-actor->cursor)
       (fn []
         nil)] ; handled by actors themself, they check player state
 
      (and mouseover-entity*
           (:entity/clickable mouseover-entity*))
-     (->clickable-mouseover-entity-interaction context entity* mouseover-entity*)
+     (->clickable-mouseover-entity-interaction entity* mouseover-entity*)
 
      :else
-     (if-let [skill-id (selected-skill context)]
+     (if-let [skill-id (selected-skill)]
        (let [skill (skill-id (:entity/skills entity*))
-             effect-ctx (->player-effect-ctx context entity*)
-             state (skill-usable-state (safe-merge context effect-ctx) entity* skill)]
+             effect-ctx (->player-effect-ctx entity*)
+             state (skill-usable-state effect-ctx entity* skill)]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
@@ -884,16 +884,16 @@ Default method returns true."
 
 (defcomponent :player-idle
   {:let {:keys [eid]}}
-  (->mk [[_ eid] _ctx]
+  (->mk [[_ eid]]
     {:eid eid})
 
   (pause-game? [_]
     true)
 
-  (manual-tick [_ ctx]
+  (manual-tick [_]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
-      (let [[cursor on-click] (->interaction-state ctx @eid)]
+      (let [[cursor on-click] (->interaction-state @eid)]
         (cons [:tx/cursor cursor]
               (when (button-just-pressed? :left)
                 (on-click))))))

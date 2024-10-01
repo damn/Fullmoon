@@ -46,14 +46,13 @@
             :cell-defaults {:pad-bottom 10}}))
 
 (defcomponent :options/sub-screen
-  (screen-render [_ ctx]
-    (if (key-just-pressed? :keys/escape)
-      (change-screen ctx :screens/world)
-      ctx)))
+  (screen-render [_]
+    (when (key-just-pressed? :keys/escape)
+      (change-screen :screens/world))))
 
 (derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
-  (->mk [_ ctx]
+  (->mk [_]
     {:stage (->stage [(->background-image)
                       (create-table)])
      :sub-screen [:options/sub-screen]}))

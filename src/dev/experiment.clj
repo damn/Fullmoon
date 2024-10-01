@@ -66,8 +66,8 @@
 (defn- post-tx! [tx]
   (post-runnable! (swap! app-state effect! [tx])))
 
-(defn- learn-skill! [skill-id] (post-tx! (fn [ctx] [[:tx/add-skill (:entity/id (player-entity* ctx)) (build-property ctx skill-id)]])))
-(defn- create-item! [item-id]  (post-tx! (fn [ctx] [[:tx/item (:position (player-entity* ctx))       (build-property ctx item-id)]])))
+(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id (player-entity*)) (build-property skill-id)]])))
+(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position (player-entity*)) (build-property item-id)]])))
 
 (defn- protocol? [value]
   (and (instance? clojure.lang.PersistentArrayMap value)
@@ -262,10 +262,10 @@
     (add-map-nodes! tree prop 0)
     tree))
 
-(defn- scroll-pane-cell [ctx rows]
+(defn- scroll-pane-cell [rows]
   (let [table (->table {:rows rows
-                           :cell-defaults {:pad 1}
-                           :pack? true})
+                        :cell-defaults {:pad 1}
+                        :pack? true})
         scroll-pane (->scroll-pane table)]
     {:actor scroll-pane
      :width (/ (gui-viewport-width) 2)
@@ -277,13 +277,12 @@
   (let [ctx @app-state
         object (case obj
                  :ctx ctx
-                 :entity (mouseover-entity* ctx)
-                 :tile @(get (:context/grid ctx) (mapv int (world-mouse-position))))]
-    (stage-add! ctx
-                (->window {:title "Tree View"
+                 :entity (mouseover-entity*)
+                 :tile @(get (:context/grid) (mapv int (world-mouse-position))))]
+    (stage-add! (->window {:title "Tree View"
                            :close-button? true
                            :close-on-escape? true
                            :center? true
-                           :rows [[(scroll-pane-cell ctx [[(->prop-tree (into (sorted-map) object))]])]]
+                           :rows [[(scroll-pane-cell [[(->prop-tree (into (sorted-map) object))]])]]
                            :pack? true}))
     nil))

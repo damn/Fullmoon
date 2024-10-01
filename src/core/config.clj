@@ -6,7 +6,7 @@
 (defcomponent :property/pretty-name
   {:data :string
    :let value}
-  (info-text [_ _ctx]
+  (info-text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
 (.bindRoot #'clojure.gdx/info-text-k-order

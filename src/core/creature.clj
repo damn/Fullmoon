@@ -37,14 +37,14 @@
 
 (defcomponent :creature/species
   {:data [:qualified-keyword {:namespace :species}]}
-  (->mk [[_ species] _ctx]
+  (->mk [[_ species]]
     (str/capitalize (name species)))
-  (info-text [[_ species] _ctx]
+  (info-text [[_ species]]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defcomponent :creature/level
   {:data :pos-int}
-  (info-text [[_ lvl] _ctx]
+  (info-text [[_ lvl]]
     (str "[GRAY]Level " lvl "[]")))
 
 ; # :z-order/flying has no effect for now
@@ -63,8 +63,8 @@
 
 (defcomponent :tx/creature
   {:let {:keys [position creature-id components]}}
-  (do! [_ ctx]
-    (let [props (build-property ctx creature-id)]
+  (do! [_]
+    (let [props (build-property creature-id)]
       [[:e/create
         position
         (->body (:entity/body props))
@@ -133,17 +133,17 @@
   (assoc (fsm initial-state nil) :state initial-state))
 
 (defcomponent :entity/state
-  (->mk [[_ [player-or-npc initial-state]] _ctx]
+  (->mk [[_ [player-or-npc initial-state]]]
     {:initial-state initial-state
      :fsm (case player-or-npc
             :state/player player-fsm
             :state/npc npc-fsm)})
 
-  (create [[k {:keys [fsm initial-state]}] eid ctx]
+  (create [[k {:keys [fsm initial-state]}] eid]
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
-     [:e/assoc eid initial-state (->mk [initial-state eid] ctx)]])
+     [:e/assoc eid initial-state (->mk [initial-state eid])]])
 
-  (info-text [[_ fsm] _ctx]
+  (info-text [[_ fsm]]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
 (extend-type clojure.gdx.Entity
@@ -155,32 +155,31 @@
     (let [state-k (entity-state entity*)]
       [state-k (state-k entity*)])))
 
-(defn- send-event! [ctx eid event params]
+(defn- send-event! [eid event params]
   (when-let [fsm (:entity/state @eid)]
     (let [old-state-k (:state fsm)
           new-fsm (fsm/fsm-event fsm event)
           new-state-k (:state new-fsm)]
       (when-not (= old-state-k new-state-k)
         (let [old-state-obj (state-obj @eid)
-              new-state-obj [new-state-k (->mk [new-state-k eid params] ctx)]]
-          [#(exit old-state-obj %)
-           #(enter new-state-obj %)
-           (when (:entity/player? @eid)
-             (fn [_ctx] (player-enter new-state-obj)))
+              new-state-obj [new-state-k (->mk [new-state-k eid params])]]
+          [#(exit old-state-obj)
+           #(enter new-state-obj)
+           (when (:entity/player? @eid) #(player-enter new-state-obj))
            [:e/assoc eid :entity/state new-fsm]
            [:e/dissoc eid old-state-k]
            [:e/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defcomponent :tx/event
-  (do! [[_ eid event params] ctx]
-    (send-event! ctx eid event params)))
+  (do! [[_ eid event params]]
+    (send-event! eid event params)))
 
 (defcomponent :npc-dead
   {:let {:keys [eid]}}
-  (->mk [[_ eid] _ctx]
+  (->mk [[_ eid]]
     {:eid eid})
 
-  (enter [_ _ctx]
+  (enter [_]
     [[:e/destroy eid]]))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
@@ -188,39 +187,39 @@
 ; also prevents fast twitching around changing directions every frame
 (defcomponent :npc-moving
   {:let {:keys [eid movement-vector counter]}}
-  (->mk [[_ eid movement-vector] ctx]
+  (->mk [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector
-     :counter (->counter ctx (* (entity-stat @eid :stats/reaction-time) 0.016))})
+     :counter (->counter (* (entity-stat @eid :stats/reaction-time) 0.016))})
 
-  (enter [_ _ctx]
+  (enter [_]
     [[:tx/set-movement eid {:direction movement-vector
                             :speed (or (entity-stat @eid :stats/movement-speed) 0)}]])
 
-  (exit [_ _ctx]
+  (exit [_]
     [[:tx/set-movement eid nil]])
 
-  (tick [_ eid ctx]
-    (when (stopped? ctx counter)
+  (tick [_ eid]
+    (when (stopped? counter)
       [[:tx/event eid :timer-finished]])))
 
 (defcomponent :npc-sleeping
   {:let {:keys [eid]}}
-  (->mk [[_ eid] _ctx]
+  (->mk [[_ eid]]
     {:eid eid})
 
-  (exit [_ ctx]
+  (exit [_]
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
-  (tick [_ eid ctx]
+  (tick [_ eid]
     (let [entity* @eid
-          cell ((:context/grid ctx) (entity-tile entity*))]
+          cell (world-grid (entity-tile entity*))]
       (when-let [distance (nearest-entity-distance @cell (enemy-faction entity*))]
         (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 
-  (render-above [_ entity* _ctx]
+  (render-above [_ entity*]
     (let [[x y] (:position entity*)]
       (draw-text {:text "zzz"
                   :x x
@@ -234,7 +233,7 @@
   (pause-game? [_]
     true)
 
-  (enter [_ _ctx]
+  (enter [_]
     [[:tx/sound "sounds/bfxr_playerdeath.wav"]
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
@@ -290,31 +289,32 @@
                    ; so you cannot put it out of your own reach
                    (- (:entity/click-distance-tiles entity*) 0.1)))
 
-(defn- world-item? [ctx]
-  (not (mouse-on-actor? ctx)))
+(defn- world-item? []
+  (not (mouse-on-actor?)))
 
 (defcomponent :player-item-on-cursor
   {:let {:keys [eid item]}}
-  (->mk [[_ eid item] _ctx]
+  (->mk [[_ eid item]]
     {:eid eid
      :item item})
 
   (pause-game? [_]
     true)
 
-  (manual-tick [_ ctx]
-    (when (and (button-just-pressed? :left) (world-item? ctx))
+  (manual-tick [_]
+    (when (and (button-just-pressed? :left)
+               (world-item?))
       [[:tx/event eid :drop-item]]))
 
   (clicked-inventory-cell [_ cell]
     (clicked-cell @eid cell))
 
-  (enter [_ _ctx]
+  (enter [_]
     [[:tx/cursor :cursors/hand-grab]
      [:e/assoc eid :entity/item-on-cursor item]])
 
-  (exit [_ ctx]
-    ; at context.ui.inventory-window/clicked-cell when we put it into a inventory-cell
+  (exit [_]
+    ; at clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
     ; on the ground
@@ -324,22 +324,22 @@
          [:tx/item (item-place-position entity*) (:entity/item-on-cursor entity*)]
          [:e/dissoc eid :entity/item-on-cursor]])))
 
-  (render-below [_ entity* ctx]
-    (when (world-item? ctx)
+  (render-below [_ entity*]
+    (when (world-item?)
       (draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
 (extend-type clojure.gdx.Context
   DrawItemOnCursor
-  (draw-item-on-cursor [ctx]
-    (let [player-entity* (player-entity* ctx)]
+  (draw-item-on-cursor []
+    (let [player-entity* (player-entity*)]
       (when (and (= :player-item-on-cursor (entity-state player-entity*))
-                 (not (world-item? ctx)))
+                 (not (world-item?)))
         (draw-centered-image (:entity/image (:entity/item-on-cursor player-entity*))
                              (gui-mouse-position))))))
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
-  (->mk [[_ eid movement-vector] _ctx]
+  (->mk [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector})
 
@@ -349,14 +349,14 @@
   (pause-game? [_]
     false)
 
-  (enter [_ _ctx]
+  (enter [_]
     [[:tx/set-movement eid {:direction movement-vector
                             :speed (entity-stat @eid :stats/movement-speed)}]])
 
-  (exit [_ _ctx]
+  (exit [_]
     [[:tx/set-movement eid nil]])
 
-  (tick [_ eid _ctx]
+  (tick [_ eid]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/set-movement eid {:direction movement-vector
                               :speed (entity-stat @eid :stats/movement-speed)}]]
@@ -364,9 +364,9 @@
 
 (defcomponent :stunned
   {:let {:keys [eid counter]}}
-  (->mk [[_ eid duration] ctx]
+  (->mk [[_ eid duration]]
     {:eid eid
-     :counter (->counter ctx duration)})
+     :counter (->counter duration)})
 
   (player-enter [_]
     [[:tx/cursor :cursors/denied]])
@@ -374,27 +374,27 @@
   (pause-game? [_]
     false)
 
-  (tick [_ eid ctx]
-    (when (stopped? ctx counter)
+  (tick [_ eid]
+    (when (stopped? counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (render-below [_ entity* _ctx]
+  (render-below [_ entity*]
     (draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
 
-(def ^{:doc "Returns the player-entity atom." :private true} ctx-player :context/player-entity)
+(declare player-entity)
 
 (defcomponent :entity/player?
-  (create [_ eid ctx]
-    (assoc ctx ctx-player eid)))
+  (create [_ eid]
+    (.bindRoot #'player-entity eid)))
 
-(defn- p-state-obj [ctx]
-  (-> ctx player-entity* state-obj))
+(defn player-entity* [] @player-entity)
+
+(defn- p-state-obj []
+  (state-obj (player-entity*)))
 
 (extend-type clojure.gdx.Context
   Player
-  (player-entity  [ctx]  (ctx-player ctx))
-  (player-entity* [ctx] @(ctx-player ctx))
-  (player-update-state      [ctx]       (manual-tick             (p-state-obj ctx) ctx))
-  (player-state-pause-game? [ctx]       (pause-game?             (p-state-obj ctx)))
-  (player-clicked-inventory [ctx cell]  (clicked-inventory-cell  (p-state-obj ctx) cell))
-  (player-clicked-skillmenu [ctx skill] (clicked-skillmenu-skill (p-state-obj ctx) skill)))
+  (player-update-state      []      (manual-tick             (p-state-obj)))
+  (player-state-pause-game? []      (pause-game?             (p-state-obj)))
+  (player-clicked-inventory [cell]  (clicked-inventory-cell  (p-state-obj) cell))
+  (player-clicked-skillmenu [skill] (clicked-skillmenu-skill (p-state-obj) skill)))

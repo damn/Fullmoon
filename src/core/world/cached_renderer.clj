@@ -17,7 +17,7 @@
 
 (defcomponent :context/tiled-map-renderer
   {:data :some}
-  (->mk [_ _ctx]
+  (->mk [_]
     (memoize ->tiled-map-renderer)))
 
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
@@ -57,11 +57,10 @@
               (swap! explored-tile-corners assoc (->tile position) true))
             white)))))
 
-(defn render-map [{:keys [context/tiled-map] :as ctx} light-position]
-  (render! ctx
-           tiled-map
+(defn render-map [light-position]
+  (render!  world-tiled-map
            (->tile-color-setter (atom nil)
                                 light-position
-                                (:context/raycaster ctx)
-                                (:context/explored-tile-corners ctx)))
+                                (:context/raycaster)
+                                (:context/explored-tile-corners)))
   #_(reset! do-once false))

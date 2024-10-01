@@ -6,7 +6,7 @@
               :y (+ y 2)
               :up? true}))
 
-(defn- ->hp-mana-bars [context]
+(defn- ->hp-mana-bars []
   (let [rahmen      (->image "images/rahmen.png")
         hpcontent   (->image "images/hp.png")
         manacontent (->image "images/mana.png")
@@ -14,16 +14,16 @@
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         y-mana 80 ; action-bar-icon-size
         y-hp (+ y-mana rahmenh)
-        render-hpmana-bar (fn [ctx x y contentimg minmaxval name]
+        render-hpmana-bar (fn [x y contentimg minmaxval name]
                             (draw-image rahmen [x y])
                             (draw-image (sub-image contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                         [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
-    (->actor {:draw (fn [ctx]
-                         (let [player-entity* (player-entity* ctx)
+    (->actor {:draw (fn []
+                         (let [player-entity* (player-entity*)
                                x (- x (/ rahmenw 2))]
-                           (render-hpmana-bar ctx x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
-                           (render-hpmana-bar ctx x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
+                           (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
+                           (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -32,28 +32,28 @@
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
 ; TODO component to info-text move to the component itself.....
-(defn- debug-infos ^String [ctx]
+(defn- debug-infos ^String []
   (let [world-mouse (world-mouse-position)]
     (str
-     "logic-frame: " (logic-frame ctx) "\n"
+     "logic-frame: " (logic-frame) "\n"
      "FPS: " (frames-per-second)  "\n"
      "Zoom: " (zoom (world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position) "\n"
-     "paused? " (:context/paused? ctx) "\n"
-     "elapsed-time " (readable-number (elapsed-time ctx)) " seconds \n"
-     (skill-info (player-entity* ctx))
-     (when-let [entity* (mouseover-entity* ctx)]
+     "paused? " (:context/paused?) "\n"
+     "elapsed-time " (readable-number (elapsed-time)) " seconds \n"
+     (skill-info (player-entity*))
+     (when-let [entity* (mouseover-entity*)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
-     #_(when-let [actor (mouse-on-actor? ctx)]
+     #_(when-let [actor (mouse-on-actor?)]
          (str "TRUE - name:" (.getName actor)
               "id: " (actor-id actor)
               )))))
 
-(defn- ->debug-window [context]
+(defn- ->debug-window []
   (let [label (->label "")
         window (->window {:title "Debug"
                           :id :debug-window
@@ -70,7 +70,7 @@
                                 :entity/faction
                                 :active-skill])
 
-(defn- ->entity-info-window [context]
+(defn- ->entity-info-window []
   (let [label (->label "")
         window (->window {:title "Info"
                           :id :entity-info-window
@@ -79,18 +79,18 @@
                           :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
-    (add-actor! window (->actor {:act (fn update-label-text [ctx]
+    (add-actor! window (->actor {:act (fn update-label-text []
                                         ; items then have 2x pretty-name
                                         #_(.setText (.getTitleLabel window)
-                                                    (if-let [entity* (mouseover-entity* ctx)]
+                                                    (if-let [entity* (mouseover-entity*)]
                                                       (info-text [:property/pretty-name (:property/pretty-name entity*)])
                                                       "Entity Info"))
                                         (.setText label
-                                                  (str (when-let [entity* (mouseover-entity* ctx)]
+                                                  (str (when-let [entity* (mouseover-entity*)]
                                                          (->info-text
                                                           ; don't use select-keys as it loses Entity record type
                                                           (apply dissoc entity* disallowed-keys)
-                                                          ctx))))
+                                                         ))))
                                         (.pack window))}))
     window))
 
@@ -104,27 +104,27 @@
 (defn- ->action-bar-button-group []
   (->button-group {:max-check-count 1 :min-check-count 0}))
 
-(defn- get-action-bar [ctx]
-  {:horizontal-group (::action-bar (:action-bar-table (stage-get ctx)))
-   :button-group (:action-bar (:context/widgets ctx))})
+(defn- get-action-bar []
+  {:horizontal-group (::action-bar (:action-bar-table (stage-get)))
+   :button-group (:action-bar (:context/widgets))})
 
 (defcomponent :tx.action-bar/add
-  (do! [[_ {:keys [property/id entity/image] :as skill}] ctx]
-    (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
+  (do! [[_ {:keys [property/id entity/image] :as skill}]]
+    (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (->image-button image identity {:scale image-scale})]
       (set-id! button id)
       (add-tooltip! button #(->info-text skill (assoc % :effect/source (player-entity %))))
       (add-actor! horizontal-group button)
       (bg-add! button-group button)
-      ctx)))
+     )))
 
 (defcomponent :tx.action-bar/remove
-  (do! [[_ {:keys [property/id]}] ctx]
-    (let [{:keys [horizontal-group button-group]} (get-action-bar ctx)
+  (do! [[_ {:keys [property/id]}]]
+    (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (get horizontal-group id)]
       (remove! button)
       (bg-remove! button-group button)
-      ctx)))
+     )))
 
 (comment
 
@@ -197,48 +197,48 @@
 
 (def ^:private duration-seconds 1.5)
 
-(defn- draw-player-message [ctx]
-  (when-let [{:keys [message]} (ctx-msg-player ctx)]
+(defn- draw-player-message []
+  (when-let [{:keys [message]} (ctx-msg-player)]
     (draw-text {:x (/ (gui-viewport-width) 2)
                 :y (+ (/ (gui-viewport-height) 2) 200)
                 :text message
                 :scale 2.5
                 :up? true})))
 
-(defn- check-remove-message [ctx]
-  (when-let [{:keys [counter]} (ctx-msg-player ctx)]
+(defn- check-remove-message []
+  (when-let [{:keys [counter]} (ctx-msg-player)]
     (swap! app-state update ctx-msg-player update :counter + (delta-time))
     (when (>= counter duration-seconds)
       (swap! app-state assoc ctx-msg-player nil))))
 
 (defcomponent :tx/msg-to-player
-  (do! [[_ message] ctx]
+  (do! [[_ message]]
     (assoc ctx :context/msg-to-player {:message message :counter 0})))
 
 (defcomponent :widgets/player-message
-  (->mk [_ _ctx]
+  (->mk [_]
     (->actor {:draw draw-player-message
               :act check-remove-message})))
 
-(defn- ->ui-actors [ctx widget-data]
+(defn- ->ui-actors [widget-data]
   [(->table {:rows [[{:actor (->action-bar)
                       :expand? true
                       :bottom? true}]]
              :id :action-bar-table
              :cell-defaults {:pad 2}
              :fill-parent? true})
-   (->hp-mana-bars ctx)
+   (->hp-mana-bars)
    (->group {:id :windows
-             :actors [(->debug-window ctx)
-                      (->entity-info-window ctx)
+             :actors [(->debug-window)
+                      (->entity-info-window)
                       (->inventory-window widget-data)]})
    (->actor {:draw draw-item-on-cursor})
-   (->mk [:widgets/player-message] ctx)])
+   (->mk [:widgets/player-message])])
 
-(defn ->world-widgets [ctx]
+(defn ->world-widgets []
   (let [widget-data {:action-bar (->action-bar-button-group)
                      :slot->background (->inventory-window-data)}
-        stage (stage-get ctx)]
+        stage (stage-get)]
     (s-clear! stage)
-    (run! #(s-add! stage %) (->ui-actors ctx widget-data))
+    (run! #(s-add! stage %) (->ui-actors widget-data))
     widget-data))

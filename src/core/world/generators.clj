@@ -74,9 +74,9 @@
 
 (def ^:private spawn-creatures? true)
 
-(defn- place-creatures! [context spawn-rate tiled-map spawn-positions area-level-grid]
+(defn- place-creatures! [spawn-rate tiled-map spawn-positions area-level-grid]
   (let [layer (t/add-layer! tiled-map :name "creatures" :visible false)
-        creature-properties (all-properties context :properties/creatures)]
+        creature-properties (all-properties :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
               :let [area-level (get area-level-grid position)]
@@ -88,9 +88,9 @@
 
 (defn generate-modules
   "The generated tiled-map needs to be disposed."
-  [context {:keys [world/map-size
-                   world/max-area-level
-                   world/spawn-rate]}]
+  [{:keys [world/map-size
+           world/max-area-level
+           world/spawn-rate]}]
   (assert (<= max-area-level map-size))
   (let [{:keys [start grid]} (->cave-grid :size map-size)
         ;_ (printgrid grid)
@@ -135,7 +135,7 @@
                                                    (#{:no-cell :undefined}
                                                     (t/property-value tiled-map :creatures p :id))))
                                             spawn-positions)))]
-    (place-creatures! context spawn-rate tiled-map spawn-positions scaled-area-level-grid)
+    (place-creatures! spawn-rate tiled-map spawn-positions scaled-area-level-grid)
     {:tiled-map tiled-map
      :start-position (get-free-position-in-area-level 0)
      :area-level-grid scaled-area-level-grid}))
@@ -166,9 +166,9 @@
 
 ; can use different algorithms(e.g. cave, module-gen-uf-terrain, room-gen? , differnt cave algorithm ...)
 
-(defn- uf-place-creatures! [context spawn-rate tiled-map spawn-positions]
+(defn- uf-place-creatures! [spawn-rate tiled-map spawn-positions]
   (let [layer (t/add-layer! tiled-map :name "creatures" :visible false)
-        creatures (all-properties context :properties/creatures)
+        creatures (all-properties :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
     ;(println "Level: " level)
@@ -226,7 +226,7 @@
 
 (def ^:private uf-caves-scale 4)
 
-(defn uf-caves [ctx {:keys [world/map-size world/spawn-rate]}]
+(defn uf-caves [{:keys [world/map-size world/spawn-rate]}]
   (let [{:keys [start grid]} (->cave-grid :size map-size)
         ;_ (println "Start: " start)
         ;_ (printgrid grid)
@@ -262,7 +262,7 @@
     ; TODO don't spawn my faction vampire w. items ...
     ; TODO don't spawn creatures on start position
     ; (all check have HP/movement..../?? ?) (breaks potential field, targeting, ...)
-    (uf-place-creatures! ctx spawn-rate tiled-map spawn-positions)
+    (uf-place-creatures! spawn-rate tiled-map spawn-positions)
     {:tiled-map tiled-map
      :start-position start-position}))
 
@@ -290,18 +290,18 @@
    :overview {:title "Worlds"
               :columns 10}})
 
-(defmulti generate (fn [_ctx world] (:world/generator world)))
+(defmulti generate (fn [world] (:world/generator world)))
 
-(defmethod generate :world.generator/tiled-map [ctx world]
+(defmethod generate :world.generator/tiled-map [world]
   {:tiled-map (t/load-map (:world/tiled-map world))
    :start-position [32 71]})
 
-(defmethod generate :world.generator/modules [ctx world]
-  (generate-modules ctx world))
+(defmethod generate :world.generator/modules [world]
+  (generate-modules world))
 
-(defmethod generate :world.generator/uf-caves [ctx world]
-  (uf-caves ctx world))
+(defmethod generate :world.generator/uf-caves [world]
+  (uf-caves world))
 
-(defn- generate-level [ctx world-id]
-  (let [prop (build-property ctx world-id)]
-    (assoc (generate ctx prop) :world/player-creature (:world/player-creature prop))))
+(defn- generate-level [world-id]
+  (let [prop (build-property world-id)]
+    (assoc (generate prop) :world/player-creature (:world/player-creature prop))))

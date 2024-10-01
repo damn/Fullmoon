@@ -1,8 +1,8 @@
 (in-ns 'core.app)
 
-(defn- geom-test [ctx]
+(defn- geom-test []
   (let [position (world-mouse-position)
-        grid (:context/grid ctx)
+        grid world-grid
         radius 0.8
         circle {:position position :radius radius}]
     (draw-circle position radius [1 0 0 0.5])
@@ -17,8 +17,8 @@
 (def ^:private ^:dbg-flag cell-entities? false)
 (def ^:private ^:dbg-flag cell-occupied? false)
 
-(defn- tile-debug [ctx]
-  (let [grid (:context/grid ctx)
+(defn- tile-debug []
+  (let [grid world-grid
         world-camera (world-camera)
         [left-x right-x bottom-y top-y] (frustum world-camera)]
 
@@ -48,19 +48,18 @@
 
 (def ^:private ^:dbg-flag highlight-blocked-cell? true)
 
-(defn- highlight-mouseover-tile [ctx]
+(defn- highlight-mouseover-tile []
   (when highlight-blocked-cell?
     (let [[x y] (->tile (world-mouse-position))
-          cell (get (:context/grid ctx) [x y])]
+          cell (get world-grid [x y])]
       (when (and cell (#{:air :none} (:movement @cell)))
         (draw-rectangle x y 1 1
                         (case (:movement @cell)
                           :air  [1 1 0 0.5]
                           :none [1 0 0 0.5]))))))
 
-(defn- before-entities [ctx]
-  (tile-debug ctx))
+(defn- before-entities [] (tile-debug))
 
-(defn- after-entities [ctx]
-  #_(geom-test ctx)
-  (highlight-mouseover-tile ctx))
+(defn- after-entities []
+  #_(geom-test)
+  (highlight-mouseover-tile))

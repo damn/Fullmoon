@@ -26,9 +26,8 @@
      :creature-id (keyword creature-id)
      :components npc-components}))
 
-(defn spawn-creatures! [ctx tiled-level]
-  (effect! ctx
-           (for [creature (cons (world->player-creature ctx tiled-level)
+(defn spawn-creatures! [tiled-level]
+  (effect! (for [creature (cons (world->player-creature ctx tiled-level)
                                 (when spawn-enemies?
-                                  (world->enemy-creatures ctx)))]
+                                  (world->enemy-creatures)))]
              [:tx/creature (update creature :position tile->middle)])))

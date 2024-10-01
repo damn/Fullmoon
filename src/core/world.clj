@@ -16,7 +16,7 @@
   {:elapsed 0
    :logic-frame 0})
 
-(defn update-time [ctx delta]
+(defn update-time [delta]
   (update ctx :context/time #(-> %
                                  (assoc :delta-time delta)
                                  (update :elapsed + delta)
@@ -50,34 +50,31 @@
 
 (extend-type clojure.gdx.Context
   WorldContext
-  (add-world-ctx [ctx world-property-id]
-    (when-let [tiled-map (:context/tiled-map ctx)]
+  (add-world-ctx [world-property-id]
+    (when-let [tiled-map (:context/tiled-map)]
       (dispose! tiled-map))
     (let [tiled-level (generate-level ctx world-property-id)]
       (-> ctx
           (dissoc :context/entity-tick-error)
           (assoc :context/ecs (->uids-entities)
                  :context/time (->world-time)
-                 :context/widgets (->world-widgets ctx))
+                 :context/widgets (->world-widgets))
           (merge (->world-map tiled-level))
           (spawn-creatures! tiled-level)))))
 
 (defcomponent :tx/add-to-world
-  (do! [[_ entity] ctx]
-    (content-grid-update-entity! ctx entity)
+  (do! [[_ entity]]
+    (content-grid-update-entity! entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (grid-add-entity! ctx entity)
-    ctx))
+    (grid-add-entity! entity)))
 
 (defcomponent :tx/remove-from-world
-  (do! [[_ entity] ctx]
-    (content-grid-remove-entity! ctx entity)
-    (grid-remove-entity! ctx entity)
-    ctx))
+  (do! [[_ entity]]
+    (content-grid-remove-entity! entity)
+    (grid-remove-entity! entity)))
 
 (defcomponent :tx/position-changed
-  (do! [[_ entity] ctx]
-    (content-grid-update-entity! ctx entity)
-    (grid-entity-position-changed! ctx entity)
-    ctx))
+  (do! [[_ entity]]
+    (content-grid-update-entity! entity)
+    (grid-entity-position-changed! entity)))
