@@ -2,7 +2,7 @@
   :repositories [["jitpack" "https://jitpack.io"]]
 
   :dependencies [[org.clojure/clojure "1.12.0"]
-                 [com.github.damn/clojure.gdx "-SNAPSHOT"]
+                 [com.github.damn/clojure.gdx "main-SNAPSHOT"]
                  ; this is already dependency in clojure.gdx
                  ; but if I remove it lein codox does not work anymore
                  [org.clojure/tools.namespace "1.3.0"]]
