@@ -154,8 +154,8 @@
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
-  (info-text [_ {:keys [info-text/entity*]}]
-    (stats-info-texts entity*))
+  (info-text [_]
+    (stats-info-texts *info-text-entity*))
 
   (render-info [_ entity*]
     (when-let [hp (entity-stat entity* :stats/hp)]

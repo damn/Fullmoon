@@ -193,7 +193,7 @@
 
  )
 
-(def ^:private ctx-msg-player :context/msg-to-player)
+(def ^:private ctx-msg-player)
 
 (def ^:private duration-seconds 1.5)
 
@@ -205,15 +205,15 @@
                 :scale 2.5
                 :up? true})))
 
-(defn- check-remove-message []
+(defn- check-remove-message [] ; FIXME
   (when-let [{:keys [counter]} (ctx-msg-player)]
-    (swap! app-state update ctx-msg-player update :counter + (delta-time))
+    (alter-var-root #'ctx-msg-player update :counter + (delta-time))
     (when (>= counter duration-seconds)
-      (swap! app-state assoc ctx-msg-player nil))))
+      (.bindRoot #'ctx-msg-player nil))))
 
 (defcomponent :tx/msg-to-player
   (do! [[_ message]]
-    (assoc ctx :context/msg-to-player {:message message :counter 0})))
+    (.bindRoot #'ctx-msg-player {:message message :counter 0})))
 
 (defcomponent :widgets/player-message
   (->mk [_]

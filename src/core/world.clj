@@ -48,19 +48,18 @@
      content-grid (->content-grid :cell-size 16 :width w :height h)
      :context/explored-tile-corners (->explored-tile-corners w h)}))
 
-(extend-type clojure.gdx.Context
-  WorldContext
-  (add-world-ctx [world-property-id]
-    (when-let [tiled-map (:context/tiled-map)]
-      (dispose! tiled-map))
-    (let [tiled-level (generate-level ctx world-property-id)]
-      (-> ctx
-          (dissoc :context/entity-tick-error)
-          (assoc :context/ecs (->uids-entities)
-                 :context/time (->world-time)
-                 :context/widgets (->world-widgets))
-          (merge (->world-map tiled-level))
-          (spawn-creatures! tiled-level)))))
+(.bindRoot #'clojure.gdx/add-world-ctx
+           (fn [world-property-id]
+             (when-let [tiled-map (:context/tiled-map)]
+               (dispose! tiled-map))
+             (let [tiled-level (generate-level ctx world-property-id)]
+               (-> ctx
+                   (dissoc :context/entity-tick-error)
+                   (assoc :context/ecs (->uids-entities)
+                          :context/time (->world-time)
+                          :context/widgets (->world-widgets))
+                   (merge (->world-map tiled-level))
+                   (spawn-creatures! tiled-level)))))
 
 (defcomponent :tx/add-to-world
   (do! [[_ entity]]

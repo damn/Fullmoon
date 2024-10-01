@@ -59,12 +59,12 @@
             (comp #(str/split % #"-")
                   name
                   :property/id)
-            (property/all-properties @app-state :properties/items)))))))
+            (property/all-properties :properties/items)))))))
 
  )
 
 (defn- post-tx! [tx]
-  (post-runnable! (swap! app-state effect! [tx])))
+  (post-runnable! (effect! [tx])))
 
 (defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id (player-entity*)) (build-property skill-id)]])))
 (defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position (player-entity*)) (build-property item-id)]])))
@@ -234,7 +234,7 @@
     (add-map-nodes! node (children->str-map (children v)) level)))
 
 (comment
- (let [vis-image (first (children (s-root (stage-get @app-state))))]
+ (let [vis-image (first (children (s-root (stage-get))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -274,9 +274,7 @@
      #_(min (- (gui-viewport-height) 50) (height table))}))
 
 (defn- show-tree-view! [obj]
-  (let [ctx @app-state
-        object (case obj
-                 :ctx ctx
+  (let [object (case obj
                  :entity (mouseover-entity*)
                  :tile @(get (:context/grid) (mapv int (world-mouse-position))))]
     (stage-add! (->window {:title "Tree View"
