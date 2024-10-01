@@ -2,6 +2,8 @@
   (:require [clojure.gdx :refer :all]))
 (comment
 
+ clj-commons.ansi
+
  (post-runnable! (show-tree-view! :ctx))
 
  (show-tree-view! :entity)
@@ -266,17 +268,17 @@
                            :pack? true})
         scroll-pane (->scroll-pane table)]
     {:actor scroll-pane
-     :width (/ (gui-viewport-width ctx) 2)
+     :width (/ (gui-viewport-width) 2)
      :height
-     (- (gui-viewport-height ctx) 50)
-     #_(min (- (gui-viewport-height ctx) 50) (height table))}))
+     (- (gui-viewport-height) 50)
+     #_(min (- (gui-viewport-height) 50) (height table))}))
 
 (defn- show-tree-view! [obj]
   (let [ctx @app-state
         object (case obj
                  :ctx ctx
                  :entity (mouseover-entity* ctx)
-                 :tile @(get (:context/grid ctx) (mapv int (world-mouse-position ctx))))]
+                 :tile @(get (:context/grid ctx) (mapv int (world-mouse-position))))]
     (stage-add! ctx
                 (->window {:title "Tree View"
                            :close-button? true

@@ -35,14 +35,14 @@ ESCAPE: leave
 direction keys: move")
 
 (defn- debug-infos ^String [ctx]
-  (let [tile (->tile (world-mouse-position ctx))
+  (let [tile (->tile (world-mouse-position))
         {:keys [tiled-map
                 area-level-grid]} @(current-data ctx)]
     (->> [infotext
           (str "Tile " tile)
           (when-not area-level-grid
             (str "Module " (mapv (comp int /)
-                                 (world-mouse-position ctx)
+                                 (world-mouse-position)
                                  [module-width module-height])))
           (when area-level-grid
             (str "Creature id: " (t/property-value tiled-map :creatures tile :id)))
@@ -60,9 +60,9 @@ direction keys: move")
   (let [label (->label "")
         window (->window {:title "Info" :rows [[label]]})]
     (add-actor! window (->actor {:act #(do
-                                              (.setText label (debug-infos %))
-                                              (.pack window))}))
-    (set-position! window 0 (gui-viewport-height ctx))
+                                        (.setText label (debug-infos %))
+                                        (.pack window))}))
+    (set-position! window 0 (gui-viewport-height))
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
@@ -93,30 +93,30 @@ direction keys: move")
 ; TODO unused
 ; TODO also draw numbers of area levels big as module size...
 
-(defn- render-on-map [g ctx]
+(defn- render-on-map [ctx]
   (let [{:keys [tiled-map
                 area-level-grid
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data ctx)
-        visible-tiles (visible-tiles (world-camera ctx))
-        [x y] (->tile (world-mouse-position ctx))]
-    (draw-rectangle g x y 1 1 :white)
+        visible-tiles (visible-tiles (world-camera))
+        [x y] (->tile (world-mouse-position))]
+    (draw-rectangle x y 1 1 :white)
     (when start-position
-      (draw-filled-rectangle g (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
+      (draw-filled-rectangle (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
               :let [movement-property (t/movement-property tiled-map [x y])]]
-        (draw-filled-circle g [(+ x 0.5) (+ y 0.5)] 0.08 :black)
-        (draw-filled-circle g [(+ x 0.5) (+ y 0.5)]
+        (draw-filled-circle [(+ x 0.5) (+ y 0.5)] 0.08 :black)
+        (draw-filled-circle [(+ x 0.5) (+ y 0.5)]
                             0.05
                             (case movement-property
                               "all"   :green
                               "air"   :orange
                               "none"  :red))))
     (when show-grid-lines
-      (draw-grid g 0 0 (t/width  tiled-map) (t/height tiled-map) 1 1 [1 1 1 0.5]))))
+      (draw-grid 0 0 (t/width  tiled-map) (t/height tiled-map) 1 1 [1 1 1 0.5]))))
 
 (def ^:private world-id :worlds/modules)
 
@@ -129,7 +129,7 @@ direction keys: move")
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
            :start-position start-position)
-    (show-whole-map! (world-camera context) tiled-map)
+    (show-whole-map! (world-camera) tiled-map)
     (set-visible! (t/get-layer tiled-map "creatures") true)
     context))
 
@@ -153,19 +153,19 @@ direction keys: move")
       (dispose! (:tiled-map @current-data)))
 
   (screen-enter [_ ctx]
-    (show-whole-map! (world-camera ctx) (:tiled-map @current-data)))
+    (show-whole-map! (world-camera) (:tiled-map @current-data)))
 
   (screen-exit [_ ctx]
-    (reset-zoom! (world-camera ctx)))
+    (reset-zoom! (world-camera)))
 
   (screen-render [_ context]
     (render! context (:tiled-map @current-data) (constantly white))
-    (render-world-view context #(render-on-map % context))
+    (render-world-view! context #(render-on-map % context))
     (if (key-just-pressed? :keys/l)
       (swap! current-data update :show-grid-lines not))
     (if (key-just-pressed? :keys/m)
       (swap! current-data update :show-movement-properties not))
-    (camera-controls context (world-camera context))
+    (camera-controls context (world-camera))
     (if (key-just-pressed? :keys/escape)
       (change-screen context :screens/main-menu)
       context)))
@@ -177,5 +177,5 @@ direction keys: move")
                   (atom {:tiled-map (t/load-map modules-file)
                          :show-movement-properties false
                          :show-grid-lines false})]
-     :stage (->stage ctx [(->generate-map-window ctx world-id)
-                             (->info-window ctx)])}))
+     :stage (->stage [(->generate-map-window ctx world-id)
+                      (->info-window ctx)])}))

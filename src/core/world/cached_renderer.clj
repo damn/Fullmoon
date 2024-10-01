@@ -6,20 +6,14 @@
   Can be used for lights & shadows.
   The map-renderers are created and cached internally.
   Renders only visible layers."
-  [{g :context/graphics
-    cached-map-renderer :context/tiled-map-renderer
-    :as ctx}
-   tiled-map
-   color-setter]
-  (t/render-tm! (cached-map-renderer g tiled-map)
+  [{cached-map-renderer :context/tiled-map-renderer} tiled-map color-setter]
+  (t/render-tm! (cached-map-renderer tiled-map)
                 color-setter
-                (world-camera ctx)
+                (world-camera)
                 tiled-map))
 
-(defn ->tiled-map-renderer [{:keys [batch] :as g} tiled-map]
-  (t/->orthogonal-tiled-map-renderer tiled-map
-                                     (world-unit-scale g)
-                                     batch))
+(defn ->tiled-map-renderer [tiled-map]
+  (t/->orthogonal-tiled-map-renderer tiled-map (world-unit-scale) batch))
 
 (defcomponent :context/tiled-map-renderer
   {:data :some}

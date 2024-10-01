@@ -220,10 +220,9 @@
         (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 
-  (render-above [_ entity* g _ctx]
+  (render-above [_ entity* _ctx]
     (let [[x y] (:position entity*)]
-      (draw-text g
-                 {:text "zzz"
+      (draw-text {:text "zzz"
                   :x x
                   :y (+ y (:half-height entity*))
                   :up? true}))))
@@ -285,9 +284,9 @@
                   (min maxrange
                        (v-distance player target)))))
 
-(defn- item-place-position [ctx entity*]
+(defn- item-place-position [entity*]
   (placement-point (:position entity*)
-                   (world-mouse-position ctx)
+                   (world-mouse-position)
                    ; so you cannot put it out of your own reach
                    (- (:entity/click-distance-tiles entity*) 0.1)))
 
@@ -322,22 +321,21 @@
     (let [entity* @eid]
       (when (:entity/item-on-cursor entity*)
         [[:tx/sound "sounds/bfxr_itemputground.wav"]
-         [:tx/item (item-place-position ctx entity*) (:entity/item-on-cursor entity*)]
+         [:tx/item (item-place-position entity*) (:entity/item-on-cursor entity*)]
          [:e/dissoc eid :entity/item-on-cursor]])))
 
-  (render-below [_ entity* g ctx]
+  (render-below [_ entity* ctx]
     (when (world-item? ctx)
-      (draw-centered-image g (:entity/image item) (item-place-position ctx entity*)))))
+      (draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
-(extend-type clojure.gdx.Graphics
+(extend-type clojure.gdx.Context
   DrawItemOnCursor
-  (draw-item-on-cursor [g ctx]
+  (draw-item-on-cursor [ctx]
     (let [player-entity* (player-entity* ctx)]
       (when (and (= :player-item-on-cursor (entity-state player-entity*))
                  (not (world-item? ctx)))
-        (draw-centered-image g
-                             (:entity/image (:entity/item-on-cursor player-entity*))
-                             (gui-mouse-position ctx))))))
+        (draw-centered-image (:entity/image (:entity/item-on-cursor player-entity*))
+                             (gui-mouse-position))))))
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
@@ -380,8 +378,8 @@
     (when (stopped? ctx counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (render-below [_ entity* g _ctx]
-    (draw-circle g (:position entity*) 0.5 [1 1 1 0.6])))
+  (render-below [_ entity* _ctx]
+    (draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
 
 (def ^{:doc "Returns the player-entity atom." :private true} ctx-player :context/player-entity)
 

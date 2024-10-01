@@ -4,7 +4,7 @@
     :image-file-extensions #{"png" "bmp"},
     :sound-file-extensions #{"wav"}},
    :context/config
-   {:configs
+   {:flags
     {:dev
      {:debug-options? true,
       :debug-window? true,

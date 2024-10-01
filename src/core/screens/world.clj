@@ -7,7 +7,7 @@
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities ctx
-                                           (world-mouse-position ctx))))]
+                                           (world-mouse-position))))]
     (->> render-order
          (sort-by-order hits :z-order)
          reverse
@@ -58,13 +58,12 @@
                 ]))
 
 (defn- render-world! [ctx]
-  (camera-set-position! (world-camera ctx) (:position (player-entity* ctx)))
-  (world/render-map ctx (camera-position (world-camera ctx)))
-  (render-world-view ctx
-                     (fn [g]
-                       (before-entities ctx g)
-                       (render-entities! ctx g (map deref (active-entities ctx)))
-                       (after-entities ctx g))))
+  (camera-set-position! (world-camera) (:position (player-entity* ctx)))
+  (world/render-map ctx (camera-position (world-camera)))
+  (render-world-view! (fn []
+                        (before-entities ctx)
+                        (render-entities! ctx (map deref (active-entities ctx)))
+                        (after-entities ctx))))
 
 (defn- hotkey->window-id []
   (merge {:keys/i :inventory-window
@@ -89,14 +88,14 @@
 
 (def ^:private zoom-speed 0.05)
 
-(defn- check-zoom-keys [ctx]
-  (let [camera (world-camera ctx)]
+(defn- check-zoom-keys []
+  (let [camera (world-camera)]
     (when (key-pressed? :keys/minus)  (adjust-zoom camera    zoom-speed))
     (when (key-pressed? :keys/equals) (adjust-zoom camera (- zoom-speed)))))
 
 ; TODO move to actor/stage listeners ? then input processor used ....
 (defn- check-key-input [ctx]
-  (check-zoom-keys ctx)
+  (check-zoom-keys)
   (check-window-hotkeys ctx)
   (cond (and (key-just-pressed? :keys/escape)
              (not (close-windows?! ctx)))
@@ -110,8 +109,8 @@
         ctx))
 
 (defcomponent :world/sub-screen
-  (screen-exit [_ ctx]
-    (set-cursor! ctx :cursors/default))
+  (screen-exit [_ _ctx]
+    (set-cursor! :cursors/default))
 
   (screen-render [_ ctx]
     (render-world! ctx)
@@ -122,5 +121,5 @@
 (derive :screens/world :screens/stage)
 (defcomponent :screens/world
   (->mk [_ ctx]
-    {:stage (->stage ctx [])
+    {:stage (->stage [])
      :sub-screen [:world/sub-screen]}))

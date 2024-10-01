@@ -9,7 +9,7 @@
 
 ; we want min/max explored tiles X / Y and show the whole explored area....
 
-(defn- minimap-zoom [{:keys [context/explored-tile-corners] :as ctx}]
+(defn- minimap-zoom [{:keys [context/explored-tile-corners]}]
   (let [positions-explored (map first
                                 (remove (fn [[position value]]
                                           (false? value))
@@ -18,7 +18,7 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (calculate-zoom (world-camera ctx)
+    (calculate-zoom (world-camera)
                     :left left
                     :top top
                     :right right
@@ -30,22 +30,20 @@
 
 #_(deftype Screen []
     (show [_ ctx]
-      (set-zoom! (world-camera ctx) (minimap-zoom ctx)))
+      (set-zoom! (world-camera) (minimap-zoom ctx)))
 
     (hide [_ ctx]
-      (reset-zoom! (world-camera ctx)))
+      (reset-zoom! (world-camera)))
 
     ; TODO fixme not subscreen
     (render [_ {:keys [context/tiled-map context/explored-tile-corners] :as context}]
       (tiled/render! context
                      tiled-map
                      (->tile-corner-color-setter @explored-tile-corners))
-      (render-world-view context
-                         (fn [g]
-                           (draw-filled-circle g
-                                               (camera-position (world-camera context))
-                                               0.5
-                                               :green)))
+      (render-world-view! (fn []
+                            (draw-filled-circle (camera-position (world-camera))
+                                                0.5
+                                                :green)))
       (if (or (key-just-pressed? :keys/tab)
               (key-just-pressed? :keys/escape))
         (change-screen context :screens/world)

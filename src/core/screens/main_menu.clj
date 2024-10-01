@@ -20,11 +20,11 @@
 
 
 (defcomponent :main/sub-screen
-  (screen-enter [_ ctx]
-    (set-cursor! ctx :cursors/default)))
+  (screen-enter [_ _ctx]
+    (set-cursor! :cursors/default)))
 
 (defn- ->actors [ctx]
-  [(->background-image ctx)
+  [(->background-image)
    (->buttons ctx)
    (->actor {:act (fn [_ctx]
                     (when (key-just-pressed? :keys/escape)
@@ -34,4 +34,4 @@
 (defcomponent :screens/main-menu
   (->mk [[k _] ctx]
     {:sub-screen [:main/sub-screen]
-     :stage (->stage ctx (->actors ctx))}))
+     :stage (->stage (->actors ctx))}))

@@ -54,6 +54,6 @@
 (derive :screens/options-menu :screens/stage)
 (defcomponent :screens/options-menu
   (->mk [_ ctx]
-    {:stage (->stage ctx [(->background-image ctx)
-                          (create-table)])
+    {:stage (->stage [(->background-image)
+                      (create-table)])
      :sub-screen [:options/sub-screen]}))

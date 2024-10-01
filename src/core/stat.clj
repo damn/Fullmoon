@@ -157,7 +157,7 @@
   (info-text [_ {:keys [info-text/entity*]}]
     (stats-info-texts entity*))
 
-  (render-info [_ entity* g _ctx]
+  (render-info [_ entity* _ctx]
     (when-let [hp (entity-stat entity* :stats/hp)]
       (let [ratio (val-max-ratio hp)
             {:keys [position width half-width half-height entity/mouseover?]} entity*
@@ -165,11 +165,10 @@
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
-                height (pixels->world-units g hpbar-height-px)
-                border (pixels->world-units g borders-px)]
-            (draw-filled-rectangle g x y width height :black)
-            (draw-filled-rectangle g
-                                   (+ x border)
+                height (pixels->world-units hpbar-height-px)
+                border (pixels->world-units borders-px)]
+            (draw-filled-rectangle x y width height :black)
+            (draw-filled-rectangle (+ x border)
                                    (+ y border)
                                    (- (* width ratio) (* 2 border))
                                    (- height (* 2 border))
@@ -193,8 +192,10 @@ Default method returns true."
   [_ ctx])
 (defmethod useful? :default [_ ctx] true)
 
-(defsystem ^:private render-effect "Renders effect during active-skill state while active till done?. Default do nothing." [_ g ctx])
-(defmethod render-effect :default [_ g ctx])
+(defsystem ^:private render-effect
+  "Renders effect during active-skill state while active till done?. Default do nothing."
+  [_ ctx])
+(defmethod render-effect :default [_ ctx])
 
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
@@ -519,11 +520,10 @@ Default method returns true."
                 ; find a way to pass ctx / effect-ctx separate ?
                 [:tx/effect {:effect/source source :effect/target target} entity-effects]]))))
 
-  (render-effect [_ g {:keys [effect/source] :as ctx}]
+  (render-effect [_ {:keys [effect/source] :as ctx}]
     (let [source* @source]
       (doseq [target* (map deref (creatures-in-los-of-player ctx))]
-        (draw-line g
-                   (:position source*) #_(start-point source* target*)
+        (draw-line (:position source*) #_(start-point source* target*)
                    (:position target*)
                    [1 0 0 0.5])))))
 
@@ -585,11 +585,10 @@ Default method returns true."
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (render-effect [_ g {:keys [effect/source effect/target]}]
+  (render-effect [_ {:keys [effect/source effect/target]}]
     (let [source* @source
           target* @target]
-      (draw-line g
-                 (start-point source* target*)
+      (draw-line (start-point source* target*)
                  (end-point   source* target* maxrange)
                  (if (in-range? source* target* maxrange)
                    [1 0 0 0.5]
@@ -655,7 +654,7 @@ Default method returns true."
 (defn- ->player-effect-ctx [ctx entity*]
   (let [target* (mouseover-entity* ctx)
         target-position (or (and target* (:position target*))
-                            (world-mouse-position ctx))]
+                            (world-mouse-position))]
     {:effect/source (:entity/id entity*)
      :effect/target (:entity/id target*)
      :effect/target-position target-position
@@ -675,18 +674,18 @@ Default method returns true."
                 :effect/direction
                 :effect/target-position))))
 
-(defn- draw-skill-icon [g icon entity* [x y] action-counter-ratio]
+(defn- draw-skill-icon [icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)
         _ (assert (= width height))
         radius (/ (float width) 2)
         y (+ (float y) (float (:half-height entity*)) (float 0.15))
         center [x (+ y radius)]]
-    (draw-filled-circle g center radius [1 1 1 0.125])
-    (draw-sector g center radius
+    (draw-filled-circle center radius [1 1 1 0.125])
+    (draw-sector center radius
                  90 ; start-angle
                  (* (float action-counter-ratio) 360) ; degree
                  [1 1 1 0.5])
-    (draw-image g icon [(- (float x) radius) y])))
+    (draw-image icon [(- (float x) radius) y])))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time
@@ -728,10 +727,10 @@ Default method returns true."
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (render-info [_ entity* g ctx]
+  (render-info [_ entity* ctx]
     (let [{:keys [entity/image skill/effects]} skill]
-      (draw-skill-icon g image entity* (:position entity*) (finished-ratio ctx counter))
-      (run! #(render-effect % g (merge ctx effect-ctx)) effects))))
+      (draw-skill-icon image entity* (:position entity*) (finished-ratio ctx counter))
+      (run! #(render-effect % (merge ctx effect-ctx)) effects))))
 
 ; TODO
 ; split it into 3 parts

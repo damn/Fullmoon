@@ -1,30 +1,29 @@
 (in-ns 'core.world)
 
-(defn- render-infostr-on-bar [g infostr x y h]
-  (draw-text g {:text infostr
-                :x (+ x 75)
-                :y (+ y 2)
-                :up? true}))
+(defn- render-infostr-on-bar [infostr x y h]
+  (draw-text {:text infostr
+              :x (+ x 75)
+              :y (+ y 2)
+              :up? true}))
 
 (defn- ->hp-mana-bars [context]
-  (let [rahmen      (->image context "images/rahmen.png")
-        hpcontent   (->image context "images/hp.png")
-        manacontent (->image context "images/mana.png")
-        x (/ (gui-viewport-width context) 2)
+  (let [rahmen      (->image "images/rahmen.png")
+        hpcontent   (->image "images/hp.png")
+        manacontent (->image "images/mana.png")
+        x (/ (gui-viewport-width) 2)
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         y-mana 80 ; action-bar-icon-size
         y-hp (+ y-mana rahmenh)
-        render-hpmana-bar (fn [g ctx x y contentimg minmaxval name]
-                            (draw-image g rahmen [x y])
-                            (draw-image g
-                                        (sub-image ctx contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+        render-hpmana-bar (fn [ctx x y contentimg minmaxval name]
+                            (draw-image rahmen [x y])
+                            (draw-image (sub-image contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                         [x y])
-                            (render-infostr-on-bar g (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
-    (->actor {:draw (fn [g ctx]
+                            (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
+    (->actor {:draw (fn [ctx]
                          (let [player-entity* (player-entity* ctx)
                                x (- x (/ rahmenw 2))]
-                           (render-hpmana-bar g ctx x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
-                           (render-hpmana-bar g ctx x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
+                           (render-hpmana-bar ctx x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
+                           (render-hpmana-bar ctx x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -34,15 +33,15 @@
 
 ; TODO component to info-text move to the component itself.....
 (defn- debug-infos ^String [ctx]
-  (let [world-mouse (world-mouse-position ctx)]
+  (let [world-mouse (world-mouse-position)]
     (str
      "logic-frame: " (logic-frame ctx) "\n"
      "FPS: " (frames-per-second)  "\n"
-     "Zoom: " (zoom (world-camera ctx)) "\n"
+     "Zoom: " (zoom (world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
-     "GUI: " (gui-mouse-position ctx) "\n"
+     "GUI: " (gui-mouse-position) "\n"
      "paused? " (:context/paused? ctx) "\n"
      "elapsed-time " (readable-number (elapsed-time ctx)) " seconds \n"
      (skill-info (player-entity* ctx))
@@ -59,7 +58,7 @@
         window (->window {:title "Debug"
                           :id :debug-window
                           :visible? false
-                          :position [0 (gui-viewport-height context)]
+                          :position [0 (gui-viewport-height)]
                           :rows [[label]]})]
     (add-actor! window (->actor {:act #(do
                                         (.setText label (debug-infos %))
@@ -76,7 +75,7 @@
         window (->window {:title "Info"
                           :id :entity-info-window
                           :visible? false
-                          :position [(gui-viewport-width context) 0]
+                          :position [(gui-viewport-width) 0]
                           :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
@@ -198,13 +197,13 @@
 
 (def ^:private duration-seconds 1.5)
 
-(defn- draw-player-message [g ctx]
+(defn- draw-player-message [ctx]
   (when-let [{:keys [message]} (ctx-msg-player ctx)]
-    (draw-text g {:x (/ (gui-viewport-width ctx) 2)
-                  :y (+ (/ (gui-viewport-height ctx) 2) 200)
-                  :text message
-                  :scale 2.5
-                  :up? true})))
+    (draw-text {:x (/ (gui-viewport-width) 2)
+                :y (+ (/ (gui-viewport-height) 2) 200)
+                :text message
+                :scale 2.5
+                :up? true})))
 
 (defn- check-remove-message [ctx]
   (when-let [{:keys [counter]} (ctx-msg-player ctx)]
@@ -232,13 +231,13 @@
    (->group {:id :windows
              :actors [(->debug-window ctx)
                       (->entity-info-window ctx)
-                      (->inventory-window ctx widget-data)]})
+                      (->inventory-window widget-data)]})
    (->actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message] ctx)])
 
 (defn ->world-widgets [ctx]
   (let [widget-data {:action-bar (->action-bar-button-group)
-                     :slot->background (->inventory-window-data ctx)}
+                     :slot->background (->inventory-window-data)}
         stage (stage-get ctx)]
     (s-clear! stage)
     (run! #(s-add! stage %) (->ui-actors ctx widget-data))
