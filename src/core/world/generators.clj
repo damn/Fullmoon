@@ -187,10 +187,10 @@
 
 (def ^:private sprite-size 48)
 
-(defn- terrain-texture-region [ctx]
+(defn- terrain-texture-region []
   (->texture-region (asset "maps/uf_terrain.png")))
 
-(defn- ->uf-tile [ctx & {:keys [sprite-x sprite-y movement]}]
+(defn- ->uf-tile [& {:keys [sprite-x sprite-y movement]}]
   (->tm-tile (->texture-region (terrain-texture-region ctx)
                                [(* sprite-x sprite-size)
                                 (* sprite-y sprite-size)
@@ -212,14 +212,14 @@
         y [13,16,19,22,25,28]]
     [x y]))
 
-(defn- ->ground-tile [ctx [x y]]
-  (->uf-tile ctx :sprite-x (+ x (rand-0-3)) :sprite-y y :movement "all"))
+(defn- ->ground-tile [[x y]]
+  (->uf-tile :sprite-x (+ x (rand-0-3)) :sprite-y y :movement "all"))
 
-(defn- ->wall-tile [ctx [x y]]
-  (->uf-tile ctx :sprite-x (+ x (rand-0-5)) :sprite-y y :movement "none"))
+(defn- ->wall-tile [[x y]]
+  (->uf-tile :sprite-x (+ x (rand-0-5)) :sprite-y y :movement "none"))
 
-(defn- ->transition-tile [ctx [x y]]
-  (->uf-tile ctx :sprite-x (+ x (rand-0-5)) :sprite-y y :movement "none"))
+(defn- ->transition-tile [[x y]]
+  (->uf-tile :sprite-x (+ x (rand-0-5)) :sprite-y y :movement "none"))
 
 (defn- transition? [grid [x y]]
   (= :ground (get grid [x (dec y)])))
@@ -249,11 +249,11 @@
         transition-idx  [wall-x (inc wall-y)]
         position->tile (fn [position]
                          (case (get grid position)
-                           :wall (->wall-tile ctx wall-idx)
+                           :wall (->wall-tile wall-idx)
                            :transition (if (transition? grid position)
-                                         (->transition-tile ctx transition-idx)
-                                         (->wall-tile ctx wall-idx))
-                           :ground (->ground-tile ctx ground-idx)))
+                                         (->transition-tile transition-idx)
+                                         (->wall-tile wall-idx))
+                           :ground (->ground-tile ground-idx)))
         tiled-map (t/wgt-grid->tiled-map grid position->tile)
         can-spawn? #(= "all" (t/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
