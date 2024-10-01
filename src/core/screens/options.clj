@@ -32,23 +32,16 @@
 (def ^:private key-help-text
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
 
-(defn- create-table [{:keys [context/config] :as ctx}]
+(defn- create-table []
   (->table {:rows (concat
                    [[(->label key-help-text)]]
-
-                   (when (safe-get config :debug-window?)
-                     [[(->label "[Z] - Debug window")]])
-
-                   (when (safe-get config :debug-options?)
-                     (for [check-box debug-flags]
-                       [(->check-box (get-text check-box)
-                                     (partial set-state check-box)
-                                     (boolean (get-state check-box)))]))
-
+                   (when (config :debug-window?) [[(->label "[Z] - Debug window")]])
+                   (when (config :debug-options?) (for [check-box debug-flags]
+                                                    [(->check-box (get-text check-box)
+                                                                  (partial set-state check-box)
+                                                                  (boolean (get-state check-box)))]))
                    [[(->text-button "Resume" #(change-screen % :screens/world))]
-
-                    [(->text-button "Exit" #(change-screen % :screens/main-menu))]])
-
+                    [(->text-button "Exit"   #(change-screen % :screens/main-menu))]])
             :fill-parent? true
             :cell-defaults {:pad-bottom 10}}))
 
@@ -62,5 +55,5 @@
 (defcomponent :screens/options-menu
   (->mk [_ ctx]
     {:stage (->stage ctx [(->background-image ctx)
-                          (create-table ctx)])
+                          (create-table)])
      :sub-screen [:options/sub-screen]}))

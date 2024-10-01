@@ -66,15 +66,14 @@
                        (render-entities! ctx g (map deref (active-entities ctx)))
                        (after-entities ctx g))))
 
-
-(defn- hotkey->window-id [{:keys [context/config]}]
+(defn- hotkey->window-id []
   (merge {:keys/i :inventory-window
           :keys/e :entity-info-window}
-         (when (safe-get config :debug-window?)
+         (when (config :debug-window?)
            {:keys/z :debug-window})))
 
 (defn- check-window-hotkeys [ctx]
-  (doseq [[hotkey window-id] (hotkey->window-id ctx)
+  (doseq [[hotkey window-id] (hotkey->window-id)
           :when (key-just-pressed? hotkey)]
     (toggle-visible! (get (:windows (stage-get ctx)) window-id))))
 

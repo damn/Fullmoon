@@ -6,13 +6,13 @@
         (change-screen :screens/world)
         (add-world-ctx world-id))))
 
-(defn- ->buttons [{:keys [context/config] :as ctx}]
+(defn- ->buttons [ctx]
   (->table {:rows (remove nil? (concat
                                    (for [{:keys [property/id]} (all-properties ctx :properties/worlds)]
                                      [(->text-button (str "Start " id) (start-game-fn id))])
-                                   [(when (safe-get config :map-editor?)
+                                   [(when (config :map-editor?)
                                       [(->text-button "Map editor" #(change-screen % :screens/map-editor))])
-                                    (when (safe-get config :property-editor?)
+                                    (when (config :property-editor?)
                                       [(->text-button "Property editor" #(change-screen % :screens/property-editor))])
                                     [(->text-button "Exit" (fn [ctx] (exit-app!) ctx))]]))
                :cell-defaults {:pad-bottom 25}
