@@ -210,7 +210,7 @@
 (defn- add-elements! [node elements]
   (doseq [element elements
           :let [el-node (->t-node (->label (str (->v-str element))))]]
-    (.add node el-node)))
+    (t-node-add! node el-node)))
 
 (declare add-map-nodes!)
 
@@ -245,7 +245,7 @@
       ;(println "add-map-nodes! k " k)
       (try
        (let [node (->t-node (->label (->labelstr k v)))]
-         (.add parent-node node)
+         (.add parent-node node) ; no t-node-add!: tree cannot be casted to tree-node ... , Tree itself different .add
          #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
            (->nested-nodes node level @v))
          (->nested-nodes node level v))
