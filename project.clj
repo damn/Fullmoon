@@ -1,11 +1,7 @@
 (defproject clojure.ctx "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
-
   :dependencies [[org.clojure/clojure "1.12.0"]
-                 [com.github.damn/clojure.gdx "main-SNAPSHOT"]
-                 ; this is already dependency in clojure.gdx
-                 ; but if I remove it lein codox does not work anymore
-                 [org.clojure/tools.namespace "1.3.0"]]
+                 [com.github.damn/clojure.gdx "main-SNAPSHOT"]]
   :plugins [[lein-hiera "2.0.0"]
             [lein-codox "0.10.8"]]
   :target-path "target/%s/" ; https://stackoverflow.com/questions/44246924/clojure-tools-namespace-refresh-fails-with-no-namespace-foo
@@ -43,34 +39,3 @@
 ; -> report to vim fireplace?
 
 ; :FireplaceConnect 7888
-
-(comment
- ; https://github.com/greglook/clj-hiera/blob/main/src/hiera/main.clj
- ; 1. activate dependency first: [lein-hiera "2.0.0"]
- ; 2. export JVM_OPTS=
- ; 3. lein repl
- ; 4. eval this:
- (do
-  (require '[hiera.main :as hiera])
-  (hiera/graph
-   {:sources #{"src"}
-    :output "target/hiera"
-    :layout :horizontal
-    :external false
-    :ignore #{"dev" ; ignore
-              "app"
-
-              "gdx"   ; 1. layer
-              "math"  ; 2. layer
-              "utils" ; 3. layer
-              "core"  ; 4. layer
-
-              ; is ok
-              "components.entity"
-              "components.properties"
-              }}))
-
- ; Current problems: simple!
- ; lein hiera :layout :horizontal :ignore "#{gdx, utils, math, mapgen, core.component, components.entity-state.load, core.entity, core.context, core.graphics, core.world, core.operation, core.modifiers, core.inventory}"
-
- )
