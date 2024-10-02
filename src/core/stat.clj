@@ -877,12 +877,9 @@ Default method returns true."
   (let [mouseover-e* (mouseover-entity*)]
     (cond
      (mouse-on-actor?)
-     [(mouseover-actor->cursor)
-      (fn []
-        nil)] ; handled by actors themself, they check player state
+     [(mouseover-actor->cursor) (fn [] nil)] ; handled by actors themself, they check player state
 
-     (and mouseover-e*
-          (:entity/clickable mouseover-e*))
+     (and mouseover-e* (:entity/clickable mouseover-e*))
      (->clickable-mouseover-entity-interaction entity* mouseover-e*)
 
      :else

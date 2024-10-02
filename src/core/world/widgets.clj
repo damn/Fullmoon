@@ -108,7 +108,7 @@
 (defcomponent :tx.action-bar/add
   (do! [[_ {:keys [property/id entity/image] :as skill}]]
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
-          button (->image-button image identity {:scale image-scale})]
+          button (->image-button image (fn []) {:scale image-scale})]
       (set-id! button id)
       (add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (player-entity)) FIXME
       (add-actor! horizontal-group button)

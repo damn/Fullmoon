@@ -40,8 +40,8 @@
                                                     [(->check-box (get-text check-box)
                                                                   (partial set-state check-box)
                                                                   (boolean (get-state check-box)))]))
-                   [[(->text-button "Resume" #(change-screen % :screens/world))]
-                    [(->text-button "Exit"   #(change-screen % :screens/main-menu))]])
+                   [[(->text-button "Resume" #(change-screen :screens/world))]
+                    [(->text-button "Exit"   #(change-screen :screens/main-menu))]])
             :fill-parent? true
             :cell-defaults {:pad-bottom 10}}))
 

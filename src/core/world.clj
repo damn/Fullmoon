@@ -37,17 +37,17 @@
     (dispose! world-tiled-map)))
 
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
+  (bind-root #'entity-tick-error nil)
   (init-world-time!)
+  (bind-root #'world-tiled-map tiled-map)
   (bind-root #'world-widgets (->world-widgets))
+  (init-uids-entities!)
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)
         grid (init-world-grid! w h (world-grid-position->value-fn tiled-map))]
     (init-world-raycaster! grid blocks-vision?)
-    (bind-root #'world-tiled-map tiled-map)
     (init-content-grid! :cell-size 16 :width w :height h)
     (bind-root #'explored-tile-corners (->explored-tile-corners w h))
-    (bind-root #'entity-tick-error nil)
-    (init-uids-entities!)
     (spawn-creatures! tiled-map start-position)))
 
 ; TODO  add-to-world/assoc/dissoc uid from entity move together here
