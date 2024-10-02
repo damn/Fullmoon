@@ -59,6 +59,8 @@
               (swap! explored-tile-corners assoc (->tile position) true))
             white)))))
 
+(declare world-tiled-map)
+
 (defn render-map [light-position]
   (render! world-tiled-map
            (->tile-color-setter (atom nil)
