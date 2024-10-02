@@ -238,7 +238,7 @@
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
                         :button-text ":("
-                        :on-click #(change-screen % :screens/main-menu)}]]))
+                        :on-click #(change-screen :screens/main-menu)}]]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)

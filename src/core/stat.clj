@@ -222,6 +222,25 @@ Default method returns true."
   [_])
 (defmethod render-effect :default [_])
 
+;;
+;; Aggregate functions
+;;
+
+(defn- filter-applicable? [effect]
+  (filter applicable? effect))
+
+(defn- effect-applicable? [effect]
+  (seq (filter-applicable? effect)))
+
+(defn- effect-useful? [effect]
+  (->> effect
+       filter-applicable?
+       (some useful?)))
+
+;;
+;;
+;;
+
 ; SCHEMA effect-ctx
 ; * source = always available
 ; # npc:
@@ -264,7 +283,16 @@ Default method returns true."
 (defcomponent :tx/effect
   (do! [[_ effect-ctx effect]]
     (with-effect-ctx effect-ctx
-      (effect! (filter applicable? effect)))))
+      (effect! (filter-applicable? effect)))))
+
+; would have to do this only if effect even needs target ... ?
+(defn- check-remove-target [{:keys [effect/source]}]
+  ;FIXME ???
+  #_(update ctx :effect/target (fn [target]
+                               (when (and target
+                                          (not (:entity/destroyed? @target))
+                                          (line-of-sight? @source @target))
+                                 target))))
 
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
@@ -625,7 +653,7 @@ Default method returns true."
 
   (applicable? [_]
     (and target
-         (some applicable? entity-effects)))
+         (effect-applicable? entity-effects)))
 
   (useful? [_]
     (assert source)
@@ -668,19 +696,6 @@ Default method returns true."
                  (if (in-range? source* target* maxrange)
                    [1 0 0 0.5]
                    [1 1 0 0.5])))))
-
-; would have to do this only if effect even needs target ... ?
-(defn- check-remove-target [{:keys [effect/source]}]
-  ;FIXME ???
-  #_(update ctx :effect/target (fn [target]
-                               (when (and target
-                                          (not (:entity/destroyed? @target))
-                                          (line-of-sight? @source @target))
-                                 target))))
-
-(defn- effect-applicable? [effects]
-  (check-remove-target)
-  (some applicable? effects))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity-stat entity* :stats/mana)]
@@ -749,7 +764,9 @@ Default method returns true."
 
   (tick [_ eid]
     (cond
-     (not (effect-applicable? effect-ctx (:skill/effects skill)))
+     ; (check-remove-target) TODO FIXME this here
+     (with-effect-ctx effect-ctx
+       (not (effect-applicable? (:skill/effects skill))))
      [[:tx/event eid :action-done]
       ; TODO some sound ?
       ]
@@ -761,23 +778,9 @@ Default method returns true."
   (render-info [_ entity*]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon image entity* (:position entity*) (finished-ratio counter))
-      (run! #(render-effect % effect-ctx) effects))))
+      (with-effect-ctx effect-ctx
+        (run! render-effect effects)))))
 
-; TODO
-; split it into 3 parts
-; applicable
-; useful
-; usable?
-(defn- effect-useful? [effects]
-  ;(println "Check useful? for effects: " (map first effects))
-  (let [applicable-effects (filter applicable? effects)
-        ;_ (println "applicable-effects: " (map first applicable-effects))
-        useful-effect (some useful? applicable-effects)]
-    ;(println "Useful: " useful-effect)
-    useful-effect))
-
-; maybe just pass the effect-ctx again?!
-; for applicable/useful?
 (defn- npc-choose-skill [entity*]
   (->> entity*
        :entity/skills
@@ -789,8 +792,7 @@ Default method returns true."
        first))
 
 (comment
- (let [uid 76
-       entity* @(get-entity uid)
+ (let [entity* @(get-entity 76)
        effect-ctx (->npc-effect-ctx entity*)]
    (npc-choose-skill effect-ctx entity*))
  )
@@ -803,7 +805,8 @@ Default method returns true."
   (tick [_ eid]
     (let [entity* @eid
           effect-ctx (->npc-effect-ctx entity*)]
-      (if-let [skill (npc-choose-skill effect-ctx entity*)]
+      (if-let [skill (with-effect-ctx effect-ctx
+                       (npc-choose-skill entity*))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
         [[:tx/event eid :movement-direction (potential-fields-follow-to-enemy eid)]]))))
 
@@ -886,7 +889,8 @@ Default method returns true."
      (if-let [skill-id (selected-skill)]
        (let [skill (skill-id (:entity/skills entity*))
              effect-ctx (->player-effect-ctx entity*)
-             state (skill-usable-state effect-ctx entity* skill)]
+             state (with-effect-ctx effect-ctx
+                     (skill-usable-state entity* skill))]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight

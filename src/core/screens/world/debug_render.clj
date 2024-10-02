@@ -6,8 +6,7 @@
         radius 0.8
         circle {:position position :radius radius}]
     (draw-circle position radius [1 0 0 0.5])
-    (doseq [[x y] (map #(:position @%)
-                       (circle->cells grid circle))]
+    (doseq [[x y] (map #(:position @%) (circle->cells grid circle))]
       (draw-rectangle x y 1 1 [1 0 0 0.5]))
     (let [{[x y] :left-bottom :keys [width height]} (circle->outer-rectangle circle)]
       (draw-rectangle x y width height [0 0 1 1]))))

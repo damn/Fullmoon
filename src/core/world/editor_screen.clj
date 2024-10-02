@@ -157,7 +157,7 @@ direction keys: move")
 
   (screen-render [_]
     (render! (:tiled-map @current-data) (constantly white))
-    (render-world-view! #(render-on-map %))
+    (render-world-view! render-on-map)
     (if (key-just-pressed? :keys/l)
       (swap! current-data update :show-grid-lines not))
     (if (key-just-pressed? :keys/m)
