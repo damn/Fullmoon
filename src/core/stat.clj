@@ -197,6 +197,11 @@ Default method returns true."
   [_])
 (defmethod render-effect :default [_])
 
+(declare ^:dynamic source
+         ^:dynamic target
+         ^:dynamic target-direction
+         ^:dynamic target-position)
+
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defcomponent :base/stat-effect
@@ -205,14 +210,14 @@ Default method returns true."
               (for [operation operations]
                 (str (op-info-text operation) " " (k->pretty-name k)))))
 
-  (applicable? [[k _] {:keys [effect/target]}]
+  (applicable? [[k _]]
     (and target
          (entity-stat @target (effect-k->stat-k k))))
 
-  (useful? [_ _effect-ctx]
+  (useful? [_]
     true)
 
-  (do! [[effect-k operations] {:keys [effect/target]}]
+  (do! [[effect-k operations]]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity-stat @target stat-k)]
         [[:e/assoc-in target [:entity/stats stat-k]
@@ -227,18 +232,18 @@ Default method returns true."
   (let [strength (or (entity-stat entity* :stats/strength) 0)]
     {:damage/min-max [strength strength]}))
 
-(defn- damage-effect [{:keys [effect/source]}]
+(defn- damage-effect []
   [:effect.entity/damage (entity*->melee-damage @source)])
 
 (defcomponent :effect.entity/melee-damage
   {:data :some}
-  (info-text [_ {:keys [effect/source] :as effect-ctx}]
+  (info-text [_]
     (str "Damage based on entity strength."
          (when source
-           (str "\n" (info-text (damage-effect effect-ctx) effect-ctx)))))
+           (str "\n" (info-text (damage-effect))))))
 
-  (applicable? [_ effect-ctx]
-    (applicable? (damage-effect effect-ctx) effect-ctx))
+  (applicable? [_]
+    (applicable? (damage-effect)))
 
   (do! [_]
     [(damage-effect)]))
@@ -290,7 +295,7 @@ Default method returns true."
 (defcomponent :effect.entity/damage
   {:let damage
    :data [:map [:damage/min-max]]}
-  (info-text [_ {:keys [effect/source]}]
+  (info-text [_]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
@@ -298,11 +303,11 @@ Default method returns true."
           (str (damage->text damage) "\nModified: " (damage->text modified))))
       (damage->text damage))) ; property menu no source,modifiers
 
-  (applicable? [_ {:keys [effect/target]}]
+  (applicable? [_]
     (and target
          (entity-stat @target :stats/hp)))
 
-  (do! [_ {:keys [effect/source effect/target]}]
+  (do! [_]
     (let [source* @source
           target* @target
           hp (entity-stat target* :stats/hp)]
@@ -331,33 +336,33 @@ Default method returns true."
       duration 5]
   (defcomponent :effect.entity/spiderweb
     {:data :some}
-    (info-text [_ _effect-ctx]
+    (info-text [_]
       "Spiderweb slows 50% for 5 seconds."
       ; modifiers same like item/modifiers has info-text
       ; counter ?
       )
 
-    (applicable? [_ {:keys [effect/source effect/target]}]
+    (applicable? [_]
       ; ?
       true)
 
     ; TODO stacking? (if already has k ?) or reset counter ? (see string-effect too)
-    (do! [_ {:keys [effect/source effect/target]}]
+    (do! [_]
       (when-not (:entity/temp-modifier @target)
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                  :counter (->counter duration)}]]))))
 (defcomponent :effect.entity/convert
   {:data :some}
-  (info-text [_ _effect-ctx]
+  (info-text [_]
     "Converts target to your side.")
 
-  (applicable? [_ {:keys [effect/source effect/target]}]
+  (applicable? [_]
     (and target
          (= (:entity/faction @target)
             (enemy-faction @source))))
 
-  (do! [_ {:keys [effect/source effect/target]}]
+  (do! [_]
     [[:tx/audiovisual (:position @target) :audiovisuals/convert]
      [:e/assoc target :entity/faction (friendly-faction @source)]]))
 
@@ -377,11 +382,11 @@ Default method returns true."
 (defcomponent :effect/spawn
   {:data [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
-  (applicable? [_ {:keys [effect/source effect/target-position]}]
+  (applicable? [_]
     (and (:entity/faction @source)
          target-position))
 
-  (do! [_ {:keys [effect/source effect/target-position]}]
+  (do! [_]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
                     :creature-id id ; already properties/get called through one-to-one, now called again.
@@ -391,26 +396,26 @@ Default method returns true."
 (defcomponent :effect.entity/stun
   {:data :pos
    :let duration}
-  (info-text [_ _effect-ctx]
+  (info-text [_]
     (str "Stuns for " (readable-number duration) " seconds"))
 
-  (applicable? [_ {:keys [effect/target]}]
+  (applicable? [_]
     (and target
          (:entity/state @target)))
 
-  (do! [_ {:keys [effect/target]}]
+  (do! [_]
     [[:tx/event target :stun duration]]))
 
 (defcomponent :effect.entity/kill
   {:data :some}
-  (info-text [_ _effect-ctx]
+  (info-text [_]
     "Kills target")
 
-  (applicable? [_ {:keys [effect/source effect/target]}]
+  (applicable? [_]
     (and target
          (:entity/state @target)))
 
-  (do! [_ {:keys [effect/target]}]
+  (do! [_]
     [[:tx/event target :kill]]))
 
 (defn- projectile-start-point [entity* direction size]
@@ -426,11 +431,11 @@ Default method returns true."
   {:data [:one-to-one :properties/projectiles]
    :let {:keys [entity-effects projectile/max-range] :as projectile}}
   ; TODO for npcs need target -- anyway only with direction
-  (applicable? [_ {:keys [effect/direction]}]
-    direction) ; faction @ source also ?
+  (applicable? [_]
+    target-direction) ; faction @ source also ?
 
   ; TODO valid params direction has to be  non-nil (entities not los player ) ?
-  (useful? [_ {:keys [effect/source effect/target]}]
+  (useful? [_]
     (let [source-p (:position @source)
           target-p (:position @target)]
       (and (not (path-blocked? ; TODO test
@@ -442,11 +447,11 @@ Default method returns true."
                           target-p)
               max-range))))
 
-  (do! [_ {:keys [effect/source effect/direction]}]
+  (do! [_]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
-      {:position (projectile-start-point @source direction (projectile-size projectile))
-       :direction direction
+      {:position (projectile-start-point @source target-direction (projectile-size projectile))
+       :direction target-direction
        :faction (:entity/faction @source)}
       projectile]]))
 
@@ -503,7 +508,7 @@ Default method returns true."
     false
     )
 
-  (do! [_ {:keys [effect/source]}]
+  (do! [_]
     (let [source* @source]
       (apply concat
              (for [target (creatures-in-los-of-player)]
@@ -520,7 +525,7 @@ Default method returns true."
                 ; find a way to pass ctx / effect-ctx separate ?
                 [:tx/effect {:effect/source source :effect/target target} entity-effects]]))))
 
-  (render-effect [_ {:keys [effect/source]}]
+  (render-effect [_]
     (let [source* @source]
       (doseq [target* (map deref (creatures-in-los-of-player))]
         (draw-line (:position source*) #_(start-point source* target*)
@@ -555,16 +560,16 @@ Default method returns true."
    :editor/doc "Applies entity-effects to a target if they are inside max-range & in line of sight.
                Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
 
-  (applicable? [_ {:keys [effect/target]}]
+  (applicable? [_]
     (and target
          (some applicable? entity-effects)))
 
-  (useful? [_ {:keys [effect/source effect/target]}]
+  (useful? [_]
     (assert source)
     (assert target)
     (in-range? @source @target maxrange))
 
-  (do! [_ {:keys [effect/source effect/target]}]
+  (do! [_]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)
@@ -585,7 +590,7 @@ Default method returns true."
          ; * either use 'MISS' or get enemy entities at end-point
          [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
-  (render-effect [_ {:keys [effect/source effect/target]}]
+  (render-effect [_]
     (let [source* @source
           target* @target]
       (draw-line (start-point source* target*)
@@ -596,7 +601,7 @@ Default method returns true."
 
 ; would have to do this only if effect even needs target ... ?
 (defn- check-remove-target [{:keys [effect/source]}]
-  ;FIXME
+  ;FIXME ???
   (update ctx :effect/target (fn [target]
                                (when (and target
                                           (not (:entity/destroyed? @target))
@@ -650,7 +655,7 @@ Default method returns true."
                  target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
-     :effect/direction (when target (direction entity* @target))}))
+     :effect/target-direction (when target (direction entity* @target))}))
 
 (defn- ->player-effect-ctx [entity*]
   (let [target* (mouseover-entity*)
@@ -659,9 +664,9 @@ Default method returns true."
     {:effect/source (:entity/id entity*)
      :effect/target (:entity/id target*)
      :effect/target-position target-position
-     :effect/direction (v-direction (:position entity*) target-position)}))
+     :effect/target-direction (v-direction (:position entity*) target-position)}))
 
-(defcomponent :tx/effect
+(defcomponent :tx/effect ; FIXME ?!?!
   (do! [[_ effect-ctx effects]]
     (-> ctx
         (merge effect-ctx)
@@ -672,7 +677,7 @@ Default method returns true."
         ; generic context ?( projectile hit is not skill context)
         (dissoc :effect/source
                 :effect/target
-                :effect/direction
+                :effect/target-direction
                 :effect/target-position))))
 
 (defn- draw-skill-icon [icon entity* [x y] action-counter-ratio]

@@ -9,7 +9,5 @@
          "screens/main_menu"
          "screens/options"))
 
-;;
-
 (defn -main []
   (start-app! "resources/properties.edn"))
