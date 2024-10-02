@@ -35,7 +35,7 @@
 (defn- debug-infos ^String []
   (let [world-mouse (world-mouse-position)]
     (str
-     "logic-frame: " (logic-frame) "\n"
+     "logic-frame: " logic-frame "\n"
      "FPS: " (frames-per-second)  "\n"
      "Zoom: " (zoom (world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
@@ -43,7 +43,7 @@
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position) "\n"
      "paused? " (:context/paused?) "\n"
-     "elapsed-time " (readable-number (elapsed-time)) " seconds \n"
+     "elapsed-time " (readable-number elapsed-time) " seconds \n"
      (skill-info (player-entity*))
      (when-let [entity* (mouseover-entity*)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))

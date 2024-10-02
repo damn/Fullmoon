@@ -58,9 +58,9 @@
             white)))))
 
 (defn render-map [light-position]
-  (render!  world-tiled-map
+  (render! world-tiled-map
            (->tile-color-setter (atom nil)
                                 light-position
-                                (:context/raycaster)
-                                (:context/explored-tile-corners)))
+                                world-raycaster
+                                explored-tile-corners))
   #_(reset! do-once false))

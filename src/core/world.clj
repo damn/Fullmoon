@@ -12,15 +12,14 @@
          "world/widgets"))
 ;;; ?
 
-(defn- ->world-time []
-  {:elapsed 0
-   :logic-frame 0})
+(defn- bind-world-time! []
+  (.bindRoot #'elapsed-time 0)
+  (.bindRoot #'logic-frame 0))
 
 (defn update-time [delta]
-  (update ctx :context/time #(-> %
-                                 (assoc :delta-time delta)
-                                 (update :elapsed + delta)
-                                 (update :logic-frame inc))))
+  (.bindRoot #'world-delta delta)
+  (alter-var-root #'elapsed-time + delta)
+  (alter-var-root #'logic-frame inc))
 
 (defn- ->explored-tile-corners [width height]
   (atom (g/create-grid width height (constantly false))))
@@ -32,34 +31,28 @@
       "air"  :air
       "all"  :all)))
 
-; TODO https://github.com/damn/core/issues/57
-; (check-not-allowed-diagonals grid)
-(defn- ->world-map [{:keys [tiled-map start-position]}]
-  (let [w (t/width  tiled-map)
-        h (t/height tiled-map)
-        grid (->world-grid w h (world-grid-position->value-fn tiled-map))]
-    {:context/tiled-map tiled-map
-     :context/start-position start-position
-     :context/grid grid
+(declare entity-tick-error)
 
-     ; TODO the keyword needs to be in ->raycaster
-     ; as the code there depends on that k specifically
-     :context/raycaster (->raycaster grid blocks-vision?)
-     content-grid (->content-grid :cell-size 16 :width w :height h)
-     :context/explored-tile-corners (->explored-tile-corners w h)}))
-
+; TODO  add-to-world/assoc/dissoc uid from entity move together here
+; also core.screens/world ....
 (.bindRoot #'clojure.gdx/add-world-ctx
            (fn [world-property-id]
-             (when-let [tiled-map (:context/tiled-map)]
-               (dispose! tiled-map))
-             (let [tiled-level (generate-level ctx world-property-id)]
-               (-> ctx
-                   (dissoc :context/entity-tick-error)
-                   (assoc :context/ecs (->uids-entities)
-                          :context/time (->world-time)
-                          :context/widgets (->world-widgets))
-                   (merge (->world-map tiled-level))
-                   (spawn-creatures! tiled-level)))))
+             (when (bound? #'world-tiled-map)
+               (dispose! world-tiled-map))
+             (bind-world-time!)
+             (.bindRoot #'world-widgets (->world-widgets))
+             (let [{:keys [tiled-map start-position]} (generate-level world-property-id)
+                   w (t/width  tiled-map)
+                   h (t/height tiled-map)
+                   grid (->world-grid w h (world-grid-position->value-fn tiled-map))]
+               (.bindRoot #'world-grid grid)
+               (.bindRoot #'world-raycaster (->raycaster grid blocks-vision?))
+               (.bindRoot #'world-tiled-map tiled-map)
+               (.bindRoot #'content-grid (->content-grid :cell-size 16 :width w :height h))
+               (.bindRoot #'explored-tile-corners (->explored-tile-corners w h))
+               (.bindRoot #'entity-tick-error nil)
+               (.bindRoot #'uids-entities {})
+               (spawn-creatures! tiled-map start-position))))
 
 (defcomponent :tx/add-to-world
   (do! [[_ entity]]

@@ -14,8 +14,6 @@
          first
          :entity/id)))
 
-(declare mouseover-entity)
-
 (defn- update-mouseover-entity []
   (let [entity (if (mouse-on-actor?)
                  nil
@@ -33,11 +31,10 @@
   (or (key-just-pressed? :keys/p)
       (key-pressed? :keys/space)))
 
-(declare entity-tick-error
-         world-paused?)
+(declare world-paused?)
 
 (defn- update-game-paused []
-  (.bindRoot #'world-paused? (or (bound? entity-tick-error)
+  (.bindRoot #'world-paused? (or world/entity-tick-error
                                  (and pausing?
                                       (player-state-pause-game?)
                                       (not (player-unpaused?))))))
@@ -48,7 +45,7 @@
     (try (tick-entities! entities)
          (catch Throwable t
            (error-window! t)
-           (.bindRoot #'entity-tick-error t)))))
+           (.bindRoot #'world/entity-tick-error t)))))
 
 (defn- game-loop []
   (effect! [player-update-state

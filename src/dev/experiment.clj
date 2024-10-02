@@ -276,7 +276,7 @@
 (defn- show-tree-view! [obj]
   (let [object (case obj
                  :entity (mouseover-entity*)
-                 :tile @(get (:context/grid) (mapv int (world-mouse-position))))]
+                 :tile @(get world-grid (mapv int (world-mouse-position))))]
     (stage-add! (->window {:title "Tree View"
                            :close-button? true
                            :close-on-escape? true
