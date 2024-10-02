@@ -31,7 +31,6 @@
                              :when cooling-down? ]
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
-; TODO component to info-text move to the component itself.....
 (defn- debug-infos ^String []
   (let [world-mouse (world-mouse-position)]
     (str
@@ -42,16 +41,15 @@
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position) "\n"
-     "paused? " (:context/paused?) "\n"
+     "paused? " world-paused? "\n"
      "elapsed-time " (readable-number elapsed-time) " seconds \n"
-     (skill-info (player-entity*))
+     "skill cooldowns: " (skill-info (player-entity*)) "\n"
      (when-let [entity* (mouseover-entity*)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-actor?)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (actor-id actor)
-              )))))
+              "id: " (actor-id actor))))))
 
 (defn- ->debug-window []
   (let [label (->label "")
@@ -106,7 +104,7 @@
 
 (defn- get-action-bar []
   {:horizontal-group (::action-bar (:action-bar-table (stage-get)))
-   :button-group (:action-bar (:context/widgets))})
+   :button-group (:action-bar world-widgets)})
 
 (defcomponent :tx.action-bar/add
   (do! [[_ {:keys [property/id entity/image] :as skill}]]
@@ -115,16 +113,14 @@
       (set-id! button id)
       (add-tooltip! button #(->info-text skill (assoc % :effect/source (player-entity %))))
       (add-actor! horizontal-group button)
-      (bg-add! button-group button)
-     )))
+      (bg-add! button-group button))))
 
 (defcomponent :tx.action-bar/remove
   (do! [[_ {:keys [property/id]}]]
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (get horizontal-group id)]
       (remove! button)
-      (bg-remove! button-group button)
-     )))
+      (bg-remove! button-group button))))
 
 (comment
 
@@ -198,15 +194,15 @@
 (def ^:private duration-seconds 1.5)
 
 (defn- draw-player-message []
-  (when-let [{:keys [message]} (ctx-msg-player)]
+  (when-let [{:keys [message]} ctx-msg-player]
     (draw-text {:x (/ (gui-viewport-width) 2)
                 :y (+ (/ (gui-viewport-height) 2) 200)
                 :text message
                 :scale 2.5
                 :up? true})))
 
-(defn- check-remove-message [] ; FIXME
-  (when-let [{:keys [counter]} (ctx-msg-player)]
+(defn- check-remove-message []
+  (when-let [{:keys [counter]} ctx-msg-player]
     (alter-var-root #'ctx-msg-player update :counter + (delta-time))
     (when (>= counter duration-seconds)
       (.bindRoot #'ctx-msg-player nil))))

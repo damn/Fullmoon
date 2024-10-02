@@ -202,6 +202,45 @@ Default method returns true."
          ^:dynamic target-direction
          ^:dynamic target-position)
 
+(defn- ->npc-effect-ctx [entity*]
+  (let [target (nearest-enemy entity*)
+        target (when (and target (line-of-sight? entity* @target))
+                 target)]
+    {:effect/source (:entity/id entity*)
+     :effect/target target
+     :effect/target-direction (when target (direction entity* @target))}))
+
+(defn- ->player-effect-ctx [entity*]
+  (let [target* (mouseover-entity*)
+        target-position (or (and target* (:position target*))
+                            (world-mouse-position))]
+    {:effect/source (:entity/id entity*)
+     :effect/target (:entity/id target*)
+     :effect/target-position target-position
+     :effect/target-direction (v-direction (:position entity*) target-position)}))
+
+(defmacro ^:private with-err-str
+  "Evaluates exprs in a context in which *err* is bound to a fresh
+  StringWriter.  Returns the string created by any nested printing
+  calls."
+  [& body]
+  `(let [s# (new java.io.StringWriter)]
+     (binding [*err* s#]
+       ~@body
+       (str s#))))
+
+#_(defn- with-effect-ctx [ctx]
+  (binding [source (:effect/source ctx)
+            target (:effect/target ctx)
+            target-direction (:effect/target-direction ctx)
+            target-position (:effect/target-position ctx)])
+  )
+
+(defcomponent :tx/effect
+  (do! [[_ effect-ctx effect]]
+    (with-effect-ctx effect-ctx
+      (effect! (filter #(applicable? % effect-ctx) effect)))))
+
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defcomponent :base/stat-effect
@@ -486,8 +525,7 @@ Default method returns true."
  ; TODO showing one a bit further up
  ; maybe world view port is cut
  ; not quite showing correctly.
- (let [ctx @app/state
-       targets (creatures-in-los-of-player)]
+ (let [targets (creatures-in-los-of-player)]
    (count targets)
    #_(sort-by #(% 1) (map #(vector (:entity.creature/name @%)
                                    (:position @%)) targets)))
@@ -602,14 +640,14 @@ Default method returns true."
 ; would have to do this only if effect even needs target ... ?
 (defn- check-remove-target [{:keys [effect/source]}]
   ;FIXME ???
-  (update ctx :effect/target (fn [target]
+  #_(update ctx :effect/target (fn [target]
                                (when (and target
                                           (not (:entity/destroyed? @target))
                                           (line-of-sight? @source @target))
                                  target))))
 
 (defn- effect-applicable? [effects]
-  (check-remove-target!)
+  (check-remove-target)
   (some applicable? effects))
 
 (defn- mana-value [entity*]
@@ -648,37 +686,6 @@ Default method returns true."
 (defn- nearest-enemy [entity*]
   (nearest-entity @(world-grid (entity-tile entity*))
                   (enemy-faction entity*)))
-
-(defn- ->npc-effect-ctx [entity*]
-  (let [target (nearest-enemy entity*)
-        target (when (and target (line-of-sight? entity* @target))
-                 target)]
-    {:effect/source (:entity/id entity*)
-     :effect/target target
-     :effect/target-direction (when target (direction entity* @target))}))
-
-(defn- ->player-effect-ctx [entity*]
-  (let [target* (mouseover-entity*)
-        target-position (or (and target* (:position target*))
-                            (world-mouse-position))]
-    {:effect/source (:entity/id entity*)
-     :effect/target (:entity/id target*)
-     :effect/target-position target-position
-     :effect/target-direction (v-direction (:position entity*) target-position)}))
-
-(defcomponent :tx/effect ; FIXME ?!?!
-  (do! [[_ effect-ctx effects]]
-    (-> ctx
-        (merge effect-ctx)
-        (effect! (filter #(applicable? % effect-ctx) effects))
-        ; TODO
-        ; context/source ?
-        ; skill.context ?  ?
-        ; generic context ?( projectile hit is not skill context)
-        (dissoc :effect/source
-                :effect/target
-                :effect/target-direction
-                :effect/target-position))))
 
 (defn- draw-skill-icon [icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)
@@ -751,22 +758,23 @@ Default method returns true."
     ;(println "Useful: " useful-effect)
     useful-effect))
 
-(defn- npc-choose-skill [ctx entity*]
+; maybe just pass the effect-ctx again?!
+; for applicable/useful?
+(defn- npc-choose-skill [entity*]
   (->> entity*
        :entity/skills
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
        (filter #(and (= :usable (skill-usable-state entity* %))
-                     (effect-useful? ctx (:skill/effects %))))
+                     (effect-useful? (:skill/effects %))))
        first))
 
 (comment
  (let [uid 76
-       ctx @app/state
-       entity* @(get-entity ctx uid)
-       effect-ctx (->npc-effect-ctx ctx entity*)]
-   (npc-choose-skill (safe-merge ctx effect-ctx) entity*))
+       entity* @(get-entity uid)
+       effect-ctx (->npc-effect-ctx entity*)]
+   (npc-choose-skill effect-ctx entity*))
  )
 
 (defcomponent :npc-idle
@@ -782,7 +790,7 @@ Default method returns true."
         [[:tx/event eid :movement-direction (potential-fields-follow-to-enemy eid)]]))))
 
 (defn- selected-skill []
-  (let [button-group (:action-bar (:context/widgets))]
+  (let [button-group (:action-bar world-widgets)]
     (when-let [skill-button (bg-checked button-group)]
       (actor-id skill-button))))
 

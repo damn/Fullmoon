@@ -2,8 +2,6 @@
   (:require [clojure.gdx :refer :all]))
 (comment
 
- clj-commons.ansi
-
  (post-runnable! (show-tree-view! :ctx))
 
  (show-tree-view! :entity)

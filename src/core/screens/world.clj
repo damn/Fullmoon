@@ -31,8 +31,6 @@
   (or (key-just-pressed? :keys/p)
       (key-pressed? :keys/space)))
 
-(declare world-paused?)
-
 (defn- update-game-paused []
   (.bindRoot #'world-paused? (or world/entity-tick-error
                                  (and pausing?
