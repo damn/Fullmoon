@@ -206,11 +206,11 @@
   (when-let [{:keys [counter]} ctx-msg-player]
     (alter-var-root #'ctx-msg-player update :counter + (delta-time))
     (when (>= counter duration-seconds)
-      (.bindRoot #'ctx-msg-player nil))))
+      (bind-root #'ctx-msg-player nil))))
 
 (defcomponent :tx/msg-to-player
   (do! [[_ message]]
-    (.bindRoot #'ctx-msg-player {:message message :counter 0})
+    (bind-root #'ctx-msg-player {:message message :counter 0})
     nil))
 
 (defcomponent :widgets/player-message

@@ -15,7 +15,7 @@
     @avar)
 
   (set-state [this is-selected]
-    (.bindRoot avar is-selected)))
+    (bind-root avar is-selected)))
 
 ; TODO not using clojure.gdx ns ... only core
 

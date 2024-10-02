@@ -23,7 +23,7 @@
      (when entity
        [:e/assoc entity :entity/mouseover? true])
      (fn []
-       (.bindRoot #'mouseover-entity entity)
+       (bind-root #'mouseover-entity entity)
        nil)]))
 
 (def ^:private ^:dbg-flag pausing? true)
@@ -33,7 +33,7 @@
       (key-pressed? :keys/space)))
 
 (defn- update-game-paused []
-  (.bindRoot #'world-paused? (or world/entity-tick-error
+  (bind-root #'world-paused? (or world/entity-tick-error
                                  (and pausing?
                                       (player-state-pause-game?)
                                       (not (player-unpaused?)))))
@@ -46,7 +46,7 @@
     (try (tick-entities! entities)
          (catch Throwable t
            (error-window! t)
-           (.bindRoot #'world/entity-tick-error t))))
+           (bind-root #'world/entity-tick-error t))))
   nil)
 
 (defn- game-loop []

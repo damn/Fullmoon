@@ -16,11 +16,11 @@
 ;;; ?
 
 (defn- bind-world-time! []
-  (.bindRoot #'elapsed-time 0)
-  (.bindRoot #'logic-frame 0))
+  (bind-root #'elapsed-time 0)
+  (bind-root #'logic-frame 0))
 
 (defn update-time [delta]
-  (.bindRoot #'world-delta delta)
+  (bind-root #'world-delta delta)
   (alter-var-root #'elapsed-time + delta)
   (alter-var-root #'logic-frame inc))
 
@@ -36,26 +36,32 @@
 
 (declare entity-tick-error)
 
+(defn- cleanup-last-world! []
+  (when (bound? #'world-tiled-map)
+    (dispose! world-tiled-map)))
+
+(defn- init-new-world! [world-property-id]
+  (bind-world-time!)
+  (bind-root #'world-widgets (->world-widgets))
+  (let [{:keys [tiled-map start-position]} (generate-level world-property-id)
+        w (t/width  tiled-map)
+        h (t/height tiled-map)
+        grid (->world-grid w h (world-grid-position->value-fn tiled-map))]
+    (bind-root #'world-grid grid)
+    (bind-root #'world-raycaster (->raycaster grid blocks-vision?))
+    (bind-root #'world-tiled-map tiled-map)
+    (bind-root #'content-grid (->content-grid :cell-size 16 :width w :height h))
+    (bind-root #'explored-tile-corners (->explored-tile-corners w h))
+    (bind-root #'entity-tick-error nil)
+    (bind-root #'uids-entities {})
+    (spawn-creatures! tiled-map start-position)))
+
 ; TODO  add-to-world/assoc/dissoc uid from entity move together here
 ; also core.screens/world ....
-(.bindRoot #'clojure.gdx/add-world-ctx
+(bind-root #'clojure.gdx/add-world-ctx
            (fn [world-property-id]
-             (when (bound? #'world-tiled-map)
-               (dispose! world-tiled-map))
-             (bind-world-time!)
-             (.bindRoot #'world-widgets (->world-widgets))
-             (let [{:keys [tiled-map start-position]} (generate-level world-property-id)
-                   w (t/width  tiled-map)
-                   h (t/height tiled-map)
-                   grid (->world-grid w h (world-grid-position->value-fn tiled-map))]
-               (.bindRoot #'world-grid grid)
-               (.bindRoot #'world-raycaster (->raycaster grid blocks-vision?))
-               (.bindRoot #'world-tiled-map tiled-map)
-               (.bindRoot #'content-grid (->content-grid :cell-size 16 :width w :height h))
-               (.bindRoot #'explored-tile-corners (->explored-tile-corners w h))
-               (.bindRoot #'entity-tick-error nil)
-               (.bindRoot #'uids-entities {})
-               (spawn-creatures! tiled-map start-position))))
+             (cleanup-last-world!)
+             (init-new-world! world-property-id)))
 
 (defcomponent :tx/add-to-world
   (do! [[_ entity]]

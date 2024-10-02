@@ -9,7 +9,7 @@
   (info-text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
-(.bindRoot #'clojure.gdx/info-text-k-order
+(bind-root #'clojure.gdx/info-text-k-order
            [:property/pretty-name
             :skill/action-time-modifier-key
             :skill/action-time
@@ -25,7 +25,7 @@
             :maxrange
             :entity-effects])
 
-(.bindRoot #'clojure.gdx/property-k-sort-order
+(bind-root #'clojure.gdx/property-k-sort-order
            [:property/id
             :property/pretty-name
             :app/lwjgl3

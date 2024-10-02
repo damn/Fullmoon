@@ -336,7 +336,7 @@
       (draw-centered-image (:entity/image (:entity/item-on-cursor player-entity*))
                            (gui-mouse-position)))))
 
-(.bindRoot #'clojure.gdx/draw-item-on-cursor draw-item-on-cursor)
+(bind-root #'clojure.gdx/draw-item-on-cursor draw-item-on-cursor)
 
 (defcomponent :player-moving
   {:let {:keys [eid movement-vector]}}
@@ -386,10 +386,10 @@
 
 (defcomponent :entity/player?
   (create [_ eid]
-    (.bindRoot #'player-entity eid)
+    (bind-root #'player-entity eid)
     nil))
 
-(.bindRoot #'player-entity* (fn [] @player-entity))
+(bind-root #'player-entity* (fn [] @player-entity))
 
 (defn- p-state-obj []
   (state-obj (player-entity*)))
