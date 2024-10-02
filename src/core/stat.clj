@@ -179,6 +179,31 @@
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
+;;;;
+;;;;
+;;;; Helpers
+;;;;
+;;;;
+
+(defn- nearest-enemy [entity*]
+  (nearest-entity @(world-grid (entity-tile entity*))
+                  (enemy-faction entity*)))
+
+
+;;;;
+;;;;
+;;;;
+;;;;
+;;;;
+;;;;
+;;;; action/effect/skill
+;;;;
+;;;;
+;;;;
+;;;;
+;;;;
+;;;;
+
 (defsystem applicable?
   "An effect will only be done (with do!) if this function returns truthy.
 Required system for every effect, no default."
@@ -196,6 +221,16 @@ Default method returns true."
   "Renders effect during active-skill state while active till done?. Default do nothing."
   [_])
 (defmethod render-effect :default [_])
+
+; SCHEMA effect-ctx
+; * source = always available
+; # npc:
+;   * target = maybe
+;   * direction = maybe
+; # player
+;  * target = maybe
+;  * target-position  = always available (mouse world position)
+;  * direction  = always available (from mouse world position)
 
 (declare ^:dynamic source
          ^:dynamic target
@@ -219,27 +254,17 @@ Default method returns true."
      :effect/target-position target-position
      :effect/target-direction (v-direction (:position entity*) target-position)}))
 
-(defmacro ^:private with-err-str
-  "Evaluates exprs in a context in which *err* is bound to a fresh
-  StringWriter.  Returns the string created by any nested printing
-  calls."
-  [& body]
-  `(let [s# (new java.io.StringWriter)]
-     (binding [*err* s#]
-       ~@body
-       (str s#))))
-
-#_(defn- with-effect-ctx [ctx]
-  (binding [source (:effect/source ctx)
-            target (:effect/target ctx)
-            target-direction (:effect/target-direction ctx)
-            target-position (:effect/target-position ctx)])
-  )
+(defmacro with-effect-ctx [ctx & body]
+  `(binding [source           (:effect/source           ~ctx)
+             target           (:effect/target           ~ctx)
+             target-direction (:effect/target-direction ~ctx)
+             target-position  (:effect/target-position  ~ctx)]
+     ~@body))
 
 (defcomponent :tx/effect
   (do! [[_ effect-ctx effect]]
     (with-effect-ctx effect-ctx
-      (effect! (filter #(applicable? % effect-ctx) effect)))))
+      (effect! (filter applicable? effect)))))
 
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
@@ -620,7 +645,14 @@ Default method returns true."
          ; TODO => make new context with end-point ... and check on point entity
          ; friendly fire ?!
          ; player maybe just direction possible ?!
-         entity-effects)
+
+         ; TODO FIXME
+         ; have to use tx/effect now ?!
+         ; still same context ...
+         ; filter applicable ?! - omg
+         entity-effects
+
+         )
         [; TODO
          ; * clicking on far away monster
          ; * hitting ground in front of you ( there is another monster )
@@ -672,20 +704,6 @@ Default method returns true."
 
    :else
    :usable))
-
-; SCHEMA effect-ctx
-; * source = always available
-; # npc:
-;   * target = maybe
-;   * direction = maybe
-; # player
-;  * target = maybe
-;  * target-position  = always available (mouse world position)
-;  * direction  = always available (from mouse world position)
-
-(defn- nearest-enemy [entity*]
-  (nearest-entity @(world-grid (entity-tile entity*))
-                  (enemy-faction entity*)))
 
 (defn- draw-skill-icon [icon entity* [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)

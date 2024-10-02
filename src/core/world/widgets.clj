@@ -59,7 +59,7 @@
                           :position [0 (gui-viewport-height)]
                           :rows [[label]]})]
     (add-actor! window (->actor {:act #(do
-                                        (.setText label (debug-infos %))
+                                        (.setText label (debug-infos))
                                         (.pack window))}))
     window))
 
@@ -87,8 +87,7 @@
                                                   (str (when-let [entity* (mouseover-entity*)]
                                                          (->info-text
                                                           ; don't use select-keys as it loses Entity record type
-                                                          (apply dissoc entity* disallowed-keys)
-                                                         ))))
+                                                          (apply dissoc entity* disallowed-keys)))))
                                         (.pack window))}))
     window))
 
@@ -111,16 +110,18 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (->image-button image identity {:scale image-scale})]
       (set-id! button id)
-      (add-tooltip! button #(->info-text skill (assoc % :effect/source (player-entity %))))
+      (add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (player-entity)) FIXME
       (add-actor! horizontal-group button)
-      (bg-add! button-group button))))
+      (bg-add! button-group button)
+      nil)))
 
 (defcomponent :tx.action-bar/remove
   (do! [[_ {:keys [property/id]}]]
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (get horizontal-group id)]
       (remove! button)
-      (bg-remove! button-group button))))
+      (bg-remove! button-group button)
+      nil)))
 
 (comment
 
@@ -209,7 +210,8 @@
 
 (defcomponent :tx/msg-to-player
   (do! [[_ message]]
-    (.bindRoot #'ctx-msg-player {:message message :counter 0})))
+    (.bindRoot #'ctx-msg-player {:message message :counter 0})
+    nil))
 
 (defcomponent :widgets/player-message
   (->mk [_]

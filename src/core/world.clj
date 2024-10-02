@@ -10,6 +10,9 @@
          "world/editor_screen" ; move, but very raw
          "world/spawn" ; ?
          "world/widgets"))
+;;
+
+; foo
 ;;; ?
 
 (defn- bind-world-time! []
@@ -59,14 +62,17 @@
     (content-grid-update-entity! entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (grid-add-entity! entity)))
+    (grid-add-entity! entity)
+    nil))
 
 (defcomponent :tx/remove-from-world
   (do! [[_ entity]]
     (content-grid-remove-entity! entity)
-    (grid-remove-entity! entity)))
+    (grid-remove-entity! entity)
+    nil))
 
 (defcomponent :tx/position-changed
   (do! [[_ entity]]
     (content-grid-update-entity! entity)
-    (grid-entity-position-changed! entity)))
+    (grid-entity-position-changed! entity)
+    nil))

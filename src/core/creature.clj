@@ -386,9 +386,10 @@
 
 (defcomponent :entity/player?
   (create [_ eid]
-    (.bindRoot #'player-entity eid)))
+    (.bindRoot #'player-entity eid)
+    nil))
 
-(defn player-entity* [] @player-entity)
+(.bindRoot #'player-entity* (fn [] @player-entity))
 
 (defn- p-state-obj []
   (state-obj (player-entity*)))
