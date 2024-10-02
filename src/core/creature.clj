@@ -328,12 +328,11 @@
     (when (world-item?)
       (draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
-
 (defn draw-item-on-cursor []
-  (let [player-entity* (player-entity*)]
-    (when (and (= :player-item-on-cursor (entity-state player-entity*))
+  (let [player-e* (player-entity*)]
+    (when (and (= :player-item-on-cursor (entity-state player-e*))
                (not (world-item?)))
-      (draw-centered-image (:entity/image (:entity/item-on-cursor player-entity*))
+      (draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
                            (gui-mouse-position)))))
 
 (bind-root #'clojure.gdx/draw-item-on-cursor draw-item-on-cursor)
@@ -394,7 +393,7 @@
 (defn- p-state-obj []
   (state-obj (player-entity*)))
 
-(defn player-update-state      []      (manual-tick             (p-state-obj)))
-(defn player-state-pause-game? []      (pause-game?             (p-state-obj)))
-(defn player-clicked-inventory [cell]  (clicked-inventory-cell  (p-state-obj) cell))
-(defn player-clicked-skillmenu [skill] (clicked-skillmenu-skill (p-state-obj) skill))
+(bind-root #'player-update-state      (fn []      (manual-tick             (p-state-obj))))
+(bind-root #'player-state-pause-game? (fn []      (pause-game?             (p-state-obj))))
+(bind-root #'player-clicked-inventory (fn [cell]  (clicked-inventory-cell  (p-state-obj) cell)))
+(bind-root #'player-clicked-skillmenu (fn [skill] (clicked-skillmenu-skill (p-state-obj) skill)))

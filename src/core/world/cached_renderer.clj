@@ -1,12 +1,14 @@
 (in-ns 'core.world)
 
+(declare cached-map-renderer)
+
 (defn render!
   "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
   Color-setter is a (fn [color x y]) which is called for every tile-corner to set the color.
   Can be used for lights & shadows.
   The map-renderers are created and cached internally.
   Renders only visible layers."
-  [{cached-map-renderer :context/tiled-map-renderer} tiled-map color-setter]
+  [tiled-map color-setter]
   (t/render-tm! (cached-map-renderer tiled-map)
                 color-setter
                 (world-camera)
@@ -18,7 +20,7 @@
 (defcomponent :context/tiled-map-renderer
   {:data :some}
   (->mk [_]
-    (memoize ->tiled-map-renderer)))
+    (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
 
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
 

@@ -4,18 +4,14 @@
             [clojure.gdx.tiled :as t]
             [clojure.string :as str]
             [data.grid2d :as g])
-  (:load "world/modules" ; very specific and hardcoded stuff
-         "world/generators" ; unfinished
-         "world/cached_renderer" ; move ?
-         "world/editor_screen" ; move, but very raw
-         "world/spawn" ; ?
+  (:load "world/modules"
+         "world/generators"
+         "world/cached_renderer"
+         "world/editor_screen"
+         "world/spawn"
          "world/widgets"))
-;;
 
-; foo
-;;; ?
-
-(defn- bind-world-time! []
+(defn- init-world-time! []
   (bind-root #'elapsed-time 0)
   (bind-root #'logic-frame 0))
 
@@ -41,7 +37,7 @@
     (dispose! world-tiled-map)))
 
 (defn- init-new-world! [world-property-id]
-  (bind-world-time!)
+  (init-world-time!)
   (bind-root #'world-widgets (->world-widgets))
   (let [{:keys [tiled-map start-position]} (generate-level world-property-id)
         w (t/width  tiled-map)

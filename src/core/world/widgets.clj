@@ -190,7 +190,7 @@
 
  )
 
-(def ^:private ctx-msg-player)
+(def ^:private ctx-msg-player nil)
 
 (def ^:private duration-seconds 1.5)
 

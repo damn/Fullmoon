@@ -846,20 +846,19 @@ Default method returns true."
   [_clicked-entity*]
   (toggle-visible! (inventory-window))) ; TODO no tx
 
-(defn- clickable->cursor [mouseover-entity* too-far-away?]
-  (case (:type (:entity/clickable mouseover-entity*))
+(defn- clickable->cursor [mouseover-e* too-far-away?]
+  (case (:type (:entity/clickable mouseover-e*))
     :clickable/item (if too-far-away?
                       :cursors/hand-before-grab-gray
                       :cursors/hand-before-grab)
     :clickable/player :cursors/bag))
 
-(defn- ->clickable-mouseover-entity-interaction [player-entity* mouseover-entity*]
-  (if (< (v-distance (:position player-entity*) (:position mouseover-entity*))
-         (:entity/click-distance-tiles player-entity*))
-    [(clickable->cursor mouseover-entity* false) (fn [] (on-clicked mouseover-entity*))]
-    [(clickable->cursor mouseover-entity* true)  (fn [] (denied "Too far away"))]))
+(defn- ->clickable-mouseover-entity-interaction [player-e* mouseover-e*]
+  (if (< (v-distance (:position player-e*) (:position mouseover-e*))
+         (:entity/click-distance-tiles player-e*))
+    [(clickable->cursor mouseover-e* false) (fn [] (on-clicked mouseover-e*))]
+    [(clickable->cursor mouseover-e* true)  (fn [] (denied "Too far away"))]))
 
-; TODO move to inventory-window extend Ctx
 (defn- inventory-cell-with-item? [actor]
   (and (parent actor)
        (= "inventory-cell" (actor-name (parent actor)))
@@ -875,16 +874,16 @@ Default method returns true."
      :else :cursors/default)))
 
 (defn- ->interaction-state [entity*]
-  (let [mouseover-entity* (mouseover-entity*)]
+  (let [mouseover-e* (mouseover-entity*)]
     (cond
      (mouse-on-actor?)
      [(mouseover-actor->cursor)
       (fn []
         nil)] ; handled by actors themself, they check player state
 
-     (and mouseover-entity*
-          (:entity/clickable mouseover-entity*))
-     (->clickable-mouseover-entity-interaction entity* mouseover-entity*)
+     (and mouseover-e*
+          (:entity/clickable mouseover-e*))
+     (->clickable-mouseover-entity-interaction entity* mouseover-e*)
 
      :else
      (if-let [skill-id (selected-skill)]
