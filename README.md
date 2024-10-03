@@ -1,23 +1,5 @@
-## clojure.ctx
 
-An Action-RPG in development, a RPG Property editor (for skills, effects, item modifiers, entities and projectiles) and also trying to create an engine and a language for writing such games. 
-
-## Screenshots
-
-<img width="1437" alt="Screenshot 2024-09-11 at 10 59 32 PM" src="https://github.com/user-attachments/assets/19c2a342-0e70-4925-a203-2e8c229e4ea0">
-
-<details>
-  <summary>Context Inspector</summary>
-
-  <img width="1425" alt="Screenshot 2024-09-19 at 10 42 45 PM" src="https://github.com/user-attachments/assets/4819dd7f-93eb-4096-b392-aec8e39c6905">
-
-
-</details>
-<details>
-  <summary>Property Editor</summary>
-  <img width="1432" alt="Screenshot 2024-09-08 at 11 53 59 PM" src="https://github.com/user-attachments/assets/87c9edc0-5aab-4642-ae4d-f08291ec7970">
-
-</details>
+<img width="1440" alt="Screenshot 2024-10-03 at 12 08 30 PM" src="https://github.com/user-attachments/assets/6780f0c4-0729-46ca-b254-a1816af2d6c8">
 
 ## How to start
 
@@ -31,11 +13,15 @@ lein run
 lein dev
 ```
 
-It will start the application and also:
-* Starts an NREPL-Server
+<details>
+  <summary>Dev-loop contains:</summary>
+
+* NREPL-Server
 * On application close (ESC in the main menu), clojure.tools.namespace will do  refresh on any changed files and restart the app.
 * On any error the JVM does not have to be restarted, you can fix the error and call `clojure.gdx.dev/restart!`
     * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'clojure.gdx.dev)(restart!))`
+
+</details>
 
 ## [API Docs](https://damn.github.io/clojure.ctx/)
 
