@@ -33,7 +33,7 @@ zoom: shift-left,minus
 ESCAPE: leave
 direction keys: move")
 
-(defn- debug-infos ^String []
+(defn- map-infos ^String []
   (let [tile (->tile (world-mouse-position))
         {:keys [tiled-map
                 area-level-grid]} @(current-data)]
@@ -59,7 +59,7 @@ direction keys: move")
   (let [label (->label "")
         window (->window {:title "Info" :rows [[label]]})]
     (add-actor! window (->actor {:act #(do
-                                        (.setText label (debug-infos %))
+                                        (.setText label (map-infos))
                                         (.pack window))}))
     (set-position! window 0 (gui-viewport-height))
     window))
@@ -129,7 +129,7 @@ direction keys: move")
            ;:area-level-grid area-level-grid
            :start-position start-position)
     (show-whole-map! (world-camera) tiled-map)
-    (set-visible! (t/get-layer tiled-map "creatures") true)))
+    (.setVisible (t/get-layer tiled-map "creatures") true)))
 
 (defn ->generate-map-window [level-id]
   (->window {:title "Properties"
