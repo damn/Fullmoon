@@ -23,8 +23,6 @@ lein dev
 
 </details>
 
-## [API Docs](https://damn.github.io/clojure.ctx/)
-
 ## License
 
 * Code Licensed under MIT License
