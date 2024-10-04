@@ -1,7 +1,8 @@
 (defproject clojure.ctx "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
   :dependencies [[org.clojure/clojure "1.12.0"]
-                 [com.github.damn/clojure.gdx "main-SNAPSHOT"]]
+                 [com.github.damn/clojure.gdx "main-SNAPSHOT"]
+                 [org.openjfx/javafx-controls "22.0.1"]]
   :plugins [[lein-hiera "2.0.0"]
             [lein-codox "0.10.8"]]
   :target-path "target/%s/" ; https://stackoverflow.com/questions/44246924/clojure-tools-namespace-refresh-fails-with-no-namespace-foo
@@ -29,6 +30,7 @@
                 ;*assert* false
                 *print-level* 3}
   :aliases {"dev" ["run" "-m" "clojure.gdx.dev" "core.app"]}
+  :aot [core.tool]
   :main core.app)
 
 ; * Notes
