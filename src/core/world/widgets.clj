@@ -190,12 +190,12 @@
 
  )
 
-(def ^:private ctx-msg-player nil)
+(def ^:private message-to-player nil)
 
 (def ^:private duration-seconds 1.5)
 
 (defn- draw-player-message []
-  (when-let [{:keys [message]} ctx-msg-player]
+  (when-let [{:keys [message]} message-to-player]
     (draw-text {:x (/ (gui-viewport-width) 2)
                 :y (+ (/ (gui-viewport-height) 2) 200)
                 :text message
@@ -203,20 +203,20 @@
                 :up? true})))
 
 (defn- check-remove-message []
-  (when-let [{:keys [counter]} ctx-msg-player]
-    (alter-var-root #'ctx-msg-player update :counter + (delta-time))
+  (when-let [{:keys [counter]} message-to-player]
+    (alter-var-root #'message-to-player update :counter + (delta-time))
     (when (>= counter duration-seconds)
-      (bind-root #'ctx-msg-player nil))))
-
-(defcomponent :tx/msg-to-player
-  (do! [[_ message]]
-    (bind-root #'ctx-msg-player {:message message :counter 0})
-    nil))
+      (bind-root #'message-to-player nil))))
 
 (defcomponent :widgets/player-message
   (->mk [_]
     (->actor {:draw draw-player-message
               :act check-remove-message})))
+
+(defcomponent :tx/msg-to-player
+  (do! [[_ message]]
+    (bind-root #'message-to-player {:message message :counter 0})
+    nil))
 
 (defn- ->ui-actors [widget-data]
   [(->table {:rows [[{:actor (->action-bar)
