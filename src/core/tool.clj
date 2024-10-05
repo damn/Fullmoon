@@ -1,31 +1,37 @@
 (ns core.tool
   (:require [clojure.java.io :as io])
   (:import (javafx.event EventHandler)
-           (javafx.scene.control Button)
-           (javafx.scene.image Image)
+           (javafx.scene.control Button TreeItem TreeView)
+           (javafx.scene.image Image ImageView)
            (javafx.scene.layout StackPane)
-           (javafx.scene Scene))
+           (javafx.scene Scene Node))
   (:gen-class
    :extends javafx.application.Application))
 
+(defn- clj-file-forms [file]
+  (read-string (str "[" (slurp file) "]")))
+
+
 (defn -start [app stage]
-  (let [btn-event-handler (proxy [EventHandler] []
-                            (handle [event] (println "Hello World!")))
-        btn (doto (Button.)
-              (.setText "Say 'Hello World'")
-              (.setOnAction btn-event-handler))
-        root (StackPane.)
-        scene (Scene. root 300 250)]
-    (do
-     (.add (.getChildren root) btn)
-     (doto stage
-       (-> .getIcons
-           (.add (Image. (io/input-stream
-                          (io/resource "images/moon_background.png")))))
-       (.setTitle "Hello World !")
-       (.setScene scene)
-       (.show)))))
+  (.setTitle stage "Tree View Sample")
+  (let [root-icon (ImageView. (Image. (io/input-stream
+                                       (io/resource "images/animations/vampire-1.png"))))
+        root-item (TreeItem. "Inbox", root-icon)]
+    (.setExpanded root-item true)
+    (doseq [
+            ;[first-sym second-sym] (doall (map (partial take 2) (clj-file-forms "src/core/stat.clj")))
+
+            file (map str (file-seq (io/file "src/")))
+            ]
+      (.add (.getChildren root-item) (TreeItem.
+                                      file
+                                      #_(str first-sym " - " second-sym))))
+
+    (let [stack-pane (StackPane.)]
+      (.add (.getChildren stack-pane) (TreeView. root-item))
+      (.setScene stage (Scene. stack-pane 300 250))
+      (.show stage))))
 
 (defn -main [& args]
   (javafx.application.Application/launch core.tool
-                                         (into-array String args)))
+                                         (into-array String [""])))
