@@ -37,8 +37,8 @@
 
     ; TODO fixme not subscreen
     (render [_]
-      (tiled/render! world-tiled-map
-                     (->tile-corner-color-setter @explored-tile-corners))
+      (draw-tiled-map world-tiled-map
+                      (->tile-corner-color-setter @explored-tile-corners))
       (render-world-view! (fn []
                             (draw-filled-circle (camera-position (world-camera))
                                                 0.5

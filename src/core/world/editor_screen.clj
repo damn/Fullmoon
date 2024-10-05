@@ -156,7 +156,7 @@ direction keys: move")
     (reset-zoom! (world-camera)))
 
   (screen-render [_]
-    (render! (:tiled-map @current-data) (constantly white))
+    (draw-tiled-map (:tiled-map @current-data) (constantly white))
     (render-world-view! render-on-map)
     (if (key-just-pressed? :keys/l)
       (swap! current-data update :show-grid-lines not))

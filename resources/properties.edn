@@ -46,7 +46,6 @@
     :screens/options-menu
     :screens/property-editor
     :screens/world],
-   :context/tiled-map-renderer true,
    :context/vis-ui :skin-scale/x1},
   :app/lwjgl3
   {:fps 60,

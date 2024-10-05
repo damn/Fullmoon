@@ -6,7 +6,7 @@
             [data.grid2d :as g])
   (:load "world/modules"
          "world/generators"
-         "world/cached_renderer"
+         "world/tiled_map_renderer"
          "world/editor_screen"
          "world/spawn"
          "world/widgets"))
