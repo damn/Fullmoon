@@ -1,7 +1,8 @@
 (ns core.stat
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.rand :refer [rand-int-between]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            core.creature))
 
 (defn- defmodifier [k operations]
   (defcomponent* k {:data [:map-optional operations]}))
@@ -922,7 +923,7 @@ Default method returns true."
     true)
 
   (manual-tick [_]
-    (if-let [movement-vector (WASD-movement-vector)]
+    (if-let [movement-vector (core.creature/WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state @eid)]
         (cons [:tx/cursor cursor]
