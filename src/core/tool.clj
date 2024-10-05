@@ -11,8 +11,20 @@
 (defn- clj-file-forms [file]
   (read-string (str "[" (slurp file) "]")))
 
+(require '[rewrite-clj.parser :as p])
+
+(comment
+ (p/parse-file-all "src/core/stat.clj")
+
+ (p/parse-file-all "../clojure.gdx/src/clojure/gdx/java.clj")
+
+
+ )
+
+
 
 (defn -start [app stage]
+  (def myapp app)
   (.setTitle stage "Tree View Sample")
   (let [root-icon (ImageView. (Image. (io/input-stream
                                        (io/resource "images/animations/vampire-1.png"))))
