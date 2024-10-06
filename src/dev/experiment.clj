@@ -62,6 +62,20 @@
 
  )
 
+(comment
+ ; start world - small empty test room
+ ; 2 creatures - player?
+ ; start skill w. applicable needs target (bow)
+ ; this command:
+ (post-tx! [:e/destroy (get-entity 68)])
+ ; check skill has stopped using
+
+ (post-tx! [:tx/creature {:position [35 73]
+                          :creature-id :creatures/dragon-red
+                          :components {:entity/state [:state/npc :npc-sleeping]
+                                       :entity/faction :evil} }])
+ )
+
 (defn- post-tx! [tx]
   (post-runnable! (effect! [tx])))
 

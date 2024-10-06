@@ -274,6 +274,16 @@ Default method returns true."
      :effect/target-position target-position
      :effect/target-direction (v-direction (:position entity*) target-position)}))
 
+; this is not necessary if effect does not need target, but so far not other solution came up.
+(defn- check-update-ctx
+  "Call this on effect-context if the time of using the context is not the time when context was built."
+  [{:keys [effect/source effect/target] :as ctx}]
+  (if (and target
+           (not (:entity/destroyed? @target))
+           (line-of-sight? @source @target))
+    ctx
+    (dissoc ctx :effect/target)))
+
 (defmacro with-effect-ctx [ctx & body]
   `(binding [source           (:effect/source           ~ctx)
              target           (:effect/target           ~ctx)
@@ -285,15 +295,6 @@ Default method returns true."
   (do! [[_ effect-ctx effect]]
     (with-effect-ctx effect-ctx
       (effect! (filter-applicable? effect)))))
-
-; would have to do this only if effect even needs target ... ?
-(defn- check-remove-target [{:keys [effect/source]}]
-  ;FIXME ???
-  #_(update ctx :effect/target (fn [target]
-                               (when (and target
-                                          (not (:entity/destroyed? @target))
-                                          (line-of-sight? @source @target))
-                                 target))))
 
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
@@ -765,8 +766,7 @@ Default method returns true."
 
   (tick [_ eid]
     (cond
-     ; (check-remove-target) TODO FIXME this here
-     (with-effect-ctx effect-ctx
+     (with-effect-ctx (check-update-ctx effect-ctx)
        (not (effect-applicable? (:skill/effects skill))))
      [[:tx/event eid :action-done]
       ; TODO some sound ?
@@ -779,7 +779,7 @@ Default method returns true."
   (render-info [_ entity*]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon image entity* (:position entity*) (finished-ratio counter))
-      (with-effect-ctx effect-ctx
+      (with-effect-ctx (check-update-ctx effect-ctx)
         (run! render-effect effects)))))
 
 (defn- npc-choose-skill [entity*]
