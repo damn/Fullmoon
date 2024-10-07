@@ -1,7 +1,4 @@
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/4cbdc677-b738-4130-97c9-69e0e88ca8c9" />
-</p>
+![moon_background](https://github.com/user-attachments/assets/02b007a9-cf1d-4ce4-92ae-e4299684b99c)
 
 Based on [clojure](https://clojure.org/) & [libgdx](https://libgdx.com/).
 
