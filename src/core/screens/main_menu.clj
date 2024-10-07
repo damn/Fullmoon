@@ -9,9 +9,9 @@
   (->table {:rows (remove nil? (concat
                                    (for [{:keys [property/id]} (all-properties :properties/worlds)]
                                      [(->text-button (str "Start " id) (start-game-fn id))])
-                                   [(when (config :map-editor?)
+                                   [(when dev-mode?
                                       [(->text-button "Map editor" #(change-screen :screens/map-editor))])
-                                    (when (config :property-editor?)
+                                    (when dev-mode?
                                       [(->text-button "Property editor" #(change-screen :screens/property-editor))])
                                     [(->text-button "Exit" exit-app!)]]))
                :cell-defaults {:pad-bottom 25}

@@ -35,11 +35,11 @@
 (defn- create-table []
   (->table {:rows (concat
                    [[(->label key-help-text)]]
-                   (when (config :debug-window?) [[(->label "[Z] - Debug window")]])
-                   (when (config :debug-options?) (for [check-box debug-flags]
-                                                    [(->check-box (get-text check-box)
-                                                                  (partial set-state check-box)
-                                                                  (boolean (get-state check-box)))]))
+                   (when dev-mode? [[(->label "[Z] - Debug window")]])
+                   (when dev-mode? (for [check-box debug-flags]
+                                     [(->check-box (get-text check-box)
+                                                   (partial set-state check-box)
+                                                   (boolean (get-state check-box)))]))
                    [[(->text-button "Resume" #(change-screen :screens/world))]
                     [(->text-button "Exit"   #(change-screen :screens/main-menu))]])
             :fill-parent? true

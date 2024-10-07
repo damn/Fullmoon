@@ -10,7 +10,7 @@ lein run
 ### Interactive dev-loop
 
 ```
-lein dev
+./dev
 ```
 
 <details>

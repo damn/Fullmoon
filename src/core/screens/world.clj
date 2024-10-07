@@ -69,7 +69,7 @@
 (defn- hotkey->window-id []
   (merge {:keys/i :inventory-window
           :keys/e :entity-info-window}
-         (when (config :debug-window?)
+         (when dev-mode?
            {:keys/z :debug-window})))
 
 (defn- check-window-hotkeys []
