@@ -3,9 +3,9 @@
   <img src="https://github.com/user-attachments/assets/4cbdc677-b738-4130-97c9-69e0e88ca8c9" />
 </p>
 
-Based on [clojure](https://clojure.org/)&[libgdx](https://libgdx.com/).
+Based on [clojure](https://clojure.org/) & [libgdx](https://libgdx.com/).
 
-Featuring a property editor for Creatures, Skills, Items, Effects, Modifiers, Audiovisuals.
+Featuring a property editor for creatures, skills, items, effects, modifiers, audiovisuals worlds and app-settings..
 
 ### Ingame
 
