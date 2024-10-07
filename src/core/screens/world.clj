@@ -3,7 +3,7 @@
 (load "screens/world/debug_render")
 
 (defn- calculate-mouseover-entity []
-  (let [player-entity* (player-entity*)
+  (let [player-entity* @player-entity
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities (world-mouse-position))))]
@@ -59,7 +59,7 @@
             ]))
 
 (defn- render-world! []
-  (camera-set-position! (world-camera) (:position (player-entity*)))
+  (camera-set-position! (world-camera) (:position @player-entity))
   (world/render-map (camera-position (world-camera)))
   (render-world-view! (fn []
                         (before-entities)

@@ -20,7 +20,7 @@
                                         [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (->actor {:draw (fn []
-                         (let [player-entity* (player-entity*)
+                         (let [player-entity* @player-entity
                                x (- x (/ rahmenw 2))]
                            (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
                            (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
@@ -43,7 +43,7 @@
      "GUI: " (gui-mouse-position) "\n"
      "paused? " world-paused? "\n"
      "elapsed-time " (readable-number elapsed-time) " seconds \n"
-     "skill cooldowns: " (skill-info (player-entity*)) "\n"
+     "skill cooldowns: " (skill-info @player-entity) "\n"
      (when-let [entity* (mouseover-entity*)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"

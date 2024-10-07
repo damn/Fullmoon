@@ -329,7 +329,7 @@
       (draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
 (defn draw-item-on-cursor []
-  (let [player-e* (player-entity*)]
+  (let [player-e* @player-entity]
     (when (and (= :player-item-on-cursor (entity-state player-e*))
                (not (world-item?)))
       (draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
@@ -394,17 +394,13 @@
   (render-below [_ entity*]
     (draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
 
-(declare player-entity)
-
 (defcomponent :entity/player?
   (create [_ eid]
     (bind-root #'player-entity eid)
     nil))
 
-(bind-root #'player-entity* (fn [] @player-entity))
-
 (defn- p-state-obj []
-  (state-obj (player-entity*)))
+  (state-obj @player-entity))
 
 (bind-root #'player-update-state      (fn []      (manual-tick             (p-state-obj))))
 (bind-root #'player-state-pause-game? (fn []      (pause-game?             (p-state-obj))))
