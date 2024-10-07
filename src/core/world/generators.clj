@@ -188,7 +188,7 @@
 (def ^:private sprite-size 48)
 
 (defn- terrain-texture-region []
-  (->texture-region (asset "maps/uf_terrain.png")))
+  (->texture-region "maps/uf_terrain.png"))
 
 (defn- ->uf-tile [& {:keys [sprite-x sprite-y movement]}]
   (->tm-tile (->texture-region (terrain-texture-region)
