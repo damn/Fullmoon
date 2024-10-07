@@ -1,8 +1,5 @@
 ({:app/context
-  {:context/assets
-   {:folder "resources/",
-    :image-file-extensions #{"png" "bmp"},
-    :sound-file-extensions #{"wav"}},
+  {:context/assets "resources/"
    :context/graphics
    {:cursors
     {:cursors/bag ["bag001" [0 0]],
