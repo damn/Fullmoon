@@ -691,13 +691,14 @@ Default method returns true."
          [:tx/audiovisual (end-point source* target* maxrange) :audiovisuals/hit-ground]])))
 
   (render-effect [_]
-    (let [source* @source
-          target* @target]
-      (draw-line (start-point source* target*)
-                 (end-point   source* target* maxrange)
-                 (if (in-range? source* target* maxrange)
-                   [1 0 0 0.5]
-                   [1 1 0 0.5])))))
+    (when target
+      (let [source* @source
+            target* @target]
+        (draw-line (start-point source* target*)
+                   (end-point source* target* maxrange)
+                   (if (in-range? source* target* maxrange)
+                     [1 0 0 0.5]
+                     [1 1 0 0.5]))))))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity-stat entity* :stats/mana)]
