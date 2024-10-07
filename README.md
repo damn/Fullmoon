@@ -2,7 +2,7 @@
 
 Based on [clojure](https://clojure.org/) & [libgdx](https://libgdx.com/).
 
-Featuring a property editor for creatures, skills, items, effects, modifiers, audiovisuals worlds and app-settings..
+Featuring a property editor for creatures, skills, items, effects, modifiers, audiovisuals, worlds and app-settings.
 
 ### Ingame
 
