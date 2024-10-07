@@ -3,19 +3,6 @@
    {:folder "resources/",
     :image-file-extensions #{"png" "bmp"},
     :sound-file-extensions #{"wav"}},
-   :context/config
-   {:flags
-    {:dev
-     {:debug-options? true,
-      :debug-window? true,
-      :map-editor? true,
-      :property-editor? true},
-     :prod
-     {:debug-options? false,
-      :debug-window? false,
-      :map-editor? false,
-      :property-editor? false}},
-    :tag :dev},
    :context/graphics
    {:cursors
     {:cursors/bag ["bag001" [0 0]],
