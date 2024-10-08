@@ -1,4 +1,4 @@
-(in-ns 'core.world)
+(in-ns 'core.app)
 
 (defn- render-infostr-on-bar [infostr x y h]
   (draw-text {:text infostr

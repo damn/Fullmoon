@@ -1,4 +1,4 @@
-(in-ns 'core.world)
+(in-ns 'core.app)
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 

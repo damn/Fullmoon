@@ -1,4 +1,4 @@
-(in-ns 'core.world)
+(in-ns 'core.app)
 
 (def modules-file "maps/modules.tmx")
 (def module-width  32)

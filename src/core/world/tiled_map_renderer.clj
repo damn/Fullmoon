@@ -1,4 +1,4 @@
-(in-ns 'core.world)
+(in-ns 'core.app)
 
 (def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
 

@@ -1,4 +1,4 @@
-(in-ns 'core.world)
+(in-ns 'core.app)
 
 ; TODO generates 51,52. not max 50
 ; TODO can use different turn-ratio/depth/etc. params
