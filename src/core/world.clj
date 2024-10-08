@@ -1,4 +1,84 @@
-(in-ns 'core.app)
+(ns core.world
+  (:require [clojure.gdx :refer :all]
+            [clojure.gdx.tiled :as t]
+            [clojure.gdx.rand :refer [get-rand-weighted-item]]
+            [clojure.string :as str]
+            [data.grid2d :as g]))
+
+(def modules-file "maps/modules.tmx")
+(def module-width  32)
+(def module-height 20)
+(def modules-scale [module-width module-height])
+
+(def ^:private number-modules-x 8)
+(def ^:private number-modules-y 4)
+(def ^:private module-offset-tiles 1)
+(def ^:private transition-modules-row-width 4)
+(def ^:private transition-modules-row-height 4)
+(def ^:private transition-modules-offset-x 4)
+(def ^:private floor-modules-row-width 4)
+(def ^:private floor-modules-row-height 4)
+(def ^:private floor-idxvalue 0)
+
+(defn- module-index->tiled-map-positions [[module-x module-y]]
+  (let [start-x (* module-x (+ module-width  module-offset-tiles))
+        start-y (* module-y (+ module-height module-offset-tiles))]
+    (for [x (range start-x (+ start-x module-width))
+          y (range start-y (+ start-y module-height))]
+      [x y])))
+
+(defn- floor->module-index []
+  [(rand-int floor-modules-row-width)
+   (rand-int floor-modules-row-height)])
+
+(defn- transition-idxvalue->module-index [idxvalue]
+  [(+ (rem idxvalue transition-modules-row-width)
+      transition-modules-offset-x)
+   (int (/ idxvalue transition-modules-row-height))])
+
+(defn- place-module [scaled-grid
+                     unscaled-position
+                     & {:keys [transition?
+                               transition-neighbor?]}]
+  (let [idxvalue (if transition?
+                   (t/transition-idx-value unscaled-position transition-neighbor?)
+                   floor-idxvalue)
+        tiled-map-positions (module-index->tiled-map-positions
+                             (if transition?
+                               (transition-idxvalue->module-index idxvalue)
+                               (floor->module-index)))
+        offsets (for [x (range module-width)
+                      y (range module-height)]
+                  [x y])
+        offset->tiled-map-position (zipmap offsets tiled-map-positions)
+        scaled-position (mapv * unscaled-position modules-scale)]
+    (reduce (fn [grid offset]
+              (assoc grid
+                     (mapv + scaled-position offset)
+                     (offset->tiled-map-position offset)))
+            scaled-grid
+            offsets)))
+
+(defn place-modules [modules-tiled-map
+                     scaled-grid
+                     unscaled-grid
+                     unscaled-floor-positions
+                     unscaled-transition-positions]
+  (let [_ (assert (and (= (t/width modules-tiled-map)
+                          (* number-modules-x (+ module-width module-offset-tiles)))
+                       (= (t/height modules-tiled-map)
+                          (* number-modules-y (+ module-height module-offset-tiles)))))
+        scaled-grid (reduce (fn [scaled-grid unscaled-position]
+                              (place-module scaled-grid unscaled-position :transition? false))
+                            scaled-grid
+                            unscaled-floor-positions)
+        scaled-grid (reduce (fn [scaled-grid unscaled-position]
+                              (place-module scaled-grid unscaled-position :transition? true
+                                            :transition-neighbor? #(#{:transition :wall}
+                                                                    (get unscaled-grid %))))
+                            scaled-grid
+                            unscaled-transition-positions)]
+    (t/grid->tiled-map modules-tiled-map scaled-grid)))
 
 ; TODO generates 51,52. not max 50
 ; TODO can use different turn-ratio/depth/etc. params
@@ -302,6 +382,182 @@
 (defmethod generate :world.generator/uf-caves [world]
   (uf-caves world))
 
-(defn- generate-level [world-id]
+(defn generate-level [world-id]
   (let [prop (build-property world-id)]
     (assoc (generate prop) :world/player-creature (:world/player-creature prop))))
+
+; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
+; make more explicit clamped-map-coords ?
+
+; TODO
+; leftest two tiles are 0 coordinate x
+; and rightest is 16, not possible -> check clamping
+; depends on screen resize or something, changes,
+; maybe update viewport not called on resize sometimes
+
+(defn- show-whole-map! [camera tiled-map]
+  (camera-set-position! camera
+                        [(/ (t/width  tiled-map) 2)
+                         (/ (t/height tiled-map) 2)])
+  (set-zoom! camera
+             (calculate-zoom camera
+                             :left [0 0]
+                             :top [0 (t/height tiled-map)]
+                             :right [(t/width tiled-map) 0]
+                             :bottom [0 0])))
+
+(defn- current-data []
+  (-> (current-screen)
+      (get 1)
+      :sub-screen
+      (get 1)))
+
+(def ^:private infotext
+  "L: grid lines
+M: movement properties
+zoom: shift-left,minus
+ESCAPE: leave
+direction keys: move")
+
+(defn- map-infos ^String []
+  (let [tile (->tile (world-mouse-position))
+        {:keys [tiled-map
+                area-level-grid]} @(current-data)]
+    (->> [infotext
+          (str "Tile " tile)
+          (when-not area-level-grid
+            (str "Module " (mapv (comp int /)
+                                 (world-mouse-position)
+                                 [module-width module-height])))
+          (when area-level-grid
+            (str "Creature id: " (t/property-value tiled-map :creatures tile :id)))
+          (when area-level-grid
+            (let [level (get area-level-grid tile)]
+              (when (number? level)
+                (str "Area level:" level))))
+          (str "Movement properties " (t/movement-property tiled-map tile) "\n"
+               (apply vector (t/movement-properties tiled-map tile)))]
+         (remove nil?)
+         (str/join "\n"))))
+
+; same as debug-window
+(defn- ->info-window []
+  (let [label (->label "")
+        window (->window {:title "Info" :rows [[label]]})]
+    (add-actor! window (->actor {:act #(do
+                                        (.setText label (map-infos))
+                                        (.pack window))}))
+    (set-position! window 0 (gui-viewport-height))
+    window))
+
+(defn- adjust-zoom [camera by] ; DRY context.game
+  (set-zoom! camera (max 0.1 (+ (zoom camera) by))))
+
+; TODO movement-speed scales with zoom value for big maps useful
+(def ^:private camera-movement-speed 1)
+(def ^:private zoom-speed 0.1)
+
+; TODO textfield takes control !
+; TODO PLUS symbol shift & = symbol on keyboard not registered
+(defn- camera-controls [camera]
+  (when (key-pressed? :keys/shift-left)
+    (adjust-zoom camera    zoom-speed))
+  (when (key-pressed? :keys/minus)
+    (adjust-zoom camera (- zoom-speed)))
+  (let [apply-position (fn [idx f]
+                         (camera-set-position! camera
+                                               (update (camera-position camera)
+                                                       idx
+                                                       #(f % camera-movement-speed))))]
+    (if (key-pressed? :keys/left)  (apply-position 0 -))
+    (if (key-pressed? :keys/right) (apply-position 0 +))
+    (if (key-pressed? :keys/up)    (apply-position 1 +))
+    (if (key-pressed? :keys/down)  (apply-position 1 -))))
+
+#_(def ^:private show-area-level-colors true)
+; TODO unused
+; TODO also draw numbers of area levels big as module size...
+
+(defn- render-on-map []
+  (let [{:keys [tiled-map
+                area-level-grid
+                start-position
+                show-movement-properties
+                show-grid-lines]} @(current-data)
+        visible-tiles (visible-tiles (world-camera))
+        [x y] (->tile (world-mouse-position))]
+    (draw-rectangle x y 1 1 :white)
+    (when start-position
+      (draw-filled-rectangle (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
+    ; TODO move down to other doseq and make button
+    (when show-movement-properties
+      (doseq [[x y] visible-tiles
+              :let [movement-property (t/movement-property tiled-map [x y])]]
+        (draw-filled-circle [(+ x 0.5) (+ y 0.5)] 0.08 :black)
+        (draw-filled-circle [(+ x 0.5) (+ y 0.5)]
+                            0.05
+                            (case movement-property
+                              "all"   :green
+                              "air"   :orange
+                              "none"  :red))))
+    (when show-grid-lines
+      (draw-grid 0 0 (t/width  tiled-map) (t/height tiled-map) 1 1 [1 1 1 0.5]))))
+
+(def ^:private world-id :worlds/modules)
+
+(defn- generate-screen-ctx [properties]
+  (let [;{:keys [tiled-map area-level-grid start-position]} (generate-modules context properties)
+        {:keys [tiled-map start-position]} (generate-level world-id)
+        atom-data (current-data)]
+    (dispose! (:tiled-map @atom-data))
+    (swap! atom-data assoc
+           :tiled-map tiled-map
+           ;:area-level-grid area-level-grid
+           :start-position start-position)
+    (show-whole-map! (world-camera) tiled-map)
+    (.setVisible (t/get-layer tiled-map "creatures") true)))
+
+(defn ->generate-map-window [level-id]
+  (->window {:title "Properties"
+             :cell-defaults {:pad 10}
+             :rows [[(->label (with-out-str
+                               (clojure.pprint/pprint
+                                (build-property level-id))))]
+                    [(->text-button "Generate" #(try (generate-screen-ctx (build-property level-id))
+                                                     (catch Throwable t
+                                                       (error-window! t)
+                                                       (println t))))]]
+             :pack? true}))
+
+(defc ::sub-screen
+  {:let current-data}
+  ; TODO ?
+  #_(dispose [_]
+      (dispose! (:tiled-map @current-data)))
+
+  (screen-enter [_]
+    (show-whole-map! (world-camera) (:tiled-map @current-data)))
+
+  (screen-exit [_]
+    (reset-zoom! (world-camera)))
+
+  (screen-render [_]
+    (draw-tiled-map (:tiled-map @current-data) (constantly white))
+    (render-world-view! render-on-map)
+    (if (key-just-pressed? :keys/l)
+      (swap! current-data update :show-grid-lines not))
+    (if (key-just-pressed? :keys/m)
+      (swap! current-data update :show-movement-properties not))
+    (camera-controls (world-camera))
+    (when (key-just-pressed? :keys/escape)
+      (change-screen :screens/main-menu))))
+
+(derive :screens/map-editor :screens/stage)
+(defc :screens/map-editor
+  (->mk [_]
+    {:sub-screen [::sub-screen
+                  (atom {:tiled-map (t/load-map modules-file)
+                         :show-movement-properties false
+                         :show-grid-lines false})]
+     :stage (->stage [(->generate-map-window world-id)
+                      (->info-window)])}))
