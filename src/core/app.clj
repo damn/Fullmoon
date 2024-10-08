@@ -231,9 +231,12 @@
 
 (def ^:private ^:dbg-flag pausing? true)
 
+(defn- player-state-pause-game? [] (pause-game? (state-obj @world/player)))
+(defn- player-update-state      [] (manual-tick (state-obj @world/player)))
+
 (defn- player-unpaused? []
   (or (key-just-pressed? :keys/p)
-      (key-pressed? :keys/space)))
+      (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
 
 (defn- update-game-paused []
   (bind-root #'world/paused? (or entity-tick-error

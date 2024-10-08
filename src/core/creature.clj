@@ -400,10 +400,7 @@
     (bind-root #'world/player eid)
     nil))
 
-(defn- p-state-obj []
-  (state-obj @world/player))
+(defn- p-state-obj [] (state-obj @world/player))
 
-(bind-root #'player-update-state      (fn []      (manual-tick             (p-state-obj))))
-(bind-root #'player-state-pause-game? (fn []      (pause-game?             (p-state-obj))))
 (bind-root #'player-clicked-inventory (fn [cell]  (clicked-inventory-cell  (p-state-obj) cell)))
 (bind-root #'player-clicked-skillmenu (fn [skill] (clicked-skillmenu-skill (p-state-obj) skill)))

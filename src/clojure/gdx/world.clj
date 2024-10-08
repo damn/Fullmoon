@@ -1,8 +1,6 @@
 (in-ns 'clojure.gdx)
 
-(declare player-update-state
-         player-state-pause-game?
-         player-clicked-inventory
+(declare player-clicked-inventory
          player-clicked-skillmenu)
 
 ; for potential-field
