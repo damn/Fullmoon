@@ -1,30 +1,5 @@
 (in-ns 'clojure.gdx)
 
-(defn delta-time
-  "the time span between the current frame and the last frame in seconds.
-
-  `returns float`
-
-  [javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Graphics.html#getDeltaTime())"
-  []
-  (.getDeltaTime Gdx/graphics))
-
-(defn frames-per-second
-  "the average number of frames per second
-
-  `returns int`
-
-  [javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Graphics.html#getFramesPerSecond())"
-  []
-  (.getFramesPerSecond Gdx/graphics))
-
-(defn ->color
-  "[javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/graphics/Color.html#%3Cinit%3E(float,float,float,float))"
-  ([r g b]
-   (->color r g b 1))
-  ([r g b a]
-   (Color. (float r) (float g) (float b) (float a))))
-
 (defn camera-position
   "Returns camera position as [x y] vector."
   [^Camera camera]
@@ -173,30 +148,6 @@
   (let [tex (->shape-drawer-texture)]
     {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
      :shape-drawer-texture tex}))
-
-(defn- kw->color [k] (->gdx-field "graphics.Color" k))
-
-(comment
- (and (= Color/WHITE      (kw->color :white))
-      (= Color/LIGHT_GRAY (kw->color :light-gray)))
- )
-
-(def white Color/WHITE)
-(def black Color/BLACK)
-
-(defn- munge-color ^Color [color]
-  (cond
-   (= Color (class color)) color
-   (keyword? color) (kw->color color)
-   (vector? color) (apply ->color color)
-   :else (throw (ex-info "Cannot understand color" {:color color}))))
-
-(defn def-markup-color
-  "A general purpose class containing named colors that can be changed at will. For example, the markup language defined by the BitmapFontCache class uses this class to retrieve colors and the user can define his own colors.
-
-  [javadoc](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/graphics/Colors.html)"
-  [name-str color]
-  (Colors/put name-str (munge-color color)))
 
 (defn- set-color!          [^ShapeDrawer sd color] (.setColor sd (munge-color color)))
 (defn- sd-ellipse          [^ShapeDrawer sd [x y] radius-x radius-y] (.ellipse sd (float x) (float y) (float radius-x) (float radius-y)))
