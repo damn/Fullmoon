@@ -29,22 +29,6 @@
            (space.earlygrey.shapedrawer ShapeDrawer)
            (gdl RayCaster)))
 
-(declare assets
-         all-sound-files
-         all-texture-files
-         ^:private batch
-         ^:private shape-drawer
-         ^:private shape-drawer-texture
-         ^:private gui-view
-         ^:private world-view
-         ^:private default-font
-         ^:private ^:dynamic *unit-scale*
-         ^:private cursors
-         ^:private screen-k
-         ^:private screens
-         ^:private properties-db
-         ^:private properties-edn-file)
-
 (def defsystems "Map of all systems as key of name-string to var." {})
 (def component-attributes {})
 
@@ -464,7 +448,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn bind-root [avar value] (alter-var-root avar (constantly value)))
 
-
+(declare ^:private properties-db
+         ^:private properties-edn-file)
 
 (defn load-properties-db! [file]
   (let [properties (-> file slurp edn/read-string)]
@@ -952,6 +937,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (valAt [file]
       (.get ^AssetManager this ^String file))))
 
+(declare assets
+         all-sound-files
+         all-texture-files)
+
 (defn load-assets! [folder]
   (let [manager (asset-manager)
         sound-files   (search-files folder #{"wav"})
@@ -1081,7 +1070,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   [(.getRegionWidth  texture-region)
    (.getRegionHeight texture-region)])
 
-(defn- ->sprite-batch [] (SpriteBatch.))
+(declare ^:private batch)
 
 ; TODO [x y] is center or left-bottom ?
 ; why rotation origin calculations ?!
@@ -1107,16 +1096,13 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (draw-fn)
   (.end batch))
 
-(defn- ->shape-drawer-texture ^Texture []
-  (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                 (.setColor Color/WHITE)
-                 (.drawPixel 0 0))
-        tex (Texture. pixmap)]
-    (dispose! pixmap)
-    tex))
-
 (defn- ->shape-drawer [batch]
-  (let [tex (->shape-drawer-texture)]
+  (let [^Texture tex (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
+                                    (.setColor Color/WHITE)
+                                    (.drawPixel 0 0))
+                           tex (Texture. pixmap)]
+                       (dispose! pixmap)
+                       tex)]
     {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
      :shape-drawer-texture tex}))
 
@@ -1196,6 +1182,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
            false) ; wrap false, no need target-width
     (.setScale data old-scale)))
 
+(declare ^:private shape-drawer
+         ^:private shape-drawer-texture)
+
 (defn draw-ellipse [position radius-x radius-y color]
   (set-color! shape-drawer color)
   (sd-ellipse shape-drawer position radius-x radius-y))
@@ -1238,6 +1227,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
     {:unit-scale (float unit-scale)
      :viewport (->world-viewport world-width world-height unit-scale)}))
 
+(declare ^:private gui-view
+         ^:private world-view)
+
 (defn- bind-views! [{:keys [gui-view world-view]}]
   (bind-root #'gui-view (->gui-view gui-view))
   (bind-root #'world-view (->world-view world-view)))
@@ -1272,6 +1264,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
                    pixel-dimensions
                    world-unit-dimensions
                    color]) ; optional
+
+(declare ^:private ^:dynamic *unit-scale*)
 
 (defn- unit-dimensions [image]
   (if (= *unit-scale* 1)
@@ -1351,6 +1345,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (or (and true-type-font (generate-ttf true-type-font))
       (gdx-default-font)))
 
+(declare ^:private default-font)
+
 (defn draw-text
   "font, h-align, up? and scale are optional.
   h-align one of: :center, :left, :right. Default :center.
@@ -1373,6 +1369,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (mapvals (fn [[file hotspot]]
              (->cursor (str "cursors/" file ".png") hotspot))
            cursors))
+
+(declare ^:private cursors )
 
 (defn set-cursor! [cursor-key]
   (.setCursor Gdx/graphics (safe-get cursors cursor-key)))
@@ -1419,7 +1417,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (t/->orthogonal-tiled-map-renderer tiled-map (world-unit-scale) batch))
 
 (defn load-graphics! [{:keys [views default-font cursors]}]
-  (let [batch (->sprite-batch)
+  (let [batch (SpriteBatch.)
         {:keys [shape-drawer shape-drawer-texture]} (->shape-drawer batch)]
     (bind-root #'batch batch)
     (bind-root #'shape-drawer shape-drawer)
@@ -1434,6 +1432,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (dispose! shape-drawer-texture)
   (dispose! default-font)
   (run! dispose! (vals cursors)))
+
+(declare ^:private screen-k
+         ^:private screens)
 
 (defn current-screen []
   [screen-k (screen-k screens)])
