@@ -1391,10 +1391,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn render-gui-view!   [render-fn] (render-view! gui-view render-fn))
 (defn render-world-view! [render-fn] (render-view! world-view render-fn))
 
-(defn update-viewports! [dim]
-  (vp-update! (gui-viewport) dim :center-camera? true)
-  (vp-update! (world-viewport) dim)) ; Do not center the camera on world-viewport. We set the position there manually.
-
 (declare draw-item-on-cursor)
 
 (declare ^:private cached-map-renderer)
@@ -2067,7 +2063,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
                           (screen-render! (current-screen)))
 
                         (resize [w h]
-                          (update-viewports! [w h])))
+                          (vp-update! (gui-viewport) [w h] :center-camera? true)
+                          (vp-update! (world-viewport) [w h])))
                       (lwjgl3-app-config config)))
 
 (declare entity-tile
