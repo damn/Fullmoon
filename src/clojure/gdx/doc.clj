@@ -66,7 +66,7 @@
         (->clojurefuncs
          (apply str
                 (remove #{"defc" "defsystem"}
-                        (interpose " , " (map str (keys (->> (ns-publics 'clojure.gdx)
+                        (interpose " , " (map str (keys (->> (ns-interns 'clojure.gdx)
                                                              (remove anony-class?))))))))))
 
 (when (= "true" (System/getenv "ADD_METADOC"))
