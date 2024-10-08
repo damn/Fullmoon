@@ -50,13 +50,13 @@
   (:load "gdx/math"
          "gdx/utils"
          "gdx/component"
+         "gdx/properties"
 
          "gdx/app/assets"
          "gdx/app/input"
          "gdx/app/graphics"
          "gdx/app/screens"
          "gdx/app/ui"
-         "gdx/app/properties"
          "gdx/app/start"
 
          "gdx/screens/property_editor"

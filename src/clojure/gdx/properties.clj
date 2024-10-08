@@ -183,6 +183,7 @@
    :file
    :sub-image-bounds})
 
+; reduce-kv?
 (defn- apply-kvs
   "Calls for every key in map (f k v) to calculate new value at k."
   [m f]
