@@ -2075,10 +2075,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (require '[core.world :as world])
 
-(load "gdx/world/raycaster"
-      "gdx/world/grid"
-      "gdx/world/potential_fields"
-      "gdx/world/content_grid")
+(load "world/raycaster"
+      "world/grid"
+      "world/potential_fields"
+      "world/content_grid")
 
 (def mouseover-entity nil)
 
@@ -2116,24 +2116,24 @@ On any exception we get a stacktrace with all tx's values and names shown."
     ; min 1 because floating point math inaccuracies
     (min 1 (/ (- stop-time elapsed-time) duration))))
 
-(load "gdx/entity/base"
-      "gdx/entity/image"
-      "gdx/entity/animation"
-      "gdx/entity/movement"
-      "gdx/entity/delete_after_duration"
-      "gdx/entity/destroy_audiovisual"
-      "gdx/entity/line"
-      "gdx/entity/projectile"
-      "gdx/entity/skills"
-      "gdx/entity/faction"
-      "gdx/entity/clickable"
-      "gdx/entity/mouseover"
-      "gdx/entity/temp_modifier"
-      "gdx/entity/alert"
-      "gdx/entity/string_effect"
-      "gdx/entity/modifiers"
-      "gdx/entity/inventory"
-      "gdx/entity/state")
+(load "entity/base"
+      "entity/image"
+      "entity/animation"
+      "entity/movement"
+      "entity/delete_after_duration"
+      "entity/destroy_audiovisual"
+      "entity/line"
+      "entity/projectile"
+      "entity/skills"
+      "entity/faction"
+      "entity/clickable"
+      "entity/mouseover"
+      "entity/temp_modifier"
+      "entity/alert"
+      "entity/string_effect"
+      "entity/modifiers"
+      "entity/inventory"
+      "entity/state")
 
 {:metadoc/categories {:app "🖥️ Application"
                       :app.graphics "🎨 Graphics"
