@@ -10,20 +10,6 @@
            (com.badlogic.gdx.utils SharedLibraryLoader
                                    ScreenUtils)))
 
-(defn load-assets! [folder]
-  (let [manager (asset-manager)
-        sound-files   (search-files folder #{"wav"})
-        texture-files (search-files folder #{"png" "bmp"})]
-    (load-assets manager sound-files   :sound)
-    (load-assets manager texture-files :texture)
-    (.finishLoading manager)
-    (bind-root #'assets manager)
-    (bind-root #'all-sound-files sound-files)
-    (bind-root #'all-texture-files texture-files)))
-
-(defn dispose-assets! []
-  (dispose! assets))
-
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
 (load "screens/minimap"
