@@ -1,5 +1,28 @@
 (in-ns 'clojure.gdx)
 
+{:metadoc/categories {:app "🖥️ Application"
+                      :app.graphics "🎨 Graphics"
+                      :app.graphics.camera "🎥 Camera"
+                      :app.graphics.images "🖼️ Image"
+                      :app.screen "📺 Screens"
+                      :app.view.gui "🖼️ Gui View"
+                      :app.view.world "🗺️ World View"
+                      :app.input "🎮 Input"
+                      :component "⚙️ Component"
+                      :ctx "📜 Context"
+                      :effects "💥 Effects"
+                      :entity "👾 Entity"
+                      :geometry "📐 Geometry"
+                      :properties "📦️ Properties"
+                      :ui "🎛️ UI"
+                      :ui-actor "🕴️ UI Actor"
+                      :ui-stage "UI Stage"
+                      :ui-table "UI Table"
+                      :utils "🔧 Utils"
+                      :utils.random "🎲 Random"
+                      :world "🌎 World"
+                      :world.timer "⏳ Timer"}}
+
 (defn- add-metadoc! []
   (doseq [[doc-cat syms] (edn/read-string (slurp "doc/categories.edn"))
           sym syms]

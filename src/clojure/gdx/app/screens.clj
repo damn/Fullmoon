@@ -23,7 +23,7 @@
     (bind-root #'screen-k new-k)
     (screen-enter [new-k v])))
 
-(defsystem ^:private screen-render! "FIXME" [_])
+(defsystem screen-render! "FIXME" [_])
 
 (defsystem screen-render "FIXME" [_])
 (defmethod screen-render :default [_])
@@ -36,13 +36,10 @@
           {}
           components))
 
-(defc :context/screens
-  {:data :some
-   :let screen-ks}
-  (->mk [_]
-    (bind-root #'screens (create-vs (zipmap screen-ks (repeat nil))))
-    (change-screen (ffirst screens)))
+(defn load-screens! [screen-ks]
+  (bind-root #'screens (create-vs (zipmap screen-ks (repeat nil))))
+  (change-screen (ffirst screens)))
 
-  (destroy! [_]
-    ; TODO screens not disposed https://github.com/damn/core/issues/41
-    ))
+(defn dispose-screens! []
+  ; TODO screens not disposed https://github.com/damn/core/issues/41
+  )

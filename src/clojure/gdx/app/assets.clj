@@ -31,7 +31,7 @@
   (map #(str/replace-first % folder "")
        (recursively-search folder file-extensions)))
 
-(defn- load-assets! [^AssetManager manager files class-k]
+(defn- load-assets [^AssetManager manager files class-k]
   (let [^Class klass (case class-k :sound Sound :texture Texture)]
     (doseq [file files]
       (.load manager ^String file klass))))
@@ -41,21 +41,19 @@
 (def ^:private image-file-extensions #{"png" "bmp"})
 (def ^:private sound-file-extensions #{"wav"})
 
-(defc :context/assets
-  {:data :string}
-  (->mk [[_ folder]]
-    (let [manager (asset-manager)
-          sound-files   (search-files folder sound-file-extensions)
-          texture-files (search-files folder image-file-extensions)]
-      (load-assets! manager sound-files   :sound)
-      (load-assets! manager texture-files :texture)
-      (.finishLoading manager)
-      (bind-root #'assets {:manager manager
-                           :sound-files sound-files
-                           :texture-files texture-files})))
+(defn load-assets! [folder]
+  (let [manager (asset-manager)
+        sound-files   (search-files folder sound-file-extensions)
+        texture-files (search-files folder image-file-extensions)]
+    (load-assets manager sound-files   :sound)
+    (load-assets manager texture-files :texture)
+    (.finishLoading manager)
+    (bind-root #'assets {:manager manager
+                         :sound-files sound-files
+                         :texture-files texture-files})))
 
-  (destroy! [_]
-    (dispose! (:manager assets))))
+(defn dispose-assets! []
+  (dispose! (:manager assets)))
 
 (defn- asset
   "Returns the sound or texture at file-path."

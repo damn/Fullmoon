@@ -139,10 +139,8 @@
 (declare ^:private properties-db
          ^:private properties-edn-file)
 
-(defn- ->ctx-properties
-  "Validates all properties."
-  [properties-edn-file]
-  (let [properties (-> properties-edn-file slurp edn/read-string)]
+(defn load-properties-db! [file]
+  (let [properties (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id properties)))
     (run! validate properties)
     (bind-root #'properties-db (zipmap (map :property/id properties) properties))

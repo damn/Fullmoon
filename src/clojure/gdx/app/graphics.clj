@@ -480,7 +480,7 @@
 (defn render-gui-view!   [render-fn] (render-view! gui-view render-fn))
 (defn render-world-view! [render-fn] (render-view! world-view render-fn))
 
-(defn- update-viewports! [dim]
+(defn update-viewports! [dim]
   (vp-update! (gui-viewport) dim :center-camera? true)
   (vp-update! (world-viewport) dim)) ; Do not center the camera on world-viewport. We set the position there manually.
 
@@ -505,38 +505,19 @@
 (defn- ->tiled-map-renderer [tiled-map]
   (t/->orthogonal-tiled-map-renderer tiled-map (world-unit-scale) batch))
 
-(def-attributes
-  :views [:map [:gui-view :world-view]]
-  :gui-view [:map [:world-width :world-height]]
-  :world-view [:map [:tile-size :world-width :world-height]]
-  :world-width :pos-int
-  :world-height :pos-int
-  :tile-size :pos-int
+(defn load-graphics! [{:keys [views default-font cursors]}]
+  (let [batch (->sprite-batch)
+        {:keys [shape-drawer shape-drawer-texture]} (->shape-drawer batch)]
+    (bind-root #'batch batch)
+    (bind-root #'shape-drawer shape-drawer)
+    (bind-root #'shape-drawer-texture shape-drawer-texture)
+    (bind-root #'cursors (->cursors cursors))
+    (bind-root #'default-font (->default-font default-font))
+    (bind-views! views)
+    (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
 
-  :default-font [:map [:file :quality-scaling :size]]
-  :file :string
-  :quality-scaling :pos-int
-  :size :pos-int
-
-  :cursors :some)
-
-(defc :context/graphics
-  {:data [:map [:cursors
-                :default-font
-                :views]]}
-  (->mk [[_ {:keys [views default-font cursors]}]]
-    (let [batch (->sprite-batch)
-          {:keys [shape-drawer shape-drawer-texture]} (->shape-drawer batch)]
-      (bind-root #'batch batch)
-      (bind-root #'shape-drawer shape-drawer)
-      (bind-root #'shape-drawer-texture shape-drawer-texture)
-      (bind-root #'cursors (->cursors cursors))
-      (bind-root #'default-font (->default-font default-font))
-      (bind-views! views)
-      (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
-
-  (destroy! [_]
-    (dispose! batch)
-    (dispose! shape-drawer-texture)
-    (dispose! default-font)
-    (run! dispose! (vals cursors))))
+(defn dispose-graphics! []
+  (dispose! batch)
+  (dispose! shape-drawer-texture)
+  (dispose! default-font)
+  (run! dispose! (vals cursors)))

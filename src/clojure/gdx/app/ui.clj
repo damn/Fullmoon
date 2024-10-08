@@ -21,18 +21,16 @@
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
 
-(defc :context/vis-ui
-  {:data [:enum [:skin-scale/x1 :skin-scale/x2]]
-   :let skin-scale}
-  (->mk [_]
-    (check-cleanup-visui!)
-    (VisUI/load (case skin-scale
-                  :skin-scale/x1 VisUI$SkinScale/X1
-                  :skin-scale/x2 VisUI$SkinScale/X2))
-    (font-enable-markup!)
-    (set-tooltip-config!))
-  (destroy! [_]
-    (VisUI/dispose)))
+(defn load-ui! [skin-scale]
+  (check-cleanup-visui!)
+  (VisUI/load (case skin-scale
+                :skin-scale/x1 VisUI$SkinScale/X1
+                :skin-scale/x2 VisUI$SkinScale/X2))
+  (font-enable-markup!)
+  (set-tooltip-config!))
+
+(defn dispose-ui! []
+  (VisUI/dispose))
 
 (defn actor-x [^Actor a] (.getX a))
 (defn actor-y [^Actor a] (.getY a))
