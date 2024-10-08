@@ -42,15 +42,6 @@
 (defmethod edn->value :data/animation [_ animation]
   (edn->animation animation))
 
-; looping? - click on widget restart
-; frame-duration
-; frames ....
-; hidden actor act tick atom animation & set current frame image drawable
-(defmethod ->widget :data/animation [_ animation]
-  (->table {:rows [(for [image (:frames animation)]
-                        (->image-widget (edn->image image) {}))]
-               :cell-defaults {:pad 1}}))
-
 (defn- tx-assoc-image-current-frame [eid animation]
   [:e/assoc eid :entity/image (current-frame animation)])
 

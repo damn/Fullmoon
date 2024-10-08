@@ -2033,8 +2033,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (show-player-modal! params)
     nil))
 
-(load "gdx/screens/property_editor"
-      "gdx/world"
+(load "gdx/world"
       "gdx/entity/base"
       "gdx/entity/image"
       "gdx/entity/animation"

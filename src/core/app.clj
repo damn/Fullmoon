@@ -15,7 +15,8 @@
 (load "screens/minimap"
       "screens/world"
       "screens/main_menu"
-      "screens/options")
+      "screens/options"
+      "screens/property_editor")
 
 (defn lwjgl3-app-config
   [{:keys [title width height full-screen? fps]}]

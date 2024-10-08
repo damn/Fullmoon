@@ -24,22 +24,3 @@
             :entity/projectile-collision
             :maxrange
             :entity-effects])
-
-(bind-root #'clojure.gdx/property-k-sort-order
-           [:property/id
-            :property/pretty-name
-            :app/lwjgl3
-            :entity/image
-            :entity/animation
-            :creature/species
-            :creature/level
-            :entity/body
-            :item/slot
-            :projectile/speed
-            :projectile/max-range
-            :projectile/piercing?
-            :skill/action-time-modifier-key
-            :skill/action-time
-            :skill/start-action-sound
-            :skill/cost
-            :skill/cooldown])
