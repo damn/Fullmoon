@@ -1,4 +1,22 @@
 (ns clojure.gdx
+  {:metadoc/categories {:app "🖥️ Application"
+                        :camera "🎥 Camera"
+                        :component "⚙️ Component"
+                        :effect "💥 Effects"
+                        :entity "👾 Entity"
+                        :geometry "📐 Geometry"
+                        :graphics "🎨 Graphics"
+                        :gui-view  "🖼️ Gui View"
+                        :input "🎮 Input"
+                        :properties "📦️ Properties"
+                        :screen "📺 Screens"
+                        :sprite "🖼️ Image"
+                        :ui "🎛️ UI"
+                        :ui.actor "🕴️ UI Actor"
+                        :utils  "🔧 Utils"
+                        :world "🌎 World"
+                        :world-view  "🗺️ World View"
+                        :world.timer "⏳ Timer"}}
   (:require [clojure.set :as set]
             [clojure.string :as str]
             [clojure.edn :as edn]
@@ -4333,28 +4351,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defmethod widget->value :one-to-one [_ widget]
   (->> (children widget) (keep actor-id) first))
 
-{:metadoc/categories {:app "🖥️ Application"
-                      :app.graphics "🎨 Graphics"
-                      :app.graphics.camera "🎥 Camera"
-                      :app.graphics.images "🖼️ Image"
-                      :app.screen "📺 Screens"
-                      :app.view.gui "🖼️ Gui View"
-                      :app.view.world "🗺️ World View"
-                      :app.input "🎮 Input"
-                      :component "⚙️ Component"
-                      :ctx "📜 Context"
-                      :effects "💥 Effects"
-                      :entity "👾 Entity"
-                      :geometry "📐 Geometry"
-                      :properties "📦️ Properties"
-                      :ui "🎛️ UI"
-                      :ui-actor "🕴️ UI Actor"
-                      :ui-stage "UI Stage"
-                      :ui-table "UI Table"
-                      :utils "🔧 Utils"
-                      :utils.random "🎲 Random"
-                      :world "🌎 World"
-                      :world.timer "⏳ Timer"}}
+
 
 (defn- add-metadoc! []
   (doseq [[doc-cat syms] (edn/read-string (slurp "doc/categories.edn"))
