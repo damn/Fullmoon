@@ -14,9 +14,3 @@
 
 (defsystem manual-tick "FIXME" [_])
 (defmethod manual-tick :default [_])
-
-(defsystem clicked-inventory-cell "FIXME" [_ cell])
-(defmethod clicked-inventory-cell :default [_ cell])
-
-(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
-(defmethod clicked-skillmenu-skill :default [_ skill])

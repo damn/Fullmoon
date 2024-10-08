@@ -183,6 +183,12 @@
                        (a-mouseover? this (gui-mouse-position))
                        (actor-id (parent this)))))))
 
+(defsystem clicked-inventory-cell "FIXME" [_ cell])
+(defmethod clicked-inventory-cell :default [_ cell])
+
+(defn- player-clicked-inventory [cell]
+  (clicked-inventory-cell (state-obj @world/player) cell))
+
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
         image-widget (->ui-image-widget (slot->background slot) {:id :image})

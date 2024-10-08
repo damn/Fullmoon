@@ -399,8 +399,3 @@
   (create [_ eid]
     (bind-root #'world/player eid)
     nil))
-
-(defn- p-state-obj [] (state-obj @world/player))
-
-(bind-root #'player-clicked-inventory (fn [cell]  (clicked-inventory-cell  (p-state-obj) cell)))
-(bind-root #'player-clicked-skillmenu (fn [skill] (clicked-skillmenu-skill (p-state-obj) skill)))

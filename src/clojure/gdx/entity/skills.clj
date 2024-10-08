@@ -13,6 +13,12 @@
               :columns 16
               :image/scale 2}})
 
+(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
+(defmethod clicked-skillmenu-skill :default [_ skill])
+
+(defn- player-clicked-skillmenu [skill]
+  (clicked-skillmenu-skill (state-obj @world/player) skill))
+
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @world/player))
 #_(defn ->skill-window []

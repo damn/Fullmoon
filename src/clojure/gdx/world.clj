@@ -1,9 +1,5 @@
 (in-ns 'clojure.gdx)
 
-(declare player-clicked-inventory
-         player-clicked-skillmenu)
-
-; for potential-field
 (declare entity-tile
          enemy-faction)
 
