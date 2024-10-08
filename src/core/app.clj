@@ -7,8 +7,6 @@
             [core.world :as world]
             [data.grid2d :as g]))
 
-(load "editor")
-
 (defn- render-infostr-on-bar [infostr x y h]
   (draw-text {:text infostr
               :x (+ x 75)
