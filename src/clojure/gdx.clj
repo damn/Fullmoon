@@ -30,7 +30,6 @@
            (gdl RayCaster)))
 
 (def defsystems "Map of all systems as key of name-string to var." {})
-(def component-attributes {})
 
 (defmacro defsystem
   "A system is a multimethod which takes a component `[k v]` and dispatches on k."
@@ -56,6 +55,8 @@
              (namespace k)
              (not= (k->component-ns k) (ns-name *ns*)))
     (println "WARNING: defc " k " is not matching with namespace name " (ns-name *ns*))))
+
+(def component-attributes {})
 
 (defn defc*
   "Defines a component without systems methods, so only to set metadata."
@@ -115,12 +116,6 @@ Example:
                      ~fn-params params#]
                  ~@fn-exprs)))))
       ~k)))
-
-(defsystem ->mk "Create component value. Default returns v." [_])
-(defmethod ->mk :default [[_ v]] v)
-
-(defsystem ^:private destroy! "Side effect destroy resources. Default do nothing." [_])
-(defmethod destroy! :default [_])
 
 ;;;;
 
@@ -190,7 +185,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
 #_(defn set-to-max [[v mx]]
   {:pre [(m/validate val-max-schema [v mx])]}
   [mx mx])
-
 
 ;;;;
 
@@ -1456,6 +1450,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defsystem screen-render "FIXME" [_])
 (defmethod screen-render :default [_])
+
+(defsystem ->mk "Create component value. Default returns v." [_])
+(defmethod ->mk :default [[_ v]] v)
 
 (defn create-vs
   "Creates a map for every component with map entries `[k (->mk [k v])]`."
