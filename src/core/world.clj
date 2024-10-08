@@ -1,3 +1,4 @@
 (ns core.world)
 
-(declare paused?)
+(declare paused?
+         player)

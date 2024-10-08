@@ -177,7 +177,7 @@
   (->ui-widget
    (fn [this]
      (binding [*unit-scale* 1]
-       (draw-cell-rect @player-entity
+       (draw-cell-rect @world/player
                        (actor-x this)
                        (actor-y this)
                        (a-mouseover? this (gui-mouse-position))

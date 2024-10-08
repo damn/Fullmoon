@@ -1,7 +1,6 @@
 (in-ns 'clojure.gdx)
 
-(declare player-entity
-         player-update-state
+(declare player-update-state
          player-state-pause-game?
          player-clicked-inventory
          player-clicked-skillmenu)

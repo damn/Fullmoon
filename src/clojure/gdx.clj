@@ -28,8 +28,6 @@
            (space.earlygrey.shapedrawer ShapeDrawer)
            (gdl RayCaster)))
 
-;;;; App Context
-
 (declare assets
          all-sound-files
          all-texture-files
@@ -45,8 +43,6 @@
          ^:private screens
          ^:private properties-db
          ^:private properties-edn-file)
-
-;;;;
 
 (def defsystems "Map of all systems as key of name-string to var." {})
 (def component-attributes {})
@@ -781,7 +777,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
              (fn [step]
                [(.x step) (.y step)])
              (raycaster/ray-steplist (get-cell-blocked-boolean-array)
-                                     (:position @player-entity)
+                                     (:position @world/player)
                                      (g/map-coords)))))
 
 ;; MAXSTEPS TEST
@@ -796,7 +792,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                                       maxsteps))))
 
 #_(defn draw-test-raycast []
-  (let [start (:position @player-entity)
+  (let [start (:position @world/player)
         target (g/map-coords)
         color (if (fast-ray-blocked? start target) g/red g/green)]
     (render-line-middle-to-mouse color)))
@@ -804,7 +800,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 ; PATH BLOCKED TEST
 
 #_(defn draw-test-path-blocked [] ; TODO draw in map no need for screenpos-of-tilepos
-  (let [[start-x start-y] (:position @player-entity)
+  (let [[start-x start-y] (:position @world/player)
         [target-x target-y] (g/map-coords)
         [start1 target1 start2 target2] (create-double-ray-endpositions start-x start-y target-x target-y 0.4)
         [start1screenx,start1screeny]   (screenpos-of-tilepos start1)
@@ -2127,6 +2123,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (when (= "true" (System/getenv "ADD_METADOC"))
   (add-metadoc!))
+
+(require '[core.world :as world])
 
 (load "gdx/world"
       "gdx/entity/base"

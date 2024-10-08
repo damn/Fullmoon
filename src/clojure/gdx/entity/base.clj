@@ -310,7 +310,7 @@
 (defn render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [entities*]
-  (let [player-entity* @player-entity]
+  (let [player-entity* @world/player]
     (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
                                                first
                                                render-order)

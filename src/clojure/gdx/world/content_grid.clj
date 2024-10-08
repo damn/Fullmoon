@@ -30,7 +30,7 @@
          (mapcat (comp :entities deref)))))
 
 (defn active-entities []
-  (active-entities* @player-entity))
+  (active-entities* @world/player))
 
 (defn init-content-grid! [& {:keys [cell-size width height]}]
   (bind-root

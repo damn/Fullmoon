@@ -14,7 +14,7 @@
               :image/scale 2}})
 
 ; TODO render text label free-skill-points
-; (str "Free points: " (:entity/free-skill-points @player-entity))
+; (str "Free points: " (:entity/free-skill-points @world/player))
 #_(defn ->skill-window []
   (->window {:title "Skills"
              :id :skill-window
