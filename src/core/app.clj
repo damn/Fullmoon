@@ -16,15 +16,6 @@
 
 (load "editor")
 
-(defn- init-world-time! []
-  (bind-root #'elapsed-time 0)
-  (bind-root #'logic-frame 0))
-
-(defn update-time [delta]
-  (bind-root #'world-delta delta)
-  (alter-var-root #'elapsed-time + delta)
-  (alter-var-root #'logic-frame inc))
-
 (defn- ->explored-tile-corners [width height]
   (atom (g/create-grid width height (constantly false))))
 

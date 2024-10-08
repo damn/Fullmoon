@@ -2653,12 +2653,19 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (declare ^{:doc "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."}
          world-delta
-
          ^{:doc "The elapsed in-game-time (not counting when game is paused)."}
          elapsed-time
-
          ^{:doc "The game-logic frame number, starting with 1. (not counting when game is paused)"}
          logic-frame)
+
+(defn init-world-time! []
+  (bind-root #'elapsed-time 0)
+  (bind-root #'logic-frame 0))
+
+(defn update-time [delta]
+  (bind-root #'world-delta delta)
+  (alter-var-root #'elapsed-time + delta)
+  (alter-var-root #'logic-frame inc))
 
 (defrecord Counter [duration stop-time])
 
