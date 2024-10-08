@@ -2069,6 +2069,71 @@ On any exception we get a stacktrace with all tx's values and names shown."
                           (update-viewports! [w h])))
                       (lwjgl3-app-config config)))
 
+(declare entity-tile
+         enemy-faction)
+
+(require '[core.world :as world])
+
+(load "gdx/world/raycaster"
+      "gdx/world/grid"
+      "gdx/world/potential_fields"
+      "gdx/world/content_grid")
+
+(def mouseover-entity nil)
+
+(defn mouseover-entity* []
+  (when-let [entity mouseover-entity]
+    @entity))
+
+(declare explored-tile-corners)
+
+(declare ^{:doc "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."}
+         world-delta
+
+         ^{:doc "The elapsed in-game-time (not counting when game is paused)."}
+         elapsed-time
+
+         ^{:doc "The game-logic frame number, starting with 1. (not counting when game is paused)"}
+         logic-frame)
+
+(defrecord Counter [duration stop-time])
+
+(defn ->counter [duration]
+  {:pre [(>= duration 0)]}
+  (->Counter duration (+ elapsed-time duration)))
+
+(defn stopped? [{:keys [stop-time]}]
+  (>= elapsed-time stop-time))
+
+(defn reset [{:keys [duration] :as counter}]
+  (assoc counter :stop-time (+ elapsed-time duration)))
+
+(defn finished-ratio [{:keys [duration stop-time] :as counter}]
+  {:post [(<= 0 % 1)]}
+  (if (stopped? counter)
+    0
+    ; min 1 because floating point math inaccuracies
+    (min 1 (/ (- stop-time elapsed-time) duration))))
+
+(load "gdx/entity/base"
+      "gdx/entity/image"
+      "gdx/entity/animation"
+      "gdx/entity/movement"
+      "gdx/entity/delete_after_duration"
+      "gdx/entity/destroy_audiovisual"
+      "gdx/entity/line"
+      "gdx/entity/projectile"
+      "gdx/entity/skills"
+      "gdx/entity/faction"
+      "gdx/entity/clickable"
+      "gdx/entity/mouseover"
+      "gdx/entity/temp_modifier"
+      "gdx/entity/alert"
+      "gdx/entity/string_effect"
+      "gdx/entity/modifiers"
+      "gdx/entity/inventory"
+      "gdx/entity/state")
+
 {:metadoc/categories {:app "🖥️ Application"
                       :app.graphics "🎨 Graphics"
                       :app.graphics.camera "🎥 Camera"
@@ -2163,25 +2228,3 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (when (= "true" (System/getenv "ADD_METADOC"))
   (add-metadoc!))
-
-(require '[core.world :as world])
-
-(load "gdx/world"
-      "gdx/entity/base"
-      "gdx/entity/image"
-      "gdx/entity/animation"
-      "gdx/entity/movement"
-      "gdx/entity/delete_after_duration"
-      "gdx/entity/destroy_audiovisual"
-      "gdx/entity/line"
-      "gdx/entity/projectile"
-      "gdx/entity/skills"
-      "gdx/entity/faction"
-      "gdx/entity/clickable"
-      "gdx/entity/mouseover"
-      "gdx/entity/temp_modifier"
-      "gdx/entity/alert"
-      "gdx/entity/string_effect"
-      "gdx/entity/modifiers"
-      "gdx/entity/inventory"
-      "gdx/entity/state")
