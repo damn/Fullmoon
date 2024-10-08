@@ -177,7 +177,7 @@
   (->ui-widget
    (fn [this]
      (binding [*unit-scale* 1]
-       (draw-cell-rect @world/player
+       (draw-cell-rect @world-player
                        (actor-x this)
                        (actor-y this)
                        (a-mouseover? this (gui-mouse-position))
@@ -187,7 +187,7 @@
 (defmethod clicked-inventory-cell :default [_ cell])
 
 (defn- player-clicked-inventory [cell]
-  (clicked-inventory-cell (state-obj @world/player) cell))
+  (clicked-inventory-cell (state-obj @world-player) cell))
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]

@@ -20,7 +20,7 @@
                                         [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (->actor {:draw (fn []
-                         (let [player-entity* @world/player
+                         (let [player-entity* @world-player
                                x (- x (/ rahmenw 2))]
                            (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
                            (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
@@ -41,9 +41,9 @@
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position) "\n"
-     "paused? " world/paused? "\n"
+     "paused? " world-paused? "\n"
      "elapsed-time " (readable-number elapsed-time) " seconds \n"
-     "skill cooldowns: " (skill-info @world/player) "\n"
+     "skill cooldowns: " (skill-info @world-player) "\n"
      (when-let [entity* (mouseover-entity*)]
        (str "Mouseover-entity uid: " (:entity/uid entity*)))
      ;"\nMouseover-Actor:\n"
@@ -110,7 +110,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (->image-button image (fn []) {:scale image-scale})]
       (set-id! button id)
-      (add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (world/player)) FIXME
+      (add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
       (add-actor! horizontal-group button)
       (bg-add! button-group button)
       nil)))
@@ -146,7 +146,7 @@
  ; * cooldown / not usable -> diff. colors ? disable on not able to use skills (stunned?)
  ; * or even sector circling for cooldown like in WoW (clipped !)
  ; * tooltips ! with hotkey-number !
- ;  ( (skills/text skill-id world/player))
+ ;  ( (skills/text skill-id world-player))
  ; * add hotkey number to tooltips
  ; * hotkeys => select button
  ; when no selected-skill & new skill assoce'd (sword at start)

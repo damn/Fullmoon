@@ -2,7 +2,6 @@
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.string :as str]
-            [core.world :as world]
             core.creature))
 
 (defn- defmodifier [k operations]
@@ -572,7 +571,7 @@ Default method returns true."
 (defn- creatures-in-los-of-player []
   (->> (active-entities)
        (filter #(:creature/species @%))
-       (filter #(line-of-sight? @world/player @%))
+       (filter #(line-of-sight? @world-player @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!
@@ -830,7 +829,7 @@ Default method returns true."
     (:type (:entity/clickable entity*))))
 
 (defmethod on-clicked :clickable/item [clicked-entity*]
-  (let [player-entity* @world/player
+  (let [player-entity* @world-player
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
@@ -868,7 +867,7 @@ Default method returns true."
 (defn- inventory-cell-with-item? [actor]
   (and (parent actor)
        (= "inventory-cell" (actor-name (parent actor)))
-       (get-in (:entity/inventory @world/player)
+       (get-in (:entity/inventory @world-player)
                (actor-id (parent actor)))))
 
 (defn- mouseover-actor->cursor []

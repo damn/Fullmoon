@@ -6,7 +6,6 @@
             core.config
             core.creature
             core.stat
-            [core.world :as world]
             [data.grid2d :as g])
   (:load "world/modules"
          "world/generators"
@@ -201,7 +200,7 @@
   (highlight-mouseover-tile))
 
 (defn- calculate-mouseover-entity []
-  (let [player-entity* @world/player
+  (let [player-entity* @world-player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
                           (point->entities (world-mouse-position))))]
@@ -226,15 +225,15 @@
 
 (def ^:private ^:dbg-flag pausing? true)
 
-(defn- player-state-pause-game? [] (pause-game? (state-obj @world/player)))
-(defn- player-update-state      [] (manual-tick (state-obj @world/player)))
+(defn- player-state-pause-game? [] (pause-game? (state-obj @world-player)))
+(defn- player-update-state      [] (manual-tick (state-obj @world-player)))
 
 (defn- player-unpaused? []
   (or (key-just-pressed? :keys/p)
       (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
 
 (defn- update-game-paused []
-  (bind-root #'world/paused? (or entity-tick-error
+  (bind-root #'world-paused? (or entity-tick-error
                                  (and pausing?
                                       (player-state-pause-game?)
                                       (not (player-unpaused?)))))
@@ -254,13 +253,13 @@
   (effect! [player-update-state
             update-mouseover-entity ; this do always so can get debug info even when game not running
             update-game-paused
-            #(when-not world/paused?
+            #(when-not world-paused?
                (update-world))
             remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
             ]))
 
 (defn- render-world! []
-  (camera-set-position! (world-camera) (:position @world/player))
+  (camera-set-position! (world-camera) (:position @world-player))
   (render-map (camera-position (world-camera)))
   (render-world-view! (fn []
                         (before-entities)

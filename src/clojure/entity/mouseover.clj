@@ -7,7 +7,7 @@
 
 (defc :entity/mouseover?
   (render-below [_ {:keys [entity/faction] :as entity*}]
-    (let [player-entity* @world/player]
+    (let [player-entity* @world-player]
       (with-shape-line-width 3
         #(draw-ellipse (:position entity*)
                        (:half-width entity*)

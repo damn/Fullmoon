@@ -1,8 +1,7 @@
 (ns core.creature
   (:require [clojure.gdx :refer :all]
             [clojure.string :as str]
-            [reduce-fsm :as fsm]
-            [core.world :as world]))
+            [reduce-fsm :as fsm]))
 
 (def-property-type :properties/creatures
   {:schema [:entity/body
@@ -330,7 +329,7 @@
       (draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
 (defn draw-item-on-cursor []
-  (let [player-e* @world/player]
+  (let [player-e* @world-player]
     (when (and (= :player-item-on-cursor (entity-state player-e*))
                (not (world-item?)))
       (draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
@@ -397,5 +396,5 @@
 
 (defc :entity/player?
   (create [_ eid]
-    (bind-root #'world/player eid)
+    (bind-root #'world-player eid)
     nil))

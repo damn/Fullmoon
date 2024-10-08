@@ -763,7 +763,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
              (fn [step]
                [(.x step) (.y step)])
              (raycaster/ray-steplist (get-cell-blocked-boolean-array)
-                                     (:position @world/player)
+                                     (:position @world-player)
                                      (g/map-coords)))))
 
 ;; MAXSTEPS TEST
@@ -778,7 +778,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                                       maxsteps))))
 
 #_(defn draw-test-raycast []
-  (let [start (:position @world/player)
+  (let [start (:position @world-player)
         target (g/map-coords)
         color (if (fast-ray-blocked? start target) g/red g/green)]
     (render-line-middle-to-mouse color)))
@@ -786,7 +786,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 ; PATH BLOCKED TEST
 
 #_(defn draw-test-path-blocked [] ; TODO draw in map no need for screenpos-of-tilepos
-  (let [[start-x start-y] (:position @world/player)
+  (let [[start-x start-y] (:position @world-player)
         [target-x target-y] (g/map-coords)
         [start1 target1 start2 target2] (create-double-ray-endpositions start-x start-y target-x target-y 0.4)
         [start1screenx,start1screeny]   (screenpos-of-tilepos start1)
@@ -2073,7 +2073,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (declare entity-tile
          enemy-faction)
 
-(require '[core.world :as world])
+(declare world-paused?
+         world-player)
 
 (defn- set-arr [arr cell* cell*->blocked?]
   (let [[x y] (:position cell*)]
@@ -2635,7 +2636,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
          (mapcat (comp :entities deref)))))
 
 (defn active-entities []
-  (active-entities* @world/player))
+  (active-entities* @world-player))
 
 (defn init-content-grid! [& {:keys [cell-size width height]}]
   (bind-root
