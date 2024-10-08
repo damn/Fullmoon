@@ -1,6 +1,6 @@
 {:app [start-app! post-runnable! exit-app!]
  :app.input [button-just-pressed? key-just-pressed? key-pressed?]
- :component [defcomponent defcomponent* defsystem defsystems component-attributes ->mk info-text]
+ :component [defc defc* defsystem defsystems component-attributes ->mk info-text]
  :counter [->counter elapsed-time finished-ratio reset stopped?]
  :ctx [error-window! play-sound! set-cursor! add-world-ctx]
  :effects [do! effect!]
