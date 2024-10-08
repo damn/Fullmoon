@@ -528,7 +528,20 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 ;;;;
 
-(declare info-text-k-order)
+(def info-text-k-order [:property/pretty-name
+                        :skill/action-time-modifier-key
+                        :skill/action-time
+                        :skill/cooldown
+                        :skill/cost
+                        :skill/effects
+                        :creature/species
+                        :creature/level
+                        :entity/stats
+                        :entity/delete-after-duration
+                        :projectile/piercing?
+                        :entity/projectile-collision
+                        :maxrange
+                        :entity-effects])
 
 (defn index-of [k ^clojure.lang.PersistentVector v]
   (let [idx (.indexOf v k)]

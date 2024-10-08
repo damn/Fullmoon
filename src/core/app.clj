@@ -3,7 +3,6 @@
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.gdx.tiled :as t]
             [clojure.string :as str]
-            core.config
             core.creature
             core.stat
             [data.grid2d :as g])

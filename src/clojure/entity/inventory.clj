@@ -1,5 +1,13 @@
 (in-ns 'clojure.gdx)
 
+(def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
+
+(defc :property/pretty-name
+  {:data :string
+   :let value}
+  (info-text [_]
+    (str "[ITEM_GOLD]"value"[]")))
+
 (def-property-type :properties/items
   {:schema [:property/pretty-name
             :entity/image
