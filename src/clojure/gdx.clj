@@ -26,22 +26,21 @@
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
            (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator VisTree)
            (space.earlygrey.shapedrawer ShapeDrawer)
-           (gdl RayCaster)))
+           (gdl RayCaster))
+  (:load "gdx/math"
+         "gdx/utils"
+         "gdx/component"
+         "gdx/properties"))
 
-(defn exit-app!
-  "Schedule an exit from the application. On android, this will cause a call to pause() and dispose() some time in the future, it will not immediately finish your application. On iOS this should be avoided in production as it breaks Apples guidelines
+(declare assets
+         all-sound-files
+         all-texture-files)
 
-  [javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Application.html#exit())"
-  []
-  (.exit Gdx/app))
+(defn exit-app!         [] (.exit               Gdx/app))
+(defn delta-time        [] (.getDeltaTime       Gdx/graphics))
+(defn frames-per-second [] (.getFramesPerSecond Gdx/graphics))
 
-(defmacro post-runnable!
-  "Posts a Runnable on the main loop thread. In a multi-window application, the Gdx.graphics and Gdx.input values may be unpredictable at the time the Runnable is executed. If graphics or input are needed, they can be copied to a variable to be used in the Runnable. For example:
-
-  final Graphics graphics = Gdx.graphics;
-
-  [javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Application.html#postRunnable(java.lang.Runnable))"
-  [& exprs]
+(defmacro post-runnable! [& exprs]
   `(.postRunnable Gdx/app (fn [] ~@exprs)))
 
 (defn- ->gdx-field [klass-str k]
@@ -49,17 +48,6 @@
 
 (def ^:private ->gdx-input-button (partial ->gdx-field "Input$Buttons"))
 (def ^:private ->gdx-input-key    (partial ->gdx-field "Input$Keys"))
-
-(comment
- (and (= (->gdx-input-button :left) 0)
-      (= (->gdx-input-button :forward) 4)
-      (= (->gdx-input-key :shift-left) 59))
- )
-
-; missing button-pressed?
-; also not explaining just-pressed or pressed docs ...
-; always link the java class (for all stuff?)
-; https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Input.html#isButtonPressed(int)
 
 (defn button-just-pressed?
   ":left, :right, :middle, :back or :forward."
@@ -82,49 +70,20 @@
 (defn- set-input-processor! [processor]
   (.setInputProcessor Gdx/input processor))
 
-(defn delta-time
-  "the time span between the current frame and the last frame in seconds.
-
-  `returns float`
-
-  [javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Graphics.html#getDeltaTime())"
-  []
-  (.getDeltaTime Gdx/graphics))
-
-(defn frames-per-second
-  "the average number of frames per second
-
-  `returns int`
-
-  [javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/Graphics.html#getFramesPerSecond())"
-  []
-  (.getFramesPerSecond Gdx/graphics))
-
-
 (defn- kw->color [k] (->gdx-field "graphics.Color" k))
-
-(comment
- (and (= Color/WHITE      (kw->color :white))
-      (= Color/LIGHT_GRAY (kw->color :light-gray)))
- )
 
 (def white Color/WHITE)
 (def black Color/BLACK)
 
 (defn ->color
-  "[javadoc](https://javadoc.io/static/com.badlogicgames.gdx/gdx/1.12.1/com/badlogic/gdx/graphics/Color.html#%3Cinit%3E(float,float,float,float))"
-  ([r g b]
-   (->color r g b 1))
-  ([r g b a]
-   (Color. (float r) (float g) (float b) (float a))))
-
+  ([r g b] (->color r g b 1))
+  ([r g b a] (Color. (float r) (float g) (float b) (float a))))
 
 (defn- munge-color ^Color [color]
-  (cond
-   (= Color (class color)) color
-   (keyword? color) (kw->color color)
-   (vector? color) (apply ->color color)
-   :else (throw (ex-info "Cannot understand color" {:color color}))))
+  (cond (= Color (class color)) color
+        (keyword? color) (kw->color color)
+        (vector? color) (apply ->color color)
+        :else (throw (ex-info "Cannot understand color" {:color color}))))
 
 (defn def-markup-color
   "A general purpose class containing named colors that can be changed at will. For example, the markup language defined by the BitmapFontCache class uses this class to retrieve colors and the user can define his own colors.
@@ -133,12 +92,46 @@
   [name-str color]
   (Colors/put name-str (munge-color color)))
 
-(load "gdx/math"
-      "gdx/utils"
-      "gdx/component"
-      "gdx/properties"
-      "gdx/app/assets"
-      "gdx/app/graphics"
+(def dispose! Disposable/.dispose)
+
+(defn- internal-file ^FileHandle [path]
+  (.internal Gdx/files path))
+
+(defn- recursively-search [folder extensions]
+  (loop [[^FileHandle file & remaining] (.list (internal-file folder))
+         result []]
+    (cond (nil? file)
+          result
+
+          (.isDirectory file)
+          (recur (concat remaining (.list file)) result)
+
+          (extensions (.extension file))
+          (recur remaining (conj result (.path file)))
+
+          :else
+          (recur remaining result))))
+
+(defn search-files [folder file-extensions]
+  (map #(str/replace-first % folder "")
+       (recursively-search folder file-extensions)))
+
+(defn load-assets [^AssetManager manager files class-k]
+  (let [^Class klass (case class-k :sound Sound :texture Texture)]
+    (doseq [file files]
+      (.load manager ^String file klass))))
+
+(defn asset-manager []
+  (proxy [AssetManager clojure.lang.ILookup] []
+    (valAt [file]
+      (.get ^AssetManager this ^String file))))
+
+(defn play-sound! [path] (Sound/.play (get assets path)))
+
+(defc :tx/sound {:data :sound}
+  (do! [[_ file]] (play-sound! file) nil))
+
+(load "gdx/app/graphics"
       "gdx/app/screens"
       "gdx/app/ui"
       "gdx/screens/property_editor"

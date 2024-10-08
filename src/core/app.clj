@@ -10,6 +10,20 @@
            (com.badlogic.gdx.utils SharedLibraryLoader
                                    ScreenUtils)))
 
+(defn load-assets! [folder]
+  (let [manager (asset-manager)
+        sound-files   (search-files folder #{"wav"})
+        texture-files (search-files folder #{"png" "bmp"})]
+    (load-assets manager sound-files   :sound)
+    (load-assets manager texture-files :texture)
+    (.finishLoading manager)
+    (bind-root #'assets manager)
+    (bind-root #'all-sound-files sound-files)
+    (bind-root #'all-texture-files texture-files)))
+
+(defn dispose-assets! []
+  (dispose! assets))
+
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
 (load "screens/minimap"
@@ -63,10 +77,13 @@
                     :full-screen? false
                     :fps 60})
 
+; assets,g,screens lifecyclelistener?
+
 (defn -main []
   (load-properties-db! "resources/properties.edn")
   (Lwjgl3Application. (proxy [ApplicationAdapter] []
                         (create []
+                          ; (load! assets "resources/")
                           (load-assets! "resources/")
                           (load-graphics! graphics)
                           (load-ui! :skin-scale/x1)
@@ -77,7 +94,7 @@
                                           :screens/world]))
 
                         (dispose []
-                          (dispose-assets!)
+                          (dispose! assets)
                           (dispose-graphics!)
                           (dispose-ui!)
                           (dispose-screens!))
