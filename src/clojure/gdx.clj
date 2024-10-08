@@ -400,7 +400,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 ;;;;
 
-(defmulti edn->value (fn [data v] (if data (data 0))))
+(defmulti ^:private edn->value (fn [data v] (if data (data 0))))
 (defmethod edn->value :default [_data v]
   v)
 
@@ -528,20 +528,20 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 ;;;;
 
-(def info-text-k-order [:property/pretty-name
-                        :skill/action-time-modifier-key
-                        :skill/action-time
-                        :skill/cooldown
-                        :skill/cost
-                        :skill/effects
-                        :creature/species
-                        :creature/level
-                        :entity/stats
-                        :entity/delete-after-duration
-                        :projectile/piercing?
-                        :entity/projectile-collision
-                        :maxrange
-                        :entity-effects])
+(def ^:private info-text-k-order [:property/pretty-name
+                                  :skill/action-time-modifier-key
+                                  :skill/action-time
+                                  :skill/cooldown
+                                  :skill/cost
+                                  :skill/effects
+                                  :creature/species
+                                  :creature/level
+                                  :entity/stats
+                                  :entity/delete-after-duration
+                                  :projectile/piercing?
+                                  :entity/projectile-collision
+                                  :maxrange
+                                  :entity-effects])
 
 (defn index-of [k ^clojure.lang.PersistentVector v]
   (let [idx (.indexOf v k)]
@@ -945,10 +945,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
       (.get ^AssetManager this ^String file))))
 
 (declare assets
-         all-sound-files
-         all-texture-files)
+         ^:private all-sound-files
+         ^:private all-texture-files)
 
-(defn load-assets! [folder]
+(defn- load-assets! [folder]
   (let [manager (asset-manager)
         sound-files   (search-files folder #{"wav"})
         texture-files (search-files folder #{"png" "bmp"})]
@@ -959,10 +959,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (bind-root #'all-sound-files sound-files)
     (bind-root #'all-texture-files texture-files)))
 
-(defn dispose-assets! []
-  (dispose! assets))
-
-(defn play-sound! [path] (Sound/.play (get assets path)))
+(defn- play-sound! [path] (Sound/.play (get assets path)))
 
 (defc :tx/sound {:data :sound}
   (do! [[_ file]] (play-sound! file) nil))
@@ -1339,7 +1336,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   [{:keys [image tilew tileh]} [x y]]
   (sub-image image [(* x tilew) (* y tileh) tilew tileh]))
 
-(defn edn->image [{:keys [file sub-image-bounds]}]
+(defn- edn->image [{:keys [file sub-image-bounds]}]
   (if sub-image-bounds
     (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
           [tilew tileh]       (drop 2 sub-image-bounds)]
@@ -1419,7 +1416,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn- ->tiled-map-renderer [tiled-map]
   (t/->orthogonal-tiled-map-renderer tiled-map (world-unit-scale) batch))
 
-(defn load-graphics! [{:keys [views default-font cursors]}]
+(defn- load-graphics! [{:keys [views default-font cursors]}]
   (let [batch (SpriteBatch.)
         {:keys [shape-drawer shape-drawer-texture]} (->shape-drawer batch)]
     (bind-root #'batch batch)
@@ -1430,7 +1427,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (bind-views! views)
     (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
 
-(defn dispose-graphics! []
+(defn- dispose-graphics! []
   (dispose! batch)
   (dispose! shape-drawer-texture)
   (dispose! default-font)
@@ -1459,7 +1456,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (bind-root #'screen-k new-k)
     (screen-enter [new-k v])))
 
-(defsystem screen-render! "FIXME" [_])
+(defsystem ^:private screen-render! "FIXME" [_])
 
 (defsystem screen-render "FIXME" [_])
 (defmethod screen-render :default [_])
@@ -1475,11 +1472,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
           {}
           components))
 
-(defn load-screens! [screen-ks]
+(defn- load-screens! [screen-ks]
   (bind-root #'screens (create-vs (zipmap screen-ks (repeat nil))))
   (change-screen (ffirst screens)))
 
-(defn dispose-screens! []
+(defn- dispose-screens! []
   ; TODO screens not disposed https://github.com/damn/core/issues/41
   )
 
@@ -1504,7 +1501,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
   )
 
-(defn load-ui! [skin-scale]
+(defn- load-ui! [skin-scale]
   (check-cleanup-visui!)
   (VisUI/load (case skin-scale
                 :skin-scale/x1 VisUI$SkinScale/X1
@@ -1512,7 +1509,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (font-enable-markup!)
   (set-tooltip-config!))
 
-(defn dispose-ui! []
+(defn- dispose-ui! []
   (VisUI/dispose))
 
 (defn actor-x [^Actor a] (.getX a))
@@ -1902,10 +1899,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
   "Creates a new drawable that renders the same as this drawable tinted the specified color."
   [drawable color]
   (.tint ^TextureRegionDrawable drawable color))
-
-(defmacro ->click-listener [& clicked-fn-body]
-  `(proxy [ClickListener] []
-     ~@clicked-fn-body))
 
 (defn bg-add!    [button-group button] (.add    ^ButtonGroup button-group ^Button button))
 (defn bg-remove! [button-group button] (.remove ^ButtonGroup button-group ^Button button))
@@ -3753,7 +3746,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
         stack (->stack [(draw-rect-actor) image-widget])]
     (set-name! stack "inventory-cell")
     (set-id! stack cell)
-    (add-listener! stack (->click-listener
+    (add-listener! stack (proxy [ClickListener] []
                            (clicked [event x y]
                              (effect! (player-clicked-inventory cell)))))
     stack))
@@ -3864,8 +3857,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
    (#{:number :nat-int :int :pos :pos-int :val-max} k) :number
    :else k))
 
-(defmulti ->widget      (fn [[k _] _v] (k->widget k)))
-(defmulti widget->value (fn [[k _] _widget] (k->widget k)))
+(defmulti ^:private ->widget      (fn [[k _] _v] (k->widget k)))
+(defmulti ^:private widget->value (fn [[k _] _widget] (k->widget k)))
 
 ;;;;
 
@@ -3987,7 +3980,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 ; * what is missing to remove the button once the last optional key was added (not so important)
 ; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
 
-(def property-k-sort-order
+(def ^:private property-k-sort-order
   [:property/id
    :property/pretty-name
    :app/lwjgl3
@@ -4368,7 +4361,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
           sym syms]
     (try (alter-meta! (resolve sym) assoc :metadoc/categories #{doc-cat})
          (catch Throwable t
-           (throw (ex-info "" {:sym sym} t))))))
+           (println "METADOC PROBLEM: " sym " : " t)))))
 
 (defn- anony-class? [[sym avar]]
   (instance? java.lang.Class @avar))
@@ -4424,13 +4417,13 @@ On any exception we get a stacktrace with all tx's values and names shown."
 ; only for categorization not necessary
 (defn ->gdx-public-names-vimrc
   "Without macros `defc` and `defsystem`."
-  [file]
-  (spit file
+  []
+  (spit "gdx_names_vimrc"
         (->clojurefuncs
          (apply str
-                (remove #{"defc" "defsystem"}
+                (remove #{"defc", "defsystem", "post-runnable!", "proxy-ILookup", "with-err-str", "when-seq"}
                         (interpose " , " (map str (keys (->> (ns-interns 'clojure.gdx)
                                                              (remove anony-class?))))))))))
 
-#_(when (= "true" (System/getenv "ADD_METADOC"))
+(when (= "true" (System/getenv "ADD_METADOC"))
   (add-metadoc!))
