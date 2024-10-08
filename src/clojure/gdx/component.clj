@@ -234,7 +234,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (doseq [[k data] (partition 2 attributes-data)]
     (defc* k {:data data})))
 
-(defn def-type [k {:keys [schema overview]}]
+(defn def-property-type [k {:keys [schema overview]}]
   (defc k
     {:data [:map (conj schema :property/id)]
      :overview overview}))

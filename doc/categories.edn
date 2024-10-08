@@ -12,7 +12,7 @@
  :graphics.images [sprite sprite-sheet ->image sub-image]
  :graphics.camera [frustum zoom calculate-zoom camera-position camera-set-position! visible-tiles reset-zoom! set-zoom!]
  :operation [op-apply op-order op-value-text ]
- :properties [def-attributes def-type all-properties build-property ]
+ :properties [def-attributes def-property-type all-properties build-property ]
  :ui [->button-group ->check-box ->click-listener ->group ->horizontal-group ->horizontal-separator-cell ->label ->scroll-pane ->select-box ->split-pane ->stack ->t-node ->table ->text-field ->texture-region-drawable ->tinted-drawable ->ui-actor ->ui-image-button ->ui-image-widget ->ui-stage ->ui-tree ->ui-widget ->vertical-group ->vertical-separator-cell ->window button?  add-actor!  add-listener!  add-rows!  bg-add!  bg-checked bg-remove!  children clear-children! find-actor-with-id find-ancestor-window pack-ancestor-window! remove-tooltip! set-cell-opts  set-drawable! set-min-size!  set-table-opts window-title-bar? t-node-add! ->actor ->background-image ->image-button ->image-widget ->scroll-pane-cell ->text-button ->stage add-tooltip! mouse-on-actor?]
  :ui-actor [a-mouseover?  actor-id actor-name actor-x actor-y  set-id! set-center! parent remove! set-name! set-position! set-touchable! set-visible! visible? toggle-visible! ]
  :ui-stage [s-add! s-clear! s-root]

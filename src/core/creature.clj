@@ -3,7 +3,7 @@
             [clojure.string :as str]
             [reduce-fsm :as fsm]))
 
-(def-type :properties/creatures
+(def-property-type :properties/creatures
   {:schema [:entity/body
             :property/pretty-name
             :creature/species

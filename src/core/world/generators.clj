@@ -280,7 +280,7 @@
                                       :world.generator/modules
                                       :world.generator/uf-caves]]})
 
-(def-type :properties/worlds
+(def-property-type :properties/worlds
   {:schema [:world/generator
             :world/player-creature
             [:world/tiled-map {:optional true}]

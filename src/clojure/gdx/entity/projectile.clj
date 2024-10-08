@@ -1,6 +1,6 @@
 (in-ns 'clojure.gdx)
 
-(def-type :properties/projectiles
+(def-property-type :properties/projectiles
   {:schema [:entity/image
             :projectile/max-range
             :projectile/speed

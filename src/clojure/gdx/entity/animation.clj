@@ -72,7 +72,7 @@
     (when (anim-stopped? (:entity/animation @entity))
       [[:e/destroy entity]])))
 
-(def-type :properties/audiovisuals
+(def-property-type :properties/audiovisuals
   {:schema [:tx/sound
             :entity/animation]
    :overview {:title "Audiovisuals"

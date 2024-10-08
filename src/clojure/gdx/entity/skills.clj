@@ -1,6 +1,6 @@
 (in-ns 'clojure.gdx)
 
-(def-type :properties/skills
+(def-property-type :properties/skills
   {:schema [:entity/image
             :property/pretty-name
             :skill/action-time-modifier-key

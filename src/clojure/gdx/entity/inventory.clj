@@ -1,6 +1,6 @@
 (in-ns 'clojure.gdx)
 
-(def-type :properties/items
+(def-property-type :properties/items
   {:schema [:property/pretty-name
             :entity/image
             :item/slot
