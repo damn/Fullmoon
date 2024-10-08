@@ -6,6 +6,7 @@
             core.config
             core.creature
             core.stat
+            [core.world :as world]
             [data.grid2d :as g])
   (:import (com.badlogic.gdx ApplicationAdapter)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application
@@ -64,10 +65,9 @@
 
 ; TODO  add-to-world/assoc/dissoc uid from entity move together here
 ; also core.screens/world ....
-(bind-root #'clojure.gdx/add-world-ctx
-           (fn [world-property-id]
-             (cleanup-last-world!)
-             (init-new-world! (generate-level world-property-id))))
+(defn- add-world-ctx [world-property-id]
+  (cleanup-last-world!)
+  (init-new-world! (generate-level world-property-id)))
 
 (defc :tx/add-to-world
   (do! [[_ entity]]
@@ -236,7 +236,7 @@
       (key-pressed? :keys/space)))
 
 (defn- update-game-paused []
-  (bind-root #'world-paused? (or entity-tick-error
+  (bind-root #'world/paused? (or entity-tick-error
                                  (and pausing?
                                       (player-state-pause-game?)
                                       (not (player-unpaused?)))))
@@ -256,7 +256,7 @@
   (effect! [player-update-state
             update-mouseover-entity ; this do always so can get debug info even when game not running
             update-game-paused
-            #(when-not world-paused?
+            #(when-not world/paused?
                (update-world))
             remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
             ]))

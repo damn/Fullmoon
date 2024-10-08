@@ -41,7 +41,7 @@
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (gui-mouse-position) "\n"
-     "paused? " world-paused? "\n"
+     "paused? " world/paused? "\n"
      "elapsed-time " (readable-number elapsed-time) " seconds \n"
      "skill cooldowns: " (skill-info @player-entity) "\n"
      (when-let [entity* (mouseover-entity*)]

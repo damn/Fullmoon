@@ -15,10 +15,6 @@
       "gdx/world/potential_fields"
       "gdx/world/content_grid")
 
-(declare add-world-ctx)
-
-(declare world-paused?)
-
 (def mouseover-entity nil)
 
 (defn mouseover-entity* []
