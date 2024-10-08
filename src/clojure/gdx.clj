@@ -445,7 +445,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (declare ^:private properties-db
          ^:private properties-edn-file)
 
-(defn load-properties-db! [file]
+(defn- load-properties-db! [file]
   (let [properties (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id properties)))
     (run! validate properties)
@@ -2041,7 +2041,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
       (.setWindowedMode config width height))
     config))
 
-(defn start-app! [& {:keys [resources graphics screen-ks ui] :as config}]
+(defn start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
+  (load-properties-db! properties)
   (Lwjgl3Application. (proxy [ApplicationAdapter] []
                         (create []
                           (load-assets! resources)
