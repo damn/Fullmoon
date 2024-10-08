@@ -10,15 +10,16 @@
             [malli.core :as m]
             [malli.error :as me]
             [malli.generator :as mg])
-  (:import (com.badlogic.gdx Gdx)
+  (:import (com.badlogic.gdx Gdx ApplicationAdapter)
            (com.badlogic.gdx.assets AssetManager)
            (com.badlogic.gdx.audio Sound)
+           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            (com.badlogic.gdx.files FileHandle)
            (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter OrthographicCamera Camera Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
            (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
            (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
-           (com.badlogic.gdx.utils Align Scaling Disposable)
+           (com.badlogic.gdx.utils Align Scaling Disposable SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window Tree$Node)
@@ -2028,6 +2029,45 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (do! [[_ params]]
     (show-player-modal! params)
     nil))
+
+(defn- lwjgl3-app-config
+  [{:keys [title width height full-screen? fps]}]
+  {:pre [title width height (boolean? full-screen?) (or (nil? fps) (int? fps))]}
+  ; https://github.com/libgdx/libgdx/pull/7361
+  ; Maybe can delete this when using that new libgdx version
+  ; which includes this PR.
+  (when SharedLibraryLoader/isMac
+    (.set org.lwjgl.system.Configuration/GLFW_LIBRARY_NAME "glfw_async")
+    (.set org.lwjgl.system.Configuration/GLFW_CHECK_THREAD0 false))
+  (let [config (doto (Lwjgl3ApplicationConfiguration.)
+                 (.setTitle title)
+                 (.setForegroundFPS (or fps 60)))]
+    (if full-screen?
+      (.setFullscreenMode config (Lwjgl3ApplicationConfiguration/getDisplayMode))
+      (.setWindowedMode config width height))
+    config))
+
+(defn start-app! [& {:keys [resources graphics screen-ks ui] :as config}]
+  (Lwjgl3Application. (proxy [ApplicationAdapter] []
+                        (create []
+                          (load-assets! resources)
+                          (load-graphics! graphics)
+                          (load-ui! ui)
+                          (load-screens! screen-ks))
+
+                        (dispose []
+                          (dispose! assets)
+                          (dispose-graphics!)
+                          (dispose-ui!)
+                          (dispose-screens!))
+
+                        (render []
+                          (ScreenUtils/clear black)
+                          (screen-render! (current-screen)))
+
+                        (resize [w h]
+                          (update-viewports! [w h])))
+                      (lwjgl3-app-config config)))
 
 {:metadoc/categories {:app "🖥️ Application"
                       :app.graphics "🎨 Graphics"
