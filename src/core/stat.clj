@@ -2,7 +2,8 @@
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.string :as str]
-            core.creature))
+            core.creature
+            [core.projectile :refer [projectile-size]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))

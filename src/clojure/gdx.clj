@@ -3217,8 +3217,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
       #:entity {:line-render {:thick? thick? :end end :color color}
                 :delete-after-duration duration}]]))
 
-(load "entity/projectile"
-      "entity/skills"
+(load "entity/skills"
       "entity/faction"
       "entity/clickable"
       "entity/mouseover"

@@ -5,6 +5,7 @@
             [clojure.string :as str]
             core.creature
             core.stat
+            core.projectile
             [data.grid2d :as g])
   (:load "world/modules"
          "world/generators"
