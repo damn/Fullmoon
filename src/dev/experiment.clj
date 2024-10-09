@@ -146,12 +146,6 @@
                    (println "      *" k)
                    (println (str "        * data: `" (pr-str (:data (get component-attributes k))) "`"))))))))))
 
-(defn- component-systems [component-k]
-   (for [[sys-name sys-var] defsystems
-         [k method] (methods @sys-var)
-         :when (= k component-k)]
-     sys-name))
-
 (defn- data-components []
   (sort
    (concat
@@ -160,6 +154,12 @@
          (filter (fn [[k attr-m]]
                    (:schema attr-m))
                  component-attributes)))))
+
+(defn- component-systems [component-k]
+   (for [[sys-name sys-var] defsystems
+         [k method] (methods @sys-var)
+         :when (= k component-k)]
+     sys-name))
 
 (defn- print-components* [ks]
   (doseq [k ks]
