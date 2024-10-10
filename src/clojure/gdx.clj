@@ -434,7 +434,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (assert (apply distinct? (map :property/id properties)))
     (run! validate properties)
     (bind-root #'properties-db (zipmap (map :property/id properties) properties))
-    (bind-root #'properties-edn-file properties-edn-file)))
+    (bind-root #'properties-edn-file file)))
 
 (defn- async-pprint-spit! [properties]
   (.start
