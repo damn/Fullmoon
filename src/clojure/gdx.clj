@@ -63,17 +63,6 @@
     (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def ^:private warn-name-ns-mismatch? false)
-
-(defn- k->component-ns [k] ;
-  (symbol (str "components." (name (namespace k)) "." (name k))))
-
-(defn- check-warn-ns-name-mismatch [k]
-  (when (and warn-name-ns-mismatch?
-             (namespace k)
-             (not= (k->component-ns k) (ns-name *ns*)))
-    (println "WARNING: defc " k " is not matching with namespace name " (ns-name *ns*))))
-
 (def component-attributes {})
 
 (defn defc*
@@ -101,7 +90,6 @@ Example:
 => 3
 ```"
   [k & sys-impls]
-  (check-warn-ns-name-mismatch k)
   (let [attr-map? (not (list? (first sys-impls)))
         attr-map  (if attr-map? (first sys-impls) {})
         sys-impls (if attr-map? (rest sys-impls) sys-impls)
