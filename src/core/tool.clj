@@ -65,8 +65,11 @@
   [& code]
   `(javafx.application.Platform/runLater (fn [] ~@code)))
 
-
 (import javafx.geometry.Rectangle2D)
+
+; TODO
+; https://docs.oracle.com/javafx/2/get_started/form.htm
+; * new window w. form label, widget, Save, Cancel button
 
 (defn flow-pane []
   (let [flow (doto (FlowPane.)
@@ -75,7 +78,6 @@
                (.setHgap 4)
                (.setPrefWrapLength 500)
                (.setStyle "-f-background-color: DAE6F3;"))
-        ;["images/items.png" "images/skills.png"]
         image (Image. "images/creatures.png")
         size 48]
     (doseq [x (range 10)
@@ -85,14 +87,6 @@
               (.setGraphic (doto (ImageView. image)
                               (.setViewport (Rectangle2D. (* x size) (* y size) size size)))))))
     flow))
-
-(comment
- ; 480 x 624
- ; 10 width ( 48 )
- ; 13 height ( 48 )
- ; Rectangle2D imagePart = new Rectangle2D((imageNumber - 1) * IMAGE_WIDTH, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
- ; imageView.setViewport(imagePart);
- )
 
 (declare my-stage)
 
@@ -106,10 +100,10 @@
       (.setContent tab (flow-pane))
       (.add (.getTabs tab-pane) tab))
     (let [scene (Scene. (VBox. (into-array Node [tab-pane])))]
-      ;(.add (.getStylesheets scene) "style.css")
       (.setScene my-stage scene))
     (.setTitle my-stage "JavaFX App")
     (.show my-stage)))
+
  )
 
 (defn -start [app stage]
