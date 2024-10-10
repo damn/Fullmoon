@@ -70,6 +70,16 @@
 ; TODO
 ; https://docs.oracle.com/javafx/2/get_started/form.htm
 ; * new window w. form label, widget, Save, Cancel button
+(import javafx.stage.Stage)
+
+(comment
+ (fx-run
+  (let [scene (Scene. (FlowPane.) 450 450)
+        stage (doto (Stage.)
+                (.setTitle "FOOBAR")
+                (.setScene scene)
+                .show)]))
+ )
 
 (defn flow-pane []
   (let [flow (doto (FlowPane.)
