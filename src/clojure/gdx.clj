@@ -971,8 +971,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn- play-sound! [path] (Sound/.play (get assets path)))
 
-(defc :tx/sound {:data :sound}
-  (do! [[_ file]] (play-sound! file) nil))
+(defc :tx/sound
+  {:data :sound}
+  (do! [[_ file]]
+    (play-sound! file)
+    nil))
 
 (defn camera-position
   "Returns camera position as [x y] vector."
