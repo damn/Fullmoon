@@ -173,7 +173,7 @@
 (defn- data-components []
   (sort
    (concat
-    (keys (methods @#'clojure.gdx/->value))
+    (keys (methods @#'clojure.gdx/->schema))
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))

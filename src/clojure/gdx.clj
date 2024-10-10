@@ -300,17 +300,23 @@ On any exception we get a stacktrace with all tx's values and names shown."
     {:data [:map (conj schema :property/id)]
      :overview overview}))
 
-(defsystem ^:private ->schema
-  "Returns the schema for the data-definition."
-  [_])
+(defn- data-definition->type [data]
+  (if (vector? data) (data 0) data))
 
-(defn- data-component [k]
+(defmulti ^:private ->schema
+  "Returns the schema for the data-definition."
+  data-definition->type)
+
+(defmethod ->schema :default [data] data)
+
+(defn- data-type [k]
   (try (let [data (:data (safe-get component-attributes k))]
-         (if (vector? data)
-           [(first data) {:schema (->schema data)}]
-           [data (safe-get component-attributes data)]))
+         {:type (data-definition->type data)
+          :schema (->schema data)})
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
+
+(defn- data-schema [k] (:schema (data-type k)))
 
 (defn- property-type->id-namespace [property-type]
   (keyword (name property-type)))
@@ -325,7 +331,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (do
      (assert (keyword? k))
      (assert (or (nil? properties) (map? properties)) (pr-str ks))
-     [k properties (:schema ((data-component k) 1))])))
+     [k properties (data-schema k)])))
 
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (attribute-schema ks)))
@@ -334,59 +340,55 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (filter #(= (name ns-name-k) (namespace %))
           (keys component-attributes)))
 
-;;;; Component Data Schemas
+;;;; Data Types
 
-(defc :some    {:schema :some})
-(defc :boolean {:schema :boolean})
-(defc :string  {:schema :string})
-(defc :number  {:schema number?})
-(defc :nat-int {:schema nat-int?})
-(defc :int     {:schema int?})
-(defc :pos     {:schema pos?})
-(defc :pos-int {:schema pos-int?})
-(defc :sound   {:schema :string})
-(defc :val-max {:schema (m/form val-max-schema)})
-(defc :image   {:schema [:map {:closed true}
-                         [:file :string]
-                         [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]]})
-(defc :data/animation {:schema [:map {:closed true}
-                                [:frames :some]
-                                [:frame-duration pos?]
-                                [:looping? :boolean]]})
+(defmethod ->schema :some    [_] :some)
+(defmethod ->schema :boolean [_] :boolean)
+(defmethod ->schema :string  [_] :string)
+(defmethod ->schema :number  [_] number?)
+(defmethod ->schema :nat-int [_] nat-int?)
+(defmethod ->schema :int     [_] int?)
+(defmethod ->schema :pos     [_] pos?)
+(defmethod ->schema :pos-int [_] pos-int?)
+(defmethod ->schema :sound   [_] :string)
+(defmethod ->schema :val-max [_] (m/form val-max-schema))
 
-(defc :enum
-  (->schema [[_ items]]
-    (apply vector :enum items)))
+(defmethod ->schema :image [_]
+  [:map {:closed true}
+   [:file :string]
+   [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
 
-(defc :qualified-keyword
-  (->schema [schema]
-    schema))
+(defmethod ->schema :data/animation [_]
+  [:map {:closed true}
+   [:frames :some]
+   [:frame-duration pos?]
+   [:looping? :boolean]])
 
-(defc :map
-  (->schema [[_ ks]]
-    (map-schema ks)))
+(defmethod ->schema :enum [[_ items]]
+  (apply vector :enum items))
 
-(defc :map-optional
-  (->schema [[_ ks]]
-    (map-schema (map (fn [k] [k {:optional true}]) ks))))
+(defmethod ->schema :qualified-keyword [schema]
+  schema)
 
-(defc :components-ns
-  (->schema [[_ ns-name-k]]
-    (->schema [:map-optional (namespaced-ks ns-name-k)])))
+(defmethod ->schema :map [[_ ks]]
+  (map-schema ks))
 
-(defc :one-to-many
-  (->schema [[_ property-type]]
-    [:set [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]]))
+(defmethod ->schema :map-optional [[_ ks]]
+  (map-schema (map (fn [k] [k {:optional true}]) ks)))
 
-(defc :one-to-one
-  (->schema [[_ property-type]]
-    [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]))
+(defmethod ->schema :components-ns [[_ ns-name-k]]
+  (->schema [:map-optional (namespaced-ks ns-name-k)]))
+
+(defmethod ->schema :one-to-many [[_ property-type]]
+  [:set [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]])
+
+(defmethod ->schema :one-to-one [[_ property-type]]
+  [:qualified-keyword {:namespace (property-type->id-namespace property-type)}])
 
 ;;;;
 
-(defmulti ^:private edn->value (fn [data v] (if data (data 0))))
-(defmethod edn->value :default [_data v]
-  v)
+(defmulti ^:private edn->value (fn [data v] (:type data)))
+(defmethod edn->value :default [_data v] v)
 
 (defn- ns-k->property-type [ns-k]
   (keyword "properties" (name ns-k)))
@@ -407,9 +409,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn- property->schema [property]
   (-> property
       ->type
-      data-component
-      (get 1)
-      :schema
+      data-schema
       m/schema))
 
 (defn- validate [property]
@@ -483,7 +483,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn- build [property]
   (apply-kvs property
              (fn [k v]
-               (edn->value (try (data-component k)
+               (edn->value (try (data-type k)
                                 (catch Throwable _t
                                   (swap! undefined-data-ks conj k)))
                            (if (map? v)
@@ -3837,14 +3837,14 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defsystem manual-tick "FIXME" [_])
 (defmethod manual-tick :default [_])
 
-(defn- k->widget [k]
+(defn- k->widget [{:keys [type]}]
   (cond
-   (#{:map-optional :components-ns} k) :map
-   (#{:number :nat-int :int :pos :pos-int :val-max} k) :number
-   :else k))
+   (#{:map-optional :components-ns}                 type) :map
+   (#{:number :nat-int :int :pos :pos-int :val-max} type) :number
+   :else type))
 
-(defmulti ^:private ->widget      (fn [[k _] _v] (k->widget k)))
-(defmulti ^:private widget->value (fn [[k _] _widget] (k->widget k)))
+(defmulti ^:private ->widget      (fn [data _v]      (k->widget data)))
+(defmulti ^:private widget->value (fn [data _widget] (k->widget data)))
 
 ;;;;
 
@@ -3859,8 +3859,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 ;;;;
 
-(defn- add-schema-tooltip! [widget data]
-  (add-tooltip! widget (str "Schema: " (pr-str (m/form (:schema data)))))
+(defn- add-schema-tooltip! [widget schema]
+  (add-tooltip! widget (str "Schema: " (pr-str (m/form schema))))
   widget)
 
 (defn- ->edn-str [v]
@@ -3874,23 +3874,23 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defmethod widget->value :boolean [_ widget]
   (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
-(defmethod ->widget :string [[_ data] v]
+(defmethod ->widget :string [{:keys [schema]} v]
   (add-schema-tooltip! (->text-field v {})
-                       data))
+                       schema))
 
 (defmethod widget->value :string [_ widget]
   (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
 
-(defmethod ->widget :number [[_ data] v]
+(defmethod ->widget :number [{:keys [schema]} v]
   (add-schema-tooltip! (->text-field (->edn-str v) {})
-                       data))
+                       schema))
 
 (defmethod widget->value :number [_ widget]
   (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
-(defmethod ->widget :enum [[_ data] v]
-  (->select-box {:items (map ->edn-str (rest (:schema data)))
-                    :selected (->edn-str v)}))
+(defmethod ->widget :enum [{:keys [schema]} v]
+  (->select-box {:items (map ->edn-str (rest schema))
+                 :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
@@ -4013,15 +4013,15 @@ On any exception we get a stacktrace with all tx's values and names shown."
       k)))
 
 (defn- k->default-value [k]
-  (let [[data-type {:keys [schema]}] (data-component k)]
+  (let [{:keys [type schema]} (data-type k)]
     (cond
-     (#{:one-to-one :one-to-many} data-type) nil
-     ;(#{:map} data-type) {} ; cannot have empty for required keys, then no Add Component button
+     (#{:one-to-one :one-to-many} type) nil
+     ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
      :else (mg/generate schema {:size 3}))))
 
-(defn- ->choose-component-window [data attribute-widget-group]
+(defn- ->choose-component-window [schema attribute-widget-group]
   (fn []
-    (let [k-props (k-properties (:schema data))
+    (let [k-props (k-properties schema)
           window (->window {:title "Choose"
                             :modal? true
                             :close-button? true
@@ -4029,7 +4029,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                             :close-on-escape? true
                             :cell-defaults {:pad 5}})
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                     (map-keys (:schema data))))]
+                                     (map-keys schema)))]
       (add-rows! window (for [k remaining-ks]
                           [(->text-button (name k)
                                           (fn []
@@ -4049,15 +4049,15 @@ On any exception we get a stacktrace with all tx's values and names shown."
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(defmethod ->widget :map [[_ data] m]
-  (let [attribute-widget-group (->attribute-widget-group (:schema data) m)
-        optional-keys-left? (seq (set/difference (optional-keyset (:schema data))
+(defmethod ->widget :map [{:keys [schema]} m]
+  (let [attribute-widget-group (->attribute-widget-group schema m)
+        optional-keys-left? (seq (set/difference (optional-keyset schema)
                                                  (set (keys m))))]
     (set-id! attribute-widget-group :attribute-widget-group)
     (->table {:cell-defaults {:pad 5}
                  :rows (remove nil?
                                [(when optional-keys-left?
-                                  [(->text-button "Add component" (->choose-component-window data attribute-widget-group))])
+                                  [(->text-button "Add component" (->choose-component-window schema attribute-widget-group))])
                                 (when optional-keys-left?
                                   [(->horizontal-separator-cell 1)])
                                 [attribute-widget-group]])})))
@@ -4074,7 +4074,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (data-component k) v)
+        value-widget (->widget (data-type k) v)
         table (->table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -4108,7 +4108,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (into {} (for [k (map actor-id (children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (data-component k) value-widget)])))
+             [k (widget->value (data-type k) value-widget)])))
 
 ;;
 
@@ -4268,10 +4268,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
       (for [id property-ids]
         (->text-button "-" #(redo-rows (disj property-ids id))))])))
 
-(defmethod ->widget :one-to-many [[_ data] property-ids]
+(defmethod ->widget :one-to-many [{:keys [schema]} property-ids]
   (let [table (->table {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows table
-                          (one-to-many-schema->linked-property-type (:schema data))
+                          (one-to-many-schema->linked-property-type schema)
                           property-ids)
     table))
 
@@ -4309,10 +4309,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
       [(when property-id
          (->text-button "-" #(redo-rows nil)))]])))
 
-(defmethod ->widget :one-to-one [[_ data] property-id]
+(defmethod ->widget :one-to-one [{:keys [schema]} property-id]
   (let [table (->table {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows table
-                         (one-to-one-schema->linked-property-type (:schema data))
+                         (one-to-one-schema->linked-property-type schema)
                          property-id)
     table))
 
