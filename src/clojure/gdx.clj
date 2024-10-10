@@ -282,7 +282,13 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 ;;;;
 
-(defsystem ^:private ->value "..." [_])
+(defn safe-get [m k]
+  (let [result (get m k ::not-found)]
+    (if (= result ::not-found)
+      (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
+      result)))
+
+;;;;
 
 (defn def-attributes [& attributes-data]
   {:pre [(even? (count attributes-data))]}
@@ -294,16 +300,14 @@ On any exception we get a stacktrace with all tx's values and names shown."
     {:data [:map (conj schema :property/id)]
      :overview overview}))
 
-(defn safe-get [m k]
-  (let [result (get m k ::not-found)]
-    (if (= result ::not-found)
-      (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
-      result)))
+(defsystem ^:private ->schema
+  "Returns the schema for the data-definition."
+  [_])
 
 (defn- data-component [k]
   (try (let [data (:data (safe-get component-attributes k))]
          (if (vector? data)
-           [(first data) (->value data)]
+           [(first data) {:schema (->schema data)}]
            [data (safe-get component-attributes data)]))
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
@@ -377,32 +381,32 @@ On any exception we get a stacktrace with all tx's values and names shown."
                                 [:looping? :boolean]]})
 
 (defc :enum
-  (->value [[_ items]]
-    {:schema (apply vector :enum items)}))
+  (->schema [[_ items]]
+    (apply vector :enum items)))
 
 (defc :qualified-keyword
-  (->value [schema]
-    {:schema schema}))
+  (->schema [schema]
+    schema))
 
 (defc :map
-  (->value [[_ ks]]
-    {:schema (map-schema ks)}))
+  (->schema [[_ ks]]
+    (map-schema ks)))
 
 (defc :map-optional
-  (->value [[_ ks]]
-    {:schema (map-schema (map (fn [k] [k {:optional true}]) ks))}))
+  (->schema [[_ ks]]
+    (map-schema (map (fn [k] [k {:optional true}]) ks))))
 
 (defc :components-ns
-  (->value [[_ ns-name-k]]
-    (->value [:map-optional (namespaced-ks ns-name-k)])))
+  (->schema [[_ ns-name-k]]
+    (->schema [:map-optional (namespaced-ks ns-name-k)])))
 
 (defc :one-to-many
-  (->value [[_ property-type]]
-    {:schema [:set [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]]}))
+  (->schema [[_ property-type]]
+    [:set [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]]))
 
 (defc :one-to-one
-  (->value [[_ property-type]]
-    {:schema [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]}))
+  (->schema [[_ property-type]]
+    [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]))
 
 ;;;;
 
@@ -426,7 +430,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn- overview [property-type]
   (:overview (get component-attributes property-type)))
 
-(defn- ->schema [property]
+(defn- property->schema [property]
   (-> property
       ->type
       data-component
@@ -435,7 +439,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
       m/schema))
 
 (defn- validate [property]
-  (let [schema (->schema property)
+  (let [schema (property->schema property)
         valid? (try (m/validate schema property)
                     (catch Throwable t
                       (throw (ex-info "m/validate fail" {:property property} t))))]
@@ -4147,7 +4151,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                              :center? true
                              :close-on-escape? true
                              :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group (->schema props) props)
+        widgets (->attribute-widget-group (property->schema props) props)
         save!   (apply-context-fn window #(update! (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(delete! id))]
     (add-rows! window [[(->scroll-pane-cell [[{:actor widgets :colspan 2}]
@@ -4337,8 +4341,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defmethod widget->value :one-to-one [_ widget]
   (->> (children widget) (keep actor-id) first))
-
-
 
 (defn- add-metadoc! []
   (doseq [[doc-cat syms] (edn/read-string (slurp "doc/categories.edn"))
