@@ -312,32 +312,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
 
-;;;;
-
-(comment
-
- (defn- raw-properties-of-type [ptype]
-   (->> (vals properties-db)
-        (filter #(= ptype (->type %)))))
-
- (defn- migrate [ptype prop-fn]
-   (let [cnt (atom 0)]
-     (time
-      (doseq [prop (map prop-fn (raw-properties-of-type ptype))]
-        (println (swap! cnt inc) (:property/id prop) ", " (:property/pretty-name prop))
-        (update! prop)))
-     ; omg every update! calls async-write-to-file ...
-     ; actually if its async why does it take so long ?
-     (async-write-to-file! @app-state)
-     nil))
-
- (migrate :properties/creatures
-          (fn [prop]
-            (-> prop
-                (assoc :entity/tags ""))))
-
- )
-
 (defn- property-type->id-namespace [property-type]
   (keyword (name property-type)))
 
