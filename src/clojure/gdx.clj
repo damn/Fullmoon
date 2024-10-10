@@ -2089,7 +2089,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
                           (vp-update! (world-viewport) [w h])))
                       (lwjgl3-app-config config)))
 
-
 (defn enemy-faction [{:keys [entity/faction]}]
   (case faction
     :evil :good
