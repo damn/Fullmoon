@@ -1,6 +1,7 @@
 (ns core.app
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.tiled :as t]
+            clojure.gdx.editor
             core.creature
             core.stat
             core.projectile
