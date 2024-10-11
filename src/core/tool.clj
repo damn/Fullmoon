@@ -81,22 +81,23 @@
                 .show)]))
  )
 
-(prop->image (first (all-properties-raw :properties/audiovisuals)))
-{:file "images/oryx_16bit_scifi_FX_lg_trans.png", :sub-image-bounds [64 64 32 32]}
+#_(comment
+ (prop->image (first (all-properties-raw :properties/audiovisuals)))
+ {:file "images/oryx_16bit_scifi_FX_lg_trans.png", :sub-image-bounds [64 64 32 32]}
 
-(def ->image-view (memoize (fn [file] (ImageView. (Image. file)))))
+ (def ->image-view (memoize (fn [file] (ImageView. (Image. file)))))
 
-(defn- ->image-view [{:keys [file sub-image-bounds]}]
-  (let [imgview (->image-view file)]
-    (if sub-image-bounds
-      imgview
-      )
-    )
-  (doto imgview
-    (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
-  )
+ (defn- ->image-view [{:keys [file sub-image-bounds]}]
+   (let [imgview (->image-view file)]
+     (if sub-image-bounds
+       imgview
+       )
+     )
+   (doto imgview
+     (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
+   ))
 
-(defn overview-flow-pane [property-type]
+#_(defn overview-flow-pane [property-type]
   (let [flow (doto (FlowPane.)
                (.setPadding (Insets. 5 0 5 0))
                (.setVgap 4)
