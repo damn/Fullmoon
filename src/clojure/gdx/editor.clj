@@ -83,7 +83,7 @@
 ; TODO set to preferred width/height ??? why layouting not working properly?
 ; use a tree?
 ; make example with plain data
-(defn ->scroll-pane-cell [rows]
+(defn- ->scroll-pane-cell [rows]
   (let [table (->table {:rows rows :cell-defaults {:pad 1} :pack? true})
         scroll-pane (->scroll-pane table)]
     {:actor scroll-pane
