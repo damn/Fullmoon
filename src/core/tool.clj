@@ -81,33 +81,54 @@
                 .show)]))
  )
 
-(defn flow-pane []
+(prop->image (first (all-properties-raw :properties/audiovisuals)))
+{:file "images/oryx_16bit_scifi_FX_lg_trans.png", :sub-image-bounds [64 64 32 32]}
+
+(def ->image-view (memoize (fn [file] (ImageView. (Image. file)))))
+
+(defn- ->image-view [{:keys [file sub-image-bounds]}]
+  (let [imgview (->image-view file)]
+    (if sub-image-bounds
+      imgview
+      )
+    )
+  (doto imgview
+    (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
+  )
+
+(defn overview-flow-pane [property-type]
   (let [flow (doto (FlowPane.)
                (.setPadding (Insets. 5 0 5 0))
                (.setVgap 4)
                (.setHgap 4)
                (.setPrefWrapLength 500)
                (.setStyle "-f-background-color: DAE6F3;"))
-        image (Image. "images/creatures.png")
-        size 48]
-    (doseq [x (range 10)
-            y (range 13)]
-      (.add (.getChildren flow)
-            (doto (Button.)
+        {:keys [sort-by-fn
+                extra-info-text
+                columns
+                image/scale]} (overview property-type)
+        properties (all-properties-raw property-type)
+        properties (if sort-by-fn
+                     (sort-by sort-by-fn properties)
+                     properties)]
+    (doseq [property properties]
+      (.add (.getChildren flow) #_(Button. (name (:property/id property)))
+            (doto (Button. (:property/id property))
               (.setGraphic (doto (ImageView. image)
-                              (.setViewport (Rectangle2D. (* x size) (* y size) size size)))))))
+                             (.setViewport (Rectangle2D. (* x size) (* y size) size size)))))))
     flow))
 
 (declare my-stage)
+
+(require '[clojure.gdx :refer :all])
 
 (comment
  (fx-run
   (let [tab-pane (doto (TabPane.)
                    (.setTabClosingPolicy TabPane$TabClosingPolicy/UNAVAILABLE))]
-    (doseq [tab [(Tab. "Planes" (Label. "Show all planes"))
-                 (Tab. "Cars" (Label. "Show all cars"))
-                 (Tab. "Boats" (Label. "Show all boats"))]]
-      (.setContent tab (flow-pane))
+    (doseq [property-type (sort (types))
+            :let [tab (Tab. (:title (overview property-type)) (Label. "whre thsi labl is"))]]
+      (.setContent tab (overview-flow-pane property-type))
       (.add (.getTabs tab-pane) tab))
     (let [scene (Scene. (VBox. (into-array Node [tab-pane])))]
       (.setScene my-stage scene))
