@@ -1,5 +1,6 @@
 (ns dev.experiment
-  (:require [clojure.gdx :refer :all]))
+  (:require [clojure.gdx :refer :all]
+            [clojure.gdx.ui :as ui]))
 
 (comment
 
@@ -239,7 +240,7 @@
    (vector? v) (str "Vector "(count v))
    :else (str "[GRAY]" (str v) "[]")))
 
-(defn- ->labelstr [k v]
+(defn- labelstr [k v]
   (str "[LIGHT_GRAY]:"
        (if (keyword? k)
          (str
@@ -249,8 +250,8 @@
 
 (defn- add-elements! [node elements]
   (doseq [element elements
-          :let [el-node (->t-node (->label (str (->v-str element))))]]
-    (t-node-add! node el-node)))
+          :let [el-node (ui/t-node (ui/label (str (->v-str element))))]]
+    (.add node el-node)))
 
 (declare add-map-nodes!)
 
@@ -266,13 +267,13 @@
     (add-elements! node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! node (children->str-map (children (s-root v))) level))
+    (add-map-nodes! node (children->str-map (ui/children (s-root v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
-    (add-map-nodes! node (children->str-map (children v)) level)))
+    (add-map-nodes! node (children->str-map (ui/children v)) level)))
 
 (comment
- (let [vis-image (first (children (s-root (stage-get))))]
+ (let [vis-image (first (ui/children (s-root (stage-get))))]
    (supers (class vis-image))
    (str vis-image)
    )
@@ -284,27 +285,27 @@
     (doseq [[k v] (into (sorted-map) m)]
       ;(println "add-map-nodes! k " k)
       (try
-       (let [node (->t-node (->label (->labelstr k v)))]
+       (let [node (ui/t-node (ui/label (labelstr k v)))]
          (.add parent-node node) ; no t-node-add!: tree cannot be casted to tree-node ... , Tree itself different .add
          #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
            (->nested-nodes node level @v))
          (->nested-nodes node level v))
        (catch Throwable t
          (throw (ex-info "" {:k k :v v} t))
-         #_(.add parent-node (->t-node (->label (str "[RED] "k " - " t))))
+         #_(.add parent-node (ui/t-node (ui/label (str "[RED] "k " - " t))))
 
          )))))
 
 (defn- ->prop-tree [prop]
-  (let [tree (->ui-tree)]
+  (let [tree (ui/tree)]
     (add-map-nodes! tree prop 0)
     tree))
 
 (defn- scroll-pane-cell [rows]
-  (let [table (->table {:rows rows
-                        :cell-defaults {:pad 1}
-                        :pack? true})
-        scroll-pane (->scroll-pane table)]
+  (let [table (ui/table {:rows rows
+                         :cell-defaults {:pad 1}
+                         :pack? true})
+        scroll-pane (ui/scroll-pane table)]
     {:actor scroll-pane
      :width (/ (gui-viewport-width) 2)
      :height
@@ -315,10 +316,10 @@
   (let [object (case obj
                  :entity (mouseover-entity*)
                  :tile @(get world-grid (mapv int (world-mouse-position))))]
-    (stage-add! (->window {:title "Tree View"
-                           :close-button? true
-                           :close-on-escape? true
-                           :center? true
-                           :rows [[(scroll-pane-cell [[(->prop-tree (into (sorted-map) object))]])]]
-                           :pack? true}))
+    (stage-add! (ui/window {:title "Tree View"
+                            :close-button? true
+                            :close-on-escape? true
+                            :center? true
+                            :rows [[(scroll-pane-cell [[(->prop-tree (into (sorted-map) object))]])]]
+                            :pack? true}))
     nil))

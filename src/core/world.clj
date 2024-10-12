@@ -1,6 +1,7 @@
 (ns core.world
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics.camera :as 🎥]
+            [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
@@ -444,11 +445,11 @@ direction keys: move")
 
 ; same as debug-window
 (defn- ->info-window []
-  (let [label (->label "")
-        window (->window {:title "Info" :rows [[label]]})]
-    (add-actor! window (->actor {:act #(do
-                                        (.setText label (map-infos))
-                                        (.pack window))}))
+  (let [label (ui/label "")
+        window (ui/window {:title "Info" :rows [[label]]})]
+    (ui/add-actor! window (ui/actor {:act #(do
+                                            (.setText label (map-infos))
+                                            (.pack window))}))
     (a/set-position! window 0 (gui-viewport-height))
     window))
 
@@ -520,16 +521,16 @@ direction keys: move")
     (.setVisible (t/get-layer tiled-map "creatures") true)))
 
 (defn ->generate-map-window [level-id]
-  (->window {:title "Properties"
-             :cell-defaults {:pad 10}
-             :rows [[(->label (with-out-str
-                               (clojure.pprint/pprint
-                                (build-property level-id))))]
-                    [(->text-button "Generate" #(try (generate-screen-ctx (build-property level-id))
-                                                     (catch Throwable t
-                                                       (error-window! t)
-                                                       (println t))))]]
-             :pack? true}))
+  (ui/window {:title "Properties"
+              :cell-defaults {:pad 10}
+              :rows [[(ui/label (with-out-str
+                                (clojure.pprint/pprint
+                                 (build-property level-id))))]
+                     [(ui/text-button "Generate" #(try (generate-screen-ctx (build-property level-id))
+                                                       (catch Throwable t
+                                                         (error-window! t)
+                                                         (println t))))]]
+              :pack? true}))
 
 (defc ::sub-screen
   {:let current-data}

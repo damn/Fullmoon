@@ -23,6 +23,7 @@
             [clojure.gdx.assets :as assets]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.ui :as ui]
             [clj-commons.pretty.repl :refer [pretty-pst]]
             [data.grid2d :as g]
             [malli.core :as m]
@@ -34,13 +35,9 @@
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
            (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
            (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
-           (com.badlogic.gdx.utils Align Scaling Disposable SharedLibraryLoader ScreenUtils)
+           (com.badlogic.gdx.utils Align Disposable SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
-           (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
-           (com.badlogic.gdx.scenes.scene2d.ui Widget Image Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window Tree$Node)
-           (com.badlogic.gdx.scenes.scene2d.utils ClickListener ChangeListener TextureRegionDrawable Drawable)
-           (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
-           (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator VisTree)
+           (com.badlogic.gdx.scenes.scene2d Stage)
            (space.earlygrey.shapedrawer ShapeDrawer)
            (gdl RayCaster)))
 
@@ -1355,386 +1352,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
   ; TODO screens not disposed https://github.com/damn/core/issues/41
   )
 
-(defn- check-cleanup-visui! []
-  ; app crashes during startup before VisUI/dispose and we do clojure.tools.namespace.refresh-> gui elements not showing.
-  ; => actually there is a deeper issue at play
-  ; we need to dispose ALL resources which were loaded already ...
-  (when (VisUI/isLoaded)
-    (VisUI/dispose)))
-
-(defn- font-enable-markup! []
-  (-> (VisUI/getSkin)
-      (.getFont "default-font")
-      .getData
-      .markupEnabled
-      (set! true)))
-
-(defn- set-tooltip-config! []
-  (set! Tooltip/DEFAULT_APPEAR_DELAY_TIME (float 0))
-  ;(set! Tooltip/DEFAULT_FADE_TIME (float 0.3))
-  ;Controls whether to fade out tooltip when mouse was moved. (default false)
-  ;(set! Tooltip/MOUSE_MOVED_FADEOUT true)
-  )
-
-(defn- load-ui! [skin-scale]
-  (check-cleanup-visui!)
-  (VisUI/load (case skin-scale
-                :skin-scale/x1 VisUI$SkinScale/X1
-                :skin-scale/x2 VisUI$SkinScale/X2))
-  (font-enable-markup!)
-  (set-tooltip-config!))
-
-(defn- dispose-ui! []
-  (VisUI/dispose))
-
-(defn add-tooltip!
-  "tooltip-text is a (fn []) or a string. If it is a function will be-recalculated every show."
-  [^Actor a tooltip-text]
-  (let [text? (string? tooltip-text)
-        label (VisLabel. (if text? tooltip-text ""))
-        tooltip (proxy [Tooltip] []
-                  ; hooking into getWidth because at
-                  ; https://github.com/kotcrab/vis-blob/master/ui/src/main/java/com/kotcrab/vis/ui/widget/Tooltip.java#L271
-                  ; when tooltip position gets calculated we setText (which calls pack) before that
-                  ; so that the size is correct for the newly calculated text.
-                  (getWidth []
-                    (let [^Tooltip this this]
-                      (when-not text?
-                        (.setText this (str (tooltip-text))))
-                      (proxy-super getWidth))))]
-    (.setAlignment label Align/center)
-    (.setTarget  tooltip ^Actor a)
-    (.setContent tooltip ^Actor label)))
-
-(defn remove-tooltip! [^Actor a]
-  (Tooltip/removeTooltip a))
-
-(defn children
-  "Returns an ordered list of child actors in this group."
-  [^Group group]
-  (seq (.getChildren group)))
-
-(defn clear-children!
-  "Removes all actors from this group and unfocuses them."
-  [^Group group]
-  (.clearChildren group))
-
-(defn add-actor!
-  "Adds an actor as a child of this group, removing it from its previous parent. If the actor is already a child of this group, no changes are made."
-  [^Group group actor]
-  (.addActor group actor))
-
-(defn find-actor-with-id [group id]
-  (let [actors (children group)
-        ids (keep a/id actors)]
-    (assert (or (empty? ids)
-                (apply distinct? ids)) ; TODO could check @ add
-            (str "Actor ids are not distinct: " (vec ids)))
-    (first (filter #(= id (a/id %)) actors))))
-
-(defn set-cell-opts [^Cell cell opts]
-  (doseq [[option arg] opts]
-    (case option
-      :fill-x?    (.fillX     cell)
-      :fill-y?    (.fillY     cell)
-      :expand?    (.expand    cell)
-      :expand-x?  (.expandX   cell)
-      :expand-y?  (.expandY   cell)
-      :bottom?    (.bottom    cell)
-      :colspan    (.colspan   cell (int arg))
-      :pad        (.pad       cell (float arg))
-      :pad-top    (.padTop    cell (float arg))
-      :pad-bottom (.padBottom cell (float arg))
-      :width      (.width     cell (float arg))
-      :height     (.height    cell (float arg))
-      :right?     (.right     cell)
-      :left?      (.left      cell))))
-
-(defn add-rows!
-  "rows is a seq of seqs of columns.
-  Elements are actors or nil (for just adding empty cells ) or a map of
-  {:actor :expand? :bottom?  :colspan int :pad :pad-bottom}. Only :actor is required."
-  [^Table table rows]
-  (doseq [row rows]
-    (doseq [props-or-actor row]
-      (cond
-       (map? props-or-actor) (-> (.add table ^Actor (:actor props-or-actor))
-                                 (set-cell-opts (dissoc props-or-actor :actor)))
-       :else (.add table ^Actor props-or-actor)))
-    (.row table))
-  table)
-
-(defn- set-table-opts [^Table table {:keys [rows cell-defaults]}]
-  (set-cell-opts (.defaults table) cell-defaults)
-  (add-rows! table rows))
-
-(defn t-row!   "Add row to table." [^Table t] (.row   t))
-(defn t-clear! "Clear table. "     [^Table t] (.clear t))
-
-(defn t-add!
-  "Add to table"
-  ([^Table t] (.add t))
-  ([^Table t ^Actor a] (.add t a)))
-
-(defn ->horizontal-separator-cell [colspan]
-  {:actor (Separator. "default")
-   :pad-top 2
-   :pad-bottom 2
-   :colspan colspan
-   :fill-x? true
-   :expand-x? true})
-
-(defn ->vertical-separator-cell []
-  {:actor (Separator. "vertical")
-   :pad-top 2
-   :pad-bottom 2
-   :fill-y? true
-   :expand-y? true})
-
-(comment
- ; fill parent & pack is from Widget TODO ( not widget-group ?)
- com.badlogic.gdx.scenes.scene2d.ui.Widget
- ; about .pack :
- ; Generally this method should not be called in an actor's constructor because it calls Layout.layout(), which means a subclass would have layout() called before the subclass' constructor. Instead, in constructors simply set the actor's size to Layout.getPrefWidth() and Layout.getPrefHeight(). This allows the actor to have a size at construction time for more convenient use with groups that do not layout their children.
- )
-
-(defn- set-widget-group-opts [^WidgetGroup widget-group {:keys [fill-parent? pack?]}]
-  (.setFillParent widget-group (boolean fill-parent?)) ; <- actor? TODO
-  (when pack?
-    (.pack widget-group))
-  widget-group)
-
-(defn- set-opts [actor opts]
-  (a/set-opts! actor opts)
-  (when (instance? Table actor)
-    (set-table-opts actor opts)) ; before widget-group-opts so pack is packing rows
-  (when (instance? WidgetGroup actor)
-    (set-widget-group-opts actor opts))
-  actor)
-
-#_(defn- add-window-close-button [^Window window]
-    (.add (.getTitleTable window)
-          (text-button "x" #(.setVisible window false)))
-    window)
-
-(defmacro ^:private proxy-ILookup
-  "For actors inheriting from Group."
-  [class args]
-  `(proxy [~class clojure.lang.ILookup] ~args
-     (valAt
-       ([id#]
-        (find-actor-with-id ~'this id#))
-       ([id# not-found#]
-        (or (find-actor-with-id ~'this id#) not-found#)))))
-
-(defn ->group [{:keys [actors] :as opts}]
-  (let [group (proxy-ILookup Group [])]
-    (run! #(add-actor! group %) actors)
-    (set-opts group opts)))
-
-(defn ->horizontal-group [{:keys [space pad]}]
-  (let [group (proxy-ILookup HorizontalGroup [])]
-    (when space (.space group (float space)))
-    (when pad   (.pad   group (float pad)))
-    group))
-
-(defn ->vertical-group [actors]
-  (let [group (proxy-ILookup VerticalGroup [])]
-    (run! #(add-actor! group %) actors)
-    group))
-
-(defn ->button-group
-  "https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/ButtonGroup.html"
-  [{:keys [max-check-count min-check-count]}]
-  (let [button-group (ButtonGroup.)]
-    (.setMaxCheckCount button-group max-check-count)
-    (.setMinCheckCount button-group min-check-count)
-    button-group))
-
-(defn ->check-box
-  "on-clicked is a fn of one arg, taking the current isChecked state
-  [com.kotcrab.vis.ui.widget.VisCheckBox](https://www.javadoc.io/static/com.kotcrab.vis/vis-ui/1.5.3/com/kotcrab/vis/ui/widget/VisCheckBox.html)"
-  [text on-clicked checked?]
-  (let [^Button button (VisCheckBox. ^String text)]
-    (.setChecked button checked?)
-    (.addListener button
-                  (proxy [ChangeListener] []
-                    (changed [event ^Button actor]
-                      (on-clicked (.isChecked actor)))))
-    button))
-
-(defn ->select-box [{:keys [items selected]}]
-  (doto (VisSelectBox.)
-    (.setItems ^"[Lcom.badlogic.gdx.scenes.scene2d.Actor;" (into-array items))
-    (.setSelected selected)))
-
-(defn ->table ^Table [opts]
-  (-> (proxy-ILookup VisTable [])
-      (set-opts opts)))
-
-(defn ->window ^VisWindow [{:keys [title modal? close-button? center? close-on-escape?] :as opts}]
-  (-> (let [window (doto (proxy-ILookup VisWindow [^String title true]) ; true = showWindowBorder
-                     (.setModal (boolean modal?)))]
-        (when close-button?    (.addCloseButton window))
-        (when center?          (.centerWindow   window))
-        (when close-on-escape? (.closeOnEscape  window))
-        window)
-      (set-opts opts)))
-
-(defn ->label ^VisLabel [text]
-  (VisLabel. ^CharSequence text))
-
-(defn ->text-field [^String text opts]
-  (-> (VisTextField. text)
-      (set-opts opts)))
-
-; TODO is not decendend of SplitPane anymore => check all type hints here
-(defn ->split-pane [{:keys [^Actor first-widget
-                            ^Actor second-widget
-                            ^Boolean vertical?] :as opts}]
-  (-> (VisSplitPane. first-widget second-widget vertical?)
-      (a/set-opts! opts)))
-
-(defn ->stack [actors]
-  (proxy-ILookup Stack [(into-array Actor actors)]))
-
-(defmulti ^:private ->vis-image type)
-(defmethod ->vis-image Drawable      [^Drawable d      ] (VisImage.  d))
-(defmethod ->vis-image TextureRegion [^TextureRegion tr] (VisImage. tr))
-
-; TODO widget also make, for fill parent
-(defn ->ui-image-widget
-  "Takes either a texture-region or drawable. Opts are :scaling, :align and actor opts."
-  [object {:keys [scaling align fill-parent?] :as opts}]
-  (-> (let [^Image image (->vis-image object)]
-        (when (= :center align) (.setAlign image Align/center))
-        (when (= :fill scaling) (.setScaling image Scaling/fill))
-        (when fill-parent? (.setFillParent image true))
-        image)
-      (set-opts opts)))
-
-(defn ->image-widget [image opts]
-  (->ui-image-widget (:texture-region image) opts))
-
-; => maybe with VisImage not necessary anymore?
-(defn ->texture-region-drawable [^TextureRegion texture-region]
-  (TextureRegionDrawable. texture-region))
-
-(defn ->scroll-pane [actor]
-  (let [scroll-pane (VisScrollPane. actor)]
-    (.setFlickScroll scroll-pane false)
-    (.setFadeScrollBars scroll-pane false)
-    scroll-pane))
-
-(defn- button-class? [actor]
-  (some #(= Button %) (supers (class actor))))
-
-(defn button?
-  "Returns true if the actor or its parent is a button."
-  [actor]
-  (or (button-class? actor)
-      (and (a/parent actor)
-           (button-class? (a/parent actor)))))
-
-(defn window-title-bar?
-  "Returns true if the actor is a window title bar."
-  [actor]
-  (when (instance? Label actor)
-    (when-let [p (a/parent actor)]
-      (when-let [p (a/parent p)]
-        (and (instance? VisWindow p)
-             (= (.getTitleLabel ^Window p) actor))))))
-
-(defn find-ancestor-window ^Window [^Actor actor]
-  (if-let [p (a/parent actor)]
-    (if (instance? Window p)
-      p
-      (find-ancestor-window p))
-    (throw (Error. (str "Actor has no parent window " actor)))))
-
-(defn pack-ancestor-window! [^Actor actor]
-  (.pack (find-ancestor-window actor)))
-
-(declare ^:dynamic *on-clicked-actor*)
-
-(defn- ->change-listener [on-clicked]
-  (proxy [ChangeListener] []
-    (changed [event actor]
-      (binding [*on-clicked-actor* actor]
-        (on-clicked)))))
-
-(defn ->text-button [text on-clicked]
-  (let [button (VisTextButton. ^String text)]
-    (.addListener button (->change-listener on-clicked))
-    button))
-
-(defn- ->ui-image-button [texture-region scale on-clicked]
-  (let [drawable (TextureRegionDrawable. ^TextureRegion texture-region)
-        button (VisImageButton. drawable)]
-    (when scale
-      (let [[w h] (texture-region-dimensions texture-region)]
-        (.setMinSize drawable (float (* scale w)) (float (* scale h)))))
-    (.addListener button (->change-listener on-clicked))
-    button))
-
-; TODO check how to make toggle-able ? with hotkeys for actionbar trigger ?
-(defn ->image-button
-  ([image on-clicked]
-   (->image-button image on-clicked {}))
-
-  ([image on-clicked {:keys [scale]}]
-   (->ui-image-button (:texture-region image) scale on-clicked)))
-
-(defn ->actor [{:keys [draw act]}]
-  (proxy [Actor] []
-    (draw [_batch _parent-alpha]
-      (when draw (draw)))
-    (act [_delta]
-      (when act (act)))))
-
-(defn ->ui-widget [draw!]
-  (proxy [Widget] []
-    (draw [_batch _parent-alpha]
-      (draw! this))))
-
-(defn set-drawable! [^Image image drawable]
-  (.setDrawable image drawable))
-
-(defn set-min-size! [^TextureRegionDrawable drawable size]
-  (.setMinSize drawable (float size) (float size)))
-
-(defn ->tinted-drawable
-  "Creates a new drawable that renders the same as this drawable tinted the specified color."
-  [drawable color]
-  (.tint ^TextureRegionDrawable drawable color))
-
-(defn bg-add!    [button-group button] (.add    ^ButtonGroup button-group ^Button button))
-(defn bg-remove! [button-group button] (.remove ^ButtonGroup button-group ^Button button))
-(defn bg-checked
-  "The first checked button, or nil."
-  [button-group]
-  (.getChecked ^ButtonGroup button-group))
-
-; FIXME t- already used for trees
-
-(defn ->t-node ^Tree$Node [actor]
-  (proxy [Tree$Node] [actor]))
-
-(defn ->ui-tree [] (VisTree.))
-
-; FIXME broken
-(defn t-node-add! [^Tree$Node parent node] (.add parent node))
-
-(defn- ->ui-stage
-  "Stage implements clojure.lang.ILookup (get) on actor id."
-  ^Stage [viewport batch]
-  (proxy [Stage clojure.lang.ILookup] [viewport batch]
-    (valAt
-      ([id]
-       (find-actor-with-id (.getRoot ^Stage this) id))
-      ([id not-found]
-       (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))
-
 (defn- s-act!   [^Stage s]   (.act      s))
 (defn- s-draw!  [^Stage s]   (.draw     s))
 (defn  s-root   [^Stage s]   (.getRoot  s))
@@ -1763,7 +1380,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (s-draw! stage)))
 
 (defn ->stage [actors]
-  (let [stage (->ui-stage (:viewport gui-view) batch)]
+  (let [stage (ui/stage (:viewport gui-view) batch)]
     (run! #(s-add! stage %) actors)
     stage))
 
@@ -1779,10 +1396,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (def ^:private image-file "images/moon_background.png")
 
 (defn ->background-image []
-  (->image-widget (->image image-file)
-                  {:fill-parent? true
-                   :scaling :fill
-                   :align :center}))
+  (ui/image->widget (->image image-file)
+                    {:fill-parent? true
+                     :scaling :fill
+                     :align :center}))
 
 (defmacro ^:private with-err-str
   "Evaluates exprs in a context in which *err* is bound to a fresh
@@ -1797,15 +1414,15 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn error-window! [throwable]
   (binding [*print-level* 5]
     (pretty-pst throwable 24))
-  (stage-add! (->window {:title "Error"
-                         :rows [[(->label (binding [*print-level* 3]
-                                            (with-err-str
-                                              (clojure.repl/pst throwable))))]]
-                         :modal? true
-                         :close-button? true
-                         :close-on-escape? true
-                         :center? true
-                         :pack? true})))
+  (stage-add! (ui/window {:title "Error"
+                          :rows [[(ui/label (binding [*print-level* 3]
+                                             (with-err-str
+                                               (clojure.repl/pst throwable))))]]
+                          :modal? true
+                          :close-button? true
+                          :close-on-escape? true
+                          :center? true
+                          :pack? true})))
 
 ; TODO no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?
@@ -1814,17 +1431,17 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn- show-player-modal! [{:keys [title text button-text on-click]}]
   (assert (not (::modal (stage-get))))
-  (stage-add! (->window {:title title
-                         :rows [[(->label text)]
-                                [(->text-button button-text
-                                                (fn []
-                                                  (a/remove! (::modal (stage-get)))
-                                                  (on-click)))]]
-                         :id ::modal
-                         :modal? true
-                         :center-position [(/ (gui-viewport-width) 2)
-                                           (* (gui-viewport-height) (/ 3 4))]
-                         :pack? true})))
+  (stage-add! (ui/window {:title title
+                          :rows [[(ui/label text)]
+                                 [(ui/text-button button-text
+                                                  (fn []
+                                                    (a/remove! (::modal (stage-get)))
+                                                    (on-click)))]]
+                          :id ::modal
+                          :modal? true
+                          :center-position [(/ (gui-viewport-width) 2)
+                                            (* (gui-viewport-height) (/ 3 4))]
+                          :pack? true})))
 
 (defc :tx/player-modal
   (do! [[_ params]]
@@ -1854,13 +1471,13 @@ On any exception we get a stacktrace with all tx's values and names shown."
                         (create []
                           (assets/load! resources)
                           (load-graphics! graphics)
-                          (load-ui! ui)
+                          (ui/load! ui)
                           (load-screens! screen-ks))
 
                         (dispose []
                           (assets/dispose!)
                           (dispose-graphics!)
-                          (dispose-ui!)
+                          (ui/dispose!)
                           (dispose-screens!))
 
                         (render []
@@ -3044,24 +2661,24 @@ On any exception we get a stacktrace with all tx's values and names shown."
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @world-player))
 #_(defn ->skill-window []
-  (->window {:title "Skills"
-             :id :skill-window
-             :visible? false
-             :cell-defaults {:pad 10}
-             :rows [(for [id [:skills/projectile
-                              :skills/meditation
-                              :skills/spawn
-                              :skills/melee-attack]
-                          :let [; get-property in callbacks if they get changed, this is part of context permanently
-                                button (->image-button ; TODO reuse actionbar button scale?
-                                                       (:entity/image (build-property id)) ; TODO here anyway taken
-                                                       ; => should probably build this window @ game start
-                                                       (fn []
-                                                         (effect! (player-clicked-skillmenu (build-property id)))))]]
-                      (do
-                       (add-tooltip! button #(->info-text (build-property id))) ; TODO no player modifiers applied (see actionbar)
-                       button))]
-             :pack? true}))
+    (ui/window {:title "Skills"
+                :id :skill-window
+                :visible? false
+                :cell-defaults {:pad 10}
+                :rows [(for [id [:skills/projectile
+                                 :skills/meditation
+                                 :skills/spawn
+                                 :skills/melee-attack]
+                             :let [; get-property in callbacks if they get changed, this is part of context permanently
+                                   button (ui/image-button ; TODO reuse actionbar button scale?
+                                                           (:entity/image (build-property id)) ; TODO here anyway taken
+                                                           ; => should probably build this window @ game start
+                                                           (fn []
+                                                             (effect! (player-clicked-skillmenu (build-property id)))))]]
+                         (do
+                          (ui/add-tooltip! button #(->info-text (build-property id))) ; TODO no player modifiers applied (see actionbar)
+                          button))]
+                :pack? true}))
 
 (defc :skill/action-time {:data :pos}
   (info-text [[_ v]]
@@ -3525,7 +3142,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 ; is not layouted automatically to cell , use 0/0 ??
 ; (maybe (.setTransform stack true) ? , but docs say it should work anyway
 (defn- draw-rect-actor []
-  (->ui-widget
+  (ui/widget
    (fn [this]
      (draw-cell-rect @world-player
                      (a/x this)
@@ -3541,11 +3158,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
-        image-widget (->ui-image-widget (slot->background slot) {:id :image})
-        stack (->stack [(draw-rect-actor) image-widget])]
+        image-widget (ui/image-widget (slot->background slot) {:id :image})
+        stack (ui/stack [(draw-rect-actor) image-widget])]
     (a/set-name! stack "inventory-cell")
     (a/set-id! stack cell)
-    (a/add-listener! stack (proxy [ClickListener] []
+    (a/add-listener! stack (proxy [com.badlogic.gdx.scenes.scene2d.utils.ClickListener] []
                              (clicked [event x y]
                                (effect! (player-clicked-inventory cell)))))
     stack))
@@ -3564,48 +3181,50 @@ On any exception we get a stacktrace with all tx's values and names shown."
                            :boot     9
                            :bag      10} ; transparent
          (map (fn [[slot y]]
-                (let [drawable (->texture-region-drawable (:texture-region (sprite sheet [21 (+ y 2)])))]
-                  (set-min-size! drawable cell-size)
+                (let [drawable (ui/texture-region-drawable (:texture-region (sprite sheet [21 (+ y 2)])))]
+                  (ui/set-min-size! drawable cell-size)
                   [slot
-                   (->tinted-drawable drawable (->color 1 1 1 0.4))])))
+                   (ui/tinted-drawable drawable (->color 1 1 1 0.4))])))
          (into {}))))
 
+(import 'com.badlogic.gdx.scenes.scene2d.ui.Table)
+
 ; TODO move together with empty-inventory definition ?
-(defn- redo-table! [table slot->background]
+(defn- redo-table! [^Table table slot->background]
   ; cannot do add-rows, need bag :position idx
   (let [cell (fn [& args] (apply ->cell slot->background args))]
-    (t-clear! table) ; no need as we create new table ... TODO
-    (doto table t-add! t-add!
-      (t-add! (cell :inventory.slot/helm))
-      (t-add! (cell :inventory.slot/necklace)) t-row!)
-    (doto table t-add!
-      (t-add! (cell :inventory.slot/weapon))
-      (t-add! (cell :inventory.slot/chest))
-      (t-add! (cell :inventory.slot/cloak))
-      (t-add! (cell :inventory.slot/shield)) t-row!)
-    (doto table t-add! t-add!
-      (t-add! (cell :inventory.slot/leg)) t-row!)
-    (doto table t-add!
-      (t-add! (cell :inventory.slot/glove))
-      (t-add! (cell :inventory.slot/rings :position [0 0]))
-      (t-add! (cell :inventory.slot/rings :position [1 0]))
-      (t-add! (cell :inventory.slot/boot)) t-row!)
+    (.clear table) ; no need as we create new table ... TODO
+    (doto table .add .add
+      (.add (cell :inventory.slot/helm))
+      (.add (cell :inventory.slot/necklace)) .row)
+    (doto table .add
+      (.add (cell :inventory.slot/weapon))
+      (.add (cell :inventory.slot/chest))
+      (.add (cell :inventory.slot/cloak))
+      (.add (cell :inventory.slot/shield)) .row)
+    (doto table .add .add
+      (.add (cell :inventory.slot/leg)) .row)
+    (doto table .add
+      (.add (cell :inventory.slot/glove))
+      (.add (cell :inventory.slot/rings :position [0 0]))
+      (.add (cell :inventory.slot/rings :position [1 0]))
+      (.add (cell :inventory.slot/boot)) .row)
     ; TODO add separator
     (doseq [y (range (g/height (:inventory.slot/bag empty-inventory)))]
       (doseq [x (range (g/width (:inventory.slot/bag empty-inventory)))]
-        (t-add! table (cell :inventory.slot/bag :position [x y])))
-      (t-row! table))))
+        (.add table (cell :inventory.slot/bag :position [x y])))
+      (.row table))))
 
 (defn ->inventory-window [{:keys [slot->background]}]
-  (let [table (->table {:id ::table})]
+  (let [table (ui/table {:id ::table})]
     (redo-table! table slot->background)
-    (->window {:title "Inventory"
-               :id :inventory-window
-               :visible? false
-               :pack? true
-               :position [(gui-viewport-width)
-                          (gui-viewport-height)]
-               :rows [[{:actor table :pad 4}]]})))
+    (ui/window {:title "Inventory"
+                :id :inventory-window
+                :visible? false
+                :pack? true
+                :position [(gui-viewport-width)
+                           (gui-viewport-height)]
+                :rows [[{:actor table :pad 4}]]})))
 
 (defn ->inventory-window-data [] (slot->background))
 
@@ -3620,10 +3239,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (let [{:keys [table]} (get-inventory)
           cell-widget (get table cell)
           image-widget (get cell-widget :image)
-          drawable (->texture-region-drawable (:texture-region (:entity/image item)))]
-      (set-min-size! drawable cell-size)
-      (set-drawable! image-widget drawable)
-      (add-tooltip! cell-widget #(->info-text item))
+          drawable (ui/texture-region-drawable (:texture-region (:entity/image item)))]
+      (ui/set-min-size! drawable cell-size)
+      (ui/set-drawable! image-widget drawable)
+      (ui/add-tooltip! cell-widget #(->info-text item))
       nil)))
 
 (defc :tx/remove-item-from-widget
@@ -3631,8 +3250,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (let [{:keys [table slot->background]} (get-inventory)
           cell-widget (get table cell)
           image-widget (get cell-widget :image)]
-      (set-drawable! image-widget (slot->background (cell 0)))
-      (remove-tooltip! cell-widget)
+      (ui/set-drawable! image-widget (slot->background (cell 0)))
+      (ui/remove-tooltip! cell-widget)
       nil)))
 
 (defsystem enter "FIXME" [_])

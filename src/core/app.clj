@@ -2,6 +2,7 @@
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.tiled :as t]
+            [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             clojure.gdx.editor
             core.creature
@@ -29,11 +30,11 @@
                             (draw-image (sub-image contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
                                         [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
-    (->actor {:draw (fn []
-                         (let [player-entity* @world-player
-                               x (- x (/ rahmenw 2))]
-                           (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
-                           (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
+    (ui/actor {:draw (fn []
+                       (let [player-entity* @world-player
+                             x (- x (/ rahmenw 2))]
+                         (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
+                         (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (clojure.string/join "\n"
@@ -62,15 +63,15 @@
               "id: " (a/id actor))))))
 
 (defn- ->debug-window []
-  (let [label (->label "")
-        window (->window {:title "Debug"
-                          :id :debug-window
-                          :visible? false
-                          :position [0 (gui-viewport-height)]
-                          :rows [[label]]})]
-    (add-actor! window (->actor {:act #(do
-                                        (.setText label (debug-infos))
-                                        (.pack window))}))
+  (let [label (ui/label "")
+        window (ui/window {:title "Debug"
+                           :id :debug-window
+                           :visible? false
+                           :position [0 (gui-viewport-height)]
+                           :rows [[label]]})]
+    (ui/add-actor! window (ui/actor {:act #(do
+                                            (.setText label (debug-infos))
+                                            (.pack window))}))
     window))
 
 (def ^:private disallowed-keys [:entity/skills
@@ -79,37 +80,37 @@
                                 :active-skill])
 
 (defn- ->entity-info-window []
-  (let [label (->label "")
-        window (->window {:title "Info"
-                          :id :entity-info-window
-                          :visible? false
-                          :position [(gui-viewport-width) 0]
-                          :rows [[{:actor label :expand? true}]]})]
+  (let [label (ui/label "")
+        window (ui/window {:title "Info"
+                           :id :entity-info-window
+                           :visible? false
+                           :position [(gui-viewport-width) 0]
+                           :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
-    (add-actor! window (->actor {:act (fn update-label-text []
-                                        ; items then have 2x pretty-name
-                                        #_(.setText (.getTitleLabel window)
-                                                    (if-let [entity* (mouseover-entity*)]
-                                                      (info-text [:property/pretty-name (:property/pretty-name entity*)])
-                                                      "Entity Info"))
-                                        (.setText label
-                                                  (str (when-let [entity* (mouseover-entity*)]
-                                                         (->info-text
-                                                          ; don't use select-keys as it loses Entity record type
-                                                          (apply dissoc entity* disallowed-keys)))))
-                                        (.pack window))}))
+    (ui/add-actor! window (ui/actor {:act (fn update-label-text []
+                                            ; items then have 2x pretty-name
+                                            #_(.setText (.getTitleLabel window)
+                                                        (if-let [entity* (mouseover-entity*)]
+                                                          (info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                          "Entity Info"))
+                                            (.setText label
+                                                      (str (when-let [entity* (mouseover-entity*)]
+                                                             (->info-text
+                                                              ; don't use select-keys as it loses Entity record type
+                                                              (apply dissoc entity* disallowed-keys)))))
+                                            (.pack window))}))
     window))
 
 (def ^:private image-scale 2)
 
 (defn- ->action-bar []
-  (let [group (->horizontal-group {:pad 2 :space 2})]
+  (let [group (ui/horizontal-group {:pad 2 :space 2})]
     (a/set-id! group ::action-bar)
     group))
 
 (defn- ->action-bar-button-group []
-  (->button-group {:max-check-count 1 :min-check-count 0}))
+  (ui/button-group {:max-check-count 1 :min-check-count 0}))
 
 (defn- get-action-bar []
   {:horizontal-group (::action-bar (:action-bar-table (stage-get)))
@@ -118,11 +119,11 @@
 (defc :tx.action-bar/add
   (do! [[_ {:keys [property/id entity/image] :as skill}]]
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
-          button (->image-button image (fn []) {:scale image-scale})]
+          button (ui/image-button image (fn []) {:scale image-scale})]
       (a/set-id! button id)
-      (add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
-      (add-actor! horizontal-group button)
-      (bg-add! button-group button)
+      (ui/add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
+      (ui/add-actor! horizontal-group button)
+      (ui/bg-add! button-group button)
       nil)))
 
 (defc :tx.action-bar/remove
@@ -130,7 +131,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (get horizontal-group id)]
       (a/remove! button)
-      (bg-remove! button-group button)
+      (ui/bg-remove! button-group button)
       nil)))
 
 (comment
@@ -220,8 +221,8 @@
 
 (defc :widgets/player-message
   (->mk [_]
-    (->actor {:draw draw-player-message
-              :act check-remove-message})))
+    (ui/actor {:draw draw-player-message
+               :act check-remove-message})))
 
 (defc :tx/msg-to-player
   (do! [[_ message]]
@@ -229,18 +230,18 @@
     nil))
 
 (defn- ->ui-actors [widget-data]
-  [(->table {:rows [[{:actor (->action-bar)
-                      :expand? true
-                      :bottom? true}]]
-             :id :action-bar-table
-             :cell-defaults {:pad 2}
-             :fill-parent? true})
+  [(ui/table {:rows [[{:actor (->action-bar)
+                       :expand? true
+                       :bottom? true}]]
+              :id :action-bar-table
+              :cell-defaults {:pad 2}
+              :fill-parent? true})
    (->hp-mana-bars)
-   (->group {:id :windows
-             :actors [(->debug-window)
-                      (->entity-info-window)
-                      (->inventory-window widget-data)]})
-   (->actor {:draw draw-item-on-cursor})
+   (ui/group {:id :windows
+              :actors [(->debug-window)
+                       (->entity-info-window)
+                       (->inventory-window widget-data)]})
+   (ui/actor {:draw draw-item-on-cursor})
    (->mk [:widgets/player-message])])
 
 (defn ->world-widgets []
@@ -582,7 +583,7 @@
     (a/toggle-visible! (get (:windows (stage-get)) window-id))))
 
 (defn- close-windows?! []
-  (let [windows (children (:windows (stage-get)))]
+  (let [windows (ui/children (:windows (stage-get)))]
     (if (some a/visible? windows)
       (do
        (run! #(a/set-visible! % false) windows)
@@ -631,16 +632,16 @@
     (add-world-ctx world-id)))
 
 (defn- ->buttons []
-  (->table {:rows (remove nil? (concat
-                                   (for [{:keys [property/id]} (all-properties :properties/worlds)]
-                                     [(->text-button (str "Start " id) (start-game-fn id))])
-                                   [(when dev-mode?
-                                      [(->text-button "Map editor" #(change-screen :screens/map-editor))])
-                                    (when dev-mode?
-                                      [(->text-button "Property editor" #(change-screen :screens/property-editor))])
-                                    [(->text-button "Exit" exit-app!)]]))
-               :cell-defaults {:pad-bottom 25}
-               :fill-parent? true}))
+  (ui/table {:rows (remove nil? (concat
+                                 (for [{:keys [property/id]} (all-properties :properties/worlds)]
+                                   [(ui/text-button (str "Start " id) (start-game-fn id))])
+                                 [(when dev-mode?
+                                    [(ui/text-button "Map editor" #(change-screen :screens/map-editor))])
+                                  (when dev-mode?
+                                    [(ui/text-button "Property editor" #(change-screen :screens/property-editor))])
+                                  [(ui/text-button "Exit" exit-app!)]]))
+             :cell-defaults {:pad-bottom 25}
+             :fill-parent? true}))
 
 (defc :main/sub-screen
   (screen-enter [_]
@@ -649,9 +650,9 @@
 (defn- ->actors []
   [(->background-image)
    (->buttons)
-   (->actor {:act (fn []
-                    (when (key-just-pressed? :keys/escape)
-                      (exit-app!)))})])
+   (ui/actor {:act (fn []
+                     (when (key-just-pressed? :keys/escape)
+                       (exit-app!)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defc :screens/main-menu
@@ -692,17 +693,17 @@
   "[W][A][S][D] - Move\n[I] - Inventory window\n[E] - Entity Info window\n[-]/[=] - Zoom\n[TAB] - Minimap\n[P]/[SPACE] - Unpause")
 
 (defn- create-table []
-  (->table {:rows (concat
-                   [[(->label key-help-text)]]
-                   (when dev-mode? [[(->label "[Z] - Debug window")]])
-                   (when dev-mode? (for [check-box debug-flags]
-                                     [(->check-box (get-text check-box)
-                                                   (partial set-state check-box)
-                                                   (boolean (get-state check-box)))]))
-                   [[(->text-button "Resume" #(change-screen :screens/world))]
-                    [(->text-button "Exit"   #(change-screen :screens/main-menu))]])
-            :fill-parent? true
-            :cell-defaults {:pad-bottom 10}}))
+  (ui/table {:rows (concat
+                    [[(ui/label key-help-text)]]
+                    (when dev-mode? [[(ui/label "[Z] - Debug window")]])
+                    (when dev-mode? (for [check-box debug-flags]
+                                      [(ui/check-box (get-text check-box)
+                                                     (partial set-state check-box)
+                                                     (boolean (get-state check-box)))]))
+                    [[(ui/text-button "Resume" #(change-screen :screens/world))]
+                     [(ui/text-button "Exit"   #(change-screen :screens/main-menu))]])
+             :fill-parent? true
+             :cell-defaults {:pad-bottom 10}}))
 
 (defc :options/sub-screen
   (screen-render [_]

@@ -1,6 +1,7 @@
 (ns core.stat
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.rand :refer [rand-int-between]]
+            [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.string :as str]
             core.creature
@@ -829,7 +830,7 @@ Default method returns true."
 
 (defn- selected-skill []
   (let [button-group (:action-bar world-widgets)]
-    (when-let [skill-button (bg-checked button-group)]
+    (when-let [skill-button (ui/bg-checked button-group)]
       (a/id skill-button))))
 
 (defn- inventory-window []
@@ -889,8 +890,8 @@ Default method returns true."
   (let [actor (mouse-on-actor?)]
     (cond
      (inventory-cell-with-item? actor) :cursors/hand-before-grab
-     (window-title-bar? actor) :cursors/move-window
-     (button? actor) :cursors/over-button
+     (ui/window-title-bar? actor) :cursors/move-window
+     (ui/button? actor) :cursors/over-button
      :else :cursors/default)))
 
 (defn- ->interaction-state [entity*]
