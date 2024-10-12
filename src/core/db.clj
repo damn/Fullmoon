@@ -3,59 +3,8 @@
   (:require [clojure.edn :as edn]
             [clojure.gdx.utils :refer [bind-root safe-get]]
             [clojure.pprint :refer [pprint]]
-            [core.component :as component]
             [core.data :as data]
             [core.property :as property]))
-
-(defn- attribute-schema
-  "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."
-  [ks]
-  (for [k ks
-        :let [k? (keyword? k)
-              schema-props (if k? nil (k 1))
-              k (if k? k (k 0))]]
-    (do
-     (assert (keyword? k))
-     (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
-     [k schema-props (data/schema (component/data k))])))
-; why does a schema depend on compnents ???
-; should be independent of components ?!
-
-(defn- map-schema [ks]
-  (apply vector :map {:closed true} (attribute-schema ks)))
-
-(defn- namespaced-ks [ns-name-k]
-  (filter #(= (name ns-name-k) (namespace %))
-          (keys component/attributes)))
-
-(defmethod data/schema :sound [_]
-  :string)
-
-(defmethod data/schema :image [_]
-  [:map {:closed true}
-   [:file :string]
-   [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
-
-(defmethod data/schema :data/animation [_]
-  [:map {:closed true}
-   [:frames :some]
-   [:frame-duration pos?]
-   [:looping? :boolean]])
-
-(defmethod data/schema :map [[_ ks]]
-  (map-schema ks))
-
-(defmethod data/schema :map-optional [[_ ks]]
-  (map-schema (map (fn [k] [k {:optional true}]) ks)))
-
-(defmethod data/schema :components-ns [[_ ns-name-k]]
-  (data/schema [:map-optional (namespaced-ks ns-name-k)]))
-
-(defmethod data/schema :one-to-many [[_ property-type]]
-  [:set [:qualified-keyword {:namespace (property/type->id-namespace property-type)}]])
-
-(defmethod data/schema :one-to-one [[_ property-type]]
-  [:qualified-keyword {:namespace (property/type->id-namespace property-type)}])
 
 (declare db
          ^:private edn-file)
@@ -112,3 +61,15 @@
   {:pre [(contains? db property-id)]}
   (alter-var-root #'db dissoc property-id)
   (async-write-to-file!))
+
+(defmethod data/edn->value :one-to-one [_ property-id]
+  (get property-id))
+
+(defmethod data/edn->value :one-to-many [_ property-ids]
+  (map get property-ids))
+
+(defmethod data/schema :one-to-one [[_ property-type]]
+  [:qualified-keyword {:namespace (property/type->id-namespace property-type)}])
+
+(defmethod data/schema :one-to-many [[_ property-type]]
+  [:set [:qualified-keyword {:namespace (property/type->id-namespace property-type)}]])

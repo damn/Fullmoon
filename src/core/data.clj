@@ -9,9 +9,12 @@
     (data 0)
     data))
 
+; this defined @ editor for image/one-to-many ...
 (defmulti edn->value (fn [data v] (->type data)))
 (defmethod edn->value :default [_data v] v)
 
+; if this is just static no need defmethod ?
+; (data/def :d/number number?)
 (defmulti schema ->type)
 (defmethod schema :default [data] data)
 
@@ -23,3 +26,17 @@
 
 (defmethod schema :enum [[_ items]]
   (apply vector :enum items))
+
+(defmethod schema :sound [_]
+  :string)
+
+(defmethod schema :image [_]
+  [:map {:closed true}
+   [:file :string]
+   [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
+
+(defmethod schema :data/animation [_]
+  [:map {:closed true}
+   [:frames :some]
+   [:frame-duration pos?]
+   [:looping? :boolean]])

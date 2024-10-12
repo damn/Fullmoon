@@ -43,8 +43,8 @@
 
 ;;;;
 
-(defn- add-schema-tooltip! [widget schema]
-  (ui/add-tooltip! widget (str "Schema: " (pr-str (m/form schema))))
+(defn- add-data-tooltip! [widget data]
+  (ui/add-tooltip! widget (str "Data: " data))
   widget)
 
 (defn- ->edn-str [v]
@@ -59,21 +59,19 @@
   (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
 (defmethod ->widget :string [data v]
-  (add-schema-tooltip! (ui/text-field v {})
-                       (data/schema data)))
+  (add-data-tooltip! (ui/text-field v {}) data))
 
 (defmethod widget->value :string [_ widget]
   (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
 
 (defmethod ->widget :number [data v]
-  (add-schema-tooltip! (ui/text-field (->edn-str v) {})
-                       (data/schema data)))
+  (add-data-tooltip! (ui/text-field (->edn-str v) {}) data))
 
 (defmethod widget->value :number [_ widget]
   (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
 (defmethod ->widget :enum [data v]
-  (ui/select-box {:items (map ->edn-str (rest (data/schema data)))
+  (ui/select-box {:items (map ->edn-str (rest (data 1)))
                   :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]
@@ -401,30 +399,6 @@
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59
 
-
-(defn- one-to-many-schema->linked-property-type [[_set [_qualif_kw {:keys [namespace]}]]]
-  (property/ns-k->type namespace))
-
-(comment
- (= (one-to-many-schema->linked-property-type [:set [:qualified-keyword {:namespace :items}]])
-    :properties/items)
- )
-
-(defmethod data/edn->value :one-to-many [_ property-ids]
-  (map db/get property-ids))
-
-
-(defn- one-to-one-schema->linked-property-type [[_qualif_kw {:keys [namespace]}]]
-  (property/ns-k->type namespace))
-
-(comment
- (= (one-to-one-schema->linked-property-type [:qualified-keyword {:namespace :creatures}])
-    :properties/creatuers)
- )
-
-(defmethod data/edn->value :one-to-one [_ property-id]
-  (db/get property-id))
-
 (defn- add-one-to-many-rows [table property-type property-ids]
   (let [redo-rows (fn [property-ids]
                     (ui/clear-children! table)
@@ -453,11 +427,9 @@
       (for [id property-ids]
         (ui/text-button "-" #(redo-rows (disj property-ids id))))])))
 
-(defmethod ->widget :one-to-many [data property-ids]
+(defmethod ->widget :one-to-many [[_ property-type] property-ids]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
-    (add-one-to-many-rows table
-                          (one-to-many-schema->linked-property-type (data/schema data))
-                          property-ids)
+    (add-one-to-many-rows table property-type property-ids)
     table))
 
 (defmethod widget->value :one-to-many [_ widget]
@@ -494,11 +466,9 @@
       [(when property-id
          (ui/text-button "-" #(redo-rows nil)))]])))
 
-(defmethod ->widget :one-to-one [data property-id]
+(defmethod ->widget :one-to-one [[_ property-type] property-id]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
-    (add-one-to-one-rows table
-                         (one-to-one-schema->linked-property-type (data/schema data))
-                         property-id)
+    (add-one-to-one-rows table property-type property-id)
     table))
 
 (defmethod widget->value :one-to-one [_ widget]

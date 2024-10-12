@@ -13,7 +13,8 @@
                                  (format "Expected max (%d) to be smaller than val (%d)" v mx)))}
               (fn [[^int a ^int b]] (<= a b))]]))
 
-(defmethod data/schema :val-max [_] (m/form val-max-schema))
+(defmethod data/schema :val-max [_]
+  (m/form val-max-schema))
 
 (defn ratio
   "If mx and v is 0, returns 0, otherwise (/ v mx)"
