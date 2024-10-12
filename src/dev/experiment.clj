@@ -3,7 +3,8 @@
             [clojure.gdx :refer :all]
             [clojure.gdx.app :refer [post-runnable!]]
             [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui :as ui]))
+            [clojure.gdx.ui :as ui]
+            [clojure.gdx.ui.stage :as stage]))
 
 (comment
 
@@ -270,13 +271,13 @@
     (add-elements! node v))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! node (children->str-map (ui/children (s-root v))) level))
+    (add-map-nodes! node (children->str-map (ui/children (stage/root v))) level))
 
   (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
     (add-map-nodes! node (children->str-map (ui/children v)) level)))
 
 (comment
- (let [vis-image (first (ui/children (s-root (stage-get))))]
+ (let [vis-image (first (ui/children (stage/root (stage-get))))]
    (supers (class vis-image))
    (str vis-image)
    )

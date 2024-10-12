@@ -2,7 +2,7 @@
   (:require [clojure.gdx.ui.actor :as a])
   (:import (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.graphics.g2d TextureRegion)
-           (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
+           (com.badlogic.gdx.scenes.scene2d Actor Group)
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window Tree$Node)
            (com.badlogic.gdx.scenes.scene2d.utils ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
@@ -77,7 +77,7 @@
   [^Group group actor]
   (.addActor group actor))
 
-(defn- find-actor-with-id [group id]
+(defn find-actor-with-id [group id]
   (let [actors (children group)
         ids (keep a/id actors)]
     (assert (or (empty? ids)
@@ -360,13 +360,3 @@
   (proxy [Tree$Node] [actor]))
 
 (defn tree [] (VisTree.))
-
-(defn stage
-  "Stage implements clojure.lang.ILookup (get) on actor id."
-  ^Stage [viewport batch]
-  (proxy [Stage clojure.lang.ILookup] [viewport batch]
-    (valAt
-      ([id]
-       (find-actor-with-id (.getRoot ^Stage this) id))
-      ([id not-found]
-       (or (find-actor-with-id (.getRoot ^Stage this) id) not-found)))))

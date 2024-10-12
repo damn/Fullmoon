@@ -7,8 +7,9 @@
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
-            [clojure.gdx.utils :refer [bind-root dispose!]]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.ui.stage :as stage]
+            [clojure.gdx.utils :refer [bind-root dispose!]]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.raycaster :as ray]
             clojure.gdx.editor
@@ -255,8 +256,8 @@
   (let [widget-data {:action-bar (->action-bar-button-group)
                      :slot->background (->inventory-window-data)}
         stage (stage-get)]
-    (s-clear! stage)
-    (run! #(s-add! stage %) (->ui-actors widget-data))
+    (stage/clear! stage)
+    (run! #(stage/add! stage %) (->ui-actors widget-data))
     widget-data))
 
 (defn- ->explored-tile-corners [width height]
