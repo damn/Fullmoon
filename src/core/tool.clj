@@ -57,39 +57,23 @@
 (import javafx.scene.layout.BackgroundPosition)
 (import javafx.scene.layout.BackgroundSize)
 
-(defn- set-bg-image [pane image]
-  (.setBackground pane
-                  (Background. (into-array BackgroundImage
-                                           [(BackgroundImage. image
-                                                              BackgroundRepeat/ROUND
-                                                              BackgroundRepeat/ROUND
-                                                              BackgroundPosition/CENTER
-                                                              BackgroundSize/DEFAULT)]))))
-
 (defn clj-file-forms-tree [file]
   (.setTitle stage "clj-file-forms-tree")
   (let [clj-forms (doall (map (partial take 2) (clj-file-forms file)))
-        bg-image (Image. (io/input-stream (io/resource "images/moon_background.png")))
-
         ;root-icon (ImageView. (Image. (io/input-stream (io/resource "images/animations/vampire-1.png"))))
         root-item (TreeItem. (syms->text (first clj-forms)), #_root-icon)]
     (.setExpanded root-item true)
-    (doseq [
-            syms (rest clj-forms)
+    (doseq [syms (rest clj-forms)
             ;file (map str (file-seq (io/file "src/")))
             ]
-      (.add (.getChildren root-item) (TreeItem.
-                                      (syms->text syms)
-                                      ;file
-                                      )))
+      (.add (.getChildren root-item) (TreeItem. (syms->text syms)
+                                                ;file
+                                                )))
     (let [stack-pane (StackPane.)]
-      ;(.setStyle stack-pane "-fx-background-color: black;")
-      (set-bg-image stack-pane bg-image)
       (.add (.getChildren stack-pane) (TreeView. root-item))
       (let [scene (Scene. stack-pane 400 900)]
         (.add (.getStylesheets scene) (.toExternalForm (io/resource "darkmode.css")))
         (.setScene stage scene))
-      ;scene.getStylesheets().add(getClass().getResource("darkmode.css").toExternalForm());
       (.show stage))))
 
 (comment
