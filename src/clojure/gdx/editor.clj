@@ -1,6 +1,7 @@
 (ns clojure.gdx.editor
   (:require [clojure.edn :as edn]
             [clojure.gdx :refer :all]
+            [clojure.gdx.assets :as assets]
             [clojure.gdx.ui.actor :as a]
             [clojure.set :as set]
             [clojure.string :as str]
@@ -71,7 +72,7 @@
 ; too many ! too big ! scroll ... only show files first & preview?
 ; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows []
-  (for [file (sort all-texture-files)]
+  (for [file (sort assets/all-texture-files)]
     [(->image-button (prop->image file) (fn []))]
     #_[(->text-button file (fn []))]))
 
@@ -106,7 +107,7 @@
 (declare ->sound-columns)
 
 (defn- open-sounds-window! [table]
-  (let [rows (for [sound-file all-sound-files]
+  (let [rows (for [sound-file assets/all-sound-files]
                [(->text-button (str/replace-first sound-file "sounds/" "")
                                   (fn []
                                     (clear-children! table)

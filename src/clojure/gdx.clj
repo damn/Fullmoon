@@ -20,6 +20,7 @@
             [clojure.edn :as edn]
             [clojure.math :as math]
             [clojure.pprint :refer [pprint]]
+            [clojure.gdx.assets :as assets]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui.actor :as a]
             [clj-commons.pretty.repl :refer [pretty-pst]]
@@ -27,10 +28,8 @@
             [malli.core :as m]
             [malli.error :as me])
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
-           (com.badlogic.gdx.assets AssetManager)
            (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
-           (com.badlogic.gdx.files FileHandle)
            (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
            (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
@@ -894,54 +893,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (def dispose! Disposable/.dispose)
 
-(defn- internal-file ^FileHandle [path]
-  (.internal Gdx/files path))
-
-(defn- recursively-search [folder extensions]
-  (loop [[^FileHandle file & remaining] (.list (internal-file folder))
-         result []]
-    (cond (nil? file)
-          result
-
-          (.isDirectory file)
-          (recur (concat remaining (.list file)) result)
-
-          (extensions (.extension file))
-          (recur remaining (conj result (.path file)))
-
-          :else
-          (recur remaining result))))
-
-(defn- search-files [folder file-extensions]
-  (map #(str/replace-first % folder "")
-       (recursively-search folder file-extensions)))
-
-(defn- load-assets [^AssetManager manager files class-k]
-  (let [^Class klass (case class-k :sound Sound :texture Texture)]
-    (doseq [file files]
-      (.load manager ^String file klass))))
-
-(defn- asset-manager []
-  (proxy [AssetManager clojure.lang.ILookup] []
-    (valAt [file]
-      (.get ^AssetManager this ^String file))))
-
-(declare assets
-         all-sound-files
-         all-texture-files)
-
-(defn- load-assets! [folder]
-  (let [manager (asset-manager)
-        sound-files   (search-files folder #{"wav"})
-        texture-files (search-files folder #{"png" "bmp"})]
-    (load-assets manager sound-files   :sound)
-    (load-assets manager texture-files :texture)
-    (.finishLoading manager)
-    (bind-root #'assets manager)
-    (bind-root #'all-sound-files sound-files)
-    (bind-root #'all-texture-files texture-files)))
-
-(defn play-sound! [path] (Sound/.play (get assets path)))
+(defn play-sound! [path]
+  (Sound/.play (assets/get path)))
 
 (defc :tx/sound
   {:data :sound}
@@ -985,7 +938,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn ->texture-region
   ([path-or-texture]
    (let [^Texture tex (if (string? path-or-texture)
-                        (get assets path-or-texture)
+                        (assets/get path-or-texture)
                         path-or-texture)]
      (TextureRegion. tex)))
 
@@ -1072,7 +1025,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     params))
 
 (defn- generate-ttf [{:keys [file size quality-scaling]}]
-  (let [generator (FreeTypeFontGenerator. (internal-file file))
+  (let [generator (FreeTypeFontGenerator. (.internal Gdx/files file))
         font (.generateFont generator (->ttf-params size quality-scaling))]
     (dispose! generator)
     (.setScale (.getData font) (float (/ quality-scaling)))
@@ -1286,7 +1239,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
              [k (f v)])))
 
 (defn- ->cursor [file [hotspot-x hotspot-y]]
-  (let [pixmap (Pixmap. (internal-file file))
+  (let [pixmap (Pixmap. (.internal Gdx/files file))
         cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
     (dispose! pixmap)
     cursor))
@@ -1906,13 +1859,13 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (load-properties-db! properties)
   (Lwjgl3Application. (proxy [ApplicationAdapter] []
                         (create []
-                          (load-assets! resources)
+                          (assets/load! resources)
                           (load-graphics! graphics)
                           (load-ui! ui)
                           (load-screens! screen-ks))
 
                         (dispose []
-                          (dispose! assets)
+                          (assets/dispose!)
                           (dispose-graphics!)
                           (dispose-ui!)
                           (dispose-screens!))

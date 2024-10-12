@@ -1,5 +1,7 @@
 (ns core.tool
-  (:require [clojure.java.io :as io])
+  (:require [clojure.gdx :refer :all]
+            [clojure.java.io :as io]
+            [clojure.tools.namespace.repl :refer [disable-reload!]])
   (:import (javafx.event EventHandler)
            (javafx.scene.control Button TreeItem TreeView)
            (javafx.scene.image Image ImageView)
@@ -7,6 +9,8 @@
            (javafx.scene Scene Node))
   (:gen-class
    :extends javafx.application.Application))
+
+(disable-reload!) ; aot does not work nicely with tools.namespace refresh
 
 ; https://stackoverflow.com/questions/66978726/clojure-javafx-live-manipulation
 ; https://github.com/dlsc-software-consulting-gmbh/FormsFX
@@ -181,7 +185,6 @@
 
 (declare my-stage)
 
-(require '[clojure.gdx :refer :all])
 
 (comment
  (fx-run

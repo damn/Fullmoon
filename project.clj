@@ -46,7 +46,9 @@
                 ;*assert* false
                 *print-level* 3}
   :aliases {"dev" ["run" "-m" "clojure.gdx.dev" "core.app"]}
-  :aot [core.tool]
+  ; https://github.com/clojure/tools.namespace?tab=readme-ov-file#warnings-and-potential-problems
+  ; AOT-compilation: Reloading code does not work in the presence of AOT-compiled namespaces. If you are using AOT-compilation in your project, make sure it is disabled and you have deleted any AOT-compiled .class files before starting a REPL development session. (In Leiningen, run lein clean.)
+  ;:aot [core.tool]
   :main core.app)
 
 ; * Notes
