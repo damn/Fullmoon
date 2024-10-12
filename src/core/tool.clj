@@ -25,28 +25,77 @@
 
  )
 
+(comment
+ (first (doall (map (partial take 2) (clj-file-forms "src/clojure/gdx.clj")))))
 
+(declare stage)
 
-#_(defn -start [app stage]
-  (def myapp app)
-  (.setTitle stage "Tree View Sample")
-  (let [root-icon (ImageView. (Image. (io/input-stream
-                                       (io/resource "images/animations/vampire-1.png"))))
-        root-item (TreeItem. "Inbox", root-icon)]
+(defn- first-sym->icon [sym]
+  (case (str sym)
+    "ns" "📦"
+    "def" "📌"
+    "declare" "🔖"
+    "defmacro" "🏗️"
+    "defn" "📜"
+    "defn-" "🔧"
+    "defmulti" "🛠️"
+    "defmethod" "🧩"
+    "defsystem" "🔄"
+    "defc" "🔑"
+    "comment" "📖"
+    "derive" "🧬"
+    "defprotocol" "📄"
+    "defrecord" "🗃️"
+    "?"))
+
+(defn- syms->text [[first-sym second-sym]]
+  (str (first-sym->icon first-sym) " " first-sym " " second-sym))
+
+(import javafx.scene.layout.Background)
+(import javafx.scene.layout.BackgroundImage)
+(import javafx.scene.layout.BackgroundRepeat)
+(import javafx.scene.layout.BackgroundPosition)
+(import javafx.scene.layout.BackgroundSize)
+
+(defn- set-bg-image [pane image]
+  (.setBackground pane
+                  (Background. (into-array BackgroundImage
+                                           [(BackgroundImage. image
+                                                              BackgroundRepeat/ROUND
+                                                              BackgroundRepeat/ROUND
+                                                              BackgroundPosition/CENTER
+                                                              BackgroundSize/DEFAULT)]))))
+
+(defn clj-file-forms-tree [file]
+  (.setTitle stage "clj-file-forms-tree")
+  (let [clj-forms (doall (map (partial take 2) (clj-file-forms file)))
+        bg-image (Image. (io/input-stream (io/resource "images/moon_background.png")))
+
+        ;root-icon (ImageView. (Image. (io/input-stream (io/resource "images/animations/vampire-1.png"))))
+        root-item (TreeItem. (syms->text (first clj-forms)), #_root-icon)]
     (.setExpanded root-item true)
     (doseq [
-            ;[first-sym second-sym] (doall (map (partial take 2) (clj-file-forms "src/core/stat.clj")))
-
-            file (map str (file-seq (io/file "src/")))
+            syms (rest clj-forms)
+            ;file (map str (file-seq (io/file "src/")))
             ]
       (.add (.getChildren root-item) (TreeItem.
-                                      file
-                                      #_(str first-sym " - " second-sym))))
-
+                                      (syms->text syms)
+                                      ;file
+                                      )))
     (let [stack-pane (StackPane.)]
+      ;(.setStyle stack-pane "-fx-background-color: black;")
+      (set-bg-image stack-pane bg-image)
       (.add (.getChildren stack-pane) (TreeView. root-item))
-      (.setScene stage (Scene. stack-pane 300 250))
+      (let [scene (Scene. stack-pane 400 900)]
+        (.add (.getStylesheets scene) (.toExternalForm (io/resource "darkmode.css")))
+        (.setScene stage scene))
+      ;scene.getStylesheets().add(getClass().getResource("darkmode.css").toExternalForm());
       (.show stage))))
+
+(comment
+ (fx-run (clj-file-forms-tree "src/clojure/gdx.clj"))
+
+ )
 
 (import javafx.scene.control.TabPane
         javafx.scene.control.TabPane$TabClosingPolicy
@@ -138,9 +187,12 @@
 
  )
 
-(defn -start [app stage]
-  (def my-stage stage))
+(defn -start [app the-stage]
+  (def stage the-stage))
+
+(defn- start-stuff []
+  (javafx.application.Platform/setImplicitExit false)
+  (.start (Thread. #(javafx.application.Application/launch core.tool (into-array String [""])))) )
 
 (defn -main [& args]
-  (javafx.application.Platform/setImplicitExit false)
-  (.start (Thread. #(javafx.application.Application/launch core.tool (into-array String [""])))))
+  (start-stuff))
