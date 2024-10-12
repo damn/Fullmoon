@@ -25,7 +25,7 @@
 (defn ->schema [property]
   (-> property
       ->type
-      data/component
+      component/data
       data/schema
       m/schema))
 
@@ -67,15 +67,18 @@
           m
           (keys m)))
 
+(defmulti edn->value (fn [data v] (type data)))
+(defmethod edn->value :default [_data v] v)
+
 (defn build [property]
   (apply-kvs property
              (fn [k v]
-               (try (data/edn->value (try (data/component k)
-                                          (catch Throwable _t
-                                            (swap! undefined-data-ks conj k)
-                                            ::undefined-component))
-                                     (if (map? v)
-                                       (build v)
-                                       v))
+               (try (edn->value (try (component/data k)
+                                     (catch Throwable _t
+                                       (swap! undefined-data-ks conj k)
+                                       ::undefined-component))
+                                (if (map? v)
+                                  (build v)
+                                  v))
                     (catch Throwable t
                       (throw (ex-info " " {:k k :v v})))))))

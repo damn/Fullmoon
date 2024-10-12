@@ -1306,7 +1306,7 @@
                :looping? looping?))
 
 
-(defmethod data/edn->value :data/animation [_ animation]
+(defmethod property/edn->value :data/animation [_ animation]
   (edn->animation animation))
 
 (defn- tx-assoc-image-current-frame [eid animation]

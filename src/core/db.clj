@@ -62,10 +62,10 @@
   (alter-var-root #'db dissoc property-id)
   (async-write-to-file!))
 
-(defmethod data/edn->value :one-to-one [_ property-id]
+(defmethod property/edn->value :one-to-one [_ property-id]
   (get property-id))
 
-(defmethod data/edn->value :one-to-many [_ property-ids]
+(defmethod property/edn->value :one-to-many [_ property-ids]
   (map get property-ids))
 
 (defmethod data/schema :one-to-one [[_ property-type]]

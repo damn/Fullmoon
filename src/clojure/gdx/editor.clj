@@ -77,7 +77,7 @@
 (defmethod widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
-(defmethod data/edn->value :image [_ image]
+(defmethod property/edn->value :image [_ image]
   (g/edn->image image))
 
 ; too many ! too big ! scroll ... only show files first & preview?
@@ -195,7 +195,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [data (data/component k)]
+  (let [data (component/data k)]
     (cond
      (#{:one-to-one :one-to-many} data) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
@@ -257,7 +257,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (data/component k) v)
+        value-widget (->widget (component/data k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -291,7 +291,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (data/component k) value-widget)])))
+             [k (widget->value (component/data k) value-widget)])))
 
 ;;
 

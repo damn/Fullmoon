@@ -1,6 +1,8 @@
 (ns core.component
   "A component is a vector of [k & optional-more-values].
-  For example a minimal component is `[:foo]`")
+  For example a minimal component is `[:foo]`"
+  (:require [clojure.gdx.utils :refer [safe-get]]
+            [core.data :as data]))
 
 (def systems "Map of all systems as key of name-string to var." {})
 
@@ -86,3 +88,34 @@ Example:
                      ~fn-params params#]
                  ~@fn-exprs)))))
       ~k)))
+
+(defn data [k]
+  (:data (safe-get attributes k)))
+
+(defn- attribute-schema
+  "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."
+  [ks]
+  (for [k ks
+        :let [k? (keyword? k)
+              schema-props (if k? nil (k 1))
+              k (if k? k (k 0))]]
+    (do
+     (assert (keyword? k))
+     (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
+     [k schema-props (data/schema (data k))])))
+
+(defn- map-schema [ks]
+  (apply vector :map {:closed true} (attribute-schema ks)))
+
+(defmethod data/schema :map [[_ ks]]
+  (map-schema ks))
+
+(defmethod data/schema :map-optional [[_ ks]]
+  (map-schema (map (fn [k] [k {:optional true}]) ks)))
+
+(defn- namespaced-ks [ns-name-k]
+  (filter #(= (name ns-name-k) (namespace %))
+          (keys attributes)))
+
+(defmethod data/schema :components-ns [[_ ns-name-k]]
+  (data/schema [:map-optional (namespaced-ks ns-name-k)]))
