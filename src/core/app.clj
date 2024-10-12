@@ -1,6 +1,7 @@
 (ns core.app
   (:require [clojure.component :refer [defc]]
             [clojure.gdx :refer :all]
+            [clojure.gdx.app :as app]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.tiled :as t]
@@ -642,7 +643,7 @@
                                     [(ui/text-button "Map editor" #(change-screen :screens/map-editor))])
                                   (when dev-mode?
                                     [(ui/text-button "Property editor" #(change-screen :screens/property-editor))])
-                                  [(ui/text-button "Exit" exit-app!)]]))
+                                  [(ui/text-button "Exit" app/exit!)]]))
              :cell-defaults {:pad-bottom 25}
              :fill-parent? true}))
 
@@ -655,7 +656,7 @@
    (->buttons)
    (ui/actor {:act (fn []
                      (when (key-just-pressed? :keys/escape)
-                       (exit-app!)))})])
+                       (app/exit!)))})])
 
 (derive :screens/main-menu :screens/stage)
 (defc :screens/main-menu

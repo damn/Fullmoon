@@ -1,6 +1,5 @@
 (ns clojure.gdx
-  {:metadoc/categories {:app "🖥️ Application"
-                        :effect "💥 Effects"
+  {:metadoc/categories {:effect "💥 Effects"
                         :entity "👾 Entity"
                         :geometry "📐 Geometry"
                         :input "🎮 Input"
@@ -10,24 +9,23 @@
                         :world "🌎 World"
                         :world.timer "⏳ Timer"}}
   (:require [clojure.component :refer [defsystem defc defc* component-attributes]]
-            [clojure.string :as str]
-            [clojure.edn :as edn]
-            [clojure.math :as math]
-            [clojure.pprint :refer [pprint]]
+            [clojure.gdx.app :as app]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.utils :refer [gdx-field safe-get bind-root]]
+            [clojure.string :as str]
+            [clojure.edn :as edn]
+            [clojure.math :as math]
+            [clojure.pprint :refer [pprint]]
             [clj-commons.pretty.repl :refer [pretty-pst]]
             [data.grid2d :as g2d]
             [malli.core :as m]
             [malli.error :as me])
-  (:import (com.badlogic.gdx Gdx ApplicationAdapter)
+  (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.audio Sound)
-           (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
-           (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.scenes.scene2d Stage)
            (gdl RayCaster)))
 
@@ -713,12 +711,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
         :when (condition avar)]
     avar))
 
-(defn exit-app!         [] (.exit               Gdx/app))
 (defn delta-time        [] (.getDeltaTime       Gdx/graphics))
 (defn frames-per-second [] (.getFramesPerSecond Gdx/graphics))
-
-(defmacro post-runnable! [& exprs]
-  `(.postRunnable Gdx/app (fn [] ~@exprs)))
 
 (def ^:private gdx-input-button (partial gdx-field "Input$Buttons"))
 (def ^:private gdx-input-key    (partial gdx-field "Input$Keys"))
@@ -901,45 +895,28 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (show-player-modal! params)
     nil))
 
-(defn- lwjgl3-app-config
-  [{:keys [title width height full-screen? fps]}]
-  {:pre [title width height (boolean? full-screen?) (or (nil? fps) (int? fps))]}
-  ; https://github.com/libgdx/libgdx/pull/7361
-  ; Maybe can delete this when using that new libgdx version
-  ; which includes this PR.
-  (when SharedLibraryLoader/isMac
-    (.set org.lwjgl.system.Configuration/GLFW_LIBRARY_NAME "glfw_async")
-    (.set org.lwjgl.system.Configuration/GLFW_CHECK_THREAD0 false))
-  (let [config (doto (Lwjgl3ApplicationConfiguration.)
-                 (.setTitle title)
-                 (.setForegroundFPS (or fps 60)))]
-    (if full-screen?
-      (.setFullscreenMode config (Lwjgl3ApplicationConfiguration/getDisplayMode))
-      (.setWindowedMode config width height))
-    config))
-
 (defn start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
   (load-properties-db! properties)
-  (Lwjgl3Application. (proxy [ApplicationAdapter] []
-                        (create []
-                          (assets/load! resources)
-                          (g/load! graphics)
-                          (ui/load! ui)
-                          (load-screens! screen-ks))
+  (app/start! (reify app/Listener
+                (create! [_]
+                  (assets/load! resources)
+                  (g/load! graphics)
+                  (ui/load! ui)
+                  (load-screens! screen-ks))
 
-                        (dispose []
-                          (assets/dispose!)
-                          (g/dispose!)
-                          (ui/dispose!)
-                          (dispose-screens!))
+                (dispose! [_]
+                  (assets/dispose!)
+                  (g/dispose!)
+                  (ui/dispose!)
+                  (dispose-screens!))
 
-                        (render []
-                          (ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
-                          (screen-render! (current-screen)))
+                (render! [_]
+                  (com.badlogic.gdx.utils.ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
+                  (screen-render! (current-screen)))
 
-                        (resize [w h]
-                          (g/resize! [w h])))
-                      (lwjgl3-app-config config)))
+                (resize! [_ dimensions]
+                  (g/resize! dimensions)))
+              config))
 
 (defn enemy-faction [{:keys [entity/faction]}]
   (case faction
