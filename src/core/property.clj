@@ -67,7 +67,7 @@
           m
           (keys m)))
 
-(defmulti edn->value (fn [data v] (type data)))
+(defmulti edn->value (fn [data v] (data/type data)))
 (defmethod edn->value :default [_data v] v)
 
 (defn build [property]
@@ -76,7 +76,7 @@
                (try (edn->value (try (component/data k)
                                      (catch Throwable _t
                                        (swap! undefined-data-ks conj k)
-                                       ::undefined-component))
+                                       nil))
                                 (if (map? v)
                                   (build v)
                                   v))
