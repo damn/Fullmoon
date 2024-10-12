@@ -15,6 +15,7 @@
             [core.val-max :as val-max]
             [utils.core :refer [readable-number]]
             [world.creature.faction :as faction]
+            [world.entity.body :as body]
             [world.raycaster :refer [path-blocked?]]))
 
 (defn- defmodifier [k operations]
@@ -200,7 +201,7 @@
 ;;;;
 
 (defn- nearest-enemy [entity*]
-  (nearest-entity @(world-grid (entity-tile entity*))
+  (nearest-entity @(world-grid (body/tile entity*))
                   (faction/enemy entity*)))
 
 

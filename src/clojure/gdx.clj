@@ -19,6 +19,7 @@
             [malli.core :as m]
             [utils.core :refer [bind-root find-first ->tile tile->middle safe-merge readable-number]]
             [world.creature.faction :as faction]
+            [world.entity.body :as body]
             [world.raycaster :refer [ray-blocked?]]))
 
 (declare ^:private screen-k
@@ -120,9 +121,6 @@
                           :close-on-escape? true
                           :center? true
                           :pack? true})))
-
-(defn entity-tile [entity*]
-  (->tile (:position entity*)))
 
 (declare world-paused?
          world-player)
@@ -338,7 +336,7 @@
                                        (filter   #(:entity/faction @%))
                                        (group-by #(:entity/faction @%)))]
            [faction
-            (zipmap (map #(entity-tile @%) entities)
+            (zipmap (map #(body/tile @%) entities)
                     entities)])))
 
  (def max-iterations 1)
@@ -416,7 +414,7 @@
 (defn- tiles->entities [entities faction]
   (let [entities (filter #(= (:entity/faction @%) faction)
                          entities)]
-    (zipmap (map #(entity-tile @%) entities)
+    (zipmap (map #(body/tile @%) entities)
             entities)))
 
 (defn- update-faction-potential-field [grid faction entities max-iterations]
@@ -580,7 +578,7 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get world-grid (entity-tile @body))
+    (let [occupied-cell (get world-grid (body/tile @body))
           own-dist (distance-to occupied-cell)
           adj-cells (cached-adjacent-cells grid occupied-cell)
           potential-cells (filter distance-to
