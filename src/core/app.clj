@@ -11,7 +11,6 @@
             [clojure.gdx.ui.stage :as stage]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
-            [clojure.gdx.math.raycaster :as ray]
             [core.component :refer [defc] :as component]
             core.creature
             core.editor
@@ -22,7 +21,8 @@
             [core.val-max :as val-max]
             [core.world :as world]
             [data.grid2d :as g2d]
-            [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]))
+            [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
+            [world.raycaster :as raycaster]))
 
 (defn- render-infostr-on-bar [infostr x y h]
   (g/draw-text {:text infostr
@@ -324,7 +324,7 @@
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)
         grid (init-world-grid! w h (world-grid-position->value-fn tiled-map))]
-    (init-world-raycaster! grid blocks-vision?)
+    (raycaster/init! grid blocks-vision?)
     (init-content-grid! :cell-size 16 :width w :height h)
     (bind-root #'explored-tile-corners (->explored-tile-corners w h)))
 
@@ -549,14 +549,14 @@
  2432
  )
 
-(defn- ->tile-color-setter [light-cache light-position raycaster explored-tile-corners]
+(defn- ->tile-color-setter [light-cache light-position explored-tile-corners]
   (fn tile-color-setter [_color x y]
     (let [position [(int x) (int y)]
           explored? (get @explored-tile-corners position) ; TODO needs int call ?
           base-color (if explored? explored-tile-color black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
-                     (let [blocked? (ray/blocked? raycaster light-position position)]
+                     (let [blocked? (raycaster/ray-blocked? light-position position)]
                        (swap! light-cache assoc position blocked?)
                        blocked?)
                      cache-entry)]
@@ -572,7 +572,6 @@
   (g/draw-tiled-map world-tiled-map
                     (->tile-color-setter (atom nil)
                                          light-position
-                                         world-raycaster
                                          explored-tile-corners))
   #_(reset! do-once false))
 

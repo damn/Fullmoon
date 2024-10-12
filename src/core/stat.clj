@@ -13,7 +13,8 @@
             [core.operation :as op]
             [core.projectile :refer [projectile-size]]
             [core.val-max :as val-max]
-            [utils.core :refer [readable-number]]))
+            [utils.core :refer [readable-number]]
+            [world.raycaster :refer [path-blocked?]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))
