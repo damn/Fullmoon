@@ -1,5 +1,6 @@
 (ns dev.experiment
-  (:require [clojure.gdx :refer :all]
+  (:require [clojure.component :refer [component-attributes defsystems]]
+            [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]))
 

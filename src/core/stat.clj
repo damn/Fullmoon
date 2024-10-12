@@ -1,5 +1,6 @@
 (ns core.stat
-  (:require [clojure.gdx :refer :all]
+  (:require [clojure.component :refer [defc defc* defsystem]]
+            [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.ui :as ui]

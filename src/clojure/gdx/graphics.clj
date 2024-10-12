@@ -1,14 +1,14 @@
 (ns clojure.gdx.graphics
   (:require [clojure.gdx.assets :as assets]
             [clojure.gdx.tiled :as t]
-            [clojure.gdx.utils :refer [gdx-field bind-root safe-get dispose!]]
+            [clojure.gdx.utils :refer [gdx-field bind-root safe-get]]
             [clojure.string :as str])
   (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.graphics Color Colors OrthographicCamera Texture Texture$TextureFilter Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
            (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
            (com.badlogic.gdx.math MathUtils Vector2)
-           (com.badlogic.gdx.utils Align)
+           (com.badlogic.gdx.utils Align Disposable)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (space.earlygrey.shapedrawer ShapeDrawer)))
 
@@ -426,10 +426,10 @@
     (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
 
 (defn dispose! []
-  (dispose! batch)
-  (dispose! shape-drawer-texture)
-  (dispose! default-font)
-  (run! dispose! (vals cursors)))
+  (.dispose batch)
+  (.dispose shape-drawer-texture)
+  (.dispose default-font)
+  (run! Disposable/.dispose (vals cursors)))
 
 (defn resize! [[w h]]
   (vp-update! (gui-viewport) [w h] :center-camera? true)

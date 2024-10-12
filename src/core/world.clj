@@ -1,5 +1,6 @@
 (ns core.world
-  (:require [clojure.gdx :refer :all]
+  (:require [clojure.component :refer [defc]]
+            [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.ui :as ui]

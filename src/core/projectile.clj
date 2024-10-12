@@ -1,5 +1,6 @@
 (ns core.projectile
-  (:require [clojure.gdx :refer :all]))
+  (:require [clojure.component :refer [defc]]
+            [clojure.gdx :refer :all]))
 
 (def-property-type :properties/projectiles
   {:schema [:entity/image

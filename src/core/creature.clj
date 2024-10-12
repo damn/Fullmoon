@@ -1,5 +1,6 @@
 (ns core.creature
-  (:require [clojure.gdx :refer :all]
+  (:require [clojure.component :refer [defc]]
+            [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.utils :refer [bind-root]]
             [clojure.string :as str]

@@ -1,5 +1,6 @@
 (ns clojure.gdx.editor
-  (:require [clojure.edn :as edn]
+  (:require [clojure.component :refer [component-attributes defc]]
+            [clojure.edn :as edn]
             [clojure.gdx :refer :all]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
