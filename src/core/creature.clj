@@ -6,6 +6,7 @@
             [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
+            [core.effect :refer [do!]]
             [reduce-fsm :as fsm]))
 
 (def-property-type :properties/creatures

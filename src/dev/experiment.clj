@@ -4,7 +4,8 @@
             [clojure.gdx.app :refer [post-runnable!]]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.stage :as stage]))
+            [clojure.gdx.ui.stage :as stage]
+            [core.effect :refer [do! effect!]]))
 
 (comment
 

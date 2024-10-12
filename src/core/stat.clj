@@ -9,6 +9,7 @@
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             core.creature
+            [core.effect :refer [do! effect!]]
             [core.operation :as op]
             [core.projectile :refer [projectile-size]]
             [core.val-max :as val-max]))

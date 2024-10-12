@@ -14,6 +14,7 @@
             [clojure.gdx.math.raycaster :as ray]
             clojure.gdx.editor
             core.creature
+            [core.effect :refer [do! effect!]]
             core.stat
             core.projectile
             [core.val-max :as val-max]
