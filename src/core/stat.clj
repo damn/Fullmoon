@@ -9,6 +9,7 @@
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             core.creature
+            [core.operation :as op]
             [core.projectile :refer [projectile-size]]))
 
 (defn- defmodifier [k operations]
@@ -309,7 +310,7 @@ Default method returns true."
   (info-text [[k operations]]
     (str/join "\n"
               (for [operation operations]
-                (str (op-info-text operation) " " (k->pretty-name k)))))
+                (str (op/info-text operation) " " (k->pretty-name k)))))
 
   (applicable? [[k _]]
     (and target
@@ -325,7 +326,7 @@ Default method returns true."
           ; TODO similar to components.entity.modifiers/->modified-value
           ; but operations not sort-by op/order ??
           ; op-apply reuse fn over operations to get effectiv value
-          (reduce (fn [value operation] (op-apply operation value))
+          (reduce (fn [value operation] (op/apply operation value))
                   effective-value
                   operations)]]))))
 
