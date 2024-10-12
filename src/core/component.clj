@@ -1,9 +1,9 @@
 (ns core.component
   "A component is a vector of `[k & values?]`.
   For example a minimal component is `[:foo]`"
-  (:require [clojure.gdx.utils :refer [safe-get index-of]]
-            [clojure.string :as str]
-            [core.data :as data]))
+  (:require [clojure.string :as str]
+            [core.data :as data]
+            [utils.core :refer [index-of safe-get]]))
 
 (def systems "Map of all systems as key of name-string to var." {})
 

@@ -7,7 +7,6 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.math.raycaster :as ray]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
@@ -20,7 +19,8 @@
             [core.db :as db]
             [core.property :as property]
             [data.grid2d :as g2d]
-            [malli.core :as m]))
+            [malli.core :as m]
+            [utils.core :refer [bind-root]]))
 
 (defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.

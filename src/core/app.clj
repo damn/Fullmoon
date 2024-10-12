@@ -8,7 +8,7 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.utils :refer [bind-root dispose!]]
+            [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.raycaster :as ray]
             clojure.gdx.editor
@@ -20,7 +20,8 @@
             [core.db :as db]
             [core.val-max :as val-max]
             [core.world :as world]
-            [data.grid2d :as g2d]))
+            [data.grid2d :as g2d]
+            [utils.core :refer [bind-root]]))
 
 (defn- render-infostr-on-bar [infostr x y h]
   (g/draw-text {:text infostr

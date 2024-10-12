@@ -2,14 +2,14 @@
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
-            [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [core.component :refer [defc] :as component]
             [core.effect :refer [do!]]
             [core.property :as property]
             [core.db :as db]
-            [reduce-fsm :as fsm]))
+            [reduce-fsm :as fsm]
+            [utils.core :refer [bind-root]]))
 
 (property/def :properties/creatures
   {:schema [:entity/body

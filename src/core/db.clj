@@ -1,11 +1,11 @@
 (ns core.db
   (:refer-clojure :exclude [get])
   (:require [clojure.edn :as edn]
-            [clojure.gdx.utils :refer [bind-root safe-get]]
             [clojure.pprint :refer [pprint]]
             [core.component :as component]
             [core.data :as data]
-            [core.property :as property]))
+            [core.property :as property]
+            [utils.core :refer [bind-root safe-get]]))
 
 (declare db
          ^:private edn-file)

@@ -7,7 +7,6 @@
             [clojure.gdx.input :refer [key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.utils :refer [safe-get index-of]]
             [clojure.set :as set]
             [clojure.string :as str]
             [core.component :refer [defc] :as component]
@@ -15,7 +14,8 @@
             [core.db :as db]
             [core.property :as property]
             [malli.core :as m]
-            [malli.generator :as mg]))
+            [malli.generator :as mg]
+            [utils.core :refer [safe-get index-of]]))
 
 (defn- data-type->widget [data]
   (cond
