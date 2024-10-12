@@ -1,6 +1,6 @@
 (ns core.val-max
-  (:require [clojure.component :refer [defc]]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
+            [core.component :refer [defc]]
             [core.data :as data]
             [core.operation :as op]
             [malli.core :as m]))

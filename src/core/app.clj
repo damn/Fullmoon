@@ -1,6 +1,5 @@
 (ns core.app
-  (:require [clojure.component :refer [defc]]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.gdx.app :as app]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
@@ -13,6 +12,7 @@
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.raycaster :as ray]
             clojure.gdx.editor
+            [core.component :refer [defc]]
             core.creature
             [core.effect :refer [do! effect!]]
             core.stat

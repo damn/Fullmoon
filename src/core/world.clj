@@ -1,6 +1,5 @@
 (ns core.world
-  (:require [clojure.component :refer [defc]]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
@@ -10,6 +9,7 @@
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
+            [core.component :refer [defc]]
             [data.grid2d :as g2d]))
 
 (def modules-file "maps/modules.tmx")

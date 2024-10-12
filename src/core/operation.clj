@@ -1,7 +1,7 @@
 (ns core.operation
   (:refer-clojure :exclude [apply])
-  (:require [clojure.component :refer [defsystem defc]]
-            [clojure.math :as math]))
+  (:require [clojure.math :as math]
+            [core.component :refer [defsystem defc]]))
 
 (defn- +? [n]
   (case (math/signum n)

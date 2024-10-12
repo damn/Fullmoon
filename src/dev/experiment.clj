@@ -1,10 +1,10 @@
 (ns dev.experiment
-  (:require [clojure.component :refer [component-attributes defsystems]]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.gdx.app :refer [post-runnable!]]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]
+            [core.component :refer [component-attributes defsystems]]
             [core.data :as data]
             [core.effect :refer [do! effect!]]))
 

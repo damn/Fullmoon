@@ -1,6 +1,5 @@
 (ns core.stat
-  (:require [clojure.component :refer [defc defc* defsystem]]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [button-just-pressed?]]
             [clojure.gdx.rand :refer [rand-int-between]]
@@ -8,6 +7,7 @@
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
+            [core.component :refer [defc defc* defsystem]]
             core.creature
             [core.effect :refer [do! effect!]]
             [core.operation :as op]

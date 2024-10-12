@@ -1,7 +1,7 @@
 (ns core.projectile
-  (:require [clojure.component :refer [defc]]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.gdx.math.vector :as v]
+            [core.component :refer [defc]]
             [core.effect :refer [do!]]))
 
 (def-property-type :properties/projectiles

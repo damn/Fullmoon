@@ -1,5 +1,5 @@
 (ns core.effect
-  (:require [clojure.component :refer [defsystem]]))
+  (:require [core.component :refer [defsystem]]))
 
 (def ^:private ^:dbg-flag debug-print-txs? false)
 

@@ -1,6 +1,5 @@
 (ns clojure.gdx
-  (:require [clojure.component :refer [defsystem defc defc* component-attributes]]
-            [clojure.gdx.app :as app]
+  (:require [clojure.gdx.app :as app]
             [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
@@ -16,8 +15,9 @@
             [clojure.edn :as edn]
             [clojure.pprint :refer [pprint]]
             [clj-commons.pretty.repl :refer [pretty-pst]]
-            [core.effect :refer [do! effect!]]
+            [core.component :refer [defsystem defc defc* component-attributes]]
             [core.data :as data]
+            [core.effect :refer [do! effect!]]
             [core.operation :as op]
             [data.grid2d :as g2d]
             [malli.core :as m]

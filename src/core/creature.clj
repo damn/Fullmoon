@@ -1,11 +1,11 @@
 (ns core.creature
-  (:require [clojure.component :refer [defc]]
-            [clojure.gdx :refer :all]
+  (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
             [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
+            [core.component :refer [defc]]
             [core.effect :refer [do!]]
             [reduce-fsm :as fsm]))
 

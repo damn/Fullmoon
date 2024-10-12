@@ -1,4 +1,4 @@
-(ns clojure.component)
+(ns core.component)
 
 (def defsystems "Map of all systems as key of name-string to var." {})
 

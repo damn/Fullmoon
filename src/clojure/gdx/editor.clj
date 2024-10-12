@@ -1,6 +1,5 @@
 (ns clojure.gdx.editor
-  (:require [clojure.component :refer [component-attributes defc]]
-            [clojure.edn :as edn]
+  (:require [clojure.edn :as edn]
             [clojure.gdx :refer :all]
             [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
@@ -11,6 +10,7 @@
             [clojure.gdx.utils :refer [safe-get]]
             [clojure.set :as set]
             [clojure.string :as str]
+            [core.component :refer [component-attributes defc]]
             [core.data :as data]
             [malli.core :as m]
             [malli.generator :as mg]))
