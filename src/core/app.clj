@@ -22,6 +22,8 @@
             [core.world :as world]
             [data.grid2d :as g2d]
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
+            [world.grid :as grid :refer [world-grid]]
+            [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]))
 
 (defn- render-infostr-on-bar [infostr x y h]
@@ -323,8 +325,8 @@
   (bind-root #'world-tiled-map tiled-map)
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)
-        grid (init-world-grid! w h (world-grid-position->value-fn tiled-map))]
-    (raycaster/init! grid blocks-vision?)
+        grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
+    (raycaster/init! grid grid/blocks-vision?)
     (init-content-grid! :cell-size 16 :width w :height h)
     (bind-root #'explored-tile-corners (->explored-tile-corners w h)))
 
@@ -341,19 +343,19 @@
     (content-grid-update-entity! entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (grid-add-entity! entity)
+    (grid/add-entity! entity)
     nil))
 
 (defc :tx/remove-from-world
   (do! [[_ entity]]
     (content-grid-remove-entity! entity)
-    (grid-remove-entity! entity)
+    (grid/remove-entity! entity)
     nil))
 
 (defc :tx/position-changed
   (do! [[_ entity]]
     (content-grid-update-entity! entity)
-    (grid-entity-position-changed! entity)
+    (grid/entity-position-changed! entity)
     nil))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
@@ -415,7 +417,7 @@
         radius 0.8
         circle {:position position :radius radius}]
     (g/draw-circle position radius [1 0 0 0.5])
-    (doseq [[x y] (map #(:position @%) (circle->cells grid circle))]
+    (doseq [[x y] (map #(:position @%) (grid/circle->cells grid circle))]
       (g/draw-rectangle x y 1 1 [1 0 0 0.5]))
     (let [{[x y] :left-bottom :keys [width height]} (shape/circle->outer-rectangle circle)]
       (g/draw-rectangle x y width height [0 0 1 1]))))
@@ -451,7 +453,7 @@
         (let [faction :good
               {:keys [distance entity]} (faction cell*)]
           (when distance
-            (let [ratio (/ distance (factions-iterations faction))]
+            (let [ratio (/ distance (potential-fields/factions-iterations faction))]
               (g/draw-filled-rectangle x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
 (def ^:private ^:dbg-flag highlight-blocked-cell? true)
@@ -476,7 +478,7 @@
   (let [player-entity* @world-player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
-                          (point->entities (g/world-mouse-position))))]
+                          (grid/point->entities (g/world-mouse-position))))]
     (->> render-order
          (sort-by-order hits :z-order)
          reverse
@@ -515,7 +517,7 @@
 (defn- update-world []
   (update-time (min (g/delta-time) max-delta-time))
   (let [entities (active-entities)]
-    (potential-fields-update! entities)
+    (potential-fields/update! entities)
     (try (tick-entities! entities)
          (catch Throwable t
            (error-window! t)

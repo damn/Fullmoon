@@ -11,7 +11,8 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge]]
             [world.creature.faction :as faction]
-            [world.entity.body :as body]))
+            [world.entity.body :as body]
+            [world.grid :as grid :refer [world-grid]]))
 
 (property/def :properties/creatures
   {:schema [:entity/body
@@ -224,7 +225,7 @@
   (tick [_ eid]
     (let [entity* @eid
           cell (world-grid (body/tile entity*))]
-      (when-let [distance (nearest-entity-distance @cell (faction/enemy entity*))]
+      (when-let [distance (grid/nearest-entity-distance @cell (faction/enemy entity*))]
         (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 

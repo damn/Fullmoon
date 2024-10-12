@@ -16,6 +16,8 @@
             [utils.core :refer [readable-number]]
             [world.creature.faction :as faction]
             [world.entity.body :as body]
+            [world.grid :as grid :refer [world-grid]]
+            [world.potential-fields :as potential-fields]
             [world.raycaster :refer [path-blocked?]]))
 
 (defn- defmodifier [k operations]
@@ -201,8 +203,8 @@
 ;;;;
 
 (defn- nearest-enemy [entity*]
-  (nearest-entity @(world-grid (body/tile entity*))
-                  (faction/enemy entity*)))
+  (grid/nearest-entity @(world-grid (body/tile entity*))
+                       (faction/enemy entity*)))
 
 
 ;;;;
@@ -834,7 +836,7 @@ Default method returns true.")
       (if-let [skill (with-effect-ctx effect-ctx
                        (npc-choose-skill entity*))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (potential-fields-follow-to-enemy eid)]]))))
+        [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy eid)]]))))
 
 (defn- selected-skill []
   (let [button-group (:action-bar world-widgets)]

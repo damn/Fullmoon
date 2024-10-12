@@ -8,7 +8,8 @@
             [core.data :as data]
             [core.db :as db]
             [core.effect :refer [do! effect!]]
-            [utils.core :refer [get-namespaces get-vars]]))
+            [utils.core :refer [get-namespaces get-vars]]
+            [world.grid :refer [world-grid]]))
 
 (comment
 

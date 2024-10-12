@@ -4,7 +4,8 @@
             [core.component :refer [defc] :as component]
             [core.effect :refer [do!]]
             [core.property :as property]
-            [utils.core :refer [find-first]]))
+            [utils.core :refer [find-first]]
+            [world.grid :as grid :refer [world-grid]]))
 
 (property/def :properties/projectiles
   {:schema [:entity/image
@@ -28,15 +29,15 @@
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
     (let [entity* @entity
-          cells* (map deref (rectangle->cells world-grid entity*)) ; just use cached-touched -cells
+          cells* (map deref (grid/rectangle->cells world-grid entity*)) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
                                        (collides? entity* @%))
-                                 (cells->entities cells*))
+                                 (grid/cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(blocked? % (:z-order entity*)) cells*))
+                       (some #(grid/blocked? % (:z-order entity*)) cells*))
           id (:entity/id entity*)]
       [(when hit-entity
          [:e/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
