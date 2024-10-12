@@ -16,3 +16,9 @@
 
 (def dispose! Disposable/.dispose)
 
+(defn index-of [k ^clojure.lang.PersistentVector v]
+  (let [idx (.indexOf v k)]
+    (if (= -1 idx)
+      nil
+      idx)))
+

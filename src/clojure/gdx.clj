@@ -13,7 +13,7 @@
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [clj-commons.pretty.repl :refer [pretty-pst]]
-            [core.component :refer [defsystem defc]]
+            [core.component :refer [defsystem defc] :as component]
             [core.data :as data]
             [core.effect :refer [do! effect!]]
             [core.operation :as op]
@@ -21,63 +21,6 @@
             [core.property :as property]
             [data.grid2d :as g2d]
             [malli.core :as m]))
-
-(def ^:private info-text-k-order [:property/pretty-name
-                                  :skill/action-time-modifier-key
-                                  :skill/action-time
-                                  :skill/cooldown
-                                  :skill/cost
-                                  :skill/effects
-                                  :creature/species
-                                  :creature/level
-                                  :entity/stats
-                                  :entity/delete-after-duration
-                                  :projectile/piercing?
-                                  :entity/projectile-collision
-                                  :maxrange
-                                  :entity-effects])
-
-(defn index-of [k ^clojure.lang.PersistentVector v]
-  (let [idx (.indexOf v k)]
-    (if (= -1 idx)
-      nil
-      idx)))
-
-(defn- sort-k-order [components]
-  (sort-by (fn [[k _]] (or (index-of k info-text-k-order) 99))
-           components))
-
-(defn- remove-newlines [s]
-  (let [new-s (-> s
-                  (str/replace "\n\n" "\n")
-                  (str/replace #"^\n" "")
-                  str/trim-newline)]
-    (if (= (count new-s) (count s))
-      s
-      (remove-newlines new-s))))
-
-(defsystem info-text "Return info-string (for tooltips,etc.). Default nil.")
-(defmethod info-text :default [_])
-
-(declare ^:dynamic *info-text-entity*)
-
-(defn ->info-text
-  "Recursively generates info-text via [[info-text]]."
-  [components]
-  (->> components
-       sort-k-order
-       (keep (fn [{v 1 :as component}]
-               (str (try (binding [*info-text-entity* components]
-                           (info-text component))
-                         (catch Throwable t
-                           ; calling from property-editor where entity components
-                           ; have a different data schema than after ->mk
-                           ; and info-text might break
-                           (pr-str component)))
-                    (when (map? v)
-                      (str "\n" (->info-text v))))))
-       (str/join "\n")
-       remove-newlines))
 
 (defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.
@@ -307,7 +250,7 @@
 (defc :entity/faction
   {:let faction
    :data [:enum :good :evil]}
-  (info-text [_]
+  (component/info [_]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
 (defn entity-tile [entity*]
@@ -1420,7 +1363,7 @@
   (->mk [[_ duration]]
     (->counter duration))
 
-  (info-text [_]
+  (component/info [_]
     (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio counter)) "/1[]"))
 
   (tick [_ eid]
@@ -1485,21 +1428,21 @@
                                                            (fn []
                                                              (effect! (player-clicked-skillmenu (db/get id)))))]]
                          (do
-                          (ui/add-tooltip! button #(->info-text (db/get id))) ; TODO no player modifiers applied (see actionbar)
+                          (ui/add-tooltip! button #(component/info-text (db/get id))) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))
 
 (defc :skill/action-time {:data :pos}
-  (info-text [[_ v]]
+  (component/info [[_ v]]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
 (defc :skill/cooldown {:data :nat-int}
-  (info-text [[_ v]]
+  (component/info [[_ v]]
     (when-not (zero? v)
       (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
 
 (defc :skill/cost {:data :nat-int}
-  (info-text [[_ v]]
+  (component/info [[_ v]]
     (when-not (zero? v)
       (str "[CYAN]Cost: " v " Mana[]"))))
 
@@ -1510,7 +1453,7 @@
 
 (defc :skill/action-time-modifier-key
   {:data [:enum :stats/cast-speed :stats/attack-speed]}
-  (info-text [[_ v]]
+  (component/info [[_ v]]
     (str "[VIOLET]" (case v
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))
@@ -1522,7 +1465,7 @@
           (for [skill skills]
             [:tx/add-skill eid skill])))
 
-  (info-text [[_ skills]]
+  (component/info [[_ skills]]
     ; => recursive info-text leads to endless text wall
     #_(when (seq skills)
         (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
@@ -1722,7 +1665,7 @@
                [modifier-k (into {} (for [[operation-k value] operations]
                                       [operation-k [value]]))])))
 
-  (info-text [_]
+  (component/info [_]
     (let [modifiers (sum-operation-values modifiers)]
       (when (seq modifiers)
         (mod-info-text modifiers)))))
@@ -1774,7 +1717,7 @@
 (defc :property/pretty-name
   {:data :string
    :let value}
-  (info-text [_]
+  (component/info [_]
     (str "[ITEM_GOLD]"value"[]")))
 
 (property/def :properties/items
@@ -1809,7 +1752,7 @@
 (defc :item/modifiers
   {:data [:components-ns :modifier]
    :let modifiers}
-  (info-text [_]
+  (component/info [_]
     (when (seq modifiers)
       (mod-info-text modifiers))))
 
@@ -2051,7 +1994,7 @@
           drawable (ui/texture-region-drawable (:texture-region (:entity/image item)))]
       (ui/set-min-size! drawable cell-size)
       (ui/set-drawable! image-widget drawable)
-      (ui/add-tooltip! cell-widget #(->info-text item))
+      (ui/add-tooltip! cell-widget #(component/info-text item))
       nil)))
 
 (defc :tx/remove-item-from-widget

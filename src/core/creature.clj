@@ -5,7 +5,7 @@
             [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
-            [core.component :refer [defc]]
+            [core.component :refer [defc] :as component]
             [core.effect :refer [do!]]
             [core.property :as property]
             [core.db :as db]
@@ -46,12 +46,12 @@
   {:data [:qualified-keyword {:namespace :species}]}
   (->mk [[_ species]]
     (str/capitalize (name species)))
-  (info-text [[_ species]]
+  (component/info [[_ species]]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defc :creature/level
   {:data :pos-int}
-  (info-text [[_ lvl]]
+  (component/info [[_ lvl]]
     (str "[GRAY]Level " lvl "[]")))
 
 ; # :z-order/flying has no effect for now
@@ -150,7 +150,7 @@
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
      [:e/assoc eid initial-state (->mk [initial-state eid])]])
 
-  (info-text [[_ fsm]]
+  (component/info [[_ fsm]]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
 (extend-type clojure.gdx.Entity

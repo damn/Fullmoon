@@ -7,7 +7,7 @@
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
-            [core.component :refer [defc defc* defsystem]]
+            [core.component :refer [defc defc* defsystem] :as component]
             core.creature
             [core.effect :refer [do! effect!]]
             [core.operation :as op]
@@ -165,8 +165,8 @@
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
-  (info-text [_]
-    (stats-info-texts *info-text-entity*))
+  (component/info [_]
+    (stats-info-texts component/*info-text-entity*))
 
   (render-info [_ entity*]
     (when-let [hp (entity-stat entity* :stats/hp)]
@@ -306,7 +306,7 @@ Default method returns true.")
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defc :base/stat-effect
-  (info-text [[k operations]]
+  (component/info [[k operations]]
     (str/join "\n"
               (for [operation operations]
                 (str (op/info-text operation) " " (k->pretty-name k)))))
@@ -338,10 +338,10 @@ Default method returns true.")
 
 (defc :effect.entity/melee-damage
   {:data :some}
-  (info-text [_]
+  (component/info [_]
     (str "Damage based on entity strength."
          (when source
-           (str "\n" (info-text (damage-effect))))))
+           (str "\n" (component/info (damage-effect))))))
 
   (applicable? [_]
     (applicable? (damage-effect)))
@@ -396,7 +396,7 @@ Default method returns true.")
 (defc :effect.entity/damage
   {:let damage
    :data [:map [:damage/min-max]]}
-  (info-text [_]
+  (component/info [_]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
@@ -435,7 +435,7 @@ Default method returns true.")
 
 (defc :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
-  (info-text [_]
+  (component/info [_]
     (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (finished-ratio counter)) "/1[]"))
 
   (tick [[k _] eid]
@@ -450,7 +450,7 @@ Default method returns true.")
       duration 5]
   (defc :effect.entity/spiderweb
     {:data :some}
-    (info-text [_]
+    (component/info [_]
       "Spiderweb slows 50% for 5 seconds."
       ; modifiers same like item/modifiers has info-text
       ; counter ?
@@ -468,7 +468,7 @@ Default method returns true.")
                                                  :counter (->counter duration)}]]))))
 (defc :effect.entity/convert
   {:data :some}
-  (info-text [_]
+  (component/info [_]
     "Converts target to your side.")
 
   (applicable? [_]
@@ -510,7 +510,7 @@ Default method returns true.")
 (defc :effect.entity/stun
   {:data :pos
    :let duration}
-  (info-text [_]
+  (component/info [_]
     (str "Stuns for " (readable-number duration) " seconds"))
 
   (applicable? [_]
@@ -522,7 +522,7 @@ Default method returns true.")
 
 (defc :effect.entity/kill
   {:data :some}
-  (info-text [_]
+  (component/info [_]
     "Kills target")
 
   (applicable? [_]
@@ -610,7 +610,7 @@ Default method returns true.")
 (defc :effect/target-all
   {:data [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
-  (info-text [_]
+  (component/info [_]
     "[LIGHT_GRAY]All visible targets[]")
 
   (applicable? [_]
@@ -664,7 +664,7 @@ Default method returns true.")
                   maxrange)))
 
 (defc :maxrange {:data :pos}
-  (info-text [[_ maxrange]]
+  (component/info [[_ maxrange]]
     (str "[LIGHT_GRAY]Range " maxrange " meters[]")))
 
 (defc :effect/target-entity

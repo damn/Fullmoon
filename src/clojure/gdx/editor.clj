@@ -7,7 +7,7 @@
             [clojure.gdx.input :refer [key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.utils :refer [safe-get]]
+            [clojure.gdx.utils :refer [safe-get index-of]]
             [clojure.set :as set]
             [clojure.string :as str]
             [core.component :refer [defc] :as component]
@@ -323,7 +323,7 @@
                  (ui/text-button (name id) on-clicked))
         top-widget (ui/label (or (and extra-info-text (extra-info-text props)) ""))
         stack (ui/stack [button top-widget])]
-    (ui/add-tooltip! button #(->info-text props))
+    (ui/add-tooltip! button #(component/info-text props))
     (a/set-touchable! top-widget :disabled)
     stack))
 
@@ -415,7 +415,7 @@
       (for [property-id property-ids]
         (let [property (db/get property-id)
               image-widget (ui/image->widget (property/->image property) {:id property-id})]
-          (ui/add-tooltip! image-widget #(->info-text property))
+          (ui/add-tooltip! image-widget #(component/info-text property))
           image-widget))
       (for [id property-ids]
         (ui/text-button "-" #(redo-rows (disj property-ids id))))])))
@@ -454,7 +454,7 @@
       [(when property-id
          (let [property (db/get property-id)
                image-widget (ui/image->widget (property/->image property) {:id property-id})]
-           (ui/add-tooltip! image-widget #(->info-text property))
+           (ui/add-tooltip! image-widget #(component/info-text property))
            image-widget))]
       [(when property-id
          (ui/text-button "-" #(redo-rows nil)))]])))

@@ -12,7 +12,7 @@
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.raycaster :as ray]
             clojure.gdx.editor
-            [core.component :refer [defc]]
+            [core.component :refer [defc] :as component]
             core.creature
             [core.effect :refer [do! effect!]]
             core.stat
@@ -103,11 +103,11 @@
                                             ; items then have 2x pretty-name
                                             #_(.setText (.getTitleLabel window)
                                                         (if-let [entity* (mouseover-entity*)]
-                                                          (info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                          (component/info-text [:property/pretty-name (:property/pretty-name entity*)])
                                                           "Entity Info"))
                                             (.setText label
                                                       (str (when-let [entity* (mouseover-entity*)]
-                                                             (->info-text
+                                                             (component/info-text
                                                               ; don't use select-keys as it loses Entity record type
                                                               (apply dissoc entity* disallowed-keys)))))
                                             (.pack window))}))
@@ -132,7 +132,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (ui/image-button image (fn []) {:scale image-scale})]
       (a/set-id! button id)
-      (ui/add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
+      (ui/add-tooltip! button #(component/info-text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
       (ui/add-actor! horizontal-group button)
       (ui/bg-add! button-group button)
       nil)))

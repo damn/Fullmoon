@@ -1,7 +1,7 @@
 (ns core.projectile
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.math.vector :as v]
-            [core.component :refer [defc]]
+            [core.component :refer [defc] :as component]
             [core.effect :refer [do!]]
             [core.property :as property]))
 
@@ -52,7 +52,8 @@
 (defc :projectile/speed     {:data :pos-int})
 
 (defc :projectile/piercing? {:data :boolean}
-  (info-text [_] "[LIME]Piercing[]"))
+  (component/info [_]
+    "[LIME]Piercing[]"))
 
 (defn projectile-size [projectile]
   {:pre [(:entity/image projectile)]}
