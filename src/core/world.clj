@@ -12,7 +12,8 @@
             [core.component :refer [defc]]
             [core.db :as db]
             [core.property :as property]
-            [data.grid2d :as g2d]))
+            [data.grid2d :as g2d]
+            [utils.core :refer [->tile]]))
 
 (def modules-file "maps/modules.tmx")
 (def module-width  32)
@@ -495,7 +496,7 @@ direction keys: move")
                 show-movement-properties
                 show-grid-lines]} @(current-data)
         visible-tiles (🎥/visible-tiles (g/world-camera))
-        [x y] (->tile (g/world-mouse-position))]
+        [x y] (mapv int (g/world-mouse-position))]
     (g/draw-rectangle x y 1 1 :white)
     (when start-position
       (g/draw-filled-rectangle (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))

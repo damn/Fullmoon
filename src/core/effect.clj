@@ -40,4 +40,3 @@ On any exception we get a stacktrace with all tx's values and names shown."
            (throw (ex-info "Error with transaction"
                            {:tx tx #_(debug-print-tx tx)}
                            t))))))
-

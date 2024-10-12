@@ -12,7 +12,8 @@
             [core.effect :refer [do! effect!]]
             [core.operation :as op]
             [core.projectile :refer [projectile-size]]
-            [core.val-max :as val-max]))
+            [core.val-max :as val-max]
+            [utils.core :refer [readable-number]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))

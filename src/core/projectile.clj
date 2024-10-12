@@ -3,7 +3,8 @@
             [clojure.gdx.math.vector :as v]
             [core.component :refer [defc] :as component]
             [core.effect :refer [do!]]
-            [core.property :as property]))
+            [core.property :as property]
+            [utils.core :refer [find-first]]))
 
 (property/def :properties/projectiles
   {:schema [:entity/image

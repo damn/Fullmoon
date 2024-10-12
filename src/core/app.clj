@@ -21,7 +21,7 @@
             [core.val-max :as val-max]
             [core.world :as world]
             [data.grid2d :as g2d]
-            [utils.core :refer [bind-root]]))
+            [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]))
 
 (defn- render-infostr-on-bar [infostr x y h]
   (g/draw-text {:text infostr

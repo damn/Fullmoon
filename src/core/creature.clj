@@ -9,7 +9,7 @@
             [core.property :as property]
             [core.db :as db]
             [reduce-fsm :as fsm]
-            [utils.core :refer [bind-root]]))
+            [utils.core :refer [bind-root safe-merge]]))
 
 (property/def :properties/creatures
   {:schema [:entity/body

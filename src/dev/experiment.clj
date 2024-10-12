@@ -7,7 +7,8 @@
             [core.component :as component]
             [core.data :as data]
             [core.db :as db]
-            [core.effect :refer [do! effect!]]))
+            [core.effect :refer [do! effect!]]
+            [utils.core :refer [get-namespaces get-vars]]))
 
 (comment
 
