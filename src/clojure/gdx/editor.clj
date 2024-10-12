@@ -70,7 +70,7 @@
 (defmethod widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
-(defmethod property/edn->value :image [_ image]
+(defmethod db/edn->value :image [_ image]
   (g/edn->image image))
 
 ; too many ! too big ! scroll ... only show files first & preview?

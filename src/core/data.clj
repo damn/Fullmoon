@@ -19,6 +19,8 @@
 ; some malli schemas like :boolean/:string/:enum/:qualified-keyword (?)
 ; :map too?
 
+; Maybe use spec, no need to abuse defcomponent as global registry?
+
 ;;;;
 
 (defmethod schema :number  [_] number?)

@@ -7,7 +7,7 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.utils :refer [safe-get bind-root]]
+            [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.math.raycaster :as ray]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
@@ -1306,7 +1306,7 @@
                :looping? looping?))
 
 
-(defmethod property/edn->value :data/animation [_ animation]
+(defmethod db/edn->value :data/animation [_ animation]
   (edn->animation animation))
 
 (defn- tx-assoc-image-current-frame [eid animation]

@@ -1,5 +1,5 @@
 (ns core.component
-  "A component is a vector of [k & optional-more-values].
+  "A component is a vector of `[k & values?]`.
   For example a minimal component is `[:foo]`"
   (:require [clojure.gdx.utils :refer [safe-get]]
             [core.data :as data]))

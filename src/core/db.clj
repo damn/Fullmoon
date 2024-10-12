@@ -3,6 +3,7 @@
   (:require [clojure.edn :as edn]
             [clojure.gdx.utils :refer [bind-root safe-get]]
             [clojure.pprint :refer [pprint]]
+            [core.component :as component]
             [core.data :as data]
             [core.property :as property]))
 
@@ -42,13 +43,49 @@
        doall
        async-pprint-spit!))
 
+(def ^:private undefined-data-ks (atom #{}))
+
+(comment
+ #{:frames
+   :looping?
+   :frame-duration
+   :file
+   :sub-image-bounds})
+
+; reduce-kv?
+(defn- apply-kvs
+  "Calls for every key in map (f k v) to calculate new value at k."
+  [m f]
+  (reduce (fn [m k]
+            (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
+          m
+          (keys m)))
+
+(defmulti edn->value (fn [data v]
+                       (when data  ; undefined-data-ks
+                         (data/type data))))
+(defmethod edn->value :default [_data v] v)
+
+(defn- build [property]
+  (apply-kvs property
+             (fn [k v]
+               (try (edn->value (try (component/data k)
+                                     (catch Throwable _t
+                                       (swap! undefined-data-ks conj k)
+                                       nil))
+                                (if (map? v)
+                                  (build v)
+                                  v))
+                    (catch Throwable t
+                      (throw (ex-info " " {:k k :v v} t)))))))
+
 (defn get [id]
-  (property/build (safe-get db id)))
+  (build (safe-get db id)))
 
 (defn all [type]
   (->> (vals db)
        (filter #(= type (property/->type %)))
-       (map property/build)))
+       (map build)))
 
 (defn update! [{:keys [property/id] :as property}]
   {:pre [(contains? property :property/id)
@@ -62,10 +99,10 @@
   (alter-var-root #'db dissoc property-id)
   (async-write-to-file!))
 
-(defmethod property/edn->value :one-to-one [_ property-id]
+(defmethod edn->value :one-to-one [_ property-id]
   (get property-id))
 
-(defmethod property/edn->value :one-to-many [_ property-ids]
+(defmethod edn->value :one-to-many [_ property-ids]
   (map get property-ids))
 
 (defmethod data/schema :one-to-one [[_ property-type]]
