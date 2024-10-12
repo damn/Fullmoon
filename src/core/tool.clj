@@ -67,18 +67,35 @@
 
 ; (clj-files "src/")
 
-(defn clj-file-forms-tree [file]
-  (.setTitle stage "clj-file-forms-tree")
-  (let [clj-forms (clj-file-forms file)
-        ;root-icon (ImageView. (Image. (io/input-stream (io/resource "images/animations/vampire-1.png"))))
-        root-item (TreeItem. file, #_root-icon)]
+(defn- file->pretty [file]
+  (str (case file
+         "src/clojure/gdx.clj" "🕹️"
+         "src/clojure/gdx/dev.clj" "♻️"
+         "src/clojure/gdx/editor.clj" "🎛️"
+         "src/clojure/gdx/rand.clj" "🎲"
+         "src/clojure/gdx/tiled.clj" "🗺️"
+         "src/core/app.clj" "🖥️"
+         "src/core/stat.clj" "⚔️"
+         "?"
+         )
+       " "
+       file))
+
+(defn- file-forms-tree-item [file]
+  (let [item (TreeItem. (file->pretty file))]
+    (doseq [syms (clj-file-forms file)]
+      (.add (.getChildren item) (TreeItem. (syms->text syms))))
+    item))
+
+(defn clj-file-forms-tree [folder]
+  (.setTitle stage "Clojure Code Reader")
+
+  (let [root-item (TreeItem. folder)]
     (.setExpanded root-item true)
-    (doseq [syms clj-forms
-            ;file (map str (file-seq (io/file "src/")))
-            ]
-      (.add (.getChildren root-item) (TreeItem. (syms->text syms)
-                                                ;file
-                                                )))
+    (doseq [clj-file (clj-files folder)]
+      (println "clj-file: " clj-file)
+      (.add (.getChildren root-item) (file-forms-tree-item clj-file)))
+
     (let [stack-pane (StackPane.)]
       (.add (.getChildren stack-pane) (TreeView. root-item))
       (let [scene (Scene. stack-pane 400 900)]
@@ -87,8 +104,7 @@
       (.show stage))))
 
 (comment
- (fx-run (clj-file-forms-tree "src/clojure/gdx.clj"))
- (fx-run (clj-file-forms-tree "src/core/app.clj"))
+ (fx-run (clj-file-forms-tree "src/"))
 
  )
 
