@@ -18,6 +18,7 @@
             [data.grid2d :as g2d]
             [malli.core :as m]
             [utils.core :refer [bind-root find-first ->tile tile->middle safe-merge readable-number]]
+            [world.creature.faction :as faction]
             [world.raycaster :refer [ray-blocked?]]))
 
 (declare ^:private screen-k
@@ -119,20 +120,6 @@
                           :close-on-escape? true
                           :center? true
                           :pack? true})))
-
-(defn enemy-faction [{:keys [entity/faction]}]
-  (case faction
-    :evil :good
-    :good :evil))
-
-(defn friendly-faction [{:keys [entity/faction]}]
-  faction)
-
-(defc :entity/faction
-  {:let faction
-   :data [:enum :good :evil]}
-  (component/info [_]
-    (str "[SLATE]Faction: " (name faction) "[]")))
 
 (defn entity-tile [entity*]
   (->tile (:position entity*)))
@@ -513,7 +500,7 @@
 (defn- find-next-cell
   "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
   [grid entity own-cell]
-  (let [faction (enemy-faction @entity)
+  (let [faction (faction/enemy @entity)
         distance-to    #(nearest-entity-distance @% faction)
         nearest-entity #(nearest-entity          @% faction)
         own-dist (distance-to own-cell)
@@ -1364,9 +1351,9 @@
         #(g/draw-ellipse (:position entity*)
                          (:half-width entity*)
                          (:half-height entity*)
-                         (cond (= faction (enemy-faction player-entity*))
+                         (cond (= faction (faction/enemy player-entity*))
                                enemy-color
-                               (= faction (friendly-faction player-entity*))
+                               (= faction (faction/friend player-entity*))
                                friendly-color
                                :else
                                neutral-color))))))

@@ -14,6 +14,7 @@
             [core.projectile :refer [projectile-size]]
             [core.val-max :as val-max]
             [utils.core :refer [readable-number]]
+            [world.creature.faction :as faction]
             [world.raycaster :refer [path-blocked?]]))
 
 (defn- defmodifier [k operations]
@@ -200,7 +201,7 @@
 
 (defn- nearest-enemy [entity*]
   (nearest-entity @(world-grid (entity-tile entity*))
-                  (enemy-faction entity*)))
+                  (faction/enemy entity*)))
 
 
 ;;;;
@@ -476,11 +477,11 @@ Default method returns true.")
   (applicable? [_]
     (and target
          (= (:entity/faction @target)
-            (enemy-faction @source))))
+            (faction/enemy @source))))
 
   (do! [_]
     [[:tx/audiovisual (:position @target) :audiovisuals/convert]
-     [:e/assoc target :entity/faction (friendly-faction @source)]]))
+     [:e/assoc target :entity/faction (faction/friend @source)]]))
 
 ; TODO https://github.com/damn/core/issues/29
 ; spawning on player both without error ?! => not valid position checked
