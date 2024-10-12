@@ -8,7 +8,7 @@
             [core.component :refer [defc]]
             [core.effect :refer [do!]]
             [core.property :as property]
-            [core.properties :as properties]
+            [core.db :as db]
             [reduce-fsm :as fsm]))
 
 (property/def :properties/creatures
@@ -71,7 +71,7 @@
 (defc :tx/creature
   {:let {:keys [position creature-id components]}}
   (do! [_]
-    (let [props (properties/get creature-id)]
+    (let [props (db/get creature-id)]
       [[:e/create
         position
         (->body (:entity/body props))

@@ -17,7 +17,7 @@
             [core.data :as data]
             [core.effect :refer [do! effect!]]
             [core.operation :as op]
-            [core.properties :as properties]
+            [core.db :as db]
             [core.property :as property]
             [data.grid2d :as g2d]
             [malli.core :as m]))
@@ -274,7 +274,7 @@
     nil))
 
 (defn start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
-  (properties/load! properties)
+  (db/load! properties)
   (app/start! (reify app/Listener
                 (create! [_]
                   (assets/load! resources)
@@ -1340,7 +1340,7 @@
 (defc :tx/audiovisual
   (do! [[_ position id]]
     (let [{:keys [tx/sound
-                  entity/animation]} (properties/get id)]
+                  entity/animation]} (db/get id)]
       [[:tx/sound sound]
        [:e/create
         position
@@ -1480,12 +1480,12 @@
                                  :skills/melee-attack]
                              :let [; get-property in callbacks if they get changed, this is part of context permanently
                                    button (ui/image-button ; TODO reuse actionbar button scale?
-                                                           (:entity/image (properties/get id)) ; TODO here anyway taken
+                                                           (:entity/image (db/get id)) ; TODO here anyway taken
                                                            ; => should probably build this window @ game start
                                                            (fn []
-                                                             (effect! (player-clicked-skillmenu (properties/get id)))))]]
+                                                             (effect! (player-clicked-skillmenu (db/get id)))))]]
                          (do
-                          (ui/add-tooltip! button #(->info-text (properties/get id))) ; TODO no player modifiers applied (see actionbar)
+                          (ui/add-tooltip! button #(->info-text (db/get id))) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))
 

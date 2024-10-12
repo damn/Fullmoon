@@ -6,7 +6,7 @@
             [clojure.gdx.ui.stage :as stage]
             [core.component :as component]
             [core.data :as data]
-            [core.properties :as properties]
+            [core.db :as db]
             [core.effect :refer [do! effect!]]))
 
 (comment
@@ -91,7 +91,7 @@
             (comp #(str/split % #"-")
                   name
                   :property/id)
-            (properties/all :properties/items)))))))
+            (db/all :properties/items)))))))
 
  )
 
@@ -112,8 +112,8 @@
 (defn- post-tx! [tx]
   (post-runnable! (effect! [tx])))
 
-(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id @world-player) (properties/get skill-id)]])))
-(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (properties/get item-id)]])))
+(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id @world-player) (db/get skill-id)]])))
+(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (db/get item-id)]])))
 
 (defn- protocol? [value]
   (and (instance? clojure.lang.PersistentArrayMap value)

@@ -1,4 +1,4 @@
-(ns core.properties
+(ns core.db
   (:refer-clojure :exclude [get])
   (:require [clojure.edn :as edn]
             [clojure.gdx.utils :refer [bind-root safe-get]]

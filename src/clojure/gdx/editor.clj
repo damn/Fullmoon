@@ -12,7 +12,7 @@
             [clojure.string :as str]
             [core.component :refer [defc] :as component]
             [core.data :as data]
-            [core.properties :as properties]
+            [core.db :as db]
             [core.property :as property]
             [malli.core :as m]
             [malli.generator :as mg]))
@@ -301,7 +301,7 @@
        (error-window! t)))))
 
 (defn- ->property-editor-window [id]
-  (let [props (safe-get properties/db id)
+  (let [props (safe-get db/db id)
         window (ui/window {:title "Edit Property"
                            :modal? true
                            :close-button? true
@@ -309,8 +309,8 @@
                            :close-on-escape? true
                            :cell-defaults {:pad 5}})
         widgets (->attribute-widget-group (property/->schema props) props)
-        save!   (apply-context-fn window #(properties/update! (attribute-widget-group->data widgets)))
-        delete! (apply-context-fn window #(properties/delete! id))]
+        save!   (apply-context-fn window #(db/update! (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window #(db/delete! id))]
     (ui/add-rows! window [[(->scroll-pane-cell [[{:actor widgets :colspan 2}]
                                                 [(ui/text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                  (ui/text-button "Delete" delete!)]])]])
@@ -336,7 +336,7 @@
                 extra-info-text
                 columns
                 image/scale]} (property/overview property-type)
-        properties (properties/all property-type)
+        properties (db/all property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
                      properties)]
@@ -406,7 +406,7 @@
  )
 
 (defmethod data/edn->value :one-to-many [_ property-ids]
-  (map properties/get property-ids))
+  (map db/get property-ids))
 
 
 (defn- one-to-one-schema->linked-property-type [[_qualif_kw {:keys [namespace]}]]
@@ -418,7 +418,7 @@
  )
 
 (defmethod data/edn->value :one-to-one [_ property-id]
-  (properties/get property-id))
+  (db/get property-id))
 
 (defn- add-one-to-many-rows [table property-type property-ids]
   (let [redo-rows (fn [property-ids]
@@ -441,7 +441,7 @@
                            (.pack window)
                            (stage-add! window))))]
       (for [property-id property-ids]
-        (let [property (properties/get property-id)
+        (let [property (db/get property-id)
               image-widget (ui/image->widget (property/->image property) {:id property-id})]
           (ui/add-tooltip! image-widget #(->info-text property))
           image-widget))
@@ -482,7 +482,7 @@
                              (.pack window)
                              (stage-add! window)))))]
       [(when property-id
-         (let [property (properties/get property-id)
+         (let [property (db/get property-id)
                image-widget (ui/image->widget (property/->image property) {:id property-id})]
            (ui/add-tooltip! image-widget #(->info-text property))
            image-widget))]
