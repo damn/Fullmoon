@@ -4,13 +4,11 @@
                         :effect "💥 Effects"
                         :entity "👾 Entity"
                         :geometry "📐 Geometry"
-                        :gui-view  "🖼️ Gui View"
                         :input "🎮 Input"
                         :properties "📦️ Properties"
                         :screen "📺 Screens"
                         :utils  "🔧 Utils"
                         :world "🌎 World"
-                        :world-view  "🗺️ World View"
                         :world.timer "⏳ Timer"}}
   (:require [clojure.string :as str]
             [clojure.edn :as edn]
