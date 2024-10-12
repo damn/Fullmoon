@@ -2,12 +2,15 @@
   (:refer-clojure :exclude [type]))
 
 (defn type [data]
+  {:post [(keyword? %)]}
   (if (vector? data)
     (data 0)
     data))
 
 (defmulti schema type)
 (defmethod schema :default [data] data)
+
+;;;;
 
 (defmethod schema :number  [_] number?)
 (defmethod schema :nat-int [_] nat-int?)
@@ -25,6 +28,6 @@
 
 (defmethod schema :data/animation [_]
   [:map {:closed true}
-   [:frames :some]
+   [:frames :some] ; FIXME actually images
    [:frame-duration pos?]
    [:looping? :boolean]])

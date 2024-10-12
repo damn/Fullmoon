@@ -67,7 +67,9 @@
           m
           (keys m)))
 
-(defmulti edn->value (fn [data v] (data/type data)))
+(defmulti edn->value (fn [data v]
+                       (when data  ; undefined-data-ks
+                         (data/type data))))
 (defmethod edn->value :default [_data v] v)
 
 (defn build [property]
@@ -81,4 +83,4 @@
                                   (build v)
                                   v))
                     (catch Throwable t
-                      (throw (ex-info " " {:k k :v v})))))))
+                      (throw (ex-info " " {:k k :v v} t)))))))
