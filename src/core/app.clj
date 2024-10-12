@@ -1,34 +1,36 @@
 (ns core.app
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
+            [clojure.gdx.utils :refer [bind-root]]
             [clojure.gdx.ui.actor :as a]
             clojure.gdx.editor
             core.creature
             core.stat
             core.projectile
             [core.world :as world]
-            [data.grid2d :as g]))
+            [data.grid2d :as g2d]))
 
 (defn- render-infostr-on-bar [infostr x y h]
-  (draw-text {:text infostr
-              :x (+ x 75)
-              :y (+ y 2)
-              :up? true}))
+  (g/draw-text {:text infostr
+                :x (+ x 75)
+                :y (+ y 2)
+                :up? true}))
 
 (defn- ->hp-mana-bars []
-  (let [rahmen      (->image "images/rahmen.png")
-        hpcontent   (->image "images/hp.png")
-        manacontent (->image "images/mana.png")
-        x (/ (gui-viewport-width) 2)
+  (let [rahmen      (g/image "images/rahmen.png")
+        hpcontent   (g/image "images/hp.png")
+        manacontent (g/image "images/mana.png")
+        x (/ (g/gui-viewport-width) 2)
         [rahmenw rahmenh] (:pixel-dimensions rahmen)
         y-mana 80 ; action-bar-icon-size
         y-hp (+ y-mana rahmenh)
         render-hpmana-bar (fn [x y contentimg minmaxval name]
-                            (draw-image rahmen [x y])
-                            (draw-image (sub-image contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
-                                        [x y])
+                            (g/draw-image rahmen [x y])
+                            (g/draw-image (g/sub-image contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                                          [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/actor {:draw (fn []
                        (let [player-entity* @world-player
@@ -43,15 +45,15 @@
                          [id [:cooling-down? (boolean cooling-down?)]])))
 
 (defn- debug-infos ^String []
-  (let [world-mouse (world-mouse-position)]
+  (let [world-mouse (g/world-mouse-position)]
     (str
      "logic-frame: " logic-frame "\n"
      "FPS: " (frames-per-second)  "\n"
-     "Zoom: " (🎥/zoom (world-camera)) "\n"
+     "Zoom: " (🎥/zoom (g/world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
-     "GUI: " (gui-mouse-position) "\n"
+     "GUI: " (g/gui-mouse-position) "\n"
      "paused? " world-paused? "\n"
      "elapsed-time " (readable-number elapsed-time) " seconds \n"
      "skill cooldowns: " (skill-info @world-player) "\n"
@@ -67,7 +69,7 @@
         window (ui/window {:title "Debug"
                            :id :debug-window
                            :visible? false
-                           :position [0 (gui-viewport-height)]
+                           :position [0 (g/gui-viewport-height)]
                            :rows [[label]]})]
     (ui/add-actor! window (ui/actor {:act #(do
                                             (.setText label (debug-infos))
@@ -84,7 +86,7 @@
         window (ui/window {:title "Info"
                            :id :entity-info-window
                            :visible? false
-                           :position [(gui-viewport-width) 0]
+                           :position [(g/gui-viewport-width) 0]
                            :rows [[{:actor label :expand? true}]]})]
     ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
     ; => fix size somehow.
@@ -207,11 +209,11 @@
 
 (defn- draw-player-message []
   (when-let [{:keys [message]} message-to-player]
-    (draw-text {:x (/ (gui-viewport-width) 2)
-                :y (+ (/ (gui-viewport-height) 2) 200)
-                :text message
-                :scale 2.5
-                :up? true})))
+    (g/draw-text {:x (/ (g/gui-viewport-width) 2)
+                  :y (+ (/ (g/gui-viewport-height) 2) 200)
+                  :text message
+                  :scale 2.5
+                  :up? true})))
 
 (defn- check-remove-message []
   (when-let [{:keys [counter]} message-to-player]
@@ -241,7 +243,7 @@
               :actors [(->debug-window)
                        (->entity-info-window)
                        (->inventory-window widget-data)]})
-   (ui/actor {:draw draw-item-on-cursor})
+   (ui/actor {:draw core.creature/draw-item-on-cursor})
    (->mk [:widgets/player-message])])
 
 (defn ->world-widgets []
@@ -253,7 +255,7 @@
     widget-data))
 
 (defn- ->explored-tile-corners [width height]
-  (atom (g/create-grid width height (constantly false))))
+  (atom (g2d/create-grid width height (constantly false))))
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
@@ -363,7 +365,7 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (🎥/calculate-zoom (world-camera)
+    (🎥/calculate-zoom (g/world-camera)
                        :left left
                        :top top
                        :right right
@@ -375,19 +377,19 @@
 
 #_(deftype Screen []
     (show [_]
-      (🎥/set-zoom! (world-camera) (minimap-zoom)))
+      (🎥/set-zoom! (g/world-camera) (minimap-zoom)))
 
     (hide [_]
-      (🎥/reset-zoom! (world-camera)))
+      (🎥/reset-zoom! (g/world-camera)))
 
     ; TODO fixme not subscreen
     (render [_]
-      (draw-tiled-map world-tiled-map
-                      (->tile-corner-color-setter @explored-tile-corners))
-      (render-world-view! (fn []
-                            (draw-filled-circle (🎥/camera-position (world-camera))
-                                                0.5
-                                                :green)))
+      (g/draw-tiled-map world-tiled-map
+                        (->tile-corner-color-setter @explored-tile-corners))
+      (g/render-world-view! (fn []
+                              (g/draw-filled-circle (🎥/camera-position (g/world-camera))
+                                                    0.5
+                                                    :green)))
       (when (or (key-just-pressed? :keys/tab)
                 (key-just-pressed? :keys/escape))
         (change-screen :screens/world))))
@@ -397,15 +399,15 @@
     (->Screen)))
 
 (defn- geom-test []
-  (let [position (world-mouse-position)
+  (let [position (g/world-mouse-position)
         grid world-grid
         radius 0.8
         circle {:position position :radius radius}]
-    (draw-circle position radius [1 0 0 0.5])
+    (g/draw-circle position radius [1 0 0 0.5])
     (doseq [[x y] (map #(:position @%) (circle->cells grid circle))]
-      (draw-rectangle x y 1 1 [1 0 0 0.5]))
+      (g/draw-rectangle x y 1 1 [1 0 0 0.5]))
     (let [{[x y] :left-bottom :keys [width height]} (circle->outer-rectangle circle)]
-      (draw-rectangle x y width height [0 0 1 1]))))
+      (g/draw-rectangle x y width height [0 0 1 1]))))
 
 (def ^:private ^:dbg-flag tile-grid? false)
 (def ^:private ^:dbg-flag potential-field-colors? false)
@@ -414,44 +416,44 @@
 
 (defn- tile-debug []
   (let [grid world-grid
-        world-camera (world-camera)
-        [left-x right-x bottom-y top-y] (🎥/frustum world-camera)]
+        🎥 (g/world-camera)
+        [left-x right-x bottom-y top-y] (🎥/frustum 🎥)]
 
     (when tile-grid?
-      (draw-grid (int left-x) (int bottom-y)
-                 (inc (int (world-viewport-width)))
-                 (+ 2 (int (world-viewport-height)))
-                 1 1 [1 1 1 0.8]))
+      (g/draw-grid (int left-x) (int bottom-y)
+                   (inc (int (g/world-viewport-width)))
+                   (+ 2 (int (g/world-viewport-height)))
+                   1 1 [1 1 1 0.8]))
 
-    (doseq [[x y] (🎥/visible-tiles world-camera)
+    (doseq [[x y] (🎥/visible-tiles 🎥)
             :let [cell (grid [x y])]
             :when cell
             :let [cell* @cell]]
 
       (when (and cell-entities? (seq (:entities cell*)))
-        (draw-filled-rectangle x y 1 1 [1 0 0 0.6]))
+        (g/draw-filled-rectangle x y 1 1 [1 0 0 0.6]))
 
       (when (and cell-occupied? (seq (:occupied cell*)))
-        (draw-filled-rectangle x y 1 1 [0 0 1 0.6]))
+        (g/draw-filled-rectangle x y 1 1 [0 0 1 0.6]))
 
       (when potential-field-colors?
         (let [faction :good
               {:keys [distance entity]} (faction cell*)]
           (when distance
             (let [ratio (/ distance (factions-iterations faction))]
-              (draw-filled-rectangle x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
+              (g/draw-filled-rectangle x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
 (def ^:private ^:dbg-flag highlight-blocked-cell? true)
 
 (defn- highlight-mouseover-tile []
   (when highlight-blocked-cell?
-    (let [[x y] (->tile (world-mouse-position))
+    (let [[x y] (->tile (g/world-mouse-position))
           cell (get world-grid [x y])]
       (when (and cell (#{:air :none} (:movement @cell)))
-        (draw-rectangle x y 1 1
-                        (case (:movement @cell)
-                          :air  [1 1 0 0.5]
-                          :none [1 0 0 0.5]))))))
+        (g/draw-rectangle x y 1 1
+                          (case (:movement @cell)
+                            :air  [1 1 0 0.5]
+                            :none [1 0 0 0.5]))))))
 
 (defn- before-entities [] (tile-debug))
 
@@ -463,7 +465,7 @@
   (let [player-entity* @world-player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (map deref
-                          (point->entities (world-mouse-position))))]
+                          (point->entities (g/world-mouse-position))))]
     (->> render-order
          (sort-by-order hits :z-order)
          reverse
@@ -518,7 +520,7 @@
             remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
             ]))
 
-(def ^:private explored-tile-color (->color 0.5 0.5 0.5 1))
+(def ^:private explored-tile-color (g/->color 0.5 0.5 0.5 1))
 
 (def ^:private ^:dbg-flag see-all-tiles? false)
 
@@ -556,20 +558,20 @@
             white)))))
 
 (defn render-map [light-position]
-  (draw-tiled-map world-tiled-map
-                  (->tile-color-setter (atom nil)
-                                       light-position
-                                       world-raycaster
-                                       explored-tile-corners))
+  (g/draw-tiled-map world-tiled-map
+                    (->tile-color-setter (atom nil)
+                                         light-position
+                                         world-raycaster
+                                         explored-tile-corners))
   #_(reset! do-once false))
 
 (defn- render-world! []
-  (🎥/set-position! (world-camera) (:position @world-player))
-  (render-map (🎥/position (world-camera)))
-  (render-world-view! (fn []
-                        (before-entities)
-                        (render-entities! (map deref (active-entities)))
-                        (after-entities))))
+  (🎥/set-position! (g/world-camera) (:position @world-player))
+  (render-map (🎥/position (g/world-camera)))
+  (g/render-world-view! (fn []
+                          (before-entities)
+                          (render-entities! (map deref (active-entities)))
+                          (after-entities))))
 
 (defn- hotkey->window-id []
   (merge {:keys/i :inventory-window
@@ -595,7 +597,7 @@
 (def ^:private zoom-speed 0.05)
 
 (defn- check-zoom-keys []
-  (let [camera (world-camera)]
+  (let [camera (g/world-camera)]
     (when (key-pressed? :keys/minus)  (adjust-zoom camera    zoom-speed))
     (when (key-pressed? :keys/equals) (adjust-zoom camera (- zoom-speed)))))
 
@@ -613,7 +615,7 @@
 
 (defc :world/sub-screen
   (screen-exit [_]
-    (set-cursor! :cursors/default))
+    (g/set-cursor! :cursors/default))
 
   (screen-render [_]
     (render-world!)
@@ -645,7 +647,7 @@
 
 (defc :main/sub-screen
   (screen-enter [_]
-    (set-cursor! :cursors/default)))
+    (g/set-cursor! :cursors/default)))
 
 (defn- ->actors []
   [(->background-image)

@@ -1,5 +1,6 @@
 (ns core.stat
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.graphics :as g]
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
@@ -169,14 +170,14 @@
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
-                height (pixels->world-units hpbar-height-px)
-                border (pixels->world-units borders-px)]
-            (draw-filled-rectangle x y width height :black)
-            (draw-filled-rectangle (+ x border)
-                                   (+ y border)
-                                   (- (* width ratio) (* 2 border))
-                                   (- height (* 2 border))
-                                   (hpbar-color ratio))))))))
+                height (g/pixels->world-units hpbar-height-px)
+                border (g/pixels->world-units borders-px)]
+            (g/draw-filled-rectangle x y width height :black)
+            (g/draw-filled-rectangle (+ x border)
+                                     (+ y border)
+                                     (- (* width ratio) (* 2 border))
+                                     (- height (* 2 border))
+                                     (hpbar-color ratio))))))))
 
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
@@ -271,7 +272,7 @@ Default method returns true."
 (defn- ->player-effect-ctx [entity*]
   (let [target* (mouseover-entity*)
         target-position (or (and target* (:position target*))
-                            (world-mouse-position))]
+                            (g/world-mouse-position))]
     {:effect/source (:entity/id entity*)
      :effect/target (:entity/id target*)
      :effect/target-position target-position
@@ -440,7 +441,7 @@ Default method returns true."
        [:tx/reverse-modifiers eid modifiers]]))
 
   (render-above [_ entity*]
-    (draw-filled-circle (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
+    (g/draw-filled-circle (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
 (let [modifiers {:modifier/movement-speed {:op/mult -0.5}}
       duration 5]
@@ -637,9 +638,9 @@ Default method returns true."
   (render-effect [_]
     (let [source* @source]
       (doseq [target* (map deref (creatures-in-los-of-player))]
-        (draw-line (:position source*) #_(start-point source* target*)
-                   (:position target*)
-                   [1 0 0 0.5])))))
+        (g/draw-line (:position source*) #_(start-point source* target*)
+                     (:position target*)
+                     [1 0 0 0.5])))))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
   (< (- (float (v-distance (:position entity*)
@@ -710,11 +711,11 @@ Default method returns true."
     (when target
       (let [source* @source
             target* @target]
-        (draw-line (start-point source* target*)
-                   (end-point source* target* maxrange)
-                   (if (in-range? source* target* maxrange)
-                     [1 0 0 0.5]
-                     [1 1 0 0.5]))))))
+        (g/draw-line (start-point source* target*)
+                     (end-point source* target* maxrange)
+                     (if (in-range? source* target* maxrange)
+                       [1 0 0 0.5]
+                       [1 1 0 0.5]))))))
 
 (defn- mana-value [entity*]
   (if-let [mana (entity-stat entity* :stats/mana)]
@@ -745,12 +746,12 @@ Default method returns true."
         radius (/ (float width) 2)
         y (+ (float y) (float (:half-height entity*)) (float 0.15))
         center [x (+ y radius)]]
-    (draw-filled-circle center radius [1 1 1 0.125])
-    (draw-sector center radius
-                 90 ; start-angle
-                 (* (float action-counter-ratio) 360) ; degree
-                 [1 1 1 0.5])
-    (draw-image icon [(- (float x) radius) y])))
+    (g/draw-filled-circle center radius [1 1 1 0.125])
+    (g/draw-sector center radius
+                   90 ; start-angle
+                   (* (float action-counter-ratio) 360) ; degree
+                   [1 1 1 0.5])
+    (g/draw-image icon [(- (float x) radius) y])))
 
 (defn- apply-action-speed-modifier [entity* skill action-time]
   (/ action-time

@@ -1,12 +1,13 @@
 (ns core.world
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
-            [data.grid2d :as g]))
+            [data.grid2d :as g2d]))
 
 (def modules-file "maps/modules.tmx")
 (def module-width  32)
@@ -89,7 +90,7 @@
 (defn- ->cave-grid [& {:keys [size]}]
   (let [{:keys [start grid]} (t/cave-gridgen (java.util.Random.) size size :wide)
         grid (t/fix-not-allowed-diagonals grid)]
-    (assert (= #{:wall :ground} (set (g/cells grid))))
+    (assert (= #{:wall :ground} (set (g2d/cells grid))))
     {:start start
      :grid grid}))
 
@@ -109,8 +110,8 @@
 (defn- adjacent-wall-positions [grid]
   (filter (fn [p] (and (= :wall (get grid p))
                        (some #(= :ground (get grid %))
-                             (g/get-8-neighbour-positions p))))
-          (g/posis grid)))
+                             (g2d/get-8-neighbour-positions p))))
+          (g2d/posis grid)))
 
 (defn- flood-fill [grid start walk-on-position?]
   (loop [next-positions [start]
@@ -120,7 +121,7 @@
       (recur (filter #(and (get grid %)
                            (walk-on-position? %))
                      (distinct
-                      (mapcat g/get-8-neighbour-positions
+                      (mapcat g2d/get-8-neighbour-positions
                               next-positions)))
              (concat filled next-positions)
              (t/assoc-ks grid next-positions nil))
@@ -136,7 +137,7 @@
        ;_ (println "\nwidth:  " (g/width  grid)
        ;           "height: " (g/height grid)
        ;           "start " start "\n")
-       ;_ (println (g/posis grid))
+       ;_ (println (g2d/posis grid))
        _ (println "\n\n")
        filled (flood-fill grid start (fn [p] (= :ground (get grid p))))
        _ (printgrid (reduce #(assoc %1 %2 nil) grid filled))])
@@ -182,16 +183,16 @@
         ;_ (printgrid grid)
         ;_ (println " - ")
         _ (assert (or
-                   (= #{:wall :ground :transition} (set (g/cells grid)))
-                   (= #{:ground :transition} (set (g/cells grid))))
-                  (str "(set (g/cells grid)): " (set (g/cells grid))))
+                   (= #{:wall :ground :transition} (set (g2d/cells grid)))
+                   (= #{:ground :transition} (set (g2d/cells grid))))
+                  (str "(set (g2d/cells grid)): " (set (g2d/cells grid))))
         scale modules-scale
         scaled-grid (t/scale-grid grid scale)
         tiled-map (place-modules (t/load-map modules-file)
                                  scaled-grid
                                  grid
-                                 (filter #(= :ground     (get grid %)) (g/posis grid))
-                                 (filter #(= :transition (get grid %)) (g/posis grid)))
+                                 (filter #(= :ground     (get grid %)) (g2d/posis grid))
+                                 (filter #(= :transition (get grid %)) (g2d/posis grid)))
         start-position (mapv * start scale)
         can-spawn? #(= "all" (t/movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
@@ -206,9 +207,9 @@
         ;_ (printgrid area-level-grid)
         _ (assert (or
                    (= (set (concat [max-area-level] (range max-area-level)))
-                      (set (g/cells area-level-grid)))
+                      (set (g2d/cells area-level-grid)))
                    (= (set (concat [:wall max-area-level] (range max-area-level)))
-                      (set (g/cells area-level-grid)))))
+                      (set (g2d/cells area-level-grid)))))
         scaled-area-level-grid (t/scale-grid area-level-grid scale)
         get-free-position-in-area-level (fn [area-level]
                                           (rand-nth
@@ -271,14 +272,14 @@
 (def ^:private sprite-size 48)
 
 (defn- terrain-texture-region []
-  (->texture-region "maps/uf_terrain.png"))
+  (g/->texture-region "maps/uf_terrain.png"))
 
 (defn- ->uf-tile [& {:keys [sprite-x sprite-y movement]}]
-  (->tm-tile (->texture-region (terrain-texture-region)
-                               [(* sprite-x sprite-size)
-                                (* sprite-y sprite-size)
-                                sprite-size
-                                sprite-size])
+  (->tm-tile (g/->texture-region (terrain-texture-region)
+                                 [(* sprite-x sprite-size)
+                                  (* sprite-y sprite-size)
+                                  sprite-size
+                                  sprite-size])
              movement))
 
 ; TODO unused
@@ -322,9 +323,9 @@
         grid (reduce #(assoc %1 %2 :transition) grid
                      (adjacent-wall-positions grid))
         _ (assert (or
-                   (= #{:wall :ground :transition} (set (g/cells grid)))
-                   (= #{:ground :transition}       (set (g/cells grid))))
-                  (str "(set (g/cells grid)): " (set (g/cells grid))))
+                   (= #{:wall :ground :transition} (set (g2d/cells grid)))
+                   (= #{:ground :transition}       (set (g2d/cells grid))))
+                  (str "(set (g2d/cells grid)): " (set (g2d/cells grid))))
         ;_ (printgrid grid)
         ;_ (println)
         ground-idx (rand-nth uf-grounds)
@@ -423,14 +424,14 @@ ESCAPE: leave
 direction keys: move")
 
 (defn- map-infos ^String []
-  (let [tile (->tile (world-mouse-position))
+  (let [tile (->tile (g/world-mouse-position))
         {:keys [tiled-map
                 area-level-grid]} @(current-data)]
     (->> [infotext
           (str "Tile " tile)
           (when-not area-level-grid
             (str "Module " (mapv (comp int /)
-                                 (world-mouse-position)
+                                 (g/world-mouse-position)
                                  [module-width module-height])))
           (when area-level-grid
             (str "Creature id: " (t/property-value tiled-map :creatures tile :id)))
@@ -450,7 +451,7 @@ direction keys: move")
     (ui/add-actor! window (ui/actor {:act #(do
                                             (.setText label (map-infos))
                                             (.pack window))}))
-    (a/set-position! window 0 (gui-viewport-height))
+    (a/set-position! window 0 (g/gui-viewport-height))
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game
@@ -487,24 +488,24 @@ direction keys: move")
                 start-position
                 show-movement-properties
                 show-grid-lines]} @(current-data)
-        visible-tiles (🎥/visible-tiles (world-camera))
-        [x y] (->tile (world-mouse-position))]
-    (draw-rectangle x y 1 1 :white)
+        visible-tiles (🎥/visible-tiles (g/world-camera))
+        [x y] (->tile (g/world-mouse-position))]
+    (g/draw-rectangle x y 1 1 :white)
     (when start-position
-      (draw-filled-rectangle (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
+      (g/draw-filled-rectangle (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
               :let [movement-property (t/movement-property tiled-map [x y])]]
-        (draw-filled-circle [(+ x 0.5) (+ y 0.5)] 0.08 :black)
-        (draw-filled-circle [(+ x 0.5) (+ y 0.5)]
-                            0.05
-                            (case movement-property
-                              "all"   :green
-                              "air"   :orange
-                              "none"  :red))))
+        (g/draw-filled-circle [(+ x 0.5) (+ y 0.5)] 0.08 :black)
+        (g/draw-filled-circle [(+ x 0.5) (+ y 0.5)]
+                              0.05
+                              (case movement-property
+                                "all"   :green
+                                "air"   :orange
+                                "none"  :red))))
     (when show-grid-lines
-      (draw-grid 0 0 (t/width  tiled-map) (t/height tiled-map) 1 1 [1 1 1 0.5]))))
+      (g/draw-grid 0 0 (t/width  tiled-map) (t/height tiled-map) 1 1 [1 1 1 0.5]))))
 
 (def ^:private world-id :worlds/modules)
 
@@ -517,7 +518,7 @@ direction keys: move")
            :tiled-map tiled-map
            ;:area-level-grid area-level-grid
            :start-position start-position)
-    (show-whole-map! (world-camera) tiled-map)
+    (show-whole-map! (g/world-camera) tiled-map)
     (.setVisible (t/get-layer tiled-map "creatures") true)))
 
 (defn ->generate-map-window [level-id]
@@ -539,19 +540,19 @@ direction keys: move")
       (dispose! (:tiled-map @current-data)))
 
   (screen-enter [_]
-    (show-whole-map! (world-camera) (:tiled-map @current-data)))
+    (show-whole-map! (g/world-camera) (:tiled-map @current-data)))
 
   (screen-exit [_]
-    (🎥/reset-zoom! (world-camera)))
+    (🎥/reset-zoom! (g/world-camera)))
 
   (screen-render [_]
-    (draw-tiled-map (:tiled-map @current-data) (constantly white))
-    (render-world-view! render-on-map)
+    (g/draw-tiled-map (:tiled-map @current-data) (constantly white))
+    (g/render-world-view! render-on-map)
     (if (key-just-pressed? :keys/l)
       (swap! current-data update :show-grid-lines not))
     (if (key-just-pressed? :keys/m)
       (swap! current-data update :show-movement-properties not))
-    (camera-controls (world-camera))
+    (camera-controls (g/world-camera))
     (when (key-just-pressed? :keys/escape)
       (change-screen :screens/main-menu))))
 

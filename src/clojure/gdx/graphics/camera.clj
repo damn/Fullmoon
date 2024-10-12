@@ -2,9 +2,6 @@
   (:import (com.badlogic.gdx.math Vector3)
            (com.badlogic.gdx.graphics Camera OrthographicCamera)))
 
-(defn orthographic ^OrthographicCamera []
-  (OrthographicCamera.))
-
 (defn position
   "Returns camera position as [x y] vector."
   [^Camera camera]

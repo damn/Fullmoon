@@ -8,17 +8,6 @@
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
            (com.kotcrab.vis.ui.widget Tooltip VisTextButton VisCheckBox VisSelectBox VisImage VisImageButton VisTextField VisWindow VisTable VisLabel VisSplitPane VisScrollPane Separator VisTree)))
 
-;;;;
-
-;; first graphics ?
-;; also mostly editor uses UI and lets port it to javaFX first
-
-(defn- texture-region-dimensions [^TextureRegion texture-region]
-  [(.getRegionWidth  texture-region)
-   (.getRegionHeight texture-region)])
-
-;;;;
-
 (defn- check-cleanup-visui! []
   ; app crashes during startup before VisUI/dispose and we do clojure.tools.namespace.refresh-> gui elements not showing.
   ; => actually there is a deeper issue at play
@@ -327,11 +316,12 @@
   ([image on-clicked]
    (image-button image on-clicked {}))
 
-  ([{:keys [texture-region]} on-clicked {:keys [scale]}]
+  ([{:keys [^TextureRegion texture-region]} on-clicked {:keys [scale]}]
    (let [drawable (TextureRegionDrawable. ^TextureRegion texture-region)
          button (VisImageButton. drawable)]
      (when scale
-       (let [[w h] (texture-region-dimensions texture-region)]
+       (let [[w h] [(.getRegionWidth  texture-region)
+                    (.getRegionHeight texture-region)]]
          (.setMinSize drawable (float (* scale w)) (float (* scale h)))))
      (.addListener button (change-listener on-clicked))
      button)))

@@ -4,14 +4,10 @@
                         :effect "💥 Effects"
                         :entity "👾 Entity"
                         :geometry "📐 Geometry"
-                        :graphics "🎨 Graphics"
                         :gui-view  "🖼️ Gui View"
                         :input "🎮 Input"
                         :properties "📦️ Properties"
                         :screen "📺 Screens"
-                        :sprite "🖼️ Image"
-                        :ui "🎛️ UI"
-                        :ui.actor "🕴️ UI Actor"
                         :utils  "🔧 Utils"
                         :world "🌎 World"
                         :world-view  "🗺️ World View"
@@ -21,24 +17,20 @@
             [clojure.math :as math]
             [clojure.pprint :refer [pprint]]
             [clojure.gdx.assets :as assets]
-            [clojure.gdx.tiled :as t]
+            [clojure.gdx.graphics :as g]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui :as ui]
+            [clojure.gdx.utils :refer [gdx-field safe-get bind-root]]
             [clj-commons.pretty.repl :refer [pretty-pst]]
-            [data.grid2d :as g]
+            [data.grid2d :as g2d]
             [malli.core :as m]
             [malli.error :as me])
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
            (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
-           (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter Pixmap Pixmap$Format)
-           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
-           (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
            (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
-           (com.badlogic.gdx.utils Align Disposable SharedLibraryLoader ScreenUtils)
-           (com.badlogic.gdx.utils.viewport Viewport FitViewport)
+           (com.badlogic.gdx.utils Disposable SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.scenes.scene2d Stage)
-           (space.earlygrey.shapedrawer ShapeDrawer)
            (gdl RayCaster)))
 
 (def defsystems "Map of all systems as key of name-string to var." {})
@@ -274,16 +266,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (= (op-apply [:op/max-mult -0.9] [5 10]) [0 0]))
  )
 
-;;;;
-
-(defn safe-get [m k]
-  (let [result (get m k ::not-found)]
-    (if (= result ::not-found)
-      (throw (IllegalArgumentException. (str "Cannot find " (pr-str k))))
-      result)))
-
-;;;;
-
 (defn def-attributes [& attributes-data]
   {:pre [(even? (count attributes-data))]}
   (doseq [[k data] (partition 2 attributes-data)]
@@ -417,8 +399,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
                        :schema (m/form schema)})))))
 
 (defc :property/id {:data [:qualified-keyword]})
-
-(defn bind-root [avar value] (alter-var-root avar (constantly value)))
 
 (declare properties-db
          ^:private properties-edn-file)
@@ -563,27 +543,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
        (str/join "\n")
        remove-newlines))
 
-(defn equal?
-  "Returns true if a is nearly equal to b."
-  [a b]
-  (MathUtils/isEqual a b))
-
-(defn- degree->radians [degree]
-  (* (float degree) MathUtils/degreesToRadians))
-
-(defn clamp [value min max]
-  (MathUtils/clamp (float value) (float min) (float max)))
-
-; TODO not important badlogic, using clojure vectors
-; could extend some protocol by clojure vectors and just require the protocol
-; also call vector2 v2/add ? v2/scale ?
-
-(defn- ^Vector2 ->v [[x y]]
-  (Vector2. x y))
-
-(defn- ->p [^Vector2 v]
-  [(.x ^Vector2 v)
-   (.y ^Vector2 v)])
+(defn- ^Vector2 ->v [[x y]] (Vector2. x y))
+(defn- ->p [^Vector2 v] [(.x ^Vector2 v) (.y ^Vector2 v)])
 
 (defn v-scale     [v n]    (->p (.scl ^Vector2 (->v v) (float n)))) ; TODO just (mapv (partial * 2) v)
 (defn v-normalise [v]      (->p (.nor ^Vector2 (->v v))))
@@ -591,7 +552,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn v-length    [v]      (.len ^Vector2 (->v v)))
 (defn v-distance  [v1 v2]  (.dst ^Vector2 (->v v1) ^Vector2 (->v v2)))
 
-(defn v-normalised? [v] (equal? 1 (v-length v)))
+(defn v-normalised? [v] (MathUtils/isEqual 1 (v-length v)))
 
 (defn v-get-normal-vectors [[x y]]
   [[(- (float y))         x]
@@ -839,21 +800,18 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defmacro post-runnable! [& exprs]
   `(.postRunnable Gdx/app (fn [] ~@exprs)))
 
-(defn- ->gdx-field [klass-str k]
-  (eval (symbol (str "com.badlogic.gdx." klass-str "/" (str/replace (str/upper-case (name k)) "-" "_")))))
-
-(def ^:private ->gdx-input-button (partial ->gdx-field "Input$Buttons"))
-(def ^:private ->gdx-input-key    (partial ->gdx-field "Input$Keys"))
+(def ^:private gdx-input-button (partial gdx-field "Input$Buttons"))
+(def ^:private gdx-input-key    (partial gdx-field "Input$Keys"))
 
 (defn button-just-pressed?
   ":left, :right, :middle, :back or :forward."
   [b]
-  (.isButtonJustPressed Gdx/input (->gdx-input-button b)))
+  (.isButtonJustPressed Gdx/input (gdx-input-button b)))
 
 (defn key-just-pressed?
   "See [[key-pressed?]]."
   [k]
-  (.isKeyJustPressed Gdx/input (->gdx-input-key k)))
+  (.isKeyJustPressed Gdx/input (gdx-input-key k)))
 
 (defn key-pressed?
   "For options see [libgdx Input$Keys docs](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/Input.Keys.html).
@@ -861,32 +819,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
   For example Input$Keys/ALT_LEFT can be used with :alt-left.
   Numbers via :num-3, etc."
   [k]
-  (.isKeyPressed Gdx/input (->gdx-input-key k)))
+  (.isKeyPressed Gdx/input (gdx-input-key k)))
 
 (defn- set-input-processor! [processor]
   (.setInputProcessor Gdx/input processor))
-
-(defn- kw->color [k] (->gdx-field "graphics.Color" k))
-
-(def white Color/WHITE)
-(def black Color/BLACK)
-
-(defn ->color
-  ([r g b] (->color r g b 1))
-  ([r g b a] (Color. (float r) (float g) (float b) (float a))))
-
-(defn- munge-color ^Color [color]
-  (cond (= Color (class color)) color
-        (keyword? color) (kw->color color)
-        (vector? color) (apply ->color color)
-        :else (throw (ex-info "Cannot understand color" {:color color}))))
-
-(defn def-markup-color
-  "A general purpose class containing named colors that can be changed at will. For example, the markup language defined by the BitmapFontCache class uses this class to retrieve colors and the user can define his own colors.
-
-  [javadoc](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/graphics/Colors.html)"
-  [name-str color]
-  (Colors/put name-str (munge-color color)))
 
 (def dispose! Disposable/.dispose)
 
@@ -899,405 +835,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (play-sound! file)
     nil))
 
-; touch coordinates are y-down, while screen coordinates are y-up
-; so the clamping of y is reverse, but as black bars are equal it does not matter
-(defn- unproject-mouse-posi
-  "Returns vector of [x y]."
-  [^Viewport viewport]
-  (let [mouse-x (clamp (.getX Gdx/input)
-                       (.getLeftGutterWidth viewport)
-                       (.getRightGutterX viewport))
-        mouse-y (clamp (.getY Gdx/input)
-                       (.getTopGutterHeight viewport)
-                       (.getTopGutterY viewport))
-        coords (.unproject viewport (Vector2. mouse-x mouse-y))]
-    [(.x coords) (.y coords)]))
-
-(defn- vp-world-width  [^Viewport vp] (.getWorldWidth  vp))
-(defn- vp-world-height [^Viewport vp] (.getWorldHeight vp))
-(defn- vp-camera       [^Viewport vp] (.getCamera      vp))
-(defn- vp-update!      [^Viewport vp [w h] & {:keys [center-camera?]}]
-  (.update vp w h (boolean center-camera?)))
-
-(defn ->texture-region
-  ([path-or-texture]
-   (let [^Texture tex (if (string? path-or-texture)
-                        (assets/get path-or-texture)
-                        path-or-texture)]
-     (TextureRegion. tex)))
-
-  ([^TextureRegion texture-region [x y w h]]
-   (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
-
-(defn texture-region-dimensions [^TextureRegion texture-region]
-  [(.getRegionWidth  texture-region)
-   (.getRegionHeight texture-region)])
-
-(declare ^:private batch)
-
-; TODO [x y] is center or left-bottom ?
-; why rotation origin calculations ?!
-(defn- draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
-  (if color (.setColor batch color)) ; TODO move out, simplify ....
-  (.draw batch
-         texture-region
-         x
-         y
-         (/ (float w) 2) ; rotation origin
-         (/ (float h) 2)
-         w ; width height
-         h
-         1 ; scaling factor
-         1
-         rotation)
-  (if color (.setColor batch Color/WHITE)))
-
-(defn- draw-with! [^Batch batch ^Viewport viewport draw-fn]
-  (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-  (.setProjectionMatrix batch (.combined (.getCamera viewport)))
-  (.begin batch)
-  (draw-fn)
-  (.end batch))
-
-(defn- ->shape-drawer [batch]
-  (let [^Texture tex (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                                    (.setColor Color/WHITE)
-                                    (.drawPixel 0 0))
-                           tex (Texture. pixmap)]
-                       (dispose! pixmap)
-                       tex)]
-    {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
-     :shape-drawer-texture tex}))
-
-(defn- set-color!          [^ShapeDrawer sd color] (.setColor sd (munge-color color)))
-(defn- sd-ellipse          [^ShapeDrawer sd [x y] radius-x radius-y] (.ellipse sd (float x) (float y) (float radius-x) (float radius-y)))
-(defn- sd-filled-ellipse   [^ShapeDrawer sd [x y] radius-x radius-y] (.filledEllipse sd (float x) (float y) (float radius-x) (float radius-y)))
-(defn- sd-circle           [^ShapeDrawer sd [x y] radius] (.circle sd (float x) (float y) (float radius)))
-(defn- sd-filled-circle    [^ShapeDrawer sd [x y] radius] (.filledCircle sd (float x) (float y) (float radius)))
-(defn- sd-arc              [^ShapeDrawer sd [centre-x centre-y] radius start-angle degree] (.arc sd centre-x centre-y radius (degree->radians start-angle) (degree->radians degree)))
-(defn- sd-sector           [^ShapeDrawer sd [centre-x centre-y] radius start-angle degree] (.sector sd centre-x centre-y radius (degree->radians start-angle) (degree->radians degree)))
-(defn- sd-rectangle        [^ShapeDrawer sd x y w h] (.rectangle sd x y w h))
-(defn- sd-filled-rectangle [^ShapeDrawer sd x y w h] (.filledRectangle sd (float x) (float y) (float w) (float h)) )
-(defn- sd-line             [^ShapeDrawer sd [sx sy] [ex ey]] (.line sd (float sx) (float sy) (float ex) (float ey)))
-
-(defn- sd-grid [sd leftx bottomy gridw gridh cellw cellh]
-  (let [w (* (float gridw) (float cellw))
-        h (* (float gridh) (float cellh))
-        topy (+ (float bottomy) (float h))
-        rightx (+ (float leftx) (float w))]
-    (doseq [idx (range (inc (float gridw)))
-            :let [linex (+ (float leftx) (* (float idx) (float cellw)))]]
-      (sd-line sd [linex topy] [linex bottomy]))
-    (doseq [idx (range (inc (float gridh)))
-            :let [liney (+ (float bottomy) (* (float idx) (float cellh)))]]
-      (sd-line sd [leftx liney] [rightx liney]))))
-
-(defn- sd-with-line-width [^ShapeDrawer sd width draw-fn]
-  (let [old-line-width (.getDefaultLineWidth sd)]
-    (.setDefaultLineWidth sd (float (* (float width) old-line-width)))
-    (draw-fn)
-    (.setDefaultLineWidth sd (float old-line-width))))
-
-(defn- ->ttf-params [size quality-scaling]
-  (let [params (FreeTypeFontGenerator$FreeTypeFontParameter.)]
-    (set! (.size params) (* size quality-scaling))
-    ; .color and this:
-    ;(set! (.borderWidth parameter) 1)
-    ;(set! (.borderColor parameter) red)
-    (set! (.minFilter params) Texture$TextureFilter/Linear) ; because scaling to world-units
-    (set! (.magFilter params) Texture$TextureFilter/Linear)
-    params))
-
-(defn- generate-ttf [{:keys [file size quality-scaling]}]
-  (let [generator (FreeTypeFontGenerator. (.internal Gdx/files file))
-        font (.generateFont generator (->ttf-params size quality-scaling))]
-    (dispose! generator)
-    (.setScale (.getData font) (float (/ quality-scaling)))
-    (set! (.markupEnabled (.getData font)) true)
-    (.setUseIntegerPositions font false) ; otherwise scaling to world-units (/ 1 48)px not visible
-    font))
-
-(defn- gdx-default-font [] (BitmapFont.))
-
-(defn- text-height [^BitmapFont font text]
-  (-> text
-      (str/split #"\n")
-      count
-      (* (.getLineHeight font))))
-
-(defn- font-draw [^BitmapFont font
-                  unit-scale
-                  batch
-                  {:keys [x y text h-align up? scale]}]
-  (let [data (.getData font)
-        old-scale (float (.scaleX data))]
-    (.setScale data (* old-scale (float unit-scale) (float (or scale 1))))
-    (.draw font
-           batch
-           (str text)
-           (float x)
-           (+ (float y) (float (if up? (text-height font text) 0)))
-           (float 0) ; target-width
-           (case (or h-align :center)
-             :center Align/center
-             :left   Align/left
-             :right  Align/right)
-           false) ; wrap false, no need target-width
-    (.setScale data old-scale)))
-
-(declare ^:private shape-drawer
-         ^:private shape-drawer-texture)
-
-(defn draw-ellipse [position radius-x radius-y color]
-  (set-color! shape-drawer color)
-  (sd-ellipse shape-drawer position radius-x radius-y))
-(defn draw-filled-ellipse [position radius-x radius-y color]
-  (set-color! shape-drawer color)
-  (sd-filled-ellipse shape-drawer position radius-x radius-y))
-(defn draw-circle [position radius color]
-  (set-color! shape-drawer color)
-  (sd-circle shape-drawer position radius))
-(defn draw-filled-circle [position radius color]
-  (set-color! shape-drawer color)
-  (sd-filled-circle shape-drawer position radius))
-(defn draw-arc [center radius start-angle degree color]
-  (set-color! shape-drawer color)
-  (sd-arc shape-drawer center radius start-angle degree))
-(defn draw-sector [center radius start-angle degree color]
-  (set-color! shape-drawer color)
-  (sd-sector shape-drawer center radius start-angle degree))
-(defn draw-rectangle [x y w h color]
-  (set-color! shape-drawer color)
-  (sd-rectangle shape-drawer x y w h))
-(defn draw-filled-rectangle [x y w h color]
-  (set-color! shape-drawer color)
-  (sd-filled-rectangle shape-drawer x y w h))
-(defn draw-line [start end color]
-  (set-color! shape-drawer color)
-  (sd-line shape-drawer start end))
-(defn draw-grid [leftx bottomy gridw gridh cellw cellh color]
-  (set-color! shape-drawer color)
-  (sd-grid shape-drawer leftx bottomy gridw gridh cellw cellh))
-(defn with-shape-line-width [width draw-fn]
-  (sd-with-line-width shape-drawer width draw-fn))
-
-(require '[clojure.gdx.graphics.camera :as 🎥])
-
-(defn- ->gui-view [{:keys [world-width world-height]}]
-  {:unit-scale 1
-   :viewport (FitViewport. world-width world-height (🎥/orthographic))})
-
-(defn- ->world-view [{:keys [world-width world-height tile-size]}]
-  (let [unit-scale (/ tile-size)]
-    {:unit-scale (float unit-scale)
-     :viewport (let [world-width  (* world-width  unit-scale)
-                     world-height (* world-height unit-scale)
-                     camera (🎥/orthographic)
-                     y-down? false]
-                 (.setToOrtho camera y-down? world-width world-height)
-                 (FitViewport. world-width world-height camera))}))
-
-(declare ^:private gui-view
-         ^:private world-view)
-
-(defn- bind-views! [{:keys [gui-view world-view]}]
-  (bind-root #'gui-view (->gui-view gui-view))
-  (bind-root #'world-view (->world-view world-view)))
-
-(defn world-unit-scale []
-  (:unit-scale world-view))
-
-(defn pixels->world-units [pixels]
-  (* (int pixels) (world-unit-scale)))
-
-(defn- gui-viewport   [] (:viewport gui-view))
-(defn- world-viewport [] (:viewport world-view))
-
-(defn- gui-mouse-position* []
-  ; TODO mapv int needed?
-  (mapv int (unproject-mouse-posi (gui-viewport))))
-
-(defn- world-mouse-position* []
-  ; TODO clamping only works for gui-viewport ? check. comment if true
-  ; TODO ? "Can be negative coordinates, undefined cells."
-  (unproject-mouse-posi (world-viewport)))
-
-(defn gui-mouse-position    [] (gui-mouse-position*))
-(defn world-mouse-position  [] (world-mouse-position*))
-(defn gui-viewport-width    [] (vp-world-width  (gui-viewport)))
-(defn gui-viewport-height   [] (vp-world-height (gui-viewport)))
-(defn world-camera          [] (vp-camera       (world-viewport)))
-(defn world-viewport-width  [] (vp-world-width  (world-viewport)))
-(defn world-viewport-height [] (vp-world-height (world-viewport)))
-
-(defrecord Sprite [texture-region
-                   pixel-dimensions
-                   world-unit-dimensions
-                   color]) ; optional
-
-(def ^:private ^:dynamic *unit-scale* 1)
-
-(defn- unit-dimensions [image]
-  (if (= *unit-scale* 1)
-    (:pixel-dimensions image)
-    (:world-unit-dimensions image)))
-
-(defn- scale-dimensions [dimensions scale]
-  (mapv (comp float (partial * scale)) dimensions))
-
-(defn- assoc-dimensions
-  "scale can be a number for multiplying the texture-region-dimensions or [w h]."
-  [{:keys [texture-region] :as image} scale]
-  {:pre [(or (number? scale)
-             (and (vector? scale)
-                  (number? (scale 0))
-                  (number? (scale 1))))]}
-  (let [pixel-dimensions (if (number? scale)
-                           (scale-dimensions (texture-region-dimensions texture-region) scale)
-                           scale)]
-    (assoc image
-           :pixel-dimensions pixel-dimensions
-           :world-unit-dimensions (scale-dimensions pixel-dimensions (world-unit-scale)))))
-
-(defn draw-image [{:keys [texture-region color] :as image} position]
-  (draw-texture-region batch
-                       texture-region
-                       position
-                       (unit-dimensions image)
-                       0 ; rotation
-                       color))
-
-(defn draw-rotated-centered-image
-  [{:keys [texture-region color] :as image} rotation [x y]]
-  (let [[w h] (unit-dimensions image)]
-    (draw-texture-region batch
-                         texture-region
-                         [(- (float x) (/ (float w) 2))
-                          (- (float y) (/ (float h) 2))]
-                         [w h]
-                         rotation
-                         color)))
-
-(defn draw-centered-image [image position]
-  (draw-rotated-centered-image image 0 position))
-
-(defn- ->image* [texture-region]
-  (-> {:texture-region texture-region}
-      (assoc-dimensions 1) ; = scale 1
-      map->Sprite))
-
-(defn ->image [file]
-  (->image* (->texture-region file)))
-
-(defn sub-image [{:keys [texture-region]} bounds]
-  (->image* (->texture-region texture-region bounds)))
-
-(defn sprite-sheet [file tilew tileh]
-  {:image (->image file)
-   :tilew tilew
-   :tileh tileh})
-
-(defn sprite
-  "x,y index starting top-left"
-  [{:keys [image tilew tileh]} [x y]]
-  (sub-image image [(* x tilew) (* y tileh) tilew tileh]))
-
-(defn edn->image [{:keys [file sub-image-bounds]}]
-  (if sub-image-bounds
-    (let [[sprite-x sprite-y] (take 2 sub-image-bounds)
-          [tilew tileh]       (drop 2 sub-image-bounds)]
-      (sprite (sprite-sheet file tilew tileh)
-              [(int (/ sprite-x tilew))
-               (int (/ sprite-y tileh))]))
-    (->image file)))
-
-(defn- ->default-font [true-type-font]
-  (or (and true-type-font (generate-ttf true-type-font))
-      (gdx-default-font)))
-
-(declare ^:private default-font)
-
-(defn draw-text
-  "font, h-align, up? and scale are optional.
-  h-align one of: :center, :left, :right. Default :center.
-  up? renders the font over y, otherwise under.
-  scale will multiply the drawn text size with the scale."
-  [{:keys [x y text font h-align up? scale] :as opts}]
-  (font-draw (or font default-font) *unit-scale* batch opts))
-
-(defn- mapvals [f m]
-  (into {} (for [[k v] m]
-             [k (f v)])))
-
-(defn- ->cursor [file [hotspot-x hotspot-y]]
-  (let [pixmap (Pixmap. (.internal Gdx/files file))
-        cursor (.newCursor Gdx/graphics pixmap hotspot-x hotspot-y)]
-    (dispose! pixmap)
-    cursor))
-
-(defn- ->cursors [cursors]
-  (mapvals (fn [[file hotspot]]
-             (->cursor (str "cursors/" file ".png") hotspot))
-           cursors))
-
-(declare ^:private cursors)
-
-(defn set-cursor! [cursor-key]
-  (.setCursor Gdx/graphics (safe-get cursors cursor-key)))
-
 (defc :tx/cursor
   (do! [[_ cursor-key]]
-    (set-cursor! cursor-key)
+    (g/set-cursor! cursor-key)
     nil))
-
-(defn- render-view! [{:keys [viewport unit-scale]} draw-fn]
-  (draw-with! batch
-              viewport
-              (fn []
-                (with-shape-line-width unit-scale
-                  #(binding [*unit-scale* unit-scale]
-                     (draw-fn))))))
-
-(defn render-gui-view!   [render-fn] (render-view! gui-view render-fn))
-(defn render-world-view! [render-fn] (render-view! world-view render-fn))
-
-(declare draw-item-on-cursor)
-
-(declare ^:private cached-map-renderer)
-
-(defn draw-tiled-map
-  "Renders tiled-map using world-view at world-camera position and with world-unit-scale.
-
-  Color-setter is a `(fn [color x y])` which is called for every tile-corner to set the color.
-
-  Can be used for lights & shadows.
-
-  Renders only visible layers."
-  [tiled-map color-setter]
-  (t/render-tm! (cached-map-renderer tiled-map)
-                color-setter
-                (world-camera)
-                tiled-map))
-
-(defn- ->tiled-map-renderer [tiled-map]
-  (t/->orthogonal-tiled-map-renderer tiled-map (world-unit-scale) batch))
-
-(defn- load-graphics! [{:keys [views default-font cursors]}]
-  (let [batch (SpriteBatch.)
-        {:keys [shape-drawer shape-drawer-texture]} (->shape-drawer batch)]
-    (bind-root #'batch batch)
-    (bind-root #'shape-drawer shape-drawer)
-    (bind-root #'shape-drawer-texture shape-drawer-texture)
-    (bind-root #'cursors (->cursors cursors))
-    (bind-root #'default-font (->default-font default-font))
-    (bind-views! views)
-    (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
-
-(defn- dispose-graphics! []
-  (dispose! batch)
-  (dispose! shape-drawer-texture)
-  (dispose! default-font)
-  (run! dispose! (vals cursors)))
 
 (declare ^:private screen-k
          ^:private screens)
@@ -1374,7 +915,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (s-draw! stage)))
 
 (defn ->stage [actors]
-  (let [stage (ui/stage (:viewport gui-view) batch)]
+  (let [stage (ui/stage (:viewport g/gui-view) g/batch)]
     (run! #(s-add! stage %) actors)
     stage))
 
@@ -1382,7 +923,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (:stage ((current-screen) 1)))
 
 (defn mouse-on-actor? []
-  (s-hit (stage-get) (gui-mouse-position) :touchable? true))
+  (s-hit (stage-get) (g/gui-mouse-position) :touchable? true))
 
 (defn stage-add! [actor]
   (s-add! (stage-get) actor))
@@ -1390,7 +931,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (def ^:private image-file "images/moon_background.png")
 
 (defn ->background-image []
-  (ui/image->widget (->image image-file)
+  (ui/image->widget (g/image image-file)
                     {:fill-parent? true
                      :scaling :fill
                      :align :center}))
@@ -1433,8 +974,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
                                                     (on-click)))]]
                           :id ::modal
                           :modal? true
-                          :center-position [(/ (gui-viewport-width) 2)
-                                            (* (gui-viewport-height) (/ 3 4))]
+                          :center-position [(/ (g/gui-viewport-width) 2)
+                                            (* (g/gui-viewport-height) (/ 3 4))]
                           :pack? true})))
 
 (defc :tx/player-modal
@@ -1464,23 +1005,22 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (Lwjgl3Application. (proxy [ApplicationAdapter] []
                         (create []
                           (assets/load! resources)
-                          (load-graphics! graphics)
+                          (g/load! graphics)
                           (ui/load! ui)
                           (load-screens! screen-ks))
 
                         (dispose []
                           (assets/dispose!)
-                          (dispose-graphics!)
+                          (g/dispose!)
                           (ui/dispose!)
                           (dispose-screens!))
 
                         (render []
-                          (ScreenUtils/clear black)
+                          (ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
                           (screen-render! (current-screen)))
 
                         (resize [w h]
-                          (vp-update! (gui-viewport) [w h] :center-camera? true)
-                          (vp-update! (world-viewport) [w h])))
+                          (g/resize! [w h])))
                       (lwjgl3-app-config config)))
 
 (defn enemy-faction [{:keys [entity/faction]}]
@@ -1508,10 +1048,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (aset arr x y (boolean (cell*->blocked? cell*)))))
 
 (defn- ->raycaster [grid position->blocked?]
-  (let [width  (g/width  grid)
-        height (g/height grid)
+  (let [width  (g2d/width  grid)
+        height (g2d/height grid)
         arr (make-array Boolean/TYPE width height)]
-    (doseq [cell (g/cells grid)]
+    (doseq [cell (g2d/cells grid)]
       (set-arr arr @cell position->blocked?))
     (map->ArrRayCaster {:arr arr
                         :width width
@@ -1618,7 +1158,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (cached-adjacent-cells [grid cell]
     (if-let [result (:adjacent-cells @cell)]
       result
-      (let [result (into [] (keep grid) (-> @cell :position g/get-8-neighbour-positions))]
+      (let [result (into [] (keep grid) (-> @cell :position g2d/get-8-neighbour-positions))]
         (swap! cell assoc :adjacent-cells result)
         result)))
 
@@ -1710,9 +1250,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
     :occupied #{}}))
 
 (defn init-world-grid! [width height position->value]
-  (bind-root #'world-grid (g/create-grid width
-                                         height
-                                         #(atom (create-cell % (position->value %))))))
+  (bind-root #'world-grid (g2d/create-grid width
+                                           height
+                                           #(atom (create-cell % (position->value %))))))
 
 ; Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
 ; adjacent cells are walls and blocked.
@@ -1872,7 +1412,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   [pred coll]
   (for [[idx elt] (indexed coll) :when (pred elt)] idx))
 
-(let [order (g/get-8-neighbour-positions [0 0])]
+(let [order (g2d/get-8-neighbour-positions [0 0])]
   (def ^:private diagonal-check-indizes
     (into {} (for [[x y] (filter diagonal-direction? order)]
                [(first (utils-positions #(= % [x y]) order))
@@ -2058,7 +1598,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                        ::content-cell
                        deref
                        :idx)]
-           (cons idx (g/get-8-neighbour-positions idx)))
+           (cons idx (g2d/get-8-neighbour-positions idx)))
          (keep grid)
          (mapcat (comp :entities deref)))))
 
@@ -2068,11 +1608,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn init-content-grid! [& {:keys [cell-size width height]}]
   (bind-root
    #'content-grid
-   {:grid (g/create-grid (inc (int (/ width  cell-size))) ; inc because corners
-                         (inc (int (/ height cell-size)))
-                         (fn [idx]
-                           (atom {:idx idx,
-                                  :entities #{}})))
+   {:grid (g2d/create-grid (inc (int (/ width  cell-size))) ; inc because corners
+                           (inc (int (/ height cell-size)))
+                           (fn [idx]
+                             (atom {:idx idx,
+                                    :entities #{}})))
     :cell-w cell-size
     :cell-h cell-size}))
 
@@ -2251,20 +1791,22 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 ;;;; line-of-sight
 
+(require '[clojure.gdx.graphics.camera :as 🎥])
+
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?
 (defn- on-screen? [entity*]
   (let [[x y] (:position entity*)
         x (float x)
         y (float y)
-        [cx cy] (🎥/position (world-camera))
+        [cx cy] (🎥/position (g/world-camera))
         px (float cx)
         py (float cy)
         xdist (Math/abs (- x px))
         ydist (Math/abs (- y py))]
     (and
-     (<= xdist (inc (/ (float (world-viewport-width))  2)))
-     (<= ydist (inc (/ (float (world-viewport-height)) 2))))))
+     (<= xdist (inc (/ (float (g/world-viewport-width))  2)))
+     (<= ydist (inc (/ (float (g/world-viewport-height)) 2))))))
 
 ; TODO at wrong point , this affects targeting logic of npcs
 ; move the debug flag to either render or mouseover or lets see
@@ -2394,7 +1936,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn- draw-body-rect [entity* color]
   (let [[x y] (:left-bottom entity*)]
-    (draw-rectangle x y (:width entity*) (:height entity*) color)))
+    (g/draw-rectangle x y (:width entity*) (:height entity*) color)))
 
 (defn- render-entity* [system entity*]
   (try
@@ -2448,9 +1990,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
   {:data :image
    :let image}
   (render [_ entity*]
-    (draw-rotated-centered-image image
-                                 (or (:rotation-angle entity*) 0)
-                                 (:position entity*))))
+    (g/draw-rotated-centered-image image
+                                   (or (:rotation-angle entity*) 0)
+                                   (:position entity*))))
 
 (defprotocol Animation
   (^:private anim-tick [_ delta])
@@ -2486,7 +2028,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
      :maxcnt (* (count frames) (float frame-duration))}))
 
 (defn- edn->animation [{:keys [frames frame-duration looping?]}]
-  (->animation (map edn->image frames)
+  (->animation (map g/edn->image frames)
                :frame-duration frame-duration
                :looping? looping?))
 
@@ -2622,8 +2164,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (render [_ entity*]
     (let [position (:position entity*)]
       (if thick?
-        (with-shape-line-width 4 #(draw-line position end color))
-        (draw-line position end color)))))
+        (g/with-shape-line-width 4 #(g/draw-line position end color))
+        (g/draw-line position end color)))))
 
 (defc :tx/line-render
   (do! [[_ {:keys [start end duration color thick?]}]]
@@ -2755,10 +2297,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
            {:keys [entity/mouseover?] :as entity*}]
     (when (and mouseover? text)
       (let [[x y] (:position entity*)]
-        (draw-text {:text text
-                    :x x
-                    :y (+ y (:half-height entity*))
-                    :up? true})))))
+        (g/draw-text {:text text
+                      :x x
+                      :y (+ y (:half-height entity*))
+                      :up? true})))))
 
 (def ^:private outline-alpha 0.4)
 (def ^:private enemy-color    [1 0 0 outline-alpha])
@@ -2768,16 +2310,16 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defc :entity/mouseover?
   (render-below [_ {:keys [entity/faction] :as entity*}]
     (let [player-entity* @world-player]
-      (with-shape-line-width 3
-        #(draw-ellipse (:position entity*)
-                       (:half-width entity*)
-                       (:half-height entity*)
-                       (cond (= faction (enemy-faction player-entity*))
-                             enemy-color
-                             (= faction (friendly-faction player-entity*))
-                             friendly-color
-                             :else
-                             neutral-color))))))
+      (g/with-shape-line-width 3
+        #(g/draw-ellipse (:position entity*)
+                         (:half-width entity*)
+                         (:half-height entity*)
+                         (cond (= faction (enemy-faction player-entity*))
+                               enemy-color
+                               (= faction (friendly-faction player-entity*))
+                               friendly-color
+                               :else
+                               neutral-color))))))
 
 (def ^:private shout-radius 4)
 
@@ -2813,11 +2355,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
   (render-above [[_ {:keys [text]}] entity*]
     (let [[x y] (:position entity*)]
-      (draw-text {:text text
-                  :x x
-                  :y (+ y (:half-height entity*) (pixels->world-units hpbar-height-px))
-                  :scale 2
-                  :up? true}))))
+      (g/draw-text {:text text
+                    :x x
+                    :y (+ y (:half-height entity*) (g/pixels->world-units hpbar-height-px))
+                    :scale 2
+                    :up? true}))))
 
 (defc :tx/add-text-effect
   (do! [[_ entity text]]
@@ -2879,7 +2421,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
         :when (seq operations)]
     [modifier-k operations]))
 
-(def-markup-color "MODIFIER_BLUE" :cyan)
+(g/def-markup-color "MODIFIER_BLUE" :cyan)
 
 ; For now no green/red color for positive/negative numbers
 ; as :stats/damage-receive negative value would be red but actually a useful buff
@@ -2954,7 +2496,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
        6.5)))
  )
 
-(def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
+(g/def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
 
 (defc :property/pretty-name
   {:data :string
@@ -2988,7 +2530,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                         :necklace [1 1]
                         :rings    [2 1]}
        (map (fn [[slot [width height]]]
-              [slot (g/create-grid width height (constantly nil))]))
+              [slot (g2d/create-grid width height (constantly nil))]))
        (into {})))
 
 (defc :item/modifiers
@@ -3123,14 +2665,14 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
 (defn- draw-cell-rect [player-entity* x y mouseover? cell]
-  (draw-rectangle x y cell-size cell-size :gray)
+  (g/draw-rectangle x y cell-size cell-size :gray)
   (when (and mouseover?
              (= :player-item-on-cursor (entity-state player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)
           color (if (valid-slot? cell item)
                   droppable-color
                   not-allowed-color)]
-      (draw-filled-rectangle (inc x) (inc y) (- cell-size 2) (- cell-size 2) color))))
+      (g/draw-filled-rectangle (inc x) (inc y) (- cell-size 2) (- cell-size 2) color))))
 
 ; TODO why do I need to call getX ?
 ; is not layouted automatically to cell , use 0/0 ??
@@ -3141,7 +2683,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
      (draw-cell-rect @world-player
                      (a/x this)
                      (a/y this)
-                     (a/mouseover? this (gui-mouse-position))
+                     (a/mouseover? this (g/gui-mouse-position))
                      (a/id (a/parent this))))))
 
 (defsystem clicked-inventory-cell "FIXME" [_ cell])
@@ -3162,7 +2704,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
     stack))
 
 (defn- slot->background []
-  (let [sheet (sprite-sheet "images/items.png" 48 48)]
+  (let [sheet (g/sprite-sheet "images/items.png" 48 48)]
     (->> #:inventory.slot {:weapon   0
                            :shield   1
                            :rings    2
@@ -3175,10 +2717,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
                            :boot     9
                            :bag      10} ; transparent
          (map (fn [[slot y]]
-                (let [drawable (ui/texture-region-drawable (:texture-region (sprite sheet [21 (+ y 2)])))]
+                (let [drawable (ui/texture-region-drawable (:texture-region (g/sprite sheet [21 (+ y 2)])))]
                   (ui/set-min-size! drawable cell-size)
                   [slot
-                   (ui/tinted-drawable drawable (->color 1 1 1 0.4))])))
+                   (ui/tinted-drawable drawable (g/->color 1 1 1 0.4))])))
          (into {}))))
 
 (import 'com.badlogic.gdx.scenes.scene2d.ui.Table)
@@ -3204,8 +2746,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
       (.add (cell :inventory.slot/rings :position [1 0]))
       (.add (cell :inventory.slot/boot)) .row)
     ; TODO add separator
-    (doseq [y (range (g/height (:inventory.slot/bag empty-inventory)))]
-      (doseq [x (range (g/width (:inventory.slot/bag empty-inventory)))]
+    (doseq [y (range (g2d/height (:inventory.slot/bag empty-inventory)))]
+      (doseq [x (range (g2d/width (:inventory.slot/bag empty-inventory)))]
         (.add table (cell :inventory.slot/bag :position [x y])))
       (.row table))))
 
@@ -3216,8 +2758,8 @@ On any exception we get a stacktrace with all tx's values and names shown."
                 :id :inventory-window
                 :visible? false
                 :pack? true
-                :position [(gui-viewport-width)
-                           (gui-viewport-height)]
+                :position [(g/gui-viewport-width)
+                           (g/gui-viewport-height)]
                 :rows [[{:actor table :pad 4}]]})))
 
 (defn ->inventory-window-data [] (slot->background))

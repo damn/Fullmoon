@@ -1,5 +1,7 @@
 (ns core.creature
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.graphics :as g]
+            [clojure.gdx.utils :refer [bind-root]]
             [clojure.string :as str]
             [reduce-fsm :as fsm]))
 
@@ -221,10 +223,10 @@
 
   (render-above [_ entity*]
     (let [[x y] (:position entity*)]
-      (draw-text {:text "zzz"
-                  :x x
-                  :y (+ y (:half-height entity*))
-                  :up? true}))))
+      (g/draw-text {:text "zzz"
+                    :x x
+                    :y (+ y (:half-height entity*))
+                    :up? true}))))
 
 (defc :player-dead
   (player-enter [_]
@@ -285,7 +287,7 @@
 
 (defn- item-place-position [entity*]
   (placement-point (:position entity*)
-                   (world-mouse-position)
+                   (g/world-mouse-position)
                    ; so you cannot put it out of your own reach
                    (- (:entity/click-distance-tiles entity*) 0.1)))
 
@@ -326,16 +328,14 @@
 
   (render-below [_ entity*]
     (when (world-item?)
-      (draw-centered-image (:entity/image item) (item-place-position entity*)))))
+      (g/draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
 (defn draw-item-on-cursor []
   (let [player-e* @world-player]
     (when (and (= :player-item-on-cursor (entity-state player-e*))
                (not (world-item?)))
-      (draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
-                           (gui-mouse-position)))))
-
-(bind-root #'clojure.gdx/draw-item-on-cursor draw-item-on-cursor)
+      (g/draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
+                             (g/gui-mouse-position)))))
 
 (defn- add-vs [vs]
   (v-normalise (reduce v-add [0 0] vs)))
@@ -392,7 +392,7 @@
       [[:tx/event eid :effect-wears-off]]))
 
   (render-below [_ entity*]
-    (draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
+    (g/draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
 
 (defc :entity/player?
   (create [_ eid]

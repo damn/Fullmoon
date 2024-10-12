@@ -2,8 +2,10 @@
   (:require [clojure.edn :as edn]
             [clojure.gdx :refer :all]
             [clojure.gdx.assets :as assets]
+            [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.utils :refer [safe-get]]
             [clojure.set :as set]
             [clojure.string :as str]
             [malli.core :as m]
@@ -26,7 +28,7 @@
 ; hidden actor act tick atom animation & set current frame image drawable
 (defmethod ->widget :data/animation [_ animation]
   (ui/table {:rows [(for [image (:frames animation)]
-                      (ui/image->widget (edn->image image) {}))]
+                      (ui/image->widget (g/edn->image image) {}))]
              :cell-defaults {:pad 1}}))
 
 ;;;;
@@ -68,7 +70,7 @@
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
 (defmethod edn->value :image [_ image]
-  (edn->image image))
+  (g/edn->image image))
 
 ; too many ! too big ! scroll ... only show files first & preview?
 ; make tree view from folders, etc. .. !! all creatures animations showing...
@@ -78,7 +80,7 @@
     #_[(ui/text-button file (fn []))]))
 
 (defmethod ->widget :image [_ image]
-  (ui/image->widget (edn->image image) {})
+  (ui/image->widget (g/edn->image image) {})
   #_(ui/image-button image
                      #(stage-add! (->scrollable-choose-window (texture-rows)))
                      {:dimensions [96 96]})) ; x2  , not hardcoded here
@@ -90,8 +92,8 @@
   (let [table (ui/table {:rows rows :cell-defaults {:pad 1} :pack? true})
         scroll-pane (ui/scroll-pane table)]
     {:actor scroll-pane
-     :width  (- (gui-viewport-width)  600)    ; (+ (actor/width table) 200)
-     :height (- (gui-viewport-height) 100)})) ; (min (- (gui-viewport-height) 50) (actor/height table))
+     :width  (- (g/gui-viewport-width)  600)    ; (+ (actor/width table) 200)
+     :height (- (g/gui-viewport-height) 100)})) ; (min (- (g/gui-viewport-height) 50) (actor/height table))
 
 (defn- ->scrollable-choose-window [rows]
   (ui/window {:title "Choose"
