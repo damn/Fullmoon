@@ -1814,7 +1814,7 @@
       (mod-info-text modifiers))))
 
 (defc :item/slot
-  {:data (vector :enum (keys empty-inventory))})
+  {:data (apply vector :enum (keys empty-inventory))})
 
 (def ^:private body-props
   {:width 0.75
