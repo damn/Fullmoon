@@ -1,7 +1,8 @@
 (ns core.tool
   (:require [clojure.gdx :refer :all]
             [clojure.java.io :as io]
-            [clojure.tools.namespace.repl :refer [disable-reload!]])
+            [clojure.tools.namespace.repl :refer [disable-reload!]]
+            [core.properties :as properties])
   (:import (javafx.event EventHandler)
            (javafx.scene.control Button TreeItem TreeView)
            (javafx.scene.image Image ImageView)
@@ -190,7 +191,7 @@
  (fx-run
   (let [tab-pane (doto (TabPane.)
                    (.setTabClosingPolicy TabPane$TabClosingPolicy/UNAVAILABLE))]
-    (doseq [property-type (sort (types))
+    (doseq [property-type (sort (properties/types))
             :let [tab (Tab. (:title (overview property-type)) (Label. "whre thsi labl is"))]]
       (.setContent tab (overview-flow-pane property-type))
       (.add (.getTabs tab-pane) tab))
