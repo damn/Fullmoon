@@ -23,8 +23,8 @@
    (#{:number :nat-int :int :pos :pos-int :val-max} data) :number
    :else data))
 
-(defmulti ^:private ->widget      (fn [data _v]      (data-type->widget (data/->type data))))
-(defmulti ^:private widget->value (fn [data _widget] (data-type->widget (data/->type data))))
+(defmulti ^:private ->widget      (fn [data _v]      (data-type->widget (data/type data))))
+(defmulti ^:private widget->value (fn [data _widget] (data-type->widget (data/type data))))
 
 (comment
  (keys (methods ->widget))
@@ -195,7 +195,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [data (data/k->data k)]
+  (let [data (data/component k)]
     (cond
      (#{:one-to-one :one-to-many} data) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
@@ -257,7 +257,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (data/k->data k) v)
+        value-widget (->widget (data/component k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -291,7 +291,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (data/k->data k) value-widget)])))
+             [k (widget->value (data/component k) value-widget)])))
 
 ;;
 

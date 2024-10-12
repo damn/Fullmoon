@@ -1,31 +1,17 @@
 (ns core.data
+  (:refer-clojure :exclude [type])
   (:require [clojure.gdx.utils :refer [safe-get]]
             [core.component :as component]))
 
-; probably a better name for this
-; :d/type ?
-; or document where its used as param or name
-
-; actually I also do this for components
-; either just kw or [kw & values]
-; so are data types also components?
-; with :d/
-; => systems need to dispatch like that
-; that makes it also clearer what a 'component' is !
-; - anything -
-; even a namespace --> modules come back
-; or a var !
-(defn ->type [data]
+(defn type [data]
   (if (vector? data)
     (data 0)
     data))
 
-(defmulti edn->value (fn [data v] (->type data)))
+(defmulti edn->value (fn [data v] (type data)))
 (defmethod edn->value :default [_data v] v)
 
-; if this is just static no need defmethod ?
-; (data/def :d/number number?)
-(defmulti schema ->type)
+(defmulti schema type)
 (defmethod schema :default [data] data)
 
 (defmethod schema :number  [_] number?)
@@ -48,7 +34,7 @@
    [:frame-duration pos?]
    [:looping? :boolean]])
 
-(defn k->data [k]
+(defn component [k]
   (:data (safe-get component/attributes k)))
 
 (defn- attribute-schema
@@ -61,7 +47,7 @@
     (do
      (assert (keyword? k))
      (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
-     [k schema-props (schema (k->data k))])))
+     [k schema-props (schema (component k))])))
 
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (attribute-schema ks)))

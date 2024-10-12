@@ -25,7 +25,7 @@
 (defn ->schema [property]
   (-> property
       ->type
-      data/k->data
+      data/component
       data/schema
       m/schema))
 
@@ -70,9 +70,12 @@
 (defn build [property]
   (apply-kvs property
              (fn [k v]
-               (data/edn->value (try (data/k->data k)
-                                     (catch Throwable _t
-                                       (swap! undefined-data-ks conj k)))
-                                (if (map? v)
-                                  (build v)
-                                  v)))))
+               (try (data/edn->value (try (data/component k)
+                                          (catch Throwable _t
+                                            (swap! undefined-data-ks conj k)
+                                            ::undefined-component))
+                                     (if (map? v)
+                                       (build v)
+                                       v))
+                    (catch Throwable t
+                      (throw (ex-info " " {:k k :v v})))))))
