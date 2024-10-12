@@ -9,6 +9,8 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.utils :refer [bind-root dispose!]]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.math.shape :as shape]
+            [clojure.gdx.math.raycaster :as ray]
             clojure.gdx.editor
             core.creature
             core.stat
@@ -409,7 +411,7 @@
     (g/draw-circle position radius [1 0 0 0.5])
     (doseq [[x y] (map #(:position @%) (circle->cells grid circle))]
       (g/draw-rectangle x y 1 1 [1 0 0 0.5]))
-    (let [{[x y] :left-bottom :keys [width height]} (circle->outer-rectangle circle)]
+    (let [{[x y] :left-bottom :keys [width height]} (shape/circle->outer-rectangle circle)]
       (g/draw-rectangle x y width height [0 0 1 1]))))
 
 (def ^:private ^:dbg-flag tile-grid? false)
@@ -548,7 +550,7 @@
           base-color (if explored? explored-tile-color black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
-                     (let [blocked? (fast-ray-blocked? raycaster light-position position)]
+                     (let [blocked? (ray/blocked? raycaster light-position position)]
                        (swap! light-cache assoc position blocked?)
                        blocked?)
                      cache-entry)]

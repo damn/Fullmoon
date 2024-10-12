@@ -1,7 +1,6 @@
 (ns clojure.gdx
   {:metadoc/categories {:effect "💥 Effects"
                         :entity "👾 Entity"
-                        :geometry "📐 Geometry"
                         :properties "📦️ Properties"
                         :screen "📺 Screens"
                         :utils  "🔧 Utils"
@@ -16,6 +15,8 @@
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.utils :refer [safe-get bind-root]]
+            [clojure.gdx.math.raycaster :as ray]
+            [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [clojure.edn :as edn]
@@ -25,9 +26,7 @@
             [data.grid2d :as g2d]
             [malli.core :as m]
             [malli.error :as me])
-  (:import (com.badlogic.gdx.math Circle Rectangle Intersector)
-           (com.badlogic.gdx.scenes.scene2d Stage)
-           (gdl RayCaster)))
+  (:import (com.badlogic.gdx.scenes.scene2d Stage)))
 
 (def ^:private ^:dbg-flag debug-print-txs? false)
 
@@ -461,167 +460,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
        (str/join "\n")
        remove-newlines))
 
-(defn- ->circle [[x y] radius]
-  (Circle. x y radius))
-
-(defn- ->rectangle [[x y] width height]
-  (Rectangle. x y width height))
-
-(defn- rect-contains? [^Rectangle rectangle [x y]]
-  (.contains rectangle x y))
-
-(defmulti ^:private overlaps? (fn [a b] [(class a) (class b)]))
-
-(defmethod overlaps? [Circle Circle]
-  [^Circle a ^Circle b]
-  (Intersector/overlaps a b))
-
-(defmethod overlaps? [Rectangle Rectangle]
-  [^Rectangle a ^Rectangle b]
-  (Intersector/overlaps a b))
-
-(defmethod overlaps? [Rectangle Circle]
-  [^Rectangle rect ^Circle circle]
-  (Intersector/overlaps circle rect))
-
-(defmethod overlaps? [Circle Rectangle]
-  [^Circle circle ^Rectangle rect]
-  (Intersector/overlaps circle rect))
-
-(defn- rectangle? [{[x y] :left-bottom :keys [width height]}]
-  (and x y width height))
-
-(defn- circle? [{[x y] :position :keys [radius]}]
-  (and x y radius))
-
-(defn- m->shape [m]
-  (cond
-   (rectangle? m) (let [{:keys [left-bottom width height]} m]
-                    (->rectangle left-bottom width height))
-
-   (circle? m) (let [{:keys [position radius]} m]
-                 (->circle position radius))
-
-   :else (throw (Error. (str m)))))
-
-(defn shape-collides? [a b]
-  (overlaps? (m->shape a) (m->shape b)))
-
-(defn point-in-rect? [point rectangle]
-  (rect-contains? (m->shape rectangle) point))
-
-(defn circle->outer-rectangle [{[x y] :position :keys [radius] :as circle}]
-  {:pre [(circle? circle)]}
-  (let [radius (float radius)
-        size (* radius 2)]
-    {:left-bottom [(- (float x) radius)
-                   (- (float y) radius)]
-     :width  size
-     :height size}))
-
-(defprotocol PFastRayCaster
-  (fast-ray-blocked? [_ start target]))
-
-; boolean array used because 10x faster than access to clojure grid data structure
-
-; this was a serious performance bottleneck -> alength is counting the whole array?
-;(def ^:private width alength)
-;(def ^:private height (comp alength first))
-
-; does not show warning on reflection, but shows cast-double a lot.
-(defrecord ArrRayCaster [arr width height]
-  PFastRayCaster
-  (fast-ray-blocked? [_ [start-x start-y] [target-x target-y]]
-    (RayCaster/rayBlocked (double start-x)
-                          (double start-y)
-                          (double target-x)
-                          (double target-y)
-                          width ;(width boolean-2d-array)
-                          height ;(height boolean-2d-array)
-                          arr)))
-
-#_(defn ray-steplist [boolean-2d-array [start-x start-y] [target-x target-y]]
-  (seq
-   (RayCaster/castSteplist start-x
-                           start-y
-                           target-x
-                           target-y
-                           (width boolean-2d-array)
-                           (height boolean-2d-array)
-                           boolean-2d-array)))
-
-#_(defn ray-maxsteps [boolean-2d-array  [start-x start-y] [vector-x vector-y] max-steps]
-  (let [erg (RayCaster/castMaxSteps start-x
-                                    start-y
-                                    vector-x
-                                    vector-y
-                                    (width boolean-2d-array)
-                                    (height boolean-2d-array)
-                                    boolean-2d-array
-                                    max-steps
-                                    max-steps)]
-    (if (= -1 erg)
-      :not-blocked
-      erg)))
-
-; STEPLIST TEST
-
-#_(def current-steplist (atom nil))
-
-#_(defn steplist-contains? [tilex tiley] ; use vector equality
-  (some
-    (fn [[x y]]
-      (and (= x tilex) (= y tiley)))
-    @current-steplist))
-
-#_(defn render-line-middle-to-mouse [color]
-  (let [[x y] (input/get-mouse-pos)]
-    (g/draw-line (/ (g/viewport-width) 2)
-                 (/ (g/viewport-height) 2)
-                 x y color)))
-
-#_(defn update-test-raycast-steplist []
-    (reset! current-steplist
-            (map
-             (fn [step]
-               [(.x step) (.y step)])
-             (raycaster/ray-steplist (get-cell-blocked-boolean-array)
-                                     (:position @world-player)
-                                     (g/map-coords)))))
-
-;; MAXSTEPS TEST
-
-#_(def current-steps (atom nil))
-
-#_(defn update-test-raycast-maxsteps []
-    (let [maxsteps 10]
-      (reset! current-steps
-              (raycaster/ray-maxsteps (get-cell-blocked-boolean-array)
-                                      (v-direction (g/map-coords) start)
-                                      maxsteps))))
-
-#_(defn draw-test-raycast []
-  (let [start (:position @world-player)
-        target (g/map-coords)
-        color (if (fast-ray-blocked? start target) g/red g/green)]
-    (render-line-middle-to-mouse color)))
-
-; PATH BLOCKED TEST
-
-#_(defn draw-test-path-blocked [] ; TODO draw in map no need for screenpos-of-tilepos
-  (let [[start-x start-y] (:position @world-player)
-        [target-x target-y] (g/map-coords)
-        [start1 target1 start2 target2] (create-double-ray-endpositions start-x start-y target-x target-y 0.4)
-        [start1screenx,start1screeny]   (screenpos-of-tilepos start1)
-        [target1screenx,target1screeny] (screenpos-of-tilepos target1)
-        [start2screenx,start2screeny]   (screenpos-of-tilepos start2)
-        [target2screenx,target2screeny] (screenpos-of-tilepos target2)
-        color (if (is-path-blocked? start1 target1 start2 target2)
-                g/red
-                g/green)]
-    (g/draw-line start1screenx start1screeny target1screenx target1screeny color)
-    (g/draw-line start2screenx start2screeny target2screenx target2screeny color)))
-
 (defn find-first
   "Returns the first item of coll for which (pred item) returns logical true.
   Consumes sequences up to the first match, will consume the entire sequence
@@ -877,9 +715,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
         arr (make-array Boolean/TYPE width height)]
     (doseq [cell (g2d/cells grid)]
       (set-arr arr @cell position->blocked?))
-    (map->ArrRayCaster {:arr arr
-                        :width width
-                        :height height})))
+    (ray/map->ArrayRayCaster {:arr arr
+                              :width width
+                              :height height})))
 
 ; TO math.... // not tested
 (defn- create-double-ray-endpositions
@@ -904,7 +742,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (bind-root #'world-raycaster (->raycaster grid position->blocked?)))
 
 (defn ray-blocked? [start target]
-  (fast-ray-blocked? world-raycaster start target))
+  (ray/blocked? world-raycaster start target))
 
 (defn path-blocked?
   "path-w in tiles. casts two rays."
@@ -991,20 +829,20 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
   (circle->cells [grid circle]
     (->> circle
-         circle->outer-rectangle
+         shape/circle->outer-rectangle
          (rectangle->cells grid)))
 
   (circle->entities [grid circle]
     (->> (circle->cells grid circle)
          (map deref)
          cells->entities
-         (filter #(shape-collides? circle @%)))))
+         (filter #(shape/overlaps? circle @%)))))
 
 (declare world-grid)
 
 (defn point->entities [position]
   (when-let [cell (get world-grid (->tile position))]
-    (filter #(point-in-rect? position @%)
+    (filter #(shape/contains? @% position)
             (:entities @cell))))
 
 (defn grid-add-entity! [entity]
@@ -1596,7 +1434,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (v/direction (:position entity*) (:position other-entity*)))
 
 (defn collides? [entity* other-entity*]
-  (shape-collides? entity* other-entity*))
+  (shape/overlaps? entity* other-entity*))
 
 ;;;; ?
 
