@@ -30,40 +30,50 @@
 
 (declare stage)
 
+(defn expand? [sym]
+  (case (str sym)
+    ("ns" "def" "declare" "defmacro" "defn" "defn-" "defmulti"
+          "defsystem" "defc" "defrecord" "defprotocol") 1
+    ("defmethod" "derive") 2
+    0))
+
 (defn- first-sym->icon [sym]
   (case (str sym)
-    "ns" "📦"
-    "def" "📌"
-    "declare" "🔖"
-    "defmacro" "🏗️"
-    "defn" "📜"
-    "defn-" "🔧"
-    "defmulti" "🛠️"
-    "defmethod" "🧩"
-    "defsystem" "🔄"
-    "defc" "🔑"
-    "comment" "📖"
-    "derive" "🧬"
+    "ns"          "📦"
+    "def"         "📌"
+    "declare"     "🔖"
+    "defmacro"    "🏗️"
+    "defn"        "📜"
+    "defn-"       "🔧"
+    "defmulti"    "🛠️"
+    "defmethod"   "🧩"
+    "defsystem"   "🔄"
+    "defc"        "🔑"
+    "comment"     "📖"
+    "derive"      "🧬"
     "defprotocol" "📄"
-    "defrecord" "🗃️"
+    "defrecord"   "🗃️"
     "?"))
 
-(defn- syms->text [[first-sym second-sym]]
-  (str (first-sym->icon first-sym) " " first-sym " " second-sym))
+(require '[clojure.string :as str])
 
-(import javafx.scene.layout.Background)
-(import javafx.scene.layout.BackgroundImage)
-(import javafx.scene.layout.BackgroundRepeat)
-(import javafx.scene.layout.BackgroundPosition)
-(import javafx.scene.layout.BackgroundSize)
+(defn- syms->text [[first-sym & more]]
+  (str (first-sym->icon first-sym) " " first-sym " "
+       (when-let [amount (expand? first-sym)]
+         (str/join " " (take amount more)))))
+
+(defn- clj-files [folder]
+  (sort (filter #(str/ends-with? % ".clj") (map str (file-seq (io/file "src/"))))))
+
+; (clj-files "src/")
 
 (defn clj-file-forms-tree [file]
   (.setTitle stage "clj-file-forms-tree")
-  (let [clj-forms (doall (map (partial take 2) (clj-file-forms file)))
+  (let [clj-forms (clj-file-forms file)
         ;root-icon (ImageView. (Image. (io/input-stream (io/resource "images/animations/vampire-1.png"))))
-        root-item (TreeItem. (syms->text (first clj-forms)), #_root-icon)]
+        root-item (TreeItem. file, #_root-icon)]
     (.setExpanded root-item true)
-    (doseq [syms (rest clj-forms)
+    (doseq [syms clj-forms
             ;file (map str (file-seq (io/file "src/")))
             ]
       (.add (.getChildren root-item) (TreeItem. (syms->text syms)
@@ -78,6 +88,7 @@
 
 (comment
  (fx-run (clj-file-forms-tree "src/clojure/gdx.clj"))
+ (fx-run (clj-file-forms-tree "src/core/app.clj"))
 
  )
 
