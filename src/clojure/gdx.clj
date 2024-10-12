@@ -1,7 +1,5 @@
 (ns clojure.gdx
-  (:require [clojure.gdx.app :as app]
-            [clojure.gdx.audio :refer [play-sound!]]
-            [clojure.gdx.assets :as assets]
+  (:require [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :as input]
             [clojure.gdx.ui :as ui]
@@ -167,29 +165,6 @@
   (do! [[_ params]]
     (show-player-modal! params)
     nil))
-
-(defn start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
-  (db/load! properties)
-  (app/start! (reify app/Listener
-                (create! [_]
-                  (assets/load! resources)
-                  (g/load! graphics)
-                  (ui/load! ui)
-                  (load-screens! screen-ks))
-
-                (dispose! [_]
-                  (assets/dispose!)
-                  (g/dispose!)
-                  (ui/dispose!)
-                  (dispose-screens!))
-
-                (render! [_]
-                  (com.badlogic.gdx.utils.ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
-                  (screen-render! (current-screen)))
-
-                (resize! [_ dimensions]
-                  (g/resize! dimensions)))
-              config))
 
 (defn enemy-faction [{:keys [entity/faction]}]
   (case faction

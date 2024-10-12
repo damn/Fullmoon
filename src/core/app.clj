@@ -1,6 +1,7 @@
 (ns core.app
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.app :as app]
+            [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
@@ -728,6 +729,29 @@
     {:stage (->stage [(->background-image)
                       (create-table)])
      :sub-screen [:options/sub-screen]}))
+
+(defn- start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
+  (db/load! properties)
+  (app/start! (reify app/Listener
+                (create! [_]
+                  (assets/load! resources)
+                  (g/load! graphics)
+                  (ui/load! ui)
+                  (load-screens! screen-ks))
+
+                (dispose! [_]
+                  (assets/dispose!)
+                  (g/dispose!)
+                  (ui/dispose!)
+                  (dispose-screens!))
+
+                (render! [_]
+                  (com.badlogic.gdx.utils.ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
+                  (screen-render! (current-screen)))
+
+                (resize! [_ dimensions]
+                  (g/resize! dimensions)))
+              config))
 
 (defn -main []
   (start-app! :title "Core"
