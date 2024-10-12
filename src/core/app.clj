@@ -16,6 +16,7 @@
             core.creature
             core.stat
             core.projectile
+            [core.val-max :as val-max]
             [core.world :as world]
             [data.grid2d :as g2d]))
 
@@ -35,7 +36,7 @@
         y-hp (+ y-mana rahmenh)
         render-hpmana-bar (fn [x y contentimg minmaxval name]
                             (g/draw-image rahmen [x y])
-                            (g/draw-image (g/sub-image contentimg [0 0 (* rahmenw (val-max-ratio minmaxval)) rahmenh])
+                            (g/draw-image (g/sub-image contentimg [0 0 (* rahmenw (val-max/ratio minmaxval)) rahmenh])
                                           [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/actor {:draw (fn []

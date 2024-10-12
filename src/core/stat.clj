@@ -10,7 +10,8 @@
             [clojure.string :as str]
             core.creature
             [core.operation :as op]
-            [core.projectile :refer [projectile-size]]))
+            [core.projectile :refer [projectile-size]]
+            [core.val-max :as val-max]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))
@@ -168,7 +169,7 @@
 
   (render-info [_ entity*]
     (when-let [hp (entity-stat entity* :stats/hp)]
-      (let [ratio (val-max-ratio hp)
+      (let [ratio (val-max/ratio hp)
             {:keys [position width half-width half-height entity/mouseover?]} entity*
             [x y] position]
         (when (or (< ratio 1) mouseover?)
