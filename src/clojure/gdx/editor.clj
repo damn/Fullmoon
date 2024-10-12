@@ -71,7 +71,7 @@
   (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
 (defmethod ->widget :enum [data v]
-  (ui/select-box {:items (map ->edn-str (rest (data 1)))
+  (ui/select-box {:items (map ->edn-str (rest data))
                   :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]

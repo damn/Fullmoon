@@ -306,7 +306,7 @@
 
 (defc :entity/faction
   {:let faction
-   :data [:enum [:good :evil]]}
+   :data [:enum :good :evil]}
   (info-text [_]
     (str "[SLATE]Faction: " (name faction) "[]")))
 
@@ -1509,7 +1509,7 @@
 (defc :skill/start-action-sound {:data :sound})
 
 (defc :skill/action-time-modifier-key
-  {:data [:enum [:stats/cast-speed :stats/attack-speed]]}
+  {:data [:enum :stats/cast-speed :stats/attack-speed]}
   (info-text [[_ v]]
     (str "[VIOLET]" (case v
                       :stats/cast-speed "Spell"
@@ -1814,7 +1814,7 @@
       (mod-info-text modifiers))))
 
 (defc :item/slot
-  {:data [:enum (keys empty-inventory)]})
+  {:data (vector :enum (keys empty-inventory))})
 
 (def ^:private body-props
   {:width 0.75

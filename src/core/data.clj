@@ -9,7 +9,6 @@
     (data 0)
     data))
 
-; this defined @ editor for image/one-to-many ...
 (defmulti edn->value (fn [data v] (->type data)))
 (defmethod edn->value :default [_data v] v)
 
@@ -23,9 +22,6 @@
 (defmethod schema :int     [_] int?)
 (defmethod schema :pos     [_] pos?)
 (defmethod schema :pos-int [_] pos-int?)
-
-(defmethod schema :enum [[_ items]]
-  (apply vector :enum items))
 
 (defmethod schema :sound [_]
   :string)

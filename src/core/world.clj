@@ -365,9 +365,10 @@
 
 (defc :world/components {:data [:map []]})
 
-(defc :world/generator {:data [:enum [:world.generator/tiled-map
-                                      :world.generator/modules
-                                      :world.generator/uf-caves]]})
+(defc :world/generator {:data [:enum
+                               :world.generator/tiled-map
+                               :world.generator/modules
+                               :world.generator/uf-caves]})
 
 (property/def :properties/worlds
   {:schema [:world/generator
