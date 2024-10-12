@@ -27,7 +27,7 @@
            (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
-           (com.badlogic.gdx.utils Disposable SharedLibraryLoader ScreenUtils)
+           (com.badlogic.gdx.utils SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.scenes.scene2d Stage)
            (gdl RayCaster)))
 
@@ -821,8 +821,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn- set-input-processor! [processor]
   (.setInputProcessor Gdx/input processor))
-
-(def dispose! Disposable/.dispose)
 
 (defn play-sound! [path]
   (Sound/.play (assets/get path)))

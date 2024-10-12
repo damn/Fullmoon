@@ -4,7 +4,7 @@
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
-            [clojure.gdx.utils :refer [bind-root]]
+            [clojure.gdx.utils :refer [bind-root dispose!]]
             [clojure.gdx.ui.actor :as a]
             clojure.gdx.editor
             core.creature

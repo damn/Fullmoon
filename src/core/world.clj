@@ -4,6 +4,7 @@
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
