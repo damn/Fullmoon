@@ -56,7 +56,7 @@
       s
       (remove-newlines new-s))))
 
-(defsystem info-text "Return info-string (for tooltips,etc.). Default nil." [_])
+(defsystem info-text "Return info-string (for tooltips,etc.). Default nil.")
 (defmethod info-text :default [_])
 
 (declare ^:dynamic *info-text-entity*)
@@ -144,10 +144,10 @@
 (defn current-screen []
   [screen-k (screen-k screens)])
 
-(defsystem screen-enter "FIXME" [_])
+(defsystem screen-enter)
 (defmethod screen-enter :default [_])
 
-(defsystem screen-exit  "FIXME" [_])
+(defsystem screen-exit)
 (defmethod screen-exit :default  [_])
 
 (defn change-screen
@@ -161,12 +161,12 @@
     (bind-root #'screen-k new-k)
     (screen-enter [new-k v])))
 
-(defsystem ^:private screen-render! "FIXME" [_])
+(defsystem ^:private screen-render!)
 
-(defsystem screen-render "FIXME" [_])
+(defsystem screen-render)
 (defmethod screen-render :default [_])
 
-(defsystem ->mk "Create component value. Default returns v." [_])
+(defsystem ->mk "Create component value. Default returns v.")
 (defmethod ->mk :default [[_ v]] v)
 
 (defn create-vs
@@ -1096,22 +1096,22 @@
 (defsystem create "Create entity with eid for txs side-effects. Default nil." [_ entity])
 (defmethod create :default [_ entity])
 
-(defsystem destroy "FIXME" [_ entity])
+(defsystem destroy [_ entity])
 (defmethod destroy :default [_ entity])
 
-(defsystem tick "FIXME" [_ entity])
+(defsystem tick [_ entity])
 (defmethod tick :default [_ entity])
 
-(defsystem render-below "FIXME" [_ entity*])
+(defsystem render-below [_ entity*])
 (defmethod render-below :default [_ entity*])
 
-(defsystem render "FIXME" [_ entity*])
+(defsystem render [_ entity*])
 (defmethod render :default [_ entity*])
 
-(defsystem render-above "FIXME" [_ entity*])
+(defsystem render-above [_ entity*])
 (defmethod render-above :default [_ entity*])
 
-(defsystem render-info "FIXME" [_ entity*])
+(defsystem render-info [_ entity*])
 (defmethod render-info :default [_ entity*])
 
 (def ^:private render-systems [render-below
@@ -1461,7 +1461,7 @@
               :columns 16
               :image/scale 2}})
 
-(defsystem clicked-skillmenu-skill "FIXME" [_ skill])
+(defsystem clicked-skillmenu-skill [_ skill])
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
 (defn- player-clicked-skillmenu [skill]
@@ -1959,7 +1959,7 @@
                      (a/mouseover? this (g/gui-mouse-position))
                      (a/id (a/parent this))))))
 
-(defsystem clicked-inventory-cell "FIXME" [_ cell])
+(defsystem clicked-inventory-cell [_ cell])
 (defmethod clicked-inventory-cell :default [_ cell])
 
 (defn- player-clicked-inventory [cell]
@@ -2063,17 +2063,17 @@
       (ui/remove-tooltip! cell-widget)
       nil)))
 
-(defsystem enter "FIXME" [_])
+(defsystem enter)
 (defmethod enter :default [_])
 
-(defsystem exit  "FIXME" [_])
+(defsystem exit)
 (defmethod exit :default  [_])
 
-(defsystem player-enter "FIXME" [_])
+(defsystem player-enter)
 (defmethod player-enter :default [_])
 
-(defsystem pause-game? "FIXME" [_])
+(defsystem pause-game?)
 (defmethod pause-game? :default [_])
 
-(defsystem manual-tick "FIXME" [_])
+(defsystem manual-tick)
 (defmethod manual-tick :default [_])

@@ -17,8 +17,7 @@
         (println logic-frame "." (debug-print-tx tx)))))
 
 (defsystem do!
-  "Return nil or new coll/seq of txs to be done recursively."
-  [_])
+  "Return nil or new coll/seq of txs to be done recursively.")
 
 (defn effect!
   "An effect is defined as a sequence of txs(transactions).

@@ -217,20 +217,17 @@
 
 (defsystem applicable?
   "An effect will only be done (with do!) if this function returns truthy.
-Required system for every effect, no default."
-  [_])
+Required system for every effect, no default.")
 
 (defsystem useful?
   "Used for NPC AI.
 Called only if applicable? is truthy.
 For example use for healing effect is only useful if hitpoints is < max.
-Default method returns true."
-  [_])
+Default method returns true.")
 (defmethod useful? :default [_] true)
 
 (defsystem ^:private render-effect
-  "Renders effect during active-skill state while active till done?. Default do nothing."
-  [_])
+  "Renders effect during active-skill state while active till done?. Default do nothing.")
 (defmethod render-effect :default [_])
 
 ;;

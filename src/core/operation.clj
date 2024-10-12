@@ -9,13 +9,13 @@
     1.0 "+"
     -1.0 ""))
 
-(defsystem value-text "FIXME" [_])
+(defsystem value-text)
 
 (defn info-text [{value 1 :as operation}]
   (str (+? value) (value-text operation)))
 
-(defsystem apply "FIXME" [_ base-value])
-(defsystem order "FIXME" [_])
+(defsystem apply [_ base-value])
+(defsystem order)
 
 (defc :op/inc
   {:data :number

@@ -1,20 +1,31 @@
-(ns core.component)
+(ns core.component
+  "A component is a vector of [k & optional-more-values].
+  For example a minimal component is `[:foo]`")
 
 (def systems "Map of all systems as key of name-string to var." {})
 
 (defmacro defsystem
-  "A system is a multimethod which takes a component `[k v]` and dispatches on k."
-  [sys-name docstring params]
-  (when (zero? (count params))
-    (throw (IllegalArgumentException. "First argument needs to be component.")))
-  (when-let [avar (resolve sys-name)]
-    (println "WARNING: Overwriting defsystem:" avar))
-  `(do
-    (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
-      ~(str "[[defsystem]] with params: `" params "` \n\n " docstring)
-      (fn ~(symbol (str (name sys-name))) [[k# _#] & args#] k#))
-    (alter-var-root #'systems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
-    (var ~sys-name)))
+  "A system is a multimethod which takes as first argument a component and dispatches on k."
+  ([sys-name]
+   `(defsystem ~sys-name nil ['_]))
+
+  ([sys-name params-or-doc]
+   (let [[doc params] (if (string? params-or-doc)
+                        [params-or-doc ['_]]
+                        [nil params-or-doc])]
+     `(defsystem ~sys-name ~doc ~params)))
+
+  ([sys-name docstring params]
+   (when (zero? (count params))
+     (throw (IllegalArgumentException. "First argument needs to be component.")))
+   (when-let [avar (resolve sys-name)]
+     (println "WARNING: Overwriting defsystem:" avar))
+   `(do
+     (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
+       ~(str "[[defsystem]] with params: `" params (when docstring "` \n\n " docstring))
+       (fn [[k#] & _args#] k#))
+     (alter-var-root #'systems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
+     (var ~sys-name))))
 
 (def attributes {})
 
@@ -32,7 +43,7 @@ attr-map may contain `:let` binding which is let over the value part of a compon
 
 Example:
 ```clojure
-(defsystem foo \"foo docstring.\" [_])
+(defsystem foo)
 
 (defc :foo/bar
   {:let {:keys [a b]}}
