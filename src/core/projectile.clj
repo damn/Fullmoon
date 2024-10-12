@@ -2,9 +2,10 @@
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.math.vector :as v]
             [core.component :refer [defc]]
-            [core.effect :refer [do!]]))
+            [core.effect :refer [do!]]
+            [core.property :as property]))
 
-(def-property-type :properties/projectiles
+(property/def :properties/projectiles
   {:schema [:entity/image
             :projectile/max-range
             :projectile/speed

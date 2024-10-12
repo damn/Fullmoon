@@ -10,6 +10,8 @@
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
             [core.component :refer [defc]]
+            [core.properties :as properties]
+            [core.property :as property]
             [data.grid2d :as g2d]))
 
 (def modules-file "maps/modules.tmx")
@@ -154,7 +156,7 @@
   (memoize
    (fn [{:keys [property/id] :as prop}]
      (assert id)
-     (let [image (prop->image prop)
+     (let [image (property/->image prop)
            tile (t/->static-tiled-map-tile (:texture-region image))]
        (t/put! (t/m-props tile) "id" id)
        tile))))
@@ -163,7 +165,7 @@
 
 (defn- place-creatures! [spawn-rate tiled-map spawn-positions area-level-grid]
   (let [layer (t/add-layer! tiled-map :name "creatures" :visible false)
-        creature-properties (all-properties :properties/creatures)]
+        creature-properties (properties/all :properties/creatures)]
     (when spawn-creatures?
       (doseq [position spawn-positions
               :let [area-level (get area-level-grid position)]
@@ -255,7 +257,7 @@
 
 (defn- uf-place-creatures! [spawn-rate tiled-map spawn-positions]
   (let [layer (t/add-layer! tiled-map :name "creatures" :visible false)
-        creatures (all-properties :properties/creatures)
+        creatures (properties/all :properties/creatures)
         level (inc (rand-int 6))
         creatures (creatures-with-level creatures level)]
     ;(println "Level: " level)
@@ -367,7 +369,7 @@
                                       :world.generator/modules
                                       :world.generator/uf-caves]]})
 
-(def-property-type :properties/worlds
+(property/def :properties/worlds
   {:schema [:world/generator
             :world/player-creature
             [:world/tiled-map {:optional true}]
@@ -390,7 +392,7 @@
   (uf-caves world))
 
 (defn generate-level [world-id]
-  (let [prop (build-property world-id)]
+  (let [prop (properties/get world-id)]
     (assoc (generate prop) :world/player-creature (:world/player-creature prop))))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
@@ -529,8 +531,8 @@ direction keys: move")
               :cell-defaults {:pad 10}
               :rows [[(ui/label (with-out-str
                                 (clojure.pprint/pprint
-                                 (build-property level-id))))]
-                     [(ui/text-button "Generate" #(try (generate-screen-ctx (build-property level-id))
+                                 (properties/get level-id))))]
+                     [(ui/text-button "Generate" #(try (generate-screen-ctx (properties/get level-id))
                                                        (catch Throwable t
                                                          (error-window! t)
                                                          (println t))))]]

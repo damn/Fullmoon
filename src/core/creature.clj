@@ -7,9 +7,11 @@
             [clojure.string :as str]
             [core.component :refer [defc]]
             [core.effect :refer [do!]]
+            [core.property :as property]
+            [core.properties :as properties]
             [reduce-fsm :as fsm]))
 
-(def-property-type :properties/creatures
+(property/def :properties/creatures
   {:schema [:entity/body
             :property/pretty-name
             :creature/species
@@ -69,7 +71,7 @@
 (defc :tx/creature
   {:let {:keys [position creature-id components]}}
   (do! [_]
-    (let [props (build-property creature-id)]
+    (let [props (properties/get creature-id)]
       [[:e/create
         position
         (->body (:entity/body props))

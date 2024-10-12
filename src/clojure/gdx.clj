@@ -12,202 +12,15 @@
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
-            [clojure.edn :as edn]
-            [clojure.pprint :refer [pprint]]
             [clj-commons.pretty.repl :refer [pretty-pst]]
-            [core.component :refer [defsystem defc defc* component-attributes]]
+            [core.component :refer [defsystem defc]]
             [core.data :as data]
             [core.effect :refer [do! effect!]]
             [core.operation :as op]
+            [core.properties :as properties]
+            [core.property :as property]
             [data.grid2d :as g2d]
-            [malli.core :as m]
-            [malli.error :as me]))
-
-(defn def-property-type [k {:keys [schema overview]}]
-  (defc k
-    {:data [:map (conj schema :property/id)]
-     :overview overview}))
-
-(defn data-type [k]
-  (try (data/->type (:data (safe-get component-attributes k)))
-       (catch Throwable t
-         (throw (ex-info "" {:k k} t)))))
-
-(defn- data-schema [k] (:schema (data-type k)))
-
-(defn- property-type->id-namespace [property-type]
-  (keyword (name property-type)))
-
-(defn- attribute-schema
-  "Can define keys as just keywords or with properties like [:foo {:optional true}]."
-  [ks]
-  (for [k ks
-        :let [k? (keyword? k)
-              properties (if k? nil (k 1))
-              k (if k? k (k 0))]]
-    (do
-     (assert (keyword? k))
-     (assert (or (nil? properties) (map? properties)) (pr-str ks))
-     [k properties (data-schema k)])))
-
-(defn- map-schema [ks]
-  (apply vector :map {:closed true} (attribute-schema ks)))
-
-(defn- namespaced-ks [ns-name-k]
-  (filter #(= (name ns-name-k) (namespace %))
-          (keys component-attributes)))
-
-(defmethod data/schema :sound [_]
-  :string)
-
-(defmethod data/schema :image [_]
-  [:map {:closed true}
-   [:file :string]
-   [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
-
-(defmethod data/schema :data/animation [_]
-  [:map {:closed true}
-   [:frames :some]
-   [:frame-duration pos?]
-   [:looping? :boolean]])
-
-(defmethod data/schema :map [[_ ks]]
-  (map-schema ks))
-
-(defmethod data/schema :map-optional [[_ ks]]
-  (map-schema (map (fn [k] [k {:optional true}]) ks)))
-
-(defmethod data/schema :components-ns [[_ ns-name-k]]
-  (data/schema [:map-optional (namespaced-ks ns-name-k)]))
-
-(defmethod data/schema :one-to-many [[_ property-type]]
-  [:set [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]])
-
-(defmethod data/schema :one-to-one [[_ property-type]]
-  [:qualified-keyword {:namespace (property-type->id-namespace property-type)}])
-
-;;;;
-
-
-(defn ns-k->property-type [ns-k]
-  (keyword "properties" (name ns-k)))
-
-(defn- ->type [{:keys [property/id]}]
-  (keyword "properties" (namespace id)))
-
-(defn prop->image [{:keys [entity/image entity/animation]}]
-  (or image
-      (first (:frames animation))))
-
-(defn types []
-  (filter #(= "properties" (namespace %)) (keys component-attributes)))
-
-(defn overview [property-type]
-  (:overview (get component-attributes property-type)))
-
-(defn property->schema [property]
-  (-> property
-      ->type
-      data-schema
-      m/schema))
-
-(defn- validate [property]
-  (let [schema (property->schema property)
-        valid? (try (m/validate schema property)
-                    (catch Throwable t
-                      (throw (ex-info "m/validate fail" {:property property} t))))]
-    (when-not valid?
-      (throw (ex-info (str (me/humanize (m/explain schema property)))
-                      {:property property
-                       :schema (m/form schema)})))))
-
-(defc :property/id {:data [:qualified-keyword]})
-
-(declare properties-db
-         ^:private properties-edn-file)
-
-(defn- load-properties-db! [file]
-  (let [properties (-> file slurp edn/read-string)]
-    (assert (apply distinct? (map :property/id properties)))
-    (run! validate properties)
-    (bind-root #'properties-db (zipmap (map :property/id properties) properties))
-    (bind-root #'properties-edn-file file)))
-
-(defn- async-pprint-spit! [properties]
-  (.start
-   (Thread.
-    (fn []
-      (binding [*print-level* nil]
-        (->> properties
-             pprint
-             with-out-str
-             (spit properties-edn-file)))))))
-
-(defn- recur-sort-map [m]
-  (into (sorted-map)
-        (zipmap (keys m)
-                (map #(if (map? %)
-                        (recur-sort-map %)
-                        %)
-                     (vals m)))))
-
-(defn- async-write-to-file! []
-  (->> properties-db
-       vals
-       (sort-by ->type)
-       (map recur-sort-map)
-       doall
-       async-pprint-spit!))
-
-(def ^:private undefined-data-ks (atom #{}))
-
-(comment
- #{:frames
-   :looping?
-   :frame-duration
-   :file
-   :sub-image-bounds})
-
-; reduce-kv?
-(defn- apply-kvs
-  "Calls for every key in map (f k v) to calculate new value at k."
-  [m f]
-  (reduce (fn [m k]
-            (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
-          m
-          (keys m)))
-
-(defn- build [property]
-  (apply-kvs property
-             (fn [k v]
-               (data/edn->value (try (data-type k)
-                                     (catch Throwable _t
-                                       (swap! undefined-data-ks conj k)))
-                                (if (map? v)
-                                  (build v)
-                                  v)))))
-
-(defn build-property [id]
-  (build (safe-get properties-db id)))
-
-(defn all-properties [type]
-  (->> (vals properties-db)
-       (filter #(= type (->type %)))
-       (map build)))
-
-(defn update! [{:keys [property/id] :as property}]
-  {:pre [(contains? property :property/id)
-         (contains? properties-db id)]}
-  (validate property)
-  (alter-var-root #'properties-db assoc id property)
-  (async-write-to-file!))
-
-(defn delete! [property-id]
-  {:pre [(contains? properties-db property-id)]}
-  (alter-var-root #'properties-db dissoc property-id)
-  (async-write-to-file!))
-
-;;;;
+            [malli.core :as m]))
 
 (def ^:private info-text-k-order [:property/pretty-name
                                   :skill/action-time-modifier-key
@@ -461,7 +274,7 @@
     nil))
 
 (defn start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
-  (load-properties-db! properties)
+  (properties/load! properties)
   (app/start! (reify app/Listener
                 (create! [_]
                   (assets/load! resources)
@@ -1517,7 +1330,7 @@
     (when (anim-stopped? (:entity/animation @entity))
       [[:e/destroy entity]])))
 
-(def-property-type :properties/audiovisuals
+(property/def :properties/audiovisuals
   {:schema [:tx/sound
             :entity/animation]
    :overview {:title "Audiovisuals"
@@ -1527,7 +1340,7 @@
 (defc :tx/audiovisual
   (do! [[_ position id]]
     (let [{:keys [tx/sound
-                  entity/animation]} (build-property id)]
+                  entity/animation]} (properties/get id)]
       [[:tx/sound sound]
        [:e/create
         position
@@ -1635,7 +1448,7 @@
       #:entity {:line-render {:thick? thick? :end end :color color}
                 :delete-after-duration duration}]]))
 
-(def-property-type :properties/skills
+(property/def :properties/skills
   {:schema [:entity/image
             :property/pretty-name
             :skill/action-time-modifier-key
@@ -1667,12 +1480,12 @@
                                  :skills/melee-attack]
                              :let [; get-property in callbacks if they get changed, this is part of context permanently
                                    button (ui/image-button ; TODO reuse actionbar button scale?
-                                                           (:entity/image (build-property id)) ; TODO here anyway taken
+                                                           (:entity/image (properties/get id)) ; TODO here anyway taken
                                                            ; => should probably build this window @ game start
                                                            (fn []
-                                                             (effect! (player-clicked-skillmenu (build-property id)))))]]
+                                                             (effect! (player-clicked-skillmenu (properties/get id)))))]]
                          (do
-                          (ui/add-tooltip! button #(->info-text (build-property id))) ; TODO no player modifiers applied (see actionbar)
+                          (ui/add-tooltip! button #(->info-text (properties/get id))) ; TODO no player modifiers applied (see actionbar)
                           button))]
                 :pack? true}))
 
@@ -1964,7 +1777,7 @@
   (info-text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
-(def-property-type :properties/items
+(property/def :properties/items
   {:schema [:property/pretty-name
             :entity/image
             :item/slot

@@ -10,8 +10,10 @@
             [clojure.gdx.utils :refer [safe-get]]
             [clojure.set :as set]
             [clojure.string :as str]
-            [core.component :refer [component-attributes defc]]
+            [core.component :refer [defc] :as component]
             [core.data :as data]
+            [core.properties :as properties]
+            [core.property :as property]
             [malli.core :as m]
             [malli.generator :as mg]))
 
@@ -80,7 +82,7 @@
 ; make tree view from folders, etc. .. !! all creatures animations showing...
 (defn- texture-rows []
   (for [file (sort assets/all-texture-files)]
-    [(ui/image-button (prop->image file) (fn []))]
+    [(ui/image-button (g/image file) (fn []))]
     #_[(ui/text-button file (fn []))]))
 
 (defmethod ->widget :image [_ image]
@@ -191,7 +193,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [{:keys [type schema]} (data-type k)]
+  (let [{:keys [type schema]} (component/data-type k)]
     (cond
      (#{:one-to-one :one-to-many} type) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
@@ -246,13 +248,13 @@
 
 (defn- ->attribute-label [k]
   (let [label (ui/label (str k))]
-    (when-let [doc (:editor/doc (get component-attributes k))]
+    (when-let [doc (:editor/doc (get component/attributes k))]
       (ui/add-tooltip! label doc))
     label))
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (data-type k) v)
+        value-widget (->widget (component/data-type k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -286,7 +288,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (data-type k) value-widget)])))
+             [k (widget->value (component/data-type k) value-widget)])))
 
 ;;
 
@@ -299,16 +301,16 @@
        (error-window! t)))))
 
 (defn- ->property-editor-window [id]
-  (let [props (safe-get properties-db id)
+  (let [props (safe-get properties/db id)
         window (ui/window {:title "Edit Property"
                            :modal? true
                            :close-button? true
                            :center? true
                            :close-on-escape? true
                            :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group (property->schema props) props)
-        save!   (apply-context-fn window #(update! (attribute-widget-group->data widgets)))
-        delete! (apply-context-fn window #(delete! id))]
+        widgets (->attribute-widget-group (property/->schema props) props)
+        save!   (apply-context-fn window #(properties/update! (attribute-widget-group->data widgets)))
+        delete! (apply-context-fn window #(properties/delete! id))]
     (ui/add-rows! window [[(->scroll-pane-cell [[{:actor widgets :colspan 2}]
                                                 [(ui/text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
                                                  (ui/text-button "Delete" delete!)]])]])
@@ -320,7 +322,7 @@
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn id)
-        button (if-let [image (prop->image props)]
+        button (if-let [image (property/->image props)]
                  (ui/image-button image on-clicked {:scale scale})
                  (ui/text-button (name id) on-clicked))
         top-widget (ui/label (or (and extra-info-text (extra-info-text props)) ""))
@@ -333,8 +335,8 @@
   (let [{:keys [sort-by-fn
                 extra-info-text
                 columns
-                image/scale]} (overview property-type)
-        properties (all-properties property-type)
+                image/scale]} (property/overview property-type)
+        properties (properties/all property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
                      properties)]
@@ -378,8 +380,8 @@
   (stage-add! (->property-editor-window property-id)))
 
 (defn- ->tabs-data []
-  (for [property-type (sort (types))]
-    {:title (:title (overview property-type))
+  (for [property-type (sort (property/types))]
+    {:title (:title (property/overview property-type))
      :content (->overview-table property-type open-property-editor-window!)}))
 
 (derive :screens/property-editor :screens/stage)
@@ -396,7 +398,7 @@
 
 
 (defn- one-to-many-schema->linked-property-type [[_set [_qualif_kw {:keys [namespace]}]]]
-  (ns-k->property-type namespace))
+  (property/ns-k->type namespace))
 
 (comment
  (= (one-to-many-schema->linked-property-type [:set [:qualified-keyword {:namespace :items}]])
@@ -404,11 +406,11 @@
  )
 
 (defmethod data/edn->value :one-to-many [_ property-ids]
-  (map build-property property-ids))
+  (map properties/get property-ids))
 
 
 (defn- one-to-one-schema->linked-property-type [[_qualif_kw {:keys [namespace]}]]
-  (ns-k->property-type namespace))
+  (property/ns-k->type namespace))
 
 (comment
  (= (one-to-one-schema->linked-property-type [:qualified-keyword {:namespace :creatures}])
@@ -416,7 +418,7 @@
  )
 
 (defmethod data/edn->value :one-to-one [_ property-id]
-  (build-property property-id))
+  (properties/get property-id))
 
 (defn- add-one-to-many-rows [table property-type property-ids]
   (let [redo-rows (fn [property-ids]
@@ -439,8 +441,8 @@
                            (.pack window)
                            (stage-add! window))))]
       (for [property-id property-ids]
-        (let [property (build-property property-id)
-              image-widget (ui/image->widget (prop->image property) {:id property-id})]
+        (let [property (properties/get property-id)
+              image-widget (ui/image->widget (property/->image property) {:id property-id})]
           (ui/add-tooltip! image-widget #(->info-text property))
           image-widget))
       (for [id property-ids]
@@ -480,8 +482,8 @@
                              (.pack window)
                              (stage-add! window)))))]
       [(when property-id
-         (let [property (build-property property-id)
-               image-widget (ui/image->widget (prop->image property) {:id property-id})]
+         (let [property (properties/get property-id)
+               image-widget (ui/image->widget (property/->image property) {:id property-id})]
            (ui/add-tooltip! image-widget #(->info-text property))
            image-widget))]
       [(when property-id

@@ -17,6 +17,7 @@
             [core.effect :refer [do! effect!]]
             core.stat
             core.projectile
+            [core.properties :as properties]
             [core.val-max :as val-max]
             [core.world :as world]
             [data.grid2d :as g2d]))
@@ -643,7 +644,7 @@
 
 (defn- ->buttons []
   (ui/table {:rows (remove nil? (concat
-                                 (for [{:keys [property/id]} (all-properties :properties/worlds)]
+                                 (for [{:keys [property/id]} (properties/all :properties/worlds)]
                                    [(ui/text-button (str "Start " id) (start-game-fn id))])
                                  [(when dev-mode?
                                     [(ui/text-button "Map editor" #(change-screen :screens/map-editor))])

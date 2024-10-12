@@ -1,6 +1,8 @@
-(ns core.component)
+(ns core.component
+  (:require [clojure.gdx.utils :refer [safe-get]]
+            [core.data :as data]))
 
-(def defsystems "Map of all systems as key of name-string to var." {})
+(def systems "Map of all systems as key of name-string to var." {})
 
 (defmacro defsystem
   "A system is a multimethod which takes a component `[k v]` and dispatches on k."
@@ -13,17 +15,17 @@
     (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
       ~(str "[[defsystem]] with params: `" params "` \n\n " docstring)
       (fn ~(symbol (str (name sys-name))) [[k# _#] & args#] k#))
-    (alter-var-root #'defsystems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
+    (alter-var-root #'systems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
     (var ~sys-name)))
 
-(def component-attributes {})
+(def attributes {})
 
 (defn defc*
   "Defines a component without systems methods, so only to set metadata."
   [k attr-map]
-  (when (get component-attributes k)
+  (when (get attributes k)
     (println "WARNING: Overwriting defc" k "attr-map"))
-  (alter-var-root #'component-attributes assoc k attr-map))
+  (alter-var-root #'attributes assoc k attr-map))
 
 (defmacro defc
   "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
@@ -66,7 +68,7 @@ Example:
                           " Given " (count fn-params)  " args: " fn-params))))
            `(do
              (assert (keyword? ~k) (pr-str ~k))
-             (alter-var-root #'component-attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
+             (alter-var-root #'attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
              (when (get (methods @~sys-var) ~k)
                (println "WARNING: Overwriting defc" ~k "on" ~sys-var))
              (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
@@ -75,3 +77,10 @@ Example:
                      ~fn-params params#]
                  ~@fn-exprs)))))
       ~k)))
+
+(defn data-type [k]
+  (try (data/->type (:data (safe-get attributes k)))
+       (catch Throwable t
+         (throw (ex-info "" {:k k} t)))))
+
+(defn data-schema [k] (:schema (data-type k)))

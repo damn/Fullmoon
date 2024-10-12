@@ -24,3 +24,9 @@
 
 (defmethod schema :enum [[_ items]]
   (apply vector :enum items))
+
+
+; a data is itself a component?
+; [type schema] ?
+; ?? & widget ?!
+; * edn-value ?

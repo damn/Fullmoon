@@ -4,8 +4,9 @@
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]
-            [core.component :refer [component-attributes defsystems]]
+            [core.component :as component]
             [core.data :as data]
+            [core.properties :as properties]
             [core.effect :refer [do! effect!]]))
 
 (comment
@@ -90,7 +91,7 @@
             (comp #(str/split % #"-")
                   name
                   :property/id)
-            (property/all-properties :properties/items)))))))
+            (properties/all :properties/items)))))))
 
  )
 
@@ -111,8 +112,8 @@
 (defn- post-tx! [tx]
   (post-runnable! (effect! [tx])))
 
-(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id @world-player) (build-property skill-id)]])))
-(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (build-property item-id)]])))
+(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id @world-player) (properties/get skill-id)]])))
+(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (properties/get item-id)]])))
 
 (defn- protocol? [value]
   (and (instance? clojure.lang.PersistentArrayMap value)
@@ -166,7 +167,7 @@
 
              (println "\n#" nmsp)
              (doseq [k ks
-                     :let [attr-m (get component-attributes k)]]
+                     :let [attr-m (get component/attributes k)]]
                (println (str "* __" k "__ `" (get (:params attr-m) "do!") "`"))
                (when-let [data (:data attr-m)]
                  (println (str "    * data: `" (pr-str data) "`")))
@@ -175,7 +176,7 @@
                    (println "    * Descendants"))
                  (doseq [k ks]
                    (println "      *" k)
-                   (println (str "        * data: `" (pr-str (:data (get component-attributes k))) "`"))))))))))
+                   (println (str "        * data: `" (pr-str (:data (get component/attributes k))) "`"))))))))))
 
 (defn- data-components []
   (sort
@@ -184,10 +185,10 @@
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))
-                 component-attributes)))))
+                 component/attributes)))))
 
 (defn- component-systems [component-k]
-   (for [[sys-name sys-var] defsystems
+   (for [[sys-name sys-var] component/systems
          [k method] (methods @sys-var)
          :when (= k component-k)]
      sys-name))
@@ -198,7 +199,7 @@
              (if-let [ancestrs (ancestors k)]
                (str "-> "(clojure.string/join "," ancestrs))
                "")
-             (let [attr-map (get component-attributes k)]
+             (let [attr-map (get component/attributes k)]
                #_(if (seq attr-map)
                    (pr-str (:core.component/fn-params attr-map))
                    (str " `"
@@ -224,7 +225,7 @@
           (with-out-str
            (doseq [[nmsp components] (sort-by first
                                               (group-by namespace
-                                                        (sort (keys component-attributes))))]
+                                                        (sort (keys component/attributes))))]
              (println "\n#" nmsp)
              (print-components* components)
              )))))
