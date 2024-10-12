@@ -20,17 +20,6 @@
             [malli.core :as m]
             [utils.core :refer [bind-root find-first ->tile tile->middle safe-merge readable-number]]))
 
-(defc :tx/sound
-  {:data :sound}
-  (do! [[_ file]]
-    (play-sound! file)
-    nil))
-
-(defc :tx/cursor
-  (do! [[_ cursor-key]]
-    (g/set-cursor! cursor-key)
-    nil))
-
 (declare ^:private screen-k
          ^:private screens)
 
@@ -1936,3 +1925,14 @@
 
 (defsystem manual-tick)
 (defmethod manual-tick :default [_])
+
+(defc :tx/sound
+  {:data :sound}
+  (do! [[_ file]]
+    (play-sound! file)
+    nil))
+
+(defc :tx/cursor
+  (do! [[_ cursor-key]]
+    (g/set-cursor! cursor-key)
+    nil))
