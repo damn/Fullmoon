@@ -57,7 +57,7 @@
   "Calls for every key in map (f k v) to calculate new value at k."
   [m f]
   (reduce (fn [m k]
-            (assoc m k (f k (get m k)))) ; using assoc because non-destructive for records
+            (assoc m k (f k (clojure.core/get m k)))) ; using assoc because non-destructive for records
           m
           (keys m)))
 
