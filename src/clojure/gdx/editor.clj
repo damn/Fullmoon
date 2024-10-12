@@ -17,14 +17,18 @@
             [malli.core :as m]
             [malli.generator :as mg]))
 
-(defn- data->widget [data]
+(defn- data-type->widget [data]
   (cond
    (#{:map-optional :components-ns}                 data) :map
    (#{:number :nat-int :int :pos :pos-int :val-max} data) :number
    :else data))
 
-(defmulti ^:private ->widget      (fn [data _v]      (data->widget data)))
-(defmulti ^:private widget->value (fn [data _widget] (data->widget data)))
+(defmulti ^:private ->widget      (fn [data _v]      (data-type->widget (data/->type data))))
+(defmulti ^:private widget->value (fn [data _widget] (data-type->widget (data/->type data))))
+
+(comment
+ (keys (methods ->widget))
+ )
 
 ;;;;
 
