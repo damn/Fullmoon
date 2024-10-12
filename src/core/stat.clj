@@ -6,6 +6,7 @@
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             core.creature
             [core.projectile :refer [projectile-size]]))
@@ -278,7 +279,7 @@ Default method returns true."
     {:effect/source (:entity/id entity*)
      :effect/target (:entity/id target*)
      :effect/target-position target-position
-     :effect/target-direction (v-direction (:position entity*) target-position)}))
+     :effect/target-direction (v/direction (:position entity*) target-position)}))
 
 ; this is not necessary if effect does not need target, but so far not other solution came up.
 (defn- check-update-ctx
@@ -532,8 +533,8 @@ Default method returns true."
     [[:tx/event target :kill]]))
 
 (defn- projectile-start-point [entity* direction size]
-  (v-add (:position entity*)
-         (v-scale direction
+  (v/add (:position entity*)
+         (v/scale direction
                   (+ (:radius entity*) size 0.1))))
 
 ; TODO effect/text ... shouldn't have source/target dmg stuff ....
@@ -556,7 +557,7 @@ Default method returns true."
                                target-p
                                (projectile-size projectile)))
            ; TODO not taking into account body sizes
-           (< (v-distance source-p ; entity/distance function protocol EntityPosition
+           (< (v/distance source-p ; entity/distance function protocol EntityPosition
                           target-p)
               max-range))))
 
@@ -645,7 +646,7 @@ Default method returns true."
                      [1 0 0 0.5])))))
 
 (defn- in-range? [entity* target* maxrange] ; == circle-collides?
-  (< (- (float (v-distance (:position entity*)
+  (< (- (float (v/distance (:position entity*)
                            (:position target*)))
         (float (:radius entity*))
         (float (:radius target*)))
@@ -653,13 +654,13 @@ Default method returns true."
 
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
-  (v-add (:position entity*)
-         (v-scale (direction entity* target*)
+  (v/add (:position entity*)
+         (v/scale (direction entity* target*)
                   (:radius entity*))))
 
 (defn- end-point [entity* target* maxrange]
-  (v-add (start-point entity* target*)
-         (v-scale (direction entity* target*)
+  (v/add (start-point entity* target*)
+         (v/scale (direction entity* target*)
                   maxrange)))
 
 (defc :maxrange {:data :pos}
@@ -878,7 +879,7 @@ Default method returns true."
     :clickable/player :cursors/bag))
 
 (defn- ->clickable-mouseover-entity-interaction [player-e* mouseover-e*]
-  (if (< (v-distance (:position player-e*) (:position mouseover-e*))
+  (if (< (v/distance (:position player-e*) (:position mouseover-e*))
          (:entity/click-distance-tiles player-e*))
     [(clickable->cursor mouseover-e* false) (fn [] (on-clicked mouseover-e*))]
     [(clickable->cursor mouseover-e* true)  (fn [] (denied "Too far away"))]))

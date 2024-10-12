@@ -1,6 +1,7 @@
 (ns core.projectile
   (:require [clojure.component :refer [defc]]
-            [clojure.gdx :refer :all]))
+            [clojure.gdx :refer :all]
+            [clojure.gdx.math.vector :as v]))
 
 (def-property-type :properties/projectiles
   {:schema [:entity/image
@@ -69,7 +70,7 @@
         {:width size
          :height size
          :z-order :z-order/flying
-         :rotation-angle (v-get-angle-from-vector direction)}
+         :rotation-angle (v/angle-from-vector direction)}
         {:entity/movement {:direction direction
                            :speed speed}
          :entity/image image

@@ -4,6 +4,7 @@
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
             [clojure.gdx.utils :refer [bind-root]]
+            [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [reduce-fsm :as fsm]))
 
@@ -282,10 +283,10 @@
 ; this is okay, you have thrown the item over a hill, thats possible.
 
 (defn- placement-point [player target maxrange]
-  (v-add player
-         (v-scale (v-direction player target)
+  (v/add player
+         (v/scale (v/direction player target)
                   (min maxrange
-                       (v-distance player target)))))
+                       (v/distance player target)))))
 
 (defn- item-place-position [entity*]
   (placement-point (:position entity*)
@@ -340,7 +341,7 @@
                              (g/gui-mouse-position)))))
 
 (defn- add-vs [vs]
-  (v-normalise (reduce v-add [0 0] vs)))
+  (v/normalise (reduce v/add [0 0] vs)))
 
 (defn WASD-movement-vector []
   (let [r (when (key-pressed? :d) [1  0])
@@ -349,7 +350,7 @@
         d (when (key-pressed? :s) [0 -1])]
     (when (or r l u d)
       (let [v (add-vs (remove nil? [r l u d]))]
-        (when (pos? (v-length v))
+        (when (pos? (v/length v))
           v)))))
 
 (defc :player-moving

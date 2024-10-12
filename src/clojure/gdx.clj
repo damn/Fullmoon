@@ -16,6 +16,7 @@
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.utils :refer [safe-get bind-root]]
+            [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [clojure.edn :as edn]
             [clojure.math :as math]
@@ -24,7 +25,7 @@
             [data.grid2d :as g2d]
             [malli.core :as m]
             [malli.error :as me])
-  (:import (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
+  (:import (com.badlogic.gdx.math Circle Rectangle Intersector)
            (com.badlogic.gdx.scenes.scene2d Stage)
            (gdl RayCaster)))
 
@@ -460,47 +461,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
        (str/join "\n")
        remove-newlines))
 
-(defn- ^Vector2 ->v [[x y]] (Vector2. x y))
-(defn- ->p [^Vector2 v] [(.x ^Vector2 v) (.y ^Vector2 v)])
-
-(defn v-scale     [v n]    (->p (.scl ^Vector2 (->v v) (float n)))) ; TODO just (mapv (partial * 2) v)
-(defn v-normalise [v]      (->p (.nor ^Vector2 (->v v))))
-(defn v-add       [v1 v2]  (->p (.add ^Vector2 (->v v1) ^Vector2 (->v v2))))
-(defn v-length    [v]      (.len ^Vector2 (->v v)))
-(defn v-distance  [v1 v2]  (.dst ^Vector2 (->v v1) ^Vector2 (->v v2)))
-
-(defn v-normalised? [v] (MathUtils/isEqual 1 (v-length v)))
-
-(defn v-get-normal-vectors [[x y]]
-  [[(- (float y))         x]
-   [          y (- (float x))]])
-
-(defn v-direction [[sx sy] [tx ty]]
-  (v-normalise [(- (float tx) (float sx))
-                (- (float ty) (float sy))]))
-
-(defn v-get-angle-from-vector
-  "converts theta of Vector2 to angle from top (top is 0 degree, moving left is 90 degree etc.), ->counterclockwise"
-  [v]
-  (.angleDeg (->v v) (Vector2. 0 1)))
-
-(comment
-
- (pprint
-  (for [v [[0 1]
-           [1 1]
-           [1 0]
-           [1 -1]
-           [0 -1]
-           [-1 -1]
-           [-1 0]
-           [-1 1]]]
-    [v
-     (.angleDeg (->v v) (Vector2. 0 1))
-     (get-angle-from-vector (->v v))]))
-
- )
-
 (defn- ->circle [[x y] radius]
   (Circle. x y radius))
 
@@ -927,15 +887,15 @@ On any exception we get a stacktrace with all tx's values and names shown."
   [[start-x start-y] [target-x target-y] path-w]
   {:pre [(< path-w 0.98)]} ; wieso 0.98??
   (let [path-w (+ path-w 0.02) ;etwas gr�sser damit z.b. projektil nicht an ecken anst�sst
-        v (v-direction [start-x start-y]
+        v (v/direction [start-x start-y]
                        [target-y target-y])
-        [normal1 normal2] (v-get-normal-vectors v)
-        normal1 (v-scale normal1 (/ path-w 2))
-        normal2 (v-scale normal2 (/ path-w 2))
-        start1  (v-add [start-x  start-y]  normal1)
-        start2  (v-add [start-x  start-y]  normal2)
-        target1 (v-add [target-x target-y] normal1)
-        target2 (v-add [target-x target-y] normal2)]
+        [normal1 normal2] (v/normal-vectors v)
+        normal1 (v/scale normal1 (/ path-w 2))
+        normal2 (v/scale normal2 (/ path-w 2))
+        start1  (v/add [start-x  start-y]  normal1)
+        start2  (v/add [start-x  start-y]  normal2)
+        target1 (v/add [target-x target-y] normal1)
+        target2 (v/add [target-x target-y] normal2)]
     [start1,target1,start2,target2]))
 
 (declare world-raycaster)
@@ -1371,7 +1331,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
         {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
     (cond
      target-entity
-     (v-direction position (:position @target-entity))
+     (v/direction position (:position @target-entity))
 
      (nil? target-cell)
      nil
@@ -1380,7 +1340,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
      (when-not (and (= target-cell own-cell)
                     (occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
        (when-not (inside-cell? grid @entity target-cell)
-         (v-direction position (:middle @target-cell)))))))
+         (v/direction position (:middle @target-cell)))))))
 
 (defn potential-fields-update! [entities]
   (doseq [[faction max-iterations] factions-iterations]
@@ -1633,7 +1593,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
    :z-order :z-order/effect})
 
 (defn direction [entity* other-entity*]
-  (v-direction (:position entity*) (:position other-entity*)))
+  (v/direction (:position entity*) (:position other-entity*)))
 
 (defn collides? [entity* other-entity*]
   (shape-collides? entity* other-entity*))
@@ -1979,9 +1939,9 @@ On any exception we get a stacktrace with all tx's values and names shown."
   {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
   (tick [_ eid]
     (assert (m/validate movement-speed-schema speed))
-    (assert (or (zero? (v-length direction))
-                (v-normalised? direction)))
-    (when-not (or (zero? (v-length direction))
+    (assert (or (zero? (v/length direction))
+                (v/normalised? direction)))
+    (when-not (or (zero? (v/length direction))
                   (nil? speed)
                   (zero? speed))
       (let [movement (assoc movement :delta-time world-delta)
@@ -1992,7 +1952,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
           [[:e/assoc eid :position    (:position    body)]
            [:e/assoc eid :left-bottom (:left-bottom body)]
            (when rotate-in-movement-direction?
-             [:e/assoc eid :rotation-angle (v-get-angle-from-vector direction)])
+             [:e/assoc eid :rotation-angle (v/angle-from-vector direction)])
            [:tx/position-changed eid]])))))
 
 (defc :tx/set-movement
@@ -2700,7 +2660,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
        (remove record-constructor?)))
 ; 1. macros separate
 ; 2. defsystems separate
-; 3. 'v-'
 ; 4. protocols ?1 protocol functions included ?!
 
 #_(spit "testo"
