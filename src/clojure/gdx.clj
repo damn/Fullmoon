@@ -9,6 +9,7 @@
                         :world.timer "⏳ Timer"}}
   (:require [clojure.component :refer [defsystem defc defc* component-attributes]]
             [clojure.gdx.app :as app]
+            [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :as input]
@@ -23,8 +24,7 @@
             [data.grid2d :as g2d]
             [malli.core :as m]
             [malli.error :as me])
-  (:import (com.badlogic.gdx.audio Sound)
-           (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
+  (:import (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
            (com.badlogic.gdx.scenes.scene2d Stage)
            (gdl RayCaster)))
 
@@ -709,9 +709,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (for [[sym avar] (ns-interns nmspace)
         :when (condition avar)]
     avar))
-
-(defn play-sound! [path]
-  (Sound/.play (assets/get path)))
 
 (defc :tx/sound
   {:data :sound}

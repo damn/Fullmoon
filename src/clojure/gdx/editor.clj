@@ -2,6 +2,7 @@
   (:require [clojure.component :refer [component-attributes defc]]
             [clojure.edn :as edn]
             [clojure.gdx :refer :all]
+            [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [key-just-pressed?]]
