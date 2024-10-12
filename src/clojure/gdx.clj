@@ -37,7 +37,7 @@
            (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils Align Scaling Disposable SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
-           (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
+           (com.badlogic.gdx.scenes.scene2d Actor Group Stage)
            (com.badlogic.gdx.scenes.scene2d.ui Widget Image Label Button Table Cell WidgetGroup Stack ButtonGroup HorizontalGroup VerticalGroup Window Tree$Node)
            (com.badlogic.gdx.scenes.scene2d.utils ClickListener ChangeListener TextureRegionDrawable Drawable)
            (com.kotcrab.vis.ui VisUI VisUI$SkinScale)
