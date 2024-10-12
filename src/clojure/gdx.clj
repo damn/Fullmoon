@@ -913,19 +913,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
-(require '[clojure.gdx.graphics.camera :as 🎥])
-
-(defn- ->gui-viewport [world-width world-height]
-  (FitViewport. world-width world-height (🎥/orthographic)))
-
-(defn- ->world-viewport [world-width world-height unit-scale]
-  (let [world-width  (* world-width  unit-scale)
-        world-height (* world-height unit-scale)
-        camera (🎥/orthographic)
-        y-down? false]
-    (.setToOrtho camera y-down? world-width world-height)
-    (FitViewport. world-width world-height camera)))
-
 (defn- vp-world-width  [^Viewport vp] (.getWorldWidth  vp))
 (defn- vp-world-height [^Viewport vp] (.getWorldHeight vp))
 (defn- vp-camera       [^Viewport vp] (.getCamera      vp))
@@ -1094,14 +1081,21 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn with-shape-line-width [width draw-fn]
   (sd-with-line-width shape-drawer width draw-fn))
 
+(require '[clojure.gdx.graphics.camera :as 🎥])
+
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
-   :viewport (->gui-viewport world-width world-height)})
+   :viewport (FitViewport. world-width world-height (🎥/orthographic))})
 
 (defn- ->world-view [{:keys [world-width world-height tile-size]}]
   (let [unit-scale (/ tile-size)]
     {:unit-scale (float unit-scale)
-     :viewport (->world-viewport world-width world-height unit-scale)}))
+     :viewport (let [world-width  (* world-width  unit-scale)
+                     world-height (* world-height unit-scale)
+                     camera (🎥/orthographic)
+                     y-down? false]
+                 (.setToOrtho camera y-down? world-width world-height)
+                 (FitViewport. world-width world-height camera))}))
 
 (declare ^:private gui-view
          ^:private world-view)
@@ -1246,7 +1240,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
              (->cursor (str "cursors/" file ".png") hotspot))
            cursors))
 
-(declare ^:private cursors )
+(declare ^:private cursors)
 
 (defn set-cursor! [cursor-key]
   (.setCursor Gdx/graphics (safe-get cursors cursor-key)))
