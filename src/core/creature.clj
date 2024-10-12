@@ -27,10 +27,9 @@
                                    (name (:property/id %)))
               :extra-info-text #(str (:creature/level %))}})
 
-(def-attributes
-  :body/width   :pos
-  :body/height  :pos
-  :body/flying? :boolean)
+(defc :body/width   {:data :pos})
+(defc :body/height  {:data :pos})
+(defc :body/flying? {:data :boolean})
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place

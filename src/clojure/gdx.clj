@@ -23,11 +23,6 @@
             [malli.core :as m]
             [malli.error :as me]))
 
-(defn def-attributes [& attributes-data]
-  {:pre [(even? (count attributes-data))]}
-  (doseq [[k data] (partition 2 attributes-data)]
-    (defc* k {:data data})))
-
 (defn def-property-type [k {:keys [schema overview]}]
   (defc k
     {:data [:map (conj schema :property/id)]
