@@ -21,6 +21,7 @@
             [clojure.math :as math]
             [clojure.pprint :refer [pprint]]
             [clojure.gdx.tiled :as t]
+            [clojure.gdx.ui.actor :as a]
             [clj-commons.pretty.repl :refer [pretty-pst]]
             [data.grid2d :as g]
             [malli.core :as m]
@@ -1433,75 +1434,27 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn- dispose-ui! []
   (VisUI/dispose))
 
-(defn actor-x [^Actor a] (.getX a))
-(defn actor-y [^Actor a] (.getY a))
+(defn add-tooltip!
+  "tooltip-text is a (fn []) or a string. If it is a function will be-recalculated every show."
+  [^Actor a tooltip-text]
+  (let [text? (string? tooltip-text)
+        label (VisLabel. (if text? tooltip-text ""))
+        tooltip (proxy [Tooltip] []
+                  ; hooking into getWidth because at
+                  ; https://github.com/kotcrab/vis-blob/master/ui/src/main/java/com/kotcrab/vis/ui/widget/Tooltip.java#L271
+                  ; when tooltip position gets calculated we setText (which calls pack) before that
+                  ; so that the size is correct for the newly calculated text.
+                  (getWidth []
+                    (let [^Tooltip this this]
+                      (when-not text?
+                        (.setText this (str (tooltip-text))))
+                      (proxy-super getWidth))))]
+    (.setAlignment label Align/center)
+    (.setTarget  tooltip ^Actor a)
+    (.setContent tooltip ^Actor label)))
 
-(defn actor-id [^Actor actor]
-  (.getUserObject actor))
-
-(defn set-id! [^Actor actor id]
-  (.setUserObject actor id))
-
-(defn set-name! [^Actor actor name]
-  (.setName actor name))
-
-(defn actor-name [^Actor actor]
-  (.getName actor))
-
-(defn visible? [^Actor actor] ; used
-  (.isVisible actor))
-
-(defn set-visible! [^Actor actor bool]
-  (.setVisible actor (boolean bool)))
-
-(defn toggle-visible! [actor] ; used
-  (set-visible! actor (not (visible? actor))))
-
-(defn set-position! [^Actor actor x y]
-  (.setPosition actor x y))
-
-(defn set-center! [^Actor actor x y]
-  (set-position! actor
-                 (- x (/ (.getWidth actor) 2))
-                 (- y (/ (.getHeight actor) 2))))
-
-(defn set-touchable!
-  ":children-only, :disabled or :enabled."
-  [^Actor actor touchable]
-  (.setTouchable actor (case touchable
-                         :children-only Touchable/childrenOnly
-                         :disabled      Touchable/disabled
-                         :enabled       Touchable/enabled)))
-
-(defn add-listener! [^Actor actor listener]
-  (.addListener actor listener))
-
-(defn remove!
-  "Removes this actor from its parent, if it has a parent."
-  [^Actor actor]
-  (.remove actor))
-
-(defn parent
-  "Returns the parent actor, or null if not in a group."
-  [^Actor actor]
-  (.getParent actor))
-
-(defn a-mouseover? [^Actor actor [x y]]
-  (let [v (.stageToLocalCoordinates actor (Vector2. x y))]
-    (.hit actor (.x v) (.y v) true)))
-
-(defn remove-tooltip! [^Actor actor]
-  (Tooltip/removeTooltip actor))
-
-(defn find-ancestor-window ^Window [^Actor actor]
-  (if-let [p (parent actor)]
-    (if (instance? Window p)
-      p
-      (find-ancestor-window p))
-    (throw (Error. (str "Actor has no parent window " actor)))))
-
-(defn pack-ancestor-window! [^Actor actor]
-  (.pack (find-ancestor-window actor)))
+(defn remove-tooltip! [^Actor a]
+  (Tooltip/removeTooltip a))
 
 (defn children
   "Returns an ordered list of child actors in this group."
@@ -1520,11 +1473,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn find-actor-with-id [group id]
   (let [actors (children group)
-        ids (keep actor-id actors)]
+        ids (keep a/id actors)]
     (assert (or (empty? ids)
                 (apply distinct? ids)) ; TODO could check @ add
             (str "Actor ids are not distinct: " (vec ids)))
-    (first (filter #(= id (actor-id %)) actors))))
+    (first (filter #(= id (a/id %)) actors))))
 
 (defn set-cell-opts [^Cell cell opts]
   (doseq [[option arg] opts]
@@ -1585,16 +1538,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
    :fill-y? true
    :expand-y? true})
 
-; candidate for opts: :tooltip
-(defn- set-actor-opts [actor {:keys [id name visible? touchable center-position position] :as opts}]
-  (when id   (set-id!   actor id))
-  (when name (set-name! actor name))
-  (when (contains? opts :visible?)  (set-visible! actor visible?))
-  (when touchable (set-touchable! actor touchable))
-  (when-let [[x y] center-position] (set-center!   actor x y))
-  (when-let [[x y] position]        (set-position! actor x y))
-  actor)
-
 (comment
  ; fill parent & pack is from Widget TODO ( not widget-group ?)
  com.badlogic.gdx.scenes.scene2d.ui.Widget
@@ -1609,7 +1552,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   widget-group)
 
 (defn- set-opts [actor opts]
-  (set-actor-opts actor opts)
+  (a/set-opts! actor opts)
   (when (instance? Table actor)
     (set-table-opts actor opts)) ; before widget-group-opts so pack is packing rows
   (when (instance? WidgetGroup actor)
@@ -1697,7 +1640,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                             ^Actor second-widget
                             ^Boolean vertical?] :as opts}]
   (-> (VisSplitPane. first-widget second-widget vertical?)
-      (set-actor-opts opts)))
+      (a/set-opts! opts)))
 
 (defn ->stack [actors]
   (proxy-ILookup Stack [(into-array Actor actors)]))
@@ -1737,36 +1680,27 @@ On any exception we get a stacktrace with all tx's values and names shown."
   "Returns true if the actor or its parent is a button."
   [actor]
   (or (button-class? actor)
-      (and (parent actor)
-           (button-class? (parent actor)))))
+      (and (a/parent actor)
+           (button-class? (a/parent actor)))))
 
 (defn window-title-bar?
   "Returns true if the actor is a window title bar."
   [actor]
   (when (instance? Label actor)
-    (when-let [p (parent actor)]
-      (when-let [p (parent p)]
+    (when-let [p (a/parent actor)]
+      (when-let [p (a/parent p)]
         (and (instance? VisWindow p)
              (= (.getTitleLabel ^Window p) actor))))))
 
-(defn add-tooltip!
-  "tooltip-text is a (fn []) or a string. If it is a function will be-recalculated every show."
-  [^Actor actor tooltip-text]
-  (let [text? (string? tooltip-text)
-        label (VisLabel. (if text? tooltip-text ""))
-        tooltip (proxy [Tooltip] []
-                  ; hooking into getWidth because at
-                  ; https://github.com/kotcrab/vis-blob/master/ui/src/main/java/com/kotcrab/vis/ui/widget/Tooltip.java#L271
-                  ; when tooltip position gets calculated we setText (which calls pack) before that
-                  ; so that the size is correct for the newly calculated text.
-                  (getWidth []
-                    (let [^Tooltip this this]
-                      (when-not text?
-                        (.setText this (str (tooltip-text))))
-                      (proxy-super getWidth))))]
-    (.setAlignment label Align/center)
-    (.setTarget  tooltip ^Actor actor)
-    (.setContent tooltip ^Actor label)))
+(defn find-ancestor-window ^Window [^Actor actor]
+  (if-let [p (a/parent actor)]
+    (if (instance? Window p)
+      p
+      (find-ancestor-window p))
+    (throw (Error. (str "Actor has no parent window " actor)))))
+
+(defn pack-ancestor-window! [^Actor actor]
+  (.pack (find-ancestor-window actor)))
 
 (declare ^:dynamic *on-clicked-actor*)
 
@@ -1938,7 +1872,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                          :rows [[(->label text)]
                                 [(->text-button button-text
                                                 (fn []
-                                                  (remove! (::modal (stage-get)))
+                                                  (a/remove! (::modal (stage-get)))
                                                   (on-click)))]]
                          :id ::modal
                          :modal? true
@@ -3649,10 +3583,10 @@ On any exception we get a stacktrace with all tx's values and names shown."
    (fn [this]
      (binding [*unit-scale* 1]
        (draw-cell-rect @world-player
-                       (actor-x this)
-                       (actor-y this)
-                       (a-mouseover? this (gui-mouse-position))
-                       (actor-id (parent this)))))))
+                       (a/x this)
+                       (a/y this)
+                       (a/mouseover? this (gui-mouse-position))
+                       (a/id (a/parent this)))))))
 
 (defsystem clicked-inventory-cell "FIXME" [_ cell])
 (defmethod clicked-inventory-cell :default [_ cell])
@@ -3664,11 +3598,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (let [cell [slot (or position [0 0])]
         image-widget (->ui-image-widget (slot->background slot) {:id :image})
         stack (->stack [(draw-rect-actor) image-widget])]
-    (set-name! stack "inventory-cell")
-    (set-id! stack cell)
-    (add-listener! stack (proxy [ClickListener] []
-                           (clicked [event x y]
-                             (effect! (player-clicked-inventory cell)))))
+    (a/set-name! stack "inventory-cell")
+    (a/set-id! stack cell)
+    (a/add-listener! stack (proxy [ClickListener] []
+                             (clicked [event x y]
+                               (effect! (player-clicked-inventory cell)))))
     stack))
 
 (defn- slot->background []

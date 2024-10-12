@@ -1,6 +1,7 @@
 (ns clojure.gdx.editor
   (:require [clojure.edn :as edn]
             [clojure.gdx :refer :all]
+            [clojure.gdx.ui.actor :as a]
             [clojure.set :as set]
             [clojure.string :as str]
             [malli.core :as m]
@@ -110,9 +111,9 @@
                                   (fn []
                                     (clear-children! table)
                                     (add-rows! table [(->sound-columns table sound-file)])
-                                    (remove! (find-ancestor-window *on-clicked-actor*))
+                                    (a/remove! (find-ancestor-window *on-clicked-actor*))
                                     (pack-ancestor-window! table)
-                                    (set-id! table sound-file)))
+                                    (a/set-id! table sound-file)))
                 (->play-sound-button sound-file)])]
     (stage-add! (->scrollable-choose-window rows))))
 
@@ -166,7 +167,7 @@
   (->label (truncate (->edn-str v) 60)))
 
 (defmethod widget->value :default [_ widget]
-  (actor-id widget))
+  (a/id widget))
 
 (declare ->component-widget
          attribute-widget-group->data)
@@ -202,7 +203,7 @@
       (add-rows! window (for [k remaining-ks]
                           [(->text-button (name k)
                                           (fn []
-                                            (remove! window)
+                                            (a/remove! window)
                                             (add-actor! attribute-widget-group
                                                         (->component-widget [k (get k-props k) (k->default-value k)]
                                                                             :horizontal-sep?
@@ -222,7 +223,7 @@
   (let [attribute-widget-group (->attribute-widget-group schema m)
         optional-keys-left? (seq (set/difference (optional-keyset schema)
                                                  (set (keys m))))]
-    (set-id! attribute-widget-group :attribute-widget-group)
+    (a/set-id! attribute-widget-group :attribute-widget-group)
     (->table {:cell-defaults {:pad 5}
                  :rows (remove nil?
                                [(when optional-keys-left?
@@ -248,14 +249,14 @@
         column (remove nil?
                        [(when (:optional k-props)
                           (->text-button "-" #(let [window (find-ancestor-window table)]
-                                                (remove! table)
+                                                (a/remove! table)
                                                 (.pack window))))
                         label
                         (->vertical-separator-cell)
                         value-widget])
         rows [(when horizontal-sep? [(->horizontal-separator-cell (count column))])
               column]]
-    (set-id! value-widget v)
+    (a/set-id! value-widget v)
     (add-rows! table (remove nil? rows))
     table))
 
@@ -274,7 +275,7 @@
   (->vertical-group (->component-widgets schema props)))
 
 (defn- attribute-widget-group->data [group]
-  (into {} (for [k (map actor-id (children group))
+  (into {} (for [k (map a/id (children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
              [k (widget->value (data-type k) value-widget)])))
@@ -285,7 +286,7 @@
   (fn []
     (try
      (f)
-     (remove! window)
+     (a/remove! window)
      (catch Throwable t
        (error-window! t)))))
 
@@ -317,7 +318,7 @@
         top-widget (->label (or (and extra-info-text (extra-info-text props)) ""))
         stack (->stack [button top-widget])]
     (add-tooltip! button #(->info-text props))
-    (set-touchable! top-widget :disabled)
+    (a/set-touchable! top-widget :disabled)
     stack))
 
 (defn- ->overview-table [property-type clicked-id-fn]
@@ -424,7 +425,7 @@
                                                 :center? true
                                                 :close-on-escape? true})
                               clicked-id-fn (fn [id]
-                                              (remove! window)
+                                              (a/remove! window)
                                               (redo-rows (conj property-ids id)))]
                           (t-add! window (->overview-table property-type clicked-id-fn))
                           (.pack window)
@@ -446,7 +447,7 @@
 
 (defmethod widget->value :one-to-many [_ widget]
   (->> (children widget)
-       (keep actor-id)
+       (keep a/id)
        set))
 
 (defn- add-one-to-one-rows [table property-type property-id]
@@ -465,7 +466,7 @@
                                                   :center? true
                                                   :close-on-escape? true})
                                 clicked-id-fn (fn [id]
-                                                (remove! window)
+                                                (a/remove! window)
                                                 (redo-rows id))]
                             (t-add! window (->overview-table property-type clicked-id-fn))
                             (.pack window)
@@ -486,4 +487,4 @@
     table))
 
 (defmethod widget->value :one-to-one [_ widget]
-  (->> (children widget) (keep actor-id) first))
+  (->> (children widget) (keep a/id) first))

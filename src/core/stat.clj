@@ -1,6 +1,7 @@
 (ns core.stat
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.rand :refer [rand-int-between]]
+            [clojure.gdx.ui.actor :as a]
             [clojure.string :as str]
             core.creature
             [core.projectile :refer [projectile-size]]))
@@ -829,7 +830,7 @@ Default method returns true."
 (defn- selected-skill []
   (let [button-group (:action-bar world-widgets)]
     (when-let [skill-button (bg-checked button-group)]
-      (actor-id skill-button))))
+      (a/id skill-button))))
 
 (defn- inventory-window []
   (get (:windows (stage-get)) :inventory-window))
@@ -847,7 +848,7 @@ Default method returns true."
         item (:entity/item clicked-entity*)
         clicked-entity (:entity/id clicked-entity*)]
     (cond
-     (visible? (inventory-window))
+     (a/visible? (inventory-window))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:e/destroy clicked-entity]
       [:tx/event (:entity/id player-entity*) :pickup-item item]]
@@ -863,7 +864,7 @@ Default method returns true."
 
 (defmethod on-clicked :clickable/player
   [_clicked-entity*]
-  (toggle-visible! (inventory-window))) ; TODO no tx
+  (a/toggle-visible! (inventory-window))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-e* too-far-away?]
   (case (:type (:entity/clickable mouseover-e*))
@@ -879,10 +880,10 @@ Default method returns true."
     [(clickable->cursor mouseover-e* true)  (fn [] (denied "Too far away"))]))
 
 (defn- inventory-cell-with-item? [actor]
-  (and (parent actor)
-       (= "inventory-cell" (actor-name (parent actor)))
+  (and (a/parent actor)
+       (= "inventory-cell" (a/name (a/parent actor)))
        (get-in (:entity/inventory @world-player)
-               (actor-id (parent actor)))))
+               (a/id (a/parent actor)))))
 
 (defn- mouseover-actor->cursor []
   (let [actor (mouse-on-actor?)]

@@ -1,6 +1,7 @@
 (ns core.world
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics.camera :as 🎥]
+            [clojure.gdx.ui.actor :as a]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
@@ -448,7 +449,7 @@ direction keys: move")
     (add-actor! window (->actor {:act #(do
                                         (.setText label (map-infos))
                                         (.pack window))}))
-    (set-position! window 0 (gui-viewport-height))
+    (a/set-position! window 0 (gui-viewport-height))
     window))
 
 (defn- adjust-zoom [camera by] ; DRY context.game

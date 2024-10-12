@@ -2,6 +2,7 @@
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.tiled :as t]
+            [clojure.gdx.ui.actor :as a]
             clojure.gdx.editor
             core.creature
             core.stat
@@ -58,7 +59,7 @@
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-actor?)]
          (str "TRUE - name:" (.getName actor)
-              "id: " (actor-id actor))))))
+              "id: " (a/id actor))))))
 
 (defn- ->debug-window []
   (let [label (->label "")
@@ -104,7 +105,7 @@
 
 (defn- ->action-bar []
   (let [group (->horizontal-group {:pad 2 :space 2})]
-    (set-id! group ::action-bar)
+    (a/set-id! group ::action-bar)
     group))
 
 (defn- ->action-bar-button-group []
@@ -118,7 +119,7 @@
   (do! [[_ {:keys [property/id entity/image] :as skill}]]
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (->image-button image (fn []) {:scale image-scale})]
-      (set-id! button id)
+      (a/set-id! button id)
       (add-tooltip! button #(->info-text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
       (add-actor! horizontal-group button)
       (bg-add! button-group button)
@@ -128,7 +129,7 @@
   (do! [[_ {:keys [property/id]}]]
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (get horizontal-group id)]
-      (remove! button)
+      (a/remove! button)
       (bg-remove! button-group button)
       nil)))
 
@@ -578,13 +579,13 @@
 (defn- check-window-hotkeys []
   (doseq [[hotkey window-id] (hotkey->window-id)
           :when (key-just-pressed? hotkey)]
-    (toggle-visible! (get (:windows (stage-get)) window-id))))
+    (a/toggle-visible! (get (:windows (stage-get)) window-id))))
 
 (defn- close-windows?! []
   (let [windows (children (:windows (stage-get)))]
-    (if (some visible? windows)
+    (if (some a/visible? windows)
       (do
-       (run! #(set-visible! % false) windows)
+       (run! #(a/set-visible! % false) windows)
        true))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
