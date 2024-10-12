@@ -28,20 +28,13 @@
 
 (comment
  (keys (methods ->widget))
+ (:enum :sound :number :default :string :one-to-many :image :one-to-one :boolean :map :data/animation)
  )
 
-;;;;
-
-; looping? - click on widget restart
-; frame-duration
-; frames ....
-; hidden actor act tick atom animation & set current frame image drawable
 (defmethod ->widget :data/animation [_ animation]
   (ui/table {:rows [(for [image (:frames animation)]
                       (ui/image->widget (g/edn->image image) {}))]
              :cell-defaults {:pad 1}}))
-
-;;;;
 
 (defn- add-data-tooltip! [widget data]
   (ui/add-tooltip! widget (str "Data: " data))

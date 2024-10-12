@@ -12,6 +12,15 @@
 
 ;;;;
 
+; Do not use functions itself as data-types ( to delete the defmethods below )
+; * tooltip in editor will not work for function
+; * cannot derive, have to list possible data types
+; Also decided not to prefix :data/ or :d/ because we pass through schema
+; some malli schemas like :boolean/:string/:enum/:qualified-keyword (?)
+; :map too?
+
+;;;;
+
 (defmethod schema :number  [_] number?)
 (defmethod schema :nat-int [_] nat-int?)
 (defmethod schema :int     [_] int?)
