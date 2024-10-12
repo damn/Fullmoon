@@ -1144,7 +1144,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
                    world-unit-dimensions
                    color]) ; optional
 
-(declare ^:private ^:dynamic *unit-scale*)
+(def ^:private ^:dynamic *unit-scale* 1)
 
 (defn- unit-dimensions [image]
   (if (= *unit-scale* 1)
@@ -1685,12 +1685,12 @@ On any exception we get a stacktrace with all tx's values and names shown."
   ([image on-clicked {:keys [scale]}]
    (->ui-image-button (:texture-region image) scale on-clicked)))
 
-(defn- ->ui-actor [draw! act!]
+(defn ->actor [{:keys [draw act]}]
   (proxy [Actor] []
     (draw [_batch _parent-alpha]
-      (draw!))
+      (when draw (draw)))
     (act [_delta]
-      (act!))))
+      (when act (act)))))
 
 (defn ->ui-widget [draw!]
   (proxy [Widget] []
@@ -1775,13 +1775,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
 
 (defn stage-add! [actor]
   (s-add! (stage-get) actor))
-
-(defn ->actor [{:keys [draw act]}]
-  (->ui-actor (fn [] (when draw
-                       (binding [*unit-scale* 1]
-                         (draw))))
-              (fn [] (when act
-                       (act)))))
 
 (def ^:private image-file "images/moon_background.png")
 
@@ -3534,12 +3527,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defn- draw-rect-actor []
   (->ui-widget
    (fn [this]
-     (binding [*unit-scale* 1]
-       (draw-cell-rect @world-player
-                       (a/x this)
-                       (a/y this)
-                       (a/mouseover? this (gui-mouse-position))
-                       (a/id (a/parent this)))))))
+     (draw-cell-rect @world-player
+                     (a/x this)
+                     (a/y this)
+                     (a/mouseover? this (gui-mouse-position))
+                     (a/id (a/parent this))))))
 
 (defsystem clicked-inventory-cell "FIXME" [_ cell])
 (defmethod clicked-inventory-cell :default [_ cell])
