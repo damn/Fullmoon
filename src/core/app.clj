@@ -11,9 +11,9 @@
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.raycaster :as ray]
-            clojure.gdx.editor
             [core.component :refer [defc] :as component]
             core.creature
+            core.editor
             [core.effect :refer [do! effect!]]
             core.stat
             core.projectile
