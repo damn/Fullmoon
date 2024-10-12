@@ -16,7 +16,6 @@
                  [nrepl "0.9.0"]
                  [org.clj-commons/pretty "3.2.0"]
                  [org.clojure/tools.namespace "1.3.0"]
-                 [metadoc "0.2.9"]
                  [org.openjfx/javafx-controls "22.0.1"]
                  [rewrite-clj/rewrite-clj "1.1.48"]]
   :java-source-paths ["java-src"]
@@ -35,9 +34,8 @@
              ;"-Dcom.sun.management.jmxremote.ssl=false"
              ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
-  :codox {:source-uri "https://github.com/damn/clojure.gdx/blob/main/{filepath}#L{line}"
-          :metadata {:doc/format :markdown}
-          :writer metadoc.writers.codox/write-docs}
+  :codox {:source-uri "https://github.com/damn/Fullmoon/blob/main/{filepath}#L{line}"
+          :metadata {:doc/format :markdown}}
 
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]

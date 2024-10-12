@@ -5,6 +5,7 @@
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]
+            [core.data :as data]
             [core.effect :refer [do! effect!]]))
 
 (comment
@@ -179,7 +180,7 @@
 (defn- data-components []
   (sort
    (concat
-    (keys (methods @#'clojure.gdx/->schema))
+    (keys (methods data/schema))
     (map first
          (filter (fn [[k attr-m]]
                    (:schema attr-m))

@@ -1,11 +1,4 @@
 (ns clojure.gdx
-  {:metadoc/categories {:effect "💥 Effects"
-                        :entity "👾 Entity"
-                        :properties "📦️ Properties"
-                        :screen "📺 Screens"
-                        :utils  "🔧 Utils"
-                        :world "🌎 World"
-                        :world.timer "⏳ Timer"}}
   (:require [clojure.component :refer [defsystem defc defc* component-attributes]]
             [clojure.gdx.app :as app]
             [clojure.gdx.audio :refer [play-sound!]]
@@ -2280,74 +2273,3 @@
 
 (defsystem manual-tick "FIXME" [_])
 (defmethod manual-tick :default [_])
-
-(defn- add-metadoc! []
-  (doseq [[doc-cat syms] (edn/read-string (slurp "doc/categories.edn"))
-          sym syms]
-    (try (alter-meta! (resolve sym) assoc :metadoc/categories #{doc-cat})
-         (catch Throwable t
-           (println "METADOC PROBLEM: " sym " : " t)))))
-
-(defn- anony-class? [[sym avar]]
-  (instance? java.lang.Class @avar))
-
-; TODO only funcs, no macros
-; what about record constructors, refer-all -> need to make either private or
-; also highlight them ....
-; only for categorization not necessary
-(defn- vimstuff []
-  (spit "vimstuff"
-        (apply str
-               (remove #{"defc" "defsystem"}
-                       (interpose " , " (map str (keys (->> (ns-publics *ns*)
-                                                            (remove anony-class?)))))))))
-
-(defn- record-constructor? [[sym avar]]
-  (re-find #"(map)?->\p{Upper}" (name sym)))
-
-
-(defn- relevant-ns-publics []
-  (->> (ns-publics *ns*)
-       (remove anony-class?)
-       (remove record-constructor?)))
-; 1. macros separate
-; 2. defsystems separate
-; 4. protocols ?1 protocol functions included ?!
-
-#_(spit "testo"
-        (str/join "\n"
-                  (for [[asym avar] (sort-by first (relevant-ns-publics))]
-                    (str asym " " (:arglists (meta avar)))
-                    )
-                  )
-        )
-
-(comment
- (spit "relevant_ns_publics"
-       (str/join "\n" (sort (map first (relevant-ns-publics))))))
-; = 264 public vars
-; next remove ->Foo and map->Foo
-
-#_(let [[asym avar] (first (relevant-ns-publics))]
-    (str asym " "(:arglists (meta avar)))
-    )
-
-(defn- ->clojurefuncs [fns-strs-names]
-  (str "\\   'clojureFunc': [\""  fns-strs-names "\"]"))
-
-; TODO only funcs, no macros
-; what about record constructors, refer-all -> need to make either private or
-; also highlight them ....
-; only for categorization not necessary
-(defn ->gdx-public-names-vimrc
-  "Without macros `defc` and `defsystem`."
-  []
-  (spit "gdx_names_vimrc"
-        (->clojurefuncs
-         (apply str
-                (remove #{"defc", "defsystem", "post-runnable!", "proxy-ILookup", "with-err-str", "when-seq"}
-                        (interpose " , " (map str (keys (->> (ns-interns 'clojure.gdx)
-                                                             (remove anony-class?))))))))))
-
-(when (= "true" (System/getenv "ADD_METADOC"))
-  (add-metadoc!))
