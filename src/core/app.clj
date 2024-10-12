@@ -4,6 +4,7 @@
             [clojure.gdx.app :as app]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
+            [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.utils :refer [bind-root dispose!]]
@@ -50,7 +51,7 @@
   (let [world-mouse (g/world-mouse-position)]
     (str
      "logic-frame: " logic-frame "\n"
-     "FPS: " (frames-per-second)  "\n"
+     "FPS: " (g/frames-per-second)  "\n"
      "Zoom: " (🎥/zoom (g/world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
@@ -219,7 +220,7 @@
 
 (defn- check-remove-message []
   (when-let [{:keys [counter]} message-to-player]
-    (alter-var-root #'message-to-player update :counter + (delta-time))
+    (alter-var-root #'message-to-player update :counter + (g/delta-time))
     (when (>= counter duration-seconds)
       (bind-root #'message-to-player nil))))
 
@@ -504,7 +505,7 @@
   nil)
 
 (defn- update-world []
-  (update-time (min (delta-time) max-delta-time))
+  (update-time (min (g/delta-time) max-delta-time))
   (let [entities (active-entities)]
     (potential-fields-update! entities)
     (try (tick-entities! entities)

@@ -12,6 +12,9 @@
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (space.earlygrey.shapedrawer ShapeDrawer)))
 
+(defn delta-time        [] (.getDeltaTime       Gdx/graphics))
+(defn frames-per-second [] (.getFramesPerSecond Gdx/graphics))
+
 (defn- kw->color [k] (gdx-field "graphics.Color" k))
 
 (def white Color/WHITE)

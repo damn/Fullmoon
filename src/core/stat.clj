@@ -2,6 +2,7 @@
   (:require [clojure.component :refer [defc defc* defsystem]]
             [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
+            [clojure.gdx.input :refer [button-just-pressed?]]
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]

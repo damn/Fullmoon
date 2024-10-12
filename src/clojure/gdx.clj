@@ -2,7 +2,6 @@
   {:metadoc/categories {:effect "💥 Effects"
                         :entity "👾 Entity"
                         :geometry "📐 Geometry"
-                        :input "🎮 Input"
                         :properties "📦️ Properties"
                         :screen "📺 Screens"
                         :utils  "🔧 Utils"
@@ -12,9 +11,10 @@
             [clojure.gdx.app :as app]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
+            [clojure.gdx.input :as input]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui :as ui]
-            [clojure.gdx.utils :refer [gdx-field safe-get bind-root]]
+            [clojure.gdx.utils :refer [safe-get bind-root]]
             [clojure.string :as str]
             [clojure.edn :as edn]
             [clojure.math :as math]
@@ -23,8 +23,7 @@
             [data.grid2d :as g2d]
             [malli.core :as m]
             [malli.error :as me])
-  (:import (com.badlogic.gdx Gdx)
-           (com.badlogic.gdx.audio Sound)
+  (:import (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
            (com.badlogic.gdx.scenes.scene2d Stage)
            (gdl RayCaster)))
@@ -711,33 +710,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
         :when (condition avar)]
     avar))
 
-(defn delta-time        [] (.getDeltaTime       Gdx/graphics))
-(defn frames-per-second [] (.getFramesPerSecond Gdx/graphics))
-
-(def ^:private gdx-input-button (partial gdx-field "Input$Buttons"))
-(def ^:private gdx-input-key    (partial gdx-field "Input$Keys"))
-
-(defn button-just-pressed?
-  ":left, :right, :middle, :back or :forward."
-  [b]
-  (.isButtonJustPressed Gdx/input (gdx-input-button b)))
-
-(defn key-just-pressed?
-  "See [[key-pressed?]]."
-  [k]
-  (.isKeyJustPressed Gdx/input (gdx-input-key k)))
-
-(defn key-pressed?
-  "For options see [libgdx Input$Keys docs](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/Input.Keys.html).
-  Keys are upper-cased and dashes replaced by underscores.
-  For example Input$Keys/ALT_LEFT can be used with :alt-left.
-  Numbers via :num-3, etc."
-  [k]
-  (.isKeyPressed Gdx/input (gdx-input-key k)))
-
-(defn- set-input-processor! [processor]
-  (.setInputProcessor Gdx/input processor))
-
 (defn play-sound! [path]
   (Sound/.play (assets/get path)))
 
@@ -811,11 +783,11 @@ On any exception we get a stacktrace with all tx's values and names shown."
 (defc :screens/stage
   {:let {:keys [stage sub-screen]}}
   (screen-enter [_]
-    (set-input-processor! stage)
+    (input/set-processor! stage)
     (screen-enter sub-screen))
 
   (screen-exit [_]
-    (set-input-processor! nil)
+    (input/set-processor! nil)
     (screen-exit sub-screen))
 
   (screen-render! [_]

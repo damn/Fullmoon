@@ -3,8 +3,6 @@
 
  :geometry [circle->outer-rectangle point-in-rect? shape-collides? v-add v-direction v-distance v-get-angle-from-vector v-get-normal-vectors v-length v-normalise v-normalised? v-scale fast-ray-blocked?]
 
- :input [button-just-pressed? key-just-pressed? key-pressed?]
-
  :properties [def-attributes def-property-type all-properties build-property ]
 
  :screen [screen-enter screen-exit screen-render change-screen current-screen]

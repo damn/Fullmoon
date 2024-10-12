@@ -4,6 +4,7 @@
             [clojure.gdx :refer :all]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
+            [clojure.gdx.input :refer [key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.utils :refer [safe-get]]

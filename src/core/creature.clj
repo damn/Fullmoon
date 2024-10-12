@@ -2,6 +2,7 @@
   (:require [clojure.component :refer [defc]]
             [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
+            [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
             [clojure.gdx.utils :refer [bind-root]]
             [clojure.string :as str]
             [reduce-fsm :as fsm]))
