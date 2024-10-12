@@ -1,4 +1,4 @@
-(ns clojure.gdx.editor
+(ns core.editor
   (:require [clojure.edn :as edn]
             [clojure.gdx :refer :all]
             [clojure.gdx.audio :refer [play-sound!]]

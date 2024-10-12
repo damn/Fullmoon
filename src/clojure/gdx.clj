@@ -54,7 +54,7 @@
     (bind-root #'screen-k new-k)
     (screen-enter [new-k v])))
 
-(defsystem ^:private screen-render!)
+(defsystem screen-render!)
 
 (defsystem screen-render)
 (defmethod screen-render :default [_])
@@ -70,11 +70,11 @@
           {}
           components))
 
-(defn- load-screens! [screen-ks]
+(defn load-screens! [screen-ks]
   (bind-root #'screens (create-vs (zipmap screen-ks (repeat nil))))
   (change-screen (ffirst screens)))
 
-(defn- dispose-screens! []
+(defn dispose-screens! []
   ; TODO screens not disposed https://github.com/damn/core/issues/41
   )
 
