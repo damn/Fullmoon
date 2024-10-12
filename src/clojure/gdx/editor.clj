@@ -17,14 +17,14 @@
             [malli.core :as m]
             [malli.generator :as mg]))
 
-(defn- k->widget [{:keys [type]}]
+(defn- data->widget [data]
   (cond
-   (#{:map-optional :components-ns}                 type) :map
-   (#{:number :nat-int :int :pos :pos-int :val-max} type) :number
-   :else type))
+   (#{:map-optional :components-ns}                 data) :map
+   (#{:number :nat-int :int :pos :pos-int :val-max} data) :number
+   :else data))
 
-(defmulti ^:private ->widget      (fn [data _v]      (k->widget data)))
-(defmulti ^:private widget->value (fn [data _widget] (k->widget data)))
+(defmulti ^:private ->widget      (fn [data _v]      (data->widget data)))
+(defmulti ^:private widget->value (fn [data _widget] (data->widget data)))
 
 ;;;;
 
@@ -54,22 +54,22 @@
 (defmethod widget->value :boolean [_ widget]
   (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
-(defmethod ->widget :string [{:keys [schema]} v]
+(defmethod ->widget :string [data v]
   (add-schema-tooltip! (ui/text-field v {})
-                       schema))
+                       (data/schema data)))
 
 (defmethod widget->value :string [_ widget]
   (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
 
-(defmethod ->widget :number [{:keys [schema]} v]
+(defmethod ->widget :number [data v]
   (add-schema-tooltip! (ui/text-field (->edn-str v) {})
-                       schema))
+                       (data/schema data)))
 
 (defmethod widget->value :number [_ widget]
   (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
-(defmethod ->widget :enum [{:keys [schema]} v]
-  (ui/select-box {:items (map ->edn-str (rest schema))
+(defmethod ->widget :enum [data v]
+  (ui/select-box {:items (map ->edn-str (rest (data/schema data)))
                   :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]
@@ -193,11 +193,11 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [{:keys [type schema]} (component/data-type k)]
+  (let [data (component/data k)]
     (cond
-     (#{:one-to-one :one-to-many} type) nil
+     (#{:one-to-one :one-to-many} data) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
-     :else (mg/generate schema {:size 3}))))
+     :else (mg/generate (data/schema data) {:size 3}))))
 
 (defn- ->choose-component-window [schema attribute-widget-group]
   (fn []
@@ -229,8 +229,9 @@
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(defmethod ->widget :map [{:keys [schema]} m]
-  (let [attribute-widget-group (->attribute-widget-group schema m)
+(defmethod ->widget :map [data m]
+  (let [schema (data/schema data)
+        attribute-widget-group (->attribute-widget-group schema m)
         optional-keys-left? (seq (set/difference (optional-keyset schema)
                                                  (set (keys m))))]
     (a/set-id! attribute-widget-group :attribute-widget-group)
@@ -254,7 +255,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (component/data-type k) v)
+        value-widget (->widget (component/data k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -288,7 +289,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (component/data-type k) value-widget)])))
+             [k (widget->value (component/data k) value-widget)])))
 
 ;;
 
@@ -448,10 +449,10 @@
       (for [id property-ids]
         (ui/text-button "-" #(redo-rows (disj property-ids id))))])))
 
-(defmethod ->widget :one-to-many [{:keys [schema]} property-ids]
+(defmethod ->widget :one-to-many [data property-ids]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows table
-                          (one-to-many-schema->linked-property-type schema)
+                          (one-to-many-schema->linked-property-type (data/schema data))
                           property-ids)
     table))
 
@@ -489,10 +490,10 @@
       [(when property-id
          (ui/text-button "-" #(redo-rows nil)))]])))
 
-(defmethod ->widget :one-to-one [{:keys [schema]} property-id]
+(defmethod ->widget :one-to-one [data property-id]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows table
-                         (one-to-one-schema->linked-property-type schema)
+                         (one-to-one-schema->linked-property-type (data/schema data))
                          property-id)
     table))
 

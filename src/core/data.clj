@@ -1,19 +1,15 @@
 (ns core.data)
 
-(defn definition->type [data]
+(defn- data->type [data]
   (if (vector? data)
     (data 0)
     data))
 
-(defmulti edn->value (fn [data v] (definition->type data)))
+(defmulti edn->value (fn [data v] (data->type data)))
 (defmethod edn->value :default [_data v] v)
 
-(defmulti schema definition->type)
+(defmulti schema data->type)
 (defmethod schema :default [data] data)
-
-(defn ->type [data]
-  {:type (definition->type data)
-   :schema (schema data)})
 
 (defmethod schema :number  [_] number?)
 (defmethod schema :nat-int [_] nat-int?)

@@ -17,7 +17,7 @@
     (do
      (assert (keyword? k))
      (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
-     [k schema-props (component/data-schema k)])))
+     [k schema-props (data/schema (component/data k))])))
 ; why does a schema depend on compnents ???
 ; should be independent of components ?!
 

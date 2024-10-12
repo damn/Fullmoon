@@ -25,7 +25,8 @@
 (defn ->schema [property]
   (-> property
       ->type
-      component/data-schema
+      component/data
+      data/schema
       m/schema))
 
 (defn validate [property]
@@ -69,7 +70,7 @@
 (defn build [property]
   (apply-kvs property
              (fn [k v]
-               (data/edn->value (try (:data (safe-get component/attributes k))
+               (data/edn->value (try (component/data k)
                                      (catch Throwable _t
                                        (swap! undefined-data-ks conj k)))
                                 (if (map? v)

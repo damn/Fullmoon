@@ -78,9 +78,7 @@ Example:
                  ~@fn-exprs)))))
       ~k)))
 
-(defn data-type [k]
-  (try (data/->type (:data (safe-get attributes k)))
-       (catch Throwable t
-         (throw (ex-info "" {:k k} t)))))
-
-(defn data-schema [k] (:schema (data-type k)))
+; this has nothing to do with component ?!
+; the data at k == global spec
+(defn data [k]
+  (:data (safe-get attributes k)))
