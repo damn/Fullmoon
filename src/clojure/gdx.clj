@@ -29,9 +29,7 @@
      :overview overview}))
 
 (defn data-type [k]
-  (try (let [data (:data (safe-get component-attributes k))]
-         {:type (data/definition->type data)
-          :schema (data/schema data)})
+  (try (data/->type (:data (safe-get component-attributes k)))
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
 
@@ -90,8 +88,6 @@
 
 ;;;;
 
-(defmulti edn->value (fn [data v] (:type data)))
-(defmethod edn->value :default [_data v] v)
 
 (defn ns-k->property-type [ns-k]
   (keyword "properties" (name ns-k)))
@@ -184,12 +180,12 @@
 (defn- build [property]
   (apply-kvs property
              (fn [k v]
-               (edn->value (try (data-type k)
-                                (catch Throwable _t
-                                  (swap! undefined-data-ks conj k)))
-                           (if (map? v)
-                             (build v)
-                             v)))))
+               (data/edn->value (try (data-type k)
+                                     (catch Throwable _t
+                                       (swap! undefined-data-ks conj k)))
+                                (if (map? v)
+                                  (build v)
+                                  v)))))
 
 (defn build-property [id]
   (build (safe-get properties-db id)))
@@ -1497,7 +1493,7 @@
                :looping? looping?))
 
 
-(defmethod edn->value :data/animation [_ animation]
+(defmethod data/edn->value :data/animation [_ animation]
   (edn->animation animation))
 
 (defn- tx-assoc-image-current-frame [eid animation]

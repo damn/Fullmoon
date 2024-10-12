@@ -72,7 +72,7 @@
 (defmethod widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
-(defmethod edn->value :image [_ image]
+(defmethod data/edn->value :image [_ image]
   (g/edn->image image))
 
 ; too many ! too big ! scroll ... only show files first & preview?
@@ -402,7 +402,7 @@
     :properties/items)
  )
 
-(defmethod edn->value :one-to-many [_ property-ids]
+(defmethod data/edn->value :one-to-many [_ property-ids]
   (map build-property property-ids))
 
 
@@ -414,7 +414,7 @@
     :properties/creatuers)
  )
 
-(defmethod edn->value :one-to-one [_ property-id]
+(defmethod data/edn->value :one-to-one [_ property-id]
   (build-property property-id))
 
 (defn- add-one-to-many-rows [table property-type property-ids]
