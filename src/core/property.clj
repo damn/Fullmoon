@@ -1,6 +1,7 @@
 (ns core.property
   (:refer-clojure :exclude [def])
-  (:require [core.component :refer [defc] :as component]
+  (:require [clojure.gdx.utils :refer [safe-get]]
+            [core.component :refer [defc] :as component]
             [core.data :as data]
             [malli.core :as m]
             [malli.error :as me]))
@@ -68,7 +69,7 @@
 (defn build [property]
   (apply-kvs property
              (fn [k v]
-               (data/edn->value (try (component/data-type k)
+               (data/edn->value (try (:data (safe-get component/attributes k))
                                      (catch Throwable _t
                                        (swap! undefined-data-ks conj k)))
                                 (if (map? v)

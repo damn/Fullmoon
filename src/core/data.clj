@@ -1,15 +1,14 @@
 (ns core.data)
 
-(defmulti edn->value (fn [data v] (:type data)))
+(defn definition->type [data]
+  (if (vector? data)
+    (data 0)
+    data))
+
+(defmulti edn->value (fn [data v] (definition->type data)))
 (defmethod edn->value :default [_data v] v)
 
-(defn definition->type [data]
-  (if (vector? data) (data 0) data))
-
-(defmulti schema
-  "Returns the schema for the data-definition."
-  definition->type)
-
+(defmulti schema definition->type)
 (defmethod schema :default [data] data)
 
 (defn ->type [data]
