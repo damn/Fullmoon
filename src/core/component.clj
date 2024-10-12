@@ -164,10 +164,21 @@ Example:
                            (info component))
                          (catch Throwable t
                            ; calling from property-editor where entity components
-                           ; have a different data schema than after ->mk
+                           ; have a different data schema than after component/create
                            ; and info-text might break
                            (pr-str component)))
                     (when (map? v)
                       (str "\n" (info-text v))))))
        (str/join "\n")
        remove-newlines))
+
+(defsystem create "Create component value. Default returns v.")
+(defmethod create :default [[_ v]] v)
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (create [k v])]`."
+  [components]
+  (reduce (fn [m [k v]]
+            (assoc m k (create [k v])))
+          {}
+          components))

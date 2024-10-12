@@ -59,19 +59,8 @@
 (defsystem screen-render)
 (defmethod screen-render :default [_])
 
-(defsystem ->mk "Create component value. Default returns v.")
-(defmethod ->mk :default [[_ v]] v)
-
-(defn create-vs
-  "Creates a map for every component with map entries `[k (->mk [k v])]`."
-  [components]
-  (reduce (fn [m [k v]]
-            (assoc m k (->mk [k v])))
-          {}
-          components))
-
 (defn load-screens! [screen-ks]
-  (bind-root #'screens (create-vs (zipmap screen-ks (repeat nil))))
+  (bind-root #'screens (component/create-vs (zipmap screen-ks (repeat nil))))
   (change-screen (ffirst screens)))
 
 (defn dispose-screens! []
@@ -1040,7 +1029,7 @@
                       (safe-merge (-> components
                                       (assoc :entity/id eid
                                              :entity/uid (unique-number!))
-                                      (create-vs)))))
+                                      (component/create-vs)))))
       (create-e-system eid))))
 
 (defc :e/destroy
@@ -1287,7 +1276,7 @@
 
 (defc :entity/delete-after-duration
   {:let counter}
-  (->mk [[_ duration]]
+  (component/create [[_ duration]]
     (->counter duration))
 
   (component/info [_]
@@ -1587,7 +1576,7 @@
 (defc :entity/modifiers
   {:data [:components-ns :modifier]
    :let modifiers}
-  (->mk [_]
+  (component/create [_]
     (into {} (for [[modifier-k operations] modifiers]
                [modifier-k (into {} (for [[operation-k value] operations]
                                       [operation-k [value]]))])))

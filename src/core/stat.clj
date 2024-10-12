@@ -161,7 +161,7 @@
                 [:stats/armor-save    {:optional true}]
                 [:stats/armor-pierce  {:optional true}]]]
    :let stats}
-  (->mk [_]
+  (component/create [_]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
@@ -764,7 +764,7 @@ Default method returns true.")
 
 (defc :active-skill
   {:let {:keys [eid skill effect-ctx counter]}}
-  (->mk [[_ eid [skill effect-ctx]]]
+  (component/create [[_ eid [skill effect-ctx]]]
     {:eid eid
      :skill skill
      :effect-ctx effect-ctx
@@ -822,7 +822,7 @@ Default method returns true.")
 
 (defc :npc-idle
   {:let {:keys [eid]}}
-  (->mk [[_ eid]]
+  (component/create [[_ eid]]
     {:eid eid})
 
   (tick [_ eid]
@@ -938,7 +938,7 @@ Default method returns true.")
 
 (defc :player-idle
   {:let {:keys [eid]}}
-  (->mk [[_ eid]]
+  (component/create [[_ eid]]
     {:eid eid})
 
   (pause-game? [_]

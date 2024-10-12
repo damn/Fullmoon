@@ -18,7 +18,7 @@
 
 (defc :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}
-  (->mk [[_ v]]
+  (component/create [[_ v]]
     (assoc v :already-hit-bodies #{}))
 
   ; TODO probably belongs to body

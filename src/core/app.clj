@@ -233,7 +233,7 @@
       (bind-root #'message-to-player nil))))
 
 (defc :widgets/player-message
-  (->mk [_]
+  (component/create [_]
     (ui/actor {:draw draw-player-message
                :act check-remove-message})))
 
@@ -255,7 +255,7 @@
                        (->entity-info-window)
                        (->inventory-window widget-data)]})
    (ui/actor {:draw core.creature/draw-item-on-cursor})
-   (->mk [:widgets/player-message])])
+   (component/create [:widgets/player-message])])
 
 (defn ->world-widgets []
   (let [widget-data {:action-bar (->action-bar-button-group)
@@ -406,7 +406,7 @@
         (change-screen :screens/world))))
 
 #_(defc :screens/minimap
-  (->mk [_]
+  (component/create [_]
     (->Screen)))
 
 (defn- geom-test []
@@ -635,7 +635,7 @@
 
 (derive :screens/world :screens/stage)
 (defc :screens/world
-  (->mk [_]
+  (component/create [_]
     {:stage (->stage [])
      :sub-screen [:world/sub-screen]}))
 
@@ -669,7 +669,7 @@
 
 (derive :screens/main-menu :screens/stage)
 (defc :screens/main-menu
-  (->mk [[k _]]
+  (component/create [[k _]]
     {:sub-screen [:main/sub-screen]
      :stage (->stage (->actors))}))
 
@@ -725,7 +725,7 @@
 
 (derive :screens/options-menu :screens/stage)
 (defc :screens/options-menu
-  (->mk [_]
+  (component/create [_]
     {:stage (->stage [(->background-image)
                       (create-table)])
      :sub-screen [:options/sub-screen]}))

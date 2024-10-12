@@ -9,7 +9,7 @@
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
-            [core.component :refer [defc]]
+            [core.component :refer [defc] :as component]
             [core.db :as db]
             [core.property :as property]
             [data.grid2d :as g2d]
@@ -565,7 +565,7 @@ direction keys: move")
 
 (derive :screens/map-editor :screens/stage)
 (defc :screens/map-editor
-  (->mk [_]
+  (component/create [_]
     {:sub-screen [::sub-screen
                   (atom {:tiled-map (t/load-map modules-file)
                          :show-movement-properties false

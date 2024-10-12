@@ -44,7 +44,7 @@
 
 (defc :creature/species
   {:data [:qualified-keyword {:namespace :species}]}
-  (->mk [[_ species]]
+  (component/create [[_ species]]
     (str/capitalize (name species)))
   (component/info [[_ species]]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
@@ -140,7 +140,7 @@
   (assoc (fsm initial-state nil) :state initial-state))
 
 (defc :entity/state
-  (->mk [[_ [player-or-npc initial-state]]]
+  (component/create [[_ [player-or-npc initial-state]]]
     {:initial-state initial-state
      :fsm (case player-or-npc
             :state/player player-fsm
@@ -148,7 +148,7 @@
 
   (create [[k {:keys [fsm initial-state]}] eid]
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
-     [:e/assoc eid initial-state (->mk [initial-state eid])]])
+     [:e/assoc eid initial-state (component/create [initial-state eid])]])
 
   (component/info [[_ fsm]]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
@@ -169,7 +169,7 @@
           new-state-k (:state new-fsm)]
       (when-not (= old-state-k new-state-k)
         (let [old-state-obj (state-obj @eid)
-              new-state-obj [new-state-k (->mk [new-state-k eid params])]]
+              new-state-obj [new-state-k (component/create [new-state-k eid params])]]
           [#(exit old-state-obj)
            #(enter new-state-obj)
            (when (:entity/player? @eid) #(player-enter new-state-obj))
@@ -183,7 +183,7 @@
 
 (defc :npc-dead
   {:let {:keys [eid]}}
-  (->mk [[_ eid]]
+  (component/create [[_ eid]]
     {:eid eid})
 
   (enter [_]
@@ -194,7 +194,7 @@
 ; also prevents fast twitching around changing directions every frame
 (defc :npc-moving
   {:let {:keys [eid movement-vector counter]}}
-  (->mk [[_ eid movement-vector]]
+  (component/create [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector
      :counter (->counter (* (entity-stat @eid :stats/reaction-time) 0.016))})
@@ -212,7 +212,7 @@
 
 (defc :npc-sleeping
   {:let {:keys [eid]}}
-  (->mk [[_ eid]]
+  (component/create [[_ eid]]
     {:eid eid})
 
   (exit [_]
@@ -301,7 +301,7 @@
 
 (defc :player-item-on-cursor
   {:let {:keys [eid item]}}
-  (->mk [[_ eid item]]
+  (component/create [[_ eid item]]
     {:eid eid
      :item item})
 
@@ -357,7 +357,7 @@
 
 (defc :player-moving
   {:let {:keys [eid movement-vector]}}
-  (->mk [[_ eid movement-vector]]
+  (component/create [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector})
 
@@ -382,7 +382,7 @@
 
 (defc :stunned
   {:let {:keys [eid counter]}}
-  (->mk [[_ eid duration]]
+  (component/create [[_ eid duration]]
     {:eid eid
      :counter (->counter duration)})
 

@@ -382,7 +382,7 @@
 
 (derive :screens/property-editor :screens/stage)
 (defc :screens/property-editor
-  (->mk [_]
+  (component/create [_]
     {:stage (->stage [(->background-image)
                       (->tabbed-pane (->tabs-data))
                       (ui/actor {:act (fn []
