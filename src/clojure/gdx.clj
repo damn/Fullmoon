@@ -24,6 +24,7 @@
             [clojure.pprint :refer [pprint]]
             [clj-commons.pretty.repl :refer [pretty-pst]]
             [core.effect :refer [do! effect!]]
+            [core.data :as data]
             [core.operation :as op]
             [data.grid2d :as g2d]
             [malli.core :as m]
@@ -39,19 +40,10 @@
     {:data [:map (conj schema :property/id)]
      :overview overview}))
 
-(defn- data-definition->type [data]
-  (if (vector? data) (data 0) data))
-
-(defmulti ->schema
-  "Returns the schema for the data-definition."
-  data-definition->type)
-
-(defmethod ->schema :default [data] data)
-
 (defn data-type [k]
   (try (let [data (:data (safe-get component-attributes k))]
-         {:type (data-definition->type data)
-          :schema (->schema data)})
+         {:type (data/definition->type data)
+          :schema (data/schema data)})
        (catch Throwable t
          (throw (ex-info "" {:k k} t)))))
 
@@ -79,48 +71,33 @@
   (filter #(= (name ns-name-k) (namespace %))
           (keys component-attributes)))
 
-;;;; Data Types
+(defmethod data/schema :sound [_]
+  :string)
 
-(defmethod ->schema :some    [_] :some)
-(defmethod ->schema :boolean [_] :boolean)
-(defmethod ->schema :string  [_] :string)
-(defmethod ->schema :number  [_] number?)
-(defmethod ->schema :nat-int [_] nat-int?)
-(defmethod ->schema :int     [_] int?)
-(defmethod ->schema :pos     [_] pos?)
-(defmethod ->schema :pos-int [_] pos-int?)
-(defmethod ->schema :sound   [_] :string)
-
-(defmethod ->schema :image [_]
+(defmethod data/schema :image [_]
   [:map {:closed true}
    [:file :string]
    [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
 
-(defmethod ->schema :data/animation [_]
+(defmethod data/schema :data/animation [_]
   [:map {:closed true}
    [:frames :some]
    [:frame-duration pos?]
    [:looping? :boolean]])
 
-(defmethod ->schema :enum [[_ items]]
-  (apply vector :enum items))
-
-(defmethod ->schema :qualified-keyword [schema]
-  schema)
-
-(defmethod ->schema :map [[_ ks]]
+(defmethod data/schema :map [[_ ks]]
   (map-schema ks))
 
-(defmethod ->schema :map-optional [[_ ks]]
+(defmethod data/schema :map-optional [[_ ks]]
   (map-schema (map (fn [k] [k {:optional true}]) ks)))
 
-(defmethod ->schema :components-ns [[_ ns-name-k]]
-  (->schema [:map-optional (namespaced-ks ns-name-k)]))
+(defmethod data/schema :components-ns [[_ ns-name-k]]
+  (data/schema [:map-optional (namespaced-ks ns-name-k)]))
 
-(defmethod ->schema :one-to-many [[_ property-type]]
+(defmethod data/schema :one-to-many [[_ property-type]]
   [:set [:qualified-keyword {:namespace (property-type->id-namespace property-type)}]])
 
-(defmethod ->schema :one-to-one [[_ property-type]]
+(defmethod data/schema :one-to-one [[_ property-type]]
   [:qualified-keyword {:namespace (property-type->id-namespace property-type)}])
 
 ;;;;
