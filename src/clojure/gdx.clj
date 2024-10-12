@@ -1,6 +1,5 @@
 (ns clojure.gdx
   {:metadoc/categories {:app "🖥️ Application"
-                        :component "⚙️ Component"
                         :effect "💥 Effects"
                         :entity "👾 Entity"
                         :geometry "📐 Geometry"
