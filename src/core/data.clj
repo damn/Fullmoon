@@ -4,6 +4,10 @@
 ; :d/type ?
 ; or document where its used as param or name
 
+; actually I also do this for components
+; either just kw or [kw & values]
+; so are data types also components?
+; with :d/
 (defn ->type [data]
   (if (vector? data)
     (data 0)
