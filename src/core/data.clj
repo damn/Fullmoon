@@ -48,7 +48,7 @@
    [:frame-duration pos?]
    [:looping? :boolean]])
 
-(defn data [k]
+(defn k->data [k]
   (:data (safe-get component/attributes k)))
 
 (defn- attribute-schema
@@ -61,7 +61,7 @@
     (do
      (assert (keyword? k))
      (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
-     [k schema-props (schema (data k))])))
+     [k schema-props (schema (k->data k))])))
 
 (defn- map-schema [ks]
   (apply vector :map {:closed true} (attribute-schema ks)))
@@ -74,7 +74,7 @@
 
 (defn- namespaced-ks [ns-name-k]
   (filter #(= (name ns-name-k) (namespace %))
-          (keys attributes)))
+          (keys component/attributes)))
 
 (defmethod schema :components-ns [[_ ns-name-k]]
   (schema [:map-optional (namespaced-ks ns-name-k)]))
