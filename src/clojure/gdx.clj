@@ -1,6 +1,5 @@
 (ns clojure.gdx
   {:metadoc/categories {:app "🖥️ Application"
-                        :camera "🎥 Camera"
                         :component "⚙️ Component"
                         :effect "💥 Effects"
                         :entity "👾 Entity"
@@ -31,10 +30,10 @@
            (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            (com.badlogic.gdx.files FileHandle)
-           (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter OrthographicCamera Camera Pixmap Pixmap$Format)
+           (com.badlogic.gdx.graphics Color Colors Texture Texture$TextureFilter Pixmap Pixmap$Format)
            (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
            (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
-           (com.badlogic.gdx.math MathUtils Vector2 Vector3 Circle Rectangle Intersector)
+           (com.badlogic.gdx.math MathUtils Vector2 Circle Rectangle Intersector)
            (com.badlogic.gdx.utils Align Scaling Disposable SharedLibraryLoader ScreenUtils)
            (com.badlogic.gdx.utils.viewport Viewport FitViewport)
            (com.badlogic.gdx.scenes.scene2d Actor Touchable Group Stage)
@@ -949,71 +948,6 @@ On any exception we get a stacktrace with all tx's values and names shown."
     (play-sound! file)
     nil))
 
-(defn camera-position
-  "Returns camera position as [x y] vector."
-  [^Camera camera]
-  [(.x (.position camera))
-   (.y (.position camera))])
-
-(defn camera-set-position!
-  "Sets x and y and calls update on the camera."
-  [^Camera camera [x y]]
-  (set! (.x (.position camera)) (float x))
-  (set! (.y (.position camera)) (float y))
-  (.update camera))
-
-(defn frustum [^Camera camera]
-  (let [frustum-points (for [^Vector3 point (take 4 (.planePoints (.frustum camera)))
-                             :let [x (.x point)
-                                   y (.y point)]]
-                         [x y])
-        left-x   (apply min (map first  frustum-points))
-        right-x  (apply max (map first  frustum-points))
-        bottom-y (apply min (map second frustum-points))
-        top-y    (apply max (map second frustum-points))]
-    [left-x right-x bottom-y top-y]))
-
-(defn visible-tiles [camera]
-  (let [[left-x right-x bottom-y top-y] (frustum camera)]
-    (for  [x (range (int left-x)   (int right-x))
-           y (range (int bottom-y) (+ 2 (int top-y)))]
-      [x y])))
-
-(defn calculate-zoom
-  "calculates the zoom value for camera to see all the 4 points."
-  [^Camera camera & {:keys [left top right bottom]}]
-  (let [viewport-width  (.viewportWidth  camera)
-        viewport-height (.viewportHeight camera)
-        [px py] (camera-position camera)
-        px (float px)
-        py (float py)
-        leftx (float (left 0))
-        rightx (float (right 0))
-        x-diff (max (- px leftx) (- rightx px))
-        topy (float (top 1))
-        bottomy (float (bottom 1))
-        y-diff (max (- topy py) (- py bottomy))
-        vp-ratio-w (/ (* x-diff 2) viewport-width)
-        vp-ratio-h (/ (* y-diff 2) viewport-height)
-        new-zoom (max vp-ratio-w vp-ratio-h)]
-    new-zoom))
-
-(defn zoom [^OrthographicCamera camera]
-  (.zoom camera))
-
-(defn set-zoom!
-  "Sets the zoom value and updates."
-  [^OrthographicCamera camera amount]
-  (set! (.zoom camera) amount)
-  (.update camera))
-
-(defn reset-zoom!
-  "Sets the zoom value to 1."
-  [camera]
-  (set-zoom! camera 1))
-
-(defn- ->camera ^OrthographicCamera [] (OrthographicCamera.))
-
 ; touch coordinates are y-down, while screen coordinates are y-up
 ; so the clamping of y is reverse, but as black bars are equal it does not matter
 (defn- unproject-mouse-posi
@@ -1028,13 +962,15 @@ On any exception we get a stacktrace with all tx's values and names shown."
         coords (.unproject viewport (Vector2. mouse-x mouse-y))]
     [(.x coords) (.y coords)]))
 
+(require '[clojure.gdx.graphics.camera :as 🎥])
+
 (defn- ->gui-viewport [world-width world-height]
-  (FitViewport. world-width world-height (->camera)))
+  (FitViewport. world-width world-height (🎥/orthographic)))
 
 (defn- ->world-viewport [world-width world-height unit-scale]
   (let [world-width  (* world-width  unit-scale)
         world-height (* world-height unit-scale)
-        camera (->camera)
+        camera (🎥/orthographic)
         y-down? false]
     (.setToOrtho camera y-down? world-width world-height)
     (FitViewport. world-width world-height camera)))
@@ -2830,7 +2766,7 @@ On any exception we get a stacktrace with all tx's values and names shown."
   (let [[x y] (:position entity*)
         x (float x)
         y (float y)
-        [cx cy] (camera-position (world-camera))
+        [cx cy] (🎥/position (world-camera))
         px (float cx)
         py (float cy)
         xdist (Math/abs (- x px))

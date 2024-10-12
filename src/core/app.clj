@@ -1,5 +1,6 @@
 (ns core.app
   (:require [clojure.gdx :refer :all]
+            [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.tiled :as t]
             clojure.gdx.editor
             core.creature
@@ -44,7 +45,7 @@
     (str
      "logic-frame: " logic-frame "\n"
      "FPS: " (frames-per-second)  "\n"
-     "Zoom: " (zoom (world-camera)) "\n"
+     "Zoom: " (🎥/zoom (world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
@@ -360,11 +361,11 @@
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
         bottom (apply min-key (fn [[x y]] y) positions-explored)]
-    (calculate-zoom (world-camera)
-                    :left left
-                    :top top
-                    :right right
-                    :bottom bottom)))
+    (🎥/calculate-zoom (world-camera)
+                       :left left
+                       :top top
+                       :right right
+                       :bottom bottom)))
 
 (defn- ->tile-corner-color-setter [explored?]
   (fn tile-corner-color-setter [color x y]
@@ -372,17 +373,17 @@
 
 #_(deftype Screen []
     (show [_]
-      (set-zoom! (world-camera) (minimap-zoom)))
+      (🎥/set-zoom! (world-camera) (minimap-zoom)))
 
     (hide [_]
-      (reset-zoom! (world-camera)))
+      (🎥/reset-zoom! (world-camera)))
 
     ; TODO fixme not subscreen
     (render [_]
       (draw-tiled-map world-tiled-map
                       (->tile-corner-color-setter @explored-tile-corners))
       (render-world-view! (fn []
-                            (draw-filled-circle (camera-position (world-camera))
+                            (draw-filled-circle (🎥/camera-position (world-camera))
                                                 0.5
                                                 :green)))
       (when (or (key-just-pressed? :keys/tab)
@@ -412,7 +413,7 @@
 (defn- tile-debug []
   (let [grid world-grid
         world-camera (world-camera)
-        [left-x right-x bottom-y top-y] (frustum world-camera)]
+        [left-x right-x bottom-y top-y] (🎥/frustum world-camera)]
 
     (when tile-grid?
       (draw-grid (int left-x) (int bottom-y)
@@ -420,7 +421,7 @@
                  (+ 2 (int (world-viewport-height)))
                  1 1 [1 1 1 0.8]))
 
-    (doseq [[x y] (visible-tiles world-camera)
+    (doseq [[x y] (🎥/visible-tiles world-camera)
             :let [cell (grid [x y])]
             :when cell
             :let [cell* @cell]]
@@ -561,8 +562,8 @@
   #_(reset! do-once false))
 
 (defn- render-world! []
-  (camera-set-position! (world-camera) (:position @world-player))
-  (render-map (camera-position (world-camera)))
+  (🎥/set-position! (world-camera) (:position @world-player))
+  (render-map (🎥/position (world-camera)))
   (render-world-view! (fn []
                         (before-entities)
                         (render-entities! (map deref (active-entities)))
@@ -587,7 +588,7 @@
        true))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
-  (set-zoom! camera (max 0.1 (+ (zoom camera) by))))
+  (🎥/set-zoom! camera (max 0.1 (+ (🎥/zoom camera) by))))
 
 (def ^:private zoom-speed 0.05)
 
