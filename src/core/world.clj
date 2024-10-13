@@ -14,6 +14,7 @@
             [core.component :refer [defc] :as component]
             [core.db :as db]
             [core.property :as property]
+            [core.widgets.error :refer [error-window!]]
             [data.grid2d :as g2d]
             [utils.core :refer [->tile]]))
 

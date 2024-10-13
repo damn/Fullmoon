@@ -15,6 +15,7 @@
             [core.data :as data]
             [core.db :as db]
             [core.property :as property]
+            [core.widgets.error :refer [error-window!]]
             [malli.core :as m]
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))

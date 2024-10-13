@@ -21,6 +21,7 @@
             core.projectile
             [core.db :as db]
             [core.val-max :as val-max]
+            [core.widgets.error :refer [error-window!]]
             [core.world :as world]
             [data.grid2d :as g2d]
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
