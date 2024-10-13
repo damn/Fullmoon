@@ -7,7 +7,6 @@
             [core.component :refer [defc defc* do!] :as component]
             [core.effect :as effect :refer [source target target-position target-direction]]
             [core.operation :as op]
-            [core.projectile :refer [projectile-size]]
             [core.val-max :as val-max]
             [utils.core :refer [readable-number k->pretty-name]]
             [world.content-grid :as content-grid]
@@ -17,6 +16,7 @@
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]
+            [world.projectile :refer [projectile-size]]
             [world.raycaster :refer [path-blocked?]]
             [world.time :refer [->counter stopped? finished-ratio]]))
 

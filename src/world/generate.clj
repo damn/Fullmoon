@@ -1,4 +1,4 @@
-(ns core.world
+(ns world.generate
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
