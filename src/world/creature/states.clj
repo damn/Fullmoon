@@ -1,13 +1,12 @@
 (ns world.creature.states
-  (:require [clojure.gdx :refer [pause-game? manual-tick]]
-            [clojure.gdx.graphics :as g]
+  (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
             [clojure.gdx.math.vector :as v]
             [clojure.gdx.screen :as screen]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
-            [core.component :refer [defc] :as component]
+            [core.component :refer [defc do!] :as component]
             [core.effect :as effect]
             [reduce-fsm :as fsm]
             [world.entity :as entity]
@@ -159,7 +158,7 @@
   (state/player-enter [_]
     [[:tx/cursor :cursors/black-x]])
 
-  (pause-game? [_]
+  (state/pause-game? [_]
     true)
 
   (state/enter [_]
@@ -227,10 +226,10 @@
     {:eid eid
      :item item})
 
-  (pause-game? [_]
+  (state/pause-game? [_]
     true)
 
-  (manual-tick [_]
+  (state/manual-tick [_]
     (when (and (button-just-pressed? :left)
                (world-item?))
       [[:tx/event eid :drop-item]]))
@@ -286,7 +285,7 @@
   (state/player-enter [_]
     [[:tx/cursor :cursors/walking]])
 
-  (pause-game? [_]
+  (state/pause-game? [_]
     false)
 
   (state/enter [_]
@@ -311,7 +310,7 @@
   (state/player-enter [_]
     [[:tx/cursor :cursors/denied]])
 
-  (pause-game? [_]
+  (state/pause-game? [_]
     false)
 
   (entity/tick [_ eid]
@@ -353,7 +352,7 @@
   (state/player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
 
-  (pause-game? [_]
+  (state/pause-game? [_]
     false)
 
   (state/enter [_]
@@ -533,10 +532,10 @@
   (component/create [[_ eid]]
     {:eid eid})
 
-  (pause-game? [_]
+  (state/pause-game? [_]
     true)
 
-  (manual-tick [_]
+  (state/manual-tick [_]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
       (let [[cursor on-click] (->interaction-state @eid)]

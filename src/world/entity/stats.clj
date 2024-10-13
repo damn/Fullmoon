@@ -1,6 +1,5 @@
 (ns world.entity.stats
-  (:require [clojure.gdx :refer :all]
-            [clojure.gdx.graphics :as g]
+  (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
@@ -198,7 +197,7 @@
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)
                 y (+ y half-height)
-                height (g/pixels->world-units hpbar-height-px)
+                height (g/pixels->world-units 5)
                 border (g/pixels->world-units borders-px)]
             (g/draw-filled-rectangle x y width height :black)
             (g/draw-filled-rectangle (+ x border)

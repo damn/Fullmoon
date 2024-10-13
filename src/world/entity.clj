@@ -447,3 +447,28 @@
       effect-body-props
       #:entity {:line-render {:thick? thick? :end end :color color}
                 :delete-after-duration duration}]]))
+
+(defc :entity/string-effect
+  (tick [[k {:keys [counter]}] eid]
+    (when (stopped? counter)
+      [[:e/dissoc eid k]]))
+
+  (render-above [[_ {:keys [text]}] entity*]
+    (let [[x y] (:position entity*)]
+      (g/draw-text {:text text
+                    :x x
+                    :y (+ y (:half-height entity*) (g/pixels->world-units 5))
+                    :scale 2
+                    :up? true}))))
+
+(defc :tx/add-text-effect
+  (do! [[_ entity text]]
+    [[:e/assoc
+      entity
+      :entity/string-effect
+      (if-let [string-effect (:entity/string-effect @entity)]
+        (-> string-effect
+            (update :text str "\n" text)
+            (update :counter world.time/reset))
+        {:text text
+         :counter (->counter 0.4)})]]))

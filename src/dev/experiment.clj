@@ -1,6 +1,5 @@
 (ns dev.experiment
-  (:require [clojure.gdx :refer :all]
-            [clojure.gdx.app :refer [post-runnable!]]
+  (:require [clojure.gdx.app :refer [post-runnable!]]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]

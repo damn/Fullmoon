@@ -1,6 +1,5 @@
 (ns core.editor
   (:require [clojure.edn :as edn]
-            [clojure.gdx :refer :all]
             [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]

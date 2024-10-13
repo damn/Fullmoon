@@ -1,5 +1,6 @@
 (ns world.creature
-  (:require [clojure.string :as str]
+  (:require [clojure.gdx.graphics :as g]
+            [clojure.string :as str]
             [core.component :refer [defc do!] :as component]
             [core.property :as property]
             [core.db :as db]
@@ -30,6 +31,14 @@
                                    (name (:creature/species %))
                                    (name (:property/id %)))
               :extra-info-text #(str (:creature/level %))}})
+
+(g/def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
+
+(defc :property/pretty-name
+  {:data :string
+   :let value}
+  (component/info [_]
+    (str "[ITEM_GOLD]"value"[]")))
 
 (defc :body/width   {:data :pos})
 (defc :body/height  {:data :pos})

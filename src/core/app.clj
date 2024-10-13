@@ -1,6 +1,5 @@
 (ns core.app
-  (:require [clojure.gdx :refer :all]
-            [clojure.gdx.app :as app]
+  (:require [clojure.gdx.app :as app]
             [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g :refer [white black]]
@@ -11,7 +10,7 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get mouse-on-actor?]]
+            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-add! stage-get mouse-on-actor?]]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
             [core.component :refer [defc do! effect!] :as component]
@@ -45,6 +44,35 @@
   {:data :sound}
   (do! [[_ file]]
     (play-sound! file)
+    nil))
+
+(defc :tx/cursor
+  (do! [[_ cursor-key]]
+    (g/set-cursor! cursor-key)
+    nil))
+
+; TODO no window movable type cursor appears here like in player idle
+; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?
+; => input events handling
+; hmmm interesting ... can disable @ item in cursor  / moving / etc.
+
+(defn- show-player-modal! [{:keys [title text button-text on-click]}]
+  (assert (not (::modal (stage-get))))
+  (stage-add! (ui/window {:title title
+                          :rows [[(ui/label text)]
+                                 [(ui/text-button button-text
+                                                  (fn []
+                                                    (a/remove! (::modal (stage-get)))
+                                                    (on-click)))]]
+                          :id ::modal
+                          :modal? true
+                          :center-position [(/ (g/gui-viewport-width) 2)
+                                            (* (g/gui-viewport-height) (/ 3 4))]
+                          :pack? true})))
+
+(defc :tx/player-modal
+  (do! [[_ params]]
+    (show-player-modal! params)
     nil))
 
 (declare world-paused?)
@@ -402,8 +430,8 @@
 
 (def ^:private ^:dbg-flag pausing? true)
 
-(defn- player-state-pause-game? [] (pause-game? (entity-state/state-obj @world-player)))
-(defn- player-update-state      [] (manual-tick (entity-state/state-obj @world-player)))
+(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @world-player)))
+(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @world-player)))
 
 (defn- player-unpaused? []
   (or (key-just-pressed? :keys/p)

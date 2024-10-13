@@ -12,6 +12,12 @@
 (defsystem player-enter)
 (defmethod player-enter :default [_])
 
+(defsystem pause-game?)
+(defmethod pause-game? :default [_])
+
+(defsystem manual-tick)
+(defmethod manual-tick :default [_])
+
 ; fsm throws when initial-state is not part of states, so no need to assert initial-state
 ; initial state is nil, so associng it. make bug report at reduce-fsm?
 (defn- ->init-fsm [fsm initial-state]
