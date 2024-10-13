@@ -1,4 +1,4 @@
-(ns core.creature
+(ns world.creature
   (:require [clojure.string :as str]
             [core.component :refer [defc do!] :as component]
             [core.property :as property]

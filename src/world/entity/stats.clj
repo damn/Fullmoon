@@ -1,4 +1,4 @@
-(ns core.stat
+(ns world.entity.stats
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.rand :refer [rand-int-between]]

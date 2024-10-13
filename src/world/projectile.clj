@@ -1,4 +1,4 @@
-(ns core.projectile
+(ns world.projectile
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.math.vector :as v]
             [core.component :refer [defc do!] :as component]

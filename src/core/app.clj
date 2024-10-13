@@ -16,24 +16,25 @@
             [clojure.gdx.math.shape :as shape]
             [core.component :refer [defc do! effect!] :as component]
             [core.editor :as property-editor]
-            core.stat
-            core.projectile
             [core.db :as db]
             [core.val-max :as val-max]
             [core.widgets.error :refer [error-window!]]
-            [core.world :as world]
+            [world.generate :as world]
             [data.grid2d :as g2d]
             property.audiovisual
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
+            world.creature
             world.creature.states
             [world.entity :as entity]
             [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
             [world.entity.skills :refer [->action-bar ->action-bar-button-group]]
             [world.entity.state :as entity-state]
+            world.entity.stats
             [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
+            world.projectile
             [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]
             [world.time :refer [elapsed-time]]
