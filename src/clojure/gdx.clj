@@ -17,33 +17,6 @@
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
 
-(def ^:private shout-radius 4)
-
-(defn- friendlies-in-radius [position faction]
-  (->> {:position position
-        :radius shout-radius}
-       (grid/circle->entities world-grid)
-       (map deref)
-       (filter #(= (:entity/faction %) faction))
-       (map :entity/id)))
-
-(defc :entity/alert-friendlies-after-duration
-  {:let {:keys [counter faction]}}
-  (entity/tick [_ eid]
-    (when (stopped? counter)
-      (cons [:e/destroy eid]
-            (for [friendly-eid (friendlies-in-radius (:position @eid) faction)]
-              [:tx/event friendly-eid :alert])))))
-
-(defc :tx/shout
-  (do! [[_ position faction delay-seconds]]
-    [[:e/create
-      position
-      entity/effect-body-props
-      {:entity/alert-friendlies-after-duration
-       {:counter (->counter delay-seconds)
-        :faction faction}}]]))
-
 (def hpbar-height-px 5)
 
 (defc :entity/string-effect
