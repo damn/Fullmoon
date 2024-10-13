@@ -29,13 +29,15 @@
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
             [world.entity :as entity]
+            [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
             [world.entity.state :as entity-state]
             [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]
-            [world.time :refer [elapsed-time]]))
+            [world.time :refer [elapsed-time]]
+            [world.widgets :refer [world-widgets]]))
 
 (defc :tx/sound
   {:data :sound}

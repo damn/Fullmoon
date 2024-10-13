@@ -14,6 +14,7 @@
             [utils.core :refer [bind-root safe-merge]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
+            [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell]]
             [world.entity.state :as state]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]

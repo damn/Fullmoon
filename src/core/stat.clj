@@ -18,6 +18,7 @@
             [world.content-grid :as content-grid]
             [world.entity :as entity :refer [line-of-sight?]]
             [world.entity.faction :as faction]
+            [world.entity.inventory :refer [can-pickup-item? clicked-inventory-cell]]
             [world.entity.modifiers :refer [->modified-value]]
             [world.entity.skills :refer [has-skill? clicked-skillmenu-skill]]
             [world.entity.state :as state]
@@ -26,7 +27,8 @@
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.raycaster :refer [path-blocked?]]
-            [world.time :refer [->counter stopped? finished-ratio]]))
+            [world.time :refer [->counter stopped? finished-ratio]]
+            [world.widgets :refer [world-widgets]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))
