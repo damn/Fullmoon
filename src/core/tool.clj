@@ -1,17 +1,32 @@
 (ns core.tool
-  (:require [clojure.gdx :refer :all]
-            [clojure.java.io :as io]
-            [clojure.tools.namespace.repl :refer [disable-reload!]]
-            [core.properties :as properties])
+  (:require [clojure.java.io :as io])
   (:import (javafx.event EventHandler)
            (javafx.scene.control Button TreeItem TreeView)
            (javafx.scene.image Image ImageView)
            (javafx.scene.layout StackPane)
-           (javafx.scene Scene Node))
-  (:gen-class
-   :extends javafx.application.Application))
+           (javafx.scene Scene Node)))
 
-(disable-reload!) ; aot does not work nicely with tools.namespace refresh
+(when-not (= (System/getenv "DEV_MODE") "true")
+  (gen-class :extends javafx.application.Application)
+
+  )
+
+; this commented out because 'core.tool' doesnt exist in dev mode
+#_(defn- start-stuff []
+  (javafx.application.Platform/setImplicitExit false)
+  (.start (Thread. #(javafx.application.Application/launch core.tool (into-array String [""])))))
+
+#_(defn -main [& args]
+  (start-stuff))
+
+(comment
+ ; lein with-profile tool repl
+ ; lein clean before doing `dev` again (ns refresh doesnt work with aot)
+ (start-stuff)
+ (fx-run (clj-file-forms-tree "src/"))
+
+ )
+
 
 ; https://stackoverflow.com/questions/66978726/clojure-javafx-live-manipulation
 ; https://github.com/dlsc-software-consulting-gmbh/FormsFX
@@ -98,7 +113,6 @@
   (let [root-item (TreeItem. folder)]
     (.setExpanded root-item true)
     (doseq [clj-file (clj-files folder)]
-      (println "clj-file: " clj-file)
       (.add (.getChildren root-item) (file-forms-tree-item clj-file)))
 
     (let [stack-pane (StackPane.)]
@@ -108,10 +122,7 @@
         (.setScene stage scene))
       (.show stage))))
 
-(comment
- (fx-run (clj-file-forms-tree "src/"))
 
- )
 
 (import javafx.scene.control.TabPane
         javafx.scene.control.TabPane$TabClosingPolicy
@@ -204,10 +215,3 @@
 
 (defn -start [app the-stage]
   (def stage the-stage))
-
-(defn- start-stuff []
-  (javafx.application.Platform/setImplicitExit false)
-  (.start (Thread. #(javafx.application.Application/launch core.tool (into-array String [""])))) )
-
-(defn -main [& args]
-  (start-stuff))

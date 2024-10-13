@@ -18,12 +18,18 @@
                  [org.clojure/tools.namespace "1.3.0"]
                  [org.openjfx/javafx-controls "22.0.1"]
                  [rewrite-clj/rewrite-clj "1.1.48"]]
+
   :java-source-paths ["java-src"]
+
   :plugins [[lein-hiera "2.0.0"]
             [lein-codox "0.10.8"]]
+
   :target-path "target/%s/" ; https://stackoverflow.com/questions/44246924/clojure-tools-namespace-refresh-fails-with-no-namespace-foo
+
   :uberjar-name "cdq_3.jar"
+
   :omit-source true
+
   :jvm-opts ["-Xms256m"
              "-Xmx256m"
              "-Dvisualvm.display.name=CDQ"
@@ -34,19 +40,27 @@
              ;"-Dcom.sun.management.jmxremote.ssl=false"
              ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
+
   :codox {:source-uri "https://github.com/damn/Fullmoon/blob/main/{filepath}#L{line}"
           :metadata {:doc/format :markdown}}
 
   ; this from engine, what purpose?
   ;:javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
+
   :global-vars {*warn-on-reflection* false
                 ;*unchecked-math* :warn-on-boxed
                 ;*assert* false
                 *print-level* 3}
+
   :aliases {"dev" ["run" "-m" "clojure.gdx.dev" "core.app"]}
+
+  :profiles {:tool {:aot [core.tool]}}
+
   ; https://github.com/clojure/tools.namespace?tab=readme-ov-file#warnings-and-potential-problems
   ; AOT-compilation: Reloading code does not work in the presence of AOT-compiled namespaces. If you are using AOT-compilation in your project, make sure it is disabled and you have deleted any AOT-compiled .class files before starting a REPL development session. (In Leiningen, run lein clean.)
   ;:aot [core.tool]
+
+
   :main core.app)
 
 ; * Notes
