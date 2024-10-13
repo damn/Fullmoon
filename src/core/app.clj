@@ -26,6 +26,7 @@
             [data.grid2d :as g2d]
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.grid :as grid :refer [world-grid]]
+            [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]))
 

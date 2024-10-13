@@ -10,7 +10,8 @@
             [core.db :as db]
             [core.effect :refer [do! effect!]]
             [utils.core :refer [get-namespaces get-vars]]
-            [world.grid :refer [world-grid]]))
+            [world.grid :refer [world-grid]]
+            [world.player :refer [world-player]]))
 
 (comment
 

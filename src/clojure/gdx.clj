@@ -19,9 +19,8 @@
             [utils.core :refer [bind-root find-first ->tile safe-merge readable-number]]
             [world.creature.faction :as faction]
             [world.grid :as grid :refer [world-grid]]
+            [world.player :refer [world-player]]
             [world.raycaster :refer [ray-blocked?]]))
-
-(declare world-player)
 
 (declare content-grid)
 
