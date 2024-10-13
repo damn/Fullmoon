@@ -1,8 +1,7 @@
 (ns world.entity.modifiers
   (:require [clojure.gdx.graphics :as g]
             [clojure.string :as str]
-            [core.component :refer [defc] :as component]
-            [core.effect :refer [do!]]
+            [core.component :refer [defc do!] :as component]
             [core.operation :as op]
             [utils.core :refer [remove-one k->pretty-name]]))
 

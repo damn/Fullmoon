@@ -1,8 +1,7 @@
 (ns core.projectile
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.math.vector :as v]
-            [core.component :refer [defc] :as component]
-            [core.effect :refer [do!]]
+            [core.component :refer [defc do!] :as component]
             [core.property :as property]
             [utils.core :refer [find-first]]
             [world.entity :as entity]

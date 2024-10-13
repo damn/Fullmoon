@@ -1,7 +1,6 @@
 (ns property.audiovisual
-  (:require [core.component :refer [defc]]
+  (:require [core.component :refer [defc do!]]
             [core.db :as db]
-            [core.effect :refer [do!]]
             [core.property :as property]
             [world.entity :as entity]))
 

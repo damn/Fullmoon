@@ -1,6 +1,5 @@
 (ns world.entity.state
-  (:require [core.component :refer [defsystem defc] :as component]
-            [core.effect :refer [do!]]
+  (:require [core.component :refer [defsystem defc do!] :as component]
             [reduce-fsm :as fsm]
             [world.entity :as entity]))
 

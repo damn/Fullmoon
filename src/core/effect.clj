@@ -1,42 +1,99 @@
 (ns core.effect
-  (:require [core.component :refer [defsystem]]))
+  (:require [clojure.gdx.graphics :as g]
+            [clojure.gdx.math.vector :as v]
+            [core.component :refer [defsystem defc do! effect!]]
+            [world.entity :as entity]
+            [world.entity.faction :as faction]
+            [world.mouseover-entity :refer [mouseover-entity*]]
+            [world.grid :as grid :refer [world-grid]]))
 
-(def ^:private ^:dbg-flag debug-print-txs? false)
+(defsystem applicable?
+  "An effect will only be done (with do!) if this function returns truthy.
+Required system for every effect, no default.")
 
-(defn- debug-print-tx [tx]
-  (pr-str (mapv #(cond
-                  (instance? clojure.lang.Atom %) (str "<entity-atom{uid=" (:entity/uid @%) "}>")
-                  :else %)
-                tx)))
+(defsystem useful?
+  "Used for NPC AI.
+Called only if applicable? is truthy.
+For example use for healing effect is only useful if hitpoints is < max.
+Default method returns true.")
+(defmethod useful? :default [_] true)
 
-#_(defn- tx-happened! [tx]
-    (when (and
-           (not (fn? tx))
-           (not= :tx/cursor (first tx)))
-      (when debug-print-txs?
-        (println logic-frame "." (debug-print-tx tx)))))
+(defsystem render!  "Renders effect during active-skill state while active till done?. Default do nothing.")
+(defmethod render! :default [_])
 
-(defsystem do!
-  "Return nil or new coll/seq of txs to be done recursively.")
+;;
+;; Aggregate functions
+;;
 
-(defn effect!
-  "An effect is defined as a sequence of txs(transactions).
+(defn- filter-applicable? [effect]
+  (filter applicable? effect))
 
-A tx is either a (fn []) with no args or a component which implements the do! system.
+(defn effect-applicable? [effect]
+  (seq (filter-applicable? effect)))
 
-All txs are being executed in sequence, any nil are skipped.
+(defn effect-useful? [effect]
+  (->> effect
+       filter-applicable?
+       (some useful?)))
 
-If the result of a tx is non-nil, we assume a new sequence of txs and effect! calls itself recursively.
+;;
 
-On any exception we get a stacktrace with all tx's values and names shown."
-  [effect]
-  (doseq [tx effect
-          :when tx]
-    (try (when-let [result (if (fn? tx)
-                             (tx)
-                             (do! tx))]
-           (effect! result))
-         (catch Throwable t
-           (throw (ex-info "Error with transaction"
-                           {:tx tx #_(debug-print-tx tx)}
-                           t))))))
+(defn- nearest-enemy [entity*]
+  (grid/nearest-entity @(world-grid (entity/tile entity*))
+                       (faction/enemy entity*)))
+
+;;
+
+; SCHEMA effect-ctx
+; * source = always available
+; # npc:
+;   * target = maybe
+;   * direction = maybe
+; # player
+;  * target = maybe
+;  * target-position  = always available (mouse world position)
+;  * direction  = always available (from mouse world position)
+
+(declare ^:dynamic source
+         ^:dynamic target
+         ^:dynamic target-direction
+         ^:dynamic target-position)
+
+(defn npc-ctx [entity*]
+  (let [target (nearest-enemy entity*)
+        target (when (and target (entity/line-of-sight? entity* @target))
+                 target)]
+    {:effect/source (:entity/id entity*)
+     :effect/target target
+     :effect/target-direction (when target (entity/direction entity* @target))}))
+
+(defn player-ctx [entity*]
+  (let [target* (mouseover-entity*)
+        target-position (or (and target* (:position target*))
+                            (g/world-mouse-position))]
+    {:effect/source (:entity/id entity*)
+     :effect/target (:entity/id target*)
+     :effect/target-position target-position
+     :effect/target-direction (v/direction (:position entity*) target-position)}))
+
+; this is not necessary if effect does not need target, but so far not other solution came up.
+(defn check-update-ctx
+  "Call this on effect-context if the time of using the context is not the time when context was built."
+  [{:keys [effect/source effect/target] :as ctx}]
+  (if (and target
+           (not (:entity/destroyed? @target))
+           (entity/line-of-sight? @source @target))
+    ctx
+    (dissoc ctx :effect/target)))
+
+(defmacro with-ctx [ctx & body]
+  `(binding [source           (:effect/source           ~ctx)
+             target           (:effect/target           ~ctx)
+             target-direction (:effect/target-direction ~ctx)
+             target-position  (:effect/target-position  ~ctx)]
+     ~@body))
+
+(defc :tx/effect
+  (do! [[_ effect-ctx effect]]
+    (with-ctx effect-ctx
+      (effect! (filter-applicable? effect)))))

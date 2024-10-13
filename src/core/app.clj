@@ -14,10 +14,8 @@
             [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get mouse-on-actor?]]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
-            [core.component :refer [defc] :as component]
-            core.creature
+            [core.component :refer [defc do! effect!] :as component]
             [core.editor :as property-editor]
-            [core.effect :refer [do! effect!]]
             core.stat
             core.projectile
             [core.db :as db]
@@ -28,6 +26,7 @@
             property.audiovisual
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
+            world.creature.states
             [world.entity :as entity]
             [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
             [world.entity.skills :refer [->action-bar ->action-bar-button-group]]
@@ -179,7 +178,7 @@
               :actors [(->debug-window)
                        (->entity-info-window)
                        (->inventory-window widget-data)]})
-   (ui/actor {:draw core.creature/draw-item-on-cursor})
+   (ui/actor {:draw world.creature.states/draw-item-on-cursor})
    (component/create [:widgets/player-message])])
 
 (defn ->world-widgets []
