@@ -1,5 +1,5 @@
 (ns world.creature.states
-  (:require [clojure.gdx :refer [entity-stat pause-game? manual-tick]]
+  (:require [clojure.gdx :refer [pause-game? manual-tick]]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
             [clojure.gdx.math.vector :as v]
@@ -15,6 +15,7 @@
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
             [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
+            [world.entity.stats :refer [entity-stat]]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]

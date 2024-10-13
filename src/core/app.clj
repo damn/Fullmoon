@@ -30,6 +30,7 @@
             [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
             [world.entity.skills :refer [->action-bar ->action-bar-button-group]]
             [world.entity.state :as entity-state]
+            [world.entity.stats :refer [entity-stat]]
             world.entity.stats
             [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
             [world.grid :as grid :refer [world-grid]]

@@ -17,24 +17,6 @@
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
 
-(defprotocol Stats
-  (entity-stat [_ stat] "Calculating value of the stat w. modifiers"))
-
-(defc :tx.entity.stats/pay-mana-cost
-  (do! [[_ entity cost]]
-    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
-      (assert (<= cost mana-val))
-      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
-
-(comment
- (let [mana-val 4
-       entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
-       mana-cost 3
-       resulting-mana (- mana-val mana-cost)]
-   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
-      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
- )
-
 (def ^:private shout-radius 4)
 
 (defn- friendlies-in-radius [position faction]

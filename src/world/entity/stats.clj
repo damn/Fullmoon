@@ -41,6 +41,12 @@
       (defc* effect-k {:data [:map-optional effect-ops]})
       (derive effect-k :base/stat-effect))))
 
+(defn entity-stat
+  "Calculating value of the stat w. modifiers"
+  [entity* stat-k]
+  (when-let [base-value (stat-k (:entity/stats entity*))]
+    (->modified-value entity* (stat-k->modifier-k stat-k) base-value)))
+
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 ; and no need at created player (npc controller component?)
 (defstat :stats/aggro-range   {:data :nat-int})
@@ -61,6 +67,22 @@
   {:data :nat-int
    :modifier-ops [:op/max-inc :op/max-mult]
    :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
+
+(defc :tx.entity.stats/pay-mana-cost
+  (do! [[_ entity cost]]
+    (let [mana-val ((entity-stat @entity :stats/mana) 0)]
+      (assert (<= cost mana-val))
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
+
+(comment
+ (let [mana-val 4
+       entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       mana-cost 3
+       resulting-mana (- mana-val mana-cost)]
+   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+      [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
+ )
+
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
 ; * just don't create movement-speed increases too much?
@@ -110,12 +132,6 @@
 (defstat :stats/armor-pierce
   {:data :number
    :modifier-ops [:op/inc]})
-
-(extend-type world.entity.Entity
-  Stats
-  (entity-stat [entity* stat-k]
-    (when-let [base-value (stat-k (:entity/stats entity*))]
-      (->modified-value entity* (stat-k->modifier-k stat-k) base-value))))
 
 (def ^:private hpbar-colors
   {:green     [0 0.8 0]
