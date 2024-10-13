@@ -669,7 +669,7 @@
   (screen/render! [_])
   (screen/dispose! [_]))
 
-(defn- main-menu-screen []
+(defn- main-menu-screen [->background-image]
   [:screens/main-menu
    (stage-screen/create :actors
                         [(->background-image)
@@ -724,7 +724,7 @@
              :fill-parent? true
              :cell-defaults {:pad-bottom 10}}))
 
-(defn- options-menu-screen []
+(defn- options-menu-screen [->background-image]
   [:screens/options-menu
    (stage-screen/create :actors
                         [(->background-image)
@@ -732,11 +732,19 @@
                          (ui/actor {:act #(when (key-just-pressed? :keys/escape)
                                             (screen/change! :screens/world))})])])
 
+(def ^:private image-file "images/moon_background.png")
+
+(defn- ->background []
+  (ui/image->widget (g/image image-file)
+                    {:fill-parent? true
+                     :scaling :fill
+                     :align :center}))
+
 (defn- screens []
-  [(main-menu-screen)
+  [(main-menu-screen ->background)
    (world/map-editor-screen)
-   (options-menu-screen)
-   (property-editor/screen)
+   (options-menu-screen ->background)
+   (property-editor/screen ->background)
    (world-screen)])
 
 (defn- start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]

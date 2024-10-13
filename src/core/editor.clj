@@ -382,7 +382,7 @@
     {:title (:title (property/overview property-type))
      :content (->overview-table property-type open-property-editor-window!)}))
 
-(defn screen []
+(defn screen [->background-image]
   [:screens/property-editor
    (stage-screen/create :actors
                         [(->background-image)
