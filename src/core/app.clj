@@ -25,6 +25,7 @@
             [core.world :as world]
             [data.grid2d :as g2d]
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
+            [world.content-grid :as content-grid]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
@@ -333,7 +334,7 @@
         h (t/height tiled-map)
         grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
     (raycaster/init! grid grid/blocks-vision?)
-    (init-content-grid! :cell-size 16 :width w :height h)
+    (content-grid/init! :cell-size 16 :width w :height h)
     (bind-root #'explored-tile-corners (->explored-tile-corners w h)))
 
   (spawn-creatures! tiled-map start-position))
@@ -346,7 +347,7 @@
 
 (defc :tx/add-to-world
   (do! [[_ entity]]
-    (content-grid-update-entity! entity)
+    (content-grid/update-entity! entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (grid/add-entity! entity)
@@ -354,13 +355,13 @@
 
 (defc :tx/remove-from-world
   (do! [[_ entity]]
-    (content-grid-remove-entity! entity)
+    (content-grid/remove-entity! entity)
     (grid/remove-entity! entity)
     nil))
 
 (defc :tx/position-changed
   (do! [[_ entity]]
-    (content-grid-update-entity! entity)
+    (content-grid/update-entity! entity)
     (grid/entity-position-changed! entity)
     nil))
 
@@ -522,7 +523,7 @@
 
 (defn- update-world []
   (update-time (min (g/delta-time) max-delta-time))
-  (let [entities (active-entities)]
+  (let [entities (content-grid/active-entities)]
     (potential-fields/update! entities)
     (try (tick-entities! entities)
          (catch Throwable t
@@ -588,7 +589,7 @@
   (render-map (🎥/position (g/world-camera)))
   (g/render-world-view! (fn []
                           (before-entities)
-                          (render-entities! (map deref (active-entities)))
+                          (render-entities! (map deref (content-grid/active-entities)))
                           (after-entities))))
 
 (defn- hotkey->window-id []

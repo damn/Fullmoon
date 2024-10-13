@@ -15,6 +15,7 @@
             [core.projectile :refer [projectile-size]]
             [core.val-max :as val-max]
             [utils.core :refer [readable-number]]
+            [world.content-grid :as content-grid]
             [world.creature.faction :as faction]
             [world.entity.body :as body]
             [world.grid :as grid :refer [world-grid]]
@@ -597,7 +598,7 @@ Default method returns true.")
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
 (defn- creatures-in-los-of-player []
-  (->> (active-entities)
+  (->> (content-grid/active-entities)
        (filter #(:creature/species @%))
        (filter #(line-of-sight? @world-player @%))
        (remove #(:entity/player? @%))))
