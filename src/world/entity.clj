@@ -349,3 +349,11 @@
              (nil? (:direction movement)))
        [:e/dissoc entity :entity/movement]
        [:e/assoc entity :entity/movement movement])]))
+
+(defc :entity/image
+  {:data :image
+   :let image}
+  (render [_ entity*]
+    (g/draw-rotated-centered-image image
+                                   (or (:rotation-angle entity*) 0)
+                                   (:position entity*))))
