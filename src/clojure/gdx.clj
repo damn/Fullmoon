@@ -1,6 +1,5 @@
 (ns clojure.gdx
-  (:require [clojure.gdx.audio :refer [play-sound!]]
-            [clojure.gdx.graphics :as g]
+  (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [stage-get stage-add!]]
@@ -20,63 +19,6 @@
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
-
-(property/def :properties/audiovisuals
-  {:schema [:tx/sound
-            :entity/animation]
-   :overview {:title "Audiovisuals"
-              :columns 10
-              :image/scale 2}})
-
-(defc :tx/sound
-  {:data :sound}
-  (do! [[_ file]]
-    (play-sound! file)
-    nil))
-
-(defc :tx/audiovisual
-  (do! [[_ position id]]
-    (let [{:keys [tx/sound
-                  entity/animation]} (db/get id)]
-      [[:tx/sound sound]
-       [:e/create
-        position
-        entity/effect-body-props
-        {:entity/animation animation
-         :entity/delete-after-animation-stopped? true}]])))
-
-(defc :entity/destroy-audiovisual
-  {:let audiovisuals-id}
-  (entity/destroy [_ entity]
-    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
-
-(defc :entity/delete-after-duration
-  {:let counter}
-  (component/create [[_ duration]]
-    (->counter duration))
-
-  (component/info [_]
-    (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio counter)) "/1[]"))
-
-  (entity/tick [_ eid]
-    (when (stopped? counter)
-      [[:e/destroy eid]])))
-
-(defc :entity/line-render
-  {:let {:keys [thick? end color]}}
-  (entity/render [_ entity*]
-    (let [position (:position entity*)]
-      (if thick?
-        (g/with-shape-line-width 4 #(g/draw-line position end color))
-        (g/draw-line position end color)))))
-
-(defc :tx/line-render
-  (do! [[_ {:keys [start end duration color thick?]}]]
-    [[:e/create
-      start
-      entity/effect-body-props
-      #:entity {:line-render {:thick? thick? :end end :color color}
-                :delete-after-duration duration}]]))
 
 (property/def :properties/skills
   {:schema [:entity/image

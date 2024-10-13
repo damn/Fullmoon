@@ -1,6 +1,7 @@
 (ns core.app
   (:require [clojure.gdx :refer :all]
             [clojure.gdx.app :as app]
+            [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
@@ -24,6 +25,7 @@
             [core.widgets.error :refer [error-window!]]
             [core.world :as world]
             [data.grid2d :as g2d]
+            property.audiovisual
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
             [world.entity :as entity]
@@ -34,6 +36,13 @@
             [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]
             [world.time :refer [elapsed-time]]))
+
+(defc :tx/sound
+  {:data :sound}
+  (do! [[_ file]]
+    (play-sound! file)
+    nil))
+
 
 (declare world-paused?)
 

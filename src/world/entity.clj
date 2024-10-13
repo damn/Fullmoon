@@ -8,11 +8,11 @@
             [core.db :as db]
             [core.effect :refer [do! effect!]]
             [malli.core :as m]
-            [utils.core :refer [define-order sort-by-order ->tile safe-merge]]
+            [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.raycaster :refer [ray-blocked?]]
-            [world.time :refer [world-delta]]))
+            [world.time :refer [world-delta ->counter finished-ratio stopped?]]))
 
 (defsystem create [_ entity])
 (defmethod create :default [_ entity])
@@ -420,3 +420,31 @@
   (tick [_ entity]
     (when (anim-stopped? (:entity/animation @entity))
       [[:e/destroy entity]])))
+
+(defc :entity/delete-after-duration
+  {:let counter}
+  (component/create [[_ duration]]
+    (->counter duration))
+
+  (component/info [_]
+    (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio counter)) "/1[]"))
+
+  (tick [_ eid]
+    (when (stopped? counter)
+      [[:e/destroy eid]])))
+
+(defc :entity/line-render
+  {:let {:keys [thick? end color]}}
+  (render [_ entity*]
+    (let [position (:position entity*)]
+      (if thick?
+        (g/with-shape-line-width 4 #(g/draw-line position end color))
+        (g/draw-line position end color)))))
+
+(defc :tx/line-render
+  (do! [[_ {:keys [start end duration color thick?]}]]
+    [[:e/create
+      start
+      effect-body-props
+      #:entity {:line-render {:thick? thick? :end end :color color}
+                :delete-after-duration duration}]]))
