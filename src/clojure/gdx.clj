@@ -21,8 +21,7 @@
             [world.grid :as grid :refer [world-grid]]
             [world.raycaster :refer [ray-blocked?]]))
 
-(declare world-paused?
-         world-player)
+(declare world-player)
 
 (declare content-grid)
 

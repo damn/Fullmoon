@@ -29,6 +29,8 @@
             [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]))
 
+(declare world-paused?)
+
 (defn- render-infostr-on-bar [infostr x y h]
   (g/draw-text {:text infostr
                 :x (+ x 75)
