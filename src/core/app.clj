@@ -275,8 +275,10 @@
     (run! #(stage/add! stage %) (->ui-actors widget-data))
     widget-data))
 
-(defn- ->explored-tile-corners [width height]
-  (atom (g2d/create-grid width height (constantly false))))
+(declare explored-tile-corners)
+
+(defn- init-explored-tile-corners! [width height]
+  (.bindRoot #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
@@ -336,7 +338,7 @@
         grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
     (raycaster/init! grid grid/blocks-vision?)
     (content-grid/init! :cell-size 16 :width w :height h)
-    (bind-root #'explored-tile-corners (->explored-tile-corners w h)))
+    (init-explored-tile-corners! w h))
 
   (spawn-creatures! tiled-map start-position))
 

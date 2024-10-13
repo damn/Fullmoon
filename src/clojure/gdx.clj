@@ -22,8 +22,6 @@
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]))
 
-(declare explored-tile-corners)
-
 (declare ^{:doc "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."}
          world-delta
          ^{:doc "The elapsed in-game-time (not counting when game is paused)."}
