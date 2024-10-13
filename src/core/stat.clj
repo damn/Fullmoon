@@ -18,6 +18,7 @@
             [world.content-grid :as content-grid]
             [world.entity :as entity :refer [line-of-sight?]]
             [world.entity.faction :as faction]
+            [world.entity.skills :refer [has-skill? clicked-skillmenu-skill]]
             [world.entity.state :as state]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
