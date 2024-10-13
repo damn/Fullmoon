@@ -22,7 +22,8 @@
             [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
-            [world.raycaster :refer [path-blocked?]]))
+            [world.raycaster :refer [path-blocked?]]
+            [world.time :refer [->counter stopped? finished-ratio]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))
@@ -446,7 +447,7 @@ Default method returns true.")
 (defc :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
   (component/info [_]
-    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (finished-ratio counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (world.time/finished-ratio counter)) "/1[]"))
 
   (tick [[k _] eid]
     (when (stopped? counter)

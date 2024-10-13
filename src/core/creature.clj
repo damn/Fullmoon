@@ -15,7 +15,8 @@
             [world.creature.faction :as faction]
             [world.entity.body :as body]
             [world.grid :as grid :refer [world-grid]]
-            [world.player :refer [world-player]]))
+            [world.player :refer [world-player]]
+            [world.time :refer [->counter stopped?]]))
 
 (property/def :properties/creatures
   {:schema [:entity/body

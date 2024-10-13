@@ -30,7 +30,8 @@
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
-            [world.raycaster :as raycaster]))
+            [world.raycaster :as raycaster]
+            [world.time :refer [elapsed-time]]))
 
 (declare world-paused?)
 
@@ -68,7 +69,7 @@
 (defn- debug-infos ^String []
   (let [world-mouse (g/world-mouse-position)]
     (str
-     "logic-frame: " logic-frame "\n"
+     "logic-frame: " world.time/logic-frame "\n"
      "FPS: " (g/frames-per-second)  "\n"
      "Zoom: " (🎥/zoom (g/world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
@@ -328,7 +329,7 @@
 
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'entity-tick-error nil)
-  (init-world-time!)
+  (world.time/init!)
   (bind-root #'world-widgets (->world-widgets))
   (init-uids-entities!)
 
@@ -501,7 +502,7 @@
   nil)
 
 (defn- update-world []
-  (update-time (min (g/delta-time) max-delta-time))
+  (world.time/update! (min (g/delta-time) max-delta-time))
   (let [entities (content-grid/active-entities)]
     (potential-fields/update! entities)
     (try (tick-entities! entities)

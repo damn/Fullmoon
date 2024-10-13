@@ -34,7 +34,7 @@
               (- (float ty) (float sy))]))
 
 (defn angle-from-vector
-  "converts theta of Vector2 to angle from top (top is 0 degree, moving left is 90 degree etc.), ->counterclockwise"
+  "converts theta of Vector2 to angle from top (top is 0 degree, moving left is 90 degree etc.), counterclockwise"
   [v]
   (.angleDeg (->v v) (Vector2. 0 1)))
 

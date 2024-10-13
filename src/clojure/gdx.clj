@@ -20,42 +20,8 @@
             [world.creature.faction :as faction]
             [world.entity.body :refer [line-of-sight? z-orders render-order]]
             [world.grid :as grid :refer [world-grid]]
-            [world.player :refer [world-player]]))
-
-(declare ^{:doc "The game logic update delta-time. Different then delta-time-raw because it is bounded by a maximum value for entity movement speed."}
-         world-delta
-         ^{:doc "The elapsed in-game-time (not counting when game is paused)."}
-         elapsed-time
-         ^{:doc "The game-logic frame number, starting with 1. (not counting when game is paused)"}
-         logic-frame)
-
-(defn init-world-time! []
-  (bind-root #'elapsed-time 0)
-  (bind-root #'logic-frame 0))
-
-(defn update-time [delta]
-  (bind-root #'world-delta delta)
-  (alter-var-root #'elapsed-time + delta)
-  (alter-var-root #'logic-frame inc))
-
-(defrecord Counter [duration stop-time])
-
-(defn ->counter [duration]
-  {:pre [(>= duration 0)]}
-  (->Counter duration (+ elapsed-time duration)))
-
-(defn stopped? [{:keys [stop-time]}]
-  (>= elapsed-time stop-time))
-
-(defn reset [{:keys [duration] :as counter}]
-  (assoc counter :stop-time (+ elapsed-time duration)))
-
-(defn finished-ratio [{:keys [duration stop-time] :as counter}]
-  {:post [(<= 0 % 1)]}
-  (if (stopped? counter)
-    0
-    ; min 1 because floating point math inaccuracies
-    (min 1 (/ (- stop-time elapsed-time) duration))))
+            [world.player :refer [world-player]]
+            [world.time :refer [->counter stopped? world-delta finished-ratio]]))
 
 ; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
 (def max-delta-time 0.04)
@@ -689,7 +655,7 @@
       (if-let [string-effect (:entity/string-effect @entity)]
         (-> string-effect
             (update :text str "\n" text)
-            (update :counter reset))
+            (update :counter world.time/reset))
         {:text text
          :counter (->counter 0.4)})]]))
 
