@@ -1,6 +1,5 @@
 (ns core.creature
-  (:require [clojure.gdx :refer :all]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [core.component :refer [defc do!] :as component]
             [core.property :as property]
             [core.db :as db]
