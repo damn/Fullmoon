@@ -89,3 +89,10 @@
     (=
       (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
       '(:c :b :a :null :null))))
+
+(defn remove-one [coll item]
+  (let [[n m] (split-with (partial not= item) coll)]
+    (concat n (rest m))))
+
+(defn k->pretty-name [k]
+  (str/capitalize (name k)))
