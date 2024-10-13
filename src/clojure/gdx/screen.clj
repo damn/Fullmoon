@@ -24,8 +24,8 @@
     (enter! screen)))
 
 (defn set-screens!
-  "Screens is a vector of vectors: [screen-keyword screen].
-  Calls change! to first "
+  "Screens is a vector of vectors: `[screen-keyword screen]`.
+  Calls `change!` to first "
   [screens]
   {:pre [(vector? screens)]}
   (.bindRoot #'screens (into {} screens))
