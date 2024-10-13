@@ -21,75 +21,18 @@
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
 
-(defprotocol Animation
-  (^:private anim-tick [_ delta])
-  (^:private restart [_])
-  (^:private anim-stopped? [_])
-  (^:private current-frame [_]))
-
-(defrecord ImmutableAnimation [frames frame-duration looping? cnt maxcnt]
-  Animation
-  (anim-tick [this delta]
-    (let [maxcnt (float maxcnt)
-          newcnt (+ (float cnt) (float delta))]
-      (assoc this :cnt (cond (< newcnt maxcnt) newcnt
-                             looping? (min maxcnt (- newcnt maxcnt))
-                             :else maxcnt))))
-
-  (restart [this]
-    (assoc this :cnt 0))
-
-  (anim-stopped? [_]
-    (and (not looping?) (>= cnt maxcnt)))
-
-  (current-frame [this]
-    (frames (min (int (/ (float cnt) (float frame-duration)))
-                 (dec (count frames))))))
-
-(defn- ->animation [frames & {:keys [frame-duration looping?]}]
-  (map->ImmutableAnimation
-    {:frames (vec frames)
-     :frame-duration frame-duration
-     :looping? looping?
-     :cnt 0
-     :maxcnt (* (count frames) (float frame-duration))}))
-
-(defn- edn->animation [{:keys [frames frame-duration looping?]}]
-  (->animation (map g/edn->image frames)
-               :frame-duration frame-duration
-               :looping? looping?))
-
-
-(defmethod db/edn->value :data/animation [_ animation]
-  (edn->animation animation))
-
-(defn- tx-assoc-image-current-frame [eid animation]
-  [:e/assoc eid :entity/image (current-frame animation)])
-
-(defc :entity/animation
-  {:data :data/animation
-   :let animation}
-  (entity/create [_ eid]
-    [(tx-assoc-image-current-frame eid animation)])
-
-  (entity/tick [[k _] eid]
-    [(tx-assoc-image-current-frame eid animation)
-     [:e/assoc eid k (anim-tick animation world-delta)]]))
-
-(defc :entity/delete-after-animation-stopped?
-  (entity/create [_ entity]
-    (-> @entity :entity/animation :looping? not assert))
-
-  (entity/tick [_ entity]
-    (when (anim-stopped? (:entity/animation @entity))
-      [[:e/destroy entity]])))
-
 (property/def :properties/audiovisuals
   {:schema [:tx/sound
             :entity/animation]
    :overview {:title "Audiovisuals"
               :columns 10
               :image/scale 2}})
+
+(defc :tx/sound
+  {:data :sound}
+  (do! [[_ file]]
+    (play-sound! file)
+    nil))
 
 (defc :tx/audiovisual
   (do! [[_ position id]]
@@ -102,6 +45,11 @@
         {:entity/animation animation
          :entity/delete-after-animation-stopped? true}]])))
 
+(defc :entity/destroy-audiovisual
+  {:let audiovisuals-id}
+  (entity/destroy [_ entity]
+    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
+
 (defc :entity/delete-after-duration
   {:let counter}
   (component/create [[_ duration]]
@@ -113,11 +61,6 @@
   (entity/tick [_ eid]
     (when (stopped? counter)
       [[:e/destroy eid]])))
-
-(defc :entity/destroy-audiovisual
-  {:let audiovisuals-id}
-  (entity/destroy [_ entity]
-    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
 
 (defc :entity/line-render
   {:let {:keys [thick? end color]}}
@@ -254,35 +197,6 @@
    (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
-
-(defc :entity/clickable
-  (entity/render [[_ {:keys [text]}]
-           {:keys [entity/mouseover?] :as entity*}]
-    (when (and mouseover? text)
-      (let [[x y] (:position entity*)]
-        (g/draw-text {:text text
-                      :x x
-                      :y (+ y (:half-height entity*))
-                      :up? true})))))
-
-(def ^:private outline-alpha 0.4)
-(def ^:private enemy-color    [1 0 0 outline-alpha])
-(def ^:private friendly-color [0 1 0 outline-alpha])
-(def ^:private neutral-color  [1 1 1 outline-alpha])
-
-(defc :entity/mouseover?
-  (entity/render-below [_ {:keys [entity/faction] :as entity*}]
-    (let [player-entity* @world-player]
-      (g/with-shape-line-width 3
-        #(g/draw-ellipse (:position entity*)
-                         (:half-width entity*)
-                         (:half-height entity*)
-                         (cond (= faction (faction/enemy player-entity*))
-                               enemy-color
-                               (= faction (faction/friend player-entity*))
-                               friendly-color
-                               :else
-                               neutral-color))))))
 
 (def ^:private shout-radius 4)
 
@@ -756,12 +670,6 @@
 
 (defsystem manual-tick)
 (defmethod manual-tick :default [_])
-
-(defc :tx/sound
-  {:data :sound}
-  (do! [[_ file]]
-    (play-sound! file)
-    nil))
 
 (defc :tx/cursor
   (do! [[_ cursor-key]]
