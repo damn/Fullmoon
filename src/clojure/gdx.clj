@@ -16,17 +16,11 @@
             [core.property :as property]
             [data.grid2d :as g2d]
             [malli.core :as m]
-            [utils.core :refer [bind-root find-first ->tile safe-merge readable-number]]
+            [utils.core :refer [bind-root find-first ->tile safe-merge readable-number define-order sort-by-order]]
             [world.creature.faction :as faction]
+            [world.entity.body :refer [line-of-sight? z-orders render-order]]
             [world.grid :as grid :refer [world-grid]]
-            [world.player :refer [world-player]]
-            [world.raycaster :refer [ray-blocked?]]))
-
-(def mouseover-entity nil)
-
-(defn mouseover-entity* []
-  (when-let [entity mouseover-entity]
-    @entity))
+            [world.player :refer [world-player]]))
 
 (declare explored-tile-corners)
 
@@ -65,46 +59,6 @@
     ; min 1 because floating point math inaccuracies
     (min 1 (/ (- stop-time elapsed-time) duration))))
 
-(defn- define-order [order-k-vector]
-  (apply hash-map (interleave order-k-vector (range))))
-
-(defn sort-by-order [coll get-item-order-k order]
-  (sort-by #((get-item-order-k %) order) < coll))
-
-#_(defn order-contains? [order k]
-  ((apply hash-set (keys order)) k))
-
-#_(deftest test-order
-  (is
-    (= (define-order [:a :b :c]) {:a 0 :b 1 :c 2}))
-  (is
-    (order-contains? (define-order [:a :b :c]) :a))
-  (is
-    (not
-      (order-contains? (define-order [:a :b :c]) 2)))
-  (is
-    (=
-      (sort-by-order [:c :b :a :b] identity (define-order [:a :b :c]))
-      '(:a :b :b :c)))
-  (is
-    (=
-      (sort-by-order [:b :c :null :null :a] identity (define-order [:c :b :a :null]))
-      '(:c :b :a :null :null))))
-
-;;;; ?
-
-; java.lang.IllegalArgumentException: No method in multimethod 'render-info' for dispatch value: :position
-; actually we dont want this to be called over that
-; it should be :components? then ?
-; => shouldn't need default fns for render -> don't call it if its not there
-
-; every component has parent-entity-id (peid)
-; fetch active entity-ids
-; then fetch all components which implement render-below
-; and have parent-id in entity-ids, etc.
-
-;;;; Body
-
 ; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
 (def max-delta-time 0.04)
 
@@ -119,13 +73,6 @@
 (def movement-speed-schema (m/schema [:and number? [:>= 0] [:<= max-speed]]))
 
 (def hpbar-height-px 5)
-
-(def ^:private z-orders [:z-order/on-ground
-                         :z-order/ground
-                         :z-order/flying
-                         :z-order/effect])
-
-(def render-order (define-order z-orders))
 
 (defrecord Entity [position
                    left-bottom
@@ -194,37 +141,6 @@
 
 (defprotocol Modifiers
   (->modified-value [_ modifier-k base-value]))
-
-;;;; line-of-sight
-
-(require '[clojure.gdx.graphics.camera :as 🎥])
-
-; does not take into account zoom - but zoom is only for debug ???
-; vision range?
-(defn- on-screen? [entity*]
-  (let [[x y] (:position entity*)
-        x (float x)
-        y (float y)
-        [cx cy] (🎥/position (g/world-camera))
-        px (float cx)
-        py (float cy)
-        xdist (Math/abs (- x px))
-        ydist (Math/abs (- y py))]
-    (and
-     (<= xdist (inc (/ (float (g/world-viewport-width))  2)))
-     (<= ydist (inc (/ (float (g/world-viewport-height)) 2))))))
-
-; TODO at wrong point , this affects targeting logic of npcs
-; move the debug flag to either render or mouseover or lets see
-(def ^:private ^:dbg-flag los-checks? true)
-
-; does not take into account size of entity ...
-; => assert bodies <1 width then
-(defn line-of-sight? [source* target*]
-  (and (or (not (:entity/player? source*))
-           (on-screen? target*))
-       (not (and los-checks?
-                 (ray-blocked? (:position source*) (:position target*))))))
 
 (defsystem create "Create entity with eid for txs side-effects. Default nil." [_ entity])
 (defmethod create :default [_ entity])

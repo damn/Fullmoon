@@ -17,8 +17,9 @@
             [utils.core :refer [readable-number]]
             [world.content-grid :as content-grid]
             [world.creature.faction :as faction]
-            [world.entity.body :as body]
+            [world.entity.body :as body :refer [line-of-sight?]]
             [world.grid :as grid :refer [world-grid]]
+            [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.raycaster :refer [path-blocked?]]))

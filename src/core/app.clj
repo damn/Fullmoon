@@ -26,6 +26,7 @@
             [data.grid2d :as g2d]
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
+            [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
@@ -481,30 +482,6 @@
   #_(geom-test)
   (highlight-mouseover-tile))
 
-(defn- calculate-mouseover-entity []
-  (let [player-entity* @world-player
-        hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
-                     (map deref
-                          (grid/point->entities (g/world-mouse-position))))]
-    (->> render-order
-         (sort-by-order hits :z-order)
-         reverse
-         (filter #(line-of-sight? player-entity* %))
-         first
-         :entity/id)))
-
-(defn- update-mouseover-entity []
-  (let [entity (if (mouse-on-actor?)
-                 nil
-                 (calculate-mouseover-entity))]
-    [(when-let [old-entity mouseover-entity]
-       [:e/dissoc old-entity :entity/mouseover?])
-     (when entity
-       [:e/assoc entity :entity/mouseover? true])
-     (fn []
-       (bind-root #'mouseover-entity entity)
-       nil)]))
-
 (def ^:private ^:dbg-flag pausing? true)
 
 (defn- player-state-pause-game? [] (pause-game? (state-obj @world-player)))
@@ -533,7 +510,7 @@
 
 (defn- game-loop []
   (effect! [player-update-state
-            update-mouseover-entity ; this do always so can get debug info even when game not running
+            mouseover-entity/update! ; this do always so can get debug info even when game not running
             update-game-paused
             #(when-not world-paused?
                (update-world))

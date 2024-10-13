@@ -11,6 +11,7 @@
             [core.effect :refer [do! effect!]]
             [utils.core :refer [get-namespaces get-vars]]
             [world.grid :refer [world-grid]]
+            [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]))
 
 (comment
