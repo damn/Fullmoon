@@ -3,7 +3,7 @@
             [data.grid2d :as g2d]
             [utils.core :refer [->tile]]
             [world.creature.faction :as faction]
-            [world.entity.body :as body]
+            [world.entity :as entity]
             [world.grid :refer [blocked?
                                 nearest-entity-distance
                                 nearest-entity
@@ -59,12 +59,12 @@
                                        (filter   #(:entity/faction @%))
                                        (group-by #(:entity/faction @%)))]
            [faction
-            (zipmap (map #(body/tile @%) entities)
+            (zipmap (map #(entity/tile @%) entities)
                     entities)])))
 
  (def max-iterations 1)
 
- (let [entities (map db/get-entity [140 110 91])
+ (let [entities (map entity/get-entity [140 110 91])
        tl->es (:good (faction->tiles->entities-map* entities))]
    tl->es
    (def last-marked-cells (generate-potential-field :good tl->es)))
@@ -137,7 +137,7 @@
 (defn- tiles->entities [entities faction]
   (let [entities (filter #(= (:entity/faction @%) faction)
                          entities)]
-    (zipmap (map #(body/tile @%) entities)
+    (zipmap (map #(entity/tile @%) entities)
             entities)))
 
 (defn- update-faction-potential-field [grid faction entities max-iterations]
@@ -301,7 +301,7 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get world-grid (body/tile @body))
+    (let [occupied-cell (get world-grid (entity/tile @body))
           own-dist (distance-to occupied-cell)
           adj-cells (cached-adjacent-cells grid occupied-cell)
           potential-cells (filter distance-to

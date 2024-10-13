@@ -105,7 +105,7 @@
  ; 2 creatures - player?
  ; start skill w. applicable needs target (bow)
  ; this command:
- (post-tx! [:e/destroy (get-entity 68)])
+ (post-tx! [:e/destroy (entity/get-entity 68)])
  ; check skill has stopped using
 
  (post-tx! [:tx/creature {:position [35 73]

@@ -2,11 +2,11 @@
   (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [utils.core :refer [sort-by-order]]
-            [world.entity.body :refer [line-of-sight? render-order]]
+            [world.entity :refer [line-of-sight? render-order]]
             [world.grid :as grid]
             [world.player :refer [world-player]]))
 
-(def mouseover-entity nil) ; private ?!
+(def ^:private mouseover-entity nil)
 
 (defn mouseover-entity* []
   (when-let [entity mouseover-entity]

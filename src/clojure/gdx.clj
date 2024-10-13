@@ -4,10 +4,7 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [stage-get stage-add!]]
-            [clojure.gdx.math.shape :as shape]
-            [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
-            [clj-commons.pretty.repl :refer [pretty-pst]]
             [core.component :refer [defsystem defc] :as component]
             [core.data :as data]
             [core.effect :refer [do! effect!]]
@@ -16,82 +13,12 @@
             [core.property :as property]
             [data.grid2d :as g2d]
             [malli.core :as m]
-            [utils.core :refer [bind-root find-first ->tile safe-merge readable-number define-order sort-by-order]]
+            [utils.core :refer [find-first readable-number]]
             [world.creature.faction :as faction]
-            [world.entity.body :refer [line-of-sight? z-orders render-order]]
+            [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
-
-; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
-(def max-delta-time 0.04)
-
-; setting a min-size for colliding bodies so movement can set a max-speed for not
-; skipping bodies at too fast movement
-; TODO assert at properties load
-(def ^:private min-solid-body-size 0.39) ; == spider smallest creature size.
-
-; set max speed so small entities are not skipped by projectiles
-; could set faster than max-speed if I just do multiple smaller movement steps in one frame
-(def ^:private max-speed (/ min-solid-body-size max-delta-time)) ; need to make var because m/schema would fail later if divide / is inside the schema-form
-(def movement-speed-schema (m/schema [:and number? [:>= 0] [:<= max-speed]]))
-
-(def hpbar-height-px 5)
-
-(defrecord Entity [position
-                   left-bottom
-                   width
-                   height
-                   half-width
-                   half-height
-                   radius
-                   collides?
-                   z-order
-                   rotation-angle])
-
-(defn- ->Body [{[x y] :position
-                :keys [position
-                       width
-                       height
-                       collides?
-                       z-order
-                       rotation-angle]}]
-  (assert position)
-  (assert width)
-  (assert height)
-  (assert (>= width  (if collides? min-solid-body-size 0)))
-  (assert (>= height (if collides? min-solid-body-size 0)))
-  (assert (or (boolean? collides?) (nil? collides?)))
-  (assert ((set z-orders) z-order))
-  (assert (or (nil? rotation-angle)
-              (<= 0 rotation-angle 360)))
-  (map->Entity
-   {:position (mapv float position)
-    :left-bottom [(float (- x (/ width  2)))
-                  (float (- y (/ height 2)))]
-    :width  (float width)
-    :height (float height)
-    :half-width  (float (/ width  2))
-    :half-height (float (/ height 2))
-    :radius (float (max (/ width  2)
-                        (/ height 2)))
-    :collides? collides?
-    :z-order z-order
-    :rotation-angle (or rotation-angle 0)}))
-
-(def ^{:doc "For effects just to have a mouseover body size for debugging purposes."}
-  effect-body-props
-  {:width 0.5
-   :height 0.5
-   :z-order :z-order/effect})
-
-(defn direction [entity* other-entity*]
-  (v/direction (:position entity*) (:position other-entity*)))
-
-(defn collides? [entity* other-entity*]
-  (shape/overlaps? entity* other-entity*))
-
-;;;; ?
 
 (defprotocol State
   (entity-state [_])
@@ -106,176 +33,10 @@
 (defprotocol Modifiers
   (->modified-value [_ modifier-k base-value]))
 
-(defsystem create "Create entity with eid for txs side-effects. Default nil." [_ entity])
-(defmethod create :default [_ entity])
-
-(defsystem destroy [_ entity])
-(defmethod destroy :default [_ entity])
-
-(defsystem tick [_ entity])
-(defmethod tick :default [_ entity])
-
-(defsystem render-below [_ entity*])
-(defmethod render-below :default [_ entity*])
-
-(defsystem render [_ entity*])
-(defmethod render :default [_ entity*])
-
-(defsystem render-above [_ entity*])
-(defmethod render-above :default [_ entity*])
-
-(defsystem render-info [_ entity*])
-(defmethod render-info :default [_ entity*])
-
-(def ^:private render-systems [render-below
-                               render
-                               render-above
-                               render-info])
-
-(declare ^:private uids-entities)
-
-(defn init-uids-entities! []
-  (bind-root #'uids-entities {}))
-
-(defn all-entities [] (vals uids-entities))
-
-(defn get-entity
-  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
-  [uid]
-  (get uids-entities uid))
-
-(defc :entity/id
-  (create  [[_ id] _eid] [[:tx/add-to-world      id]])
-  (destroy [[_ id] _eid] [[:tx/remove-from-world id]]))
-
-(defc :entity/uid
-  {:let uid}
-  (create [_ entity]
-    (assert (number? uid))
-    (alter-var-root #'uids-entities assoc uid entity)
-    nil)
-
-  (destroy [_ _entity]
-    (assert (contains? uids-entities uid))
-    (alter-var-root #'uids-entities dissoc uid)
-    nil))
-
-(let [cnt (atom 0)]
-  (defn- unique-number! []
-    (swap! cnt inc)))
-
-(defn- create-e-system [eid]
-  (for [component @eid]
-    (fn []
-      ; we are assuming components dont remove other ones at entity/create
-      ; thats why we reuse component and not fetch each time again for key
-      (create component eid))))
-
-(defc :e/create
-  (do! [[_ position body components]]
-    (assert (and (not (contains? components :position))
-                 (not (contains? components :entity/id))
-                 (not (contains? components :entity/uid))))
-    (let [eid (atom nil)]
-      (reset! eid (-> body
-                      (assoc :position position)
-                      ->Body
-                      (safe-merge (-> components
-                                      (assoc :entity/id eid
-                                             :entity/uid (unique-number!))
-                                      (component/create-vs)))))
-      (create-e-system eid))))
-
-(defc :e/destroy
-  (do! [[_ entity]]
-    [[:e/assoc entity :entity/destroyed? true]]))
-
-(defc :e/assoc
-  (do! [[_ entity k v]]
-    (assert (keyword? k))
-    (swap! entity assoc k v)
-    nil))
-
-(defc :e/assoc-in
-  (do! [[_ entity ks v]]
-    (swap! entity assoc-in ks v)
-    nil))
-
-(defc :e/dissoc
-  (do! [[_ entity k]]
-    (assert (keyword? k))
-    (swap! entity dissoc k)
-    nil))
-
-(defc :e/dissoc-in
-  (do! [[_ entity ks]]
-    (assert (> (count ks) 1))
-    (swap! entity update-in (drop-last ks) dissoc (last ks))
-    nil))
-
-(defc :e/update-in
-  (do! [[_ entity ks f]]
-    (swap! entity update-in ks f)
-    nil))
-
-(def ^:private ^:dbg-flag show-body-bounds false)
-
-(defn- draw-body-rect [entity* color]
-  (let [[x y] (:left-bottom entity*)]
-    (g/draw-rectangle x y (:width entity*) (:height entity*) color)))
-
-(defn- render-entity* [system entity*]
-  (try
-   (when show-body-bounds
-     (draw-body-rect entity* (if (:collides? entity*) :white :gray)))
-   (run! #(system % entity*) entity*)
-   (catch Throwable t
-     (draw-body-rect entity* :red)
-     (pretty-pst t 12))))
-
-; precaution in case a component gets removed by another component
-; the question is do we still want to update nil components ?
-; should be contains? check ?
-; but then the 'order' is important? in such case dependent components
-; should be moved together?
-(defn- tick-system [entity]
-  (try
-   (doseq [k (keys @entity)]
-     (when-let [v (k @entity)]
-       (effect! (tick [k v] entity))))
-   (catch Throwable t
-     (throw (ex-info "" (select-keys @entity [:entity/uid]) t)))))
-
-(defn tick-entities!
-  "Calls tick system on all components of entities."
-  [entities]
-  (run! tick-system entities))
-
-(defn render-entities!
-  "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
-  [entities*]
-  (let [player-entity* @world-player]
-    (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
-                                               first
-                                               render-order)
-            system render-systems
-            entity* entities*
-            :when (or (= z-order :z-order/effect)
-                      (line-of-sight? player-entity* entity*))]
-      (render-entity* system entity*))))
-
-(defn remove-destroyed-entities!
-  "Calls destroy on all entities which are marked with ':e/destroy'"
-  []
-  (for [entity (filter (comp :entity/destroyed? deref) (all-entities))
-        component @entity]
-    (fn []
-      (destroy component entity))))
-
 (defc :entity/image
   {:data :image
    :let image}
-  (render [_ entity*]
+  (entity/render [_ entity*]
     (g/draw-rotated-centered-image image
                                    (or (:rotation-angle entity*) 0)
                                    (:position entity*))))
@@ -328,18 +89,18 @@
 (defc :entity/animation
   {:data :data/animation
    :let animation}
-  (create [_ eid]
+  (entity/create [_ eid]
     [(tx-assoc-image-current-frame eid animation)])
 
-  (tick [[k _] eid]
+  (entity/tick [[k _] eid]
     [(tx-assoc-image-current-frame eid animation)
      [:e/assoc eid k (anim-tick animation world-delta)]]))
 
 (defc :entity/delete-after-animation-stopped?
-  (create [_ entity]
+  (entity/create [_ entity]
     (-> @entity :entity/animation :looping? not assert))
 
-  (tick [_ entity]
+  (entity/tick [_ entity]
     (when (anim-stopped? (:entity/animation @entity))
       [[:e/destroy entity]])))
 
@@ -357,76 +118,9 @@
       [[:tx/sound sound]
        [:e/create
         position
-        effect-body-props
+        entity/effect-body-props
         {:entity/animation animation
          :entity/delete-after-animation-stopped? true}]])))
-
-(defn- move-position [position {:keys [direction speed delta-time]}]
-  (mapv #(+ %1 (* %2 speed delta-time)) position direction))
-
-(defn- move-body [body movement]
-  (-> body
-      (update :position    move-position movement)
-      (update :left-bottom move-position movement)))
-
-(defn- valid-position? [{:keys [entity/id z-order] :as body}]
-  {:pre [(:collides? body)]}
-  (let [cells* (into [] (map deref) (grid/rectangle->cells world-grid body))]
-    (and (not-any? #(grid/blocked? % z-order) cells*)
-         (->> cells*
-              grid/cells->entities
-              (not-any? (fn [other-entity]
-                          (let [other-entity* @other-entity]
-                            (and (not= (:entity/id other-entity*) id)
-                                 (:collides? other-entity*)
-                                 (collides? other-entity* body)))))))))
-
-(defn- try-move [body movement]
-  (let [new-body (move-body body movement)]
-    (when (valid-position? new-body)
-      new-body)))
-
-; TODO sliding threshold
-; TODO name - with-sliding? 'on'
-; TODO if direction was [-1 0] and invalid-position then this algorithm tried to move with
-; direection [0 0] which is a waste of processor power...
-(defn- try-move-solid-body [body {[vx vy] :direction :as movement}]
-  (let [xdir (Math/signum (float vx))
-        ydir (Math/signum (float vy))]
-    (or (try-move body movement)
-        (try-move body (assoc movement :direction [xdir 0]))
-        (try-move body (assoc movement :direction [0 ydir])))))
-
-(defc :entity/movement
-  {:let {:keys [direction speed rotate-in-movement-direction?] :as movement}}
-  (tick [_ eid]
-    (assert (m/validate movement-speed-schema speed))
-    (assert (or (zero? (v/length direction))
-                (v/normalised? direction)))
-    (when-not (or (zero? (v/length direction))
-                  (nil? speed)
-                  (zero? speed))
-      (let [movement (assoc movement :delta-time world-delta)
-            body @eid]
-        (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
-                          (try-move-solid-body body movement)
-                          (move-body body movement))]
-          [[:e/assoc eid :position    (:position    body)]
-           [:e/assoc eid :left-bottom (:left-bottom body)]
-           (when rotate-in-movement-direction?
-             [:e/assoc eid :rotation-angle (v/angle-from-vector direction)])
-           [:tx/position-changed eid]])))))
-
-(defc :tx/set-movement
-  (do! [[_ entity movement]]
-    (assert (or (nil? movement)
-                (nil? (:direction movement))
-                (and (:direction movement) ; continue schema of that ...
-                     #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
-    [(if (or (nil? movement)
-             (nil? (:direction movement)))
-       [:e/dissoc entity :entity/movement]
-       [:e/assoc entity :entity/movement movement])]))
 
 (defc :entity/delete-after-duration
   {:let counter}
@@ -436,18 +130,18 @@
   (component/info [_]
     (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio counter)) "/1[]"))
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (when (stopped? counter)
       [[:e/destroy eid]])))
 
 (defc :entity/destroy-audiovisual
   {:let audiovisuals-id}
-  (destroy [_ entity]
+  (entity/destroy [_ entity]
     [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
 
 (defc :entity/line-render
   {:let {:keys [thick? end color]}}
-  (render [_ entity*]
+  (entity/render [_ entity*]
     (let [position (:position entity*)]
       (if thick?
         (g/with-shape-line-width 4 #(g/draw-line position end color))
@@ -457,7 +151,7 @@
   (do! [[_ {:keys [start end duration color thick?]}]]
     [[:e/create
       start
-      effect-body-props
+      entity/effect-body-props
       #:entity {:line-render {:thick? thick? :end end :color color}
                 :delete-after-duration duration}]]))
 
@@ -530,7 +224,7 @@
 
 (defc :entity/skills
   {:data [:one-to-many :properties/skills]}
-  (create [[k skills] eid]
+  (entity/create [[k skills] eid]
     (cons [:e/assoc eid k nil]
           (for [skill skills]
             [:tx/add-skill eid skill])))
@@ -540,7 +234,7 @@
     #_(when (seq skills)
         (str "[VIOLET]Skills: " (str/join "," (map name (keys skills))) "[]")))
 
-  (tick [[k skills] eid]
+  (entity/tick [[k skills] eid]
     (for [{:keys [skill/cooling-down?] :as skill} (vals skills)
           :when (and cooling-down?
                      (stopped? cooling-down?))]
@@ -571,7 +265,7 @@
 
 (comment
  (let [mana-val 4
-       entity (atom (map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
+       entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
    (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
@@ -579,7 +273,7 @@
  )
 
 (defc :entity/clickable
-  (render [[_ {:keys [text]}]
+  (entity/render [[_ {:keys [text]}]
            {:keys [entity/mouseover?] :as entity*}]
     (when (and mouseover? text)
       (let [[x y] (:position entity*)]
@@ -594,7 +288,7 @@
 (def ^:private neutral-color  [1 1 1 outline-alpha])
 
 (defc :entity/mouseover?
-  (render-below [_ {:keys [entity/faction] :as entity*}]
+  (entity/render-below [_ {:keys [entity/faction] :as entity*}]
     (let [player-entity* @world-player]
       (g/with-shape-line-width 3
         #(g/draw-ellipse (:position entity*)
@@ -619,7 +313,7 @@
 
 (defc :entity/alert-friendlies-after-duration
   {:let {:keys [counter faction]}}
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (when (stopped? counter)
       (cons [:e/destroy eid]
             (for [friendly-eid (friendlies-in-radius (:position @eid) faction)]
@@ -629,17 +323,19 @@
   (do! [[_ position faction delay-seconds]]
     [[:e/create
       position
-      effect-body-props
+      entity/effect-body-props
       {:entity/alert-friendlies-after-duration
        {:counter (->counter delay-seconds)
         :faction faction}}]]))
 
+(def hpbar-height-px 5)
+
 (defc :entity/string-effect
-  (tick [[k {:keys [counter]}] eid]
+  (entity/tick [[k {:keys [counter]}] eid]
     (when (stopped? counter)
       [[:e/dissoc eid k]]))
 
-  (render-above [[_ {:keys [text]}] entity*]
+  (entity/render-above [[_ {:keys [text]}] entity*]
     (let [[x y] (:position entity*)]
       (g/draw-text {:text text
                     :x x
@@ -740,7 +436,7 @@
       (when (seq modifiers)
         (mod-info-text modifiers)))))
 
-(extend-type clojure.gdx.Entity
+(extend-type world.entity.Entity
   Modifiers
   (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
     {:pre [(= "modifier" (namespace modifier-k))]}
@@ -754,7 +450,7 @@
 (comment
 
  (let [->entity (fn [modifiers]
-                  (map->Entity {:entity/modifiers modifiers}))]
+                  (entity/map->Entity {:entity/modifiers modifiers}))]
    (and
     (= (->modified-value (->entity {:modifier/damage-deal {:op/val-inc [30]
                                                            :op/val-mult [0.5]}})
@@ -766,7 +462,7 @@
                          :modifier/damage-deal
                          [5 10])
        [35 35])
-    (= (->modified-value (map->Entity {})
+    (= (->modified-value (entity/map->Entity {})
                          :modifier/damage-deal
                          [5 10])
        [5 10])
@@ -929,14 +625,14 @@
   (do! [[_ entity item]]
     (pickup-item @entity item)))
 
-(extend-type clojure.gdx.Entity
+(extend-type world.entity.Entity
   Inventory
   (can-pickup-item? [entity* item]
     (boolean (pickup-item entity* item))))
 
 (defc :entity/inventory
   {:data [:one-to-many :properties/items]}
-  (create [[_ items] eid]
+  (entity/create [[_ items] eid]
     (cons [:e/assoc eid :entity/inventory empty-inventory]
           (for [item items]
             [:tx/pickup-item eid item]))))

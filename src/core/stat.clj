@@ -17,7 +17,7 @@
             [utils.core :refer [readable-number]]
             [world.content-grid :as content-grid]
             [world.creature.faction :as faction]
-            [world.entity.body :as body :refer [line-of-sight?]]
+            [world.entity :as entity :refer [line-of-sight?]]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]
@@ -116,7 +116,7 @@
   {:data :number
    :modifier-ops [:op/inc]})
 
-(extend-type clojure.gdx.Entity
+(extend-type world.entity.Entity
   Stats
   (entity-stat [entity* stat-k]
     (when-let [base-value (stat-k (:entity/stats entity*))]
@@ -179,7 +179,7 @@
   (component/info [_]
     (stats-info-texts component/*info-text-entity*))
 
-  (render-info [_ entity*]
+  (entity/render-info [_ entity*]
     (when-let [hp (entity-stat entity* :stats/hp)]
       (let [ratio (val-max/ratio hp)
             {:keys [position width half-width half-height entity/mouseover?]} entity*
@@ -208,7 +208,7 @@
 ;;;;
 
 (defn- nearest-enemy [entity*]
-  (grid/nearest-entity @(world-grid (body/tile entity*))
+  (grid/nearest-entity @(world-grid (entity/tile entity*))
                        (faction/enemy entity*)))
 
 
@@ -281,7 +281,7 @@ Default method returns true.")
                  target)]
     {:effect/source (:entity/id entity*)
      :effect/target target
-     :effect/target-direction (when target (direction entity* @target))}))
+     :effect/target-direction (when target (entity/direction entity* @target))}))
 
 (defn- ->player-effect-ctx [entity*]
   (let [target* (mouseover-entity*)
@@ -449,12 +449,12 @@ Default method returns true.")
   (component/info [_]
     (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (world.time/finished-ratio counter)) "/1[]"))
 
-  (tick [[k _] eid]
+  (entity/tick [[k _] eid]
     (when (stopped? counter)
       [[:e/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
-  (render-above [_ entity*]
+  (entity/render-above [_ entity*]
     (g/draw-filled-circle (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
 
 (let [modifiers {:modifier/movement-speed {:op/mult -0.5}}
@@ -666,12 +666,12 @@ Default method returns true.")
 ; TODO use at projectile & also adjust rotation
 (defn- start-point [entity* target*]
   (v/add (:position entity*)
-         (v/scale (direction entity* target*)
+         (v/scale (entity/direction entity* target*)
                   (:radius entity*))))
 
 (defn- end-point [entity* target* maxrange]
   (v/add (start-point entity* target*)
-         (v/scale (direction entity* target*)
+         (v/scale (entity/direction entity* target*)
                   maxrange)))
 
 (defc :maxrange {:data :pos}
@@ -796,7 +796,7 @@ Default method returns true.")
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (cond
      (with-effect-ctx (check-update-ctx effect-ctx)
        (not (effect-applicable? (:skill/effects skill))))
@@ -808,7 +808,7 @@ Default method returns true.")
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (render-info [_ entity*]
+  (entity/render-info [_ entity*]
     (let [{:keys [entity/image skill/effects]} skill]
       (draw-skill-icon image entity* (:position entity*) (finished-ratio counter))
       (with-effect-ctx (check-update-ctx effect-ctx)
@@ -825,7 +825,7 @@ Default method returns true.")
        first))
 
 (comment
- (let [entity* @(get-entity 76)
+ (let [entity* @(entity/get-entity 76)
        effect-ctx (->npc-effect-ctx entity*)]
    (npc-choose-skill effect-ctx entity*))
  )
@@ -835,7 +835,7 @@ Default method returns true.")
   (component/create [[_ eid]]
     {:eid eid})
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (let [entity* @eid
           effect-ctx (->npc-effect-ctx entity*)]
       (if-let [skill (with-effect-ctx effect-ctx

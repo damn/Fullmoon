@@ -26,6 +26,7 @@
             [data.grid2d :as g2d]
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
+            [world.entity :as entity]
             [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
@@ -331,7 +332,7 @@
   (bind-root #'entity-tick-error nil)
   (world.time/init!)
   (bind-root #'world-widgets (->world-widgets))
-  (init-uids-entities!)
+  (entity/init-uids-entities!)
 
   (bind-root #'world-tiled-map tiled-map)
   (let [w (t/width  tiled-map)
@@ -502,10 +503,10 @@
   nil)
 
 (defn- update-world []
-  (world.time/update! (min (g/delta-time) max-delta-time))
+  (world.time/update! (min (g/delta-time) entity/max-delta-time))
   (let [entities (content-grid/active-entities)]
     (potential-fields/update! entities)
-    (try (tick-entities! entities)
+    (try (entity/tick-entities! entities)
          (catch Throwable t
            (error-window! t)
            (bind-root #'entity-tick-error t))))
@@ -517,7 +518,7 @@
             update-game-paused
             #(when-not world-paused?
                (update-world))
-            remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+            entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
             ]))
 
 (def ^:private explored-tile-color (g/->color 0.5 0.5 0.5 1))
@@ -569,7 +570,7 @@
   (render-map (🎥/position (g/world-camera)))
   (g/render-world-view! (fn []
                           (before-entities)
-                          (render-entities! (map deref (content-grid/active-entities)))
+                          (entity/render-entities! (map deref (content-grid/active-entities)))
                           (after-entities))))
 
 (defn- hotkey->window-id []

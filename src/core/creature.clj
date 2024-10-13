@@ -13,7 +13,7 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge]]
             [world.creature.faction :as faction]
-            [world.entity.body :as body]
+            [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped?]]))
@@ -153,14 +153,14 @@
             :state/player player-fsm
             :state/npc npc-fsm)})
 
-  (create [[k {:keys [fsm initial-state]}] eid]
+  (entity/create [[k {:keys [fsm initial-state]}] eid]
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
      [:e/assoc eid initial-state (component/create [initial-state eid])]])
 
   (component/info [[_ fsm]]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(extend-type clojure.gdx.Entity
+(extend-type world.entity.Entity
   State
   (entity-state [entity*]
     (-> entity* :entity/state :state))
@@ -213,7 +213,7 @@
   (exit [_]
     [[:tx/set-movement eid nil]])
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (when (stopped? counter)
       [[:tx/event eid :timer-finished]])))
 
@@ -226,14 +226,14 @@
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (let [entity* @eid
-          cell (world-grid (body/tile entity*))]
+          cell (world-grid (entity/tile entity*))]
       (when-let [distance (grid/nearest-entity-distance @cell (faction/enemy entity*))]
         (when (<= distance (entity-stat entity* :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 
-  (render-above [_ entity*]
+  (entity/render-above [_ entity*]
     (let [[x y] (:position entity*)]
       (g/draw-text {:text "zzz"
                     :x x
@@ -338,7 +338,7 @@
          [:tx/item (item-place-position entity*) (:entity/item-on-cursor entity*)]
          [:e/dissoc eid :entity/item-on-cursor]])))
 
-  (render-below [_ entity*]
+  (entity/render-below [_ entity*]
     (when (world-item?)
       (g/draw-centered-image (:entity/image item) (item-place-position entity*)))))
 
@@ -381,7 +381,7 @@
   (exit [_]
     [[:tx/set-movement eid nil]])
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/set-movement eid {:direction movement-vector
                               :speed (entity-stat @eid :stats/movement-speed)}]]
@@ -399,14 +399,14 @@
   (pause-game? [_]
     false)
 
-  (tick [_ eid]
+  (entity/tick [_ eid]
     (when (stopped? counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (render-below [_ entity*]
+  (entity/render-below [_ entity*]
     (g/draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
 
 (defc :entity/player?
-  (create [_ eid]
+  (entity/create [_ eid]
     (bind-root #'world-player eid)
     nil))

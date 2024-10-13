@@ -5,6 +5,7 @@
             [core.effect :refer [do!]]
             [core.property :as property]
             [utils.core :refer [find-first]]
+            [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]))
 
 (property/def :properties/projectiles
@@ -23,7 +24,7 @@
     (assoc v :already-hit-bodies #{}))
 
   ; TODO probably belongs to body
-  (tick [[k _] entity]
+  (entity/tick [[k _] entity]
     ; TODO this could be called from body on collision
     ; for non-solid
     ; means non colliding with other entities
@@ -34,7 +35,7 @@
                                        (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
-                                       (collides? entity* @%))
+                                       (entity/collides? entity* @%))
                                  (grid/cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
                        (some #(grid/blocked? % (:z-order entity*)) cells*))
