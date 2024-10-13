@@ -5,7 +5,7 @@
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage-screen :refer [stage-get mouse-on-actor?]]
+            [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [core.component :refer [defc defc* defsystem] :as component]
@@ -18,17 +18,16 @@
             [world.content-grid :as content-grid]
             [world.entity :as entity :refer [line-of-sight?]]
             [world.entity.faction :as faction]
-            [world.entity.inventory :refer [can-pickup-item? clicked-inventory-cell]]
+            [world.entity.inventory :refer [can-pickup-item? clicked-inventory-cell inventory-window]]
             [world.entity.modifiers :refer [->modified-value]]
-            [world.entity.skills :refer [has-skill? clicked-skillmenu-skill]]
+            [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.raycaster :refer [path-blocked?]]
-            [world.time :refer [->counter stopped? finished-ratio]]
-            [world.widgets :refer [world-widgets]]))
+            [world.time :refer [->counter stopped? finished-ratio]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:data [:map-optional operations]}))
@@ -847,14 +846,6 @@ Default method returns true.")
                        (npc-choose-skill entity*))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
         [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy eid)]]))))
-
-(defn- selected-skill []
-  (let [button-group (:action-bar world-widgets)]
-    (when-let [skill-button (ui/bg-checked button-group)]
-      (a/id skill-button))))
-
-(defn- inventory-window []
-  (get (:windows (stage-get)) :inventory-window))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]

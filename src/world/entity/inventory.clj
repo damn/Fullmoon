@@ -294,3 +294,6 @@
       (ui/set-drawable! image-widget (slot->background (cell 0)))
       (ui/remove-tooltip! cell-widget)
       nil)))
+
+(defn inventory-window []
+  (get (:windows (stage-get)) :inventory-window))
