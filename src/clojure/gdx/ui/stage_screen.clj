@@ -25,7 +25,6 @@
     (stage/draw! stage))
 
   (screen/dispose! [_]
-    (println "Dispose screen: " sub-screen)
     (dispose! stage)))
 
 (defn create
