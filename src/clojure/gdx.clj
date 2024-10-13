@@ -16,13 +16,10 @@
             [utils.core :refer [find-first readable-number]]
             [world.creature.faction :as faction]
             [world.entity :as entity]
+            [world.entity.state :as entity-state]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
-
-(defprotocol State
-  (entity-state [_])
-  (state-obj [_]))
 
 (defprotocol Inventory
   (can-pickup-item? [_ item]))
@@ -172,7 +169,7 @@
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
 (defn- player-clicked-skillmenu [skill]
-  (clicked-skillmenu-skill (state-obj @world-player) skill))
+  (clicked-skillmenu-skill (entity-state/state-obj @world-player) skill))
 
 ; TODO render text label free-skill-points
 ; (str "Free points: " (:entity/free-skill-points @world-player))
@@ -649,7 +646,7 @@
 (defn- draw-cell-rect [player-entity* x y mouseover? cell]
   (g/draw-rectangle x y cell-size cell-size :gray)
   (when (and mouseover?
-             (= :player-item-on-cursor (entity-state player-entity*)))
+             (= :player-item-on-cursor (entity-state/state-k player-entity*)))
     (let [item (:entity/item-on-cursor player-entity*)
           color (if (valid-slot? cell item)
                   droppable-color
@@ -672,7 +669,7 @@
 (defmethod clicked-inventory-cell :default [_ cell])
 
 (defn- player-clicked-inventory [cell]
-  (clicked-inventory-cell (state-obj @world-player) cell))
+  (clicked-inventory-cell (entity-state/state-obj @world-player) cell))
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]
@@ -771,15 +768,6 @@
       (ui/set-drawable! image-widget (slot->background (cell 0)))
       (ui/remove-tooltip! cell-widget)
       nil)))
-
-(defsystem enter)
-(defmethod enter :default [_])
-
-(defsystem exit)
-(defmethod exit :default  [_])
-
-(defsystem player-enter)
-(defmethod player-enter :default [_])
 
 (defsystem pause-game?)
 (defmethod pause-game? :default [_])

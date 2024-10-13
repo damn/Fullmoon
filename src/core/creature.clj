@@ -14,9 +14,66 @@
             [utils.core :refer [bind-root safe-merge]]
             [world.creature.faction :as faction]
             [world.entity :as entity]
+            [world.entity.state :as state]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped?]]))
+
+
+(comment
+ ; graphviz required in path
+ (fsm/show-fsm player-fsm)
+
+ )
+
+(fsm/defsm-inc ^:private player-fsm
+  [[:player-idle
+    :kill -> :player-dead
+    :stun -> :stunned
+    :start-action -> :active-skill
+    :pickup-item -> :player-item-on-cursor
+    :movement-input -> :player-moving]
+   [:player-moving
+    :kill -> :player-dead
+    :stun -> :stunned
+    :no-movement-input -> :player-idle]
+   [:active-skill
+    :kill -> :player-dead
+    :stun -> :stunned
+    :action-done -> :player-idle]
+   [:stunned
+    :kill -> :player-dead
+    :effect-wears-off -> :player-idle]
+   [:player-item-on-cursor
+    :kill -> :player-dead
+    :stun -> :stunned
+    :drop-item -> :player-idle
+    :dropped-item -> :player-idle]
+   [:player-dead]])
+
+(fsm/defsm-inc ^:private npc-fsm
+  [[:npc-sleeping
+    :kill -> :npc-dead
+    :stun -> :stunned
+    :alert -> :npc-idle]
+   [:npc-idle
+    :kill -> :npc-dead
+    :stun -> :stunned
+    :start-action -> :active-skill
+    :movement-direction -> :npc-moving]
+   [:npc-moving
+    :kill -> :npc-dead
+    :stun -> :stunned
+    :timer-finished -> :npc-idle]
+   [:active-skill
+    :kill -> :npc-dead
+    :stun -> :stunned
+    :action-done -> :npc-idle]
+   [:stunned
+    :kill -> :npc-dead
+    :effect-wears-off -> :npc-idle]
+   [:npc-dead]])
+
 
 (property/def :properties/creatures
   {:schema [:entity/body
@@ -75,6 +132,16 @@
    :collides? true
    :z-order :z-order/ground #_(if flying? :z-order/flying :z-order/ground)})
 
+(defn- set-fsm [components]
+  (if (:entity/state components)
+    (update components :entity/state
+            (fn [[player-or-npc initial-state]]
+              {:initial-state initial-state
+               :fsm (case player-or-npc
+                      :state/player player-fsm
+                      :state/npc npc-fsm)}))
+    components))
+
 (defc :tx/creature
   {:let {:keys [position creature-id components]}}
   (do! [_]
@@ -85,115 +152,14 @@
         (-> props
             (dissoc :entity/body)
             (assoc :entity/destroy-audiovisual :audiovisuals/creature-die)
-            (safe-merge components))]])))
-
-(comment
- ; graphviz required in path
- (fsm/show-fsm player-fsm)
-
- )
-
-(fsm/defsm-inc ^:private player-fsm
-  [[:player-idle
-    :kill -> :player-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :pickup-item -> :player-item-on-cursor
-    :movement-input -> :player-moving]
-   [:player-moving
-    :kill -> :player-dead
-    :stun -> :stunned
-    :no-movement-input -> :player-idle]
-   [:active-skill
-    :kill -> :player-dead
-    :stun -> :stunned
-    :action-done -> :player-idle]
-   [:stunned
-    :kill -> :player-dead
-    :effect-wears-off -> :player-idle]
-   [:player-item-on-cursor
-    :kill -> :player-dead
-    :stun -> :stunned
-    :drop-item -> :player-idle
-    :dropped-item -> :player-idle]
-   [:player-dead]])
-
-(fsm/defsm-inc ^:private npc-fsm
-  [[:npc-sleeping
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :alert -> :npc-idle]
-   [:npc-idle
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :movement-direction -> :npc-moving]
-   [:npc-moving
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :timer-finished -> :npc-idle]
-   [:active-skill
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :action-done -> :npc-idle]
-   [:stunned
-    :kill -> :npc-dead
-    :effect-wears-off -> :npc-idle]
-   [:npc-dead]])
-
-; fsm throws when initial-state is not part of states, so no need to assert initial-state
-; initial state is nil, so associng it. make bug report at reduce-fsm?
-(defn- ->init-fsm [fsm initial-state]
-  (assoc (fsm initial-state nil) :state initial-state))
-
-(defc :entity/state
-  (component/create [[_ [player-or-npc initial-state]]]
-    {:initial-state initial-state
-     :fsm (case player-or-npc
-            :state/player player-fsm
-            :state/npc npc-fsm)})
-
-  (entity/create [[k {:keys [fsm initial-state]}] eid]
-    [[:e/assoc eid k (->init-fsm fsm initial-state)]
-     [:e/assoc eid initial-state (component/create [initial-state eid])]])
-
-  (component/info [[_ fsm]]
-    (str "[YELLOW]State: " (name (:state fsm)) "[]")))
-
-(extend-type world.entity.Entity
-  State
-  (entity-state [entity*]
-    (-> entity* :entity/state :state))
-
-  (state-obj [entity*]
-    (let [state-k (entity-state entity*)]
-      [state-k (state-k entity*)])))
-
-(defn- send-event! [eid event params]
-  (when-let [fsm (:entity/state @eid)]
-    (let [old-state-k (:state fsm)
-          new-fsm (fsm/fsm-event fsm event)
-          new-state-k (:state new-fsm)]
-      (when-not (= old-state-k new-state-k)
-        (let [old-state-obj (state-obj @eid)
-              new-state-obj [new-state-k (component/create [new-state-k eid params])]]
-          [#(exit old-state-obj)
-           #(enter new-state-obj)
-           (when (:entity/player? @eid) #(player-enter new-state-obj))
-           [:e/assoc eid :entity/state new-fsm]
-           [:e/dissoc eid old-state-k]
-           [:e/assoc eid new-state-k (new-state-obj 1)]])))))
-
-(defc :tx/event
-  (do! [[_ eid event params]]
-    (send-event! eid event params)))
+            (safe-merge (set-fsm components)))]])))
 
 (defc :npc-dead
   {:let {:keys [eid]}}
   (component/create [[_ eid]]
     {:eid eid})
 
-  (enter [_]
+  (state/enter [_]
     [[:e/destroy eid]]))
 
 ; npc moving is basically a performance optimization so npcs do not have to check
@@ -206,11 +172,11 @@
      :movement-vector movement-vector
      :counter (->counter (* (entity-stat @eid :stats/reaction-time) 0.016))})
 
-  (enter [_]
+  (state/enter [_]
     [[:tx/set-movement eid {:direction movement-vector
                             :speed (or (entity-stat @eid :stats/movement-speed) 0)}]])
 
-  (exit [_]
+  (state/exit [_]
     [[:tx/set-movement eid nil]])
 
   (entity/tick [_ eid]
@@ -222,7 +188,7 @@
   (component/create [[_ eid]]
     {:eid eid})
 
-  (exit [_]
+  (state/exit [_]
     [[:tx/add-text-effect eid "[WHITE]!"]
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
@@ -241,13 +207,13 @@
                     :up? true}))))
 
 (defc :player-dead
-  (player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/black-x]])
 
   (pause-game? [_]
     true)
 
-  (enter [_]
+  (state/enter [_]
     [[:tx/sound "sounds/bfxr_playerdeath.wav"]
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
@@ -323,11 +289,11 @@
   (clicked-inventory-cell [_ cell]
     (clicked-cell @eid cell))
 
-  (enter [_]
+  (state/enter [_]
     [[:tx/cursor :cursors/hand-grab]
      [:e/assoc eid :entity/item-on-cursor item]])
 
-  (exit [_]
+  (state/exit [_]
     ; at clicked-cell when we put it into a inventory-cell
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
@@ -344,7 +310,7 @@
 
 (defn draw-item-on-cursor []
   (let [player-e* @world-player]
-    (when (and (= :player-item-on-cursor (entity-state player-e*))
+    (when (and (= :player-item-on-cursor (state/state-k player-e*))
                (not (world-item?)))
       (g/draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
                              (g/gui-mouse-position)))))
@@ -368,17 +334,17 @@
     {:eid eid
      :movement-vector movement-vector})
 
-  (player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/walking]])
 
   (pause-game? [_]
     false)
 
-  (enter [_]
+  (state/enter [_]
     [[:tx/set-movement eid {:direction movement-vector
                             :speed (entity-stat @eid :stats/movement-speed)}]])
 
-  (exit [_]
+  (state/exit [_]
     [[:tx/set-movement eid nil]])
 
   (entity/tick [_ eid]
@@ -393,7 +359,7 @@
     {:eid eid
      :counter (->counter duration)})
 
-  (player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/denied]])
 
   (pause-game? [_]

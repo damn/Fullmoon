@@ -37,6 +37,7 @@
 
 (defn exit! []
   (.exit Gdx/app))
+; hi
 
 (defmacro post-runnable! [& exprs]
   `(.postRunnable Gdx/app (fn [] ~@exprs)))

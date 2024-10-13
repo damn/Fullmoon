@@ -27,6 +27,7 @@
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
             [world.entity :as entity]
+            [world.entity.state :as entity-state]
             [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
@@ -488,8 +489,8 @@
 
 (def ^:private ^:dbg-flag pausing? true)
 
-(defn- player-state-pause-game? [] (pause-game? (state-obj @world-player)))
-(defn- player-update-state      [] (manual-tick (state-obj @world-player)))
+(defn- player-state-pause-game? [] (pause-game? (entity-state/state-obj @world-player)))
+(defn- player-update-state      [] (manual-tick (entity-state/state-obj @world-player)))
 
 (defn- player-unpaused? []
   (or (key-just-pressed? :keys/p)

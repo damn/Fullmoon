@@ -18,6 +18,7 @@
             [world.content-grid :as content-grid]
             [world.creature.faction :as faction]
             [world.entity :as entity :refer [line-of-sight?]]
+            [world.entity.state :as state]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
             [world.player :refer [world-player]]
@@ -783,13 +784,13 @@ Default method returns true.")
                    (apply-action-speed-modifier @eid skill)
                    (->counter))})
 
-  (player-enter [_]
+  (state/player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
 
   (pause-game? [_]
     false)
 
-  (enter [_]
+  (state/enter [_]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
        [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter (:skill/cooldown skill))])
