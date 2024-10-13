@@ -14,21 +14,12 @@
             [data.grid2d :as g2d]
             [malli.core :as m]
             [utils.core :refer [find-first readable-number]]
-            [world.creature.faction :as faction]
             [world.entity :as entity]
+            [world.entity.faction :as faction]
             [world.entity.state :as entity-state]
             [world.grid :as grid :refer [world-grid]]
             [world.player :refer [world-player]]
             [world.time :refer [->counter stopped? world-delta finished-ratio]]))
-
-(defprotocol Inventory
-  (can-pickup-item? [_ item]))
-
-(defprotocol Stats
-  (entity-stat [_ stat] "Calculating value of the stat w. modifiers"))
-
-(defprotocol Modifiers
-  (->modified-value [_ modifier-k base-value]))
 
 (defc :entity/image
   {:data :image
@@ -254,6 +245,9 @@
      (when (:entity/player? @entity)
        [:tx.action-bar/remove skill])]))
 
+(defprotocol Stats
+  (entity-stat [_ stat] "Calculating value of the stat w. modifiers"))
+
 (defc :tx.entity.stats/pay-mana-cost
   (do! [[_ entity cost]]
     (let [mana-val ((entity-stat @entity :stats/mana) 0)]
@@ -433,16 +427,14 @@
       (when (seq modifiers)
         (mod-info-text modifiers)))))
 
-(extend-type world.entity.Entity
-  Modifiers
-  (->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
-    {:pre [(= "modifier" (namespace modifier-k))]}
-    (->> modifiers
-         modifier-k
-         (sort-by op/order)
-         (reduce (fn [base-value [operation-k values]]
-                   (op/apply [operation-k (apply + values)] base-value))
-                 base-value))))
+(defn ->modified-value [{:keys [entity/modifiers]} modifier-k base-value]
+  {:pre [(= "modifier" (namespace modifier-k))]}
+  (->> modifiers
+       modifier-k
+       (sort-by op/order)
+       (reduce (fn [base-value [operation-k values]]
+                 (op/apply [operation-k (apply + values)] base-value))
+               base-value)))
 
 (comment
 
@@ -622,10 +614,8 @@
   (do! [[_ entity item]]
     (pickup-item @entity item)))
 
-(extend-type world.entity.Entity
-  Inventory
-  (can-pickup-item? [entity* item]
-    (boolean (pickup-item entity* item))))
+(defn can-pickup-item? [entity* item]
+  (boolean (pickup-item entity* item)))
 
 (defc :entity/inventory
   {:data [:one-to-many :properties/items]}

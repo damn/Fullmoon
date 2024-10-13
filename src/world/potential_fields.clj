@@ -2,8 +2,8 @@
   (:require [clojure.gdx.math.vector :as v]
             [data.grid2d :as g2d]
             [utils.core :refer [->tile]]
-            [world.creature.faction :as faction]
             [world.entity :as entity]
+            [world.entity.faction :as faction]
             [world.grid :refer [blocked?
                                 nearest-entity-distance
                                 nearest-entity

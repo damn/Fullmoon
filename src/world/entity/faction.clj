@@ -1,4 +1,4 @@
-(ns world.creature.faction
+(ns world.entity.faction
   (:require [core.component :refer [defc] :as component]))
 
 (defn enemy [{:keys [entity/faction]}]
