@@ -5,6 +5,7 @@
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
+            [clojure.gdx.screen :as screen]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
@@ -405,7 +406,7 @@
                                                     :green)))
       (when (or (key-just-pressed? :keys/tab)
                 (key-just-pressed? :keys/escape))
-        (change-screen :screens/world))))
+        (screen/change :screens/world))))
 
 #_(defc :screens/minimap
   (component/create [_]
@@ -619,17 +620,17 @@
   (check-window-hotkeys)
   (cond (and (key-just-pressed? :keys/escape)
              (not (close-windows?!)))
-        (change-screen :screens/options-menu)
+        (screen/change :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen-render!
         #_(key-just-pressed? :keys/tab)
-        #_(change-screen :screens/minimap)))
+        #_(screen/change :screens/minimap)))
 
 (defc :world/sub-screen
-  (screen-exit [_]
+  (screen/exit [_]
     (g/set-cursor! :cursors/default))
 
-  (screen-render [_]
+  (screen/render [_]
     (render-world!)
     (game-loop)
     (check-key-input)))
@@ -642,7 +643,7 @@
 
 (defn- start-game-fn [world-id]
   (fn []
-    (change-screen :screens/world)
+    (screen/change :screens/world)
     (add-world-ctx world-id)))
 
 (defn- ->buttons []
@@ -650,15 +651,15 @@
                                  (for [{:keys [property/id]} (db/all :properties/worlds)]
                                    [(ui/text-button (str "Start " id) (start-game-fn id))])
                                  [(when dev-mode?
-                                    [(ui/text-button "Map editor" #(change-screen :screens/map-editor))])
+                                    [(ui/text-button "Map editor" #(screen/change :screens/map-editor))])
                                   (when dev-mode?
-                                    [(ui/text-button "Property editor" #(change-screen :screens/property-editor))])
+                                    [(ui/text-button "Property editor" #(screen/change :screens/property-editor))])
                                   [(ui/text-button "Exit" app/exit!)]]))
              :cell-defaults {:pad-bottom 25}
              :fill-parent? true}))
 
 (defc :main/sub-screen
-  (screen-enter [_]
+  (screen/enter [_]
     (g/set-cursor! :cursors/default)))
 
 (defn- ->actors []
@@ -714,15 +715,15 @@
                                       [(ui/check-box (get-text check-box)
                                                      (partial set-state check-box)
                                                      (boolean (get-state check-box)))]))
-                    [[(ui/text-button "Resume" #(change-screen :screens/world))]
-                     [(ui/text-button "Exit"   #(change-screen :screens/main-menu))]])
+                    [[(ui/text-button "Resume" #(screen/change :screens/world))]
+                     [(ui/text-button "Exit"   #(screen/change :screens/main-menu))]])
              :fill-parent? true
              :cell-defaults {:pad-bottom 10}}))
 
 (defc :options/sub-screen
-  (screen-render [_]
+  (screen/render [_]
     (when (key-just-pressed? :keys/escape)
-      (change-screen :screens/world))))
+      (screen/change :screens/world))))
 
 (derive :screens/options-menu :screens/stage)
 (defc :screens/options-menu
@@ -738,17 +739,17 @@
                   (assets/load! resources)
                   (g/load! graphics)
                   (ui/load! ui)
-                  (load-screens! screen-ks))
+                  (screen/create-all! screen-ks))
 
                 (dispose! [_]
                   (assets/dispose!)
                   (g/dispose!)
                   (ui/dispose!)
-                  (dispose-screens!))
+                  (screen/dispose-all!))
 
                 (render! [_]
                   (com.badlogic.gdx.utils.ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
-                  (screen-render! (current-screen)))
+                  (screen/render! (screen/current)))
 
                 (resize! [_ dimensions]
                   (g/resize! dimensions)))

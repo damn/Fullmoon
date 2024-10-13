@@ -7,6 +7,7 @@
             [clojure.gdx.ui.stage :as stage]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
+            [clojure.gdx.screen :as screen]
             [clojure.string :as str]
             [clj-commons.pretty.repl :refer [pretty-pst]]
             [core.component :refer [defsystem defc] :as component]
@@ -22,59 +23,23 @@
             [world.grid :as grid :refer [world-grid]]
             [world.raycaster :refer [ray-blocked?]]))
 
-(declare ^:private screen-k
-         ^:private screens)
-
-(defn current-screen []
-  [screen-k (screen-k screens)])
-
-(defsystem screen-enter)
-(defmethod screen-enter :default [_])
-
-(defsystem screen-exit)
-(defmethod screen-exit :default  [_])
-
-(defn change-screen
-  "Calls `screen-exit` on the current-screen (if there is one).
-  Calls `screen-enter` on the new screen."
-  [new-k]
-  (when-let [v (and (bound? #'screen-k) (screen-k screens))]
-    (screen-exit [screen-k v]))
-  (let [v (new-k screens)]
-    (assert v (str "Cannot find screen with key: " new-k))
-    (bind-root #'screen-k new-k)
-    (screen-enter [new-k v])))
-
-(defsystem screen-render!)
-
-(defsystem screen-render)
-(defmethod screen-render :default [_])
-
-(defn load-screens! [screen-ks]
-  (bind-root #'screens (component/create-vs (zipmap screen-ks (repeat nil))))
-  (change-screen (ffirst screens)))
-
-(defn dispose-screens! []
-  ; TODO screens not disposed https://github.com/damn/core/issues/41
-  )
-
 ; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
 (defc :screens/stage
   {:let {:keys [stage sub-screen]}}
-  (screen-enter [_]
+  (screen/enter [_]
     (input/set-processor! stage)
-    (screen-enter sub-screen))
+    (screen/enter sub-screen))
 
-  (screen-exit [_]
+  (screen/exit [_]
     (input/set-processor! nil)
-    (screen-exit sub-screen))
+    (screen/exit sub-screen))
 
-  (screen-render! [_]
+  (screen/render! [_]
     ; stage act first so user-screen calls change-screen -> is the end of frame
     ; otherwise would need render-after-stage
     ; or on change-screen the stage of the current screen would still .act
     (stage/act! stage)
-    (screen-render sub-screen)
+    (screen/render sub-screen)
     (stage/draw! stage)))
 
 (defn ->stage [actors]
@@ -83,7 +48,7 @@
     stage))
 
 (defn stage-get []
-  (:stage ((current-screen) 1)))
+  (:stage ((screen/current) 1)))
 
 (defn mouse-on-actor? []
   (stage/hit (stage-get) (g/gui-mouse-position) :touchable? true))

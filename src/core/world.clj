@@ -5,6 +5,7 @@
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.screen :as screen]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
@@ -417,8 +418,9 @@
                                    :right [(t/width tiled-map) 0]
                                    :bottom [0 0])))
 
+; use var !
 (defn- current-data []
-  (-> (current-screen)
+  (-> (screen/current)
       (get 1)
       :sub-screen
       (get 1)))
@@ -546,13 +548,13 @@ direction keys: move")
   #_(dispose [_]
       (dispose! (:tiled-map @current-data)))
 
-  (screen-enter [_]
+  (screen/enter [_]
     (show-whole-map! (g/world-camera) (:tiled-map @current-data)))
 
-  (screen-exit [_]
+  (screen/exit [_]
     (🎥/reset-zoom! (g/world-camera)))
 
-  (screen-render [_]
+  (screen/render [_]
     (g/draw-tiled-map (:tiled-map @current-data) (constantly white))
     (g/render-world-view! render-on-map)
     (if (key-just-pressed? :keys/l)
@@ -561,7 +563,7 @@ direction keys: move")
       (swap! current-data update :show-movement-properties not))
     (camera-controls (g/world-camera))
     (when (key-just-pressed? :keys/escape)
-      (change-screen :screens/main-menu))))
+      (screen/change :screens/main-menu))))
 
 (derive :screens/map-editor :screens/stage)
 (defc :screens/map-editor

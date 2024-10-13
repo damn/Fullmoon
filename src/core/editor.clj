@@ -7,6 +7,7 @@
             [clojure.gdx.input :refer [key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.screen :as screen]
             [clojure.set :as set]
             [clojure.string :as str]
             [core.component :refer [defc] :as component]
@@ -387,7 +388,7 @@
                       (->tabbed-pane (->tabs-data))
                       (ui/actor {:act (fn []
                                         (when (key-just-pressed? :shift-left)
-                                          (change-screen :screens/main-menu)))})])}))
+                                          (screen/change :screens/main-menu)))})])}))
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59
