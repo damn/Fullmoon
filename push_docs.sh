@@ -1,7 +1,7 @@
 set -ex
 git checkout gh-pages
 git merge main --commit
-sh doc/codox
+lein codox
 rm -rf docs
 mv target/doc docs
 git add docs
