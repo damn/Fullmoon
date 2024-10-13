@@ -25,7 +25,8 @@
     (stage/draw! stage))
 
   (screen/dispose! [_]
-    (dispose! stage)))
+    (dispose! stage)
+    (when sub-screen (screen/dispose! sub-screen))))
 
 (defn create
   "Actors or screen can be nil."
