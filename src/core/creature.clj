@@ -4,6 +4,7 @@
             [clojure.gdx.input :refer [button-just-pressed? key-pressed?]]
             [clojure.gdx.math.vector :as v]
             [clojure.gdx.screen :as screen]
+            [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [clojure.string :as str]
             [core.component :refer [defc] :as component]
             [core.effect :refer [do!]]
@@ -249,7 +250,7 @@
      [:tx/player-modal {:title "YOU DIED"
                         :text "\nGood luck next time"
                         :button-text ":("
-                        :on-click #(screen/change :screens/main-menu)}]]))
+                        :on-click #(screen/change! :screens/main-menu)}]]))
 
 (defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
   (let [inventory (:entity/inventory entity*)

@@ -4,6 +4,7 @@
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]
+            [clojure.gdx.ui.stage-screen :refer [stage-add!]]
             [core.component :as component]
             [core.data :as data]
             [core.db :as db]

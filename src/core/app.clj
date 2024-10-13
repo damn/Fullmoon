@@ -10,11 +10,12 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage :as stage]
+            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get mouse-on-actor?]]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
             [core.component :refer [defc] :as component]
             core.creature
-            core.editor
+            [core.editor :as property-editor]
             [core.effect :refer [do! effect!]]
             core.stat
             core.projectile
@@ -406,7 +407,7 @@
                                                     :green)))
       (when (or (key-just-pressed? :keys/tab)
                 (key-just-pressed? :keys/escape))
-        (screen/change :screens/world))))
+        (screen/change! :screens/world))))
 
 #_(defc :screens/minimap
   (component/create [_]
@@ -620,30 +621,32 @@
   (check-window-hotkeys)
   (cond (and (key-just-pressed? :keys/escape)
              (not (close-windows?!)))
-        (screen/change :screens/options-menu)
+        (screen/change! :screens/options-menu)
 
         ; TODO not implementing StageSubScreen so NPE no screen-render!
         #_(key-just-pressed? :keys/tab)
-        #_(screen/change :screens/minimap)))
+        #_(screen/change! :screens/minimap)))
 
-(defc :world/sub-screen
-  (screen/exit [_]
+(deftype WorldScreen []
+  screen/Screen
+  (screen/enter! [_])
+
+  (screen/exit! [_]
     (g/set-cursor! :cursors/default))
 
-  (screen/render [_]
+  (screen/render! [_]
     (render-world!)
     (game-loop)
-    (check-key-input)))
+    (check-key-input))
 
-(derive :screens/world :screens/stage)
-(defc :screens/world
-  (component/create [_]
-    {:stage (->stage [])
-     :sub-screen [:world/sub-screen]}))
+  (screen/dispose! [_]))
+
+(defn- world-screen []
+  [:screens/world (stage-screen/create :screen (->WorldScreen))])
 
 (defn- start-game-fn [world-id]
   (fn []
-    (screen/change :screens/world)
+    (screen/change! :screens/world)
     (add-world-ctx world-id)))
 
 (defn- ->buttons []
@@ -651,29 +654,30 @@
                                  (for [{:keys [property/id]} (db/all :properties/worlds)]
                                    [(ui/text-button (str "Start " id) (start-game-fn id))])
                                  [(when dev-mode?
-                                    [(ui/text-button "Map editor" #(screen/change :screens/map-editor))])
+                                    [(ui/text-button "Map editor" #(screen/change! :screens/map-editor))])
                                   (when dev-mode?
-                                    [(ui/text-button "Property editor" #(screen/change :screens/property-editor))])
+                                    [(ui/text-button "Property editor" #(screen/change! :screens/property-editor))])
                                   [(ui/text-button "Exit" app/exit!)]]))
              :cell-defaults {:pad-bottom 25}
              :fill-parent? true}))
 
-(defc :main/sub-screen
-  (screen/enter [_]
-    (g/set-cursor! :cursors/default)))
+(deftype MainMenuScreen []
+  screen/Screen
+  (screen/enter! [_]
+    (g/set-cursor! :cursors/default))
+  (screen/exit! [_])
+  (screen/render! [_])
+  (screen/dispose! [_]))
 
-(defn- ->actors []
-  [(->background-image)
-   (->buttons)
-   (ui/actor {:act (fn []
-                     (when (key-just-pressed? :keys/escape)
-                       (app/exit!)))})])
-
-(derive :screens/main-menu :screens/stage)
-(defc :screens/main-menu
-  (component/create [[k _]]
-    {:sub-screen [:main/sub-screen]
-     :stage (->stage (->actors))}))
+(defn- main-menu-screen []
+  [:screens/main-menu
+   (stage-screen/create :actors
+                        [(->background-image)
+                         (->buttons)
+                         (ui/actor {:act (fn []
+                                           (when (key-just-pressed? :keys/escape)
+                                             (app/exit!)))})]
+                        :screen (->MainMenuScreen))])
 
 (defprotocol ^:private StatusCheckBox
   (^:private get-text [this])
@@ -715,22 +719,25 @@
                                       [(ui/check-box (get-text check-box)
                                                      (partial set-state check-box)
                                                      (boolean (get-state check-box)))]))
-                    [[(ui/text-button "Resume" #(screen/change :screens/world))]
-                     [(ui/text-button "Exit"   #(screen/change :screens/main-menu))]])
+                    [[(ui/text-button "Resume" #(screen/change! :screens/world))]
+                     [(ui/text-button "Exit"   #(screen/change! :screens/main-menu))]])
              :fill-parent? true
              :cell-defaults {:pad-bottom 10}}))
 
-(defc :options/sub-screen
-  (screen/render [_]
-    (when (key-just-pressed? :keys/escape)
-      (screen/change :screens/world))))
+(defn- options-menu-screen []
+  [:screens/options-menu
+   (stage-screen/create :actors
+                        [(->background-image)
+                         (create-table)
+                         (ui/actor {:act #(when (key-just-pressed? :keys/escape)
+                                            (screen/change! :screens/world))})])])
 
-(derive :screens/options-menu :screens/stage)
-(defc :screens/options-menu
-  (component/create [_]
-    {:stage (->stage [(->background-image)
-                      (create-table)])
-     :sub-screen [:options/sub-screen]}))
+(defn- screens []
+  [(main-menu-screen)
+   (world/map-editor-screen)
+   (options-menu-screen)
+   (property-editor/screen)
+   (world-screen)])
 
 (defn- start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
   (db/load! properties)
@@ -739,7 +746,7 @@
                   (assets/load! resources)
                   (g/load! graphics)
                   (ui/load! ui)
-                  (screen/create-all! screen-ks))
+                  (screen/set-screens! (screens)))
 
                 (dispose! [_]
                   (assets/dispose!)
@@ -785,9 +792,4 @@
                                  :world-view {:world-width 1440
                                               :world-height 900
                                               :tile-size 48}}}
-              :ui :skin-scale/x1
-              :screen-ks [:screens/main-menu
-                          :screens/map-editor
-                          :screens/options-menu
-                          :screens/property-editor
-                          :screens/world]))
+              :ui :skin-scale/x1))

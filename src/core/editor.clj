@@ -7,10 +7,11 @@
             [clojure.gdx.input :refer [key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-add!]]
             [clojure.gdx.screen :as screen]
             [clojure.set :as set]
             [clojure.string :as str]
-            [core.component :refer [defc] :as component]
+            [core.component :as component]
             [core.data :as data]
             [core.db :as db]
             [core.property :as property]
@@ -381,14 +382,14 @@
     {:title (:title (property/overview property-type))
      :content (->overview-table property-type open-property-editor-window!)}))
 
-(derive :screens/property-editor :screens/stage)
-(defc :screens/property-editor
-  (component/create [_]
-    {:stage (->stage [(->background-image)
-                      (->tabbed-pane (->tabs-data))
-                      (ui/actor {:act (fn []
-                                        (when (key-just-pressed? :shift-left)
-                                          (screen/change :screens/main-menu)))})])}))
+(defn screen []
+  [:screens/property-editor
+   (stage-screen/create :actors
+                        [(->background-image)
+                         (->tabbed-pane (->tabs-data))
+                         (ui/actor {:act (fn []
+                                           (when (key-just-pressed? :shift-left)
+                                             (screen/change! :screens/main-menu)))})])])
 
 ; TODO schemas not checking if that property exists in db...
 ; https://github.com/damn/core/issues/59

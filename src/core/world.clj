@@ -5,6 +5,7 @@
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.ui.stage-screen :as stage-screen]
             [clojure.gdx.screen :as screen]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.tiled :as t]
@@ -421,9 +422,8 @@
 ; use var !
 (defn- current-data []
   (-> (screen/current)
-      (get 1)
       :sub-screen
-      (get 1)))
+      :current-data))
 
 (def ^:private infotext
   "L: grid lines
@@ -542,19 +542,15 @@ direction keys: move")
                                                          (println t))))]]
               :pack? true}))
 
-(defc ::sub-screen
-  {:let current-data}
-  ; TODO ?
-  #_(dispose [_]
-      (dispose! (:tiled-map @current-data)))
-
-  (screen/enter [_]
+(defrecord MapEditorScreen [current-data]
+  screen/Screen
+  (screen/enter! [_]
     (show-whole-map! (g/world-camera) (:tiled-map @current-data)))
 
-  (screen/exit [_]
+  (screen/exit! [_]
     (🎥/reset-zoom! (g/world-camera)))
 
-  (screen/render [_]
+  (screen/render! [_]
     (g/draw-tiled-map (:tiled-map @current-data) (constantly white))
     (g/render-world-view! render-on-map)
     (if (key-just-pressed? :keys/l)
@@ -563,14 +559,15 @@ direction keys: move")
       (swap! current-data update :show-movement-properties not))
     (camera-controls (g/world-camera))
     (when (key-just-pressed? :keys/escape)
-      (screen/change :screens/main-menu))))
+      (screen/change! :screens/main-menu)))
 
-(derive :screens/map-editor :screens/stage)
-(defc :screens/map-editor
-  (component/create [_]
-    {:sub-screen [::sub-screen
-                  (atom {:tiled-map (t/load-map modules-file)
-                         :show-movement-properties false
-                         :show-grid-lines false})]
-     :stage (->stage [(->generate-map-window world-id)
-                      (->info-window)])}))
+  (dispose! [_]
+    (dispose! (:tiled-map @current-data))))
+
+(defn map-editor-screen []
+  [:screens/map-editor
+   (stage-screen/create :actors [(->generate-map-window world-id)
+                                 (->info-window)]
+                        :screen (->MapEditorScreen (atom {:tiled-map (t/load-map modules-file)
+                                                          :show-movement-properties false
+                                                          :show-grid-lines false})))])

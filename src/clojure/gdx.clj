@@ -1,13 +1,11 @@
 (ns clojure.gdx
   (:require [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.graphics :as g]
-            [clojure.gdx.input :as input]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage :as stage]
+            [clojure.gdx.ui.stage-screen :refer [stage-get stage-add!]]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
-            [clojure.gdx.screen :as screen]
             [clojure.string :as str]
             [clj-commons.pretty.repl :refer [pretty-pst]]
             [core.component :refer [defsystem defc] :as component]
@@ -22,39 +20,6 @@
             [world.creature.faction :as faction]
             [world.grid :as grid :refer [world-grid]]
             [world.raycaster :refer [ray-blocked?]]))
-
-; TODO not disposed anymore... screens are sub-level.... look for dispose stuff also in @ cdq! FIXME
-(defc :screens/stage
-  {:let {:keys [stage sub-screen]}}
-  (screen/enter [_]
-    (input/set-processor! stage)
-    (screen/enter sub-screen))
-
-  (screen/exit [_]
-    (input/set-processor! nil)
-    (screen/exit sub-screen))
-
-  (screen/render! [_]
-    ; stage act first so user-screen calls change-screen -> is the end of frame
-    ; otherwise would need render-after-stage
-    ; or on change-screen the stage of the current screen would still .act
-    (stage/act! stage)
-    (screen/render sub-screen)
-    (stage/draw! stage)))
-
-(defn ->stage [actors]
-  (let [stage (stage/create (:viewport g/gui-view) g/batch)]
-    (run! #(stage/add! stage %) actors)
-    stage))
-
-(defn stage-get []
-  (:stage ((screen/current) 1)))
-
-(defn mouse-on-actor? []
-  (stage/hit (stage-get) (g/gui-mouse-position) :touchable? true))
-
-(defn stage-add! [actor]
-  (stage/add! (stage-get) actor))
 
 (def ^:private image-file "images/moon_background.png")
 

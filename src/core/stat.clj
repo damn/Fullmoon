@@ -5,6 +5,7 @@
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.ui.stage-screen :refer [stage-get mouse-on-actor?]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
             [core.component :refer [defc defc* defsystem] :as component]
