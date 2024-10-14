@@ -7,14 +7,14 @@
            (javafx.scene Scene Node)))
 
 (when-not (= (System/getenv "DEV_MODE") "true")
-  (gen-class :extends javafx.application.Application)
+  (gen-class
+   :name "core.tool"
+   :extends "javafx.application.Application"))
 
-  )
-
-; this commented out because 'core.tool' doesnt exist in dev mode
-#_(defn- start-stuff []
+(defn- start-stuff []
   (javafx.application.Platform/setImplicitExit false)
-  (.start (Thread. #(javafx.application.Application/launch core.tool (into-array String [""])))))
+  ; otherwise cannot find class in dev mode w. ns-refresh, so create symbol
+  (.start (Thread. #(javafx.application.Application/launch (eval 'core.tool) (into-array String [""])))))
 
 #_(defn -main [& args]
   (start-stuff))
