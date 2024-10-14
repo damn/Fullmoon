@@ -164,18 +164,38 @@
 
  (def ->image-view (memoize (fn [file] (ImageView. (Image. file)))))
 
- (defn- ->image-view [{:keys [file sub-image-bounds]}]
-   (let [imgview (->image-view file)]
-     (if sub-image-bounds
-       imgview
-       )
-     )
-   (doto imgview
-     (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
-   ))
+ )
 
 (require '[core.property :as property])
 (require '[core.db :as db])
+
+#_(defn- ->image-view []
+  (let [imgview (->image-view file)]
+    (if sub-image-bounds
+      imgview
+      )
+    )
+  (doto imgview
+    (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
+  )
+
+(def ->image (memoize (fn [file] (Image. file))))
+
+(defn image-view [{:keys [file sub-image-bounds]}]
+  (let [[x y w h] sub-image-bounds
+        image-view (ImageView. (->image file))]
+    (if sub-image-bounds
+      (do (.setViewport image-view (Rectangle2D. x y w h))
+          image-view)
+      image-view)))
+
+(comment
+ (def my-img (image-view (property/->image (first (db/all-raw :properties/audiovisuals)))))
+
+ {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
+  :sub-image-bounds [64 64 32 32]}
+
+ )
 
 (defn overview-flow-pane [property-type]
   (let [flow (doto (FlowPane.)
@@ -188,15 +208,16 @@
                 extra-info-text
                 columns
                 image/scale]} (property/overview property-type)
-        properties (db/all property-type)
+        properties (db/all-raw property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
                      properties)]
-    (doseq [property properties]
-      (.add (.getChildren flow) #_(Button. (name (:property/id property)))
-            (doto (Button. (:property/id property))
-              #_(.setGraphic (doto (ImageView. image)
-                             (.setViewport (Rectangle2D. (* x size) (* y size) size size)))))))
+    (doseq [property properties
+            :let [image (property/->image property)]]
+      (.add (.getChildren flow)
+            (if image
+              (Button. "" (image-view (property/->image property)))
+              (Button. (name (:property/id property))))))
     flow))
 
 (declare stage)
@@ -245,6 +266,7 @@
 
  (fx-run (tool-tree "src/"))
 
+ (db/load! "properties.edn")
  (fx-run (properties-tabs))
 
  )
