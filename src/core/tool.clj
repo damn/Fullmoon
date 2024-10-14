@@ -6,27 +6,6 @@
            (javafx.scene.layout StackPane)
            (javafx.scene Scene Node)))
 
-(when-not (= (System/getenv "DEV_MODE") "true")
-  (gen-class
-   :name "core.tool"
-   :extends "javafx.application.Application"))
-
-(defn- start-stuff []
-  (javafx.application.Platform/setImplicitExit false)
-  ; otherwise cannot find class in dev mode w. ns-refresh, so create symbol
-  (.start (Thread. #(javafx.application.Application/launch (eval 'core.tool) (into-array String [""])))))
-
-#_(defn -main [& args]
-  (start-stuff))
-
-(comment
- ; lein with-profile tool repl
- ; lein clean before doing `dev` again (ns refresh doesnt work with aot)
- (start-stuff)
- (fx-run (clj-file-forms-tree "src/"))
-
- )
-
 
 ; https://stackoverflow.com/questions/66978726/clojure-javafx-live-manipulation
 ; https://github.com/dlsc-software-consulting-gmbh/FormsFX
@@ -50,36 +29,40 @@
 
 (declare stage)
 
-(defn expand? [sym]
+(defn amount-syms [sym]
   (case (str sym)
     ("ns" "def" "declare" "defmacro" "defn" "defn-" "defmulti"
-          "defsystem" "defc" "defrecord" "defprotocol") 1
+          "defsystem" "defc" "defrecord" "defprotocol" "deftype") 1
     ("defmethod" "derive") 2
     0))
 
 (defn- first-sym->icon [sym]
   (case (str sym)
-    "ns"          "📦"
+    "ns"          "📖"
+    "comment"     "💬"
     "def"         "📌"
-    "declare"     "🔖"
+    "declare"     "📌"
     "defmacro"    "🏗️"
-    "defn"        "📜"
-    "defn-"       "🔧"
-    "defmulti"    "🛠️"
+    "defn"        "🔧"
+    "defn-"       "🔒🔧"
+    "defmulti"    "🔧️"
+    "defsystem"   "🔧️️"
+    "defc"        "🧩"
     "defmethod"   "🧩"
-    "defsystem"   "🔄"
-    "defc"        "🔑"
-    "comment"     "📖"
     "derive"      "🧬"
-    "defprotocol" "📄"
+    "defprotocol" "📄🔧️️"
     "defrecord"   "🗃️"
+    "deftype"     "📦"
     "?"))
 
 (require '[clojure.string :as str])
 
-(defn- syms->text [[first-sym & more]]
-  (str (first-sym->icon first-sym) " " first-sym " "
-       (when-let [amount (expand? first-sym)]
+(defn- form->label [[first-sym & more]]
+  (str (first-sym->icon first-sym)
+       " "
+       first-sym
+       " "
+       (when-let [amount (amount-syms first-sym)]
          (str/join " " (take amount more)))))
 
 (defn- clj-files [folder]
@@ -101,28 +84,52 @@
        " "
        file))
 
+(defn- form->node [form]
+  (let [tree-item (TreeItem. (form->label form))]
+    #_(cond (= 'defprotocol (first form))
+          (do
+           (println "Found defprotocol : " (second form))
+           (doseq [sig (sort (map name (keys (:sigs clojure.gdx.app/Listener))))]
+             (.add (.getChildren tree-item) (TreeItem. (str (first-sym->icon 'defn) sig))))))
+    tree-item))
+
 (defn- file-forms-tree-item [file]
   (let [item (TreeItem. (file->pretty file))]
-    (doseq [syms (clj-file-forms file)]
-      (.add (.getChildren item) (TreeItem. (syms->text syms))))
+    (doseq [form (clj-file-forms file)]
+      (.add (.getChildren item) (form->node form)))
     item))
 
-(defn clj-file-forms-tree [folder]
-  (.setTitle stage "Clojure Code Reader")
+;(.getName (.isDirectory (second (seq (.listFiles (io/file "src/"))))))
 
+(defn add-items! [root-item root-file]
+  (doseq [file (sort-by java.io.File/.getName (seq (.listFiles root-file)))
+          :let [file-name (.getName file)
+                path (.getPath file)]
+          :when (not (str/starts-with? file-name "."))]
+    (.add (.getChildren root-item)
+          (cond
+           (.isDirectory file)
+           (let [tree-item (TreeItem. path)]
+             (add-items! tree-item file)
+             tree-item)
+
+           (str/ends-with? file-name ".clj")
+           (file-forms-tree-item path)
+
+           :else
+           (TreeItem. path)))))
+
+(defn tool-tree [folder]
+  (.setTitle stage "Tool")
   (let [root-item (TreeItem. folder)]
     (.setExpanded root-item true)
-    (doseq [clj-file (clj-files folder)]
-      (.add (.getChildren root-item) (file-forms-tree-item clj-file)))
-
+    (add-items! root-item (io/file "src/"))
     (let [stack-pane (StackPane.)]
       (.add (.getChildren stack-pane) (TreeView. root-item))
       (let [scene (Scene. stack-pane 400 900)]
         (.add (.getStylesheets scene) (.toExternalForm (io/resource "darkmode.css")))
         (.setScene stage scene))
       (.show stage))))
-
-
 
 (import javafx.scene.control.TabPane
         javafx.scene.control.TabPane$TabClosingPolicy
@@ -134,12 +141,6 @@
 (import javafx.scene.image.ImageView)
 (import javafx.scene.image.Image)
 (import javafx.scene.layout.FlowPane)
-
-(defmacro fx-run
-  "With this macro what you run is run in the JavaFX Application thread.
-  Is needed for all calls related with JavaFx"
-  [& code]
-  `(javafx.application.Platform/runLater (fn [] ~@code)))
 
 (import javafx.geometry.Rectangle2D)
 
@@ -214,4 +215,36 @@
  )
 
 (defn -start [app the-stage]
-  (def stage the-stage))
+  (def stage the-stage)
+  (tool-tree "src/"))
+
+(defmacro fx-run
+  "With this macro what you run is run in the JavaFX Application thread.
+  Is needed for all calls related with JavaFx"
+  [& code]
+  `(javafx.application.Platform/runLater (fn [] ~@code)))
+
+(when-not (= (System/getenv "DEV_MODE") "true")
+  (gen-class
+   :name "core.tool"
+   :extends "javafx.application.Application"))
+
+(defn- init-javafx! []
+  (javafx.application.Platform/setImplicitExit false)
+  ; otherwise cannot find class in dev mode w. ns-refresh, so create symbol
+  (javafx.application.Application/launch (eval 'core.tool) (into-array String [""])))
+
+(defn -main [& args]
+  (init-javafx!))
+
+(comment
+ ; lein with-profile tool run -m core.tool
+ ; lein with-profile tool repl
+ ; lein clean before doing `dev` again (ns refresh doesnt work with aot)
+ (do
+  (.start (Thread. init-javafx!))
+  (Thread/sleep 500)
+  (fx-run (tool-tree "src/")))
+
+
+ )
