@@ -1,5 +1,7 @@
 (ns world.time)
 
+(declare paused?)
+
 (declare ^{:doc "The game logic update delta-time. Different then clojure.gdx.graphics/delta-time because it is bounded by a maximum value for entity movement speed."}
          world-delta
 

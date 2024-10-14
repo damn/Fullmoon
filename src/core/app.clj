@@ -18,8 +18,11 @@
             [core.db :as db]
             [core.tx :as tx]
             core.tx.gdx
-            [core.val-max :as val-max]
+            [core.widgets.debug-window :as debug-window]
+            [core.widgets.entity-info-window :as entity-info-window]
             [core.widgets.error :refer [error-window!]]
+            [core.widgets.hp-mana :as hp-mana-bars]
+            [core.widgets.player-message :as player-message]
             [world.generate :as world]
             [data.grid2d :as g2d]
             property.audiovisual
@@ -42,125 +45,6 @@
             [world.time :refer [elapsed-time]]
             [world.widgets :refer [world-widgets]]))
 
-(declare world-paused?)
-
-(defn- render-infostr-on-bar [infostr x y h]
-  (g/draw-text {:text infostr
-                :x (+ x 75)
-                :y (+ y 2)
-                :up? true}))
-
-(defn- ->hp-mana-bars []
-  (let [rahmen      (g/image "images/rahmen.png")
-        hpcontent   (g/image "images/hp.png")
-        manacontent (g/image "images/mana.png")
-        x (/ (g/gui-viewport-width) 2)
-        [rahmenw rahmenh] (:pixel-dimensions rahmen)
-        y-mana 80 ; action-bar-icon-size
-        y-hp (+ y-mana rahmenh)
-        render-hpmana-bar (fn [x y contentimg minmaxval name]
-                            (g/draw-image rahmen [x y])
-                            (g/draw-image (g/sub-image contentimg [0 0 (* rahmenw (val-max/ratio minmaxval)) rahmenh])
-                                          [x y])
-                            (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
-    (ui/actor {:draw (fn []
-                       (let [player-entity* @world-player
-                             x (- x (/ rahmenw 2))]
-                         (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
-                         (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
-
-(defn- skill-info [{:keys [entity/skills]}]
-  (clojure.string/join "\n"
-                       (for [{:keys [property/id skill/cooling-down?]} (vals skills)
-                             :when cooling-down? ]
-                         [id [:cooling-down? (boolean cooling-down?)]])))
-
-(defn- debug-infos ^String []
-  (let [world-mouse (g/world-mouse-position)]
-    (str
-     "logic-frame: " world.time/logic-frame "\n"
-     "FPS: " (g/frames-per-second)  "\n"
-     "Zoom: " (🎥/zoom (g/world-camera)) "\n"
-     "World: "(mapv int world-mouse) "\n"
-     "X:" (world-mouse 0) "\n"
-     "Y:" (world-mouse 1) "\n"
-     "GUI: " (g/gui-mouse-position) "\n"
-     "paused? " world-paused? "\n"
-     "elapsed-time " (readable-number elapsed-time) " seconds \n"
-     "skill cooldowns: " (skill-info @world-player) "\n"
-     (when-let [entity* (mouseover-entity*)]
-       (str "Mouseover-entity uid: " (:entity/uid entity*)))
-     ;"\nMouseover-Actor:\n"
-     #_(when-let [actor (mouse-on-actor?)]
-         (str "TRUE - name:" (.getName actor)
-              "id: " (a/id actor))))))
-
-(defn- ->debug-window []
-  (let [label (ui/label "")
-        window (ui/window {:title "Debug"
-                           :id :debug-window
-                           :visible? false
-                           :position [0 (g/gui-viewport-height)]
-                           :rows [[label]]})]
-    (ui/add-actor! window (ui/actor {:act #(do
-                                            (.setText label (debug-infos))
-                                            (.pack window))}))
-    window))
-
-(def ^:private disallowed-keys [:entity/skills
-                                :entity/state
-                                :entity/faction
-                                :active-skill])
-
-(defn- ->entity-info-window []
-  (let [label (ui/label "")
-        window (ui/window {:title "Info"
-                           :id :entity-info-window
-                           :visible? false
-                           :position [(g/gui-viewport-width) 0]
-                           :rows [[{:actor label :expand? true}]]})]
-    ; TODO do not change window size ... -> no need to invalidate layout, set the whole stage up again
-    ; => fix size somehow.
-    (ui/add-actor! window (ui/actor {:act (fn update-label-text []
-                                            ; items then have 2x pretty-name
-                                            #_(.setText (.getTitleLabel window)
-                                                        (if-let [entity* (mouseover-entity*)]
-                                                          (info/->text [:property/pretty-name (:property/pretty-name entity*)])
-                                                          "Entity Info"))
-                                            (.setText label
-                                                      (str (when-let [entity* (mouseover-entity*)]
-                                                             (info/->text
-                                                              ; don't use select-keys as it loses Entity record type
-                                                              (apply dissoc entity* disallowed-keys)))))
-                                            (.pack window))}))
-    window))
-
-(def ^:private message-to-player nil)
-
-(def ^:private duration-seconds 1.5)
-
-(defn- draw-player-message []
-  (when-let [{:keys [message]} message-to-player]
-    (g/draw-text {:x (/ (g/gui-viewport-width) 2)
-                  :y (+ (/ (g/gui-viewport-height) 2) 200)
-                  :text message
-                  :scale 2.5
-                  :up? true})))
-
-(defn- check-remove-message []
-  (when-let [{:keys [counter]} message-to-player]
-    (alter-var-root #'message-to-player update :counter + (g/delta-time))
-    (when (>= counter duration-seconds)
-      (bind-root #'message-to-player nil))))
-
-(defn- widgets-player-message []
-  (ui/actor {:draw draw-player-message
-             :act check-remove-message}))
-
-(defc :tx/msg-to-player
-  (tx/do! [[_ message]]
-    (bind-root #'message-to-player {:message message :counter 0})
-    nil))
 
 (defn- ->ui-actors [widget-data]
   [(ui/table {:rows [[{:actor (->action-bar)
@@ -169,13 +53,13 @@
               :id :action-bar-table
               :cell-defaults {:pad 2}
               :fill-parent? true})
-   (->hp-mana-bars)
+   (hp-mana-bars/create)
    (ui/group {:id :windows
-              :actors [(->debug-window)
-                       (->entity-info-window)
+              :actors [(debug-window/create)
+                       (entity-info-window/create)
                        (->inventory-window widget-data)]})
    (ui/actor {:draw world.creature.states/draw-item-on-cursor})
-   (widgets-player-message)])
+   (player-message/create)])
 
 (defn ->world-widgets []
   (let [widget-data {:action-bar (->action-bar-button-group)
@@ -404,10 +288,10 @@
       (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
 
 (defn- update-game-paused []
-  (bind-root #'world-paused? (or entity-tick-error
-                                 (and pausing?
-                                      (player-state-pause-game?)
-                                      (not (player-unpaused?)))))
+  (bind-root #'world.time/paused? (or entity-tick-error
+                                      (and pausing?
+                                           (player-state-pause-game?)
+                                           (not (player-unpaused?)))))
   nil)
 
 (defn- update-world []
@@ -424,7 +308,7 @@
   (tx/do-all [player-update-state
               mouseover-entity/update! ; this do always so can get debug info even when game not running
               update-game-paused
-              #(when-not world-paused?
+              #(when-not world.time/paused?
                  (update-world))
               entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
               ]))
