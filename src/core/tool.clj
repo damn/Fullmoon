@@ -4,8 +4,8 @@
            (javafx.scene.control Button TreeItem TreeView)
            (javafx.scene.image Image ImageView)
            (javafx.scene.layout StackPane)
-           (javafx.scene Scene Node)))
-
+           (javafx.scene Scene Node))
+  (:gen-class :extends javafx.application.Application))
 
 ; https://stackoverflow.com/questions/66978726/clojure-javafx-live-manipulation
 ; https://github.com/dlsc-software-consulting-gmbh/FormsFX
@@ -174,7 +174,10 @@
      (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
    ))
 
-#_(defn overview-flow-pane [property-type]
+(require '[core.property :as property])
+(require '[core.db :as db])
+
+(defn overview-flow-pane [property-type]
   (let [flow (doto (FlowPane.)
                (.setPadding (Insets. 5 0 5 0))
                (.setVgap 4)
@@ -184,39 +187,36 @@
         {:keys [sort-by-fn
                 extra-info-text
                 columns
-                image/scale]} (overview property-type)
-        properties (all-properties-raw property-type)
+                image/scale]} (property/overview property-type)
+        properties (db/all property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
                      properties)]
     (doseq [property properties]
       (.add (.getChildren flow) #_(Button. (name (:property/id property)))
             (doto (Button. (:property/id property))
-              (.setGraphic (doto (ImageView. image)
+              #_(.setGraphic (doto (ImageView. image)
                              (.setViewport (Rectangle2D. (* x size) (* y size) size size)))))))
     flow))
 
-(declare my-stage)
+(declare stage)
 
-
-(comment
- (fx-run
+(defn- properties-tabs []
   (let [tab-pane (doto (TabPane.)
                    (.setTabClosingPolicy TabPane$TabClosingPolicy/UNAVAILABLE))]
-    (doseq [property-type (sort (properties/types))
-            :let [tab (Tab. (:title (overview property-type)) (Label. "whre thsi labl is"))]]
+    (doseq [property-type (sort (property/types))
+            :let [tab (Tab. (:title (property/overview property-type))
+                            (Label. "whre thsi labl is"))]]
       (.setContent tab (overview-flow-pane property-type))
       (.add (.getTabs tab-pane) tab))
     (let [scene (Scene. (VBox. (into-array Node [tab-pane])))]
-      (.setScene my-stage scene))
-    (.setTitle my-stage "JavaFX App")
-    (.show my-stage)))
-
- )
+      (.setScene stage scene))
+    (.setTitle stage "JavaFX App")
+    (.show stage)))
 
 (defn -start [app the-stage]
   (def stage the-stage)
-  (tool-tree "src/"))
+  #_(tool-tree "src/"))
 
 (defmacro fx-run
   "With this macro what you run is run in the JavaFX Application thread.
@@ -224,7 +224,7 @@
   [& code]
   `(javafx.application.Platform/runLater (fn [] ~@code)))
 
-(when-not (= (System/getenv "DEV_MODE") "true")
+#_(when-not (= (System/getenv "DEV_MODE") "true")
   (gen-class
    :name "core.tool"
    :extends "javafx.application.Application"))
@@ -241,6 +241,10 @@
  ; lein with-profile tool repl
  ; lein clean before doing `dev` again (ns refresh doesnt work with aot)
 
+ (.start (Thread. init-javafx!))
+
  (fx-run (tool-tree "src/"))
+
+ (fx-run (properties-tabs))
 
  )

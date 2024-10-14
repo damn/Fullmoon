@@ -82,10 +82,12 @@
 (defn get [id]
   (build (safe-get db id)))
 
-(defn all [type]
+(defn all-raw [type]
   (->> (vals db)
-       (filter #(= type (property/->type %)))
-       (map build)))
+       (filter #(= type (property/->type %)))))
+
+(defn all [type]
+  (map build (all-raw type)))
 
 (defn update! [{:keys [property/id] :as property}]
   {:pre [(contains? property :property/id)
