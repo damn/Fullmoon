@@ -675,7 +675,7 @@
    (property-editor/screen ->background)
    (world-screen)])
 
-(defn- start-app! [& {:keys [graphics screen-ks ui] :as config}]
+(defn- start-app! [& {:keys [graphics ui] :as config}]
   (db/load! "properties.edn")
   (app/start! (reify app/Listener
                 (create! [_]
