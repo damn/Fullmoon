@@ -8,8 +8,7 @@
             [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get mouse-on-actor?]]
+            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
             [core.component :refer [defc]]
@@ -22,21 +21,15 @@
             [core.db :as db]
             [core.tx :as tx]
             core.tx.gdx
-            [core.widgets.debug-window :as debug-window]
-            [core.widgets.entity-info-window :as entity-info-window]
             [core.widgets.error :refer [error-window!]]
-            [core.widgets.hp-mana :as hp-mana-bars]
-            [core.widgets.player-message :as player-message]
             [world.generate :as world]
             [data.grid2d :as g2d]
             property.audiovisual
             [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
             [world.content-grid :as content-grid]
             world.creature
-            world.creature.states
+
             [world.entity :as entity]
-            [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
-            [world.entity.skills :refer [->action-bar ->action-bar-button-group]]
             [world.entity.state :as entity-state]
             [world.entity.stats :refer [entity-stat]]
             world.entity.stats
@@ -46,32 +39,8 @@
             world.projectile
             [world.potential-fields :as potential-fields]
             [world.raycaster :as raycaster]
-            [world.time :refer [elapsed-time]]
-            [world.widgets :refer [world-widgets]]))
-
-
-(defn- ->ui-actors [widget-data]
-  [(ui/table {:rows [[{:actor (->action-bar)
-                       :expand? true
-                       :bottom? true}]]
-              :id :action-bar-table
-              :cell-defaults {:pad 2}
-              :fill-parent? true})
-   (hp-mana-bars/create)
-   (ui/group {:id :windows
-              :actors [(debug-window/create)
-                       (entity-info-window/create)
-                       (->inventory-window widget-data)]})
-   (ui/actor {:draw world.creature.states/draw-item-on-cursor})
-   (player-message/create)])
-
-(defn ->world-widgets []
-  (let [widget-data {:action-bar (->action-bar-button-group)
-                     :slot->background (->inventory-window-data)}
-        stage (stage-get)]
-    (stage/clear! stage)
-    (run! #(stage/add! stage %) (->ui-actors widget-data))
-    widget-data))
+            world.time
+            world.widgets.setup))
 
 (declare explored-tile-corners)
 
@@ -127,7 +96,7 @@
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'entity-tick-error nil)
   (world.time/init!)
-  (bind-root #'world-widgets (->world-widgets))
+  (world.widgets.setup/init!)
   (entity/init-uids-entities!)
 
   (bind-root #'world-tiled-map tiled-map)
