@@ -5,135 +5,27 @@
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
             [clojure.gdx.screen :as screen]
-            [clojure.gdx.tiled :as t]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
-            [clojure.gdx.utils :refer [dispose!]]
-            [clojure.gdx.math.shape :as shape]
-            [core.component :refer [defc]]
             [core.editor :as property-editor]
             core.effect.entity
             core.effect.projectile
             core.effect.spawn
             core.effect.target
-            [core.info :as info]
             [core.db :as db]
-            [core.tx :as tx]
             core.tx.gdx
-            [core.widgets.error :refer [error-window!]]
-            [world.generate :as world]
-            [data.grid2d :as g2d]
             property.audiovisual
-            [utils.core :refer [bind-root ->tile tile->middle readable-number get-namespaces get-vars]]
-            [world.content-grid :as content-grid]
+            [utils.core :refer [bind-root get-namespaces get-vars]]
+            [world.core :refer [explored-tile-corners]]
             world.creature
-
-            [world.entity :as entity]
-            [world.entity.state :as entity-state]
-            [world.entity.stats :refer [entity-stat]]
             world.entity.stats
-            [world.mouseover-entity :refer [mouseover-entity*] :as mouseover-entity]
-            [world.grid :as grid :refer [world-grid]]
-            [world.player :refer [world-player]]
+            [world.generate :as world]
             world.projectile
-            [world.potential-fields :as potential-fields]
-            [world.raycaster :as raycaster]
-            world.time
-            world.widgets.setup))
-
-(declare explored-tile-corners)
-
-(defn- init-explored-tile-corners! [width height]
-  (.bindRoot #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
-
-(defn- world-grid-position->value-fn [tiled-map]
-  (fn [position]
-    (case (t/movement-property tiled-map position)
-      "none" :none
-      "air"  :air
-      "all"  :all)))
-
-(declare entity-tick-error)
-
-(declare world-tiled-map)
-
-(defn- cleanup-last-world! []
-  (when (bound? #'world-tiled-map)
-    (dispose! world-tiled-map)))
-
-(def ^:private ^:dbg-flag spawn-enemies? true)
-
-(def ^:private player-components {:entity/state [:state/player :player-idle]
-                                  :entity/faction :good
-                                  :entity/player? true
-                                  :entity/free-skill-points 3
-                                  :entity/clickable {:type :clickable/player}
-                                  :entity/click-distance-tiles 1.5})
-
-(def ^:private npc-components {:entity/state [:state/npc :npc-sleeping]
-                               :entity/faction :evil})
-
-; player-creature needs mana & inventory
-; till then hardcode :creatures/vampire
-(defn- world->player-creature [start-position]
-  {:position start-position
-   :creature-id :creatures/vampire
-   :components player-components})
-
-(defn- world->enemy-creatures [tiled-map]
-  (for [[position creature-id] (t/positions-with-property tiled-map :creatures :id)]
-    {:position position
-     :creature-id (keyword creature-id)
-     :components npc-components}))
-
-(defn spawn-creatures! [tiled-map start-position]
-  (tx/do-all (for [creature (cons (world->player-creature start-position)
-                                  (when spawn-enemies?
-                                    (world->enemy-creatures tiled-map)))]
-               [:tx/creature (update creature :position tile->middle)])))
-
-(defn- init-new-world! [{:keys [tiled-map start-position]}]
-  (bind-root #'entity-tick-error nil)
-  (world.time/init!)
-  (world.widgets.setup/init!)
-  (entity/init-uids-entities!)
-
-  (bind-root #'world-tiled-map tiled-map)
-  (let [w (t/width  tiled-map)
-        h (t/height tiled-map)
-        grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
-    (raycaster/init! grid grid/blocks-vision?)
-    (content-grid/init! :cell-size 16 :width w :height h)
-    (init-explored-tile-corners! w h))
-
-  (spawn-creatures! tiled-map start-position))
-
-; TODO  add-to-world/assoc/dissoc uid from entity move together here
-; also core.screens/world ....
-(defn- add-world-ctx [world-property-id]
-  (cleanup-last-world!)
-  (init-new-world! (world/generate-level world-property-id)))
-
-(defc :tx/add-to-world
-  (tx/do! [[_ entity]]
-    (content-grid/update-entity! entity)
-    ; https://github.com/damn/core/issues/58
-    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (grid/add-entity! entity)
-    nil))
-
-(defc :tx/remove-from-world
-  (tx/do! [[_ entity]]
-    (content-grid/remove-entity! entity)
-    (grid/remove-entity! entity)
-    nil))
-
-(defc :tx/position-changed
-  (tx/do! [[_ entity]]
-    (content-grid/update-entity! entity)
-    (grid/entity-position-changed! entity)
-    nil))
+            [world.render :refer [render-world!]]
+            [world.game-loop :refer [game-loop]]
+            world.setup
+            world.time))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
@@ -187,156 +79,6 @@
 #_(defc :screens/minimap
   (component/create [_]
     (->Screen)))
-
-(defn- geom-test []
-  (let [position (g/world-mouse-position)
-        grid world-grid
-        radius 0.8
-        circle {:position position :radius radius}]
-    (g/draw-circle position radius [1 0 0 0.5])
-    (doseq [[x y] (map #(:position @%) (grid/circle->cells grid circle))]
-      (g/draw-rectangle x y 1 1 [1 0 0 0.5]))
-    (let [{[x y] :left-bottom :keys [width height]} (shape/circle->outer-rectangle circle)]
-      (g/draw-rectangle x y width height [0 0 1 1]))))
-
-(def ^:private ^:dbg-flag tile-grid? false)
-(def ^:private ^:dbg-flag potential-field-colors? false)
-(def ^:private ^:dbg-flag cell-entities? false)
-(def ^:private ^:dbg-flag cell-occupied? false)
-
-(defn- tile-debug []
-  (let [grid world-grid
-        🎥 (g/world-camera)
-        [left-x right-x bottom-y top-y] (🎥/frustum 🎥)]
-
-    (when tile-grid?
-      (g/draw-grid (int left-x) (int bottom-y)
-                   (inc (int (g/world-viewport-width)))
-                   (+ 2 (int (g/world-viewport-height)))
-                   1 1 [1 1 1 0.8]))
-
-    (doseq [[x y] (🎥/visible-tiles 🎥)
-            :let [cell (grid [x y])]
-            :when cell
-            :let [cell* @cell]]
-
-      (when (and cell-entities? (seq (:entities cell*)))
-        (g/draw-filled-rectangle x y 1 1 [1 0 0 0.6]))
-
-      (when (and cell-occupied? (seq (:occupied cell*)))
-        (g/draw-filled-rectangle x y 1 1 [0 0 1 0.6]))
-
-      (when potential-field-colors?
-        (let [faction :good
-              {:keys [distance entity]} (faction cell*)]
-          (when distance
-            (let [ratio (/ distance (potential-fields/factions-iterations faction))]
-              (g/draw-filled-rectangle x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
-
-(def ^:private ^:dbg-flag highlight-blocked-cell? true)
-
-(defn- highlight-mouseover-tile []
-  (when highlight-blocked-cell?
-    (let [[x y] (->tile (g/world-mouse-position))
-          cell (get world-grid [x y])]
-      (when (and cell (#{:air :none} (:movement @cell)))
-        (g/draw-rectangle x y 1 1
-                          (case (:movement @cell)
-                            :air  [1 1 0 0.5]
-                            :none [1 0 0 0.5]))))))
-
-(defn- before-entities [] (tile-debug))
-
-(defn- after-entities []
-  #_(geom-test)
-  (highlight-mouseover-tile))
-
-(def ^:private ^:dbg-flag pausing? true)
-
-(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @world-player)))
-(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @world-player)))
-
-(defn- player-unpaused? []
-  (or (key-just-pressed? :keys/p)
-      (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
-
-(defn- update-game-paused []
-  (bind-root #'world.time/paused? (or entity-tick-error
-                                      (and pausing?
-                                           (player-state-pause-game?)
-                                           (not (player-unpaused?)))))
-  nil)
-
-(defn- update-world []
-  (world.time/update! (min (g/delta-time) entity/max-delta-time))
-  (let [entities (content-grid/active-entities)]
-    (potential-fields/update! entities)
-    (try (entity/tick-entities! entities)
-         (catch Throwable t
-           (error-window! t)
-           (bind-root #'entity-tick-error t))))
-  nil)
-
-(defn- game-loop []
-  (tx/do-all [player-update-state
-              mouseover-entity/update! ; this do always so can get debug info even when game not running
-              update-game-paused
-              #(when-not world.time/paused?
-                 (update-world))
-              entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
-              ]))
-
-(def ^:private explored-tile-color (g/->color 0.5 0.5 0.5 1))
-
-(def ^:private ^:dbg-flag see-all-tiles? false)
-
-(comment
- (def ^:private count-rays? false)
-
- (def ray-positions (atom []))
- (def do-once (atom true))
-
- (count @ray-positions)
- 2256
- (count (distinct @ray-positions))
- 608
- (* 608 4)
- 2432
- )
-
-(defn- ->tile-color-setter [light-cache light-position explored-tile-corners]
-  (fn tile-color-setter [_color x y]
-    (let [position [(int x) (int y)]
-          explored? (get @explored-tile-corners position) ; TODO needs int call ?
-          base-color (if explored? explored-tile-color black)
-          cache-entry (get @light-cache position :not-found)
-          blocked? (if (= cache-entry :not-found)
-                     (let [blocked? (raycaster/ray-blocked? light-position position)]
-                       (swap! light-cache assoc position blocked?)
-                       blocked?)
-                     cache-entry)]
-      #_(when @do-once
-          (swap! ray-positions conj position))
-      (if blocked?
-        (if see-all-tiles? white base-color)
-        (do (when-not explored?
-              (swap! explored-tile-corners assoc (->tile position) true))
-            white)))))
-
-(defn render-map [light-position]
-  (g/draw-tiled-map world-tiled-map
-                    (->tile-color-setter (atom nil)
-                                         light-position
-                                         explored-tile-corners))
-  #_(reset! do-once false))
-
-(defn- render-world! []
-  (🎥/set-position! (g/world-camera) (:position @world-player))
-  (render-map (🎥/position (g/world-camera)))
-  (g/render-world-view! (fn []
-                          (before-entities)
-                          (entity/render-entities! (map deref (content-grid/active-entities)))
-                          (after-entities))))
 
 (defn- hotkey->window-id []
   (merge {:keys/i :inventory-window
@@ -398,7 +140,7 @@
 (defn- start-game-fn [world-id]
   (fn []
     (screen/change! :screens/world)
-    (add-world-ctx world-id)))
+    (world.setup/add-world-ctx! world-id)))
 
 (defn- ->buttons []
   (ui/table {:rows (remove nil? (concat
