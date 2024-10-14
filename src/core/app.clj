@@ -675,11 +675,11 @@
    (property-editor/screen ->background)
    (world-screen)])
 
-(defn- start-app! [& {:keys [resources properties graphics screen-ks ui] :as config}]
-  (db/load! properties)
+(defn- start-app! [& {:keys [graphics screen-ks ui] :as config}]
+  (db/load! "properties.edn")
   (app/start! (reify app/Listener
                 (create! [_]
-                  (assets/load! resources)
+                  (assets/load! "resources/")
                   (g/load! graphics)
                   (ui/load! ui)
                   (screen/set-screens! (screens)))
@@ -704,8 +704,6 @@
               :height 900
               :full-screen? false
               :fps 60
-              :resources "resources/"
-              :properties "resources/properties.edn"
               :graphics {:cursors {:cursors/bag ["bag001" [0 0]]
                                    :cursors/black-x ["black_x" [0 0]]
                                    :cursors/default ["default" [0 0]]
