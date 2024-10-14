@@ -3,8 +3,10 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [stage-get]]
-            [core.component :refer [defsystem defc do! effect!] :as component]
+            [core.component :refer [defsystem defc]]
+            [core.info :as info]
             [core.property :as property]
+            [core.tx :as tx]
             [data.grid2d :as g2d]
             [utils.core :refer [find-first]]
             [world.entity :as entity]
@@ -35,7 +37,7 @@
 (defc :item/modifiers
   {:data [:components-ns :modifier]
    :let modifiers}
-  (component/info [_]
+  (info/text [_]
     (when (seq modifiers)
       (mod-info-text modifiers))))
 
@@ -58,7 +60,7 @@
    :z-order :z-order/on-ground})
 
 (defc :tx/item
-  (do! [[_ position item]]
+  (tx/do! [[_ position item]]
     [[:e/create position body-props {:entity/image (:entity/image item)
                                      :entity/item item
                                      :entity/clickable {:type :clickable/item
@@ -100,11 +102,11 @@
        [:tx/remove-item-from-widget cell])]))
 
 (defc :tx/set-item
-  (do! [[_ entity cell item]]
+  (tx/do! [[_ entity cell item]]
     (set-item @entity cell item)))
 
 (defc :tx/remove-item
-  (do! [[_ entity cell]]
+  (tx/do! [[_ entity cell]]
     (remove-item @entity cell)))
 
 ; TODO doesnt exist, stackable, usable items with action/skillbar thingy
@@ -129,7 +131,7 @@
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
 (defc :tx/stack-item
-  (do! [[_ entity cell item]]
+  (tx/do! [[_ entity cell item]]
     (stack-item @entity cell item)))
 
 (defn- try-put-item-in [entity* slot item]
@@ -149,7 +151,7 @@
    (try-put-item-in entity* :inventory.slot/bag item)))
 
 (defc :tx/pickup-item
-  (do! [[_ entity item]]
+  (tx/do! [[_ entity item]]
     (pickup-item @entity item)))
 
 (defn can-pickup-item? [entity* item]
@@ -206,7 +208,7 @@
     (a/set-id! stack cell)
     (a/add-listener! stack (proxy [com.badlogic.gdx.scenes.scene2d.utils.ClickListener] []
                              (clicked [event x y]
-                               (effect! (player-clicked-inventory cell)))))
+                               (tx/do-all (player-clicked-inventory cell)))))
     stack))
 
 (defn- slot->background []
@@ -275,18 +277,18 @@
    :slot->background (:slot->background world-widgets)})
 
 (defc :tx/set-item-image-in-widget
-  (do! [[_ cell item]]
+  (tx/do! [[_ cell item]]
     (let [{:keys [table]} (get-inventory)
           cell-widget (get table cell)
           image-widget (get cell-widget :image)
           drawable (ui/texture-region-drawable (:texture-region (:entity/image item)))]
       (ui/set-min-size! drawable cell-size)
       (ui/set-drawable! image-widget drawable)
-      (ui/add-tooltip! cell-widget #(component/info-text item))
+      (ui/add-tooltip! cell-widget #(info/->text item))
       nil)))
 
 (defc :tx/remove-item-from-widget
-  (do! [[_ cell]]
+  (tx/do! [[_ cell]]
     (let [{:keys [table slot->background]} (get-inventory)
           cell-widget (get table cell)
           image-widget (get cell-widget :image)]

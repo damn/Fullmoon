@@ -24,7 +24,7 @@
 (defn ->schema [property]
   (-> property
       ->type
-      component/data
+      data/component
       data/schema
       m/schema))
 

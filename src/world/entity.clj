@@ -4,8 +4,10 @@
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
-            [core.component :refer [defsystem defc do! effect!] :as component]
+            [core.component :refer [defsystem defc]]
+            [core.info :as info]
             [core.db :as db]
+            [core.tx :as tx]
             [malli.core :as m]
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
             [world.grid :as grid :refer [world-grid]]
@@ -182,8 +184,19 @@
       ; thats why we reuse component and not fetch each time again for key
       (create component eid))))
 
+(defsystem ->v "Create component value. Default returns v.")
+(defmethod ->v :default [[_ v]] v)
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (create [k v])]`."
+  [components]
+  (reduce (fn [m [k v]]
+            (assoc m k (->v [k v])))
+          {}
+          components))
+
 (defc :e/create
-  (do! [[_ position body components]]
+  (tx/do! [[_ position body components]]
     (assert (and (not (contains? components :position))
                  (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
@@ -194,38 +207,38 @@
                       (safe-merge (-> components
                                       (assoc :entity/id eid
                                              :entity/uid (unique-number!))
-                                      (component/create-vs)))))
+                                      (create-vs)))))
       (create-e-system eid))))
 
 (defc :e/destroy
-  (do! [[_ entity]]
+  (tx/do! [[_ entity]]
     [[:e/assoc entity :entity/destroyed? true]]))
 
 (defc :e/assoc
-  (do! [[_ entity k v]]
+  (tx/do! [[_ entity k v]]
     (assert (keyword? k))
     (swap! entity assoc k v)
     nil))
 
 (defc :e/assoc-in
-  (do! [[_ entity ks v]]
+  (tx/do! [[_ entity ks v]]
     (swap! entity assoc-in ks v)
     nil))
 
 (defc :e/dissoc
-  (do! [[_ entity k]]
+  (tx/do! [[_ entity k]]
     (assert (keyword? k))
     (swap! entity dissoc k)
     nil))
 
 (defc :e/dissoc-in
-  (do! [[_ entity ks]]
+  (tx/do! [[_ entity ks]]
     (assert (> (count ks) 1))
     (swap! entity update-in (drop-last ks) dissoc (last ks))
     nil))
 
 (defc :e/update-in
-  (do! [[_ entity ks f]]
+  (tx/do! [[_ entity ks f]]
     (swap! entity update-in ks f)
     nil))
 
@@ -253,7 +266,7 @@
   (try
    (doseq [k (keys @entity)]
      (when-let [v (k @entity)]
-       (effect! (tick [k v] entity))))
+       (tx/do-all (tick [k v] entity))))
    (catch Throwable t
      (throw (ex-info "" (select-keys @entity [:entity/uid]) t)))))
 
@@ -340,7 +353,7 @@
            [:tx/position-changed eid]])))))
 
 (defc :tx/set-movement
-  (do! [[_ entity movement]]
+  (tx/do! [[_ entity movement]]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...
@@ -422,10 +435,10 @@
 
 (defc :entity/delete-after-duration
   {:let counter}
-  (component/create [[_ duration]]
+  (->v [[_ duration]]
     (->counter duration))
 
-  (component/info [_]
+  (info/text [_]
     (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio counter)) "/1[]"))
 
   (tick [_ eid]
@@ -441,7 +454,7 @@
         (g/draw-line position end color)))))
 
 (defc :tx/line-render
-  (do! [[_ {:keys [start end duration color thick?]}]]
+  (tx/do! [[_ {:keys [start end duration color thick?]}]]
     [[:e/create
       start
       effect-body-props
@@ -462,7 +475,7 @@
                     :up? true}))))
 
 (defc :tx/add-text-effect
-  (do! [[_ entity text]]
+  (tx/do! [[_ entity text]]
     [[:e/assoc
       entity
       :entity/string-effect

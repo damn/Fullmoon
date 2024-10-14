@@ -1,5 +1,6 @@
 (ns world.entity.faction
-  (:require [core.component :refer [defc] :as component]))
+  (:require [core.component :refer [defc]]
+            [core.info :as info]))
 
 (defn enemy [{:keys [entity/faction]}]
   (case faction
@@ -12,6 +13,6 @@
 (defc :entity/faction
   {:data [:enum :good :evil]
    :let faction}
-  (component/info [_]
+  (info/text [_]
     (str "[SLATE]Faction: " (name faction) "[]")))
 

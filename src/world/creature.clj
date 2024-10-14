@@ -1,9 +1,11 @@
 (ns world.creature
   (:require [clojure.gdx.graphics :as g]
             [clojure.string :as str]
-            [core.component :refer [defc do!] :as component]
+            [core.component :refer [defc]]
             [core.property :as property]
             [core.db :as db]
+            [core.info :as info]
+            [core.tx :as tx]
             [utils.core :refer [bind-root safe-merge]]
             world.creature.states
             [world.entity :as entity]
@@ -37,7 +39,7 @@
 (defc :property/pretty-name
   {:data :string
    :let value}
-  (component/info [_]
+  (info/text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
 (defc :body/width   {:data :pos})
@@ -55,14 +57,14 @@
 
 (defc :creature/species
   {:data [:qualified-keyword {:namespace :species}]}
-  (component/create [[_ species]]
+  (entity/->v [[_ species]]
     (str/capitalize (name species)))
-  (component/info [[_ species]]
+  (info/text [[_ species]]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defc :creature/level
   {:data :pos-int}
-  (component/info [[_ lvl]]
+  (info/text [[_ lvl]]
     (str "[GRAY]Level " lvl "[]")))
 
 ; # :z-order/flying has no effect for now
@@ -91,7 +93,7 @@
 
 (defc :tx/creature
   {:let {:keys [position creature-id components]}}
-  (do! [_]
+  (tx/do! [_]
     (let [props (db/get creature-id)]
       [[:e/create
         position

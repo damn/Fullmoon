@@ -10,7 +10,7 @@
             [clojure.gdx.tiled :as t]
             [clojure.gdx.rand :refer [get-rand-weighted-item]]
             [clojure.string :as str]
-            [core.component :refer [defc] :as component]
+            [core.component :refer [defc]]
             [core.db :as db]
             [core.property :as property]
             [core.widgets.error :refer [error-window!]]

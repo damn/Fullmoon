@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [get])
   (:require [clojure.edn :as edn]
             [clojure.pprint :refer [pprint]]
-            [core.component :as component]
             [core.data :as data]
             [core.property :as property]
             [utils.core :refer [bind-root safe-get]]))
@@ -70,7 +69,7 @@
 (defn- build [property]
   (apply-kvs property
              (fn [k v]
-               (try (edn->value (try (component/data k)
+               (try (edn->value (try (data/component k)
                                      (catch Throwable _t
                                        (swap! undefined-data-ks conj k)
                                        nil))

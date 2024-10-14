@@ -70,19 +70,19 @@
 
 ; (clj-files "src/")
 
+(defn- file->ns-str [path]
+  (-> path
+      (str/replace "src/" "")
+      (str/replace ".clj" "")
+      (str/replace "/" ".")))
+
 (defn- file->pretty [file]
-  (str (case file
-         "src/clojure/gdx.clj" "🕹️"
-         "src/clojure/gdx/dev.clj" "♻️"
-         "src/clojure/gdx/editor.clj" "🎛️"
-         "src/clojure/gdx/rand.clj" "🎲"
-         "src/clojure/gdx/tiled.clj" "🗺️"
-         "src/core/app.clj" "🖥️"
-         "src/core/stat.clj" "⚔️"
-         "?"
-         )
-       " "
-       file))
+  (let [ns-str (file->ns-str file)]
+    (str (when-let [icon (::icon (meta (find-ns (symbol ns-str))))]
+           (str icon " "))
+         ns-str)))
+
+; (meta (find-ns (symbol (file->pretty "src/clojure/gdx/app.clj"))))
 
 (defn- form->node [form]
   (let [tree-item (TreeItem. (form->label form))]
@@ -238,13 +238,9 @@
   (init-javafx!))
 
 (comment
- ; lein with-profile tool run -m core.tool
  ; lein with-profile tool repl
  ; lein clean before doing `dev` again (ns refresh doesnt work with aot)
- (do
-  (.start (Thread. init-javafx!))
-  (Thread/sleep 500)
-  (fx-run (tool-tree "src/")))
 
+ (fx-run (tool-tree "src/"))
 
  )

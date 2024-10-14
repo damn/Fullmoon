@@ -1,7 +1,9 @@
 (ns world.projectile
   (:require [clojure.gdx.math.vector :as v]
-            [core.component :refer [defc do!] :as component]
+            [core.component :refer [defc]]
+            [core.info :as info]
             [core.property :as property]
+            [core.tx :as tx]
             [utils.core :refer [find-first]]
             [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]))
@@ -18,7 +20,7 @@
 
 (defc :entity/projectile-collision
   {:let {:keys [entity-effects already-hit-bodies piercing?]}}
-  (component/create [[_ v]]
+  (entity/->v [[_ v]]
     (assoc v :already-hit-bodies #{}))
 
   ; TODO probably belongs to body
@@ -53,7 +55,7 @@
 (defc :projectile/speed     {:data :pos-int})
 
 (defc :projectile/piercing? {:data :boolean}
-  (component/info [_]
+  (info/text [_]
     "[LIME]Piercing[]"))
 
 (defn projectile-size [projectile]
@@ -61,13 +63,13 @@
   (first (:world-unit-dimensions (:entity/image projectile))))
 
 (defc :tx/projectile
-  (do! [[_
-         {:keys [position direction faction]}
-         {:keys [entity/image
-                 projectile/max-range
-                 projectile/speed
-                 entity-effects
-                 projectile/piercing?] :as projectile}]]
+  (tx/do! [[_
+            {:keys [position direction faction]}
+            {:keys [entity/image
+                    projectile/max-range
+                    projectile/speed
+                    entity-effects
+                    projectile/piercing?] :as projectile}]]
     (let [size (projectile-size projectile)]
       [[:e/create
         position

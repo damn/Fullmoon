@@ -1,14 +1,15 @@
 (ns core.effect
   (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.math.vector :as v]
-            [core.component :refer [defsystem defc do! effect!]]
+            [core.component :refer [defsystem defc]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.mouseover-entity :refer [mouseover-entity*]]
+            [core.tx :as tx]
             [world.grid :as grid :refer [world-grid]]))
 
 (defsystem applicable?
-  "An effect will only be done (with do!) if this function returns truthy.
+  "An effect will only be done (with tx/do!) if this function returns truthy.
 Required system for every effect, no default.")
 
 (defsystem useful?
@@ -94,6 +95,6 @@ Default method returns true.")
      ~@body))
 
 (defc :tx/effect
-  (do! [[_ effect-ctx effect]]
+  (tx/do! [[_ effect-ctx effect]]
     (with-ctx effect-ctx
-      (effect! (filter-applicable? effect)))))
+      (tx/do-all (filter-applicable? effect)))))

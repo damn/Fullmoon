@@ -1,4 +1,5 @@
 (ns clojure.gdx.app
+  {:core.tool/icon "✅"}
   (:import (com.badlogic.gdx Gdx ApplicationAdapter)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            (com.badlogic.gdx.utils SharedLibraryLoader)

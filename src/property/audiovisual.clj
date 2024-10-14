@@ -1,7 +1,8 @@
 (ns property.audiovisual
-  (:require [core.component :refer [defc do!]]
+  (:require [core.component :refer [defc]]
             [core.db :as db]
             [core.property :as property]
+            [core.tx :as tx]
             [world.entity :as entity]))
 
 (property/def :properties/audiovisuals
@@ -12,9 +13,8 @@
               :image/scale 2}})
 
 (defc :tx/audiovisual
-  (do! [[_ position id]]
-    (let [{:keys [tx/sound
-                  entity/animation]} (db/get id)]
+  (tx/do! [[_ position id]]
+    (let [{:keys [tx/sound entity/animation]} (db/get id)]
       [[:tx/sound sound]
        [:e/create
         position

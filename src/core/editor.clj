@@ -13,6 +13,7 @@
             [core.component :as component]
             [core.data :as data]
             [core.db :as db]
+            [core.info :as info]
             [core.property :as property]
             [core.widgets.error :refer [error-window!]]
             [malli.core :as m]
@@ -190,7 +191,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [data (component/data k)]
+  (let [data (data/component k)]
     (cond
      (#{:one-to-one :one-to-many} data) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
@@ -252,7 +253,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (component/data k) v)
+        value-widget (->widget (data/component k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -286,7 +287,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (component/data k) value-widget)])))
+             [k (widget->value (data/component k) value-widget)])))
 
 ;;
 
@@ -325,7 +326,7 @@
                  (ui/text-button (name id) on-clicked))
         top-widget (ui/label (or (and extra-info-text (extra-info-text props)) ""))
         stack (ui/stack [button top-widget])]
-    (ui/add-tooltip! button #(component/info-text props))
+    (ui/add-tooltip! button #(info/->text props))
     (a/set-touchable! top-widget :disabled)
     stack))
 
@@ -417,7 +418,7 @@
       (for [property-id property-ids]
         (let [property (db/get property-id)
               image-widget (ui/image->widget (property/->image property) {:id property-id})]
-          (ui/add-tooltip! image-widget #(component/info-text property))
+          (ui/add-tooltip! image-widget #(info/->text property))
           image-widget))
       (for [id property-ids]
         (ui/text-button "-" #(redo-rows (disj property-ids id))))])))
@@ -456,7 +457,7 @@
       [(when property-id
          (let [property (db/get property-id)
                image-widget (ui/image->widget (property/->image property) {:id property-id})]
-           (ui/add-tooltip! image-widget #(component/info-text property))
+           (ui/add-tooltip! image-widget #(info/->text property))
            image-widget))]
       [(when property-id
          (ui/text-button "-" #(redo-rows nil)))]])))

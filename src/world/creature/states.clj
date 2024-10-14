@@ -6,8 +6,9 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
-            [core.component :refer [defc do!] :as component]
+            [core.component :refer [defc]]
             [core.effect :as effect]
+            [core.tx :as tx]
             [reduce-fsm :as fsm]
             [world.entity :as entity]
             [world.entity.faction :as faction]
@@ -77,7 +78,7 @@
 
 (defc :npc-dead
   {:let {:keys [eid]}}
-  (component/create [[_ eid]]
+  (entity/->v [[_ eid]]
     {:eid eid})
 
   (state/enter [_]
@@ -88,7 +89,7 @@
 ; also prevents fast twitching around changing directions every frame
 (defc :npc-moving
   {:let {:keys [eid movement-vector counter]}}
-  (component/create [[_ eid movement-vector]]
+  (entity/->v [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector
      :counter (->counter (* (entity-stat @eid :stats/reaction-time) 0.016))})
@@ -121,7 +122,7 @@
               [:tx/event friendly-eid :alert])))))
 
 (defc :tx/shout
-  (do! [[_ position faction delay-seconds]]
+  (tx/do! [[_ position faction delay-seconds]]
     [[:e/create
       position
       entity/effect-body-props
@@ -131,7 +132,7 @@
 
 (defc :npc-sleeping
   {:let {:keys [eid]}}
-  (component/create [[_ eid]]
+  (entity/->v [[_ eid]]
     {:eid eid})
 
   (state/exit [_]
@@ -220,7 +221,7 @@
 
 (defc :player-item-on-cursor
   {:let {:keys [eid item]}}
-  (component/create [[_ eid item]]
+  (entity/->v [[_ eid item]]
     {:eid eid
      :item item})
 
@@ -276,7 +277,7 @@
 
 (defc :player-moving
   {:let {:keys [eid movement-vector]}}
-  (component/create [[_ eid movement-vector]]
+  (entity/->v [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector})
 
@@ -301,7 +302,7 @@
 
 (defc :stunned
   {:let {:keys [eid counter]}}
-  (component/create [[_ eid duration]]
+  (entity/->v [[_ eid duration]]
     {:eid eid
      :counter (->counter duration)})
 
@@ -338,7 +339,7 @@
 
 (defc :active-skill
   {:let {:keys [eid skill effect-ctx counter]}}
-  (component/create [[_ eid [skill effect-ctx]]]
+  (entity/->v [[_ eid [skill effect-ctx]]]
     {:eid eid
      :skill skill
      :effect-ctx effect-ctx
@@ -419,7 +420,7 @@
 
 (defc :npc-idle
   {:let {:keys [eid]}}
-  (component/create [[_ eid]]
+  (entity/->v [[_ eid]]
     {:eid eid})
 
   (entity/tick [_ eid]
@@ -527,7 +528,7 @@
 
 (defc :player-idle
   {:let {:keys [eid]}}
-  (component/create [[_ eid]]
+  (entity/->v [[_ eid]]
     {:eid eid})
 
   (state/pause-game? [_]

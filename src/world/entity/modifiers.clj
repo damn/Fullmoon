@@ -1,9 +1,12 @@
 (ns world.entity.modifiers
   (:require [clojure.gdx.graphics :as g]
             [clojure.string :as str]
-            [core.component :refer [defc do!] :as component]
+            [core.component :refer [defc]]
+            [core.info :as info]
             [core.operation :as op]
-            [utils.core :refer [remove-one k->pretty-name]]))
+            [core.tx :as tx]
+            [utils.core :refer [remove-one k->pretty-name]]
+            [world.entity :as entity]))
 
 (defn- txs-update-modifiers [entity modifiers f]
   (for [[modifier-k operations] modifiers
@@ -20,11 +23,11 @@
     (remove-one values value)))
 
 (defc :tx/apply-modifiers
-  (do! [[_ entity modifiers]]
+  (tx/do! [[_ entity modifiers]]
     (txs-update-modifiers entity modifiers conj-value)))
 
 (defc :tx/reverse-modifiers
-  (do! [[_ entity modifiers]]
+  (tx/do! [[_ entity modifiers]]
     (txs-update-modifiers entity modifiers remove-value)))
 
 (comment
@@ -69,12 +72,12 @@
 (defc :entity/modifiers
   {:data [:components-ns :modifier]
    :let modifiers}
-  (component/create [_]
+  (entity/->v [_]
     (into {} (for [[modifier-k operations] modifiers]
                [modifier-k (into {} (for [[operation-k value] operations]
                                       [operation-k [value]]))])))
 
-  (component/info [_]
+  (info/text [_]
     (let [modifiers (sum-operation-values modifiers)]
       (when (seq modifiers)
         (mod-info-text modifiers)))))

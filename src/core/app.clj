@@ -13,9 +13,11 @@
             [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-add! stage-get mouse-on-actor?]]
             [clojure.gdx.utils :refer [dispose!]]
             [clojure.gdx.math.shape :as shape]
-            [core.component :refer [defc do! effect!] :as component]
+            [core.component :refer [defc]]
             [core.editor :as property-editor]
+            [core.info :as info]
             [core.db :as db]
+            [core.tx :as tx]
             [core.val-max :as val-max]
             [core.widgets.error :refer [error-window!]]
             [world.generate :as world]
@@ -42,12 +44,12 @@
 
 (defc :tx/sound
   {:data :sound}
-  (do! [[_ file]]
+  (tx/do! [[_ file]]
     (play-sound! file)
     nil))
 
 (defc :tx/cursor
-  (do! [[_ cursor-key]]
+  (tx/do! [[_ cursor-key]]
     (g/set-cursor! cursor-key)
     nil))
 
@@ -71,7 +73,7 @@
                           :pack? true})))
 
 (defc :tx/player-modal
-  (do! [[_ params]]
+  (tx/do! [[_ params]]
     (show-player-modal! params)
     nil))
 
@@ -158,11 +160,11 @@
                                             ; items then have 2x pretty-name
                                             #_(.setText (.getTitleLabel window)
                                                         (if-let [entity* (mouseover-entity*)]
-                                                          (component/info-text [:property/pretty-name (:property/pretty-name entity*)])
+                                                          (info/->text [:property/pretty-name (:property/pretty-name entity*)])
                                                           "Entity Info"))
                                             (.setText label
                                                       (str (when-let [entity* (mouseover-entity*)]
-                                                             (component/info-text
+                                                             (info/->text
                                                               ; don't use select-keys as it loses Entity record type
                                                               (apply dissoc entity* disallowed-keys)))))
                                             (.pack window))}))
@@ -186,13 +188,12 @@
     (when (>= counter duration-seconds)
       (bind-root #'message-to-player nil))))
 
-(defc :widgets/player-message
-  (component/create [_]
-    (ui/actor {:draw draw-player-message
-               :act check-remove-message})))
+(defn- widgets-player-message []
+  (ui/actor {:draw draw-player-message
+             :act check-remove-message}))
 
 (defc :tx/msg-to-player
-  (do! [[_ message]]
+  (tx/do! [[_ message]]
     (bind-root #'message-to-player {:message message :counter 0})
     nil))
 
@@ -209,7 +210,7 @@
                        (->entity-info-window)
                        (->inventory-window widget-data)]})
    (ui/actor {:draw world.creature.states/draw-item-on-cursor})
-   (component/create [:widgets/player-message])])
+   (widgets-player-message)])
 
 (defn ->world-widgets []
   (let [widget-data {:action-bar (->action-bar-button-group)
@@ -265,10 +266,10 @@
      :components npc-components}))
 
 (defn spawn-creatures! [tiled-map start-position]
-  (effect! (for [creature (cons (world->player-creature start-position)
-                                (when spawn-enemies?
-                                  (world->enemy-creatures tiled-map)))]
-             [:tx/creature (update creature :position tile->middle)])))
+  (tx/do-all (for [creature (cons (world->player-creature start-position)
+                                  (when spawn-enemies?
+                                    (world->enemy-creatures tiled-map)))]
+               [:tx/creature (update creature :position tile->middle)])))
 
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'entity-tick-error nil)
@@ -293,7 +294,7 @@
   (init-new-world! (world/generate-level world-property-id)))
 
 (defc :tx/add-to-world
-  (do! [[_ entity]]
+  (tx/do! [[_ entity]]
     (content-grid/update-entity! entity)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
@@ -301,13 +302,13 @@
     nil))
 
 (defc :tx/remove-from-world
-  (do! [[_ entity]]
+  (tx/do! [[_ entity]]
     (content-grid/remove-entity! entity)
     (grid/remove-entity! entity)
     nil))
 
 (defc :tx/position-changed
-  (do! [[_ entity]]
+  (tx/do! [[_ entity]]
     (content-grid/update-entity! entity)
     (grid/entity-position-changed! entity)
     nil))
@@ -455,13 +456,13 @@
   nil)
 
 (defn- game-loop []
-  (effect! [player-update-state
-            mouseover-entity/update! ; this do always so can get debug info even when game not running
-            update-game-paused
-            #(when-not world-paused?
-               (update-world))
-            entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
-            ]))
+  (tx/do-all [player-update-state
+              mouseover-entity/update! ; this do always so can get debug info even when game not running
+              update-game-paused
+              #(when-not world-paused?
+                 (update-world))
+              entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+              ]))
 
 (def ^:private explored-tile-color (g/->color 0.5 0.5 0.5 1))
 

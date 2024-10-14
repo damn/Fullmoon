@@ -1,5 +1,7 @@
 (ns world.entity.state
-  (:require [core.component :refer [defsystem defc do!] :as component]
+  (:require [core.component :refer [defsystem defc]]
+            [core.info :as info]
+            [core.tx :as tx]
             [reduce-fsm :as fsm]
             [world.entity :as entity]))
 
@@ -26,9 +28,9 @@
 (defc :entity/state
   (entity/create [[k {:keys [fsm initial-state]}] eid]
     [[:e/assoc eid k (->init-fsm fsm initial-state)]
-     [:e/assoc eid initial-state (component/create [initial-state eid])]])
+     [:e/assoc eid initial-state (entity/->v [initial-state eid])]])
 
-  (component/info [[_ fsm]]
+  (info/text [[_ fsm]]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
 (defn state-k [entity*]
@@ -45,7 +47,7 @@
           new-state-k (:state new-fsm)]
       (when-not (= old-state-k new-state-k)
         (let [old-state-obj (state-obj @eid)
-              new-state-obj [new-state-k (component/create [new-state-k eid params])]]
+              new-state-obj [new-state-k (entity/->v [new-state-k eid params])]]
           [#(exit old-state-obj)
            #(enter new-state-obj)
            (when (:entity/player? @eid) #(player-enter new-state-obj))
@@ -54,5 +56,5 @@
            [:e/assoc eid new-state-k (new-state-obj 1)]])))))
 
 (defc :tx/event
-  (do! [[_ eid event params]]
+  (tx/do! [[_ eid event params]]
     (send-event! eid event params)))

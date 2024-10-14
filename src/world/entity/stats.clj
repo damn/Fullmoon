@@ -3,9 +3,11 @@
             [clojure.gdx.rand :refer [rand-int-between]]
             [clojure.gdx.math.vector :as v]
             [clojure.string :as str]
-            [core.component :refer [defc defc* do!] :as component]
+            [core.component :refer [defc defc*]]
             [core.effect :as effect :refer [source target target-position target-direction]]
+            [core.info :as info]
             [core.operation :as op]
+            [core.tx :as tx]
             [core.val-max :as val-max]
             [utils.core :refer [readable-number k->pretty-name]]
             [world.content-grid :as content-grid]
@@ -68,7 +70,7 @@
    :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
 (defc :tx.entity.stats/pay-mana-cost
-  (do! [[_ entity cost]]
+  (tx/do! [[_ entity cost]]
     (let [mana-val ((entity-stat @entity :stats/mana) 0)]
       (assert (<= cost mana-val))
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] (- mana-val cost)]])))
@@ -78,7 +80,7 @@
        entity (atom (entity/map->Entity {:entity/stats {:stats/mana [mana-val 10]}}))
        mana-cost 3
        resulting-mana (- mana-val mana-cost)]
-   (= (do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
+   (= (tx/do! [:tx.entity.stats/pay-mana-cost entity mana-cost] nil)
       [[:e/assoc-in entity [:entity/stats :stats/mana 0] resulting-mana]]))
  )
 
@@ -181,13 +183,13 @@
                 [:stats/armor-save    {:optional true}]
                 [:stats/armor-pierce  {:optional true}]]]
    :let stats}
-  (component/create [_]
+  (entity/->v [_]
     (-> stats
         (update :stats/hp (fn [hp] (when hp [hp hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
-  (component/info [_]
-    (stats-info-texts component/*info-text-entity*))
+  (info/text [_]
+    (stats-info-texts info/*info-text-entity*))
 
   (entity/render-info [_ entity*]
     (when-let [hp (entity-stat entity* :stats/hp)]
@@ -214,7 +216,7 @@
 ; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defc :base/stat-effect
-  (component/info [[k operations]]
+  (info/text [[k operations]]
     (str/join "\n"
               (for [operation operations]
                 (str (op/info-text operation) " " (k->pretty-name k)))))
@@ -226,7 +228,7 @@
   (effect/useful? [_]
     true)
 
-  (do! [[effect-k operations]]
+  (tx/do! [[effect-k operations]]
     (let [stat-k (effect-k->stat-k effect-k)]
       (when-let [effective-value (entity-stat @target stat-k)]
         [[:e/assoc-in target [:entity/stats stat-k]
@@ -246,15 +248,15 @@
 
 (defc :effect.entity/melee-damage
   {:data :some}
-  (component/info [_]
+  (info/text [_]
     (str "Damage based on entity strength."
          (when source
-           (str "\n" (component/info (damage-effect))))))
+           (str "\n" (info/text (damage-effect))))))
 
   (effect/applicable? [_]
     (effect/applicable? (damage-effect)))
 
-  (do! [_]
+  (tx/do! [_]
     [(damage-effect)]))
 
 (defn- effective-armor-save [source* target*]
@@ -304,7 +306,7 @@
 (defc :effect.entity/damage
   {:let damage
    :data [:map [:damage/min-max]]}
-  (component/info [_]
+  (info/text [_]
     (if source
       (let [modified (->effective-damage damage @source)]
         (if (= damage modified)
@@ -316,7 +318,7 @@
     (and target
          (entity-stat @target :stats/hp)))
 
-  (do! [_]
+  (tx/do! [_]
     (let [source* @source
           target* @target
           hp (entity-stat target* :stats/hp)]
@@ -343,7 +345,7 @@
 
 (defc :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
-  (component/info [_]
+  (info/text [_]
     (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (world.time/finished-ratio counter)) "/1[]"))
 
   (entity/tick [[k _] eid]
@@ -358,7 +360,7 @@
       duration 5]
   (defc :effect.entity/spiderweb
     {:data :some}
-    (component/info [_]
+    (info/text [_]
       "Spiderweb slows 50% for 5 seconds."
       ; modifiers same like item/modifiers has info-text
       ; counter ?
@@ -369,14 +371,14 @@
       true)
 
     ; TODO stacking? (if already has k ?) or reset counter ? (see string-effect too)
-    (do! [_]
+    (tx/do! [_]
       (when-not (:entity/temp-modifier @target)
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                  :counter (->counter duration)}]]))))
 (defc :effect.entity/convert
   {:data :some}
-  (component/info [_]
+  (info/text [_]
     "Converts target to your side.")
 
   (effect/applicable? [_]
@@ -384,7 +386,7 @@
          (= (:entity/faction @target)
             (faction/enemy @source))))
 
-  (do! [_]
+  (tx/do! [_]
     [[:tx/audiovisual (:position @target) :audiovisuals/convert]
      [:e/assoc target :entity/faction (faction/friend @source)]]))
 
@@ -408,7 +410,7 @@
     (and (:entity/faction @source)
          target-position))
 
-  (do! [_]
+  (tx/do! [_]
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position target-position
                     :creature-id id ; already properties/get called through one-to-one, now called again.
@@ -418,26 +420,26 @@
 (defc :effect.entity/stun
   {:data :pos
    :let duration}
-  (component/info [_]
+  (info/text [_]
     (str "Stuns for " (readable-number duration) " seconds"))
 
   (effect/applicable? [_]
     (and target
          (:entity/state @target)))
 
-  (do! [_]
+  (tx/do! [_]
     [[:tx/event target :stun duration]]))
 
 (defc :effect.entity/kill
   {:data :some}
-  (component/info [_]
+  (info/text [_]
     "Kills target")
 
   (effect/applicable? [_]
     (and target
          (:entity/state @target)))
 
-  (do! [_]
+  (tx/do! [_]
     [[:tx/event target :kill]]))
 
 (defn- projectile-start-point [entity* direction size]
@@ -469,7 +471,7 @@
                           target-p)
               max-range))))
 
-  (do! [_]
+  (tx/do! [_]
     [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
      [:tx/projectile
       {:position (projectile-start-point @source target-direction (projectile-size projectile))
@@ -518,7 +520,7 @@
 (defc :effect/target-all
   {:data [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
-  (component/info [_]
+  (info/text [_]
     "[LIGHT_GRAY]All visible targets[]")
 
   (effect/applicable? [_]
@@ -529,7 +531,7 @@
     false
     )
 
-  (do! [_]
+  (tx/do! [_]
     (let [source* @source]
       (apply concat
              (for [target (creatures-in-los-of-player)]
@@ -572,7 +574,7 @@
                   maxrange)))
 
 (defc :maxrange {:data :pos}
-  (component/info [[_ maxrange]]
+  (info/text [[_ maxrange]]
     (str "[LIGHT_GRAY]Range " maxrange " meters[]")))
 
 (defc :effect/target-entity
@@ -590,7 +592,7 @@
     (assert target)
     (in-range? @source @target maxrange))
 
-  (do! [_]
+  (tx/do! [_]
     (let [source* @source
           target* @target]
       (if (in-range? source* target* maxrange)

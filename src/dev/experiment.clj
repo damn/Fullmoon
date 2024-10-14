@@ -4,9 +4,10 @@
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]
             [clojure.gdx.ui.stage-screen :refer [stage-add!]]
-            [core.component :refer [do! effect!] :as component]
+            [core.component :as component]
             [core.data :as data]
             [core.db :as db]
+            [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
             [world.grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity*]]
@@ -113,7 +114,7 @@
  )
 
 (defn- post-tx! [tx]
-  (post-runnable! (effect! [tx])))
+  (post-runnable! (tx/do-all [tx])))
 
 (defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill world-player (db/get skill-id)]])))
 (defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (db/get item-id)]])))
@@ -166,12 +167,12 @@
         (binding [*print-level* nil]
           (with-out-str
            (doseq [[nmsp ks] (sort-by first
-                                      (group-by namespace (sort (keys (methods do!)))))]
+                                      (group-by namespace (sort (keys (methods tx/do!)))))]
 
              (println "\n#" nmsp)
              (doseq [k ks
                      :let [attr-m (get component/attributes k)]]
-               (println (str "* __" k "__ `" (get (:params attr-m) "do!") "`"))
+               (println (str "* __" k "__ `" (get (:params attr-m) "tx/do!") "`"))
                (when-let [data (:data attr-m)]
                  (println (str "    * data: `" (pr-str data) "`")))
                (let [ks (descendants k)]
