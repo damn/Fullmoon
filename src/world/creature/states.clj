@@ -9,7 +9,6 @@
             [core.component :refer [defc]]
             [core.effect :as effect]
             [core.tx :as tx]
-            [reduce-fsm :as fsm]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
@@ -21,60 +20,6 @@
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.time :refer [->counter stopped? finished-ratio]]))
-
-(comment
- ; graphviz required in path
- (fsm/show-fsm player-fsm)
-
- )
-
-(fsm/defsm-inc player-fsm
-  [[:player-idle
-    :kill -> :player-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :pickup-item -> :player-item-on-cursor
-    :movement-input -> :player-moving]
-   [:player-moving
-    :kill -> :player-dead
-    :stun -> :stunned
-    :no-movement-input -> :player-idle]
-   [:active-skill
-    :kill -> :player-dead
-    :stun -> :stunned
-    :action-done -> :player-idle]
-   [:stunned
-    :kill -> :player-dead
-    :effect-wears-off -> :player-idle]
-   [:player-item-on-cursor
-    :kill -> :player-dead
-    :stun -> :stunned
-    :drop-item -> :player-idle
-    :dropped-item -> :player-idle]
-   [:player-dead]])
-
-(fsm/defsm-inc npc-fsm
-  [[:npc-sleeping
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :alert -> :npc-idle]
-   [:npc-idle
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :movement-direction -> :npc-moving]
-   [:npc-moving
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :timer-finished -> :npc-idle]
-   [:active-skill
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :action-done -> :npc-idle]
-   [:stunned
-    :kill -> :npc-dead
-    :effect-wears-off -> :npc-idle]
-   [:npc-dead]])
 
 (defc :npc-dead
   {:let {:keys [eid]}}

@@ -7,6 +7,7 @@
             [core.info :as info]
             [core.tx :as tx]
             [utils.core :refer [bind-root safe-merge]]
+            [world.creature.fsms :as fsms]
             world.creature.states
             [world.entity :as entity]
             [world.player :refer [world-player]]))
@@ -87,8 +88,8 @@
             (fn [[player-or-npc initial-state]]
               {:initial-state initial-state
                :fsm (case player-or-npc
-                      :state/player world.creature.states/player-fsm
-                      :state/npc    world.creature.states/npc-fsm)}))
+                      :state/player fsms/player
+                      :state/npc    fsms/npc)}))
     components))
 
 (defc :tx/creature
