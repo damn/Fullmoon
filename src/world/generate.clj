@@ -15,8 +15,9 @@
             [core.property :as property]
             [core.widgets.error :refer [error-window!]]
             [data.grid2d :as g2d]
-            [utils.core :refer [->tile]]
+            [utils.core :refer [->tile assoc-ks]]
             [world.generate.area-level-grid :as area-level-grid]
+            [world.generate.caves :as caves]
             [world.generate.modules :as modules :refer [modules-scale
                                                         module-width
                                                         module-height]]))
@@ -25,7 +26,7 @@
 ; TODO can use different turn-ratio/depth/etc. params
 ; (printgrid (:grid (->cave-grid :size 800)))
 (defn- ->cave-grid [& {:keys [size]}]
-  (let [{:keys [start grid]} (t/cave-gridgen (java.util.Random.) size size :wide)
+  (let [{:keys [start grid]} (caves/generate (java.util.Random.) size size :wide)
         grid (t/fix-not-allowed-diagonals grid)]
     (assert (= #{:wall :ground} (set (g2d/cells grid))))
     {:start start
@@ -61,7 +62,7 @@
                       (mapcat g2d/get-8-neighbour-positions
                               next-positions)))
              (concat filled next-positions)
-             (t/assoc-ks grid next-positions nil))
+             (assoc-ks grid next-positions nil))
       filled)))
 
 (comment

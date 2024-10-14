@@ -4,7 +4,6 @@
             [clojure.gdx.ui.stage-screen :refer [stage-get]]
             [core.widgets.debug-window :as debug-window]
             [core.widgets.entity-info-window :as entity-info-window]
-            [core.widgets.error :refer [error-window!]]
             [core.widgets.hp-mana :as hp-mana-bars]
             [core.widgets.player-message :as player-message]
             world.creature.states
