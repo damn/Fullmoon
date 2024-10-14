@@ -37,7 +37,7 @@
                                  (grid/cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
                        (some #(grid/blocked? % (:z-order entity*)) cells*))
-          id (:entity/id entity*)]
+          id entity]
       [(when hit-entity
          [:e/assoc-in id [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
        (when destroy?

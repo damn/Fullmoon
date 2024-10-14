@@ -115,7 +115,7 @@
 (defn- post-tx! [tx]
   (post-runnable! (effect! [tx])))
 
-(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill (:entity/id @world-player) (db/get skill-id)]])))
+(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill world-player (db/get skill-id)]])))
 (defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (db/get item-id)]])))
 
 (defn- protocol? [value]

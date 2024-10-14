@@ -17,14 +17,12 @@
 (defn- calculate-mouseover-entity []
   (let [player-entity* @world-player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
-                     (map deref
-                          (grid/point->entities (g/world-mouse-position))))]
+                     (grid/point->entities (g/world-mouse-position)))]
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse
-         (filter #(entity/line-of-sight? player-entity* %))
-         first
-         :entity/id)))
+         (filter #(entity/line-of-sight? player-entity* @%))
+         first)))
 
 (defn update! []
   (let [entity (if (stage-screen/mouse-on-actor?)

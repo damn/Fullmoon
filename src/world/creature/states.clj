@@ -110,9 +110,7 @@
   (->> {:position position
         :radius shout-radius}
        (grid/circle->entities world-grid)
-       (map deref)
-       (filter #(= (:entity/faction %) faction))
-       (map :entity/id)))
+       (filter #(= (:entity/faction @%) faction))))
 
 (defc :entity/alert-friendlies-after-duration
   {:let {:keys [counter faction]}}
