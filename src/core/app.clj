@@ -14,6 +14,10 @@
             [clojure.gdx.math.shape :as shape]
             [core.component :refer [defc]]
             [core.editor :as property-editor]
+            core.effect.entity
+            core.effect.projectile
+            core.effect.spawn
+            core.effect.target
             [core.info :as info]
             [core.db :as db]
             [core.tx :as tx]

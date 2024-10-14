@@ -11,6 +11,7 @@
   (render!  [_])
   (resize!  [_ dimensions]))
 
+; hi
 (defn- macos-fix! []
   ; https://github.com/libgdx/libgdx/pull/7361
   ; Maybe can delete this when using that new libgdx version
