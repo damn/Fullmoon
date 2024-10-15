@@ -307,7 +307,7 @@
                            :center? true
                            :close-on-escape? true
                            :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group (property/->schema props) props)
+        widgets (->attribute-widget-group (property/schema props) props)
         save!   (apply-context-fn window #(db/update! (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(db/delete! id))]
     (ui/add-rows! window [[(->scroll-pane-cell [[{:actor widgets :colspan 2}]

@@ -5,7 +5,7 @@
            (javafx.scene.image Image ImageView)
            (javafx.scene.layout StackPane)
            (javafx.scene Scene Node))
-  (:gen-class :extends javafx.application.Application))
+  #_(:gen-class :extends javafx.application.Application))
 
 ; https://stackoverflow.com/questions/66978726/clojure-javafx-live-manipulation
 ; https://github.com/dlsc-software-consulting-gmbh/FormsFX

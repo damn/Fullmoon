@@ -13,7 +13,7 @@
   (let [file (clojure.java.io/resource file) ; load here and not in threading macro so #'edn-file correct (tests?!)
         properties (-> file slurp edn/read-string)]
     (assert (apply distinct? (map :property/id properties)))
-    (run! property/validate properties)
+    (run! property/validate! properties)
     (bind-root #'db (zipmap (map :property/id properties) properties))
     (bind-root #'edn-file file)))
 
@@ -92,7 +92,7 @@
 (defn update! [{:keys [property/id] :as property}]
   {:pre [(contains? property :property/id)
          (contains? db id)]}
-  (property/validate property)
+  (property/validate! property)
   (alter-var-root #'db assoc id property)
   (async-write-to-file!))
 

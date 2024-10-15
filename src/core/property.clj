@@ -18,7 +18,10 @@
 (defn type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
-(defn ->schema [property]
+(defn types []
+  (filter #(= "properties" (namespace %)) (keys component/attributes)))
+
+(defn schema [property]
   (-> property
       type
       data/component
@@ -30,17 +33,14 @@
            {:value value
             :schema (m/form schema)}))
 
-(defn validate [property]
-  (let [schema (->schema property)]
+(defn validate! [property]
+  (let [schema (schema property)]
     (when-not (m/validate schema property)
       (throw (invalid-ex-info schema property)))))
+
+(defn overview [property-type]
+  (:overview (get component/attributes property-type)))
 
 (defn ->image [{:keys [entity/image entity/animation]}]
   (or image
       (first (:frames animation))))
-
-(defn types []
-  (filter #(= "properties" (namespace %)) (keys component/attributes)))
-
-(defn overview [property-type]
-  (:overview (get component/attributes property-type)))
