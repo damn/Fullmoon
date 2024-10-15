@@ -38,7 +38,7 @@
 (defn- async-write-to-file! []
   (->> db
        vals
-       (sort-by property/->type)
+       (sort-by property/type)
        (map recur-sort-map)
        doall
        async-pprint-spit!))
@@ -84,7 +84,7 @@
 
 (defn all-raw [type]
   (->> (vals db)
-       (filter #(= type (property/->type %)))))
+       (filter #(= type (property/type %)))))
 
 (defn all [type]
   (map build (all-raw type)))

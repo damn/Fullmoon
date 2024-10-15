@@ -1,5 +1,5 @@
 (ns core.property
-  (:refer-clojure :exclude [def])
+  (:refer-clojure :exclude [def type])
   (:require [core.component :refer [defc] :as component]
             [core.data :as data]
             [malli.core :as m]
@@ -15,12 +15,12 @@
 (defn type->id-namespace [property-type]
   (keyword (name property-type)))
 
-(defn ->type [{:keys [property/id]}]
+(defn type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
 (defn ->schema [property]
   (-> property
-      ->type
+      type
       data/component
       data/schema
       m/schema))
