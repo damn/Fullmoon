@@ -15,14 +15,10 @@
 
 (comment
 
- (defn- raw-properties-of-type [ptype]
-   (->> (vals properties-db)
-        (filter #(= ptype (->type %)))))
-
  (defn- migrate [ptype prop-fn]
    (let [cnt (atom 0)]
      (time
-      (doseq [prop (map prop-fn (raw-properties-of-type ptype))]
+      (doseq [prop (map prop-fn (db/all-raw ptype))]
         (println (swap! cnt inc) (:property/id prop) ", " (:property/pretty-name prop))
         (update! prop)))
      ; omg every update! calls async-write-to-file ...
