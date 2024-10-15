@@ -12,12 +12,12 @@
             [world.entity.stats :refer [entity-stat]]
             [world.time :refer [->counter stopped? finished-ratio]]  ))
 
-(defn- entity*->melee-damage [entity*]
-  (let [strength (or (entity-stat entity* :stats/strength) 0)]
+(defn- entity->melee-damage [entity]
+  (let [strength (or (entity-stat entity :stats/strength) 0)]
     {:damage/min-max [strength strength]}))
 
 (defn- damage-effect []
-  [:effect.entity/damage (entity*->melee-damage @source)])
+  [:effect.entity/damage (entity->melee-damage @source)])
 
 (defc :effect.entity/melee-damage
   {:data :some}
@@ -126,8 +126,8 @@
       [[:e/dissoc eid k]
        [:tx/reverse-modifiers eid modifiers]]))
 
-  (entity/render-above [_ entity*]
-    (g/draw-filled-circle (:position entity*) 0.5 [0.5 0.5 0.5 0.4])))
+  (entity/render-above [_ entity]
+    (g/draw-filled-circle (:position entity) 0.5 [0.5 0.5 0.5 0.4])))
 
 (let [modifiers {:modifier/movement-speed {:op/mult -0.5}}
       duration 5]

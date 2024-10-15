@@ -33,12 +33,12 @@
   (info/text [[_ fsm]]
     (str "[YELLOW]State: " (name (:state fsm)) "[]")))
 
-(defn state-k [entity*]
-  (-> entity* :entity/state :state))
+(defn state-k [entity]
+  (-> entity :entity/state :state))
 
-(defn state-obj [entity*]
-  (let [k (state-k entity*)]
-    [k (k entity*)]))
+(defn state-obj [entity]
+  (let [k (state-k entity)]
+    [k (k entity)]))
 
 (defn- send-event! [eid event params]
   (when-let [fsm (:entity/state @eid)]

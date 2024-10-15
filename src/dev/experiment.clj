@@ -10,7 +10,7 @@
             [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
             [world.grid :refer [world-grid]]
-            [world.mouseover-entity :refer [mouseover-entity*]]
+            [world.mouseover-entity :refer [mouseover-entity]]
             [world.player :refer [world-player]]))
 
 (comment
@@ -321,7 +321,7 @@
 
 (defn- show-tree-view! [obj]
   (let [object (case obj
-                 :entity (mouseover-entity*)
+                 :entity (mouseover-entity)
                  :tile @(get world-grid (mapv int (g/world-mouse-position))))]
     (stage-add! (ui/window {:title "Tree View"
                             :close-button? true

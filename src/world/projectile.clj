@@ -29,16 +29,16 @@
     ; for non-solid
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
-    (let [entity* @eid
-          cells* (map deref (grid/rectangle->cells world-grid entity*)) ; just use cached-touched -cells
+    (let [entity @eid
+          cells* (map deref (grid/rectangle->cells world-grid entity)) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
-                                       (not= (:entity/faction entity*) ; this is not clear in the componentname & what if they dont have faction - ??
+                                       (not= (:entity/faction entity) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
-                                       (entity/collides? entity* @%))
+                                       (entity/collides? entity @%))
                                  (grid/cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(grid/blocked? % (:z-order entity*)) cells*))]
+                       (some #(grid/blocked? % (:z-order entity)) cells*))]
       [(when hit-entity
          [:e/assoc-in eid [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
        (when destroy?

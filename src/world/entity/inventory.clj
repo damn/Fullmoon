@@ -82,23 +82,23 @@
        (:count item-b) ; this is not required but can be asserted, all of one name should have count if others have count
        (= (:property/id item-a) (:property/id item-b))))
 
-(defn- set-item [{:keys [entity/id] :as entity*} cell item]
-  (let [inventory (:entity/inventory entity*)]
+(defn- set-item [{:keys [entity/id] :as entity} cell item]
+  (let [inventory (:entity/inventory entity)]
     (assert (and (nil? (get-in inventory cell))
                  (valid-slot? cell item))))
   [[:e/assoc-in id (cons :entity/inventory cell) item]
    (when (applies-modifiers? cell)
      [:tx/apply-modifiers id (:item/modifiers item)])
-   (when (:entity/player? entity*)
+   (when (:entity/player? entity)
      [:tx/set-item-image-in-widget cell item])])
 
-(defn- remove-item [{:keys [entity/id] :as entity*} cell]
-  (let [item (get-in (:entity/inventory entity*) cell)]
+(defn- remove-item [{:keys [entity/id] :as entity} cell]
+  (let [item (get-in (:entity/inventory entity) cell)]
     (assert item)
     [[:e/assoc-in id (cons :entity/inventory cell) nil]
      (when (applies-modifiers? cell)
        [:tx/reverse-modifiers id (:item/modifiers item)])
-     (when (:entity/player? entity*)
+     (when (:entity/player? entity)
        [:tx/remove-item-from-widget cell])]))
 
 (defc :tx/set-item
@@ -122,40 +122,40 @@
       (remove-item! eid cell))))
 
 ; TODO no items which stack are available
-(defn- stack-item [entity* cell item]
-  (let [cell-item (get-in (:entity/inventory entity*) cell)]
+(defn- stack-item [entity cell item]
+  (let [cell-item (get-in (:entity/inventory entity) cell)]
     (assert (stackable? item cell-item))
     ; TODO this doesnt make sense with modifiers ! (triggered 2 times if available)
     ; first remove and then place, just update directly  item ...
-    (concat (remove-item entity* cell)
-            (set-item entity* cell (update cell-item :count + (:count item))))))
+    (concat (remove-item entity cell)
+            (set-item entity cell (update cell-item :count + (:count item))))))
 
 (defc :tx/stack-item
   (tx/do! [[_ eid cell item]]
     (stack-item @eid cell item)))
 
-(defn- try-put-item-in [entity* slot item]
-  (let [inventory (:entity/inventory entity*)
+(defn- try-put-item-in [entity slot item]
+  (let [inventory (:entity/inventory entity)
         cells-items (cells-and-items inventory slot)
         [cell _cell-item] (find-first (fn [[_cell cell-item]] (stackable? item cell-item))
                                       cells-items)]
     (if cell
-      (stack-item entity* cell item)
+      (stack-item entity cell item)
       (when-let [[empty-cell] (find-first (fn [[_cell item]] (nil? item))
                                           cells-items)]
-        (set-item entity* empty-cell item)))))
+        (set-item entity empty-cell item)))))
 
-(defn- pickup-item [entity* item]
+(defn- pickup-item [entity item]
   (or
-   (try-put-item-in entity* (:item/slot item)   item)
-   (try-put-item-in entity* :inventory.slot/bag item)))
+   (try-put-item-in entity (:item/slot item)   item)
+   (try-put-item-in entity :inventory.slot/bag item)))
 
 (defc :tx/pickup-item
   (tx/do! [[_ eid item]]
     (pickup-item @eid item)))
 
-(defn can-pickup-item? [entity* item]
-  (boolean (pickup-item entity* item)))
+(defn can-pickup-item? [entity item]
+  (boolean (pickup-item entity item)))
 
 (defc :entity/inventory
   {:data [:one-to-many :properties/items]}
@@ -172,11 +172,11 @@
 (def ^:private droppable-color    [0   0.6 0 0.8])
 (def ^:private not-allowed-color  [0.6 0   0 0.8])
 
-(defn- draw-cell-rect [player-entity* x y mouseover? cell]
+(defn- draw-cell-rect [player-entity x y mouseover? cell]
   (g/draw-rectangle x y cell-size cell-size :gray)
   (when (and mouseover?
-             (= :player-item-on-cursor (entity-state/state-k player-entity*)))
-    (let [item (:entity/item-on-cursor player-entity*)
+             (= :player-item-on-cursor (entity-state/state-k player-entity)))
+    (let [item (:entity/item-on-cursor player-entity)
           color (if (valid-slot? cell item)
                   droppable-color
                   not-allowed-color)]

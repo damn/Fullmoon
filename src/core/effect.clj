@@ -4,7 +4,7 @@
             [core.component :refer [defsystem defc]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
-            [world.mouseover-entity :refer [mouseover-entity*]]
+            [world.mouseover-entity :refer [mouseover-entity]]
             [core.tx :as tx]
             [world.grid :as grid :refer [world-grid]]))
 
@@ -39,9 +39,9 @@ Default method returns true.")
 
 ;;
 
-(defn- nearest-enemy [entity*]
-  (grid/nearest-entity @(world-grid (entity/tile entity*))
-                       (faction/enemy entity*)))
+(defn- nearest-enemy [entity]
+  (grid/nearest-entity @(world-grid (entity/tile entity))
+                       (faction/enemy entity)))
 
 ;;
 
@@ -60,22 +60,22 @@ Default method returns true.")
          ^:dynamic target-direction
          ^:dynamic target-position)
 
-(defn npc-ctx [entity*]
-  (let [target (nearest-enemy entity*)
-        target (when (and target (entity/line-of-sight? entity* @target))
+(defn npc-ctx [entity]
+  (let [target (nearest-enemy entity)
+        target (when (and target (entity/line-of-sight? entity @target))
                  target)]
-    {:effect/source (:entity/id entity*)
+    {:effect/source (:entity/id entity)
      :effect/target target
-     :effect/target-direction (when target (entity/direction entity* @target))}))
+     :effect/target-direction (when target (entity/direction entity @target))}))
 
-(defn player-ctx [entity*]
-  (let [target* (mouseover-entity*)
+(defn player-ctx [entity]
+  (let [target* (mouseover-entity)
         target-position (or (and target* (:position target*))
                             (g/world-mouse-position))]
-    {:effect/source (:entity/id entity*)
+    {:effect/source (:entity/id entity)
      :effect/target (:entity/id target*)
      :effect/target-position target-position
-     :effect/target-direction (v/direction (:position entity*) target-position)}))
+     :effect/target-direction (v/direction (:position entity) target-position)}))
 
 ; this is not necessary if effect does not need target, but so far not other solution came up.
 (defn check-update-ctx

@@ -34,9 +34,9 @@
 
 (defn entity-stat
   "Calculating value of the stat w. modifiers"
-  [entity* stat-k]
-  (when-let [base-value (stat-k (:entity/stats entity*))]
-    (->modified-value entity* (stat-k->modifier-k stat-k) base-value)))
+  [entity stat-k]
+  (when-let [base-value (stat-k (:entity/stats entity))]
+    (->modified-value entity (stat-k->modifier-k stat-k) base-value)))
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 ; and no need at created player (npc controller component?)
@@ -152,10 +152,10 @@
                    ;:stats/aggro-range
                    ;:stats/reaction-time
                    ]]
-  (defn- stats-info-texts [entity*]
+  (defn- stats-info-texts [entity]
     (str/join "\n"
               (for [stat-k stats-order
-                    :let [value (entity-stat entity* stat-k)]
+                    :let [value (entity-stat entity stat-k)]
                     :when value]
                 (str (k->pretty-name stat-k) ": " value)))))
 
@@ -181,10 +181,10 @@
   (info/text [_]
     (stats-info-texts info/*info-text-entity*))
 
-  (entity/render-info [_ entity*]
-    (when-let [hp (entity-stat entity* :stats/hp)]
+  (entity/render-info [_ entity]
+    (when-let [hp (entity-stat entity :stats/hp)]
       (let [ratio (val-max/ratio hp)
-            {:keys [position width half-width half-height entity/mouseover?]} entity*
+            {:keys [position width half-width half-height entity/mouseover?]} entity
             [x y] position]
         (when (or (< ratio 1) mouseover?)
           (let [x (- x half-width)

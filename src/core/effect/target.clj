@@ -70,22 +70,22 @@
                      (:position target*)
                      [1 0 0 0.5])))))
 
-(defn- in-range? [entity* target* maxrange] ; == circle-collides?
-  (< (- (float (v/distance (:position entity*)
+(defn- in-range? [entity target* maxrange] ; == circle-collides?
+  (< (- (float (v/distance (:position entity)
                            (:position target*)))
-        (float (:radius entity*))
+        (float (:radius entity))
         (float (:radius target*)))
      (float maxrange)))
 
 ; TODO use at projectile & also adjust rotation
-(defn- start-point [entity* target*]
-  (v/add (:position entity*)
-         (v/scale (entity/direction entity* target*)
-                  (:radius entity*))))
+(defn- start-point [entity target*]
+  (v/add (:position entity)
+         (v/scale (entity/direction entity target*)
+                  (:radius entity))))
 
-(defn- end-point [entity* target* maxrange]
-  (v/add (start-point entity* target*)
-         (v/scale (entity/direction entity* target*)
+(defn- end-point [entity target* maxrange]
+  (v/add (start-point entity target*)
+         (v/scale (entity/direction entity target*)
                   maxrange)))
 
 (defc :maxrange {:data :pos}

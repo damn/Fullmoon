@@ -6,10 +6,10 @@
             [world.projectile :refer [projectile-size]]
             [world.raycaster :refer [path-blocked?]]))
 
-(defn- projectile-start-point [entity* direction size]
-  (v/add (:position entity*)
+(defn- projectile-start-point [entity direction size]
+  (v/add (:position entity)
          (v/scale direction
-                  (+ (:radius entity*) size 0.1))))
+                  (+ (:radius entity) size 0.1))))
 
 (defc :effect/projectile
   {:data [:one-to-one :properties/projectiles]

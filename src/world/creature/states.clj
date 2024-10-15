@@ -16,7 +16,7 @@
             [world.entity.state :as state]
             [world.entity.stats :refer [entity-stat]]
             [world.grid :as grid :refer [world-grid]]
-            [world.mouseover-entity :refer [mouseover-entity*]]
+            [world.mouseover-entity :refer [mouseover-entity]]
             [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.time :refer [->counter stopped? finished-ratio]]))
@@ -85,17 +85,17 @@
      [:tx/shout (:position @eid) (:entity/faction @eid) 0.2]])
 
   (entity/tick [_ eid]
-    (let [entity* @eid
-          cell (world-grid (entity/tile entity*))]
-      (when-let [distance (grid/nearest-entity-distance @cell (faction/enemy entity*))]
-        (when (<= distance (entity-stat entity* :stats/aggro-range))
+    (let [entity @eid
+          cell (world-grid (entity/tile entity))]
+      (when-let [distance (grid/nearest-entity-distance @cell (faction/enemy entity))]
+        (when (<= distance (entity-stat entity :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 
-  (entity/render-above [_ entity*]
-    (let [[x y] (:position entity*)]
+  (entity/render-above [_ entity]
+    (let [[x y] (:position entity)]
       (g/draw-text {:text "zzz"
                     :x x
-                    :y (+ y (:half-height entity*))
+                    :y (+ y (:half-height entity))
                     :up? true}))))
 
 (defc :player-dead
@@ -112,10 +112,10 @@
                         :button-text ":("
                         :on-click #(screen/change! :screens/main-menu)}]]))
 
-(defn- clicked-cell [{:keys [entity/id] :as entity*} cell]
-  (let [inventory (:entity/inventory entity*)
+(defn- clicked-cell [{:keys [entity/id] :as entity} cell]
+  (let [inventory (:entity/inventory entity)
         item-in-cell (get-in inventory cell)
-        item-on-cursor (:entity/item-on-cursor entity*)]
+        item-on-cursor (:entity/item-on-cursor entity)]
     (cond
      ; PUT ITEM IN EMPTY CELL
      (and (not item-in-cell)
@@ -155,11 +155,11 @@
                   (min maxrange
                        (v/distance player target)))))
 
-(defn- item-place-position [entity*]
-  (placement-point (:position entity*)
+(defn- item-place-position [entity]
+  (placement-point (:position entity)
                    (g/world-mouse-position)
                    ; so you cannot put it out of your own reach
-                   (- (:entity/click-distance-tiles entity*) 0.1)))
+                   (- (:entity/click-distance-tiles entity) 0.1)))
 
 (defn- world-item? []
   (not (mouse-on-actor?)))
@@ -190,15 +190,15 @@
     ; we do not want to drop it on the ground too additonally,
     ; so we dissoc it there manually. Otherwise it creates another item
     ; on the ground
-    (let [entity* @eid]
-      (when (:entity/item-on-cursor entity*)
+    (let [entity @eid]
+      (when (:entity/item-on-cursor entity)
         [[:tx/sound "sounds/bfxr_itemputground.wav"]
-         [:tx/item (item-place-position entity*) (:entity/item-on-cursor entity*)]
+         [:tx/item (item-place-position entity) (:entity/item-on-cursor entity)]
          [:e/dissoc eid :entity/item-on-cursor]])))
 
-  (entity/render-below [_ entity*]
+  (entity/render-below [_ entity]
     (when (world-item?)
-      (g/draw-centered-image (:entity/image item) (item-place-position entity*)))))
+      (g/draw-centered-image (:entity/image item) (item-place-position entity)))))
 
 (defn draw-item-on-cursor []
   (let [player-e* @world-player]
@@ -261,14 +261,14 @@
     (when (stopped? counter)
       [[:tx/event eid :effect-wears-off]]))
 
-  (entity/render-below [_ entity*]
-    (g/draw-circle (:position entity*) 0.5 [1 1 1 0.6])))
+  (entity/render-below [_ entity]
+    (g/draw-circle (:position entity) 0.5 [1 1 1 0.6])))
 
-(defn- draw-skill-icon [icon entity* [x y] action-counter-ratio]
+(defn- draw-skill-icon [icon entity [x y] action-counter-ratio]
   (let [[width height] (:world-unit-dimensions icon)
         _ (assert (= width height))
         radius (/ (float width) 2)
-        y (+ (float y) (float (:half-height entity*)) (float 0.15))
+        y (+ (float y) (float (:half-height entity)) (float 0.15))
         center [x (+ y radius)]]
     (g/draw-filled-circle center radius [1 1 1 0.125])
     (g/draw-sector center radius
@@ -277,9 +277,9 @@
                    [1 1 1 0.5])
     (g/draw-image icon [(- (float x) radius) y])))
 
-(defn- apply-action-speed-modifier [entity* skill action-time]
+(defn- apply-action-speed-modifier [entity skill action-time]
   (/ action-time
-     (or (entity-stat entity* (:skill/action-time-modifier-key skill))
+     (or (entity-stat entity (:skill/action-time-modifier-key skill))
          1)))
 
 (defc :active-skill
@@ -318,27 +318,27 @@
      [[:tx/event eid :action-done]
       [:tx/effect effect-ctx (:skill/effects skill)]]))
 
-  (entity/render-info [_ entity*]
+  (entity/render-info [_ entity]
     (let [{:keys [entity/image skill/effects]} skill]
-      (draw-skill-icon image entity* (:position entity*) (finished-ratio counter))
+      (draw-skill-icon image entity (:position entity) (finished-ratio counter))
       (effect/with-ctx (effect/check-update-ctx effect-ctx)
         (run! effect/render! effects)))))
 
-(defn- mana-value [entity*]
-  (if-let [mana (entity-stat entity* :stats/mana)]
+(defn- mana-value [entity]
+  (if-let [mana (entity-stat entity :stats/mana)]
     (mana 0)
     0))
 
-(defn- not-enough-mana? [entity* {:keys [skill/cost]}]
-  (> cost (mana-value entity*)))
+(defn- not-enough-mana? [entity {:keys [skill/cost]}]
+  (> cost (mana-value entity)))
 
 (defn- skill-usable-state
-  [entity* {:keys [skill/cooling-down? skill/effects] :as skill}]
+  [entity {:keys [skill/cooling-down? skill/effects] :as skill}]
   (cond
    cooling-down?
    :cooldown
 
-   (not-enough-mana? entity* skill)
+   (not-enough-mana? entity skill)
    :not-enough-mana
 
    (not (effect/effect-applicable? effects))
@@ -347,20 +347,20 @@
    :else
    :usable))
 
-(defn- npc-choose-skill [entity*]
-  (->> entity*
+(defn- npc-choose-skill [entity]
+  (->> entity
        :entity/skills
        vals
        (sort-by #(or (:skill/cost %) 0))
        reverse
-       (filter #(and (= :usable (skill-usable-state entity* %))
+       (filter #(and (= :usable (skill-usable-state entity %))
                      (effect/effect-useful? (:skill/effects %))))
        first))
 
 (comment
- (let [entity* @(entity/get-entity 76)
-       effect-ctx (effect/npc-ctx entity*)]
-   (npc-choose-skill effect-ctx entity*))
+ (let [entity @(entity/get-entity 76)
+       effect-ctx (effect/npc-ctx entity)]
+   (npc-choose-skill effect-ctx entity))
  )
 
 (defc :npc-idle
@@ -369,10 +369,10 @@
     {:eid eid})
 
   (entity/tick [_ eid]
-    (let [entity* @eid
-          effect-ctx (effect/npc-ctx entity*)]
+    (let [entity @eid
+          effect-ctx (effect/npc-ctx entity)]
       (if-let [skill (effect/with-ctx effect-ctx
-                       (npc-choose-skill entity*))]
+                       (npc-choose-skill entity))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
         [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy eid)]]))))
 
@@ -381,30 +381,30 @@
    [:tx/msg-to-player text]])
 
 (defmulti ^:private on-clicked
-  (fn [entity*]
-    (:type (:entity/clickable entity*))))
+  (fn [entity]
+    (:type (:entity/clickable entity))))
 
-(defmethod on-clicked :clickable/item [clicked-entity*]
-  (let [player-entity* @world-player
-        item (:entity/item clicked-entity*)
-        clicked-entity (:entity/id clicked-entity*)]
+(defmethod on-clicked :clickable/item [clicked-entity]
+  (let [player-entity @world-player
+        item (:entity/item clicked-entity)
+        clicked-entity (:entity/id clicked-entity)]
     (cond
      (a/visible? (inventory-window))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
       [:e/destroy clicked-entity]
-      [:tx/event (:entity/id player-entity*) :pickup-item item]]
+      [:tx/event (:entity/id player-entity) :pickup-item item]]
 
-     (can-pickup-item? player-entity* item)
+     (can-pickup-item? player-entity item)
      [[:tx/sound "sounds/bfxr_pickup.wav"]
       [:e/destroy clicked-entity]
-      [:tx/pickup-item (:entity/id player-entity*) item]]
+      [:tx/pickup-item (:entity/id player-entity) item]]
 
      :else
      [[:tx/sound "sounds/bfxr_denied.wav"]
       [:tx/msg-to-player "Your Inventory is full"]])))
 
 (defmethod on-clicked :clickable/player
-  [_clicked-entity*]
+  [_clicked-entity]
   (a/toggle-visible! (inventory-window))) ; TODO no tx
 
 (defn- clickable->cursor [mouseover-e* too-far-away?]
@@ -434,21 +434,21 @@
      (ui/button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn- ->interaction-state [entity*]
-  (let [mouseover-e* (mouseover-entity*)]
+(defn- ->interaction-state [entity]
+  (let [mouseover-e* (mouseover-entity)]
     (cond
      (mouse-on-actor?)
      [(mouseover-actor->cursor) (fn [] nil)] ; handled by actors themself, they check player state
 
      (and mouseover-e* (:entity/clickable mouseover-e*))
-     (->clickable-mouseover-entity-interaction entity* mouseover-e*)
+     (->clickable-mouseover-entity-interaction entity mouseover-e*)
 
      :else
      (if-let [skill-id (selected-skill)]
-       (let [skill (skill-id (:entity/skills entity*))
-             effect-ctx (effect/player-ctx entity*)
+       (let [skill (skill-id (:entity/skills entity))
+             effect-ctx (effect/player-ctx entity)
              state (effect/with-ctx effect-ctx
-                     (skill-usable-state entity* skill))]
+                     (skill-usable-state entity skill))]
          (if (= state :usable)
            (do
             ; TODO cursor AS OF SKILL effect (SWORD !) / show already what the effect would do ? e.g. if it would kill highlight
@@ -456,7 +456,7 @@
             ; => e.g. meditation no TARGET .. etc.
             [:cursors/use-skill
              (fn []
-               [[:tx/event (:entity/id entity*) :start-action [skill effect-ctx]]])])
+               [[:tx/event (:entity/id entity) :start-action [skill effect-ctx]]])])
            (do
             ; TODO cursor as of usable state
             ; cooldown -> sanduhr kleine

@@ -252,12 +252,12 @@
                           (some #(viable-cell? grid distance-to own-dist eid %) cells)
                           own-cell)))}))))
 
-(defn- inside-cell? [grid entity* cell]
-  (let [cells (rectangle->cells grid entity*)]
+(defn- inside-cell? [grid entity cell]
+  (let [cells (rectangle->cells grid entity)]
     (and (= 1 (count cells))
          (= cell (first cells)))))
 
-; TODO work with entity* !? occupied-by-other? works with entity not entity* ... not with ids ... hmmm
+; TODO work with entity !? occupied-by-other? works with entity not entity ... not with ids ... hmmm
 (defn follow-to-enemy [eid] ; TODO pass faction here, one less dependency.
   (let [grid world-grid
         position (:position @eid)

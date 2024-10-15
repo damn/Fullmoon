@@ -2,7 +2,7 @@
   (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [core.info :as info]
-            [world.mouseover-entity :refer [mouseover-entity*]]))
+            [world.mouseover-entity :refer [mouseover-entity]]))
 
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state
@@ -21,14 +21,14 @@
     (ui/add-actor! window (ui/actor {:act (fn update-label-text []
                                             ; items then have 2x pretty-name
                                             #_(.setText (.getTitleLabel window)
-                                                        (if-let [entity* (mouseover-entity*)]
-                                                          (info/->text [:property/pretty-name (:property/pretty-name entity*)])
+                                                        (if-let [entity (mouseover-entity)]
+                                                          (info/->text [:property/pretty-name (:property/pretty-name entity)])
                                                           "Entity Info"))
                                             (.setText label
-                                                      (str (when-let [entity* (mouseover-entity*)]
+                                                      (str (when-let [entity (mouseover-entity)]
                                                              (info/->text
                                                               ; don't use select-keys as it loses Entity record type
-                                                              (apply dissoc entity* disallowed-keys)))))
+                                                              (apply dissoc entity disallowed-keys)))))
                                             (.pack window))}))
     window))
 

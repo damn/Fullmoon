@@ -102,8 +102,8 @@
     :z-order z-order
     :rotation-angle (or rotation-angle 0)}))
 
-(defn tile [entity*]
-  (->tile (:position entity*)))
+(defn tile [entity]
+  (->tile (:position entity)))
 
 (def ^{:doc "For effects just to have a mouseover body size for debugging purposes."}
   effect-body-props
@@ -111,16 +111,16 @@
    :height 0.5
    :z-order :z-order/effect})
 
-(defn direction [entity* other-entity*]
-  (v/direction (:position entity*) (:position other-entity*)))
+(defn direction [entity other-entity]
+  (v/direction (:position entity) (:position other-entity)))
 
-(defn collides? [entity* other-entity*]
-  (shape/overlaps? entity* other-entity*))
+(defn collides? [entity other-entity]
+  (shape/overlaps? entity other-entity))
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?
-(defn- on-screen? [entity*]
-  (let [[x y] (:position entity*)
+(defn- on-screen? [entity]
+  (let [[x y] (:position entity)
         x (float x)
         y (float y)
         [cx cy] (🎥/position (g/world-camera))
@@ -146,11 +146,9 @@
 
 (declare ^:private uids-entities)
 
-(defn init-uids-entities! []
-  (.bindRoot #'uids-entities {}))
+(defn init-uids-entities! [] (.bindRoot #'uids-entities {}))
 
-(defn all-entities []
-  (vals uids-entities))
+(defn all-entities [] (vals uids-entities))
 
 (defn get-entity
   "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
@@ -244,17 +242,17 @@
 
 (def ^:private ^:dbg-flag show-body-bounds false)
 
-(defn- draw-body-rect [entity* color]
-  (let [[x y] (:left-bottom entity*)]
-    (g/draw-rectangle x y (:width entity*) (:height entity*) color)))
+(defn- draw-body-rect [entity color]
+  (let [[x y] (:left-bottom entity)]
+    (g/draw-rectangle x y (:width entity) (:height entity) color)))
 
-(defn- render-entity* [system entity*]
+(defn- render-entity [system entity]
   (try
    (when show-body-bounds
-     (draw-body-rect entity* (if (:collides? entity*) :white :gray)))
-   (run! #(system % entity*) entity*)
+     (draw-body-rect entity (if (:collides? entity) :white :gray)))
+   (run! #(system % entity) entity)
    (catch Throwable t
-     (draw-body-rect entity* :red)
+     (draw-body-rect entity :red)
      (pretty-pst t 12))))
 
 ; precaution in case a component gets removed by another component
@@ -278,15 +276,15 @@
 (defn render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [entities*]
-  (let [player-entity* @world-player]
+  (let [player-entity @world-player]
     (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
                                                first
                                                render-order)
             system render-systems
-            entity* entities*
+            entity entities*
             :when (or (= z-order :z-order/effect)
-                      (line-of-sight? player-entity* entity*))]
-      (render-entity* system entity*))))
+                      (line-of-sight? player-entity entity))]
+      (render-entity system entity))))
 
 (defn remove-destroyed-entities!
   "Calls destroy on all entities which are marked with ':e/destroy'"
@@ -311,10 +309,10 @@
          (->> cells*
               grid/cells->entities
               (not-any? (fn [other-entity]
-                          (let [other-entity* @other-entity]
-                            (and (not= (:entity/id other-entity*) id)
-                                 (:collides? other-entity*)
-                                 (collides? other-entity* body)))))))))
+                          (let [other-entity @other-entity]
+                            (and (not= (:entity/id other-entity) id)
+                                 (:collides? other-entity)
+                                 (collides? other-entity body)))))))))
 
 (defn- try-move [body movement]
   (let [new-body (move-body body movement)]
@@ -366,10 +364,10 @@
 (defc :entity/image
   {:data :image
    :let image}
-  (render [_ entity*]
+  (render [_ entity]
     (g/draw-rotated-centered-image image
-                                   (or (:rotation-angle entity*) 0)
-                                   (:position entity*))))
+                                   (or (:rotation-angle entity) 0)
+                                   (:position entity))))
 
 (defprotocol Animation
   (^:private anim-tick [_ delta])
@@ -447,8 +445,8 @@
 
 (defc :entity/line-render
   {:let {:keys [thick? end color]}}
-  (render [_ entity*]
-    (let [position (:position entity*)]
+  (render [_ entity]
+    (let [position (:position entity)]
       (if thick?
         (g/with-shape-line-width 4 #(g/draw-line position end color))
         (g/draw-line position end color)))))
@@ -466,11 +464,11 @@
     (when (stopped? counter)
       [[:e/dissoc eid k]]))
 
-  (render-above [[_ {:keys [text]}] entity*]
-    (let [[x y] (:position entity*)]
+  (render-above [[_ {:keys [text]}] entity]
+    (let [[x y] (:position entity)]
       (g/draw-text {:text text
                     :x x
-                    :y (+ y (:half-height entity*) (g/pixels->world-units 5))
+                    :y (+ y (:half-height entity) (g/pixels->world-units 5))
                     :scale 2
                     :up? true}))))
 

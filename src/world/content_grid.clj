@@ -17,8 +17,8 @@
 
 (defn update-entity! [eid]
   (let [{:keys [grid cell-w cell-h]} content-grid
-        {::keys [content-cell] :as entity*} @eid
-        [x y] (:position entity*)
+        {::keys [content-cell] :as entity} @eid
+        [x y] (:position entity)
         new-cell (get grid [(int (/ x cell-w))
                             (int (/ y cell-h))])]
     (when-not (= content-cell new-cell)
@@ -32,9 +32,9 @@
       ::content-cell
       (swap! update :entities disj eid)))
 
-(defn- active-entities* [center-entity*]
+(defn- active-entities* [center-entity]
   (let [{:keys [grid]} content-grid]
-    (->> (let [idx (-> center-entity*
+    (->> (let [idx (-> center-entity
                        ::content-cell
                        deref
                        :idx)]

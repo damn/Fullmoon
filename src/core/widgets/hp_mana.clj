@@ -26,7 +26,7 @@
                                           [x y])
                             (render-infostr-on-bar (str (readable-number (minmaxval 0)) "/" (minmaxval 1) " " name) x y rahmenh))]
     (ui/actor {:draw (fn []
-                       (let [player-entity* @world-player
+                       (let [player-entity @world-player
                              x (- x (/ rahmenw 2))]
-                         (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity* :stats/hp) "HP")
-                         (render-hpmana-bar x y-mana manacontent (entity-stat player-entity* :stats/mana) "MP")))})))
+                         (render-hpmana-bar x y-hp   hpcontent   (entity-stat player-entity :stats/hp) "HP")
+                         (render-hpmana-bar x y-mana manacontent (entity-stat player-entity :stats/mana) "MP")))})))
