@@ -1,6 +1,5 @@
 (ns world.game-loop
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
+  (:require [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
             [core.tx :as tx]
             [core.widgets.error :refer [error-window!]]
             [utils.core :refer [bind-root]]
@@ -28,21 +27,20 @@
                                            (not (player-unpaused?)))))
   nil)
 
-(defn- update-world []
-  (world.time/update! (min (g/delta-time) entity/max-delta-time))
-  (let [entities (content-grid/active-entities)]
-    (potential-fields/update! entities)
-    (try (entity/tick-entities! entities)
-         (catch Throwable t
-           (error-window! t)
-           (bind-root #'entity-tick-error t))))
-  nil)
 
-(defn game-loop []
+
+(defn game-loop [delta-time]
   (tx/do-all [player-update-state
               mouseover-entity/update! ; this do always so can get debug info even when game not running
               update-game-paused
               #(when-not world.time/paused?
-                 (update-world))
+                 (world.time/update! (min delta-time entity/max-delta-time))
+                 (let [entities (content-grid/active-entities)]
+                   (potential-fields/update! entities)
+                   (try (entity/tick-entities! entities)
+                        (catch Throwable t
+                          (error-window! t)
+                          (bind-root #'entity-tick-error t))))
+                 nil)
               entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
               ]))

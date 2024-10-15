@@ -129,7 +129,7 @@
 
   (screen/render! [_]
     (render-world!)
-    (game-loop)
+    (game-loop (g/delta-time))
     (check-key-input))
 
   (screen/dispose! [_]))
