@@ -149,35 +149,15 @@
 ; * new window w. form label, widget, Save, Cancel button
 (import javafx.stage.Stage)
 
-(comment
- (fx-run
+(defn- property-editor-window [property]
   (let [scene (Scene. (FlowPane.) 450 450)
         stage (doto (Stage.)
-                (.setTitle "FOOBAR")
+                (.setTitle (name (:property/id property)))
                 (.setScene scene)
                 .show)]))
- )
-
-#_(comment
- (prop->image (first (all-properties-raw :properties/audiovisuals)))
- {:file "images/oryx_16bit_scifi_FX_lg_trans.png", :sub-image-bounds [64 64 32 32]}
-
- (def ->image-view (memoize (fn [file] (ImageView. (Image. file)))))
-
- )
 
 (require '[core.property :as property])
 (require '[core.db :as db])
-
-#_(defn- ->image-view []
-  (let [imgview (->image-view file)]
-    (if sub-image-bounds
-      imgview
-      )
-    )
-  (doto imgview
-    (.setViewport (Rectangle2D. (* x size) (* y size) size size)))
-  )
 
 (def ->image (memoize (fn [file] (Image. file))))
 
@@ -189,13 +169,17 @@
           image-view)
       image-view)))
 
-(comment
- (def my-img (image-view (property/->image (first (db/all-raw :properties/audiovisuals)))))
-
- {:file "images/oryx_16bit_scifi_FX_lg_trans.png",
-  :sub-image-bounds [64 64 32 32]}
-
- )
+(defn- property->button [property]
+  (let [image (property/->image property)
+        button (if image
+                 (Button. "" (image-view (property/->image property)))
+                 (Button. (name (:property/id property))))]
+    (.setOnAction button (reify EventHandler
+                           (handle [_ e]
+                             (println (name (:property/id property)))
+                             (property-editor-window property)
+                             )))
+    button))
 
 (defn overview-flow-pane [property-type]
   (let [flow (doto (FlowPane.)
@@ -212,12 +196,8 @@
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
                      properties)]
-    (doseq [property properties
-            :let [image (property/->image property)]]
-      (.add (.getChildren flow)
-            (if image
-              (Button. "" (image-view (property/->image property)))
-              (Button. (name (:property/id property))))))
+    (doseq [property properties]
+      (.add (.getChildren flow) (property->button property)))
     flow))
 
 (declare stage)
