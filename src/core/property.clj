@@ -25,15 +25,15 @@
       data/schema
       m/schema))
 
+(defn- invalid-ex-info [schema value]
+  (ex-info (str (me/humanize (m/explain schema value)))
+           {:value value
+            :schema (m/form schema)}))
+
 (defn validate [property]
-  (let [schema (->schema property)
-        valid? (try (m/validate schema property)
-                    (catch Throwable t
-                      (throw (ex-info "m/validate fail" {:property property} t))))]
-    (when-not valid?
-      (throw (ex-info (str (me/humanize (m/explain schema property)))
-                      {:property property
-                       :schema (m/form schema)})))))
+  (let [schema (->schema property)]
+    (when-not (m/validate schema property)
+      (throw (invalid-ex-info schema property)))))
 
 (defn ->image [{:keys [entity/image entity/animation]}]
   (or image
