@@ -148,7 +148,7 @@
     (some #(not= % eid) occupied)) ; contains? faster?
 
   (nearest-entity [this faction]
-    (-> this faction :entity))
+    (-> this faction :eid))
 
   (nearest-entity-distance [this faction]
     (-> this faction :distance)))
