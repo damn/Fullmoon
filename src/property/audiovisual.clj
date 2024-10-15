@@ -24,6 +24,6 @@
 
 (defc :entity/destroy-audiovisual
   {:let audiovisuals-id}
-  (entity/destroy [_ entity]
-    [[:tx/audiovisual (:position @entity) audiovisuals-id]]))
+  (entity/destroy [_ eid]
+    [[:tx/audiovisual (:position @eid) audiovisuals-id]]))
 

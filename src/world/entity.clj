@@ -15,14 +15,14 @@
             [world.raycaster :refer [ray-blocked?]]
             [world.time :refer [world-delta ->counter finished-ratio stopped?]]))
 
-(defsystem create [_ entity])
-(defmethod create :default [_ entity])
+(defsystem create [_ eid])
+(defmethod create :default [_ eid])
 
-(defsystem destroy [_ entity])
-(defmethod destroy :default [_ entity])
+(defsystem destroy [_ eid])
+(defmethod destroy :default [_ eid])
 
-(defsystem tick [_ entity])
-(defmethod tick :default [_ entity])
+(defsystem tick [_ eid])
+(defmethod tick :default [_ eid])
 
 (defsystem render-below [_ entity*])
 (defmethod render-below :default [_ entity*])
@@ -159,12 +159,12 @@
 
 (defc :entity/uid
   {:let uid}
-  (create [_ entity]
+  (create [_ eid]
     (assert (number? uid))
-    (alter-var-root #'uids-entities assoc uid entity)
+    (alter-var-root #'uids-entities assoc uid eid)
     nil)
 
-  (destroy [_ _entity]
+  (destroy [_ _eid]
     (assert (contains? uids-entities uid))
     (alter-var-root #'uids-entities dissoc uid)
     nil))
@@ -211,35 +211,35 @@
       (create-e-system eid))))
 
 (defc :e/destroy
-  (tx/do! [[_ entity]]
-    [[:e/assoc entity :entity/destroyed? true]]))
+  (tx/do! [[_ eid]]
+    [[:e/assoc eid :entity/destroyed? true]]))
 
 (defc :e/assoc
-  (tx/do! [[_ entity k v]]
+  (tx/do! [[_ eid k v]]
     (assert (keyword? k))
-    (swap! entity assoc k v)
+    (swap! eid assoc k v)
     nil))
 
 (defc :e/assoc-in
-  (tx/do! [[_ entity ks v]]
-    (swap! entity assoc-in ks v)
+  (tx/do! [[_ eid ks v]]
+    (swap! eid assoc-in ks v)
     nil))
 
 (defc :e/dissoc
-  (tx/do! [[_ entity k]]
+  (tx/do! [[_ eid k]]
     (assert (keyword? k))
-    (swap! entity dissoc k)
+    (swap! eid dissoc k)
     nil))
 
 (defc :e/dissoc-in
-  (tx/do! [[_ entity ks]]
+  (tx/do! [[_ eid ks]]
     (assert (> (count ks) 1))
-    (swap! entity update-in (drop-last ks) dissoc (last ks))
+    (swap! eid update-in (drop-last ks) dissoc (last ks))
     nil))
 
 (defc :e/update-in
-  (tx/do! [[_ entity ks f]]
-    (swap! entity update-in ks f)
+  (tx/do! [[_ eid ks f]]
+    (swap! eid update-in ks f)
     nil))
 
 (def ^:private ^:dbg-flag show-body-bounds false)
@@ -262,13 +262,13 @@
 ; should be contains? check ?
 ; but then the 'order' is important? in such case dependent components
 ; should be moved together?
-(defn- tick-system [entity]
+(defn- tick-system [eid]
   (try
-   (doseq [k (keys @entity)]
-     (when-let [v (k @entity)]
-       (tx/do-all (tick [k v] entity))))
+   (doseq [k (keys @eid)]
+     (when-let [v (k @eid)]
+       (tx/do-all (tick [k v] eid))))
    (catch Throwable t
-     (throw (ex-info "" (select-keys @entity [:entity/uid]) t)))))
+     (throw (ex-info "" (select-keys @eid [:entity/uid]) t)))))
 
 (defn tick-entities!
   "Calls tick system on all components of entities."
@@ -291,10 +291,10 @@
 (defn remove-destroyed-entities!
   "Calls destroy on all entities which are marked with ':e/destroy'"
   []
-  (for [entity (filter (comp :entity/destroyed? deref) (all-entities))
-        component @entity]
+  (for [eid (filter (comp :entity/destroyed? deref) (all-entities))
+        component @eid]
     (fn []
-      (destroy component entity))))
+      (destroy component eid))))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
@@ -353,15 +353,15 @@
            [:tx/position-changed eid]])))))
 
 (defc :tx/set-movement
-  (tx/do! [[_ entity movement]]
+  (tx/do! [[_ eid movement]]
     (assert (or (nil? movement)
                 (nil? (:direction movement))
                 (and (:direction movement) ; continue schema of that ...
                      #_(:speed movement)))) ; princess no stats/movement-speed, then nil and here assertion-error
     [(if (or (nil? movement)
              (nil? (:direction movement)))
-       [:e/dissoc entity :entity/movement]
-       [:e/assoc entity :entity/movement movement])]))
+       [:e/dissoc eid :entity/movement]
+       [:e/assoc eid :entity/movement movement])]))
 
 (defc :entity/image
   {:data :image
@@ -426,12 +426,12 @@
      [:e/assoc eid k (anim-tick animation world-delta)]]))
 
 (defc :entity/delete-after-animation-stopped?
-  (create [_ entity]
-    (-> @entity :entity/animation :looping? not assert))
+  (create [_ eid]
+    (-> @eid :entity/animation :looping? not assert))
 
-  (tick [_ entity]
-    (when (anim-stopped? (:entity/animation @entity))
-      [[:e/destroy entity]])))
+  (tick [_ eid]
+    (when (anim-stopped? (:entity/animation @eid))
+      [[:e/destroy eid]])))
 
 (defc :entity/delete-after-duration
   {:let counter}
@@ -475,11 +475,11 @@
                     :up? true}))))
 
 (defc :tx/add-text-effect
-  (tx/do! [[_ entity text]]
+  (tx/do! [[_ eid text]]
     [[:e/assoc
-      entity
+      eid
       :entity/string-effect
-      (if-let [string-effect (:entity/string-effect @entity)]
+      (if-let [string-effect (:entity/string-effect @eid)]
         (-> string-effect
             (update :text str "\n" text)
             (update :counter world.time/reset))

@@ -83,10 +83,10 @@
     (and (not= x1 x2)
          (not= y1 y2))))
 
-(defrecord FieldData [distance entity])
+(defrecord FieldData [distance eid])
 
-(defn- add-field-data! [cell faction distance entity]
-  (swap! cell assoc faction (->FieldData distance entity)))
+(defn- add-field-data! [cell faction distance eid]
+  (swap! cell assoc faction (->FieldData distance eid)))
 
 (defn- remove-field-data! [cell faction]
   (swap! cell assoc faction nil)) ; don't dissoc - will lose the Cell record type
@@ -119,11 +119,11 @@
 (defn- generate-potential-field
   "returns the marked-cells"
   [grid faction tiles->entities max-iterations]
-  (let [entity-cell-seq (for [[tile entity] tiles->entities] ; FIXME lazy seq
-                          [entity (get grid tile)])
+  (let [entity-cell-seq (for [[tile eid] tiles->entities] ; FIXME lazy seq
+                          [eid (get grid tile)])
         marked (map second entity-cell-seq)]
-    (doseq [[entity cell] entity-cell-seq]
-      (add-field-data! cell faction 0 entity))
+    (doseq [[eid cell] entity-cell-seq]
+      (add-field-data! cell faction 0 eid))
     (loop [marked-cells     marked
            new-marked-cells marked
            iterations 0]
@@ -194,10 +194,10 @@
 ; not using filter because nil cells considered @ remove-not-allowed-diagonals
 ; TODO only non-nil cells check
 ; TODO always called with cached-adjacent-cells ...
-(defn- filter-viable-cells [entity adjacent-cells]
+(defn- filter-viable-cells [eid adjacent-cells]
   (remove-not-allowed-diagonals
     (mapv #(when-not (or (cell-blocked? @%)
-                         (occupied-by-other? @% entity))
+                         (occupied-by-other? @% eid))
              %)
           adjacent-cells)))
 
@@ -211,17 +211,17 @@
     (apply min-key distance-to cells)))
 
 ; rarely called -> no performance bottleneck
-(defn- viable-cell? [grid distance-to own-dist entity cell]
+(defn- viable-cell? [grid distance-to own-dist eid cell]
   (when-let [best-cell (get-min-dist-cell
                         distance-to
-                        (filter-viable-cells entity (cached-adjacent-cells grid cell)))]
+                        (filter-viable-cells eid (cached-adjacent-cells grid cell)))]
     (when (< (float (distance-to best-cell)) (float own-dist))
       cell)))
 
 (defn- find-next-cell
-  "returns {:target-entity entity} or {:target-cell cell}. Cell can be nil."
-  [grid entity own-cell]
-  (let [faction (faction/enemy @entity)
+  "returns {:target-entity eid} or {:target-cell cell}. Cell can be nil."
+  [grid eid own-cell]
+  (let [faction (faction/enemy @eid)
         distance-to    #(nearest-entity-distance @% faction)
         nearest-entity #(nearest-entity          @% faction)
         own-dist (distance-to own-cell)
@@ -232,7 +232,7 @@
                                                   (zero? (float (distance-to %))))
                                             adjacent-cells))]
         {:target-entity (nearest-entity adjacent-cell)}
-        {:target-cell (let [cells (filter-viable-cells entity adjacent-cells)
+        {:target-cell (let [cells (filter-viable-cells eid adjacent-cells)
                             min-key-cell (get-min-dist-cell distance-to cells)]
                         (cond
                          (not min-key-cell)  ; red
@@ -249,7 +249,7 @@
 
                          (= (distance-to min-key-cell) own-dist) ; yellow
                          (or
-                          (some #(viable-cell? grid distance-to own-dist entity %) cells)
+                          (some #(viable-cell? grid distance-to own-dist eid %) cells)
                           own-cell)))}))))
 
 (defn- inside-cell? [grid entity* cell]
@@ -258,11 +258,11 @@
          (= cell (first cells)))))
 
 ; TODO work with entity* !? occupied-by-other? works with entity not entity* ... not with ids ... hmmm
-(defn follow-to-enemy [entity] ; TODO pass faction here, one less dependency.
+(defn follow-to-enemy [eid] ; TODO pass faction here, one less dependency.
   (let [grid world-grid
-        position (:position @entity)
+        position (:position @eid)
         own-cell (get grid (->tile position))
-        {:keys [target-entity target-cell]} (find-next-cell grid entity own-cell)]
+        {:keys [target-entity target-cell]} (find-next-cell grid eid own-cell)]
     (cond
      target-entity
      (v/direction position (:position @target-entity))
@@ -272,8 +272,8 @@
 
      :else
      (when-not (and (= target-cell own-cell)
-                    (occupied-by-other? @own-cell entity)) ; prevent friction 2 move to center
-       (when-not (inside-cell? grid @entity target-cell)
+                    (occupied-by-other? @own-cell eid)) ; prevent friction 2 move to center
+       (when-not (inside-cell? grid @eid target-cell)
          (v/direction position (:middle @target-cell)))))))
 
 (defn update! [entities]

@@ -11,8 +11,8 @@
 (def ^:private mouseover-entity nil)
 
 (defn mouseover-entity* []
-  (when-let [entity mouseover-entity]
-    @entity))
+  (when-let [eid mouseover-entity]
+    @eid))
 
 (defn- calculate-mouseover-entity []
   (let [player-entity* @world-player
@@ -25,15 +25,15 @@
          first)))
 
 (defn update! []
-  (let [entity (if (stage-screen/mouse-on-actor?)
-                 nil
-                 (calculate-mouseover-entity))]
+  (let [eid (if (stage-screen/mouse-on-actor?)
+              nil
+              (calculate-mouseover-entity))]
     [(when-let [old-entity mouseover-entity]
        [:e/dissoc old-entity :entity/mouseover?])
-     (when entity
-       [:e/assoc entity :entity/mouseover? true])
+     (when eid
+       [:e/assoc eid :entity/mouseover? true])
      (fn []
-       (.bindRoot #'mouseover-entity entity)
+       (.bindRoot #'mouseover-entity eid)
        nil)]))
 
 (defc :entity/clickable

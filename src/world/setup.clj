@@ -82,21 +82,21 @@
   (init-new-world! (world/generate-level world-property-id)))
 
 (defc :tx/add-to-world
-  (tx/do! [[_ entity]]
-    (content-grid/update-entity! entity)
+  (tx/do! [[_ eid]]
+    (content-grid/update-entity! eid)
     ; https://github.com/damn/core/issues/58
-    ;(assert (valid-position? grid @entity)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
-    (grid/add-entity! entity)
+    ;(assert (valid-position? grid @eid)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
+    (grid/add-entity! eid)
     nil))
 
 (defc :tx/remove-from-world
-  (tx/do! [[_ entity]]
-    (content-grid/remove-entity! entity)
-    (grid/remove-entity! entity)
+  (tx/do! [[_ eid]]
+    (content-grid/remove-entity! eid)
+    (grid/remove-entity! eid)
     nil))
 
 (defc :tx/position-changed
-  (tx/do! [[_ entity]]
-    (content-grid/update-entity! entity)
-    (grid/entity-position-changed! entity)
+  (tx/do! [[_ eid]]
+    (content-grid/update-entity! eid)
+    (grid/entity-position-changed! eid)
     nil))

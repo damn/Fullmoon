@@ -8,10 +8,10 @@
             [utils.core :refer [remove-one k->pretty-name]]
             [world.entity :as entity]))
 
-(defn- txs-update-modifiers [entity modifiers f]
+(defn- txs-update-modifiers [eid modifiers f]
   (for [[modifier-k operations] modifiers
         [operation-k value] operations]
-    [:e/update-in entity [:entity/modifiers modifier-k operation-k] (f value)]))
+    [:e/update-in eid [:entity/modifiers modifier-k operation-k] (f value)]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -23,12 +23,12 @@
     (remove-one values value)))
 
 (defc :tx/apply-modifiers
-  (tx/do! [[_ entity modifiers]]
-    (txs-update-modifiers entity modifiers conj-value)))
+  (tx/do! [[_ eid modifiers]]
+    (txs-update-modifiers eid modifiers conj-value)))
 
 (defc :tx/reverse-modifiers
-  (tx/do! [[_ entity modifiers]]
-    (txs-update-modifiers entity modifiers remove-value)))
+  (tx/do! [[_ eid modifiers]]
+    (txs-update-modifiers eid modifiers remove-value)))
 
 (comment
  (= (txs-update-modifiers :entity

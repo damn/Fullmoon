@@ -51,7 +51,7 @@
 
       (when potential-field-colors?
         (let [faction :good
-              {:keys [distance entity]} (faction cell*)]
+              {:keys [distance]} (faction cell*)]
           (when distance
             (let [ratio (/ distance (potential-fields/factions-iterations faction))]
               (g/draw-filled-rectangle x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))

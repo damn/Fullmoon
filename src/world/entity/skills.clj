@@ -74,17 +74,17 @@
   (contains? skills id))
 
 (defc :tx/add-skill
-  (tx/do! [[_ entity {:keys [property/id] :as skill}]]
-    (assert (not (has-skill? @entity skill)))
-    [[:e/assoc-in entity [:entity/skills id] skill]
-     (when (:entity/player? @entity)
+  (tx/do! [[_ eid {:keys [property/id] :as skill}]]
+    (assert (not (has-skill? @eid skill)))
+    [[:e/assoc-in eid [:entity/skills id] skill]
+     (when (:entity/player? @eid)
        [:tx.action-bar/add skill])]))
 
 (defc :tx/remove-skill
-  (tx/do! [[_ entity {:keys [property/id] :as skill}]]
-    (assert (has-skill? @entity skill))
-    [[:e/dissoc-in entity [:entity/skills id]]
-     (when (:entity/player? @entity)
+  (tx/do! [[_ eid {:keys [property/id] :as skill}]]
+    (assert (has-skill? @eid skill))
+    [[:e/dissoc-in eid [:entity/skills id]]
+     (when (:entity/player? @eid)
        [:tx.action-bar/remove skill])]))
 
 (defsystem clicked-skillmenu-skill [_ skill])

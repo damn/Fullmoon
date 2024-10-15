@@ -27,18 +27,18 @@
          [x y])
        [[l b] [l t] [r b] [r t]]))))
 
-(defn- set-cells! [grid entity]
-  (let [cells (rectangle->cells grid @entity)]
+(defn- set-cells! [grid eid]
+  (let [cells (rectangle->cells grid @eid)]
     (assert (not-any? nil? cells))
-    (swap! entity assoc ::touched-cells cells)
+    (swap! eid assoc ::touched-cells cells)
     (doseq [cell cells]
-      (assert (not (get (:entities @cell) entity)))
-      (swap! cell update :entities conj entity))))
+      (assert (not (get (:entities @cell) eid)))
+      (swap! cell update :entities conj eid))))
 
-(defn- remove-from-cells! [entity]
-  (doseq [cell (::touched-cells @entity)]
-    (assert (get (:entities @cell) entity))
-    (swap! cell update :entities disj entity)))
+(defn- remove-from-cells! [eid]
+  (doseq [cell (::touched-cells @eid)]
+    (assert (get (:entities @cell) eid))
+    (swap! cell update :entities disj eid)))
 
 ; could use inside tiles only for >1 tile bodies (for example size 4.5 use 4x4 tiles for occupied)
 ; => only now there are no >1 tile entities anyway
@@ -49,17 +49,17 @@
           [(int (+ (float (left-bottom 0)) (/ (float width) 2)))
            (int (+ (float (left-bottom 1)) (/ (float height) 2)))])]))
 
-(defn- set-occupied-cells! [grid entity]
-  (let [cells (rectangle->occupied-cells grid @entity)]
+(defn- set-occupied-cells! [grid eid]
+  (let [cells (rectangle->occupied-cells grid @eid)]
     (doseq [cell cells]
-      (assert (not (get (:occupied @cell) entity)))
-      (swap! cell update :occupied conj entity))
-    (swap! entity assoc ::occupied-cells cells)))
+      (assert (not (get (:occupied @cell) eid)))
+      (swap! cell update :occupied conj eid))
+    (swap! eid assoc ::occupied-cells cells)))
 
-(defn- remove-from-occupied-cells! [entity]
-  (doseq [cell (::occupied-cells @entity)]
-    (assert (get (:occupied @cell) entity))
-    (swap! cell update :occupied disj entity)))
+(defn- remove-from-occupied-cells! [eid]
+  (doseq [cell (::occupied-cells @eid)]
+    (assert (get (:occupied @cell) eid))
+    (swap! cell update :occupied disj eid)))
 
 (defn cells->entities [cells*]
   (into #{} (mapcat :entities) cells*))
@@ -96,29 +96,29 @@
     (filter #(shape/contains? @% position)
             (:entities @cell))))
 
-(defn add-entity! [entity]
+(defn add-entity! [eid]
   (let [grid world-grid]
-    (set-cells! grid entity)
-    (when (:collides? @entity)
-      (set-occupied-cells! grid entity))))
+    (set-cells! grid eid)
+    (when (:collides? @eid)
+      (set-occupied-cells! grid eid))))
 
-(defn remove-entity! [entity]
-  (remove-from-cells! entity)
-  (when (:collides? @entity)
-    (remove-from-occupied-cells! entity)))
+(defn remove-entity! [eid]
+  (remove-from-cells! eid)
+  (when (:collides? @eid)
+    (remove-from-occupied-cells! eid)))
 
-(defn entity-position-changed! [entity]
+(defn entity-position-changed! [eid]
   (let [grid world-grid]
-    (remove-from-cells! entity)
-    (set-cells! grid entity)
-    (when (:collides? @entity)
-      (remove-from-occupied-cells! entity)
-      (set-occupied-cells! grid entity))))
+    (remove-from-cells! eid)
+    (set-cells! grid eid)
+    (when (:collides? @eid)
+      (remove-from-occupied-cells! eid)
+      (set-occupied-cells! grid eid))))
 
 (defprotocol GridCell
   (blocked? [cell* z-order])
   (blocks-vision? [cell*])
-  (occupied-by-other? [cell* entity]
+  (occupied-by-other? [cell* eid]
                       "returns true if there is some occupying body with center-tile = this cell
                       or a multiple-cell-size body which touches this cell.")
   (nearest-entity          [cell* faction])
@@ -144,8 +144,8 @@
   (blocks-vision? [_]
     (= movement :none))
 
-  (occupied-by-other? [_ entity]
-    (some #(not= % entity) occupied)) ; contains? faster?
+  (occupied-by-other? [_ eid]
+    (some #(not= % eid) occupied)) ; contains? faster?
 
   (nearest-entity [this faction]
     (-> this faction :entity))

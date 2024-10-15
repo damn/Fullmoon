@@ -102,24 +102,24 @@
        [:tx/remove-item-from-widget cell])]))
 
 (defc :tx/set-item
-  (tx/do! [[_ entity cell item]]
-    (set-item @entity cell item)))
+  (tx/do! [[_ eid cell item]]
+    (set-item @eid cell item)))
 
 (defc :tx/remove-item
-  (tx/do! [[_ entity cell]]
-    (remove-item @entity cell)))
+  (tx/do! [[_ eid cell]]
+    (remove-item @eid cell)))
 
 ; TODO doesnt exist, stackable, usable items with action/skillbar thingy
-#_(defn remove-one-item [entity cell]
-  (let [item (get-in (:entity/inventory @entity) cell)]
+#_(defn remove-one-item [eid cell]
+  (let [item (get-in (:entity/inventory @eid) cell)]
     (if (and (:count item)
              (> (:count item) 1))
       (do
        ; TODO this doesnt make sense with modifiers ! (triggered 2 times if available)
        ; first remove and then place, just update directly  item ...
-       (remove-item! entity cell)
-       (set-item! entity cell (update item :count dec)))
-      (remove-item! entity cell))))
+       (remove-item! eid cell)
+       (set-item! eid cell (update item :count dec)))
+      (remove-item! eid cell))))
 
 ; TODO no items which stack are available
 (defn- stack-item [entity* cell item]
@@ -131,8 +131,8 @@
             (set-item entity* cell (update cell-item :count + (:count item))))))
 
 (defc :tx/stack-item
-  (tx/do! [[_ entity cell item]]
-    (stack-item @entity cell item)))
+  (tx/do! [[_ eid cell item]]
+    (stack-item @eid cell item)))
 
 (defn- try-put-item-in [entity* slot item]
   (let [inventory (:entity/inventory entity*)
@@ -151,8 +151,8 @@
    (try-put-item-in entity* :inventory.slot/bag item)))
 
 (defc :tx/pickup-item
-  (tx/do! [[_ entity item]]
-    (pickup-item @entity item)))
+  (tx/do! [[_ eid item]]
+    (pickup-item @eid item)))
 
 (defn can-pickup-item? [entity* item]
   (boolean (pickup-item entity* item)))
