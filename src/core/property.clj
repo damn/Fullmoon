@@ -18,9 +18,6 @@
 (defn ->type [{:keys [property/id]}]
   (keyword "properties" (namespace id)))
 
-(defn ns-k->type [ns-k]
-  (keyword "properties" (name ns-k)))
-
 (defn ->schema [property]
   (-> property
       ->type
