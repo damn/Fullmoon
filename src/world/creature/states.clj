@@ -9,6 +9,7 @@
             [core.component :refer [defc]]
             [core.effect :as effect]
             [core.tx :as tx]
+            [world.core :as world]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
@@ -17,7 +18,6 @@
             [world.entity.stats :refer [entity-stat]]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity]]
-            [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]
             [world.time :refer [->counter stopped? finished-ratio]]))
 
@@ -201,7 +201,7 @@
       (g/draw-centered-image (:entity/image item) (item-place-position entity)))))
 
 (defn draw-item-on-cursor []
-  (let [player-e* @world-player]
+  (let [player-e* @world/player]
     (when (and (= :player-item-on-cursor (state/state-k player-e*))
                (not (world-item?)))
       (g/draw-centered-image (:entity/image (:entity/item-on-cursor player-e*))
@@ -385,7 +385,7 @@
     (:type (:entity/clickable entity))))
 
 (defmethod on-clicked :clickable/item [clicked-entity]
-  (let [player-entity @world-player
+  (let [player-entity @world/player
         item (:entity/item clicked-entity)
         clicked-entity (:entity/id clicked-entity)]
     (cond
@@ -423,7 +423,7 @@
 (defn- inventory-cell-with-item? [actor]
   (and (a/parent actor)
        (= "inventory-cell" (a/name (a/parent actor)))
-       (get-in (:entity/inventory @world-player)
+       (get-in (:entity/inventory @world/player)
                (a/id (a/parent actor)))))
 
 (defn- mouseover-actor->cursor []

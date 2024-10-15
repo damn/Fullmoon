@@ -5,8 +5,8 @@
             [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [clojure.string :as str]
             [utils.core :refer [readable-number]]
+            [world.core :as world]
             [world.mouseover-entity :refer [mouseover-entity]]
-            [world.player :refer [world-player]]
             world.time))
 
 (defn- skill-info [{:keys [entity/skills]}]
@@ -27,7 +27,7 @@
      "GUI: " (g/gui-mouse-position) "\n"
      "paused? " world.time/paused? "\n"
      "elapsed-time " (readable-number world.time/elapsed-time) " seconds \n"
-     "skill cooldowns: " (skill-info @world-player) "\n"
+     "skill cooldowns: " (skill-info @world/player) "\n"
      (when-let [entity (mouseover-entity)]
        (str "Mouseover-entity uid: " (:entity/uid entity)))
      ;"\nMouseover-Actor:\n"

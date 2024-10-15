@@ -1,5 +1,6 @@
 (ns world.core)
 
-(declare explored-tile-corners
-         world-tiled-map
+(declare player
+         tiled-map
+         explored-tile-corners
          entity-tick-error)

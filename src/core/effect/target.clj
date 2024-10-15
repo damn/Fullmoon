@@ -6,8 +6,8 @@
             [core.info :as info]
             [core.tx :as tx]
             [world.content-grid :as content-grid]
-            [world.entity :as entity]
-            [world.player :refer [world-player]]))
+            [world.core :as world]
+            [world.entity :as entity]))
 
 (defc :entity-effects {:data [:components-ns :effect.entity]})
 
@@ -16,7 +16,7 @@
 (defn- creatures-in-los-of-player []
   (->> (content-grid/active-entities)
        (filter #(:creature/species @%))
-       (filter #(entity/line-of-sight? @world-player @%))
+       (filter #(entity/line-of-sight? @world/player @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!

@@ -1,6 +1,6 @@
 (ns world.content-grid
   (:require [data.grid2d :as g2d]
-            [world.player :refer [world-player]]))
+            [world.core :as world]))
 
 (declare ^:private content-grid)
 
@@ -43,4 +43,4 @@
          (mapcat (comp :entities deref)))))
 
 (defn active-entities []
-  (active-entities* @world-player))
+  (active-entities* @world/player))

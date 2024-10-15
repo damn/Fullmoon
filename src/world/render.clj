@@ -3,12 +3,11 @@
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.math.shape :as shape]
             [utils.core :refer [->tile ]]
-            [world.core :refer [world-tiled-map explored-tile-corners]]
+            [world.core :as world]
             [world.content-grid :as content-grid]
             [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]
             [world.potential-fields :as potential-fields]
-            [world.player :refer [world-player]]
             [world.raycaster :as raycaster]))
 
 (defn- geom-test []
@@ -92,10 +91,10 @@
  2432
  )
 
-(defn- ->tile-color-setter [light-cache light-position explored-tile-corners]
+(defn- ->tile-color-setter [light-cache light-position]
   (fn tile-color-setter [_color x y]
     (let [position [(int x) (int y)]
-          explored? (get @explored-tile-corners position) ; TODO needs int call ?
+          explored? (get @world/explored-tile-corners position) ; TODO needs int call ?
           base-color (if explored? explored-tile-color black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
@@ -108,18 +107,17 @@
       (if blocked?
         (if see-all-tiles? white base-color)
         (do (when-not explored?
-              (swap! explored-tile-corners assoc (->tile position) true))
+              (swap! world/explored-tile-corners assoc (->tile position) true))
             white)))))
 
 (defn render-map [light-position]
-  (g/draw-tiled-map world-tiled-map
+  (g/draw-tiled-map world/tiled-map
                     (->tile-color-setter (atom nil)
-                                         light-position
-                                         explored-tile-corners))
+                                         light-position))
   #_(reset! do-once false))
 
 (defn render-world! []
-  (🎥/set-position! (g/world-camera) (:position @world-player))
+  (🎥/set-position! (g/world-camera) (:position @world/player))
   (render-map (🎥/position (g/world-camera)))
   (g/render-world-view! (fn []
                           (before-entities)

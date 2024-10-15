@@ -17,10 +17,10 @@
             core.tx.gdx
             property.audiovisual
             [utils.core :refer [bind-root get-namespaces get-vars]]
-            [world.core :refer [explored-tile-corners]]
+            [world.core :as world]
             world.creature
             world.entity.stats
-            [world.generate :as world]
+            world.generate
             world.projectile
             [world.render :refer [render-world!]]
             [world.game-loop :refer [game-loop]]
@@ -42,7 +42,7 @@
   (let [positions-explored (map first
                                 (remove (fn [[position value]]
                                           (false? value))
-                                        (seq @explored-tile-corners)))
+                                        (seq @world/explored-tile-corners)))
         left   (apply min-key (fn [[x y]] x) positions-explored)
         top    (apply max-key (fn [[x y]] y) positions-explored)
         right  (apply max-key (fn [[x y]] x) positions-explored)
@@ -66,8 +66,8 @@
 
     ; TODO fixme not subscreen
     (render [_]
-      (g/draw-tiled-map world-tiled-map
-                        (->tile-corner-color-setter @explored-tile-corners))
+      (g/draw-tiled-map world/tiled-map
+                        (->tile-corner-color-setter @world/explored-tile-corners))
       (g/render-world-view! (fn []
                               (g/draw-filled-circle (🎥/camera-position (g/world-camera))
                                                     0.5
@@ -235,7 +235,7 @@
 
 (defn- screens []
   [(main-menu-screen ->background)
-   (world/map-editor-screen)
+   (world.generate/map-editor-screen)
    (options-menu-screen ->background)
    (property-editor/screen ->background)
    (world-screen)])

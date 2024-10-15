@@ -4,24 +4,23 @@
             [core.widgets.error :refer [error-window!]]
             [utils.core :refer [bind-root]]
             [world.content-grid :as content-grid]
-            [world.core :refer [entity-tick-error]]
+            [world.core :as world]
             [world.entity :as entity]
             [world.entity.state :as entity-state]
             [world.mouseover-entity :as mouseover-entity]
-            [world.player :refer [world-player]]
             [world.potential-fields :as potential-fields]))
 
 (def ^:private ^:dbg-flag pausing? true)
 
-(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @world-player)))
-(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @world-player)))
+(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @world/player)))
+(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @world/player)))
 
 (defn- player-unpaused? []
   (or (key-just-pressed? :keys/p)
       (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
 
 (defn- update-game-paused []
-  (bind-root #'world.time/paused? (or entity-tick-error
+  (bind-root #'world.time/paused? (or world/entity-tick-error
                                       (and pausing?
                                            (player-state-pause-game?)
                                            (not (player-unpaused?)))))
@@ -40,7 +39,7 @@
                    (try (entity/tick-entities! entities)
                         (catch Throwable t
                           (error-window! t)
-                          (bind-root #'entity-tick-error t))))
+                          (bind-root #'world/entity-tick-error t))))
                  nil)
               entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
               ]))

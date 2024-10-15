@@ -3,10 +3,10 @@
             [clojure.gdx.ui.stage-screen :as stage-screen]
             [core.component :refer [defc]]
             [utils.core :refer [sort-by-order]]
+            [world.core :as world]
             [world.entity :as entity]
             [world.entity.faction :as faction]
-            [world.grid :as grid]
-            [world.player :refer [world-player]]))
+            [world.grid :as grid]))
 
 (def ^:private mouseover-eid nil)
 
@@ -15,7 +15,7 @@
     @eid))
 
 (defn- calculate-mouseover-eid []
-  (let [player-entity @world-player
+  (let [player-entity @world/player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
                      (grid/point->entities (g/world-mouse-position)))]
     (->> entity/render-order
@@ -51,7 +51,7 @@
 
 (defc :entity/mouseover?
   (entity/render-below [_ {:keys [entity/faction] :as entity}]
-    (let [player-entity @world-player]
+    (let [player-entity @world/player]
       (g/with-shape-line-width 3
         #(g/draw-ellipse (:position entity)
                          (:half-width entity)

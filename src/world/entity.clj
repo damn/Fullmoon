@@ -10,8 +10,8 @@
             [core.tx :as tx]
             [malli.core :as m]
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
+            [world.core :as world]
             [world.grid :as grid :refer [world-grid]]
-            [world.player :refer [world-player]]
             [world.raycaster :refer [ray-blocked?]]
             [world.time :refer [world-delta ->counter finished-ratio stopped?]]))
 
@@ -276,7 +276,7 @@
 (defn render-entities!
   "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
   [entities*]
-  (let [player-entity @world-player]
+  (let [player-entity @world/player]
     (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
                                                first
                                                render-order)

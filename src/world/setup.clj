@@ -6,16 +6,16 @@
             [core.tx :as tx]
             [utils.core :refer [bind-root tile->middle]]
             [world.content-grid :as content-grid]
-            [world.core :refer [entity-tick-error world-tiled-map explored-tile-corners]]
+            [world.core :as world]
             [world.entity :as entity]
-            [world.generate :as world]
+            world.generate
             [world.grid :as grid]
             world.time
             [world.raycaster :as raycaster]
             world.widgets.setup))
 
 (defn- init-explored-tile-corners! [width height]
-  (.bindRoot #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
+  (.bindRoot #'world/explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
@@ -25,8 +25,8 @@
       "all"  :all)))
 
 (defn- cleanup-last-world! []
-  (when (bound? #'world-tiled-map)
-    (dispose! world-tiled-map)))
+  (when (bound? #'world/tiled-map)
+    (dispose! world/tiled-map)))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -60,12 +60,11 @@
                [:tx/creature (update creature :position tile->middle)])))
 
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
-  (bind-root #'entity-tick-error nil)
+  (bind-root #'world/entity-tick-error nil)
   (world.time/init!)
   (world.widgets.setup/init!)
   (entity/init-uids-entities!)
-
-  (bind-root #'world-tiled-map tiled-map)
+  (bind-root #'world/tiled-map tiled-map)
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)
         grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
@@ -79,7 +78,7 @@
 ; also core.screens/world ....
 (defn add-world-ctx! [world-property-id]
   (cleanup-last-world!)
-  (init-new-world! (world/generate-level world-property-id)))
+  (init-new-world! (world.generate/generate-level world-property-id)))
 
 (defc :tx/add-to-world
   (tx/do! [[_ eid]]

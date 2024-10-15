@@ -9,10 +9,10 @@
             [core.tx :as tx]
             [data.grid2d :as g2d]
             [utils.core :refer [find-first]]
+            [world.core :as world]
             [world.entity :as entity]
             [world.entity.modifiers :refer [mod-info-text]]
             [world.entity.state :as entity-state]
-            [world.player :refer [world-player]]
             [world.widgets :refer [world-widgets]]))
 
 (def ^:private empty-inventory
@@ -188,7 +188,7 @@
 (defn- draw-rect-actor []
   (ui/widget
    (fn [this]
-     (draw-cell-rect @world-player
+     (draw-cell-rect @world/player
                      (a/x this)
                      (a/y this)
                      (a/mouseover? this (g/gui-mouse-position))
@@ -198,7 +198,7 @@
 (defmethod clicked-inventory-cell :default [_ cell])
 
 (defn- player-clicked-inventory [cell]
-  (clicked-inventory-cell (entity-state/state-obj @world-player) cell))
+  (clicked-inventory-cell (entity-state/state-obj @world/player) cell))
 
 (defn- ->cell [slot->background slot & {:keys [position]}]
   (let [cell [slot (or position [0 0])]

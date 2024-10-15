@@ -7,14 +7,14 @@
             [core.info :as info]
             [core.tx :as tx]
             [utils.core :refer [bind-root safe-merge]]
+            [world.core :as world]
             [world.creature.fsms :as fsms]
             world.creature.states
-            [world.entity :as entity]
-            [world.player :refer [world-player]]))
+            [world.entity :as entity]))
 
 (defc :entity/player?
   (entity/create [_ eid]
-    (bind-root #'world-player eid)
+    (bind-root #'world/player eid)
     nil))
 
 (property/def :properties/creatures

@@ -10,8 +10,8 @@
             [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
             [world.grid :refer [world-grid]]
-            [world.mouseover-entity :refer [mouseover-entity]]
-            [world.player :refer [world-player]]))
+            [world.core :as world]
+            [world.mouseover-entity :refer [mouseover-entity]]))
 
 (comment
 
@@ -112,8 +112,8 @@
 (defn- post-tx! [tx]
   (post-runnable! (tx/do-all [tx])))
 
-(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill world-player (db/get skill-id)]])))
-(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world-player) (db/get item-id)]])))
+(defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill world/player (db/get skill-id)]])))
+(defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world/player) (db/get item-id)]])))
 
 (defn- protocol? [value]
   (and (instance? clojure.lang.PersistentArrayMap value)

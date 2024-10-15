@@ -7,9 +7,9 @@
             [core.property :as property]
             [core.tx :as tx]
             [utils.core :refer [readable-number]]
+            [world.core :as world]
             [world.entity :as entity]
             [world.entity.state :as entity-state]
-            [world.player :refer [world-player]]
             [world.time :refer [stopped?]]
             [world.widgets :refer [world-widgets]]))
 
@@ -91,10 +91,10 @@
 (defmethod clicked-skillmenu-skill :default [_ skill])
 
 (defn- player-clicked-skillmenu [skill]
-  (clicked-skillmenu-skill (entity-state/state-obj @world-player) skill))
+  (clicked-skillmenu-skill (entity-state/state-obj @world/player) skill))
 
 ; TODO render text label free-skill-points
-; (str "Free points: " (:entity/free-skill-points @world-player))
+; (str "Free points: " (:entity/free-skill-points @world/player))
 #_(defn ->skill-window []
     (ui/window {:title "Skills"
                 :id :skill-window
@@ -134,7 +134,7 @@
     (let [{:keys [horizontal-group button-group]} (get-action-bar)
           button (ui/image-button image (fn []) {:scale image-scale})]
       (a/set-id! button id)
-      (ui/add-tooltip! button #(info/->text skill)) ; (assoc ctx :effect/source (world-player)) FIXME
+      (ui/add-tooltip! button #(info/->text skill)) ; (assoc ctx :effect/source (world/player)) FIXME
       (ui/add-actor! horizontal-group button)
       (ui/bg-add! button-group button)
       nil)))
@@ -175,7 +175,7 @@
  ; * cooldown / not usable -> diff. colors ? disable on not able to use skills (stunned?)
  ; * or even sector circling for cooldown like in WoW (clipped !)
  ; * tooltips ! with hotkey-number !
- ;  ( (skills/text skill-id world-player))
+ ;  ( (skills/text skill-id world/player))
  ; * add hotkey number to tooltips
  ; * hotkeys => select button
  ; when no selected-skill & new skill assoce'd (sword at start)
