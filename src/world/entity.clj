@@ -1,6 +1,5 @@
 (ns world.entity
-  (:require [clj-commons.pretty.repl :refer [pretty-pst]]
-            [clojure.gdx.graphics :as g]
+  (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.graphics.camera :as 🎥]
             [clojure.gdx.math.shape :as shape]
             [clojure.gdx.math.vector :as v]
@@ -9,7 +8,7 @@
             [core.db :as db]
             [core.tx :as tx]
             [malli.core :as m]
-            [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
+            [utils.core :refer [define-order ->tile safe-merge readable-number]]
             [world.core :as world :refer [timer finished-ratio stopped?]]))
 
 (defsystem create [_ eid])
@@ -33,10 +32,7 @@
 (defsystem render-info [_ entity*])
 (defmethod render-info :default [_ entity*])
 
-(def ^:private render-systems [render-below
-                               render
-                               render-above
-                               render-info])
+(def render-systems [render-below render render-above render-info])
 
 ; so that at low fps the game doesn't jump faster between frames used @ movement to set a max speed so entities don't jump over other entities when checking collisions
 (def max-delta-time 0.04)
@@ -210,52 +206,6 @@
   (tx/do! [[_ eid ks f]]
     (swap! eid update-in ks f)
     nil))
-
-(def ^:private ^:dbg-flag show-body-bounds false)
-
-(defn- draw-body-rect [entity color]
-  (let [[x y] (:left-bottom entity)]
-    (g/draw-rectangle x y (:width entity) (:height entity) color)))
-
-(defn- render-entity [system entity]
-  (try
-   (when show-body-bounds
-     (draw-body-rect entity (if (:collides? entity) :white :gray)))
-   (run! #(system % entity) entity)
-   (catch Throwable t
-     (draw-body-rect entity :red)
-     (pretty-pst t 12))))
-
-; precaution in case a component gets removed by another component
-; the question is do we still want to update nil components ?
-; should be contains? check ?
-; but then the 'order' is important? in such case dependent components
-; should be moved together?
-(defn- tick-system [eid]
-  (try
-   (doseq [k (keys @eid)]
-     (when-let [v (k @eid)]
-       (tx/do-all (tick [k v] eid))))
-   (catch Throwable t
-     (throw (ex-info "" (select-keys @eid [:entity/id]) t)))))
-
-(defn tick-entities!
-  "Calls tick system on all components of entities."
-  [entities]
-  (run! tick-system entities))
-
-(defn render-entities!
-  "Draws entities in the correct z-order and in the order of render-systems for each z-order."
-  [entities]
-  (let [player-entity @world/player]
-    (doseq [[z-order entities] (sort-by-order (group-by :z-order entities)
-                                               first
-                                               render-order)
-            system render-systems
-            entity entities
-            :when (or (= z-order :z-order/effect)
-                      (line-of-sight? player-entity entity))]
-      (render-entity system entity))))
 
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
