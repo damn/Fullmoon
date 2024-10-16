@@ -357,9 +357,9 @@
        first))
 
 (comment
- (let [entity @(entity/get-entity 76)
-       effect-ctx (effect/npc-ctx entity)]
-   (npc-choose-skill effect-ctx entity))
+ (let [eid (entity/get-entity 76)
+       effect-ctx (effect/npc-ctx eid)]
+   (npc-choose-skill effect-ctx @eid))
  )
 
 (defc :npc-idle
@@ -368,10 +368,9 @@
     {:eid eid})
 
   (entity/tick [_ eid]
-    (let [entity @eid
-          effect-ctx (effect/npc-ctx entity)]
+    (let [effect-ctx (effect/npc-ctx eid)]
       (if-let [skill (effect/with-ctx effect-ctx
-                       (npc-choose-skill entity))]
+                       (npc-choose-skill @eid))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
         [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy eid)]]))))
 
@@ -433,8 +432,9 @@
      (ui/button? actor) :cursors/over-button
      :else :cursors/default)))
 
-(defn- ->interaction-state [entity]
-  (let [mouseover-e* (mouseover-entity)]
+(defn- ->interaction-state [eid]
+  (let [entity @eid
+        mouseover-e* (mouseover-entity)]
     (cond
      (mouse-on-actor?)
      [(mouseover-actor->cursor) (fn [] nil)] ; handled by actors themself, they check player state
@@ -445,7 +445,7 @@
      :else
      (if-let [skill-id (selected-skill)]
        (let [skill (skill-id (:entity/skills entity))
-             effect-ctx (effect/player-ctx entity)
+             effect-ctx (effect/player-ctx eid)
              state (effect/with-ctx effect-ctx
                      (skill-usable-state entity skill))]
          (if (= state :usable)
@@ -455,7 +455,7 @@
             ; => e.g. meditation no TARGET .. etc.
             [:cursors/use-skill
              (fn []
-               [[:tx/event (:entity/id entity) :start-action [skill effect-ctx]]])])
+               [[:tx/event eid :start-action [skill effect-ctx]]])])
            (do
             ; TODO cursor as of usable state
             ; cooldown -> sanduhr kleine
@@ -481,7 +481,7 @@
   (state/manual-tick [_]
     (if-let [movement-vector (WASD-movement-vector)]
       [[:tx/event eid :movement-input movement-vector]]
-      (let [[cursor on-click] (->interaction-state @eid)]
+      (let [[cursor on-click] (->interaction-state eid)]
         (cons [:tx/cursor cursor]
               (when (button-just-pressed? :left)
                 (on-click))))))

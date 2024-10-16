@@ -8,7 +8,7 @@
             [world.entity.faction :as faction]
             [world.grid :as grid]))
 
-(def ^:private mouseover-eid nil)
+(def mouseover-eid nil)
 
 (defn mouseover-entity []
   (when-let [eid mouseover-eid]

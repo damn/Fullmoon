@@ -4,7 +4,7 @@
             [core.component :refer [defsystem defc]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
-            [world.mouseover-entity :refer [mouseover-entity]]
+            [world.mouseover-entity :refer [mouseover-eid mouseover-entity]]
             [core.tx :as tx]
             [world.grid :as grid :refer [world-grid]]))
 
@@ -60,22 +60,22 @@ Default method returns true.")
          ^:dynamic target-direction
          ^:dynamic target-position)
 
-(defn npc-ctx [entity]
-  (let [target (nearest-enemy entity)
+(defn npc-ctx [eid]
+  (let [entity @eid
+        target (nearest-enemy entity)
         target (when (and target (entity/line-of-sight? entity @target))
                  target)]
-    {:effect/source (:entity/id entity)
+    {:effect/source eid
      :effect/target target
      :effect/target-direction (when target (entity/direction entity @target))}))
 
-(defn player-ctx [entity]
-  (let [target* (mouseover-entity)
-        target-position (or (and target* (:position target*))
+(defn player-ctx [eid]
+  (let [target-position (or (and mouseover-eid (:position @mouseover-eid))
                             (g/world-mouse-position))]
-    {:effect/source (:entity/id entity)
-     :effect/target (:entity/id target*)
+    {:effect/source eid
+     :effect/target mouseover-eid
      :effect/target-position target-position
-     :effect/target-direction (v/direction (:position entity) target-position)}))
+     :effect/target-direction (v/direction (:position @eid) target-position)}))
 
 ; this is not necessary if effect does not need target, but so far not other solution came up.
 (defn check-update-ctx
