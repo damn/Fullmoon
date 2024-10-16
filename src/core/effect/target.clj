@@ -5,7 +5,6 @@
             [core.effect :as effect :refer [source target]]
             [core.info :as info]
             [core.tx :as tx]
-            [world.content-grid :as content-grid]
             [world.core :as world]
             [world.entity :as entity]))
 
@@ -14,7 +13,7 @@
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
 (defn- creatures-in-los-of-player []
-  (->> (content-grid/active-entities)
+  (->> (world/active-entities)
        (filter #(:creature/species @%))
        (filter #(entity/line-of-sight? @world/player @%))
        (remove #(:entity/player? @%))))

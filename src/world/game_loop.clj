@@ -3,7 +3,6 @@
             [core.tx :as tx]
             [core.widgets.error :refer [error-window!]]
             [utils.core :refer [bind-root]]
-            [world.content-grid :as content-grid]
             [world.core :as world]
             [world.entity :as entity]
             [world.entity.state :as entity-state]
@@ -34,7 +33,7 @@
               update-game-paused
               #(when-not world.time/paused?
                  (world.time/update! (min delta-time entity/max-delta-time))
-                 (let [entities (content-grid/active-entities)]
+                 (let [entities (world/active-entities)]
                    (potential-fields/update! entities)
                    (try (entity/tick-entities! entities)
                         (catch Throwable t

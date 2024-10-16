@@ -4,7 +4,6 @@
             [clojure.gdx.math.shape :as shape]
             [utils.core :refer [->tile ]]
             [world.core :as world]
-            [world.content-grid :as content-grid]
             [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]
             [world.potential-fields :as potential-fields]))
@@ -120,5 +119,5 @@
   (render-map (🎥/position (g/world-camera)))
   (g/render-world-view! (fn []
                           (before-entities)
-                          (entity/render-entities! (map deref (content-grid/active-entities)))
+                          (entity/render-entities! (map deref (world/active-entities)))
                           (after-entities))))

@@ -68,7 +68,7 @@
         h (t/height tiled-map)
         grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
     (world/init-raycaster! grid grid/blocks-vision?)
-    (content-grid/init! :cell-size 16 :width w :height h)
+    (world/init-content-grid! {:cell-size 16 :width w :height h})
     (init-explored-tile-corners! w h))
 
   (spawn-creatures! tiled-map start-position))
@@ -81,7 +81,7 @@
 
 (defc :tx/add-to-world
   (tx/do! [[_ eid]]
-    (content-grid/update-entity! eid)
+    (content-grid/update-entity! world/content-grid eid)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @eid)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (grid/add-entity! eid)
@@ -89,7 +89,7 @@
 
 (defc :tx/remove-from-world
   (tx/do! [[_ eid]]
-    (content-grid/remove-entity! eid)
+    (content-grid/remove-entity! world/content-grid eid)
     (grid/remove-entity! eid)
     nil))
 

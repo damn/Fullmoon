@@ -1,11 +1,16 @@
 (ns world.core
-  (:require [world.raycaster :as raycaster]))
+  (:require [world.content-grid :as content-grid]
+            [world.raycaster :as raycaster]))
 
 (declare player
          tiled-map
          explored-tile-corners
-         entity-tick-error
-         ^:private raycaster)
+         entity-tick-error)
+
+(declare ^:private raycaster)
+
+(defn init-raycaster! [grid position->blocked?]
+  (.bindRoot #'raycaster (raycaster/create grid position->blocked?)))
 
 (defn ray-blocked? [start target]
   (raycaster/blocked? raycaster start target))
@@ -15,5 +20,10 @@
   [start target path-w]
   (raycaster/path-blocked? raycaster start target path-w))
 
-(defn init-raycaster! [grid position->blocked?]
-  (def raycaster (raycaster/create grid position->blocked?)))
+(declare ^:private content-grid)
+
+(defn init-content-grid! [opts]
+  (.bindRoot #'content-grid (content-grid/create opts)))
+
+(defn active-entities []
+  (content-grid/active-entities content-grid @player))
