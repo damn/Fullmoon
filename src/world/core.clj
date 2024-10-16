@@ -5,10 +5,12 @@
             [clojure.gdx.tiled :as t]
             [clojure.gdx.utils :refer [dispose!]]
             [core.component :refer [defc]]
+            [core.db :as db]
             [core.tx :as tx]
             [data.grid2d :as g2d]
-            [utils.core :refer [->tile tile->middle]]
+            [utils.core :refer [->tile tile->middle safe-merge]]
             [world.content-grid :as content-grid]
+            [world.entity :as entity]
             [world.raycaster :as raycaster]))
 
 (defn- rectangle->tiles
@@ -448,3 +450,96 @@
                     (->tile-color-setter (atom nil) light-position))
   #_(reset! do-once false))
 
+; does not take into account zoom - but zoom is only for debug ???
+; vision range?
+(defn- on-screen? [entity]
+  (let [[x y] (:position entity)
+        x (float x)
+        y (float y)
+        [cx cy] (🎥/position (g/world-camera))
+        px (float cx)
+        py (float cy)
+        xdist (Math/abs (- x px))
+        ydist (Math/abs (- y py))]
+    (and
+     (<= xdist (inc (/ (float (g/world-viewport-width))  2)))
+     (<= ydist (inc (/ (float (g/world-viewport-height)) 2))))))
+
+; TODO at wrong point , this affects targeting logic of npcs
+; move the debug flag to either render or mouseover or lets see
+(def ^:private ^:dbg-flag los-checks? true)
+
+; does not take into account size of entity ...
+; => assert bodies <1 width then
+(defn line-of-sight? [source target]
+  (and (or (not (:entity/player? source))
+           (on-screen? target))
+       (not (and los-checks?
+                 (ray-blocked? (:position source) (:position target))))))
+
+(defn remove-destroyed-entities!
+  "Calls destroy on all entities which are marked with ':e/destroy'"
+  []
+  (mapcat (fn [eid]
+            (cons [:tx/remove-from-world eid]
+                  (for [component @eid]
+                    #(entity/destroy component eid))))
+          (filter (comp :entity/destroyed? deref) (all-entities))))
+
+(let [cnt (atom 0)]
+  (defn- unique-number! []
+    (swap! cnt inc)))
+
+(defn create-vs
+  "Creates a map for every component with map entries `[k (create [k v])]`."
+  [components]
+  (reduce (fn [m [k v]]
+            (assoc m k (entity/->v [k v])))
+          {}
+          components))
+
+(defc :e/create
+  (tx/do! [[_ position body components]]
+    (assert (and (not (contains? components :position))
+                 (not (contains? components :entity/id))))
+    (let [eid (atom (-> body
+                        (assoc :position position)
+                        entity/->Body
+                        (safe-merge (-> components
+                                        (assoc :entity/id (unique-number!))
+                                        (create-vs)))))]
+      (cons [:tx/add-to-world eid]
+            (for [component @eid]
+              #(entity/create component eid))))))
+
+(defc :e/destroy
+  (tx/do! [[_ eid]]
+    [[:e/assoc eid :entity/destroyed? true]]))
+
+(defc :e/assoc
+  (tx/do! [[_ eid k v]]
+    (assert (keyword? k))
+    (swap! eid assoc k v)
+    nil))
+
+(defc :e/assoc-in
+  (tx/do! [[_ eid ks v]]
+    (swap! eid assoc-in ks v)
+    nil))
+
+(defc :e/dissoc
+  (tx/do! [[_ eid k]]
+    (assert (keyword? k))
+    (swap! eid dissoc k)
+    nil))
+
+(defc :e/dissoc-in
+  (tx/do! [[_ eid ks]]
+    (assert (> (count ks) 1))
+    (swap! eid update-in (drop-last ks) dissoc (last ks))
+    nil))
+
+(defc :e/update-in
+  (tx/do! [[_ eid ks f]]
+    (swap! eid update-in ks f)
+    nil))

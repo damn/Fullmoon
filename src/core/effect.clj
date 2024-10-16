@@ -63,7 +63,7 @@ Default method returns true.")
 (defn npc-ctx [eid]
   (let [entity @eid
         target (nearest-enemy entity)
-        target (when (and target (entity/line-of-sight? entity @target))
+        target (when (and target (world/line-of-sight? entity @target))
                  target)]
     {:effect/source eid
      :effect/target target
@@ -83,7 +83,7 @@ Default method returns true.")
   [{:keys [effect/source effect/target] :as ctx}]
   (if (and target
            (not (:entity/destroyed? @target))
-           (entity/line-of-sight? @source @target))
+           (world/line-of-sight? @source @target))
     ctx
     (dissoc ctx :effect/target)))
 

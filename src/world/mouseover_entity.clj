@@ -20,7 +20,7 @@
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse
-         (filter #(entity/line-of-sight? player-entity @%))
+         (filter #(world/line-of-sight? player-entity @%))
          first)))
 
 (defn update! []

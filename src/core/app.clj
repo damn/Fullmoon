@@ -24,8 +24,14 @@
             [core.widgets.hp-mana :as hp-mana-bars]
             [core.widgets.player-message :as player-message]
             [world.entity :as entity]
+            world.entity.animation
+            world.entity.delete-after-duration
+            world.entity.image
             [world.entity.inventory :refer [->inventory-window]]
+            world.entity.line
+            world.entity.movement
             [world.entity.state :as entity-state]
+            world.entity.string-effect
             [world.entity.skills :refer [action-bar]]
             property.audiovisual
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
@@ -173,7 +179,7 @@
             system entity/render-systems
             entity entities
             :when (or (= z-order :z-order/effect)
-                      (entity/line-of-sight? player-entity entity))]
+                      (world/line-of-sight? player-entity entity))]
       (render-entity! system entity))))
 
 ; precaution in case a component gets removed by another component
@@ -223,7 +229,7 @@
                             (error-window! t)
                             (bind-root #'world/entity-tick-error t))))
                    nil)
-                entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                world/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
                 ])
     (check-key-input))
 

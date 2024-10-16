@@ -15,7 +15,7 @@
 (defn- creatures-in-los-of-player []
   (->> (world/active-entities)
        (filter #(:creature/species @%))
-       (filter #(entity/line-of-sight? @world/player @%))
+       (filter #(world/line-of-sight? @world/player @%))
        (remove #(:entity/player? @%))))
 
 ; TODO targets projectiles with -50% hp !!
