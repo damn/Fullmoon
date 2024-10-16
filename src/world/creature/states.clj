@@ -9,7 +9,7 @@
             [core.component :refer [defc]]
             [core.effect :as effect]
             [core.tx :as tx]
-            [world.core :as world :refer [->counter stopped? finished-ratio]]
+            [world.core :as world :refer [timer stopped? finished-ratio]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
@@ -35,7 +35,7 @@
   (entity/->v [[_ eid movement-vector]]
     {:eid eid
      :movement-vector movement-vector
-     :counter (->counter (* (entity-stat @eid :stats/reaction-time) 0.016))})
+     :counter (timer (* (entity-stat @eid :stats/reaction-time) 0.016))})
 
   (state/enter [_]
     [[:tx/set-movement eid {:direction movement-vector
@@ -70,7 +70,7 @@
       position
       entity/effect-body-props
       {:entity/alert-friendlies-after-duration
-       {:counter (->counter delay-seconds)
+       {:counter (timer delay-seconds)
         :faction faction}}]]))
 
 (defc :npc-sleeping
@@ -248,7 +248,7 @@
   {:let {:keys [eid counter]}}
   (entity/->v [[_ eid duration]]
     {:eid eid
-     :counter (->counter duration)})
+     :counter (timer duration)})
 
   (state/player-enter [_]
     [[:tx/cursor :cursors/denied]])
@@ -290,7 +290,7 @@
      :counter (->> skill
                    :skill/action-time
                    (apply-action-speed-modifier @eid skill)
-                   (->counter))})
+                   (timer))})
 
   (state/player-enter [_]
     [[:tx/cursor :cursors/sandclock]])
@@ -301,7 +301,7 @@
   (state/enter [_]
     [[:tx/sound (:skill/start-action-sound skill)]
      (when (:skill/cooldown skill)
-       [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (->counter (:skill/cooldown skill))])
+       [:e/assoc-in eid [:entity/skills (:property/id skill) :skill/cooling-down?] (timer (:skill/cooldown skill))])
      (when-not (zero? (:skill/cost skill))
        [:tx.entity.stats/pay-mana-cost eid (:skill/cost skill)])])
 

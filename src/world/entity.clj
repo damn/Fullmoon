@@ -10,7 +10,7 @@
             [core.tx :as tx]
             [malli.core :as m]
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
-            [world.core :as world :refer [->counter finished-ratio stopped?]]))
+            [world.core :as world :refer [timer finished-ratio stopped?]]))
 
 (defsystem create [_ eid])
 (defmethod create :default [_ eid])
@@ -397,7 +397,7 @@
 (defc :entity/delete-after-duration
   {:let counter}
   (->v [[_ duration]]
-    (->counter duration))
+    (timer duration))
 
   (info/text [_]
     (str "[LIGHT_GRAY]Remaining: " (readable-number (finished-ratio counter)) "/1[]"))
@@ -445,4 +445,4 @@
             (update :text str "\n" text)
             (update :counter world/reset))
         {:text text
-         :counter (->counter 0.4)})]]))
+         :counter (timer 0.4)})]]))

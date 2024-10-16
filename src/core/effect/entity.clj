@@ -6,7 +6,7 @@
             [core.info :as info]
             [core.tx :as tx]
             [utils.core :refer [readable-number]]
-            [world.core :refer [->counter stopped? finished-ratio]]
+            [world.core :refer [timer stopped? finished-ratio]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.modifiers :refer [->modified-value]]
@@ -148,7 +148,7 @@
       (when-not (:entity/temp-modifier @target)
         [[:tx/apply-modifiers target modifiers]
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
-                                                 :counter (->counter duration)}]]))))
+                                                 :counter (timer duration)}]]))))
 (defc :effect.entity/convert
   {:data :some}
   (info/text [_]

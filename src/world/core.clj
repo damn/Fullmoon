@@ -183,7 +183,7 @@
   (alter-var-root #'elapsed-time + delta)
   (alter-var-root #'logic-frame inc))
 
-(defn ->counter [duration]
+(defn timer [duration]
   {:pre [(>= duration 0)]}
   {:duration duration
    :stop-time (+ elapsed-time duration)})
