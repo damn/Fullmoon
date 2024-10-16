@@ -245,14 +245,14 @@
   (run! tick-system entities))
 
 (defn render-entities!
-  "Draws entities* in the correct z-order and in the order of render-systems for each z-order."
-  [entities*]
+  "Draws entities in the correct z-order and in the order of render-systems for each z-order."
+  [entities]
   (let [player-entity @world/player]
-    (doseq [[z-order entities*] (sort-by-order (group-by :z-order entities*)
+    (doseq [[z-order entities] (sort-by-order (group-by :z-order entities)
                                                first
                                                render-order)
             system render-systems
-            entity entities*
+            entity entities
             :when (or (= z-order :z-order/effect)
                       (line-of-sight? player-entity entity))]
       (render-entity system entity))))

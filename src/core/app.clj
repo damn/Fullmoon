@@ -7,6 +7,7 @@
             [clojure.gdx.screen :as screen]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
+            [clojure.gdx.ui.stage :as stage]
             [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [core.editor :as property-editor]
             core.effect.entity
@@ -14,17 +15,28 @@
             core.effect.spawn
             core.effect.target
             [core.db :as db]
+            [core.tx :as tx]
             core.tx.gdx
+            [core.widgets.debug-window :as debug-window]
+            [core.widgets.error :refer [error-window!]]
+            [core.widgets.entity-info-window :as entity-info-window]
+            [core.widgets.hp-mana :as hp-mana-bars]
+            [core.widgets.player-message :as player-message]
+            [world.entity :as entity]
+            [world.entity.inventory :refer [->inventory-window]]
+            [world.entity.state :as entity-state]
+            [world.entity.skills :refer [action-bar]]
             property.audiovisual
             [utils.core :refer [bind-root get-namespaces get-vars]]
             [world.core :as world]
             world.creature
+            world.creature.states
+            [world.entity :as entity]
             world.entity.stats
             world.generate
-            world.projectile
-            [world.render :refer [render-world!]]
-            [world.game-loop :refer [game-loop]]
-            world.widgets))
+            [world.mouseover-entity :as mouseover-entity]
+            [world.potential-fields :as potential-fields]
+            world.projectile))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
@@ -119,6 +131,22 @@
         #_(key-just-pressed? :keys/tab)
         #_(screen/change! :screens/minimap)))
 
+(def ^:private ^:dbg-flag pausing? true)
+
+(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @world/player)))
+(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @world/player)))
+
+(defn- player-unpaused? []
+  (or (key-just-pressed? :keys/p)
+      (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
+
+(defn- update-game-paused []
+  (bind-root #'world/paused? (or world/entity-tick-error
+                                 (and pausing?
+                                      (player-state-pause-game?)
+                                      (not (player-unpaused?)))))
+  nil)
+
 (deftype WorldScreen []
   screen/Screen
   (screen/enter! [_])
@@ -127,8 +155,29 @@
     (g/set-cursor! :cursors/default))
 
   (screen/render! [_]
-    (render-world!)
-    (game-loop (g/delta-time))
+    (🎥/set-position! (g/world-camera) (:position @world/player))
+    (world/render-tiled-map! (🎥/position (g/world-camera)))
+    (g/render-world-view! (fn []
+                            (world/render-before-entities)
+
+                            ; this one also w. player los ...
+                            (entity/render-entities! (map deref (world/active-entities)))
+
+                            (world/render-after-entities)))
+    (tx/do-all [player-update-state
+                mouseover-entity/update! ; this do always so can get debug info even when game not running
+                update-game-paused
+                #(when-not world/paused?
+                   (world/update-time! (min (g/delta-time) entity/max-delta-time))
+                   (let [entities (world/active-entities)]
+                     (potential-fields/update! entities)
+                     (try (entity/tick-entities! entities)
+                          (catch Throwable t
+                            (error-window! t)
+                            (bind-root #'world/entity-tick-error t))))
+                   nil)
+                entity/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
+                ])
     (check-key-input))
 
   (screen/dispose! [_]))
@@ -136,10 +185,30 @@
 (defn- world-screen []
   [:screens/world (stage-screen/create :screen (->WorldScreen))])
 
+(defn- world-actors []
+  [(ui/table {:rows [[{:actor (action-bar)
+                       :expand? true
+                       :bottom? true}]]
+              :id :action-bar-table
+              :cell-defaults {:pad 2}
+              :fill-parent? true})
+   (hp-mana-bars/create)
+   (ui/group {:id :windows
+              :actors [(debug-window/create)
+                       (entity-info-window/create)
+                       (->inventory-window)]})
+   (ui/actor {:draw world.creature.states/draw-item-on-cursor})
+   (player-message/create)])
+
+(defn reset-stage! []
+  (let [stage (stage-get)] ; these fns to stage itself
+    (stage/clear! stage)
+    (run! #(stage/add! stage %) (world-actors))))
+
 (defn- start-game-fn [world-id]
   (fn []
     (screen/change! :screens/world)
-    (world.widgets/reset-stage!)
+    (reset-stage!)
     (world/init! (world.generate/generate-level world-id))))
 
 (defn- ->buttons []
