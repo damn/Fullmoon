@@ -56,3 +56,6 @@
   "Gets the asset at file-path."
   [path]
   (.get manager ^String path))
+
+(defn play-sound! [path]
+  (Sound/.play (get path)))

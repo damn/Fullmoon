@@ -1,6 +1,5 @@
 (ns core.editor
   (:require [clojure.edn :as edn]
-            [clojure.gdx.audio :refer [play-sound!]]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.input :refer [key-just-pressed?]]
@@ -109,7 +108,7 @@
               :pack? true}))
 
 (defn- ->play-sound-button [sound-file]
-  (ui/text-button "play!" #(play-sound! sound-file)))
+  (ui/text-button "play!" #(assets/play-sound! sound-file)))
 
 (declare ->sound-columns)
 

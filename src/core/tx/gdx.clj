@@ -1,5 +1,5 @@
 (ns core.tx.gdx
-  (:require [clojure.gdx.audio :refer [play-sound!]]
+  (:require [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.actor :as a]
@@ -10,7 +10,7 @@
 (defc :tx/sound
   {:data :sound}
   (tx/do! [[_ file]]
-    (play-sound! file)
+    (assets/play-sound! file)
     nil))
 
 (defc :tx/cursor
