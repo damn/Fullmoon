@@ -79,3 +79,5 @@
 
 (defn update-entity! [eid]
   (content-grid/update-entity! content-grid eid))
+
+(declare widgets)

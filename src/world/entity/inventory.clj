@@ -12,8 +12,7 @@
             [world.core :as world]
             [world.entity :as entity]
             [world.entity.modifiers :refer [mod-info-text]]
-            [world.entity.state :as entity-state]
-            [world.widgets :refer [world-widgets]]))
+            [world.entity.state :as entity-state]))
 
 (def ^:private empty-inventory
   (->> #:inventory.slot{:bag      [6 4]
@@ -274,7 +273,7 @@
 
 (defn- get-inventory []
   {:table (::table (get (:windows (stage-get)) :inventory-window))
-   :slot->background (:slot->background world-widgets)})
+   :slot->background (:slot->background world/widgets)})
 
 (defc :tx/set-item-image-in-widget
   (tx/do! [[_ cell item]]

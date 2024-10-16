@@ -9,8 +9,7 @@
             [utils.core :refer [readable-number]]
             [world.core :as world :refer [stopped?]]
             [world.entity :as entity]
-            [world.entity.state :as entity-state]
-            [world.widgets :refer [world-widgets]]))
+            [world.entity.state :as entity-state]))
 
 (property/def :properties/skills
   {:schema [:entity/image
@@ -126,7 +125,7 @@
 
 (defn- get-action-bar []
   {:horizontal-group (::action-bar (:action-bar-table (stage-get)))
-   :button-group (:action-bar world-widgets)})
+   :button-group (:action-bar world/widgets)})
 
 (defc :tx.action-bar/add
   (tx/do! [[_ {:keys [property/id entity/image] :as skill}]]
@@ -147,7 +146,7 @@
       nil)))
 
 (defn selected-skill []
-  (let [button-group (:action-bar world-widgets)]
+  (let [button-group (:action-bar world/widgets)]
     (when-let [skill-button (ui/bg-checked button-group)]
       (a/id skill-button))))
 

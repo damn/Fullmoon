@@ -6,10 +6,10 @@
             [core.widgets.entity-info-window :as entity-info-window]
             [core.widgets.hp-mana :as hp-mana-bars]
             [core.widgets.player-message :as player-message]
+            [world.core :as world]
             world.creature.states
             [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
-            [world.entity.skills :refer [->action-bar ->action-bar-button-group]]
-            world.widgets))
+            [world.entity.skills :refer [->action-bar ->action-bar-button-group]]))
 
 (defn- actors [widget-data]
   [(ui/table {:rows [[{:actor (->action-bar)
@@ -35,4 +35,4 @@
     widget-data))
 
 (defn init! []
-  (.bindRoot #'world.widgets/world-widgets (data)))
+  (.bindRoot #'world/widgets (data)))
