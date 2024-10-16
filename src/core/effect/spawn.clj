@@ -17,7 +17,7 @@
 ; new UI -> show creature body & then place
 ; >> but what if it is blocked the area during action-time ?? <<
 (defc :effect/spawn
-  {:data [:one-to-one :properties/creatures]
+  {:db/schema [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
   (effect/applicable? [_]
     (and (:entity/faction @source)

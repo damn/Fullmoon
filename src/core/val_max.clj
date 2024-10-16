@@ -68,16 +68,16 @@
     (let [[_ op-k] (val-max-op-k->parts op-k)]
       (op/order [op-k value]))))
 
-(defc   :op/val-inc {:data :int})
+(defc   :op/val-inc {:db/schema :int})
 (derive :op/val-inc :op/val-max)
 
-(defc   :op/val-mult {:data :number})
+(defc   :op/val-mult {:db/schema :number})
 (derive :op/val-mult :op/val-max)
 
-(defc   :op/max-inc {:data :int})
+(defc   :op/max-inc {:db/schema :int})
 (derive :op/max-inc :op/val-max)
 
-(defc   :op/max-mult {:data :number})
+(defc   :op/max-mult {:db/schema :number})
 (derive :op/max-mult :op/val-max)
 
 (comment

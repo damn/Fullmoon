@@ -12,7 +12,7 @@
             [world.entity.modifiers :refer [->modified-value]]))
 
 (defn- defmodifier [k operations]
-  (defc* k {:data [:map-optional operations]}))
+  (defc* k {:db/schema [:map-optional operations]}))
 
 (defn- stat-k->modifier-k [k]
   (keyword "modifier" (name k)))
@@ -29,7 +29,7 @@
     (defmodifier (stat-k->modifier-k k) modifier-ops))
   (when effect-ops
     (let [effect-k (stat-k->effect-k k)]
-      (defc* effect-k {:data [:map-optional effect-ops]})
+      (defc* effect-k {:db/schema [:map-optional effect-ops]})
       (derive effect-k :base/stat-effect))))
 
 (defn entity-stat
@@ -40,8 +40,8 @@
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 ; and no need at created player (npc controller component?)
-(defstat :stats/aggro-range   {:data :nat-int})
-(defstat :stats/reaction-time {:data :pos-int})
+(defstat :stats/aggro-range   {:db/schema :nat-int})
+(defstat :stats/reaction-time {:db/schema :pos-int})
 
 ; TODO
 ; @ hp says here 'Minimum' hp instead of just 'HP'
@@ -50,12 +50,12 @@
 ; op/set-to-ratio 0.5 ....
 ; sets the hp to 50%...
 (defstat :stats/hp
-  {:data :pos-int
+  {:db/schema :pos-int
    :modifier-ops [:op/max-inc :op/max-mult]
    :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
 (defstat :stats/mana
-  {:data :nat-int
+  {:db/schema :nat-int
    :modifier-ops [:op/max-inc :op/max-mult]
    :effect-ops [:op/val-inc :op/val-mult :op/max-inc :op/max-mult]})
 
@@ -82,19 +82,19 @@
 
 ; TODO clamp between 0 and max-speed ( same as movement-speed-schema )
 (defstat :stats/movement-speed
-  {:data :pos;(m/form entity/movement-speed-schema)
+  {:db/schema :pos;(m/form entity/movement-speed-schema)
    :modifier-ops [:op/inc :op/mult]})
 
 ; TODO show the stat in different color red/green if it was permanently modified ?
 ; or an icon even on the creature
 ; also we want audiovisuals always ...
 (defc :effect.entity/movement-speed
-  {:data [:map [:op/mult]]})
+  {:db/schema [:map [:op/mult]]})
 (derive :effect.entity/movement-speed :base/stat-effect)
 
 ; TODO clamp into ->pos-int
 (defstat :stats/strength
-  {:data :nat-int
+  {:db/schema :nat-int
    :modifier-ops [:op/inc]})
 
 ; TODO here >0
@@ -106,22 +106,22 @@
       data :pos
       operations [:op/inc]]
   (defstat :stats/cast-speed
-    {:data data
+    {:db/schema data
      :editor/doc doc
      :modifier-ops operations})
 
   (defstat :stats/attack-speed
-    {:data data
+    {:db/schema data
      :editor/doc doc
      :modifier-ops operations}))
 
 ; TODO bounds
 (defstat :stats/armor-save
-  {:data :number
+  {:db/schema :number
    :modifier-ops [:op/inc]})
 
 (defstat :stats/armor-pierce
-  {:data :number
+  {:db/schema :number
    :modifier-ops [:op/inc]})
 
 (def ^:private hpbar-colors
@@ -162,16 +162,16 @@
 ; TODO mana optional? / armor-save / armor-pierce (anyway wrong here)
 ; cast/attack-speed optional ?
 (defc :entity/stats
-  {:data [:map [:stats/hp
-                :stats/movement-speed
-                :stats/aggro-range
-                :stats/reaction-time
-                [:stats/mana          {:optional true}]
-                [:stats/strength      {:optional true}]
-                [:stats/cast-speed    {:optional true}]
-                [:stats/attack-speed  {:optional true}]
-                [:stats/armor-save    {:optional true}]
-                [:stats/armor-pierce  {:optional true}]]]
+  {:db/schema [:map [:stats/hp
+                     :stats/movement-speed
+                     :stats/aggro-range
+                     :stats/reaction-time
+                     [:stats/mana          {:optional true}]
+                     [:stats/strength      {:optional true}]
+                     [:stats/cast-speed    {:optional true}]
+                     [:stats/attack-speed  {:optional true}]
+                     [:stats/armor-save    {:optional true}]
+                     [:stats/armor-pierce  {:optional true}]]]
    :let stats}
   (entity/->v [_]
     (-> stats
@@ -203,7 +203,7 @@
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
 
-; is called :base/stat-effect so it doesn't show up in (:data [:components-ns :effect.entity]) list in editor
+; is called :base/stat-effect so it doesn't show up in (:db/schema [:components-ns :effect.entity]) list in editor
 ; for :skill/effects
 (defc :base/stat-effect
   (info/text [[k operations]]

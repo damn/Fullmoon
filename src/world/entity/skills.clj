@@ -25,33 +25,33 @@
               :image/scale 2}})
 
 (defc :skill/action-time-modifier-key
-  {:data [:enum :stats/cast-speed :stats/attack-speed]}
+  {:db/schema [:enum :stats/cast-speed :stats/attack-speed]}
   (info/text [[_ v]]
     (str "[VIOLET]" (case v
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))
 
-(defc :skill/action-time {:data :pos}
+(defc :skill/action-time {:db/schema :pos}
   (info/text [[_ v]]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
-(defc :skill/start-action-sound {:data :sound})
+(defc :skill/start-action-sound {:db/schema :sound})
 
 (defc :skill/effects
-  {:data [:components-ns :effect]})
+  {:db/schema [:components-ns :effect]})
 
-(defc :skill/cooldown {:data :nat-int}
+(defc :skill/cooldown {:db/schema :nat-int}
   (info/text [[_ v]]
     (when-not (zero? v)
       (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
 
-(defc :skill/cost {:data :nat-int}
+(defc :skill/cost {:db/schema :nat-int}
   (info/text [[_ v]]
     (when-not (zero? v)
       (str "[CYAN]Cost: " v " Mana[]"))))
 
 (defc :entity/skills
-  {:data [:one-to-many :properties/skills]}
+  {:db/schema [:one-to-many :properties/skills]}
   (entity/create [[k skills] eid]
     (cons [:e/assoc eid k nil]
           (for [skill skills]

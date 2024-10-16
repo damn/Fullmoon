@@ -50,7 +50,7 @@
   [:e/assoc eid :entity/image (current-frame animation)])
 
 (defc :entity/animation
-  {:data :data/animation
+  {:db/schema :data/animation
    :let animation}
   (entity/create [_ eid]
     [(tx-assoc-image-current-frame eid animation)])

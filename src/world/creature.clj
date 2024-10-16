@@ -38,33 +38,33 @@
 (g/def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
 
 (defc :property/pretty-name
-  {:data :string
+  {:db/schema :string
    :let value}
   (info/text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
-(defc :body/width   {:data :pos})
-(defc :body/height  {:data :pos})
-(defc :body/flying? {:data :boolean})
+(defc :body/width   {:db/schema :pos})
+(defc :body/height  {:db/schema :pos})
+(defc :body/flying? {:db/schema :boolean})
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
 
 (defc :entity/body
-  {:data [:map [:body/width
-                :body/height
-                :body/flying?]]})
+  {:db/schema [:map [:body/width
+                     :body/height
+                     :body/flying?]]})
 
 (defc :creature/species
-  {:data [:qualified-keyword {:namespace :species}]}
+  {:db/schema [:qualified-keyword {:namespace :species}]}
   (entity/->v [[_ species]]
     (str/capitalize (name species)))
   (info/text [[_ species]]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defc :creature/level
-  {:data :pos-int}
+  {:db/schema :pos-int}
   (info/text [[_ lvl]]
     (str "[GRAY]Level " lvl "[]")))
 

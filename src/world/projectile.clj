@@ -51,10 +51,10 @@
 
 ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
-(defc :projectile/max-range {:data :pos-int})
-(defc :projectile/speed     {:data :pos-int})
+(defc :projectile/max-range {:db/schema :pos-int})
+(defc :projectile/speed     {:db/schema :pos-int})
 
-(defc :projectile/piercing? {:data :boolean}
+(defc :projectile/piercing? {:db/schema :boolean}
   (info/text [_]
     "[LIME]Piercing[]"))
 
@@ -92,7 +92,7 @@
                   (+ (:radius entity) size 0.1))))
 
 (defc :effect/projectile
-  {:data [:one-to-one :properties/projectiles]
+  {:db/schema [:one-to-one :properties/projectiles]
    :let {:keys [entity-effects projectile/max-range] :as projectile}}
   ; TODO for npcs need target -- anyway only with direction
   (effect/applicable? [_]

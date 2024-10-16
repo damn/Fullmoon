@@ -45,7 +45,7 @@
    [:looping? :boolean]])
 
 (defn component [k]
-  (:data (safe-get component/meta k)))
+  (:db/schema (safe-get component/meta k)))
 
 (defn- attribute-schema
   "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."

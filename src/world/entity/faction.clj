@@ -11,7 +11,7 @@
   faction)
 
 (defc :entity/faction
-  {:data [:enum :good :evil]
+  {:db/schema [:enum :good :evil]
    :let faction}
   (info/text [_]
     (str "[SLATE]Faction: " (name faction) "[]")))
