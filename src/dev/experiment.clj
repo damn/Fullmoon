@@ -9,8 +9,7 @@
             [core.db :as db]
             [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
-            [world.core :as world]
-            [world.mouseover-entity :refer [mouseover-entity]]))
+            [world.core :as world :refer [mouseover-entity]]))
 
 (comment
 

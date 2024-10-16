@@ -5,8 +5,7 @@
             [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [clojure.string :as str]
             [utils.core :refer [readable-number]]
-            [world.core :as world]
-            [world.mouseover-entity :refer [mouseover-entity]]))
+            [world.core :as world :refer [mouseover-entity]]))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (str/join "\n"

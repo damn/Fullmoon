@@ -1,16 +1,23 @@
 (ns world.core
-  (:require [clojure.gdx.graphics :as g :refer [white black]]
+  (:require [clj-commons.pretty.repl :refer [pretty-pst]]
+            [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
+            [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
+            [clojure.gdx.ui.stage-screen :as stage-screen]
             [clojure.gdx.math.shape :as shape]
+            [clojure.gdx.math.vector :as v]
             [clojure.gdx.tiled :as t]
             [clojure.gdx.utils :refer [dispose!]]
             [core.component :refer [defc]]
             [core.db :as db]
             [core.tx :as tx]
+            [core.widgets.error :refer [error-window!]]
             [data.grid2d :as g2d]
-            [utils.core :refer [->tile tile->middle safe-merge]]
+            [utils.core :refer [bind-root ->tile tile->middle safe-merge sort-by-order]]
             [world.content-grid :as content-grid]
             [world.entity :as entity]
+            [world.entity.faction :as faction]
+            [world.entity.state :as entity-state]
             [world.raycaster :as raycaster]))
 
 (defn- rectangle->tiles
@@ -163,9 +170,11 @@
     :occupied #{}}))
 
 (defn- init-grid! [width height position->value]
-  (.bindRoot #'grid (g2d/create-grid width
+  (bind-root #'grid (g2d/create-grid width
                                      height
                                      #(atom (create-cell % (position->value %))))))
+
+(load "potential_fields")
 
 (declare paused?
 
@@ -179,11 +188,11 @@
          logic-frame)
 
 (defn- init-time! []
-  (.bindRoot #'elapsed-time 0)
-  (.bindRoot #'logic-frame 0))
+  (bind-root #'elapsed-time 0)
+  (bind-root #'logic-frame 0))
 
-(defn update-time! [delta]
-  (.bindRoot #'delta-time delta)
+(defn- update-time! [delta]
+  (bind-root #'delta-time delta)
   (alter-var-root #'elapsed-time + delta)
   (alter-var-root #'logic-frame inc))
 
@@ -211,14 +220,14 @@
          explored-tile-corners)
 
 (defn- init-explored-tile-corners! [width height]
-  (.bindRoot #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
+  (bind-root #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
 
 ;;
 
 (declare ^:private raycaster)
 
 (defn- init-raycaster! []
-  (.bindRoot #'raycaster (raycaster/create grid blocks-vision?)))
+  (bind-root #'raycaster (raycaster/create grid blocks-vision?)))
 
 (defn ray-blocked? [start target]
   (raycaster/blocked? raycaster start target))
@@ -233,7 +242,7 @@
 (declare ^:private content-grid)
 
 (defn- init-content-grid! [opts]
-  (.bindRoot #'content-grid (content-grid/create opts)))
+  (bind-root #'content-grid (content-grid/create opts)))
 
 (defn active-entities []
   (content-grid/active-entities content-grid @player))
@@ -243,7 +252,7 @@
 (declare ^:private ids->eids)
 
 (defn- init-ids->eids! []
-  (.bindRoot #'ids->eids {}))
+  (bind-root #'ids->eids {}))
 
 (defn all-entities []
   (vals ids->eids))
@@ -320,11 +329,11 @@
    nil))
 
 (defn init! [{:keys [tiled-map start-position]}]
-  (.bindRoot #'entity-tick-error nil)
+  (bind-root #'entity-tick-error nil)
   (init-time!)
   (when (bound? #'tiled-map)
     (dispose! @#'tiled-map))
-  (.bindRoot #'tiled-map tiled-map)
+  (bind-root #'tiled-map tiled-map)
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)]
     (init-grid! w h (world-grid-position->value-fn tiled-map))
@@ -373,17 +382,10 @@
         (g/draw-filled-rectangle x y 1 1 [0 0 1 0.6]))
 
       (when potential-field-colors?
-
-
-
-        ; FIXME !
-
-
-
-        #_(let [faction :good
+        (let [faction :good
               {:keys [distance]} (faction cell*)]
           (when distance
-            (let [ratio (/ distance (potential-fields/factions-iterations faction))]
+            (let [ratio (/ distance (factions-iterations faction))]
               (g/draw-filled-rectangle x y 1 1 [ratio (- 1 ratio) ratio 0.6]))))))))
 
 ;;
@@ -400,9 +402,9 @@
                             :air  [1 1 0 0.5]
                             :none [1 0 0 0.5]))))))
 
-(defn render-before-entities [] (tile-debug))
+(defn- render-before-entities [] (tile-debug))
 
-(defn render-after-entities []
+(defn- render-after-entities []
   #_(geom-test)
   (highlight-mouseover-tile))
 
@@ -445,7 +447,7 @@
               (swap! explored-tile-corners assoc (->tile position) true))
             white)))))
 
-(defn render-tiled-map! [light-position]
+(defn- render-tiled-map! [light-position]
   (g/draw-tiled-map tiled-map
                     (->tile-color-setter (atom nil) light-position))
   #_(reset! do-once false))
@@ -477,7 +479,7 @@
        (not (and los-checks?
                  (ray-blocked? (:position source) (:position target))))))
 
-(defn remove-destroyed-entities!
+(defn- remove-destroyed-entities!
   "Calls destroy on all entities which are marked with ':e/destroy'"
   []
   (mapcat (fn [eid]
@@ -490,7 +492,7 @@
   (defn- unique-number! []
     (swap! cnt inc)))
 
-(defn create-vs
+(defn- create-vs
   "Creates a map for every component with map entries `[k (create [k v])]`."
   [components]
   (reduce (fn [m [k v]]
@@ -543,3 +545,92 @@
   (tx/do! [[_ eid ks f]]
     (swap! eid update-in ks f)
     nil))
+
+;;
+
+(def ^:private ^:dbg-flag pausing? true)
+
+(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @player)))
+(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @player)))
+
+(defn- player-unpaused? []
+  (or (key-just-pressed? :keys/p)
+      (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
+
+(defn- update-game-paused []
+  (bind-root #'paused? (or entity-tick-error
+                                 (and pausing?
+                                      (player-state-pause-game?)
+                                      (not (player-unpaused?)))))
+  nil)
+
+(def ^:private ^:dbg-flag show-body-bounds false)
+
+(defn- draw-body-rect [entity color]
+  (let [[x y] (:left-bottom entity)]
+    (g/draw-rectangle x y (:width entity) (:height entity) color)))
+
+(defn- render-entity! [system entity]
+  (try
+   (when show-body-bounds
+     (draw-body-rect entity (if (:collides? entity) :white :gray)))
+   (run! #(system % entity) entity)
+   (catch Throwable t
+     (draw-body-rect entity :red)
+     (pretty-pst t 12))))
+
+(defn- render-entities!
+  "Draws entities in the correct z-order and in the order of render-systems for each z-order."
+  [entities]
+  (let [player-entity @player]
+    (doseq [[z-order entities] (sort-by-order (group-by :z-order entities)
+                                               first
+                                               entity/render-order)
+            system entity/render-systems
+            entity entities
+            :when (or (= z-order :z-order/effect)
+                      (line-of-sight? player-entity entity))]
+      (render-entity! system entity))))
+
+; precaution in case a component gets removed by another component
+; the question is do we still want to update nil components ?
+; should be contains? check ?
+; but then the 'order' is important? in such case dependent components
+; should be moved together?
+(defn- tick-system [eid]
+  (try
+   (doseq [k (keys @eid)]
+     (when-let [v (k @eid)]
+       (tx/do-all (entity/tick [k v] eid))))
+   (catch Throwable t
+     (throw (ex-info "" (select-keys @eid [:entity/id]) t)))))
+
+(defn- tick-entities!
+  "Calls tick system on all components of entities."
+  [entities]
+  (run! tick-system entities))
+
+(load "mouseover_entity")
+
+(defn tick! []
+  (🎥/set-position! (g/world-camera) (:position @player))
+  (render-tiled-map! (🎥/position (g/world-camera)))
+  (g/render-world-view! (fn []
+                          (render-before-entities)
+                          (render-entities! (map deref (active-entities)))
+                          (render-after-entities)))
+  (tx/do-all [player-update-state
+              ; this do always so can get debug info even when game not running
+              update-mouseover-entity!
+              update-game-paused
+              #(when-not paused?
+                 (update-time! (min (g/delta-time) entity/max-delta-time))
+                 (let [entities (active-entities)]
+                   (update-potential-fields! entities)
+                   (try (run! tick-system entities)
+                        (catch Throwable t
+                          (error-window! t)
+                          (bind-root #'entity-tick-error t))))
+                 nil)
+              ; do not pause this as for example pickup item, should be destroyed.
+              remove-destroyed-entities!]))

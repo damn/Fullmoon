@@ -1,15 +1,8 @@
 (ns clojure.gdx.app
-  {:core.tool/icon "✅"}
-  (:import (com.badlogic.gdx Gdx ApplicationAdapter)
+  (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.backends.lwjgl3 Lwjgl3Application Lwjgl3ApplicationConfiguration)
            (com.badlogic.gdx.utils SharedLibraryLoader)
            (org.lwjgl.system Configuration)))
-
-(defprotocol Listener
-  (create!  [_])
-  (dispose! [_])
-  (render!  [_])
-  (resize!  [_ dimensions]))
 
 (defn- macos-fix! []
   ; https://github.com/libgdx/libgdx/pull/7361
@@ -32,12 +25,7 @@
 
 (defn start! [listener config]
   (macos-fix!)
-  (Lwjgl3Application. (proxy [ApplicationAdapter] []
-                        (create  []    (create!  listener))
-                        (dispose []    (dispose! listener))
-                        (render  []    (render!  listener))
-                        (resize  [w h] (resize!  listener [w h])))
-                      (lwjgl3-config config)))
+  (Lwjgl3Application. listener (lwjgl3-config config)))
 
 (defn exit! []
   (.exit Gdx/app))

@@ -9,15 +9,13 @@
             [core.component :refer [defc]]
             [core.effect :as effect]
             [core.tx :as tx]
-            [world.core :as world :refer [timer stopped? finished-ratio]]
+            [world.core :as world :refer [timer stopped? finished-ratio mouseover-eid]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
             [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
-            [world.entity.stats :refer [entity-stat]]
-            [world.mouseover-entity :refer [mouseover-eid]]
-            [world.potential-fields :as potential-fields]))
+            [world.entity.stats :refer [entity-stat]]))
 
 (defc :npc-dead
   {:let {:keys [eid]}}
@@ -372,7 +370,7 @@
       (if-let [skill (effect/with-ctx effect-ctx
                        (npc-choose-skill @eid))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (potential-fields/follow-to-enemy eid)]]))))
+        [[:tx/event eid :movement-direction (world/follow-to-enemy eid)]]))))
 
 (defn- denied [text]
   [[:tx/sound "sounds/bfxr_denied.wav"]

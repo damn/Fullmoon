@@ -2,7 +2,7 @@
   (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.ui :as ui]
             [core.info :as info]
-            [world.mouseover-entity :refer [mouseover-entity]]))
+            [world.core :refer [mouseover-entity]]))
 
 (def ^:private disallowed-keys [:entity/skills
                                 :entity/state

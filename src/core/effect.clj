@@ -2,10 +2,9 @@
   (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.math.vector :as v]
             [core.component :refer [defsystem defc]]
-            [world.core :as world]
+            [world.core :as world :refer [mouseover-eid]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
-            [world.mouseover-entity :refer [mouseover-eid]]
             [core.tx :as tx]))
 
 (defsystem applicable?

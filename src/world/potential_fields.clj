@@ -1,16 +1,4 @@
-(ns world.potential-fields
-  (:require [clojure.gdx.math.vector :as v]
-            [data.grid2d :as g2d]
-            [utils.core :refer [->tile]]
-            [world.entity :as entity]
-            [world.entity.faction :as faction]
-            [world.core :refer [blocked?
-                                nearest-entity-distance
-                                nearest-entity
-                                cached-adjacent-cells
-                                occupied-by-other?
-                                rectangle->cells]
-             :as world]))
+(in-ns 'world.core)
 
 ; Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
 ; adjacent cells are walls and blocked.
@@ -23,7 +11,7 @@
 
 (def ^:private pf-cache (atom nil))
 
-(def factions-iterations {:good 15 :evil 5})
+(def ^:private factions-iterations {:good 15 :evil 5})
 
 (defn- cell-blocked? [cell*]
   (blocked? cell* :z-order/ground))
@@ -120,7 +108,7 @@
   "returns the marked-cells"
   [faction tiles->entities max-iterations]
   (let [entity-cell-seq (for [[tile eid] tiles->entities] ; FIXME lazy seq
-                          [eid (get world/grid tile)])
+                          [eid (get grid tile)])
         marked (map second entity-cell-seq)]
     (doseq [[eid cell] entity-cell-seq]
       (add-field-data! cell faction 0 eid))
@@ -259,7 +247,7 @@
 ; TODO work with entity !? occupied-by-other? works with entity not entity ... not with ids ... hmmm
 (defn follow-to-enemy [eid] ; TODO pass faction here, one less dependency.
   (let [position (:position @eid)
-        own-cell (get world/grid (->tile position))
+        own-cell (get grid (->tile position))
         {:keys [target-entity target-cell]} (find-next-cell eid own-cell)]
     (cond
      target-entity
@@ -274,7 +262,7 @@
        (when-not (inside-cell? @eid target-cell)
          (v/direction position (:middle @target-cell)))))))
 
-(defn update! [entities]
+(defn- update-potential-fields! [entities]
   (doseq [[faction max-iterations] factions-iterations]
     (update-faction-potential-field faction entities max-iterations)))
 
@@ -299,7 +287,7 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get world/grid (entity/tile @body))
+    (let [occupied-cell (get grid (entity/tile @body))
           own-dist (distance-to occupied-cell)
           adj-cells (cached-adjacent-cells occupied-cell)
           potential-cells (filter distance-to

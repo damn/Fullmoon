@@ -1,11 +1,4 @@
-(ns world.mouseover-entity
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui.stage-screen :as stage-screen]
-            [core.component :refer [defc]]
-            [utils.core :refer [sort-by-order]]
-            [world.core :as world]
-            [world.entity :as entity]
-            [world.entity.faction :as faction]))
+(in-ns 'world.core)
 
 (def mouseover-eid nil)
 
@@ -14,16 +7,16 @@
     @eid))
 
 (defn- calculate-mouseover-eid []
-  (let [player-entity @world/player
+  (let [player-entity @player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
-                     (world/point->entities (g/world-mouse-position)))]
+                     (point->entities (g/world-mouse-position)))]
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse
-         (filter #(world/line-of-sight? player-entity @%))
+         (filter #(line-of-sight? player-entity @%))
          first)))
 
-(defn update! []
+(defn- update-mouseover-entity! []
   (let [eid (if (stage-screen/mouse-on-actor?)
               nil
               (calculate-mouseover-eid))]
@@ -50,7 +43,7 @@
 
 (defc :entity/mouseover?
   (entity/render-below [_ {:keys [entity/faction] :as entity}]
-    (let [player-entity @world/player]
+    (let [player-entity @player]
       (g/with-shape-line-width 3
         #(g/draw-ellipse (:position entity)
                          (:half-width entity)

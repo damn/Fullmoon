@@ -1,6 +1,5 @@
 (ns core.app
-  (:require [clj-commons.pretty.repl :refer [pretty-pst]]
-            [clojure.gdx.app :as app]
+  (:require [clojure.gdx.app :as app]
             [clojure.gdx.assets :as assets]
             [clojure.gdx.graphics :as g :refer [white black]]
             [clojure.gdx.graphics.camera :as 🎥]
@@ -19,18 +18,15 @@
             [core.tx :as tx]
             core.tx.gdx
             [core.widgets.debug-window :as debug-window]
-            [core.widgets.error :refer [error-window!]]
             [core.widgets.entity-info-window :as entity-info-window]
             [core.widgets.hp-mana :as hp-mana-bars]
             [core.widgets.player-message :as player-message]
-            [world.entity :as entity]
             world.entity.animation
             world.entity.delete-after-duration
             world.entity.image
             [world.entity.inventory :refer [->inventory-window]]
             world.entity.line
             world.entity.movement
-            [world.entity.state :as entity-state]
             world.entity.string-effect
             [world.entity.skills :refer [action-bar]]
             property.audiovisual
@@ -41,8 +37,6 @@
             [world.entity :as entity]
             world.entity.stats
             world.generate
-            [world.mouseover-entity :as mouseover-entity]
-            [world.potential-fields :as potential-fields]
             world.projectile))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
@@ -138,68 +132,6 @@
         #_(key-just-pressed? :keys/tab)
         #_(screen/change! :screens/minimap)))
 
-(def ^:private ^:dbg-flag pausing? true)
-
-(defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @world/player)))
-(defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @world/player)))
-
-(defn- player-unpaused? []
-  (or (key-just-pressed? :keys/p)
-      (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
-
-(defn- update-game-paused []
-  (bind-root #'world/paused? (or world/entity-tick-error
-                                 (and pausing?
-                                      (player-state-pause-game?)
-                                      (not (player-unpaused?)))))
-  nil)
-
-(def ^:private ^:dbg-flag show-body-bounds false)
-
-(defn- draw-body-rect [entity color]
-  (let [[x y] (:left-bottom entity)]
-    (g/draw-rectangle x y (:width entity) (:height entity) color)))
-
-(defn- render-entity! [system entity]
-  (try
-   (when show-body-bounds
-     (draw-body-rect entity (if (:collides? entity) :white :gray)))
-   (run! #(system % entity) entity)
-   (catch Throwable t
-     (draw-body-rect entity :red)
-     (pretty-pst t 12))))
-
-(defn- render-entities!
-  "Draws entities in the correct z-order and in the order of render-systems for each z-order."
-  [entities]
-  (let [player-entity @world/player]
-    (doseq [[z-order entities] (sort-by-order (group-by :z-order entities)
-                                               first
-                                               entity/render-order)
-            system entity/render-systems
-            entity entities
-            :when (or (= z-order :z-order/effect)
-                      (world/line-of-sight? player-entity entity))]
-      (render-entity! system entity))))
-
-; precaution in case a component gets removed by another component
-; the question is do we still want to update nil components ?
-; should be contains? check ?
-; but then the 'order' is important? in such case dependent components
-; should be moved together?
-(defn- tick-system [eid]
-  (try
-   (doseq [k (keys @eid)]
-     (when-let [v (k @eid)]
-       (tx/do-all (entity/tick [k v] eid))))
-   (catch Throwable t
-     (throw (ex-info "" (select-keys @eid [:entity/id]) t)))))
-
-(defn- tick-entities!
-  "Calls tick system on all components of entities."
-  [entities]
-  (run! tick-system entities))
-
 (deftype WorldScreen []
   screen/Screen
   (screen/enter! [_])
@@ -208,29 +140,7 @@
     (g/set-cursor! :cursors/default))
 
   (screen/render! [_]
-    (🎥/set-position! (g/world-camera) (:position @world/player))
-    (world/render-tiled-map! (🎥/position (g/world-camera)))
-    (g/render-world-view! (fn []
-                            (world/render-before-entities)
-
-                            ; this one also w. player los ...
-                            (render-entities! (map deref (world/active-entities)))
-
-                            (world/render-after-entities)))
-    (tx/do-all [player-update-state
-                mouseover-entity/update! ; this do always so can get debug info even when game not running
-                update-game-paused
-                #(when-not world/paused?
-                   (world/update-time! (min (g/delta-time) entity/max-delta-time))
-                   (let [entities (world/active-entities)]
-                     (potential-fields/update! entities)
-                     (try (run! tick-system entities)
-                          (catch Throwable t
-                            (error-window! t)
-                            (bind-root #'world/entity-tick-error t))))
-                   nil)
-                world/remove-destroyed-entities! ; do not pause this as for example pickup item, should be destroyed.
-                ])
+    (world/tick!)
     (check-key-input))
 
   (screen/dispose! [_]))
@@ -364,25 +274,25 @@
 
 (defn- start-app! [& {:keys [graphics ui] :as config}]
   (db/load! "properties.edn")
-  (app/start! (reify app/Listener
-                (create! [_]
+  (app/start! (proxy [com.badlogic.gdx.ApplicationAdapter] []
+                (create []
                   (assets/load! "resources/")
                   (g/load! graphics)
                   (ui/load! ui)
                   (screen/set-screens! (screens)))
 
-                (dispose! [_]
+                (dispose []
                   (assets/dispose!)
                   (g/dispose!)
                   (ui/dispose!)
                   (screen/dispose-all!))
 
-                (render! [_]
+                (render []
                   (com.badlogic.gdx.utils.ScreenUtils/clear com.badlogic.gdx.graphics.Color/BLACK)
                   (screen/render! (screen/current)))
 
-                (resize! [_ dimensions]
-                  (g/resize! dimensions)))
+                (resize [w h]
+                  (g/resize! [w h])))
               config))
 
 (defn -main []
