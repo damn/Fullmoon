@@ -65,7 +65,8 @@
                              :color [1 1 1]
                              :duration 2}])
 
- (do
+ (do ; this only works in game screen otherwise action-bar uses wrong stage !!
+     ; remove anyway other screens?! optionsmenu not needed -> menubar in dev mode
   (learn-skill! :skills/projectile)
   (learn-skill! :skills/spawn)
   (learn-skill! :skills/meditation)
