@@ -4,63 +4,21 @@
             [clojure.pprint :refer [pprint]]
             [core.component :refer [defc] :as component]
             [core.property :as property]
-            [core.schema :as schema]
+            [core.schema :as s]
             [malli.core :as m]
             [malli.error :as me]
             [utils.core :refer [bind-root safe-get]]))
 
-(defmethod schema/form :number  [_] number?)
-(defmethod schema/form :nat-int [_] nat-int?)
-(defmethod schema/form :int     [_] int?)
-(defmethod schema/form :pos     [_] pos?)
-(defmethod schema/form :pos-int [_] pos-int?)
+(defn def-attr [k schema]
+  (defc k {:db/schema schema}))
 
-(defmethod schema/form :sound [_] :string)
+(defn attr-schema [k]
+  (:db/schema (component/meta k)))
 
-(defmethod schema/form :image [_]
-  [:map {:closed true}
-   [:file :string]
-   [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
+(def-attr :property/id :qualified-keyword)
 
-(defmethod schema/form :data/animation [_]
-  [:map {:closed true}
-   [:frames :some] ; FIXME actually images
-   [:frame-duration pos?]
-   [:looping? :boolean]])
-
-(defn k->schema [k]
-  (:db/schema (safe-get component/meta k)))
-
-(defn- attribute-form
-  "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."
-  [ks]
-  (for [k ks
-        :let [k? (keyword? k)
-              schema-props (if k? nil (k 1))
-              k (if k? k (k 0))]]
-    (do
-     (assert (keyword? k))
-     (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
-     [k schema-props (schema/form (k->schema k))])))
-
-(defn- map-form [ks]
-  (apply vector :map {:closed true} (attribute-form ks)))
-
-(defmethod schema/form :map [[_ ks]]
-  (map-form ks))
-
-(defmethod schema/form :map-optional [[_ ks]]
-  (map-form (map (fn [k] [k {:optional true}]) ks)))
-
-(defn- namespaced-ks [ns-name-k]
-  (filter #(= (name ns-name-k) (namespace %))
-          (keys component/meta)))
-
-(defmethod schema/form :components-ns [[_ ns-name-k]]
-  (schema/form [:map-optional (namespaced-ks ns-name-k)]))
-
-(defc :property/id {:db/schema :qualified-keyword})
-
+; overview is only for editor - remove
+; remove this whole thing then
 (defn def-property [k {:keys [schema overview]}]
   (defc k
     {:db/schema [:map (conj schema :property/id)]
@@ -72,8 +30,8 @@
 (defn prop->schema [property]
   (-> property
       property/type
-      k->schema
-      schema/form
+      attr-schema
+      s/form
       m/schema))
 
 (defn- invalid-ex-info [schema value]
@@ -148,13 +106,13 @@
 
 (defmulti edn->value (fn [schema v]
                        (when schema  ; undefined-data-ks
-                         (schema/type schema))))
+                         (s/type schema))))
 (defmethod edn->value :default [_ v] v)
 
 (defn- build [property]
   (apply-kvs property
              (fn [k v]
-               (try (edn->value (try (k->schema k)
+               (try (edn->value (try (attr-schema k)
                                      (catch Throwable _t
                                        (swap! undefined-data-ks conj k)
                                        nil))
@@ -186,14 +144,46 @@
   (alter-var-root #'db dissoc property-id)
   (async-write-to-file!))
 
+;;
+
+(defn- attribute-form
+  "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."
+  [ks]
+  (for [k ks
+        :let [k? (keyword? k)
+              schema-props (if k? nil (k 1))
+              k (if k? k (k 0))]]
+    (do
+     (assert (keyword? k))
+     (assert (or (nil? schema-props) (map? schema-props)) (pr-str ks))
+     [k schema-props (s/form (attr-schema k))])))
+
+(defn- map-form [ks]
+  (apply vector :map {:closed true} (attribute-form ks)))
+
+(defmethod s/form :map [[_ ks]]
+  (map-form ks))
+
+(defmethod s/form :map-optional [[_ ks]]
+  (map-form (map (fn [k] [k {:optional true}]) ks)))
+
+(defn- namespaced-ks [ns-name-k]
+  (filter #(= (name ns-name-k) (namespace %))
+          (keys component/meta)))
+
+(defmethod s/form :components-ns [[_ ns-name-k]]
+  (s/form [:map-optional (namespaced-ks ns-name-k)]))
+
+;;
+
+(defmethod s/form :one-to-one [[_ property-type]]
+  [:qualified-keyword {:namespace (property/type->id-namespace property-type)}])
+
 (defmethod edn->value :one-to-one [_ property-id]
   (get property-id))
 
+(defmethod s/form :one-to-many [[_ property-type]]
+  [:set [:qualified-keyword {:namespace (property/type->id-namespace property-type)}]])
+
 (defmethod edn->value :one-to-many [_ property-ids]
   (map get property-ids))
-
-(defmethod schema/form :one-to-one [[_ property-type]]
-  [:qualified-keyword {:namespace (property/type->id-namespace property-type)}])
-
-(defmethod schema/form :one-to-many [[_ property-type]]
-  [:set [:qualified-keyword {:namespace (property/type->id-namespace property-type)}]])

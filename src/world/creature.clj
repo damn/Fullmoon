@@ -42,18 +42,17 @@
   (info/text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
-(defc :body/width   {:db/schema :pos})
-(defc :body/height  {:db/schema :pos})
-(defc :body/flying? {:db/schema :boolean})
+(db/def-attr :body/width   :pos)
+(db/def-attr :body/height  :pos)
+(db/def-attr :body/flying? :boolean)
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
 
-(defc :entity/body
-  {:db/schema [:map [:body/width
-                     :body/height
-                     :body/flying?]]})
+(db/def-attr :entity/body [:map [:body/width
+                                 :body/height
+                                 :body/flying?]])
 
 (defc :creature/species
   {:db/schema [:qualified-keyword {:namespace :species}]}

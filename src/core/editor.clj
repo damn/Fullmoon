@@ -191,7 +191,7 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [schema (db/k->schema k)]
+  (let [schema (db/attr-schema k)]
     (cond
      (#{:one-to-one :one-to-many} schema) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
@@ -256,7 +256,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (db/k->schema k) v)
+        value-widget (->widget (db/attr-schema k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -290,7 +290,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (db/k->schema k) value-widget)])))
+             [k (widget->value (db/attr-schema k) value-widget)])))
 
 ;;
 
