@@ -22,7 +22,7 @@
      (println "WARNING: Overwriting defsystem:" avar))
    `(do
      (defmulti ~(vary-meta sys-name assoc :params (list 'quote params))
-       ~(str "[[defsystem]] with params: `" params (when docstring "` \n\n " docstring))
+       ~(str "[[defsystem]] `" params "`" (when docstring (str "\n\n" docstring)))
        (fn [[k#] & _args#] k#))
      (alter-var-root #'systems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
      (var ~sys-name))))
