@@ -19,7 +19,7 @@
   (keyword "properties" (namespace id)))
 
 (defn types []
-  (filter #(= "properties" (namespace %)) (keys component/attributes)))
+  (filter #(= "properties" (namespace %)) (keys component/meta)))
 
 (defn schema [property]
   (-> property
@@ -39,7 +39,7 @@
       (throw (invalid-ex-info schema property)))))
 
 (defn overview [property-type]
-  (:overview (get component/attributes property-type)))
+  (:overview (component/meta property-type)))
 
 (defn ->image [{:keys [entity/image entity/animation]}]
   (or image

@@ -46,7 +46,7 @@
    [:looping? :boolean]])
 
 (defn component [k]
-  (:data (safe-get component/attributes k)))
+  (:data (safe-get component/meta k)))
 
 (defn- attribute-schema
   "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."
@@ -71,7 +71,7 @@
 
 (defn- namespaced-ks [ns-name-k]
   (filter #(= (name ns-name-k) (namespace %))
-          (keys component/attributes)))
+          (keys component/meta)))
 
 (defmethod schema :components-ns [[_ ns-name-k]]
   (schema [:map-optional (namespaced-ks ns-name-k)]))

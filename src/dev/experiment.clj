@@ -166,7 +166,7 @@
 
              (println "\n#" nmsp)
              (doseq [k ks
-                     :let [attr-m (get component/attributes k)]]
+                     :let [attr-m (component/meta k)]]
                (println (str "* __" k "__ `" (get (:params attr-m) "tx/do!") "`"))
                (when-let [data (:data attr-m)]
                  (println (str "    * data: `" (pr-str data) "`")))
@@ -175,16 +175,10 @@
                    (println "    * Descendants"))
                  (doseq [k ks]
                    (println "      *" k)
-                   (println (str "        * data: `" (pr-str (:data (get component/attributes k))) "`"))))))))))
+                   (println (str "        * data: `" (pr-str (:data (component/meta k))) "`"))))))))))
 
 (defn- data-components []
-  (sort
-   (concat
-    (keys (methods data/schema))
-    (map first
-         (filter (fn [[k attr-m]]
-                   (:schema attr-m))
-                 component/attributes)))))
+  (sort (keys (methods data/schema))))
 
 (defn- component-systems [component-k]
    (for [[sys-name sys-var] component/systems
@@ -198,7 +192,7 @@
              (if-let [ancestrs (ancestors k)]
                (str "-> "(clojure.string/join "," ancestrs))
                "")
-             (let [attr-map (get component/attributes k)]
+             (let [attr-map (component/meta k)]
                #_(if (seq attr-map)
                    (pr-str (:core.component/fn-params attr-map))
                    (str " `"
@@ -224,7 +218,7 @@
           (with-out-str
            (doseq [[nmsp components] (sort-by first
                                               (group-by namespace
-                                                        (sort (keys component/attributes))))]
+                                                        (sort (keys component/meta))))]
              (println "\n#" nmsp)
              (print-components* components)
              )))))

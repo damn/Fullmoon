@@ -246,7 +246,7 @@
 
 (defn- ->attribute-label [k]
   (let [label (ui/label (str k))]
-    (when-let [doc (:editor/doc (get component/attributes k))]
+    (when-let [doc (:editor/doc (component/meta k))]
       (ui/add-tooltip! label doc))
     label))
 

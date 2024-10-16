@@ -1,6 +1,7 @@
 (ns core.component
   "A component is a vector of `[k & values?]`.
-  For example a minimal component is `[:foo]`")
+  For example a minimal component is `[:foo]`"
+  (:refer-clojure :exclude [meta]))
 
 (def systems "Map of all systems as key of name-string to var." {})
 
@@ -27,14 +28,14 @@
      (alter-var-root #'systems assoc ~(str (ns-name *ns*) "/" sys-name) (var ~sys-name))
      (var ~sys-name))))
 
-(def attributes {})
+(def meta {})
 
 (defn defc*
   "Defines a component without systems methods, so only to set metadata."
   [k attr-map]
-  (when (get attributes k)
+  (when (meta k)
     (println "WARNING: Overwriting defc" k "attr-map"))
-  (alter-var-root #'attributes assoc k attr-map))
+  (alter-var-root #'meta assoc k attr-map))
 
 (defmacro defc
   "Defines a component with keyword k and optional metadata attribute-map followed by system implementations (via defmethods).
@@ -65,7 +66,7 @@ Example:
       #_(alter-meta! *ns* #(update % :doc str "\n* defc `" ~k "`"))
       ~@(for [[sys & fn-body] sys-impls
               :let [sys-var (resolve sys)
-                    sys-params (:params (meta sys-var))
+                    sys-params (:params (clojure.core/meta sys-var))
                     fn-params (first fn-body)
                     fn-exprs (rest fn-body)]]
           (do
@@ -77,7 +78,7 @@ Example:
                           " Given " (count fn-params)  " args: " fn-params))))
            `(do
              (assert (keyword? ~k) (pr-str ~k))
-             (alter-var-root #'attributes assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
+             (alter-var-root #'meta assoc-in [~k :params ~(name (symbol sys-var))] (quote ~fn-params))
              (when (get (methods @~sys-var) ~k)
                (println "WARNING: Overwriting defc" ~k "on" ~sys-var))
              (defmethod ~sys ~k ~(symbol (str (name (symbol sys-var)) "." (name k)))
