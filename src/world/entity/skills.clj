@@ -115,12 +115,12 @@
 
 (def ^:private image-scale 2)
 
-(defn ->action-bar []
+(defn action-bar []
   (let [group (ui/horizontal-group {:pad 2 :space 2})]
     (a/set-id! group ::action-bar)
     group))
 
-(defn ->action-bar-button-group []
+(defn action-bar-button-group []
   (ui/button-group {:max-check-count 1 :min-check-count 0}))
 
 (defn- get-action-bar []

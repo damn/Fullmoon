@@ -8,11 +8,11 @@
             [core.widgets.player-message :as player-message]
             [world.core :as world]
             world.creature.states
-            [world.entity.inventory :refer [->inventory-window ->inventory-window-data]]
-            [world.entity.skills :refer [->action-bar ->action-bar-button-group]]))
+            [world.entity.inventory :refer [->inventory-window]]
+            [world.entity.skills :refer [action-bar action-bar-button-group]]))
 
-(defn- actors [widget-data]
-  [(ui/table {:rows [[{:actor (->action-bar)
+(defn- actors []
+  [(ui/table {:rows [[{:actor (action-bar)
                        :expand? true
                        :bottom? true}]]
               :id :action-bar-table
@@ -22,14 +22,12 @@
    (ui/group {:id :windows
               :actors [(debug-window/create)
                        (entity-info-window/create)
-                       (->inventory-window widget-data)]})
+                       (->inventory-window)]})
    (ui/actor {:draw world.creature.states/draw-item-on-cursor})
    (player-message/create)])
 
 (defn reset-stage! []
-  (let [widget-data {:action-bar (->action-bar-button-group)
-                     :slot->background (->inventory-window-data)}
-        stage (stage-get)]
+  (let [stage (stage-get)] ; these fns to stage itself
     (stage/clear! stage)
-    (run! #(stage/add! stage %) (actors widget-data))
-    widget-data))
+    (run! #(stage/add! stage %) (actors))
+    {:action-bar (action-bar-button-group)}))
