@@ -7,10 +7,9 @@
             [core.property :as property]
             [core.tx :as tx]
             [utils.core :refer [readable-number]]
-            [world.core :as world]
+            [world.core :as world :refer [stopped?]]
             [world.entity :as entity]
             [world.entity.state :as entity-state]
-            [world.time :refer [stopped?]]
             [world.widgets :refer [world-widgets]]))
 
 (property/def :properties/skills

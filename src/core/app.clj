@@ -24,8 +24,7 @@
             world.projectile
             [world.render :refer [render-world!]]
             [world.game-loop :refer [game-loop]]
-            world.setup
-            world.time))
+            world.setup))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
 

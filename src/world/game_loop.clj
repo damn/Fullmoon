@@ -19,10 +19,10 @@
       (key-pressed? :keys/space))) ; FIXMe :keys? shouldnt it be just :space?
 
 (defn- update-game-paused []
-  (bind-root #'world.time/paused? (or world/entity-tick-error
-                                      (and pausing?
-                                           (player-state-pause-game?)
-                                           (not (player-unpaused?)))))
+  (bind-root #'world/paused? (or world/entity-tick-error
+                                 (and pausing?
+                                      (player-state-pause-game?)
+                                      (not (player-unpaused?)))))
   nil)
 
 
@@ -31,8 +31,8 @@
   (tx/do-all [player-update-state
               mouseover-entity/update! ; this do always so can get debug info even when game not running
               update-game-paused
-              #(when-not world.time/paused?
-                 (world.time/update! (min delta-time entity/max-delta-time))
+              #(when-not world/paused?
+                 (world/update-time! (min delta-time entity/max-delta-time))
                  (let [entities (world/active-entities)]
                    (potential-fields/update! entities)
                    (try (entity/tick-entities! entities)

@@ -9,7 +9,7 @@
             [core.component :refer [defc]]
             [core.effect :as effect]
             [core.tx :as tx]
-            [world.core :as world]
+            [world.core :as world :refer [->counter stopped? finished-ratio]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
@@ -18,8 +18,7 @@
             [world.entity.stats :refer [entity-stat]]
             [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-entity]]
-            [world.potential-fields :as potential-fields]
-            [world.time :refer [->counter stopped? finished-ratio]]))
+            [world.potential-fields :as potential-fields]))
 
 (defc :npc-dead
   {:let {:keys [eid]}}

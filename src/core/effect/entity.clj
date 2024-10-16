@@ -6,11 +6,11 @@
             [core.info :as info]
             [core.tx :as tx]
             [utils.core :refer [readable-number]]
+            [world.core :refer [->counter stopped? finished-ratio]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.modifiers :refer [->modified-value]]
-            [world.entity.stats :refer [entity-stat]]
-            [world.time :refer [->counter stopped? finished-ratio]]  ))
+            [world.entity.stats :refer [entity-stat]]))
 
 (defn- entity->melee-damage [entity]
   (let [strength (or (entity-stat entity :stats/strength) 0)]
@@ -119,7 +119,7 @@
 (defc :entity/temp-modifier
   {:let {:keys [counter modifiers]}}
   (info/text [_]
-    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (world.time/finished-ratio counter)) "/1[]"))
+    (str "[LIGHT_GRAY]Spiderweb - remaining: " (readable-number (finished-ratio counter)) "/1[]"))
 
   (entity/tick [[k _] eid]
     (when (stopped? counter)

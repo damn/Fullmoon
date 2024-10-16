@@ -10,9 +10,8 @@
             [core.tx :as tx]
             [malli.core :as m]
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
-            [world.core :as world]
-            [world.grid :as grid :refer [world-grid]]
-            [world.time :refer [world-delta ->counter finished-ratio stopped?]]))
+            [world.core :as world :refer [world-delta ->counter finished-ratio stopped?]]
+            [world.grid :as grid :refer [world-grid]]))
 
 (defsystem create [_ eid])
 (defmethod create :default [_ eid])
@@ -479,6 +478,6 @@
       (if-let [string-effect (:entity/string-effect @eid)]
         (-> string-effect
             (update :text str "\n" text)
-            (update :counter world.time/reset))
+            (update :counter world/reset))
         {:text text
          :counter (->counter 0.4)})]]))

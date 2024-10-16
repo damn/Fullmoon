@@ -6,8 +6,7 @@
             [clojure.string :as str]
             [utils.core :refer [readable-number]]
             [world.core :as world]
-            [world.mouseover-entity :refer [mouseover-entity]]
-            world.time))
+            [world.mouseover-entity :refer [mouseover-entity]]))
 
 (defn- skill-info [{:keys [entity/skills]}]
   (str/join "\n"
@@ -18,15 +17,15 @@
 (defn- debug-infos ^String []
   (let [world-mouse (g/world-mouse-position)]
     (str
-     "logic-frame: " world.time/logic-frame "\n"
+     "logic-frame: " world/logic-frame "\n"
      "FPS: " (g/frames-per-second)  "\n"
      "Zoom: " (🎥/zoom (g/world-camera)) "\n"
      "World: "(mapv int world-mouse) "\n"
      "X:" (world-mouse 0) "\n"
      "Y:" (world-mouse 1) "\n"
      "GUI: " (g/gui-mouse-position) "\n"
-     "paused? " world.time/paused? "\n"
-     "elapsed-time " (readable-number world.time/elapsed-time) " seconds \n"
+     "paused? " world/paused? "\n"
+     "elapsed-time " (readable-number world/elapsed-time) " seconds \n"
      "skill cooldowns: " (skill-info @world/player) "\n"
      (when-let [entity (mouseover-entity)]
        (str "Mouseover-entity uid: " (:entity/uid entity)))

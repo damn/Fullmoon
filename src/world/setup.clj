@@ -1,6 +1,5 @@
 (ns world.setup
-  (:require [data.grid2d :as g2d]
-            [clojure.gdx.tiled :as t]
+  (:require [clojure.gdx.tiled :as t]
             [clojure.gdx.utils :refer [dispose!]]
             [core.component :refer [defc]]
             [core.tx :as tx]
@@ -10,11 +9,7 @@
             [world.entity :as entity]
             world.generate
             [world.grid :as grid]
-            world.time
             world.widgets.setup))
-
-(defn- init-explored-tile-corners! [width height]
-  (.bindRoot #'world/explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
@@ -22,10 +17,6 @@
       "none" :none
       "air"  :air
       "all"  :all)))
-
-(defn- cleanup-last-world! []
-  (when (bound? #'world/tiled-map)
-    (dispose! world/tiled-map)))
 
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
@@ -60,23 +51,26 @@
 
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'world/entity-tick-error nil)
-  (world.time/init!)
+  (world/init-time!)
   (world.widgets.setup/init!)
   (entity/init-uids-entities!)
+
+  (when (bound? #'world/tiled-map)
+    (dispose! world/tiled-map))
   (bind-root #'world/tiled-map tiled-map)
+
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)
         grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
     (world/init-raycaster! grid grid/blocks-vision?)
     (world/init-content-grid! {:cell-size 16 :width w :height h})
-    (init-explored-tile-corners! w h))
+    (world/init-explored-tile-corners! w h))
 
   (spawn-creatures! tiled-map start-position))
 
 ; TODO  add-to-world/assoc/dissoc uid from entity move together here
 ; also core.screens/world ....
 (defn add-world-ctx! [world-property-id]
-  (cleanup-last-world!)
   (init-new-world! (world.generate/generate-level world-property-id)))
 
 (defc :tx/add-to-world
