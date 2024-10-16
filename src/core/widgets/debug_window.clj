@@ -28,7 +28,7 @@
      "elapsed-time " (readable-number world/elapsed-time) " seconds \n"
      "skill cooldowns: " (skill-info @world/player) "\n"
      (when-let [entity (mouseover-entity)]
-       (str "Mouseover-entity uid: " (:entity/uid entity)))
+       (str "Mouseover-entity id: " (:entity/id entity)))
      ;"\nMouseover-Actor:\n"
      #_(when-let [actor (mouse-on-actor?)]
          (str "TRUE - name:" (.getName actor)

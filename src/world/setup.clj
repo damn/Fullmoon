@@ -6,7 +6,6 @@
             [utils.core :refer [bind-root tile->middle]]
             [world.content-grid :as content-grid]
             [world.core :as world]
-            [world.entity :as entity]
             world.generate
             [world.grid :as grid]
             world.widgets))
@@ -52,7 +51,6 @@
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'world/entity-tick-error nil)
   (world/init-time!)
-  (entity/init-uids-entities!)
 
   (when (bound? #'world/tiled-map)
     (dispose! world/tiled-map))
@@ -65,6 +63,7 @@
     (world/init-content-grid! {:cell-size 16 :width w :height h})
     (world/init-explored-tile-corners! w h))
 
+  (world/init-ids->eids!)
   (spawn-creatures! tiled-map start-position))
 
 (defn add-world-ctx! [world-property-id]

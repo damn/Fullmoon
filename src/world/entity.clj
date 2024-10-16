@@ -142,29 +142,6 @@
        (not (and los-checks?
                  (world/ray-blocked? (:position source*) (:position target*))))))
 
-(declare ^:private uids-entities)
-
-(defn init-uids-entities! [] (.bindRoot #'uids-entities {}))
-
-(defn all-entities [] (vals uids-entities))
-
-(defn get-entity
-  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
-  [uid]
-  (get uids-entities uid))
-
-(defc :entity/uid
-  {:let uid}
-  (create [_ eid]
-    (assert (number? uid))
-    (alter-var-root #'uids-entities assoc uid eid)
-    nil)
-
-  (destroy [_ _eid]
-    (assert (contains? uids-entities uid))
-    (alter-var-root #'uids-entities dissoc uid)
-    nil))
-
 (let [cnt (atom 0)]
   (defn- unique-number! []
     (swap! cnt inc)))
@@ -183,12 +160,12 @@
 (defc :e/create
   (tx/do! [[_ position body components]]
     (assert (and (not (contains? components :position))
-                 (not (contains? components :entity/uid))))
+                 (not (contains? components :entity/id))))
     (let [eid (atom (-> body
                         (assoc :position position)
                         ->Body
                         (safe-merge (-> components
-                                        (assoc :entity/uid (unique-number!))
+                                        (assoc :entity/id (unique-number!))
                                         (create-vs)))))]
       (cons [:tx/add-to-world eid]
             (for [component @eid]
@@ -261,7 +238,7 @@
      (when-let [v (k @eid)]
        (tx/do-all (tick [k v] eid))))
    (catch Throwable t
-     (throw (ex-info "" (select-keys @eid [:entity/uid]) t)))))
+     (throw (ex-info "" (select-keys @eid [:entity/id]) t)))))
 
 (defn tick-entities!
   "Calls tick system on all components of entities."
@@ -289,7 +266,7 @@
       (update :position    move-position movement)
       (update :left-bottom move-position movement)))
 
-(defn- valid-position? [{:keys [entity/uid z-order] :as body}]
+(defn- valid-position? [{:keys [entity/id z-order] :as body}]
   {:pre [(:collides? body)]}
   (let [cells* (into [] (map deref) (grid/rectangle->cells world-grid body))]
     (and (not-any? #(grid/blocked? % z-order) cells*)
@@ -297,7 +274,7 @@
               grid/cells->entities
               (not-any? (fn [other-entity]
                           (let [other-entity @other-entity]
-                            (and (not= (:entity/uid other-entity) uid)
+                            (and (not= (:entity/id other-entity) id)
                                  (:collides? other-entity)
                                  (collides? other-entity body)))))))))
 

@@ -71,10 +71,29 @@
 (defn active-entities []
   (content-grid/active-entities content-grid @player))
 
+(declare ^:private ids->eids)
+
+(defn init-ids->eids! []
+  (.bindRoot #'ids->eids {}))
+
+(defn all-entities []
+  (vals ids->eids))
+
+(defn get-entity
+  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
+  [id]
+  (get ids->eids id))
+
 (defn add-entity! [eid]
+  (let [id (:entity/id @eid)]
+    (assert (number? id))
+    (alter-var-root #'ids-entities assoc eid id))
   (content-grid/update-entity! content-grid eid))
 
 (defn remove-entity! [eid]
+  (let [id (:entity/id @eid)]
+    (assert (contains? ids-entities id))
+    (alter-var-root #'world/ids-entities dissoc id))
   (content-grid/remove-entity! eid))
 
 (defn update-entity! [eid]
