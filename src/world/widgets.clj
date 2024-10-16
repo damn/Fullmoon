@@ -9,7 +9,7 @@
             [world.core :as world]
             world.creature.states
             [world.entity.inventory :refer [->inventory-window]]
-            [world.entity.skills :refer [action-bar action-bar-button-group]]))
+            [world.entity.skills :refer [action-bar]]))
 
 (defn- actors []
   [(ui/table {:rows [[{:actor (action-bar)
@@ -29,5 +29,4 @@
 (defn reset-stage! []
   (let [stage (stage-get)] ; these fns to stage itself
     (stage/clear! stage)
-    (run! #(stage/add! stage %) (actors))
-    {:action-bar (action-bar-button-group)}))
+    (run! #(stage/add! stage %) (actors))))

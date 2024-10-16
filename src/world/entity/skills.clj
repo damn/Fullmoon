@@ -115,17 +115,25 @@
 
 (def ^:private image-scale 2)
 
+(defn- action-bar-button-group []
+  (let [actor (ui/actor {})]
+    (.setName actor "action-bar/button-group")
+    (.setUserObject actor (ui/button-group {:max-check-count 1 :min-check-count 0}))
+    actor))
+
+(defn- group->button-group [group]
+  (.getUserObject (.findActor group "action-bar/button-group")))
+
 (defn action-bar []
   (let [group (ui/horizontal-group {:pad 2 :space 2})]
     (a/set-id! group ::action-bar)
+    (ui/add-actor! group (action-bar-button-group))
     group))
 
-(defn action-bar-button-group []
-  (ui/button-group {:max-check-count 1 :min-check-count 0}))
-
 (defn- get-action-bar []
-  {:horizontal-group (::action-bar (:action-bar-table (stage-get)))
-   :button-group (:action-bar world/widgets)})
+  (let [group (::action-bar (:action-bar-table (stage-get)))]
+    {:horizontal-group group
+     :button-group (group->button-group group)}))
 
 (defc :tx.action-bar/add
   (tx/do! [[_ {:keys [property/id entity/image] :as skill}]]
@@ -146,9 +154,8 @@
       nil)))
 
 (defn selected-skill []
-  (let [button-group (:action-bar world/widgets)]
-    (when-let [skill-button (ui/bg-checked button-group)]
-      (a/id skill-button))))
+  (when-let [skill-button (ui/bg-checked (:button-group (get-action-bar)))]
+    (a/id skill-button)))
 
 (comment
 

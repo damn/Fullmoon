@@ -52,7 +52,6 @@
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'world/entity-tick-error nil)
   (world/init-time!)
-  (world/init-widget-data! (world.widgets/reset-stage!))
   (entity/init-uids-entities!)
 
   (when (bound? #'world/tiled-map)
@@ -68,9 +67,8 @@
 
   (spawn-creatures! tiled-map start-position))
 
-; TODO  add-to-world/assoc/dissoc uid from entity move together here
-; also core.screens/world ....
 (defn add-world-ctx! [world-property-id]
+  (world.widgets/reset-stage!)
   (init-new-world! (world.generate/generate-level world-property-id)))
 
 (defc :tx/add-to-world
