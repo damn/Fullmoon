@@ -2,11 +2,11 @@
   (:require [clojure.gdx.app :as app]))
 
 (defn -main []
-  (app/start! (reify app/Listener
-                (create! [_])
-                (dispose! [_])
-                (render! [_])
-                (resize! [_ dimensions]))
+  (app/start! (proxy [com.badlogic.gdx.ApplicationAdapter] []
+                (create [])
+                (dispose [])
+                (render [])
+                (resize [w h]))
               {:title "Hello window"
                :width 800
                :height 600

@@ -1,4 +1,4 @@
-(ns world.entity.string-effect
+(ns ^:no-doc world.entity.string-effect
   (:require [clojure.gdx.graphics :as g]
             [core.component :refer [defc]]
             [core.tx :as tx]

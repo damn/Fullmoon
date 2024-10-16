@@ -216,7 +216,7 @@
 
 (declare player
          tiled-map
-         entity-tick-error
+         ^:private entity-tick-error
          explored-tile-corners)
 
 (defn- init-explored-tile-corners! [width height]

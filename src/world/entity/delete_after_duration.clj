@@ -1,4 +1,4 @@
-(ns world.entity.delete-after-duration
+(ns ^:no-doc world.entity.delete-after-duration
   (:require [core.component :refer [defc]]
             [core.info :as info]
             [utils.core :refer [readable-number]]

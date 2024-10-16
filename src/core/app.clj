@@ -11,7 +11,6 @@
             [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [core.editor :as property-editor]
             core.effect.entity
-            core.effect.projectile
             core.effect.spawn
             core.effect.target
             [core.db :as db]

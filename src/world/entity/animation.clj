@@ -1,4 +1,4 @@
-(ns world.entity.animation
+(ns ^:no-doc world.entity.animation
   (:require [clojure.gdx.graphics :as g]
             [core.component :refer [defc]]
             [core.db :as db]
@@ -6,10 +6,10 @@
             [world.entity :as entity]))
 
 (defprotocol Animation
-  (^:private anim-tick [_ delta])
-  (^:private restart [_])
-  (^:private anim-stopped? [_])
-  (^:private current-frame [_]))
+  (anim-tick [_ delta])
+  (restart [_])
+  (anim-stopped? [_])
+  (current-frame [_]))
 
 (defrecord ImmutableAnimation [frames frame-duration looping? cnt maxcnt]
   Animation

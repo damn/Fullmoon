@@ -1,4 +1,4 @@
-(ns world.entity.line
+(ns ^:no-doc world.entity.line
   (:require [clojure.gdx.graphics :as g]
             [core.component :refer [defc]]
             [core.tx :as tx]

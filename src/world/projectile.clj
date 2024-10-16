@@ -1,11 +1,12 @@
 (ns world.projectile
   (:require [clojure.gdx.math.vector :as v]
             [core.component :refer [defc]]
+            [core.effect :as effect :refer [source target target-direction]]
             [core.info :as info]
             [core.property :as property]
             [core.tx :as tx]
             [utils.core :refer [find-first]]
-            [world.core :as world]
+            [world.core :as w]
             [world.entity :as entity]))
 
 (property/def :properties/projectiles
@@ -30,15 +31,15 @@
     ; means non colliding with other entities
     ; but still collding with other stuff here ? o.o
     (let [entity @eid
-          cells* (map deref (world/rectangle->cells entity)) ; just use cached-touched -cells
+          cells* (map deref (w/rectangle->cells entity)) ; just use cached-touched -cells
           hit-entity (find-first #(and (not (contains? already-hit-bodies %)) ; not filtering out own id
                                        (not= (:entity/faction entity) ; this is not clear in the componentname & what if they dont have faction - ??
                                              (:entity/faction @%))
                                        (:collides? @%)
                                        (entity/collides? entity @%))
-                                 (world/cells->entities cells*))
+                                 (w/cells->entities cells*))
           destroy? (or (and hit-entity (not piercing?))
-                       (some #(world/blocked? % (:z-order entity)) cells*))]
+                       (some #(w/blocked? % (:z-order entity)) cells*))]
       [(when hit-entity
          [:e/assoc-in eid [k :already-hit-bodies] (conj already-hit-bodies hit-entity)]) ; this is only necessary in case of not piercing ...
        (when destroy?
@@ -84,3 +85,51 @@
          :entity/destroy-audiovisual :audiovisuals/hit-wall
          :entity/projectile-collision {:entity-effects entity-effects
                                        :piercing? piercing?}}]])))
+
+(defn- projectile-start-point [entity direction size]
+  (v/add (:position entity)
+         (v/scale direction
+                  (+ (:radius entity) size 0.1))))
+
+(defc :effect/projectile
+  {:data [:one-to-one :properties/projectiles]
+   :let {:keys [entity-effects projectile/max-range] :as projectile}}
+  ; TODO for npcs need target -- anyway only with direction
+  (effect/applicable? [_]
+    target-direction) ; faction @ source also ?
+
+  ; TODO valid params direction has to be  non-nil (entities not los player ) ?
+  (effect/useful? [_]
+    (let [source-p (:position @source)
+          target-p (:position @target)]
+      (and (not (w/path-blocked? ; TODO test
+                                 source-p
+                                 target-p
+                                 (projectile-size projectile)))
+           ; TODO not taking into account body sizes
+           (< (v/distance source-p ; entity/distance function protocol EntityPosition
+                          target-p)
+              max-range))))
+
+  (tx/do! [_]
+    [[:tx/sound "sounds/bfxr_waypointunlock.wav"]
+     [:tx/projectile
+      {:position (projectile-start-point @source target-direction (projectile-size projectile))
+       :direction target-direction
+       :faction (:entity/faction @source)}
+      projectile]]))
+
+(comment
+ ; mass shooting
+ (for [direction (map math.vector/normalise
+                      [[1 0]
+                       [1 1]
+                       [1 -1]
+                       [0 1]
+                       [0 -1]
+                       [-1 -1]
+                       [-1 1]
+                       [-1 0]])]
+   [:tx/projectile projectile-id ...]
+   )
+ )
