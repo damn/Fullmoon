@@ -1,4 +1,4 @@
-(ns world.raycaster
+(ns ^:no-doc world.raycaster
   (:require [clojure.gdx.math.vector :as v]
             [data.grid2d :as g2d])
   (:import (gdl RayCaster)))

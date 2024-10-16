@@ -16,7 +16,6 @@
             [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
             [world.entity.stats :refer [entity-stat]]
-            [world.grid :as grid :refer [world-grid]]
             [world.mouseover-entity :refer [mouseover-eid]]
             [world.potential-fields :as potential-fields]))
 
@@ -54,7 +53,7 @@
 (defn- friendlies-in-radius [position faction]
   (->> {:position position
         :radius shout-radius}
-       (grid/circle->entities world-grid)
+       world/circle->entities
        (filter #(= (:entity/faction @%) faction))))
 
 (defc :entity/alert-friendlies-after-duration
@@ -85,8 +84,8 @@
 
   (entity/tick [_ eid]
     (let [entity @eid
-          cell (world-grid (entity/tile entity))]
-      (when-let [distance (grid/nearest-entity-distance @cell (faction/enemy entity))]
+          cell (world/grid (entity/tile entity))] ; pattern!
+      (when-let [distance (world/nearest-entity-distance @cell (faction/enemy entity))]
         (when (<= distance (entity-stat entity :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 

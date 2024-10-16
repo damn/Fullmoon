@@ -5,8 +5,7 @@
             [utils.core :refer [sort-by-order]]
             [world.core :as world]
             [world.entity :as entity]
-            [world.entity.faction :as faction]
-            [world.grid :as grid]))
+            [world.entity.faction :as faction]))
 
 (def mouseover-eid nil)
 
@@ -17,7 +16,7 @@
 (defn- calculate-mouseover-eid []
   (let [player-entity @world/player
         hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
-                     (grid/point->entities (g/world-mouse-position)))]
+                     (world/point->entities (g/world-mouse-position)))]
     (->> entity/render-order
          (sort-by-order hits :z-order)
          reverse

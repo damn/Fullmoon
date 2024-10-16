@@ -2,11 +2,11 @@
   (:require [clojure.gdx.graphics :as g]
             [clojure.gdx.math.vector :as v]
             [core.component :refer [defsystem defc]]
+            [world.core :as world]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.mouseover-entity :refer [mouseover-eid]]
-            [core.tx :as tx]
-            [world.grid :as grid :refer [world-grid]]))
+            [core.tx :as tx]))
 
 (defsystem applicable?
   "An effect will only be done (with tx/do!) if this function returns truthy.
@@ -40,8 +40,8 @@ Default method returns true.")
 ;;
 
 (defn- nearest-enemy [entity]
-  (grid/nearest-entity @(world-grid (entity/tile entity))
-                       (faction/enemy entity)))
+  (world/nearest-entity @(world/grid (entity/tile entity))
+                        (faction/enemy entity)))
 
 ;;
 

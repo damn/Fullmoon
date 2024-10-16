@@ -10,8 +10,7 @@
             [core.tx :as tx]
             [malli.core :as m]
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
-            [world.core :as world :refer [world-delta ->counter finished-ratio stopped?]]
-            [world.grid :as grid :refer [world-grid]]))
+            [world.core :as world :refer [world-delta ->counter finished-ratio stopped?]]))
 
 (defsystem create [_ eid])
 (defmethod create :default [_ eid])
@@ -178,7 +177,7 @@
             (cons [:tx/remove-from-world eid]
                   (for [component @eid]
                     #(destroy component eid))))
-          (filter (comp :entity/destroyed? deref) (all-entities))))
+          (filter (comp :entity/destroyed? deref) (world/all-entities))))
 
 (defc :e/destroy
   (tx/do! [[_ eid]]
@@ -268,10 +267,10 @@
 
 (defn- valid-position? [{:keys [entity/id z-order] :as body}]
   {:pre [(:collides? body)]}
-  (let [cells* (into [] (map deref) (grid/rectangle->cells world-grid body))]
-    (and (not-any? #(grid/blocked? % z-order) cells*)
+  (let [cells* (into [] (map deref) (world/rectangle->cells body))]
+    (and (not-any? #(world/blocked? % z-order) cells*)
          (->> cells*
-              grid/cells->entities
+              world/cells->entities
               (not-any? (fn [other-entity]
                           (let [other-entity @other-entity]
                             (and (not= (:entity/id other-entity) id)

@@ -5,16 +5,14 @@
             [utils.core :refer [->tile ]]
             [world.core :as world]
             [world.entity :as entity]
-            [world.grid :as grid :refer [world-grid]]
             [world.potential-fields :as potential-fields]))
 
 (defn- geom-test []
   (let [position (g/world-mouse-position)
-        grid world-grid
         radius 0.8
         circle {:position position :radius radius}]
     (g/draw-circle position radius [1 0 0 0.5])
-    (doseq [[x y] (map #(:position @%) (grid/circle->cells grid circle))]
+    (doseq [[x y] (map #(:position @%) (world/circle->cells circle))]
       (g/draw-rectangle x y 1 1 [1 0 0 0.5]))
     (let [{[x y] :left-bottom :keys [width height]} (shape/circle->outer-rectangle circle)]
       (g/draw-rectangle x y width height [0 0 1 1]))))
@@ -25,8 +23,7 @@
 (def ^:private ^:dbg-flag cell-occupied? false)
 
 (defn- tile-debug []
-  (let [grid world-grid
-        🎥 (g/world-camera)
+  (let [🎥 (g/world-camera)
         [left-x right-x bottom-y top-y] (🎥/frustum 🎥)]
 
     (when tile-grid?
@@ -36,7 +33,7 @@
                    1 1 [1 1 1 0.8]))
 
     (doseq [[x y] (🎥/visible-tiles 🎥)
-            :let [cell (grid [x y])]
+            :let [cell (world/grid [x y])]
             :when cell
             :let [cell* @cell]]
 
@@ -58,7 +55,7 @@
 (defn- highlight-mouseover-tile []
   (when highlight-blocked-cell?
     (let [[x y] (->tile (g/world-mouse-position))
-          cell (get world-grid [x y])]
+          cell (get world/grid [x y])]
       (when (and cell (#{:air :none} (:movement @cell)))
         (g/draw-rectangle x y 1 1
                           (case (:movement @cell)

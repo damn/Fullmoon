@@ -4,13 +4,13 @@
             [utils.core :refer [->tile]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
-            [world.grid :refer [blocked?
+            [world.core :refer [blocked?
                                 nearest-entity-distance
                                 nearest-entity
                                 cached-adjacent-cells
                                 occupied-by-other?
-                                rectangle->cells
-                                world-grid]]))
+                                rectangle->cells]
+             :as world]))
 
 ; Assumption: The map contains no not-allowed diagonal cells, diagonal wall cells where both
 ; adjacent cells are walls and blocked.
@@ -96,14 +96,14 @@
 ; * sorted-set-by ?
 ; * do not refresh the potential-fields EVERY frame, maybe very 100ms & check for exists? target if they died inbetween.
 ; (or teleported?)
-(defn- step [grid faction last-marked-cells]
+(defn- step [faction last-marked-cells]
   (let [marked-cells (transient [])
         distance       #(nearest-entity-distance % faction)
         nearest-entity #(nearest-entity          % faction)
         marked? faction]
     ; sorting important because of diagonal-cell values, flow from lower dist first for correct distance
     (doseq [cell (sort-by #(distance @%) last-marked-cells)
-            adjacent-cell (cached-adjacent-cells grid cell)
+            adjacent-cell (cached-adjacent-cells cell)
             :let [cell* @cell
                   adjacent-cell* @adjacent-cell]
             :when (not (or (cell-blocked? adjacent-cell*)
@@ -118,9 +118,9 @@
 
 (defn- generate-potential-field
   "returns the marked-cells"
-  [grid faction tiles->entities max-iterations]
+  [faction tiles->entities max-iterations]
   (let [entity-cell-seq (for [[tile eid] tiles->entities] ; FIXME lazy seq
-                          [eid (get grid tile)])
+                          [eid (get world/grid tile)])
         marked (map second entity-cell-seq)]
     (doseq [[eid cell] entity-cell-seq]
       (add-field-data! cell faction 0 eid))
@@ -129,7 +129,7 @@
            iterations 0]
       (if (= iterations max-iterations)
         marked-cells
-        (let [new-marked (step grid faction new-marked-cells)]
+        (let [new-marked (step faction new-marked-cells)]
           (recur (concat marked-cells new-marked) ; FIXME lazy seq
                  new-marked
                  (inc iterations)))))))
@@ -140,7 +140,7 @@
     (zipmap (map #(entity/tile @%) entities)
             entities)))
 
-(defn- update-faction-potential-field [grid faction entities max-iterations]
+(defn- update-faction-potential-field [faction entities max-iterations]
   (let [tiles->entities (tiles->entities entities faction)
         last-state   [faction :tiles->entities]
         marked-cells [faction :marked-cells]]
@@ -149,7 +149,6 @@
       (doseq [cell (get-in @pf-cache marked-cells)]
         (remove-field-data! cell faction))
       (swap! pf-cache assoc-in marked-cells (generate-potential-field
-                                             grid
                                              faction
                                              tiles->entities
                                              max-iterations)))))
@@ -211,21 +210,21 @@
     (apply min-key distance-to cells)))
 
 ; rarely called -> no performance bottleneck
-(defn- viable-cell? [grid distance-to own-dist eid cell]
+(defn- viable-cell? [distance-to own-dist eid cell]
   (when-let [best-cell (get-min-dist-cell
                         distance-to
-                        (filter-viable-cells eid (cached-adjacent-cells grid cell)))]
+                        (filter-viable-cells eid (cached-adjacent-cells cell)))]
     (when (< (float (distance-to best-cell)) (float own-dist))
       cell)))
 
 (defn- find-next-cell
   "returns {:target-entity eid} or {:target-cell cell}. Cell can be nil."
-  [grid eid own-cell]
+  [eid own-cell]
   (let [faction (faction/enemy @eid)
         distance-to    #(nearest-entity-distance @% faction)
         nearest-entity #(nearest-entity          @% faction)
         own-dist (distance-to own-cell)
-        adjacent-cells (cached-adjacent-cells grid own-cell)]
+        adjacent-cells (cached-adjacent-cells own-cell)]
     (if (and own-dist (zero? (float own-dist)))
       {:target-entity (nearest-entity own-cell)}
       (if-let [adjacent-cell (first (filter #(and (distance-to %)
@@ -249,20 +248,19 @@
 
                          (= (distance-to min-key-cell) own-dist) ; yellow
                          (or
-                          (some #(viable-cell? grid distance-to own-dist eid %) cells)
+                          (some #(viable-cell? distance-to own-dist eid %) cells)
                           own-cell)))}))))
 
-(defn- inside-cell? [grid entity cell]
-  (let [cells (rectangle->cells grid entity)]
+(defn- inside-cell? [entity cell]
+  (let [cells (rectangle->cells entity)]
     (and (= 1 (count cells))
          (= cell (first cells)))))
 
 ; TODO work with entity !? occupied-by-other? works with entity not entity ... not with ids ... hmmm
 (defn follow-to-enemy [eid] ; TODO pass faction here, one less dependency.
-  (let [grid world-grid
-        position (:position @eid)
-        own-cell (get grid (->tile position))
-        {:keys [target-entity target-cell]} (find-next-cell grid eid own-cell)]
+  (let [position (:position @eid)
+        own-cell (get world/grid (->tile position))
+        {:keys [target-entity target-cell]} (find-next-cell eid own-cell)]
     (cond
      target-entity
      (v/direction position (:position @target-entity))
@@ -273,12 +271,12 @@
      :else
      (when-not (and (= target-cell own-cell)
                     (occupied-by-other? @own-cell eid)) ; prevent friction 2 move to center
-       (when-not (inside-cell? grid @eid target-cell)
+       (when-not (inside-cell? @eid target-cell)
          (v/direction position (:middle @target-cell)))))))
 
 (defn update! [entities]
   (doseq [[faction max-iterations] factions-iterations]
-    (update-faction-potential-field world-grid faction entities max-iterations)))
+    (update-faction-potential-field faction entities max-iterations)))
 
 ;; DEBUG RENDER TODO not working in old map debug cdq.maps.render_
 
@@ -301,9 +299,9 @@
 
 #_(defn calculate-mouseover-body-colors [mouseoverbody]
   (when-let [body mouseoverbody]
-    (let [occupied-cell (get world-grid (entity/tile @body))
+    (let [occupied-cell (get world/grid (entity/tile @body))
           own-dist (distance-to occupied-cell)
-          adj-cells (cached-adjacent-cells grid occupied-cell)
+          adj-cells (cached-adjacent-cells occupied-cell)
           potential-cells (filter distance-to
                                   (filter-viable-cells body adj-cells))
           adj-cells (remove nil? adj-cells)]
