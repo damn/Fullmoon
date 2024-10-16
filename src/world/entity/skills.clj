@@ -35,8 +35,8 @@
   (info/text [[_ v]]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
-(db/def-attr :skill/start-action-sound :sound)
-(db/def-attr :skill/effects [:components-ns :effect])
+(db/def-schema :skill/start-action-sound :sound)
+(db/def-schema :skill/effects [:components-ns :effect])
 
 (defc :skill/cooldown {:db/schema :nat-int}
   (info/text [[_ v]]

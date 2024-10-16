@@ -291,14 +291,14 @@
     {:tiled-map tiled-map
      :start-position start-position}))
 
-(db/def-attr :world/player-creature :some #_[:one-to-one :properties/creatures])
+(db/def-schema :world/player-creature :some #_[:one-to-one :properties/creatures])
 
-(db/def-attr :world/map-size :pos-int)
-(db/def-attr :world/max-area-level :pos-int) ; TODO <= map-size !?
-(db/def-attr :world/spawn-rate :pos) ; TODO <1 !
-(db/def-attr :world/tiled-map :string)
-(db/def-attr :world/components [:map []])
-(db/def-attr :world/generator [:enum
+(db/def-schema :world/map-size :pos-int)
+(db/def-schema :world/max-area-level :pos-int) ; TODO <= map-size !?
+(db/def-schema :world/spawn-rate :pos) ; TODO <1 !
+(db/def-schema :world/tiled-map :string)
+(db/def-schema :world/components [:map []])
+(db/def-schema :world/generator [:enum
                                :world.generator/tiled-map
                                :world.generator/modules
                                :world.generator/uf-caves])

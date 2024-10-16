@@ -51,8 +51,8 @@
 
 ; -> range needs to be smaller than potential field range (otherwise hitting someone who can't get back at you)
 ; -> first range check then ray ! otherwise somewhere in contentfield out of sight
-(db/def-attr :projectile/max-range :pos-int)
-(db/def-attr :projectile/speed     :pos-int)
+(db/def-schema :projectile/max-range :pos-int)
+(db/def-schema :projectile/speed     :pos-int)
 
 (defc :projectile/piercing? {:db/schema :boolean}
   (info/text [_]

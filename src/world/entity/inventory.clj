@@ -30,7 +30,7 @@
               [slot (g2d/create-grid width height (constantly nil))]))
        (into {})))
 
-(db/def-attr :item/slot (apply vector :enum (keys empty-inventory)))
+(db/def-schema :item/slot (apply vector :enum (keys empty-inventory)))
 
 (defc :item/modifiers
   {:db/schema [:components-ns :modifier]

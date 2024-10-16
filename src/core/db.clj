@@ -9,13 +9,13 @@
             [malli.error :as me]
             [utils.core :refer [bind-root safe-get]]))
 
-(defn def-attr [k schema]
+(defn def-schema [k schema]
   (defc k {:db/schema schema}))
 
 (defn attr-schema [k]
   (:db/schema (component/meta k)))
 
-(def-attr :property/id :qualified-keyword)
+(def-schema :property/id :qualified-keyword)
 
 ; overview is only for editor - remove
 ; remove this whole thing then
