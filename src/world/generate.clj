@@ -89,7 +89,7 @@
   (memoize
    (fn [{:keys [property/id] :as prop}]
      (assert id)
-     (let [image (property/->image prop)
+     (let [image (property/image prop)
            tile (t/->static-tiled-map-tile (:texture-region image))]
        (t/put! (t/m-props tile) "id" id)
        tile))))
@@ -306,7 +306,7 @@
                                     :world.generator/modules
                                     :world.generator/uf-caves]})
 
-(property/def :properties/worlds
+(db/def-property :properties/worlds
   {:schema [:world/generator
             :world/player-creature
             [:world/tiled-map {:optional true}]

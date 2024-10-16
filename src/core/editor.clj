@@ -10,23 +10,24 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [core.component :as component]
-            [core.data :as data]
             [core.db :as db]
             [core.info :as info]
             [core.property :as property]
+            [core.schema :as schema]
             [core.widgets.error :refer [error-window!]]
             [malli.core :as m]
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
 
-(defn- data-type->widget [data]
-  (cond
-   (#{:map-optional :components-ns}                 data) :map
-   (#{:number :nat-int :int :pos :pos-int :val-max} data) :number
-   :else data))
+(defn- widget-type [schema]
+  (let [stype (schema/type schema)]
+    (cond
+     (#{:map-optional :components-ns}                 stype) :map
+     (#{:number :nat-int :int :pos :pos-int :val-max} stype) :number
+     :else stype)))
 
-(defmulti ^:private ->widget      (fn [data _v]      (data-type->widget (data/type data))))
-(defmulti ^:private widget->value (fn [data _widget] (data-type->widget (data/type data))))
+(defmulti ^:private ->widget      (fn [schema _v]      (widget-type schema)))
+(defmulti ^:private widget->value (fn [schema _widget] (widget-type schema)))
 
 (comment
  (keys (methods ->widget))
@@ -190,12 +191,13 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [data (data/component k)]
+  (let [schema (db/k->schema k)]
     (cond
-     (#{:one-to-one :one-to-many} data) nil
+     (#{:one-to-one :one-to-many} schema) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
-     :else (mg/generate (data/schema data) {:size 3}))))
+     :else (mg/generate (schema/form schema) {:size 3}))))
 
+; TODO here also schema - but malli - form , evaluate later
 (defn- ->choose-component-window [schema attribute-widget-group]
   (fn []
     (let [k-props (k-properties schema)
@@ -226,9 +228,11 @@
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(defmethod ->widget :map [data m]
-  (let [schema (data/schema data)
+; TODO data in argvec, grep data/schema and fix
+(defmethod ->widget :map [schema m]
+  (let [schema (schema/form schema)
         attribute-widget-group (->attribute-widget-group schema m)
+        ; these are schema operations
         optional-keys-left? (seq (set/difference (optional-keyset schema)
                                                  (set (keys m))))]
     (a/set-id! attribute-widget-group :attribute-widget-group)
@@ -252,7 +256,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (data/component k) v)
+        value-widget (->widget (db/k->schema k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -286,7 +290,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (data/component k) value-widget)])))
+             [k (widget->value (db/k->schema k) value-widget)])))
 
 ;;
 
@@ -306,7 +310,7 @@
                            :center? true
                            :close-on-escape? true
                            :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group (property/schema props) props)
+        widgets (->attribute-widget-group (db/prop->schema props) props)
         save!   (apply-context-fn window #(db/update! (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(db/delete! id))]
     (ui/add-rows! window [[(->scroll-pane-cell [[{:actor widgets :colspan 2}]
@@ -320,7 +324,7 @@
 
 (defn- ->overview-property-widget [{:keys [property/id] :as props} clicked-id-fn extra-info-text scale]
   (let [on-clicked #(clicked-id-fn id)
-        button (if-let [image (property/->image props)]
+        button (if-let [image (property/image props)]
                  (ui/image-button image on-clicked {:scale scale})
                  (ui/text-button (name id) on-clicked))
         top-widget (ui/label (or (and extra-info-text (extra-info-text props)) ""))
@@ -333,7 +337,7 @@
   (let [{:keys [sort-by-fn
                 extra-info-text
                 columns
-                image/scale]} (property/overview property-type)
+                image/scale]} (db/prop-type-overview property-type)
         properties (db/all property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
@@ -378,8 +382,8 @@
   (stage-add! (->property-editor-window property-id)))
 
 (defn- ->tabs-data []
-  (for [property-type (sort (property/types))]
-    {:title (:title (property/overview property-type))
+  (for [property-type (sort (db/prop-types))]
+    {:title (:title (db/prop-type-overview property-type))
      :content (->overview-table property-type open-property-editor-window!)}))
 
 (defn screen [->background-image]
@@ -416,7 +420,7 @@
                            (stage-add! window))))]
       (for [property-id property-ids]
         (let [property (db/get property-id)
-              image-widget (ui/image->widget (property/->image property) {:id property-id})]
+              image-widget (ui/image->widget (property/image property) {:id property-id})]
           (ui/add-tooltip! image-widget #(info/->text property))
           image-widget))
       (for [id property-ids]
@@ -455,7 +459,7 @@
                              (stage-add! window)))))]
       [(when property-id
          (let [property (db/get property-id)
-               image-widget (ui/image->widget (property/->image property) {:id property-id})]
+               image-widget (ui/image->widget (property/image property) {:id property-id})]
            (ui/add-tooltip! image-widget #(info/->text property))
            image-widget))]
       [(when property-id

@@ -156,8 +156,8 @@
                 (.setScene scene)
                 .show)]))
 
-(require '[core.property :as property])
 (require '[core.db :as db])
+(require '[core.property :as property])
 
 (def ->image (memoize (fn [file] (Image. file))))
 
@@ -170,9 +170,9 @@
       image-view)))
 
 (defn- property->button [property]
-  (let [image (property/->image property)
+  (let [image (property/image property)
         button (if image
-                 (Button. "" (image-view (property/->image property)))
+                 (Button. "" (image-view (property/image property)))
                  (Button. (name (:property/id property))))]
     (.setOnAction button (reify EventHandler
                            (handle [_ e]
@@ -191,7 +191,7 @@
         {:keys [sort-by-fn
                 extra-info-text
                 columns
-                image/scale]} (property/overview property-type)
+                image/scale]} (db/prop-type-overview property-type)
         properties (db/all-raw property-type)
         properties (if sort-by-fn
                      (sort-by sort-by-fn properties)
@@ -205,8 +205,8 @@
 (defn- properties-tabs []
   (let [tab-pane (doto (TabPane.)
                    (.setTabClosingPolicy TabPane$TabClosingPolicy/UNAVAILABLE))]
-    (doseq [property-type (sort (property/types))
-            :let [tab (Tab. (:title (property/overview property-type))
+    (doseq [property-type (sort (db/prop-types))
+            :let [tab (Tab. (:title (db/prop-type-overview property-type))
                             (Label. "whre thsi labl is"))]]
       (.setContent tab (overview-flow-pane property-type))
       (.add (.getTabs tab-pane) tab))

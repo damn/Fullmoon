@@ -1,15 +1,15 @@
 (ns ^:no-doc world.projectile
   (:require [clojure.gdx.math.vector :as v]
             [core.component :refer [defc]]
+            [core.db :as db]
             [core.effect :as effect :refer [source target target-direction]]
             [core.info :as info]
-            [core.property :as property]
             [core.tx :as tx]
             [utils.core :refer [find-first]]
             [world.core :as w]
             [world.entity :as entity]))
 
-(property/def :properties/projectiles
+(db/def-property :properties/projectiles
   {:schema [:entity/image
             :projectile/max-range
             :projectile/speed

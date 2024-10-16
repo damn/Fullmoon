@@ -1,8 +1,8 @@
 (ns core.val-max
   (:require [clojure.string :as str]
             [core.component :refer [defc]]
-            [core.data :as data]
             [core.operation :as op]
+            [core.schema :as schema]
             [malli.core :as m]))
 
 (def ^:private val-max-schema
@@ -13,7 +13,7 @@
                                  (format "Expected max (%d) to be smaller than val (%d)" v mx)))}
               (fn [[^int a ^int b]] (<= a b))]]))
 
-(defmethod data/schema :val-max [_]
+(defmethod schema/form :val-max [_]
   (m/form val-max-schema))
 
 (defn ratio

@@ -4,8 +4,8 @@
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [stage-get]]
             [core.component :refer [defsystem defc]]
+            [core.db :as db]
             [core.info :as info]
-            [core.property :as property]
             [core.tx :as tx]
             [data.grid2d :as g2d]
             [utils.core :refer [find-first]]
@@ -40,7 +40,7 @@
     (when (seq modifiers)
       (mod-info-text modifiers))))
 
-(property/def :properties/items
+(db/def-property :properties/items
   {:schema [:property/pretty-name
             :entity/image
             :item/slot

@@ -3,15 +3,15 @@
             [clojure.gdx.ui.actor :as a]
             [clojure.gdx.ui.stage-screen :refer [stage-get]]
             [core.component :refer [defc defsystem]]
+            [core.db :as db]
             [core.info :as info]
-            [core.property :as property]
             [core.tx :as tx]
             [utils.core :refer [readable-number]]
             [world.core :as world :refer [stopped?]]
             [world.entity :as entity]
             [world.entity.state :as entity-state]))
 
-(property/def :properties/skills
+(db/def-property :properties/skills
   {:schema [:entity/image
             :property/pretty-name
             :skill/action-time-modifier-key

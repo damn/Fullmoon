@@ -5,7 +5,6 @@
             [clojure.gdx.ui.stage :as stage]
             [clojure.gdx.ui.stage-screen :refer [stage-add!]]
             [core.component :as component]
-            [core.data :as data]
             [core.db :as db]
             [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
@@ -51,7 +50,6 @@
 
  (print-components "components.md")
 
- (spit-out "data-components.md" (data-components))
 
  ; TODO items dont refresh on clicking tab -!
 
@@ -177,8 +175,12 @@
                    (println "      *" k)
                    (println (str "        * data: `" (pr-str (:db/schema (component/meta k))) "`"))))))))))
 
-(defn- data-components []
-  (sort (keys (methods data/schema))))
+; TODO have 2 check @ editor, because :default -
+; the actual supported types r @ editor ....
+; or have to default to a malli schema
+ #_(spit-out "schema-types.md" (schema-types))
+#_(defn- schema-types []
+  (sort (keys (methods schema/form))))
 
 (defn- component-systems [component-k]
    (for [[sys-name sys-var] component/systems

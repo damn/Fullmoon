@@ -2,7 +2,6 @@
   (:require [clojure.gdx.graphics :as g]
             [clojure.string :as str]
             [core.component :refer [defc]]
-            [core.property :as property]
             [core.db :as db]
             [core.info :as info]
             [core.tx :as tx]
@@ -17,7 +16,7 @@
     (bind-root #'world/player eid)
     nil))
 
-(property/def :properties/creatures
+(db/def-property :properties/creatures
   {:schema [:entity/body
             :property/pretty-name
             :creature/species

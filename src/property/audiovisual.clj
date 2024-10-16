@@ -1,11 +1,10 @@
 (ns property.audiovisual
   (:require [core.component :refer [defc]]
             [core.db :as db]
-            [core.property :as property]
             [core.tx :as tx]
             [world.entity :as entity]))
 
-(property/def :properties/audiovisuals
+(db/def-property :properties/audiovisuals
   {:schema [:tx/sound
             :entity/animation]
    :overview {:title "Audiovisuals"
