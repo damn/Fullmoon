@@ -1,6 +1,5 @@
 (ns world.raycaster
-  (:require [clojure.gdx.math.raycaster :as ray]
-            [clojure.gdx.math.vector :as v]
+  (:require [clojure.gdx.math.vector :as v]
             [data.grid2d :as g2d])
   (:import (gdl RayCaster)))
 
@@ -106,7 +105,7 @@
 
 (defn- set-arr [arr cell cell->blocked?]
   (let [[x y] (:position cell)]
-    (aset arr x y (boolean (cell->blocked? cell*)))))
+    (aset arr x y (boolean (cell->blocked? cell)))))
 
 (defn create [grid position->blocked?]
   (let [width  (g2d/width  grid)

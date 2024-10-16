@@ -75,7 +75,7 @@
 
 (defc :tx/add-to-world
   (tx/do! [[_ eid]]
-    (content-grid/update-entity! world/content-grid eid)
+    (world/add-entity! eid)
     ; https://github.com/damn/core/issues/58
     ;(assert (valid-position? grid @eid)) ; TODO deactivate because projectile no left-bottom remove that field or update properly for all
     (grid/add-entity! eid)
@@ -83,12 +83,12 @@
 
 (defc :tx/remove-from-world
   (tx/do! [[_ eid]]
-    (content-grid/remove-entity! world/content-grid eid)
+    (world/remove-entity! eid)
     (grid/remove-entity! eid)
     nil))
 
 (defc :tx/position-changed
   (tx/do! [[_ eid]]
-    (content-grid/update-entity! eid)
+    (world/update-entity! eid)
     (grid/entity-position-changed! eid)
     nil))

@@ -70,3 +70,12 @@
 
 (defn active-entities []
   (content-grid/active-entities content-grid @player))
+
+(defn add-entity! [eid]
+  (content-grid/update-entity! content-grid eid))
+
+(defn remove-entity! [eid]
+  (content-grid/remove-entity! eid))
+
+(defn update-entity! [eid]
+  (content-grid/update-entity! content-grid eid))

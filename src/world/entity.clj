@@ -140,7 +140,7 @@
   (and (or (not (:entity/player? source*))
            (on-screen? target*))
        (not (and los-checks?
-                 (w/ray-blocked? (:position source*) (:position target*))))))
+                 (world/ray-blocked? (:position source*) (:position target*))))))
 
 (declare ^:private uids-entities)
 

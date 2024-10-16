@@ -96,7 +96,7 @@
           base-color (if explored? explored-tile-color black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
-                     (let [blocked? (w/ray-blocked? light-position position)]
+                     (let [blocked? (world/ray-blocked? light-position position)]
                        (swap! light-cache assoc position blocked?)
                        blocked?)
                      cache-entry)]
