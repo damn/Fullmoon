@@ -4,7 +4,7 @@
             [core.component :refer [defsystem defc]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
-            [world.mouseover-entity :refer [mouseover-eid mouseover-entity]]
+            [world.mouseover-entity :refer [mouseover-eid]]
             [core.tx :as tx]
             [world.grid :as grid :refer [world-grid]]))
 

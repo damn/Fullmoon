@@ -17,7 +17,7 @@
             [world.entity.state :as state]
             [world.entity.stats :refer [entity-stat]]
             [world.grid :as grid :refer [world-grid]]
-            [world.mouseover-entity :refer [mouseover-entity]]
+            [world.mouseover-entity :refer [mouseover-eid]]
             [world.potential-fields :as potential-fields]))
 
 (defc :npc-dead
@@ -111,8 +111,9 @@
                         :button-text ":("
                         :on-click #(screen/change! :screens/main-menu)}]]))
 
-(defn- clicked-cell [{:keys [entity/id] :as entity} cell]
-  (let [inventory (:entity/inventory entity)
+(defn- clicked-cell [eid cell]
+  (let [entity @eid
+        inventory (:entity/inventory entity)
         item-in-cell (get-in inventory cell)
         item-on-cursor (:entity/item-on-cursor entity)]
     (cond
@@ -120,29 +121,29 @@
      (and (not item-in-cell)
           (valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
-      [:tx/set-item id cell item-on-cursor]
-      [:e/dissoc id :entity/item-on-cursor]
-      [:tx/event id :dropped-item]]
+      [:tx/set-item eid cell item-on-cursor]
+      [:e/dissoc eid :entity/item-on-cursor]
+      [:tx/event eid :dropped-item]]
 
      ; STACK ITEMS
      (and item-in-cell
           (stackable? item-in-cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
-      [:tx/stack-item id cell item-on-cursor]
-      [:e/dissoc id :entity/item-on-cursor]
-      [:tx/event id :dropped-item]]
+      [:tx/stack-item eid cell item-on-cursor]
+      [:e/dissoc eid :entity/item-on-cursor]
+      [:tx/event eid :dropped-item]]
 
      ; SWAP ITEMS
      (and item-in-cell
           (valid-slot? cell item-on-cursor))
      [[:tx/sound "sounds/bfxr_itemput.wav"]
-      [:tx/remove-item id cell]
-      [:tx/set-item id cell item-on-cursor]
+      [:tx/remove-item eid cell]
+      [:tx/set-item eid cell item-on-cursor]
       ; need to dissoc and drop otherwise state enter does not trigger picking it up again
       ; TODO? coud handle pickup-item from item-on-cursor state also
-      [:e/dissoc id :entity/item-on-cursor]
-      [:tx/event id :dropped-item]
-      [:tx/event id :pickup-item item-in-cell]])))
+      [:e/dissoc eid :entity/item-on-cursor]
+      [:tx/event eid :dropped-item]
+      [:tx/event eid :pickup-item item-in-cell]])))
 
 ; It is possible to put items out of sight, losing them.
 ; Because line of sight checks center of entity only, not corners
@@ -178,7 +179,7 @@
       [[:tx/event eid :drop-item]]))
 
   (clicked-inventory-cell [_ cell]
-    (clicked-cell @eid cell))
+    (clicked-cell eid cell))
 
   (state/enter [_]
     [[:tx/cursor :cursors/hand-grab]
@@ -379,44 +380,42 @@
    [:tx/msg-to-player text]])
 
 (defmulti ^:private on-clicked
-  (fn [entity]
-    (:type (:entity/clickable entity))))
+  (fn [eid]
+    (:type (:entity/clickable @eid))))
 
-(defmethod on-clicked :clickable/item [clicked-entity]
-  (let [player-entity @world/player
-        item (:entity/item clicked-entity)
-        clicked-entity (:entity/id clicked-entity)]
+(defmethod on-clicked :clickable/item [eid]
+  (let [item (:entity/item @eid)]
     (cond
      (a/visible? (inventory-window))
      [[:tx/sound "sounds/bfxr_takeit.wav"]
-      [:e/destroy clicked-entity]
-      [:tx/event (:entity/id player-entity) :pickup-item item]]
+      [:e/destroy eid]
+      [:tx/event world/player :pickup-item item]]
 
-     (can-pickup-item? player-entity item)
+     (can-pickup-item? world/player item)
      [[:tx/sound "sounds/bfxr_pickup.wav"]
-      [:e/destroy clicked-entity]
-      [:tx/pickup-item (:entity/id player-entity) item]]
+      [:e/destroy eid]
+      [:tx/pickup-item world/player item]]
 
      :else
      [[:tx/sound "sounds/bfxr_denied.wav"]
       [:tx/msg-to-player "Your Inventory is full"]])))
 
-(defmethod on-clicked :clickable/player
-  [_clicked-entity]
+(defmethod on-clicked :clickable/player [_]
   (a/toggle-visible! (inventory-window))) ; TODO no tx
 
-(defn- clickable->cursor [mouseover-e* too-far-away?]
-  (case (:type (:entity/clickable mouseover-e*))
+(defn- clickable->cursor [entity too-far-away?]
+  (case (:type (:entity/clickable entity))
     :clickable/item (if too-far-away?
                       :cursors/hand-before-grab-gray
                       :cursors/hand-before-grab)
     :clickable/player :cursors/bag))
 
-(defn- ->clickable-mouseover-entity-interaction [player-e* mouseover-e*]
-  (if (< (v/distance (:position player-e*) (:position mouseover-e*))
-         (:entity/click-distance-tiles player-e*))
-    [(clickable->cursor mouseover-e* false) (fn [] (on-clicked mouseover-e*))]
-    [(clickable->cursor mouseover-e* true)  (fn [] (denied "Too far away"))]))
+(defn- clickable-entity-interaction [player-entity clicked-eid]
+  (if (< (v/distance (:position player-entity)
+                     (:position @clicked-eid))
+         (:entity/click-distance-tiles player-entity))
+    [(clickable->cursor @clicked-eid false) (fn [] (on-clicked clicked-eid))]
+    [(clickable->cursor @clicked-eid true)  (fn [] (denied "Too far away"))]))
 
 (defn- inventory-cell-with-item? [actor]
   (and (a/parent actor)
@@ -433,14 +432,13 @@
      :else :cursors/default)))
 
 (defn- ->interaction-state [eid]
-  (let [entity @eid
-        mouseover-e* (mouseover-entity)]
+  (let [entity @eid]
     (cond
      (mouse-on-actor?)
      [(mouseover-actor->cursor) (fn [] nil)] ; handled by actors themself, they check player state
 
-     (and mouseover-e* (:entity/clickable mouseover-e*))
-     (->clickable-mouseover-entity-interaction entity mouseover-e*)
+     (and mouseover-eid (:entity/clickable @mouseover-eid))
+     (clickable-entity-interaction entity mouseover-eid)
 
      :else
      (if-let [skill-id (selected-skill)]

@@ -169,17 +169,6 @@
   (defn- unique-number! []
     (swap! cnt inc)))
 
-(defc :entity/id
-  (create  [[_ id] _eid] [[:tx/add-to-world      id]])
-  (destroy [[_ id] _eid] [[:tx/remove-from-world id]]))
-
-(defn- create-e-system [eid]
-  (for [component @eid]
-    (fn []
-      ; we are assuming components dont remove other ones at entity/create
-      ; thats why we reuse component and not fetch each time again for key
-      (create component eid))))
-
 (defsystem ->v "Create component value. Default returns v.")
 (defmethod ->v :default [[_ v]] v)
 
@@ -194,17 +183,25 @@
 (defc :e/create
   (tx/do! [[_ position body components]]
     (assert (and (not (contains? components :position))
-                 (not (contains? components :entity/id))
                  (not (contains? components :entity/uid))))
-    (let [eid (atom nil)]
-      (reset! eid (-> body
-                      (assoc :position position)
-                      ->Body
-                      (safe-merge (-> components
-                                      (assoc :entity/id eid
-                                             :entity/uid (unique-number!))
-                                      (create-vs)))))
-      (create-e-system eid))))
+    (let [eid (atom (-> body
+                        (assoc :position position)
+                        ->Body
+                        (safe-merge (-> components
+                                        (assoc :entity/uid (unique-number!))
+                                        (create-vs)))))]
+      (cons [:tx/add-to-world eid]
+            (for [component @eid]
+              #(create component eid))))))
+
+(defn remove-destroyed-entities!
+  "Calls destroy on all entities which are marked with ':e/destroy'"
+  []
+  (mapcat (fn [eid]
+            (cons [:tx/remove-from-world eid]
+                  (for [component @eid]
+                    #(destroy component eid))))
+          (filter (comp :entity/destroyed? deref) (all-entities))))
 
 (defc :e/destroy
   (tx/do! [[_ eid]]
@@ -284,14 +281,6 @@
                       (line-of-sight? player-entity entity))]
       (render-entity system entity))))
 
-(defn remove-destroyed-entities!
-  "Calls destroy on all entities which are marked with ':e/destroy'"
-  []
-  (for [eid (filter (comp :entity/destroyed? deref) (all-entities))
-        component @eid]
-    (fn []
-      (destroy component eid))))
-
 (defn- move-position [position {:keys [direction speed delta-time]}]
   (mapv #(+ %1 (* %2 speed delta-time)) position direction))
 
@@ -300,7 +289,7 @@
       (update :position    move-position movement)
       (update :left-bottom move-position movement)))
 
-(defn- valid-position? [{:keys [entity/id z-order] :as body}]
+(defn- valid-position? [{:keys [entity/uid z-order] :as body}]
   {:pre [(:collides? body)]}
   (let [cells* (into [] (map deref) (grid/rectangle->cells world-grid body))]
     (and (not-any? #(grid/blocked? % z-order) cells*)
@@ -308,7 +297,7 @@
               grid/cells->entities
               (not-any? (fn [other-entity]
                           (let [other-entity @other-entity]
-                            (and (not= (:entity/id other-entity) id)
+                            (and (not= (:entity/uid other-entity) uid)
                                  (:collides? other-entity)
                                  (collides? other-entity body)))))))))
 
