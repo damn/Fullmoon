@@ -3,12 +3,6 @@
             [data.grid2d :as g2d]
             [utils.core :refer [->tile tile->middle bind-root]]))
 
-(defprotocol Grid
-  (cached-adjacent-cells [grid cell])
-  (rectangle->cells [grid rectangle])
-  (circle->cells    [grid circle])
-  (circle->entities [grid circle]))
-
 (defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]
   {:pre [left-bottom width height]}
@@ -26,6 +20,20 @@
              y (range b (inc t))]
          [x y])
        [[l b] [l t] [r b] [r t]]))))
+
+(defn rectangle->cells [grid rectangle]
+  (into [] (keep grid) (rectangle->tiles rectangle)))
+
+(defn circle->cells [grid circle]
+  (->> circle
+       shape/circle->outer-rectangle
+       (rectangle->cells grid)))
+
+(defn circle->entities [grid circle]
+  (->> (circle->cells grid circle)
+       (map deref)
+       cells->entities
+       (filter #(shape/overlaps? circle @%))))
 
 (defn- set-cells! [grid eid]
   (let [cells (rectangle->cells grid @eid)]
@@ -66,28 +74,12 @@
 
 ; TODO LAZY SEQ @ g/get-8-neighbour-positions !!
 ; https://github.com/damn/g/blob/master/src/data/grid2d.clj#L126
-(extend-type data.grid2d.Grid2D
-  Grid
-  (cached-adjacent-cells [grid cell]
-    (if-let [result (:adjacent-cells @cell)]
-      result
-      (let [result (into [] (keep grid) (-> @cell :position g2d/get-8-neighbour-positions))]
-        (swap! cell assoc :adjacent-cells result)
-        result)))
-
-  (rectangle->cells [grid rectangle]
-    (into [] (keep grid) (rectangle->tiles rectangle)))
-
-  (circle->cells [grid circle]
-    (->> circle
-         shape/circle->outer-rectangle
-         (rectangle->cells grid)))
-
-  (circle->entities [grid circle]
-    (->> (circle->cells grid circle)
-         (map deref)
-         cells->entities
-         (filter #(shape/overlaps? circle @%)))))
+(defn cached-adjacent-cells [grid cell]
+  (if-let [result (:adjacent-cells @cell)]
+    result
+    (let [result (into [] (keep grid) (-> @cell :position g2d/get-8-neighbour-positions))]
+      (swap! cell assoc :adjacent-cells result)
+      result)))
 
 (declare world-grid)
 
