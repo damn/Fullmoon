@@ -81,3 +81,6 @@
   (content-grid/update-entity! content-grid eid))
 
 (declare widgets)
+
+(defn init-widget-data! [widget-data]
+  (.bindRoot #'widgets widget-data))

@@ -9,7 +9,7 @@
             [world.entity :as entity]
             world.generate
             [world.grid :as grid]
-            world.widgets.setup))
+            world.widgets))
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
@@ -52,7 +52,7 @@
 (defn- init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'world/entity-tick-error nil)
   (world/init-time!)
-  (world.widgets.setup/init!)
+  (world/init-widget-data! (world.widgets/reset-stage!))
   (entity/init-uids-entities!)
 
   (when (bound? #'world/tiled-map)

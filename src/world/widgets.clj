@@ -1,4 +1,4 @@
-(ns world.widgets.setup
+(ns world.widgets
   (:require [clojure.gdx.ui :as ui]
             [clojure.gdx.ui.stage :as stage]
             [clojure.gdx.ui.stage-screen :refer [stage-get]]
@@ -26,13 +26,10 @@
    (ui/actor {:draw world.creature.states/draw-item-on-cursor})
    (player-message/create)])
 
-(defn- data []
+(defn reset-stage! []
   (let [widget-data {:action-bar (->action-bar-button-group)
                      :slot->background (->inventory-window-data)}
         stage (stage-get)]
     (stage/clear! stage)
     (run! #(stage/add! stage %) (actors widget-data))
     widget-data))
-
-(defn init! []
-  (.bindRoot #'world/widgets (data)))
