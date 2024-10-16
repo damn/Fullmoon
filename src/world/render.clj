@@ -7,8 +7,7 @@
             [world.content-grid :as content-grid]
             [world.entity :as entity]
             [world.grid :as grid :refer [world-grid]]
-            [world.potential-fields :as potential-fields]
-            [world.raycaster :as raycaster]))
+            [world.potential-fields :as potential-fields]))
 
 (defn- geom-test []
   (let [position (g/world-mouse-position)
@@ -98,7 +97,7 @@
           base-color (if explored? explored-tile-color black)
           cache-entry (get @light-cache position :not-found)
           blocked? (if (= cache-entry :not-found)
-                     (let [blocked? (raycaster/ray-blocked? light-position position)]
+                     (let [blocked? (w/ray-blocked? light-position position)]
                        (swap! light-cache assoc position blocked?)
                        blocked?)
                      cache-entry)]

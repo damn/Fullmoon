@@ -12,7 +12,6 @@
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
             [world.core :as world]
             [world.grid :as grid :refer [world-grid]]
-            [world.raycaster :refer [ray-blocked?]]
             [world.time :refer [world-delta ->counter finished-ratio stopped?]]))
 
 (defsystem create [_ eid])
@@ -142,7 +141,7 @@
   (and (or (not (:entity/player? source*))
            (on-screen? target*))
        (not (and los-checks?
-                 (ray-blocked? (:position source*) (:position target*))))))
+                 (w/ray-blocked? (:position source*) (:position target*))))))
 
 (declare ^:private uids-entities)
 

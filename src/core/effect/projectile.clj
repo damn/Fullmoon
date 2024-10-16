@@ -3,8 +3,8 @@
             [core.component :refer [defc]]
             [core.effect :as effect :refer [source target target-direction]]
             [core.tx :as tx]
-            [world.projectile :refer [projectile-size]]
-            [world.raycaster :refer [path-blocked?]]))
+            [world.core :as w]
+            [world.projectile :refer [projectile-size]]))
 
 (defn- projectile-start-point [entity direction size]
   (v/add (:position entity)
@@ -22,10 +22,10 @@
   (effect/useful? [_]
     (let [source-p (:position @source)
           target-p (:position @target)]
-      (and (not (path-blocked? ; TODO test
-                               source-p
-                               target-p
-                               (projectile-size projectile)))
+      (and (not (w/path-blocked? ; TODO test
+                                 source-p
+                                 target-p
+                                 (projectile-size projectile)))
            ; TODO not taking into account body sizes
            (< (v/distance source-p ; entity/distance function protocol EntityPosition
                           target-p)

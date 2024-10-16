@@ -11,7 +11,6 @@
             world.generate
             [world.grid :as grid]
             world.time
-            [world.raycaster :as raycaster]
             world.widgets.setup))
 
 (defn- init-explored-tile-corners! [width height]
@@ -68,7 +67,7 @@
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)
         grid (world.grid/init! w h (world-grid-position->value-fn tiled-map))]
-    (raycaster/init! grid grid/blocks-vision?)
+    (world/init-raycaster! grid grid/blocks-vision?)
     (content-grid/init! :cell-size 16 :width w :height h)
     (init-explored-tile-corners! w h))
 
