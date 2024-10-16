@@ -10,7 +10,7 @@
             [core.tx :as tx]
             [malli.core :as m]
             [utils.core :refer [define-order sort-by-order ->tile safe-merge readable-number]]
-            [world.core :as world :refer [world-delta ->counter finished-ratio stopped?]]))
+            [world.core :as world :refer [->counter finished-ratio stopped?]]))
 
 (defsystem create [_ eid])
 (defmethod create :default [_ eid])
@@ -302,7 +302,7 @@
     (when-not (or (zero? (v/length direction))
                   (nil? speed)
                   (zero? speed))
-      (let [movement (assoc movement :delta-time world-delta)
+      (let [movement (assoc movement :delta-time world/delta-time)
             body @eid]
         (when-let [body (if (:collides? body) ; < == means this is a movement-type ... which could be a multimethod ....
                           (try-move-solid-body body movement)
@@ -384,7 +384,7 @@
 
   (tick [[k _] eid]
     [(tx-assoc-image-current-frame eid animation)
-     [:e/assoc eid k (anim-tick animation world-delta)]]))
+     [:e/assoc eid k (anim-tick animation world/delta-time)]]))
 
 (defc :entity/delete-after-animation-stopped?
   (create [_ eid]

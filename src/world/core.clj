@@ -166,7 +166,7 @@
 (declare paused?)
 
 (declare ^{:doc "The game logic update delta-time. Different then clojure.gdx.graphics/delta-time because it is bounded by a maximum value for entity movement speed."}
-         world-delta
+         delta-time
 
          ^{:doc "The elapsed in-game-time (not counting when game is paused)."}
          elapsed-time
@@ -179,7 +179,7 @@
   (.bindRoot #'logic-frame 0))
 
 (defn update-time! [delta]
-  (.bindRoot #'world-delta delta)
+  (.bindRoot #'delta-time delta)
   (alter-var-root #'elapsed-time + delta)
   (alter-var-root #'logic-frame inc))
 
