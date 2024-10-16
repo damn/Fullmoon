@@ -38,7 +38,7 @@
             world.generate
             world.projectile))
 
-(def dev-mode? (= (System/getenv "DEV_MODE") "true"))
+(def ^:private dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
@@ -162,7 +162,7 @@
    (ui/actor {:draw world.creature.states/draw-item-on-cursor})
    (player-message/create)])
 
-(defn reset-stage! []
+(defn- reset-stage! []
   (let [stage (stage-get)] ; these fns to stage itself
     (stage/clear! stage)
     (run! #(stage/add! stage %) (world-actors))))
