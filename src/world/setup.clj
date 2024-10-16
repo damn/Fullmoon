@@ -6,9 +6,7 @@
             [utils.core :refer [bind-root tile->middle]]
             [world.content-grid :as content-grid]
             [world.core :as world]
-            world.generate
-            [world.grid :as grid]
-            world.widgets))
+            [world.grid :as grid]))
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
@@ -48,7 +46,7 @@
                                     (world->enemy-creatures tiled-map)))]
                [:tx/creature (update creature :position tile->middle)])))
 
-(defn- init-new-world! [{:keys [tiled-map start-position]}]
+(defn init-new-world! [{:keys [tiled-map start-position]}]
   (bind-root #'world/entity-tick-error nil)
   (world/init-time!)
 
@@ -65,10 +63,6 @@
 
   (world/init-ids->eids!)
   (spawn-creatures! tiled-map start-position))
-
-(defn add-world-ctx! [world-property-id]
-  (world.widgets/reset-stage!)
-  (init-new-world! (world.generate/generate-level world-property-id)))
 
 (defc :tx/add-to-world
   (tx/do! [[_ eid]]

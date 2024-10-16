@@ -24,7 +24,8 @@
             world.projectile
             [world.render :refer [render-world!]]
             [world.game-loop :refer [game-loop]]
-            world.setup))
+            world.setup
+            world.widgets))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
@@ -139,7 +140,8 @@
 (defn- start-game-fn [world-id]
   (fn []
     (screen/change! :screens/world)
-    (world.setup/add-world-ctx! world-id)))
+    (world.widgets/reset-stage!)
+    (world.setup/init-new-world! (world.generate/generate-level world-property-id))))
 
 (defn- ->buttons []
   (ui/table {:rows (remove nil? (concat
