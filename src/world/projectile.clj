@@ -1,4 +1,4 @@
-(ns world.projectile
+(ns ^:no-doc world.projectile
   (:require [clojure.gdx.math.vector :as v]
             [core.component :refer [defc]]
             [core.effect :as effect :refer [source target target-direction]]
@@ -58,7 +58,7 @@
   (info/text [_]
     "[LIME]Piercing[]"))
 
-(defn projectile-size [projectile]
+(defn- projectile-size [projectile]
   {:pre [(:entity/image projectile)]}
   (first (:world-unit-dimensions (:entity/image projectile))))
 
