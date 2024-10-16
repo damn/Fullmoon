@@ -31,8 +31,7 @@
 (defmethod schema :pos     [_] pos?)
 (defmethod schema :pos-int [_] pos-int?)
 
-(defmethod schema :sound [_]
-  :string)
+(defmethod schema :sound [_] :string)
 
 (defmethod schema :image [_]
   [:map {:closed true}
