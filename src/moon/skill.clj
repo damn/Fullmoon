@@ -1,4 +1,4 @@
-(ns moon.creature.skill
+(ns moon.skill
   (:require [component.core :refer [defc defsystem]]
             [component.info :as info]
             [component.property :as property]
@@ -9,7 +9,9 @@
             [utils.core :refer [readable-number]]
             [world.core :as world :refer [stopped?]]
             [world.entity :as entity]
-            [world.entity.state :as entity-state]))
+            [world.entity.state :as entity-state]
+            [world.entity.stats :refer [entity-stat]]
+            [world.effect :as effect]))
 
 (property/def :properties/skills
   {:schema [:entity/image
@@ -223,3 +225,26 @@
  (.getChildren horizontal-group)
 
  )
+
+(defn- mana-value [entity]
+  (if-let [mana (entity-stat entity :stats/mana)]
+    (mana 0)
+    0))
+
+(defn- not-enough-mana? [entity {:keys [skill/cost]}]
+  (> cost (mana-value entity)))
+
+(defn usable-state
+  [entity {:keys [skill/cooling-down? skill/effects] :as skill}]
+  (cond
+   cooling-down?
+   :cooldown
+
+   (not-enough-mana? entity skill)
+   :not-enough-mana
+
+   (not (effect/effect-applicable? effects))
+   :invalid-params
+
+   :else
+   :usable))

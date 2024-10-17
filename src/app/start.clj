@@ -17,8 +17,9 @@
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             moon.audiovisual
             [moon.creature :as creature]
-            [moon.creature.item :refer [->inventory-window]]
-            [moon.creature.skill :refer [action-bar]]
+            moon.creature.player.item-on-cursor
+            [moon.item :refer [->inventory-window]]
+            [moon.skill :refer [action-bar]]
             moon.projectile
             [world.core :as world]
             world.entity.animation
@@ -158,7 +159,7 @@
               :actors [(debug-window/create)
                        (entity-info-window/create)
                        (->inventory-window)]})
-   (ui/actor {:draw moon.creature.states/draw-item-on-cursor})
+   (ui/actor {:draw moon.creature.player.item-on-cursor/draw-item-on-cursor})
    (player-message/create)])
 
 (defn- reset-stage! []

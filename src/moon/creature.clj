@@ -10,7 +10,16 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge tile->middle]]
             [world.core :as world]
-            moon.creature.states
+            moon.creature.active
+            moon.creature.stunned
+            moon.creature.npc.dead
+            moon.creature.npc.idle
+            moon.creature.npc.moving
+            moon.creature.npc.sleeping
+            moon.creature.player.dead
+            moon.creature.player.idle
+            moon.creature.player.item-on-cursor
+            moon.creature.player.moving
             [world.entity :as entity]
             [world.effect :as effect]))
 
