@@ -102,3 +102,12 @@
     m
     (apply assoc m (interleave ks (repeat v)))))
 
+(defn truncate [s limit]
+  (if (> (count s) limit)
+    (str (subs s 0 limit) "...")
+    s))
+
+(defn ->edn-str [v]
+  (binding [*print-level* nil]
+    (pr-str v)))
+
