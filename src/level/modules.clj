@@ -1,5 +1,7 @@
 (ns level.modules
-  (:require [gdx.tiled :as t]))
+  (:require [gdx.tiled :as t]
+            [level.grid :refer [transition-idx-value]]
+            [level.tiled :refer [grid->tiled-map]]))
 
 (def module-width  32)
 (def module-height 20)
@@ -36,7 +38,7 @@
                      & {:keys [transition?
                                transition-neighbor?]}]
   (let [idxvalue (if transition?
-                   (t/transition-idx-value unscaled-position transition-neighbor?)
+                   (transition-idx-value unscaled-position transition-neighbor?)
                    floor-idxvalue)
         tiled-map-positions (module-index->tiled-map-positions
                              (if transition?
@@ -73,4 +75,4 @@
                                                                     (get unscaled-grid %))))
                             scaled-grid
                             unscaled-transition-positions)]
-    (t/grid->tiled-map modules-tiled-map scaled-grid)))
+    (grid->tiled-map modules-tiled-map scaled-grid)))

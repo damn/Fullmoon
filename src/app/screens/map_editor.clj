@@ -12,7 +12,8 @@
             [gdx.tiled :as t]
             [gdx.utils :refer [dispose!]]
             [level.generate :refer [generate-level]]
-            [level.modules :refer [module-width module-height]]))
+            [level.modules :refer [module-width module-height]]
+            [level.tiled :refer [movement-properties movement-property]]))
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
@@ -63,8 +64,8 @@ direction keys: move")
             (let [level (get area-level-grid tile)]
               (when (number? level)
                 (str "Area level:" level))))
-          (str "Movement properties " (t/movement-property tiled-map tile) "\n"
-               (apply vector (t/movement-properties tiled-map tile)))]
+          (str "Movement properties " (movement-property tiled-map tile) "\n"
+               (apply vector (movement-properties tiled-map tile)))]
          (remove nil?)
          (str/join "\n"))))
 
@@ -120,11 +121,11 @@ direction keys: move")
     ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
-              :let [movement-property (t/movement-property tiled-map [x y])]]
+              :let [prop (movement-property tiled-map [x y])]]
         (g/draw-filled-circle [(+ x 0.5) (+ y 0.5)] 0.08 :black)
         (g/draw-filled-circle [(+ x 0.5) (+ y 0.5)]
                               0.05
-                              (case movement-property
+                              (case prop
                                 "all"   :green
                                 "air"   :orange
                                 "none"  :red))))

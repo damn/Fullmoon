@@ -9,14 +9,16 @@
             [utils.core :refer [->tile assoc-ks]]
             [level.area-level-grid :as area-level-grid]
             [level.caves :as caves]
-            [level.modules :as modules :refer [modules-scale module-width module-height]]))
+            [level.grid :refer [scale-grid scalegrid printgrid transition-idx-value fix-not-allowed-diagonals]]
+            [level.modules :as modules :refer [modules-scale module-width module-height]]
+            [level.tiled :refer [movement-properties movement-property wgt-grid->tiled-map]]))
 
 ; TODO generates 51,52. not max 50
 ; TODO can use different turn-ratio/depth/etc. params
 ; (printgrid (:grid (->cave-grid :size 800)))
 (defn- ->cave-grid [& {:keys [size]}]
   (let [{:keys [start grid]} (caves/generate (java.util.Random.) size size :wide)
-        grid (t/fix-not-allowed-diagonals grid)]
+        grid (fix-not-allowed-diagonals grid)]
     (assert (= #{:wall :ground} (set (g2d/cells grid))))
     {:start start
      :grid grid}))
@@ -116,14 +118,14 @@
                    (= #{:ground :transition} (set (g2d/cells grid))))
                   (str "(set (g2d/cells grid)): " (set (g2d/cells grid))))
         scale modules-scale
-        scaled-grid (t/scale-grid grid scale)
+        scaled-grid (scale-grid grid scale)
         tiled-map (modules/place (t/load-map modules-file)
                                  scaled-grid
                                  grid
                                  (filter #(= :ground     (get grid %)) (g2d/posis grid))
                                  (filter #(= :transition (get grid %)) (g2d/posis grid)))
         start-position (mapv * start scale)
-        can-spawn? #(= "all" (t/movement-property tiled-map %))
+        can-spawn? #(= "all" (movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
         spawn-positions (flood-fill scaled-grid start-position can-spawn?)
         ;_ (println "scaled grid with filled nil: '?' \n")
@@ -140,7 +142,7 @@
                       (set (g2d/cells area-level-grid)))
                    (= (set (concat [:wall max-area-level] (range max-area-level)))
                       (set (g2d/cells area-level-grid)))))
-        scaled-area-level-grid (t/scale-grid area-level-grid scale)
+        scaled-area-level-grid (scale-grid area-level-grid scale)
         get-free-position-in-area-level (fn [area-level]
                                           (rand-nth
                                            (filter
@@ -155,7 +157,7 @@
      :area-level-grid scaled-area-level-grid}))
 
 (defn uf-transition [position grid]
-  (t/transition-idx-value position (= :transition (get grid position))))
+  (transition-idx-value position (= :transition (get grid position))))
 
 (defn rand-0-3 []
   (get-rand-weighted-item {0 60 1 1 2 1 3 1}))
@@ -246,7 +248,7 @@
         ;_ (printgrid grid)
         ;_ (println)
         scale uf-caves-scale
-        grid (t/scalegrid grid scale)
+        grid (scalegrid grid scale)
         ;_ (printgrid grid)
         ;_ (println)
         start-position (mapv #(* % scale) start)
@@ -268,8 +270,8 @@
                                          (->transition-tile transition-idx)
                                          (->wall-tile wall-idx))
                            :ground (->ground-tile ground-idx)))
-        tiled-map (t/wgt-grid->tiled-map grid position->tile)
-        can-spawn? #(= "all" (t/movement-property tiled-map %))
+        tiled-map (wgt-grid->tiled-map grid position->tile)
+        can-spawn? #(= "all" (movement-property tiled-map %))
         _ (assert (can-spawn? start-position)) ; assuming hoping bottom left is movable
         spawn-positions (flood-fill grid start-position can-spawn?)
         ]

@@ -17,7 +17,9 @@
             [world.core.content-grid :as content-grid]
             [world.core.raycaster :as raycaster]
             [world.entity :as entity]
-            [world.entity.state :as entity-state]))
+            [world.entity.state :as entity-state]
+
+            [level.tiled :refer [movement-property]]))
 
 (load "core/grid"
       "core/potential_fields"
@@ -75,7 +77,7 @@
 
 (defn- world-grid-position->value-fn [tiled-map]
   (fn [position]
-    (case (t/movement-property tiled-map position)
+    (case (movement-property tiled-map position)
       "none" :none
       "air"  :air
       "all"  :all)))
