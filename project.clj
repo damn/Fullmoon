@@ -30,8 +30,9 @@
 
   :omit-source true
 
-  :jvm-opts ["-Xms256m"
-             "-Xmx256m"
+  ; because dev.browser 512...
+  :jvm-opts ["-Xms512m"
+             "-Xmx512m"
              "-Dvisualvm.display.name=CDQ"
              "-XX:-OmitStackTraceInFastThrow" ; disappeared stacktraces
              ; for visualvm profiling
@@ -52,7 +53,7 @@
                 ;*assert* false
                 *print-level* 3}
 
-  :profiles {:tool    {:aot [editor.javafx]}
+  :profiles {:javafx  {:aot [editor.javafx dev.browser]}
              :uberjar {:aot [app.start]}}
 
   :main app.start)
