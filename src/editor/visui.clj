@@ -163,15 +163,11 @@
                        value-widget (attribute-widget-table->value-widget table)]]
              [k (widget/value (schema/of k) value-widget)])))
 
-;;
-
 (defn- apply-context-fn [window f]
-  (fn []
-    (try
-     (f)
-     (a/remove! window)
-     (catch Throwable t
-       (error-window! t)))))
+  #(try (f)
+        (a/remove! window)
+        (catch Throwable t
+          (error-window! t))))
 
 (defn- ->property-editor-window [id]
   (let [props (safe-get db/db id)
@@ -193,9 +189,7 @@
     (.pack window)
     window))
 
-(import 'com.kotcrab.vis.ui.widget.tabbedpane.Tab)
-(import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane)
-(import 'com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter)
+(import '(com.kotcrab.vis.ui.widget.tabbedpane Tab TabbedPane TabbedPaneAdapter))
 (import 'com.kotcrab.vis.ui.widget.VisTable)
 
 (defn- ->tab [{:keys [title content savable? closable-by-user?]}]
