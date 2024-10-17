@@ -1,4 +1,4 @@
-(ns core.val-max
+(ns data.val-max
   (:require [clojure.string :as str]
             [component.core :refer [defc]]
             [component.schema :as schema]

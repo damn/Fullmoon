@@ -1,12 +1,12 @@
-(ns core.effect.target
+(ns world.effect.target
   (:require [component.core :refer [defc]]
             [component.info :as info]
             [component.tx :as tx]
-            [core.effect :as effect :refer [source target]]
             [gdx.graphics :as g]
             [gdx.math.vector :as v]
             [world.core :as world]
-            [world.entity :as entity]))
+            [world.entity :as entity]
+            [world.effect :as effect :refer [source target]]))
 
 (defc :entity-effects {:schema [:s/components-ns :effect.entity]})
 

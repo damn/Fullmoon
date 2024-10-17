@@ -1,4 +1,4 @@
-(ns core.effect
+(ns world.effect
   (:require [component.core :refer [defsystem defc]]
             [component.tx :as tx]
             [gdx.graphics :as g]

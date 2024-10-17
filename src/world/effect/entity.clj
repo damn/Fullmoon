@@ -1,16 +1,16 @@
-(ns core.effect.entity
-  (:require [gdx.graphics :as g]
-            [gdx.rand :refer [rand-int-between]]
-            [component.core :refer [defc]]
+(ns world.effect.entity
+  (:require [component.core :refer [defc]]
             [component.info :as info]
             [component.tx :as tx]
-            [core.effect :as effect :refer [source target]]
+            [gdx.graphics :as g]
+            [gdx.rand :refer [rand-int-between]]
             [utils.core :refer [readable-number]]
             [world.core :refer [timer stopped? finished-ratio]]
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.modifiers :refer [->modified-value]]
-            [world.entity.stats :refer [entity-stat]]))
+            [world.entity.stats :refer [entity-stat]]
+            [world.effect :as effect :refer [source target]]))
 
 (defn- entity->melee-damage [entity]
   (let [strength (or (entity-stat entity :stats/strength) 0)]

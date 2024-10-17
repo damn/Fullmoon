@@ -3,7 +3,6 @@
             [component.core :refer [defc]]
             [component.db :as db]
             [component.property :as property]
-            [core.widgets.error :refer [error-window!]]
             [data.grid2d :as g2d]
             [gdx.graphics :as g :refer [white black]]
             [gdx.graphics.camera :as 🎥]
@@ -20,7 +19,8 @@
             [world.generate.caves :as caves]
             [world.generate.modules :as modules :refer [modules-scale
                                                         module-width
-                                                        module-height]]))
+                                                        module-height]]
+            [world.widgets.error :refer [error-window!]]))
 
 ; TODO generates 51,52. not max 50
 ; TODO can use different turn-ratio/depth/etc. params

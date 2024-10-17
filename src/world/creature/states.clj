@@ -1,7 +1,6 @@
 (ns world.creature.states
   (:require [component.core :refer [defc]]
             [component.tx :as tx]
-            [core.effect :as effect]
             [gdx.graphics :as g]
             [gdx.input :refer [button-just-pressed? key-pressed?]]
             [gdx.math.vector :as v]
@@ -15,7 +14,8 @@
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
             [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
-            [world.entity.stats :refer [entity-stat]]))
+            [world.entity.stats :refer [entity-stat]]
+            [world.effect :as effect]))
 
 (defc :npc-dead
   {:let {:keys [eid]}}

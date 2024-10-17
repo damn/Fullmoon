@@ -5,14 +5,14 @@
             [component.info :as info]
             [component.property :as property]
             [component.tx :as tx]
-            [core.effect :as effect]
             [gdx.graphics :as g]
             [gdx.tiled :as tiled]
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge tile->middle]]
             [world.core :as world]
             world.creature.states
-            [world.entity :as entity]))
+            [world.entity :as entity]
+            [world.effect :as effect]))
 
 (defc :entity/player?
   (entity/create [_ eid]

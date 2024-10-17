@@ -7,7 +7,6 @@
             [component.info :as info]
             [component.property :as property]
             [component.schema :as schema]
-            [core.widgets.error :refer [error-window!]]
             [gdx.assets :as assets]
             [gdx.graphics :as g]
             [gdx.input :refer [key-just-pressed?]]
@@ -17,7 +16,8 @@
             [gdx.screen :as screen]
             [malli.core :as m]
             [malli.generator :as mg]
-            [utils.core :refer [safe-get index-of]]))
+            [utils.core :refer [safe-get index-of]]
+            [world.widgets.error :refer [error-window!]]))
 
 (comment
  ; Possible schemas:

@@ -2,13 +2,6 @@
   (:require [component.db :as db]
             [component.tx :as tx]
             [core.editor :as property-editor]
-            core.effect.entity
-            core.effect.target
-            core.tx.gdx
-            [core.widgets.debug-window :as debug-window]
-            [core.widgets.entity-info-window :as entity-info-window]
-            [core.widgets.hp-mana :as hp-mana-bars]
-            [core.widgets.player-message :as player-message]
             [gdx.app :as app]
             [gdx.assets :as assets]
             [gdx.graphics :as g :refer [white black]]
@@ -21,6 +14,7 @@
             [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             world.audiovisual
+            [world.core :as world]
             [world.creature :as creature]
             world.entity.animation
             world.entity.delete-after-duration
@@ -30,11 +24,17 @@
             world.entity.movement
             world.entity.string-effect
             [world.entity.skills :refer [action-bar]]
-            [world.core :as world]
+            world.effect.entity
+            world.effect.target
             [world.entity :as entity]
             world.entity.stats
             world.generate
-            world.projectile))
+            world.projectile
+            [world.widgets.debug-window :as debug-window]
+            [world.widgets.entity-info-window :as entity-info-window]
+            [world.widgets.hp-mana :as hp-mana-bars]
+            [world.widgets.player-message :as player-message]
+            world.widgets.player-modal))
 
 (def ^:private dev-mode? (= (System/getenv "DEV_MODE") "true"))
 

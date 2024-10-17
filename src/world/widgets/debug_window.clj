@@ -1,4 +1,4 @@
-(ns core.widgets.debug-window
+(ns world.widgets.debug-window
   (:require [gdx.graphics :as g]
             [gdx.graphics.camera :as 🎥]
             [gdx.ui :as ui]

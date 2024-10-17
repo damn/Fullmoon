@@ -1,7 +1,7 @@
-(ns core.widgets.hp-mana
-  (:require [gdx.graphics :as g]
+(ns world.widgets.hp-mana
+  (:require [data.val-max :as val-max]
+            [gdx.graphics :as g]
             [gdx.ui :as ui]
-            [core.val-max :as val-max]
             [utils.core :refer [readable-number]]
             [world.core :as world]
             [world.entity.stats :refer [entity-stat]]))

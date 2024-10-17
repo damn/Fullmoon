@@ -1,4 +1,4 @@
-(ns core.widgets.error
+(ns world.widgets.error
   (:require [clj-commons.pretty.repl :refer [pretty-pst]]
             [gdx.ui :as ui]
             [gdx.ui.stage-screen :refer [stage-add!]]))

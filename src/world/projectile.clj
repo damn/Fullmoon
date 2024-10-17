@@ -3,11 +3,11 @@
             [component.info :as info]
             [component.property :as property]
             [component.tx :as tx]
-            [core.effect :as effect :refer [source target target-direction]]
             [gdx.math.vector :as v]
             [utils.core :refer [find-first]]
             [world.core :as w]
-            [world.entity :as entity]))
+            [world.entity :as entity]
+            [world.effect :as effect :refer [source target target-direction]]))
 
 (property/def :properties/projectiles
   {:schema [:entity/image

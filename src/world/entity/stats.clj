@@ -4,12 +4,12 @@
             [component.info :as info]
             [component.operation :as op]
             [component.tx :as tx]
-            [core.effect :as effect :refer [target]]
-            [core.val-max :as val-max]
+            [data.val-max :as val-max]
             [gdx.graphics :as g]
             [utils.core :refer [k->pretty-name]]
             [world.entity :as entity]
-            [world.entity.modifiers :refer [->modified-value]]))
+            [world.entity.modifiers :refer [->modified-value]]
+            [world.effect :as effect :refer [target]]))
 
 (defn- defmodifier [k operations]
   (defc* k {:schema [:s/map-optional operations]}))

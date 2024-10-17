@@ -3,7 +3,6 @@
             [component.core :refer [defc]]
             [component.db :as db]
             [component.tx :as tx]
-            [core.widgets.error :refer [error-window!]]
             [data.grid2d :as g2d]
             [gdx.graphics :as g :refer [white black]]
             [gdx.graphics.camera :as 🎥]
@@ -18,7 +17,8 @@
             [world.entity :as entity]
             [world.entity.faction :as faction]
             [world.entity.state :as entity-state]
-            [world.raycaster :as raycaster]))
+            [world.raycaster :as raycaster]
+            [world.widgets.error :refer [error-window!]]))
 
 (defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]
