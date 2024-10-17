@@ -6,7 +6,7 @@
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.stage-screen :refer [mouse-on-actor?]]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.effect :as effect]
             [core.tx :as tx]
             [world.core :as world :refer [timer stopped? finished-ratio mouseover-eid]]

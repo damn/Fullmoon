@@ -3,7 +3,7 @@
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.stage-screen :refer [stage-get]]
-            [core.component :refer [defsystem defc]]
+            [component.core :refer [defsystem defc]]
             [core.info :as info]
             [core.property :as property]
             [core.tx :as tx]

@@ -8,7 +8,7 @@
             [gdx.math.vector :as v]
             [gdx.tiled :as t]
             [gdx.utils :refer [dispose!]]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.db :as db]
             [core.tx :as tx]
             [core.widgets.error :refer [error-window!]]

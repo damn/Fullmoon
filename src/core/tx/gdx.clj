@@ -4,7 +4,7 @@
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.stage-screen :refer [stage-add! stage-get]]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.tx :as tx]))
 
 (defc :tx/sound

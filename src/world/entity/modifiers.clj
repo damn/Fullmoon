@@ -1,7 +1,7 @@
 (ns world.entity.modifiers
   (:require [gdx.graphics :as g]
             [clojure.string :as str]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.info :as info]
             [core.operation :as op]
             [core.tx :as tx]

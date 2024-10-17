@@ -1,6 +1,6 @@
 (ns ^:no-doc world.entity.string-effect
   (:require [gdx.graphics :as g]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.tx :as tx]
             [world.core :as world :refer [timer stopped?]]
             [world.entity :as entity]))

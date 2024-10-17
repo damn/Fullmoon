@@ -1,5 +1,5 @@
 (ns property.audiovisual
-  (:require [core.component :refer [defc]]
+  (:require [component.core :refer [defc]]
             [core.db :as db]
             [core.property :as property]
             [core.tx :as tx]

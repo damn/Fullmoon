@@ -4,7 +4,7 @@
             [gdx.ui :as ui]
             [gdx.ui.stage :as stage]
             [gdx.ui.stage-screen :refer [stage-add!]]
-            [core.component :as component]
+            [component.core :as component]
             [core.data :as data]
             [core.db :as db]
             [core.tx :as tx]
@@ -194,7 +194,7 @@
                "")
              (let [attr-map (component/meta k)]
                #_(if (seq attr-map)
-                   (pr-str (:core.component/fn-params attr-map))
+                   (pr-str (:component.core/fn-params attr-map))
                    (str " `"
                         (binding [*print-level* nil]
                           (with-out-str

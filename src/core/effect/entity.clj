@@ -1,7 +1,7 @@
 (ns core.effect.entity
   (:require [gdx.graphics :as g]
             [gdx.rand :refer [rand-int-between]]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.effect :as effect :refer [source target]]
             [core.info :as info]
             [core.tx :as tx]

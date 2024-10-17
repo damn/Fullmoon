@@ -1,6 +1,6 @@
 (ns core.property
   (:refer-clojure :exclude [def type])
-  (:require [core.component :refer [defc] :as component]
+  (:require [component.core :refer [defc] :as component]
             [core.data :as data]
             [malli.core :as m]
             [malli.error :as me]))

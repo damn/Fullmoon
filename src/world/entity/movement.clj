@@ -1,6 +1,6 @@
 (ns ^:no-doc world.entity.movement
   (:require [gdx.math.vector :as v]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.tx :as tx]
             [malli.core :as m]
             [world.core :as world]

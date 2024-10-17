@@ -1,7 +1,7 @@
 (ns core.effect
   (:require [gdx.graphics :as g]
             [gdx.math.vector :as v]
-            [core.component :refer [defsystem defc]]
+            [component.core :refer [defsystem defc]]
             [world.core :as world :refer [mouseover-eid]]
             [world.entity :as entity]
             [world.entity.faction :as faction]

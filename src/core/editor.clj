@@ -9,7 +9,7 @@
             [gdx.screen :as screen]
             [clojure.set :as set]
             [clojure.string :as str]
-            [core.component :as component]
+            [component.core :as component]
             [core.data :as data]
             [core.db :as db]
             [core.info :as info]

@@ -2,7 +2,7 @@
   (:require [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.stage-screen :refer [stage-get]]
-            [core.component :refer [defc defsystem]]
+            [component.core :refer [defc defsystem]]
             [core.info :as info]
             [core.property :as property]
             [core.tx :as tx]

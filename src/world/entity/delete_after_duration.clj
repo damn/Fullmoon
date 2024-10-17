@@ -1,5 +1,5 @@
 (ns ^:no-doc world.entity.delete-after-duration
-  (:require [core.component :refer [defc]]
+  (:require [component.core :refer [defc]]
             [core.info :as info]
             [utils.core :refer [readable-number]]
             [world.core :refer [timer stopped? finished-ratio]]

@@ -1,6 +1,6 @@
 (ns ^:no-doc world.projectile
   (:require [gdx.math.vector :as v]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.effect :as effect :refer [source target target-direction]]
             [core.info :as info]
             [core.property :as property]

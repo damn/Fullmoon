@@ -1,6 +1,6 @@
 (ns core.info
   (:require [clojure.string :as str]
-            [core.component :refer [defsystem]]
+            [component.core :refer [defsystem]]
             [utils.core :refer [index-of]]))
 
 (defsystem text "Return info-string (for tooltips,etc.). Default nil.")

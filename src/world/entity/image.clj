@@ -1,6 +1,6 @@
 (ns ^:no-doc world.entity.image
   (:require [gdx.graphics :as g]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [world.entity :as entity]))
 
 (defc :entity/image

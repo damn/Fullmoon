@@ -1,7 +1,7 @@
 (ns world.entity.stats
   (:require [gdx.graphics :as g]
             [clojure.string :as str]
-            [core.component :refer [defc defc*]]
+            [component.core :refer [defc defc*]]
             [core.effect :as effect :refer [target]]
             [core.info :as info]
             [core.operation :as op]

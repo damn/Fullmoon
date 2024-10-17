@@ -1,6 +1,6 @@
 (ns core.data
   (:refer-clojure :exclude [type])
-  (:require [core.component :as component]
+  (:require [component.core :as component]
             [utils.core :refer [safe-get]]))
 
 (defn type [data]

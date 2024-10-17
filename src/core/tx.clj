@@ -1,5 +1,5 @@
 (ns core.tx
-  (:require [core.component :refer [defsystem]]))
+  (:require [component.core :refer [defsystem]]))
 
 (defsystem do!)
 

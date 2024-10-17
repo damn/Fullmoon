@@ -1,6 +1,6 @@
 (ns ^:no-doc world.entity.line
   (:require [gdx.graphics :as g]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.tx :as tx]
             [world.entity :as entity]))
 

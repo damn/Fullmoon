@@ -2,7 +2,7 @@
   (:require [gdx.graphics :as g]
             [gdx.tiled :as tiled]
             [clojure.string :as str]
-            [core.component :refer [defc]]
+            [component.core :refer [defc]]
             [core.property :as property]
             [core.db :as db]
             [core.effect :as effect]

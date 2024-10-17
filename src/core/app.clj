@@ -226,7 +226,7 @@
 (defn- debug-flags [] ;
   (apply concat
          ; TODO
-         (for [nmspace (get-namespaces #{"core"})] ; DRY in core.component check ns-name & core.app require all ... core.components
+         (for [nmspace (get-namespaces #{"core"})] ; DRY in component.core check ns-name & core.app require all ... component.cores
            (get-vars nmspace (fn [avar] (:dbg-flag (meta avar)))))))
 
 ; TODO FIXME IF THE FLAGS ARE CHANGED MANUALLY IN THE REPL THIS IS NOT REFRESHED
