@@ -53,9 +53,9 @@
                 *print-level* 3}
 
   :profiles {:tool    {:aot [core.tool]}
-             :uberjar {:aot [core.app]}}
+             :uberjar {:aot [app.start]}}
 
-  :main core.app)
+  :main app.start)
 
 ; * Notes
 

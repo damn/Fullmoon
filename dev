@@ -1,1 +1,1 @@
-DEV_MODE=true lein run -m gdx.dev core.app
+DEV_MODE=true lein run -m gdx.dev app.start

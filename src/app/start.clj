@@ -1,4 +1,4 @@
-(ns core.app
+(ns app.start
   (:require [gdx.app :as app]
             [gdx.assets :as assets]
             [gdx.graphics :as g :refer [white black]]
