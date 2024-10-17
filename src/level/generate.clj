@@ -9,69 +9,9 @@
             [utils.core :refer [->tile assoc-ks]]
             [level.area-level-grid :as area-level-grid]
             [level.caves :as caves]
-            [level.grid :refer [scale-grid scalegrid printgrid transition-idx-value fix-not-allowed-diagonals]]
+            [level.grid :refer [scale-grid scalegrid printgrid transition-idx-value fix-not-allowed-diagonals cave-grid adjacent-wall-positions flood-fill]]
             [level.modules :as modules :refer [modules-scale module-width module-height]]
             [level.tiled :refer [movement-properties movement-property wgt-grid->tiled-map]]))
-
-; TODO generates 51,52. not max 50
-; TODO can use different turn-ratio/depth/etc. params
-; (printgrid (:grid (->cave-grid :size 800)))
-(defn- ->cave-grid [& {:keys [size]}]
-  (let [{:keys [start grid]} (caves/generate (java.util.Random.) size size :wide)
-        grid (fix-not-allowed-diagonals grid)]
-    (assert (= #{:wall :ground} (set (g2d/cells grid))))
-    {:start start
-     :grid grid}))
-
-; TODO HERE
-; * unique max 16 modules, not random take @ #'floor->module-index, also special start, end modules, rare modules...
-
-; * at the beginning enemies very close, different area different spawn-rate !
-
-; beginning slow enemies low hp low dmg etc.
-
-; * flood-fill gets 8 neighbour posis -> no NADs on modules ! assert !
-
-; * assuming bottom left in floor module is walkable
-
-; whats the assumption here? => or put extra borders around? / assert!
-
-(defn- adjacent-wall-positions [grid]
-  (filter (fn [p] (and (= :wall (get grid p))
-                       (some #(= :ground (get grid %))
-                             (g2d/get-8-neighbour-positions p))))
-          (g2d/posis grid)))
-
-(defn- flood-fill [grid start walk-on-position?]
-  (loop [next-positions [start]
-         filled []
-         grid grid]
-    (if (seq next-positions)
-      (recur (filter #(and (get grid %)
-                           (walk-on-position? %))
-                     (distinct
-                      (mapcat g2d/get-8-neighbour-positions
-                              next-positions)))
-             (concat filled next-positions)
-             (assoc-ks grid next-positions nil))
-      filled)))
-
-(comment
- (let [{:keys [start grid]} (t/->cave-grid :size 15)
-       _ (println "BASE GRID:\n")
-       _ (printgrid grid)
-       ;_ (println)
-       ;_ (println "WITH START POSITION (0) :\n")
-       ;_ (printgrid (assoc grid start 0))
-       ;_ (println "\nwidth:  " (g/width  grid)
-       ;           "height: " (g/height grid)
-       ;           "start " start "\n")
-       ;_ (println (g2d/posis grid))
-       _ (println "\n\n")
-       filled (flood-fill grid start (fn [p] (= :ground (get grid p))))
-       _ (printgrid (reduce #(assoc %1 %2 nil) grid filled))])
- )
-
 
 (defn- creatures-with-level [creature-properties level]
   (filter #(= level (:creature/level %)) creature-properties))
@@ -107,7 +47,7 @@
            world/max-area-level
            world/spawn-rate]}]
   (assert (<= max-area-level map-size))
-  (let [{:keys [start grid]} (->cave-grid :size map-size)
+  (let [{:keys [start grid]} (cave-grid :size map-size)
         ;_ (printgrid grid)
         ;_ (println " - ")
         grid (reduce #(assoc %1 %2 :transition) grid (adjacent-wall-positions grid))
@@ -243,7 +183,7 @@
 (def ^:private uf-caves-scale 4)
 
 (defn uf-caves [{:keys [world/map-size world/spawn-rate]}]
-  (let [{:keys [start grid]} (->cave-grid :size map-size)
+  (let [{:keys [start grid]} (cave-grid :size map-size)
         ;_ (println "Start: " start)
         ;_ (printgrid grid)
         ;_ (println)
