@@ -11,7 +11,7 @@
             [utils.core :refer [dev-mode?]]
             [moon.creature :as creature]
             moon.creature.player.item-on-cursor
-            [moon.skill :refer [action-bar]]
+            [moon.widgets.action-bar :as action-bar]
             [moon.widgets.debug-window :as debug-window]
             [moon.widgets.entity-info-window :as entity-info-window]
             [moon.widgets.hp-mana :as hp-mana-bars]
@@ -89,7 +89,7 @@
   [:screens/world (stage-screen/create :screen (->WorldScreen))])
 
 (defn- world-actors []
-  [(ui/table {:rows [[{:actor (action-bar)
+  [(ui/table {:rows [[{:actor (action-bar/create)
                        :expand? true
                        :bottom? true}]]
               :id :action-bar-table
