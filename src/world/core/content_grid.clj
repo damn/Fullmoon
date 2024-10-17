@@ -1,4 +1,4 @@
-(ns ^:no-doc world.content-grid
+(ns ^:no-doc world.core.content-grid
   (:require [data.grid2d :as g2d]))
 
 (defn create [{:keys [cell-size width height]}]
