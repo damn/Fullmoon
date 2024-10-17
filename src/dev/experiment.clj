@@ -2,7 +2,8 @@
   (:require [component.core :as component]
             [component.db :as db]
             [component.tx :as tx]
-            [gdx.app :refer [post-runnable!]]))
+            [gdx.app :refer [post-runnable!]]
+            [world.core :as world]))
 
 (comment
 

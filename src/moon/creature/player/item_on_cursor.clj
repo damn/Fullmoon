@@ -4,7 +4,8 @@
             [gdx.input :refer [button-just-pressed?]]
             [gdx.math.vector :as v]
             [gdx.ui.stage-screen :refer [mouse-on-actor?]]
-            [moon.item :refer [valid-slot? stackable? clicked-inventory-cell]]
+            [moon.item :refer [valid-slot? stackable?]]
+            [moon.widgets.inventory :refer [clicked-inventory-cell]]
             [world.core :as world]
             [world.entity :as entity]
             [world.entity.state :as state]))

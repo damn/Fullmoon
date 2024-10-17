@@ -20,9 +20,9 @@
             moon.audiovisual
             [moon.creature :as creature]
             moon.creature.player.item-on-cursor
-            [moon.item :refer [->inventory-window]]
             [moon.skill :refer [action-bar]]
             moon.projectile
+            [moon.widgets.inventory :as inventory]
             [world.core :as world]
             world.entity.animation
             world.entity.delete-after-duration
@@ -158,7 +158,7 @@
    (ui/group {:id :windows
               :actors [(debug-window/create)
                        (entity-info-window/create)
-                       (->inventory-window)]})
+                       (inventory/create)]})
    (ui/actor {:draw moon.creature.player.item-on-cursor/draw-item-on-cursor})
    (player-message/create)])
 
