@@ -1,5 +1,6 @@
 (ns world.entity
   (:require [component.core :refer [defsystem defc]]
+            [component.info :as info]
             [gdx.math.shape :as shape]
             [gdx.math.vector :as v]
             [malli.core :as m]
@@ -106,3 +107,17 @@
 
 (defn collides? [entity other-entity]
   (shape/overlaps? entity other-entity))
+
+(defn enemy [{:keys [entity/faction]}]
+  (case faction
+    :evil :good
+    :good :evil))
+
+(defn friend [{:keys [entity/faction]}]
+  faction)
+
+(defc :entity/faction
+  {:schema [:enum :good :evil]
+   :let faction}
+  (info/text [_]
+    (str "[SLATE]Faction: " (name faction) "[]")))

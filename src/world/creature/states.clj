@@ -10,7 +10,6 @@
             [gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [world.core :as world :refer [timer stopped? finished-ratio mouseover-eid]]
             [world.entity :as entity]
-            [world.entity.faction :as faction]
             [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
             [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
@@ -83,7 +82,7 @@
   (entity/tick [_ eid]
     (let [entity @eid
           cell (world/grid (entity/tile entity))] ; pattern!
-      (when-let [distance (world/nearest-entity-distance @cell (faction/enemy entity))]
+      (when-let [distance (world/nearest-entity-distance @cell (entity/enemy entity))]
         (when (<= distance (entity-stat entity :stats/aggro-range))
           [[:tx/event eid :alert]]))))
 

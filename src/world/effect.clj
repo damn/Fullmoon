@@ -4,8 +4,7 @@
             [gdx.graphics :as g]
             [gdx.math.vector :as v]
             [world.core :as world :refer [mouseover-eid]]
-            [world.entity :as entity]
-            [world.entity.faction :as faction]))
+            [world.entity :as entity]))
 
 (defsystem applicable?
   "An effect will only be done (with tx/do!) if this function returns truthy.
@@ -40,7 +39,7 @@ Default method returns true.")
 
 (defn- nearest-enemy [entity]
   (world/nearest-entity @(world/grid (entity/tile entity))
-                        (faction/enemy entity)))
+                        (entity/enemy entity)))
 
 ;;
 

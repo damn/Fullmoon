@@ -7,7 +7,6 @@
             [utils.core :refer [readable-number]]
             [world.core :refer [timer stopped? finished-ratio]]
             [world.entity :as entity]
-            [world.entity.faction :as faction]
             [world.entity.modifiers :refer [->modified-value]]
             [world.entity.stats :refer [entity-stat]]
             [world.effect :as effect :refer [source target]]))
@@ -157,11 +156,11 @@
   (effect/applicable? [_]
     (and target
          (= (:entity/faction @target)
-            (faction/enemy @source))))
+            (entity/enemy @source))))
 
   (tx/do! [_]
     [[:tx/audiovisual (:position @target) :audiovisuals/convert]
-     [:e/assoc target :entity/faction (faction/friend @source)]]))
+     [:e/assoc target :entity/faction (entity/friend @source)]]))
 
 (defc :effect.entity/stun
   {:schema pos?

@@ -48,9 +48,9 @@
         #(g/draw-ellipse (:position entity)
                          (:half-width entity)
                          (:half-height entity)
-                         (cond (= faction (faction/enemy player-entity))
+                         (cond (= faction (entity/enemy player-entity))
                                enemy-color
-                               (= faction (faction/friend player-entity))
+                               (= faction (entity/friend player-entity))
                                friendly-color
                                :else
                                neutral-color))))))

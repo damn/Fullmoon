@@ -15,7 +15,6 @@
             [utils.core :refer [bind-root ->tile tile->middle safe-merge sort-by-order]]
             [world.content-grid :as content-grid]
             [world.entity :as entity]
-            [world.entity.faction :as faction]
             [world.entity.state :as entity-state]
             [world.raycaster :as raycaster]
             [world.widgets.error :refer [error-window!]]))
