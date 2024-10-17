@@ -9,7 +9,7 @@
             [utils.core :refer [k->pretty-name]]
             [world.entity :as entity]
             [world.entity.modifiers :refer [->modified-value]]
-            [world.effect :as effect :refer [target]]))
+            [world.effect :as effect]))
 
 (defn- defmodifier [k operations]
   (defc* k {:schema [:s/map-optional operations]}))
@@ -73,7 +73,6 @@
    (= (tx/do! [:tx.entity.stats/pay-mana-cost eid mana-cost] nil)
       [[:e/assoc-in eid [:entity/stats :stats/mana 0] resulting-mana]]))
  )
-
 
 ; * TODO clamp/post-process effective-values @ stat-k->effective-value
 ; * just don't create movement-speed increases too much?
@@ -212,16 +211,16 @@
                 (str (op/info-text operation) " " (k->pretty-name k)))))
 
   (effect/applicable? [[k _]]
-    (and target
-         (entity-stat @target (effect-k->stat-k k))))
+    (and effect/target
+         (entity-stat @effect/target (effect-k->stat-k k))))
 
   (effect/useful? [_]
     true)
 
   (tx/do! [[effect-k operations]]
     (let [stat-k (effect-k->stat-k effect-k)]
-      (when-let [effective-value (entity-stat @target stat-k)]
-        [[:e/assoc-in target [:entity/stats stat-k]
+      (when-let [effective-value (entity-stat @effect/target stat-k)]
+        [[:e/assoc-in effect/target [:entity/stats stat-k]
           ; TODO similar to components.entity.modifiers/->modified-value
           ; but operations not sort-by op/order ??
           ; op-apply reuse fn over operations to get effectiv value
