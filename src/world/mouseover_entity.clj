@@ -8,10 +8,10 @@
 
 (defn- calculate-mouseover-eid []
   (let [player-entity @player
-        hits (remove #(= (:z-order %) :z-order/effect) ; or: only items/creatures/projectiles.
+        hits (remove #(= (:z-order @%) :z-order/effect) ; or: only items/creatures/projectiles.
                      (point->entities (g/world-mouse-position)))]
     (->> entity/render-order
-         (sort-by-order hits :z-order)
+         (sort-by-order hits #(:z-order @%))
          reverse
          (filter #(line-of-sight? player-entity @%))
          first)))
