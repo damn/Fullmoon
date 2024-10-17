@@ -25,20 +25,8 @@
       "core/potential_fields"
       "core/time")
 
-(declare player
-         tiled-map
-         ^:private entity-tick-error
-         explored-tile-corners)
-
-(defn- init-explored-tile-corners! [width height]
-  (bind-root #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
-
-;;
-
-(declare ^:private raycaster)
-
-(defn- init-raycaster! []
-  (bind-root #'raycaster (raycaster/create grid blocks-vision?)))
+(defn- init-raycaster []
+  (def ^:private raycaster (raycaster/create grid blocks-vision?)))
 
 (defn ray-blocked? [start target]
   (raycaster/blocked? raycaster start target))
@@ -48,9 +36,8 @@
   [start target path-w]
   (raycaster/path-blocked? raycaster start target path-w))
 
-;;
-
-(declare ^:private content-grid)
+(declare ^:private content-grid
+         player)
 
 (defn- init-content-grid! [opts]
   (bind-root #'content-grid (content-grid/create opts)))
@@ -58,29 +45,9 @@
 (defn active-entities []
   (content-grid/active-entities content-grid @player))
 
-;;
-
-(declare ^:private ids->eids)
-
-(defn- init-ids->eids! []
-  (bind-root #'ids->eids {}))
-
-(defn all-entities []
-  (vals ids->eids))
-
-(defn get-entity
-  "Mostly used for debugging, use an entity's atom for (probably) faster access in your logic."
-  [id]
-  (get ids->eids id))
-
-;;
-
-(defn- world-grid-position->value-fn [tiled-map]
-  (fn [position]
-    (case (movement-property tiled-map position)
-      "none" :none
-      "air"  :air
-      "all"  :all)))
+(defn- init-ids->eids [] (def ^:private ids->eids {}))
+(defn all-entities [] (vals ids->eids))
+(defn get-entity [id] (get ids->eids id))
 
 (defc :tx/add-to-world
   (tx/do! [[_ eid]]
@@ -108,6 +75,13 @@
     (grid-entity-position-changed! eid)
    nil))
 
+(declare tiled-map
+         ^:private entity-tick-error
+         explored-tile-corners)
+
+(defn- init-explored-tile-corners [width height]
+  (bind-root #'explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
+
 (defn init! [tiled-map]
   (bind-root #'entity-tick-error nil)
   (init-time!)
@@ -116,11 +90,15 @@
   (bind-root #'tiled-map tiled-map)
   (let [w (t/width  tiled-map)
         h (t/height tiled-map)]
-    (init-grid! w h (world-grid-position->value-fn tiled-map))
-    (init-raycaster!)
+    (init-grid! w h (fn [position]
+                      (case (movement-property tiled-map position)
+                        "none" :none
+                        "air"  :air
+                        "all"  :all)))
+    (init-raycaster)
     (init-content-grid! {:cell-size 16 :width w :height h})
-    (init-explored-tile-corners! w h))
-  (init-ids->eids!))
+    (init-explored-tile-corners w h))
+  (init-ids->eids))
 
 ; does not take into account zoom - but zoom is only for debug ???
 ; vision range?

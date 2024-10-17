@@ -8,7 +8,6 @@
             [gdx.rand :refer [get-rand-weighted-item]]
             [utils.core :refer [->tile assoc-ks]]
             [level.area-level-grid :as area-level-grid]
-            [level.caves :as caves]
             [level.grid :refer [scale-grid scalegrid printgrid transition-idx-value fix-not-allowed-diagonals cave-grid adjacent-wall-positions flood-fill]]
             [level.modules :as modules :refer [modules-scale module-width module-height]]
             [level.tiled :refer [movement-properties movement-property wgt-grid->tiled-map]]))

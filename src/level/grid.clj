@@ -1,6 +1,7 @@
 (ns level.grid
   (:require [data.grid2d :as g]
-            [utils.core :refer [assoc-ks]]))
+            [utils.core :refer [assoc-ks]]
+            [level.caves :as caves]))
 
 (defn scale-grid [grid [w h]]
   (g/create-grid (* (g/width grid)  w)
@@ -197,7 +198,7 @@
 (defn cave-grid [& {:keys [size]}]
   (let [{:keys [start grid]} (caves/generate (java.util.Random.) size size :wide)
         grid (fix-not-allowed-diagonals grid)]
-    (assert (= #{:wall :ground} (set (g2d/cells grid))))
+    (assert (= #{:wall :ground} (set (g/cells grid))))
     {:start start
      :grid grid}))
 
@@ -217,8 +218,8 @@
 (defn adjacent-wall-positions [grid]
   (filter (fn [p] (and (= :wall (get grid p))
                        (some #(= :ground (get grid %))
-                             (g2d/get-8-neighbour-positions p))))
-          (g2d/posis grid)))
+                             (g/get-8-neighbour-positions p))))
+          (g/posis grid)))
 
 (defn flood-fill [grid start walk-on-position?]
   (loop [next-positions [start]
@@ -228,7 +229,7 @@
       (recur (filter #(and (get grid %)
                            (walk-on-position? %))
                      (distinct
-                      (mapcat g2d/get-8-neighbour-positions
+                      (mapcat g/get-8-neighbour-positions
                               next-positions)))
              (concat filled next-positions)
              (assoc-ks grid next-positions nil))
@@ -244,7 +245,7 @@
        ;_ (println "\nwidth:  " (g/width  grid)
        ;           "height: " (g/height grid)
        ;           "start " start "\n")
-       ;_ (println (g2d/posis grid))
+       ;_ (println (g/posis grid))
        _ (println "\n\n")
        filled (flood-fill grid start (fn [p] (= :ground (get grid p))))
        _ (printgrid (reduce #(assoc %1 %2 nil) grid filled))])
