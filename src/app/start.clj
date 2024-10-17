@@ -13,6 +13,7 @@
             [gdx.ui.actor :as a]
             [gdx.ui.stage :as stage]
             [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
+            [gdx.vis-ui :as vis-ui]
             level.generate
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             moon.audiovisual
@@ -273,19 +274,19 @@
    (property-editor/screen ->background)
    (world-screen)])
 
-(defn- start-app! [& {:keys [graphics ui] :as config}]
+(defn- start-app! [& {:keys [graphics] :as config}]
   (db/load! "properties.edn")
   (app/start! (proxy [com.badlogic.gdx.ApplicationAdapter] []
                 (create []
                   (assets/load! "resources/")
                   (g/load! graphics)
-                  (ui/load! ui)
+                  (vis-ui/load! :skin-scale/x1)
                   (screen/set-screens! (screens)))
 
                 (dispose []
                   (assets/dispose!)
                   (g/dispose!)
-                  (ui/dispose!)
+                  (vis-ui/dispose!)
                   (screen/dispose-all!))
 
                 (render []
@@ -323,5 +324,4 @@
                                             :world-height 900}
                                  :world-view {:world-width 1440
                                               :world-height 900
-                                              :tile-size 48}}}
-              :ui :skin-scale/x1))
+                                              :tile-size 48}}}))
