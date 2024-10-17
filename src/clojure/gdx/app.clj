@@ -5,9 +5,6 @@
            (org.lwjgl.system Configuration)))
 
 (defn- macos-fix! []
-  ; https://github.com/libgdx/libgdx/pull/7361
-  ; Maybe can delete this when using that new libgdx version
-  ; which includes this PR.
   (when SharedLibraryLoader/isMac
     (.set Configuration/GLFW_LIBRARY_NAME "glfw_async")
     (.set Configuration/GLFW_CHECK_THREAD0 false)))
