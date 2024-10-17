@@ -1,4 +1,4 @@
-(ns dev.experiment
+(ns ^:no-doc dev.experiment
   (:require [component.core :as component]
             [component.db :as db]
             [component.schema :as schema]

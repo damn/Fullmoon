@@ -1,4 +1,4 @@
-(ns world.widgets.player-message
+(ns moon.widgets.player-message
   (:require [component.core :refer [defc]]
             [component.tx :as tx]
             [gdx.graphics :as g]

@@ -1,4 +1,4 @@
-(ns world.creature
+(ns moon.creature
   (:require [clojure.string :as str]
             [component.core :refer [defc]]
             [component.db :as db]
@@ -10,7 +10,7 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge tile->middle]]
             [world.core :as world]
-            world.creature.states
+            moon.creature.states
             [world.entity :as entity]
             [world.effect :as effect]))
 

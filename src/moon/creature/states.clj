@@ -1,4 +1,4 @@
-(ns world.creature.states
+(ns moon.creature.states
   (:require [component.core :refer [defc]]
             [component.tx :as tx]
             [gdx.graphics :as g]
@@ -8,10 +8,10 @@
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.stage-screen :refer [mouse-on-actor?]]
+            [moon.creature.item :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
+            [moon.creature.skill :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.core :as world :refer [timer stopped? finished-ratio mouseover-eid]]
             [world.entity :as entity]
-            [world.entity.inventory :refer [valid-slot? stackable? clicked-inventory-cell can-pickup-item? inventory-window]]
-            [world.entity.skills :refer [has-skill? clicked-skillmenu-skill selected-skill]]
             [world.entity.state :as state]
             [world.entity.stats :refer [entity-stat]]
             [world.effect :as effect]))

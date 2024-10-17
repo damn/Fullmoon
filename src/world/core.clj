@@ -7,6 +7,7 @@
             [gdx.graphics :as g :refer [white black]]
             [gdx.graphics.camera :as 🎥]
             [gdx.input :refer [key-pressed? key-just-pressed?]]
+            [gdx.ui.error-window :refer [error-window!]]
             [gdx.ui.stage-screen :as stage-screen]
             [gdx.math.shape :as shape]
             [gdx.math.vector :as v]
@@ -16,8 +17,7 @@
             [world.content-grid :as content-grid]
             [world.entity :as entity]
             [world.entity.state :as entity-state]
-            [world.raycaster :as raycaster]
-            [world.widgets.error :refer [error-window!]]))
+            [world.raycaster :as raycaster]))
 
 (defn- rectangle->tiles
   [{[x y] :left-bottom :keys [left-bottom width height]}]

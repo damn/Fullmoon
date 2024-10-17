@@ -1,4 +1,4 @@
-(ns world.entity.inventory
+(ns moon.creature.item
   (:require [component.core :refer [defsystem defc]]
             [component.info :as info]
             [component.property :as property]

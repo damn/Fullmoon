@@ -1,4 +1,4 @@
-(ns world.widgets.player-modal
+(ns moon.widgets.player-modal
   (:require [component.core :refer [defc]]
             [component.tx :as tx]
             [gdx.graphics :as g]

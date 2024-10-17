@@ -1,4 +1,4 @@
-(ns editor.javafx
+(ns ^:no-doc editor.javafx
   (:require [clojure.java.io :as io])
   (:import (javafx.event EventHandler)
            (javafx.scene.control Button TreeItem TreeView)

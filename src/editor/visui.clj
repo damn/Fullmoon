@@ -1,4 +1,4 @@
-(ns editor.visui
+(ns ^:no-doc editor.visui
   (:require [clojure.edn :as edn]
             [clojure.set :as set]
             [clojure.string :as str]

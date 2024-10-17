@@ -1,4 +1,4 @@
-(ns world.entity.skills
+(ns moon.creature.skill
   (:require [component.core :refer [defc defsystem]]
             [component.info :as info]
             [component.property :as property]

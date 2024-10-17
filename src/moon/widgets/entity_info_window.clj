@@ -1,4 +1,4 @@
-(ns world.widgets.entity-info-window
+(ns moon.widgets.entity-info-window
   (:require [component.info :as info]
             [gdx.graphics :as g]
             [gdx.ui :as ui]

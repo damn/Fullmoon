@@ -1,4 +1,4 @@
-(ns app.start
+(ns ^:no-doc app.start
   (:require [component.db :as db]
             [component.tx :as tx]
             [editor.visui :as property-editor]
@@ -12,29 +12,29 @@
             [gdx.ui.actor :as a]
             [gdx.ui.stage :as stage]
             [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
+            level.generate
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
-            world.audiovisual
+            moon.audiovisual
+            [moon.creature :as creature]
+            [moon.creature.item :refer [->inventory-window]]
+            [moon.creature.skill :refer [action-bar]]
+            moon.projectile
             [world.core :as world]
-            [world.creature :as creature]
             world.entity.animation
             world.entity.delete-after-duration
             world.entity.image
-            [world.entity.inventory :refer [->inventory-window]]
             world.entity.line
             world.entity.movement
             world.entity.string-effect
-            [world.entity.skills :refer [action-bar]]
             world.effect.entity
             world.effect.target
             [world.entity :as entity]
             world.entity.stats
-            world.generate
-            world.projectile
-            [world.widgets.debug-window :as debug-window]
-            [world.widgets.entity-info-window :as entity-info-window]
-            [world.widgets.hp-mana :as hp-mana-bars]
-            [world.widgets.player-message :as player-message]
-            world.widgets.player-modal))
+            [moon.widgets.debug-window :as debug-window]
+            [moon.widgets.entity-info-window :as entity-info-window]
+            [moon.widgets.hp-mana :as hp-mana-bars]
+            [moon.widgets.player-message :as player-message]
+            moon.widgets.player-modal))
 
 (def ^:private dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
@@ -157,7 +157,7 @@
               :actors [(debug-window/create)
                        (entity-info-window/create)
                        (->inventory-window)]})
-   (ui/actor {:draw world.creature.states/draw-item-on-cursor})
+   (ui/actor {:draw moon.creature.states/draw-item-on-cursor})
    (player-message/create)])
 
 (defn- reset-stage! []
@@ -169,7 +169,7 @@
   (fn []
     (screen/change! :screens/world)
     (reset-stage!)
-    (let [level (world.generate/generate-level world-id)]
+    (let [level (level.generate/generate-level world-id)]
       (world/init! (:tiled-map level))
       (creature/spawn-all level))))
 
@@ -266,7 +266,7 @@
 
 (defn- screens []
   [(main-menu-screen ->background)
-   (world.generate/map-editor-screen)
+   (level.generate/map-editor-screen)
    (options-menu-screen ->background)
    (property-editor/screen ->background)
    (world-screen)])
