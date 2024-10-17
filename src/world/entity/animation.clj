@@ -1,5 +1,5 @@
 (ns ^:no-doc world.entity.animation
-  (:require [clojure.gdx.graphics :as g]
+  (:require [gdx.graphics :as g]
             [core.component :refer [defc]]
             [core.db :as db]
             [world.core :as world]

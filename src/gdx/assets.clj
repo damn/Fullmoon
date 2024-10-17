@@ -1,4 +1,4 @@
-(ns clojure.gdx.assets
+(ns gdx.assets
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as str])
   (:import (com.badlogic.gdx Gdx)

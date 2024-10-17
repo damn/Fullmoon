@@ -1,7 +1,7 @@
 (ns core.widgets.error
   (:require [clj-commons.pretty.repl :refer [pretty-pst]]
-            [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.stage-screen :refer [stage-add!]]))
+            [gdx.ui :as ui]
+            [gdx.ui.stage-screen :refer [stage-add!]]))
 
 (defmacro ^:private with-err-str
   "Evaluates exprs in a context in which *err* is bound to a fresh

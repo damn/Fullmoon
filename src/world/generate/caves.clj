@@ -1,6 +1,6 @@
 (ns world.generate.caves
   (:require [data.grid2d :as g]
-            [clojure.gdx.rand :refer [sshuffle srand srand-int]]
+            [gdx.rand :refer [sshuffle srand srand-int]]
             [utils.core :refer [assoc-ks]]))
 
 ;Cave Algorithmus.

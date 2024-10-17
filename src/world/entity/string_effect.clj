@@ -1,5 +1,5 @@
 (ns ^:no-doc world.entity.string-effect
-  (:require [clojure.gdx.graphics :as g]
+  (:require [gdx.graphics :as g]
             [core.component :refer [defc]]
             [core.tx :as tx]
             [world.core :as world :refer [timer stopped?]]

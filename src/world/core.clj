@@ -1,13 +1,13 @@
 (ns world.core
   (:require [clj-commons.pretty.repl :refer [pretty-pst]]
-            [clojure.gdx.graphics :as g :refer [white black]]
-            [clojure.gdx.graphics.camera :as 🎥]
-            [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
-            [clojure.gdx.ui.stage-screen :as stage-screen]
-            [clojure.gdx.math.shape :as shape]
-            [clojure.gdx.math.vector :as v]
-            [clojure.gdx.tiled :as t]
-            [clojure.gdx.utils :refer [dispose!]]
+            [gdx.graphics :as g :refer [white black]]
+            [gdx.graphics.camera :as 🎥]
+            [gdx.input :refer [key-pressed? key-just-pressed?]]
+            [gdx.ui.stage-screen :as stage-screen]
+            [gdx.math.shape :as shape]
+            [gdx.math.vector :as v]
+            [gdx.tiled :as t]
+            [gdx.utils :refer [dispose!]]
             [core.component :refer [defc]]
             [core.db :as db]
             [core.tx :as tx]
@@ -178,7 +178,7 @@
 
 (declare paused?
 
-         ^{:doc "The game logic update delta-time. Different then clojure.gdx.graphics/delta-time because it is bounded by a maximum value for entity movement speed."}
+         ^{:doc "The game logic update delta-time. Different then gdx.graphics/delta-time because it is bounded by a maximum value for entity movement speed."}
          delta-time
 
          ^{:doc "The elapsed in-game-time (not counting when game is paused)."}

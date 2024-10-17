@@ -50,8 +50,8 @@ You need to have [leiningen](https://leiningen.org/) installed.
 
 * NREPL-Server
 * On application close (ESC in the main menu), clojure.tools.namespace will do  refresh on any changed files and restart the app.
-* On any error the JVM does not have to be restarted, you can fix the error and call `clojure.gdx.dev/restart!`
-    * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'clojure.gdx.dev)(restart!))`
+* On any error the JVM does not have to be restarted, you can fix the error and call `gdx.dev/restart!`
+    * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'gdx.dev)(restart!))`
 
 </details>
 

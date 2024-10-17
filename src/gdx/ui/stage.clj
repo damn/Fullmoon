@@ -1,5 +1,5 @@
-(ns clojure.gdx.ui.stage
-  (:require [clojure.gdx.ui :refer [find-actor-with-id]])
+(ns gdx.ui.stage
+  (:require [gdx.ui :refer [find-actor-with-id]])
   (:import (com.badlogic.gdx.scenes.scene2d Stage)))
 
 (defn act!   [^Stage s]   (.act      s))

@@ -1,4 +1,4 @@
-(ns clojure.gdx.screen)
+(ns gdx.screen)
 
 (defprotocol Screen
   (enter!   [_])

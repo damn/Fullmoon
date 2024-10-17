@@ -1,9 +1,9 @@
 (ns core.tx.gdx
-  (:require [clojure.gdx.assets :as assets]
-            [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage-screen :refer [stage-add! stage-get]]
+  (:require [gdx.assets :as assets]
+            [gdx.graphics :as g]
+            [gdx.ui :as ui]
+            [gdx.ui.actor :as a]
+            [gdx.ui.stage-screen :refer [stage-add! stage-get]]
             [core.component :refer [defc]]
             [core.tx :as tx]))
 

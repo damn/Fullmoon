@@ -1,5 +1,5 @@
 (ns ^:no-doc world.projectile
-  (:require [clojure.gdx.math.vector :as v]
+  (:require [gdx.math.vector :as v]
             [core.component :refer [defc]]
             [core.effect :as effect :refer [source target target-direction]]
             [core.info :as info]

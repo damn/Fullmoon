@@ -1,6 +1,6 @@
 (ns core.effect
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.math.vector :as v]
+  (:require [gdx.graphics :as g]
+            [gdx.math.vector :as v]
             [core.component :refer [defsystem defc]]
             [world.core :as world :refer [mouseover-eid]]
             [world.entity :as entity]

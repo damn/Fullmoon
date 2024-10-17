@@ -1,5 +1,5 @@
-(ns clojure.gdx.ui
-  (:require [clojure.gdx.ui.actor :as a])
+(ns gdx.ui
+  (:require [gdx.ui.actor :as a])
   (:import (com.badlogic.gdx.utils Align Scaling)
            (com.badlogic.gdx.graphics.g2d TextureRegion)
            (com.badlogic.gdx.scenes.scene2d Actor Group)

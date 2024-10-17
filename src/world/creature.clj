@@ -1,6 +1,6 @@
 (ns world.creature
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.tiled :as tiled]
+  (:require [gdx.graphics :as g]
+            [gdx.tiled :as tiled]
             [clojure.string :as str]
             [core.component :refer [defc]]
             [core.property :as property]

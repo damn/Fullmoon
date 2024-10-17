@@ -1,5 +1,5 @@
 (ns world.entity.modifiers
-  (:require [clojure.gdx.graphics :as g]
+  (:require [gdx.graphics :as g]
             [clojure.string :as str]
             [core.component :refer [defc]]
             [core.info :as info]

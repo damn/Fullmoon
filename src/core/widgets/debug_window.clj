@@ -1,8 +1,8 @@
 (ns core.widgets.debug-window
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.graphics.camera :as 🎥]
-            [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.stage-screen :refer [mouse-on-actor?]]
+  (:require [gdx.graphics :as g]
+            [gdx.graphics.camera :as 🎥]
+            [gdx.ui :as ui]
+            [gdx.ui.stage-screen :refer [mouse-on-actor?]]
             [clojure.string :as str]
             [utils.core :refer [readable-number]]
             [world.core :as world :refer [mouseover-entity]]))

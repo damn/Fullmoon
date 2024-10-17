@@ -1,5 +1,5 @@
-(ns clojure.gdx.input
-  (:require [clojure.gdx.utils :refer [gdx-field]])
+(ns gdx.input
+  (:require [gdx.utils :refer [gdx-field]])
   (:import (com.badlogic.gdx Gdx)))
 
 (def ^:private gdx-input-button (partial gdx-field "Input$Buttons"))

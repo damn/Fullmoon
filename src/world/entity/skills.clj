@@ -1,7 +1,7 @@
 (ns world.entity.skills
-  (:require [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage-screen :refer [stage-get]]
+  (:require [gdx.ui :as ui]
+            [gdx.ui.actor :as a]
+            [gdx.ui.stage-screen :refer [stage-get]]
             [core.component :refer [defc defsystem]]
             [core.info :as info]
             [core.property :as property]

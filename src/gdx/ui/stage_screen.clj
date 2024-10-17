@@ -1,9 +1,9 @@
-(ns clojure.gdx.ui.stage-screen
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.input :as input]
-            [clojure.gdx.screen :as screen]
-            [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.utils :refer [dispose!]]))
+(ns gdx.ui.stage-screen
+  (:require [gdx.graphics :as g]
+            [gdx.input :as input]
+            [gdx.screen :as screen]
+            [gdx.ui.stage :as stage]
+            [gdx.utils :refer [dispose!]]))
 
 (defrecord StageScreen [stage sub-screen]
   screen/Screen

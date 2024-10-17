@@ -19,13 +19,13 @@
 (comment
  (p/parse-file-all "src/core/stat.clj")
 
- (p/parse-file-all "../clojure.gdx/src/clojure/gdx/java.clj")
+ (p/parse-file-all "../gdx/src/gdx/java.clj")
 
 
  )
 
 (comment
- (first (doall (map (partial take 2) (clj-file-forms "src/clojure/gdx.clj")))))
+ (first (doall (map (partial take 2) (clj-file-forms "src/gdx.clj")))))
 
 (declare stage)
 
@@ -82,14 +82,14 @@
            (str icon " "))
          ns-str)))
 
-; (meta (find-ns (symbol (file->pretty "src/clojure/gdx/app.clj"))))
+; (meta (find-ns (symbol (file->pretty "src/gdx/app.clj"))))
 
 (defn- form->node [form]
   (let [tree-item (TreeItem. (form->label form))]
     #_(cond (= 'defprotocol (first form))
           (do
            (println "Found defprotocol : " (second form))
-           (doseq [sig (sort (map name (keys (:sigs clojure.gdx.app/Listener))))]
+           (doseq [sig (sort (map name (keys (:sigs gdx.app/Listener))))]
              (.add (.getChildren tree-item) (TreeItem. (str (first-sym->icon 'defn) sig))))))
     tree-item))
 

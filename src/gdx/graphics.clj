@@ -1,7 +1,7 @@
-(ns clojure.gdx.graphics
-  (:require [clojure.gdx.assets :as assets]
-            [clojure.gdx.tiled :as t]
-            [clojure.gdx.utils :refer [gdx-field]]
+(ns gdx.graphics
+  (:require [gdx.assets :as assets]
+            [gdx.tiled :as t]
+            [gdx.utils :refer [gdx-field]]
             [clojure.string :as str]
             [utils.core :refer [bind-root safe-get]])
   (:import (com.badlogic.gdx Gdx)

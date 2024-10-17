@@ -1,8 +1,8 @@
 (ns world.entity.inventory
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage-screen :refer [stage-get]]
+  (:require [gdx.graphics :as g]
+            [gdx.ui :as ui]
+            [gdx.ui.actor :as a]
+            [gdx.ui.stage-screen :refer [stage-get]]
             [core.component :refer [defsystem defc]]
             [core.info :as info]
             [core.property :as property]

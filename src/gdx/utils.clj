@@ -1,4 +1,4 @@
-(ns clojure.gdx.utils
+(ns gdx.utils
   (:require [clojure.string :as str])
   (:import (com.badlogic.gdx.utils Disposable)))
 

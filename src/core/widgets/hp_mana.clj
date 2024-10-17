@@ -1,6 +1,6 @@
 (ns core.widgets.hp-mana
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui :as ui]
+  (:require [gdx.graphics :as g]
+            [gdx.ui :as ui]
             [core.val-max :as val-max]
             [utils.core :refer [readable-number]]
             [world.core :as world]

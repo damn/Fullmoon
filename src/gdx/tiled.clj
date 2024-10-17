@@ -1,4 +1,4 @@
-(ns clojure.gdx.tiled
+(ns gdx.tiled
   "API for [com.badlogic.gdx.maps.tiled](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/maps/tiled/package-summary.html) plus grid2d level generation."
   (:require [data.grid2d :as g]
             [utils.core :refer [assoc-ks]])

@@ -1,5 +1,5 @@
-(ns clojure.gdx.app-test
-  (:require [clojure.gdx.app :as app]))
+(ns gdx.app-test
+  (:require [gdx.app :as app]))
 
 (defn -main []
   (app/start! (proxy [com.badlogic.gdx.ApplicationAdapter] []

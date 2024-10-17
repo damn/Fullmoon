@@ -1,6 +1,6 @@
 (ns core.widgets.entity-info-window
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui :as ui]
+  (:require [gdx.graphics :as g]
+            [gdx.ui :as ui]
             [core.info :as info]
             [world.core :refer [mouseover-entity]]))
 

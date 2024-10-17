@@ -1,6 +1,6 @@
 (ns world.entity
-  (:require [clojure.gdx.math.shape :as shape]
-            [clojure.gdx.math.vector :as v]
+  (:require [gdx.math.shape :as shape]
+            [gdx.math.vector :as v]
             [core.component :refer [defsystem defc]]
             [malli.core :as m]
             [utils.core :refer [define-order ->tile]]))

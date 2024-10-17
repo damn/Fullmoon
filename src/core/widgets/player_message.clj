@@ -1,6 +1,6 @@
 (ns core.widgets.player-message
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.gdx.ui :as ui]
+  (:require [gdx.graphics :as g]
+            [gdx.ui :as ui]
             [core.component :refer [defc]]
             [core.tx :as tx]))
 

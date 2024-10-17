@@ -1,5 +1,5 @@
 (ns ^:no-doc world.entity.image
-  (:require [clojure.gdx.graphics :as g]
+  (:require [gdx.graphics :as g]
             [core.component :refer [defc]]
             [world.entity :as entity]))
 

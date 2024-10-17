@@ -1,5 +1,5 @@
 (ns world.generate.modules
-  (:require [clojure.gdx.tiled :as t]))
+  (:require [gdx.tiled :as t]))
 
 (def module-width  32)
 (def module-height 20)

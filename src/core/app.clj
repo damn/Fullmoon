@@ -1,14 +1,14 @@
 (ns core.app
-  (:require [clojure.gdx.app :as app]
-            [clojure.gdx.assets :as assets]
-            [clojure.gdx.graphics :as g :refer [white black]]
-            [clojure.gdx.graphics.camera :as 🎥]
-            [clojure.gdx.input :refer [key-pressed? key-just-pressed?]]
-            [clojure.gdx.screen :as screen]
-            [clojure.gdx.ui :as ui]
-            [clojure.gdx.ui.actor :as a]
-            [clojure.gdx.ui.stage :as stage]
-            [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
+  (:require [gdx.app :as app]
+            [gdx.assets :as assets]
+            [gdx.graphics :as g :refer [white black]]
+            [gdx.graphics.camera :as 🎥]
+            [gdx.input :refer [key-pressed? key-just-pressed?]]
+            [gdx.screen :as screen]
+            [gdx.ui :as ui]
+            [gdx.ui.actor :as a]
+            [gdx.ui.stage :as stage]
+            [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [core.editor :as property-editor]
             core.effect.entity
             core.effect.target
@@ -221,7 +221,7 @@
   (set-state [this is-selected]
     (bind-root avar is-selected)))
 
-; TODO not using clojure.gdx ns ... only core
+; TODO not using gdx ns ... only core
 
 (defn- debug-flags [] ;
   (apply concat

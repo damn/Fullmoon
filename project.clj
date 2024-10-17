@@ -52,8 +52,6 @@
                 ;*assert* false
                 *print-level* 3}
 
-  :aliases {"dev" ["run" "-m" "clojure.gdx.dev" "core.app"]}
-
   :profiles {:tool    {:aot [core.tool]}
              :uberjar {:aot [core.app]}}
 

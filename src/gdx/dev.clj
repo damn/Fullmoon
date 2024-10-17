@@ -1,4 +1,4 @@
-(ns clojure.gdx.dev
+(ns gdx.dev
   "Starts a dev loop using clojure.tools.namespace.repl/refresh in order to restart the app without
   restarting the JVM.
   Also starts an nrepl server which will keep up even between app crashes and restarts.
@@ -8,7 +8,7 @@
 
   You can bind this on a key for smooth dev experience, here in VIM:
   ``` vimscript
-  nmap <F5> :Eval (do (in-ns 'clojure.gdx.dev)(restart!))
+  nmap <F5> :Eval (do (in-ns 'gdx.dev)(restart!))
   ```"
   (:require [clojure.java.io :as io]
             [nrepl.server :as nrepl]
@@ -60,7 +60,7 @@
   (loop []
     (when-not @thrown
       (do
-       (.bindRoot #'refresh-error (refresh :after 'clojure.gdx.dev/start-dev-loop!))
+       (.bindRoot #'refresh-error (refresh :after 'gdx.dev/start-dev-loop!))
        (handle-throwable! refresh-error)))
     (wait!)
     (recur)))
