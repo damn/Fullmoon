@@ -11,7 +11,6 @@
             [clojure.gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [core.editor :as property-editor]
             core.effect.entity
-            core.effect.spawn
             core.effect.target
             [core.db :as db]
             [core.tx :as tx]
@@ -31,7 +30,7 @@
             property.audiovisual
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             [world.core :as world]
-            world.creature
+            [world.creature :as creature]
             world.creature.states
             [world.entity :as entity]
             world.entity.stats
@@ -171,7 +170,9 @@
   (fn []
     (screen/change! :screens/world)
     (reset-stage!)
-    (world/init! (world.generate/generate-level world-id))))
+    (let [level (world.generate/generate-level world-id)]
+      (world/init! (:tiled-map level))
+      (creature/spawn-all level))))
 
 (defn- ->buttons []
   (ui/table {:rows (remove nil? (concat
