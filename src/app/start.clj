@@ -1,5 +1,6 @@
 (ns ^:no-doc app.start
-  (:require [component.db :as db]
+  (:require [app.screens.map-editor :as map-editor]
+            [component.db :as db]
             [component.tx :as tx]
             [editor.visui :as property-editor]
             [gdx.app :as app]
@@ -266,7 +267,7 @@
 
 (defn- screens []
   [(main-menu-screen ->background)
-   (level.generate/map-editor-screen)
+   (map-editor/create)
    (options-menu-screen ->background)
    (property-editor/screen ->background)
    (world-screen)])
