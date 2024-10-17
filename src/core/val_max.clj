@@ -13,7 +13,7 @@
                                  (format "Expected max (%d) to be smaller than val (%d)" v mx)))}
               (fn [[^int a ^int b]] (<= a b))]]))
 
-(defmethod schema/form :val-max [_]
+(defmethod schema/form :s/val-max [_]
   (m/form val-max-schema))
 
 (defn ratio
@@ -68,16 +68,16 @@
     (let [[_ op-k] (val-max-op-k->parts op-k)]
       (op/order [op-k value]))))
 
-(defc   :op/val-inc {:schema :int})
+(defc   :op/val-inc {:schema int?})
 (derive :op/val-inc :op/val-max)
 
-(defc   :op/val-mult {:schema :number})
+(defc   :op/val-mult {:schema number?})
 (derive :op/val-mult :op/val-max)
 
-(defc   :op/max-inc {:schema :int})
+(defc   :op/max-inc {:schema int?})
 (derive :op/max-inc :op/val-max)
 
-(defc   :op/max-mult {:schema :number})
+(defc   :op/max-mult {:schema number?})
 (derive :op/max-mult :op/val-max)
 
 (comment

@@ -4,7 +4,7 @@
             [world.entity :as entity]))
 
 (defc :entity/image
-  {:schema :image
+  {:schema :s/image
    :let image}
   (entity/render [_ entity]
     (g/draw-rotated-centered-image image

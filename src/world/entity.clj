@@ -1,7 +1,7 @@
 (ns world.entity
-  (:require [gdx.math.shape :as shape]
+  (:require [component.core :refer [defsystem defc]]
+            [gdx.math.shape :as shape]
             [gdx.math.vector :as v]
-            [component.core :refer [defsystem defc]]
             [malli.core :as m]
             [utils.core :refer [define-order ->tile]]))
 

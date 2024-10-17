@@ -44,20 +44,20 @@
                :frame-duration frame-duration
                :looping? looping?))
 
-(defmethod db/edn->value :schema/animation [_ animation]
+(defmethod db/edn->value :s/animation [_ animation]
   (edn->animation animation))
 
 (defn- tx-assoc-image-current-frame [eid animation]
   [:e/assoc eid :entity/image (current-frame animation)])
 
-(defmethod schema/form :schema/animation [_]
+(defmethod schema/form :s/animation [_]
   [:map {:closed true}
    [:frames :some] ; FIXME actually images
    [:frame-duration pos?]
    [:looping? :boolean]])
 
 (defc :entity/animation
-  {:schema :schema/animation
+  {:schema :s/animation
    :let animation}
   (entity/create [_ eid]
     [(tx-assoc-image-current-frame eid animation)])

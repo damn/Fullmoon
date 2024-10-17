@@ -19,22 +19,27 @@
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
 
+(comment
+ ; Possible schemas:
+ (keys (methods ->widget))
+ ; plus in widget-type
+ )
+
 (defn- widget-type [schema _]
   (let [stype (schema/type schema)]
     (cond
-     (#{:map-optional :components-ns}                 stype) :map
-     (#{:number :nat-int :int :pos :pos-int :val-max} stype) :number
+     (#{:s/map-optional :s/components-ns} stype)
+     :s/map
+
+     (#{number? nat-int? int? pos? pos-int? :s/val-max} stype)
+     :s/number
+
      :else stype)))
 
 (defmulti ^:private ->widget      widget-type)
 (defmulti ^:private widget->value widget-type)
 
-(comment
- (keys (methods ->widget))
- (:enum :sound :number :default :string :one-to-many :image :one-to-one :boolean :map :schema/animation)
- )
-
-(defmethod ->widget :schema/animation [_ animation]
+(defmethod ->widget :s/animation [_ animation]
   (ui/table {:rows [(for [image (:frames animation)]
                       (ui/image->widget (g/edn->image image) {}))]
              :cell-defaults {:pad 1}}))
@@ -60,10 +65,10 @@
 (defmethod widget->value :string [_ widget]
   (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
 
-(defmethod ->widget :number [schema v]
+(defmethod ->widget number? [schema v]
   (add-schema-tooltip! (ui/text-field (->edn-str v) {}) schema))
 
-(defmethod widget->value :number [_ widget]
+(defmethod widget->value number? [_ widget]
   (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
 (defmethod ->widget :enum [schema v]
@@ -73,7 +78,7 @@
 (defmethod widget->value :enum [_ widget]
   (edn/read-string (.getSelected ^com.kotcrab.vis.ui.widget.VisSelectBox widget)))
 
-(defmethod db/edn->value :image [_ image]
+(defmethod db/edn->value :s/image [_ image]
   (g/edn->image image))
 
 ; too many ! too big ! scroll ... only show files first & preview?
@@ -83,7 +88,7 @@
     [(ui/image-button (g/image file) (fn []))]
     #_[(ui/text-button file (fn []))]))
 
-(defmethod ->widget :image [_ image]
+(defmethod ->widget :s/image [_ image]
   (ui/image->widget (g/edn->image image) {})
   #_(ui/image-button image
                      #(stage-add! (->scrollable-choose-window (texture-rows)))
@@ -129,7 +134,7 @@
   [(ui/text-button (name sound-file) #(open-sounds-window! table))
    (->play-sound-button sound-file)])
 
-(defmethod ->widget :sound [_ sound-file]
+(defmethod ->widget :s/sound [_ sound-file]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
     (ui/add-rows! table [(if sound-file
                            (->sound-columns table sound-file)
@@ -193,8 +198,8 @@
 (defn- k->default-value [k]
   (let [schema (schema/of k)]
     (cond
-     (#{:one-to-one :one-to-many} schema) nil
-     ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
+     (#{:s/one-to-one :s/one-to-many} schema) nil
+     ;(#{:s/map} type) {} ; cannot have empty for required keys, then no Add Component button
      :else (mg/generate (schema/form schema) {:size 3}))))
 
 (defn- ->choose-component-window [schema attribute-widget-group]
@@ -227,7 +232,7 @@
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(defmethod ->widget :map [schema m]
+(defmethod ->widget :s/map [schema m]
   (let [schema (schema/form schema)
         attribute-widget-group (->attribute-widget-group schema m)
         optional-keys-left? (seq (set/difference (optional-keyset schema)
@@ -242,7 +247,7 @@
                               [attribute-widget-group]])})))
 
 
-(defmethod widget->value :map [_ table]
+(defmethod widget->value :s/map [_ table]
   (attribute-widget-group->data (:attribute-widget-group table)))
 
 (defn- ->attribute-label [k]
@@ -423,12 +428,12 @@
       (for [id property-ids]
         (ui/text-button "-" #(redo-rows (disj property-ids id))))])))
 
-(defmethod ->widget :one-to-many [[_ property-type] property-ids]
+(defmethod ->widget :s/one-to-many [[_ property-type] property-ids]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
     (add-one-to-many-rows table property-type property-ids)
     table))
 
-(defmethod widget->value :one-to-many [_ widget]
+(defmethod widget->value :s/one-to-many [_ widget]
   (->> (ui/children widget)
        (keep a/id)
        set))
@@ -462,10 +467,10 @@
       [(when property-id
          (ui/text-button "-" #(redo-rows nil)))]])))
 
-(defmethod ->widget :one-to-one [[_ property-type] property-id]
+(defmethod ->widget :s/one-to-one [[_ property-type] property-id]
   (let [table (ui/table {:cell-defaults {:pad 5}})]
     (add-one-to-one-rows table property-type property-id)
     table))
 
-(defmethod widget->value :one-to-one [_ widget]
+(defmethod widget->value :s/one-to-one [_ widget]
   (->> (ui/children widget) (keep a/id) first))

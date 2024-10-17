@@ -45,8 +45,8 @@
   (info/text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
-(defc :body/width   {:schema :pos})
-(defc :body/height  {:schema :pos})
+(defc :body/width   {:schema pos?})
+(defc :body/height  {:schema pos?})
 (defc :body/flying? {:schema :boolean})
 
 ; player doesn;t need aggro-range/reaction-time
@@ -54,7 +54,7 @@
 ; assert min body size from core.entity
 
 (defc :entity/body
-  {:schema [:map [:body/width
+  {:schema [:s/map [:body/width
                 :body/height
                 :body/flying?]]})
 
@@ -66,7 +66,7 @@
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defc :creature/level
-  {:schema :pos-int}
+  {:schema pos-int?}
   (info/text [[_ lvl]]
     (str "[GRAY]Level " lvl "[]")))
 
@@ -197,7 +197,7 @@
 ; new UI -> show creature body & then place
 ; >> but what if it is blocked the area during action-time ?? <<
 (defc :effect/spawn
-  {:schema [:one-to-one :properties/creatures]
+  {:schema [:s/one-to-one :properties/creatures]
    :let {:keys [property/id]}}
   (effect/applicable? [_]
     (and (:entity/faction @effect/source)

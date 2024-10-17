@@ -63,10 +63,10 @@
 (defn play-sound! [path]
   (Sound/.play (get path)))
 
-(defmethod schema/form :sound [_] :string)
+(defmethod schema/form :s/sound [_] :string)
 
 (defc :tx/sound
-  {:schema :sound}
+  {:schema :s/sound}
   (tx/do! [[_ file]]
     (play-sound! file)
     nil))

@@ -31,27 +31,27 @@
                       :stats/cast-speed "Spell"
                       :stats/attack-speed "Attack") "[]")))
 
-(defc :skill/action-time {:schema :pos}
+(defc :skill/action-time {:schema pos?}
   (info/text [[_ v]]
     (str "[GOLD]Action-Time: " (readable-number v) " seconds[]")))
 
-(defc :skill/start-action-sound {:schema :sound})
+(defc :skill/start-action-sound {:schema :s/sound})
 
 (defc :skill/effects
-  {:schema [:components-ns :effect]})
+  {:schema [:s/components-ns :effect]})
 
-(defc :skill/cooldown {:schema :nat-int}
+(defc :skill/cooldown {:schema nat-int?}
   (info/text [[_ v]]
     (when-not (zero? v)
       (str "[SKY]Cooldown: " (readable-number v) " seconds[]"))))
 
-(defc :skill/cost {:schema :nat-int}
+(defc :skill/cost {:schema nat-int?}
   (info/text [[_ v]]
     (when-not (zero? v)
       (str "[CYAN]Cost: " v " Mana[]"))))
 
 (defc :entity/skills
-  {:schema [:one-to-many :properties/skills]}
+  {:schema [:s/one-to-many :properties/skills]}
   (entity/create [[k skills] eid]
     (cons [:e/assoc eid k nil]
           (for [skill skills]

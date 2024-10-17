@@ -74,11 +74,11 @@
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
-(defc :damage/min-max {:schema :val-max})
+(defc :damage/min-max {:schema :s/val-max})
 
 (defc :effect.entity/damage
   {:let damage
-   :schema [:map [:damage/min-max]]}
+   :schema [:s/map [:damage/min-max]]}
   (info/text [_]
     (if source
       (let [modified (->effective-damage damage @source)]
@@ -164,7 +164,7 @@
      [:e/assoc target :entity/faction (faction/friend @source)]]))
 
 (defc :effect.entity/stun
-  {:schema :pos
+  {:schema pos?
    :let duration}
   (info/text [_]
     (str "Stuns for " (readable-number duration) " seconds"))

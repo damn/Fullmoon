@@ -9,7 +9,7 @@
 
 (defn def [k {:keys [schema overview]}]
   (defc k
-    {:schema [:map (conj schema :property/id)]
+    {:schema [:s/map (conj schema :property/id)]
      :overview overview}))
 
 (defn type->id-namespace [property-type]
