@@ -20,6 +20,7 @@
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
 
+; TODO items dont refresh on clicking tab -!
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
 ; TODO save button show if changes made, otherwise disabled?
 ; when closing (lose changes? yes no)

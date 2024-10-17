@@ -1,39 +1,13 @@
 (ns ^:no-doc dev.experiment
   (:require [component.core :as component]
             [component.db :as db]
-            [component.schema :as schema]
             [component.tx :as tx]
-            [gdx.app :refer [post-runnable!]]
-            [gdx.graphics :as g]
-            [gdx.ui :as ui]
-            [gdx.ui.stage :as stage]
-            [gdx.ui.stage-screen :refer [stage-add!]]
-            [utils.core :refer [get-namespaces get-vars]]
-            [world.core :as world :refer [mouseover-entity]]))
+            [gdx.app :refer [post-runnable!]]))
 
 (comment
 
-
- (post-runnable! (show-tree-view! :ctx))
-
- (show-tree-view! :entity)
- (show-tree-view! :tile)
-
- ; if we remove ns we can remove it at tree view !!
-
-
- (print-app-values-tree)
-
- ; We mostly want to know abouts txs, entity and schema
- ; the rest not so important?
-
  (print-txs "txs.md")
-
  (print-components "components.md")
-
- (spit-out "data-components.md" (data-components))
-
- ; TODO items dont refresh on clicking tab -!
 
  ; * Test
  ; * if z-order/effect renders behind wall
@@ -56,7 +30,7 @@
 
  ; FIXME
  ; first says inventory is full
- ; ok! beholder doesn't have inventory !
+ ; ok! beholder doesn't have inventory - player entity needs inventory/...
  ; => tests...
  (create-item! :items/blood-glove)
 
@@ -94,40 +68,6 @@
 (defn- learn-skill! [skill-id] (post-tx! (fn [] [[:tx/add-skill world/player (db/get skill-id)]])))
 (defn- create-item! [item-id]  (post-tx! (fn [] [[:tx/item       (:position @world/player) (db/get item-id)]])))
 
-(defn- protocol? [value]
-  (and (instance? clojure.lang.PersistentArrayMap value)
-       (:on value)))
-
-(defn- get-non-fn-vars [nmspace]
-  (get-vars nmspace (fn [avar]
-                      (let [value @avar]
-                        (not (or (fn? value)
-                                 (instance? clojure.lang.MultiFn value)
-                                 #_(:method-map value) ; breaks for stage Ilookup
-                                 (protocol? value)
-                                 (instance? java.lang.Class value) ;anonymous class (proxy)
-                                 ))))))
-
-(defn- print-app-values-tree []
-  (spit "app-values-tree.clj"
-        (with-out-str
-         (clojure.pprint/pprint
-          (for [nmspace (sort-by (comp name ns-name)
-                                 (get-namespaces
-                                  (fn [first-ns-part-str]
-                                    (not (#{;"clojure"
-                                            "nrepl"
-                                            "malli"
-                                            "user"
-                                            "borkdude"
-                                            "clj-commons"
-                                            "dorothy"
-                                            "reduce-fsm"}
-                                          first-ns-part-str)))))
-                :let [value-vars (get-non-fn-vars nmspace)]
-                :when (seq value-vars)]
-            [(ns-name nmspace) (map (comp symbol name symbol) value-vars)])))))
-
 ; https://gist.github.com/pierrejoubert73/902cc94d79424356a8d20be2b382e1ab
 ; https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-collapsed-sections
 ; -> and after each 'build' I can have a bash script which uploads the components go github
@@ -156,9 +96,6 @@
                  (doseq [k ks]
                    (println "      *" k)
                    (println (str "        * data: `" (pr-str (:schema (component/meta k))) "`"))))))))))
-
-#_(defn- data-components []
-  (sort (keys (methods data/schema)))) ; TODO use widget ...
 
 (defn- component-systems [component-k]
    (for [[sys-name sys-var] component/systems
@@ -202,104 +139,3 @@
              (println "\n#" nmsp)
              (print-components* components)
              )))))
-
-; TODO expand only on click ... save bandwidth ....
-; crash only on expanding big one ...
-
-
-
-(defn- ->v-str [v]
-  (cond
-   (number? v) v
-   (keyword? v) v
-   (string? v) (pr-str v)
-   (boolean? v) v
-   (instance? clojure.lang.Atom v) (str "[LIME] Atom [GRAY]" (class @v) "[]")
-   (map? v) (str (class v))
-   (and (vector? v) (< (count v) 3)) (pr-str v)
-   (vector? v) (str "Vector "(count v))
-   :else (str "[GRAY]" (str v) "[]")))
-
-(defn- labelstr [k v]
-  (str "[LIGHT_GRAY]:"
-       (if (keyword? k)
-         (str
-          (when-let [ns (namespace k)] (str ns "/")) "[WHITE]" (name k))
-         k) ; TODO truncate ...
-       ": [GOLD]" (str (->v-str v))))
-
-(defn- add-elements! [node elements]
-  (doseq [element elements
-          :let [el-node (ui/t-node (ui/label (str (->v-str element))))]]
-    (.add node el-node)))
-
-(declare add-map-nodes!)
-
-(defn- children->str-map [children]
-  (zipmap (map str children)
-          children))
-
-(defn- ->nested-nodes [node level v]
-  (when (map? v)
-    (add-map-nodes! node v (inc level)))
-
-  (when (and (vector? v) (>= (count v) 3))
-    (add-elements! node v))
-
-  (when (instance? com.badlogic.gdx.scenes.scene2d.Stage v)
-    (add-map-nodes! node (children->str-map (ui/children (stage/root v))) level))
-
-  (when (instance? com.badlogic.gdx.scenes.scene2d.Group v)
-    (add-map-nodes! node (children->str-map (ui/children v)) level)))
-
-(comment
- (let [vis-image (first (ui/children (stage/root (stage-get))))]
-   (supers (class vis-image))
-   (str vis-image)
-   )
- )
-
-(defn- add-map-nodes! [parent-node m level]
-  ;(println "Level: " level " - go deeper? " (< level 4))
-  (when (< level 2)
-    (doseq [[k v] (into (sorted-map) m)]
-      ;(println "add-map-nodes! k " k)
-      (try
-       (let [node (ui/t-node (ui/label (labelstr k v)))]
-         (.add parent-node node) ; no t-node-add!: tree cannot be casted to tree-node ... , Tree itself different .add
-         #_(when (instance? clojure.lang.Atom v) ; StackOverFLow
-           (->nested-nodes node level @v))
-         (->nested-nodes node level v))
-       (catch Throwable t
-         (throw (ex-info "" {:k k :v v} t))
-         #_(.add parent-node (ui/t-node (ui/label (str "[RED] "k " - " t))))
-
-         )))))
-
-(defn- ->prop-tree [prop]
-  (let [tree (ui/tree)]
-    (add-map-nodes! tree prop 0)
-    tree))
-
-(defn- scroll-pane-cell [rows]
-  (let [table (ui/table {:rows rows
-                         :cell-defaults {:pad 1}
-                         :pack? true})
-        scroll-pane (ui/scroll-pane table)]
-    {:actor scroll-pane
-     :width (/ (g/gui-viewport-width) 2)
-     :height
-     (- (g/gui-viewport-height) 50)
-     #_(min (- (g/gui-viewport-height) 50) (height table))}))
-
-(defn- show-tree-view! [obj]
-  (let [object (case obj
-                 :entity (mouseover-entity)
-                 :tile @(get world/grid (mapv int (g/world-mouse-position))))]
-    (stage-add! (ui/window {:title "Tree View"
-                            :close-button? true
-                            :close-on-escape? true
-                            :center? true
-                            :rows [[(scroll-pane-cell [[(->prop-tree (into (sorted-map) object))]])]]
-                            :pack? true}))
-    nil))
