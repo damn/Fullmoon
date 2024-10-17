@@ -80,8 +80,7 @@
              :start-module     "@"
              :transition       "+"))))
 
-; print-grid in data.grid2d is y-down
-(defn printgrid
+(defn printgrid ; print-grid in data.grid2d is y-down
   "Prints with y-up coordinates."
   [grid]
   (doseq [y (range (dec (g/height grid)) -1 -1)]
@@ -139,8 +138,7 @@
           (doall (concat result nads)))) ; doall else stackoverflow error
       result)))
 
-(defn- get-tiles-needing-fix-for-nad [grid [[fromx fromy]
-                                           [tox toy]]]
+(defn- get-tiles-needing-fix-for-nad [grid [[fromx fromy] [tox toy]]]
   (let [xstep (- tox fromx)
         ystep (- toy fromy)
         cell1x (+ fromx xstep)
@@ -171,8 +169,6 @@
 (defn fix-not-allowed-diagonals [grid]
   (mark-nads grid (get-nads grid) :ground))
 
-;; TEST
-
 (comment
   (def found (atom false))
 
@@ -193,27 +189,12 @@
     (println "found buggy nads? " @found)))
 
 ; TODO generates 51,52. not max 50
-; TODO can use different turn-ratio/depth/etc. params
-; (printgrid (:grid (->cave-grid :size 800)))
 (defn cave-grid [& {:keys [size]}]
   (let [{:keys [start grid]} (caves/generate (java.util.Random.) size size :wide)
         grid (fix-not-allowed-diagonals grid)]
     (assert (= #{:wall :ground} (set (g/cells grid))))
     {:start start
      :grid grid}))
-
-; TODO HERE
-; * unique max 16 modules, not random take @ #'floor->module-index, also special start, end modules, rare modules...
-
-; * at the beginning enemies very close, different area different spawn-rate !
-
-; beginning slow enemies low hp low dmg etc.
-
-; * flood-fill gets 8 neighbour posis -> no NADs on modules ! assert !
-
-; * assuming bottom left in floor module is walkable
-
-; whats the assumption here? => or put extra borders around? / assert!
 
 (defn adjacent-wall-positions [grid]
   (filter (fn [p] (and (= :wall (get grid p))
