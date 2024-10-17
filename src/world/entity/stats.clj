@@ -1,12 +1,12 @@
 (ns world.entity.stats
-  (:require [gdx.graphics :as g]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [component.core :refer [defc defc*]]
+            [component.info :as info]
+            [component.operation :as op]
+            [component.tx :as tx]
             [core.effect :as effect :refer [target]]
-            [core.info :as info]
-            [core.operation :as op]
-            [core.tx :as tx]
             [core.val-max :as val-max]
+            [gdx.graphics :as g]
             [utils.core :refer [k->pretty-name]]
             [world.entity :as entity]
             [world.entity.modifiers :refer [->modified-value]]))

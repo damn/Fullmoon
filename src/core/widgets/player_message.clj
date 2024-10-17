@@ -1,8 +1,8 @@
 (ns core.widgets.player-message
-  (:require [gdx.graphics :as g]
-            [gdx.ui :as ui]
-            [component.core :refer [defc]]
-            [core.tx :as tx]))
+  (:require [component.core :refer [defc]]
+            [component.tx :as tx]
+            [gdx.graphics :as g]
+            [gdx.ui :as ui]))
 
 (def ^:private duration-seconds 1.5)
 

@@ -1,11 +1,11 @@
 (ns core.effect
-  (:require [gdx.graphics :as g]
+  (:require [component.core :refer [defsystem defc]]
+            [component.tx :as tx]
+            [gdx.graphics :as g]
             [gdx.math.vector :as v]
-            [component.core :refer [defsystem defc]]
             [world.core :as world :refer [mouseover-eid]]
             [world.entity :as entity]
-            [world.entity.faction :as faction]
-            [core.tx :as tx]))
+            [world.entity.faction :as faction]))
 
 (defsystem applicable?
   "An effect will only be done (with tx/do!) if this function returns truthy.

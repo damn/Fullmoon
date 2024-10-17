@@ -1,7 +1,7 @@
 (ns ^:no-doc world.entity.string-effect
-  (:require [gdx.graphics :as g]
-            [component.core :refer [defc]]
-            [core.tx :as tx]
+  (:require [component.core :refer [defc]]
+            [component.tx :as tx]
+            [gdx.graphics :as g]
             [world.core :as world :refer [timer stopped?]]
             [world.entity :as entity]))
 

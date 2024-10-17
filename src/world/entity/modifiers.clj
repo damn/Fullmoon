@@ -1,10 +1,10 @@
 (ns world.entity.modifiers
-  (:require [gdx.graphics :as g]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [component.core :refer [defc]]
-            [core.info :as info]
-            [core.operation :as op]
-            [core.tx :as tx]
+            [component.info :as info]
+            [component.operation :as op]
+            [component.tx :as tx]
+            [gdx.graphics :as g]
             [utils.core :refer [remove-one k->pretty-name]]
             [world.entity :as entity]))
 

@@ -1,7 +1,7 @@
 (ns ^:no-doc world.entity.movement
-  (:require [gdx.math.vector :as v]
-            [component.core :refer [defc]]
-            [core.tx :as tx]
+  (:require [component.core :refer [defc]]
+            [component.tx :as tx]
+            [gdx.math.vector :as v]
             [malli.core :as m]
             [world.core :as world]
             [world.entity :as entity]))

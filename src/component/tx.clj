@@ -1,4 +1,4 @@
-(ns core.tx
+(ns component.tx
   (:require [component.core :refer [defsystem]]))
 
 (defsystem do!)

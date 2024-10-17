@@ -1,13 +1,13 @@
 (ns dev.experiment
-  (:require [gdx.app :refer [post-runnable!]]
+  (:require [component.core :as component]
+            [component.schema :as schema]
+            [component.tx :as tx]
+            [core.db :as db]
+            [gdx.app :refer [post-runnable!]]
             [gdx.graphics :as g]
             [gdx.ui :as ui]
             [gdx.ui.stage :as stage]
             [gdx.ui.stage-screen :refer [stage-add!]]
-            [component.core :as component]
-            [component.schema :as schema]
-            [core.db :as db]
-            [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
             [world.core :as world :refer [mouseover-entity]]))
 

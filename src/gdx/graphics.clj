@@ -1,11 +1,11 @@
 (ns gdx.graphics
-  (:require [gdx.assets :as assets]
-            [gdx.tiled :as t]
-            [gdx.utils :refer [gdx-field]]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [component.core :refer [defc]]
             [component.schema :as schema]
-            [core.tx :as tx]
+            [component.tx :as tx]
+            [gdx.assets :as assets]
+            [gdx.tiled :as t]
+            [gdx.utils :refer [gdx-field]]
             [utils.core :refer [bind-root safe-get]])
   (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.graphics Color Colors OrthographicCamera Texture Texture$TextureFilter Pixmap Pixmap$Format)

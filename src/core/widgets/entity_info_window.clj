@@ -1,7 +1,7 @@
 (ns core.widgets.entity-info-window
-  (:require [gdx.graphics :as g]
+  (:require [component.info :as info]
+            [gdx.graphics :as g]
             [gdx.ui :as ui]
-            [core.info :as info]
             [world.core :refer [mouseover-entity]]))
 
 (def ^:private disallowed-keys [:entity/skills

@@ -3,7 +3,7 @@
   (:require [clojure.string :as str]
             [component.core :refer [defc]]
             [component.schema :as schema]
-            [core.tx :as tx])
+            [component.tx :as tx])
   (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.assets AssetManager)

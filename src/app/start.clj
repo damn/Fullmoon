@@ -13,7 +13,7 @@
             core.effect.entity
             core.effect.target
             [core.db :as db]
-            [core.tx :as tx]
+            [component.tx :as tx]
             core.tx.gdx
             [core.widgets.debug-window :as debug-window]
             [core.widgets.entity-info-window :as entity-info-window]

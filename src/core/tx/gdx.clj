@@ -1,10 +1,10 @@
 (ns core.tx.gdx
-  (:require [gdx.graphics :as g]
+  (:require [component.core :refer [defc]]
+            [component.tx :as tx]
+            [gdx.graphics :as g]
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
-            [gdx.ui.stage-screen :refer [stage-add! stage-get]]
-            [component.core :refer [defc]]
-            [core.tx :as tx]))
+            [gdx.ui.stage-screen :refer [stage-add! stage-get]]))
 
 ; no window movable type cursor appears here like in player idle
 ; inventory still working, other stuff not, because custom listener to keypresses ? use actor listeners?

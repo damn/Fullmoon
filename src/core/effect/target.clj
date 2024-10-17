@@ -1,10 +1,10 @@
 (ns core.effect.target
-  (:require [gdx.graphics :as g]
-            [gdx.math.vector :as v]
-            [component.core :refer [defc]]
+  (:require [component.core :refer [defc]]
+            [component.info :as info]
+            [component.tx :as tx]
             [core.effect :as effect :refer [source target]]
-            [core.info :as info]
-            [core.tx :as tx]
+            [gdx.graphics :as g]
+            [gdx.math.vector :as v]
             [world.core :as world]
             [world.entity :as entity]))
 

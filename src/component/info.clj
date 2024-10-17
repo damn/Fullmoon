@@ -1,4 +1,4 @@
-(ns core.info
+(ns component.info
   (:require [clojure.string :as str]
             [component.core :refer [defsystem]]
             [utils.core :refer [index-of]]))

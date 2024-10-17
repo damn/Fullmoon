@@ -1,8 +1,8 @@
 (ns world.audiovisual
   (:require [component.core :refer [defc]]
+            [component.tx :as tx]
             [core.db :as db]
             [core.property :as property]
-            [core.tx :as tx]
             [world.entity :as entity]))
 
 (property/def :properties/audiovisuals

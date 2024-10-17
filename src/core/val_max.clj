@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [component.core :refer [defc]]
             [component.schema :as schema]
-            [core.operation :as op]
+            [component.operation :as op]
             [malli.core :as m]))
 
 (def ^:private val-max-schema

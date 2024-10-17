@@ -1,7 +1,7 @@
 (ns world.entity.state
   (:require [component.core :refer [defsystem defc]]
-            [core.info :as info]
-            [core.tx :as tx]
+            [component.info :as info]
+            [component.tx :as tx]
             [reduce-fsm :as fsm]
             [world.entity :as entity]))
 

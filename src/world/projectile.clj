@@ -1,10 +1,10 @@
 (ns ^:no-doc world.projectile
-  (:require [gdx.math.vector :as v]
-            [component.core :refer [defc]]
+  (:require [component.core :refer [defc]]
+            [component.info :as info]
+            [component.tx :as tx]
             [core.effect :as effect :refer [source target target-direction]]
-            [core.info :as info]
             [core.property :as property]
-            [core.tx :as tx]
+            [gdx.math.vector :as v]
             [utils.core :refer [find-first]]
             [world.core :as w]
             [world.entity :as entity]))
