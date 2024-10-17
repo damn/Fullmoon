@@ -112,3 +112,23 @@
     (pr-str v)))
 
 (def dev-mode? (= (System/getenv "DEV_MODE") "true"))
+
+(defn indexed ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence of [index, item] pairs, where items come
+ from 's' and indexes count up from zero.
+
+ (indexed '(a b c d)) => ([0 a] [1 b] [2 c] [3 d])"
+  [s]
+  (map vector (iterate inc 0) s))
+
+(defn utils-positions ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence containing the positions at which pred
+	 is true for items in coll."
+  [pred coll]
+  (for [[idx elt] (indexed coll) :when (pred elt)] idx))
+
+(defmacro when-seq [[aseq bind] & body]
+  `(let [~aseq ~bind]
+     (when (seq ~aseq)
+       ~@body)))
+

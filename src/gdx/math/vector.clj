@@ -54,3 +54,8 @@
      (get-angle-from-vector (->v v))]))
 
  )
+
+(defn diagonal-direction? [[x y]]
+  (and (not (zero? (float x)))
+       (not (zero? (float y)))))
+

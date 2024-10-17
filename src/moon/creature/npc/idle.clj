@@ -3,6 +3,7 @@
             [moon.skill :as skill]
             [world.core :as world]
             [world.entity :as entity]
+            [world.entity.follow-ai :as follow-ai]
             [world.effect :as effect]))
 
 (comment
@@ -31,4 +32,4 @@
       (if-let [skill (effect/with-ctx effect-ctx
                        (npc-choose-skill @eid))]
         [[:tx/event eid :start-action [skill effect-ctx]]]
-        [[:tx/event eid :movement-direction (world/follow-to-enemy eid)]]))))
+        [[:tx/event eid :movement-direction (follow-ai/direction-vector eid)]]))))

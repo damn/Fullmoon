@@ -10,7 +10,6 @@
             [gdx.ui.error-window :refer [error-window!]]
             [gdx.ui.stage-screen :as stage-screen]
             [gdx.math.shape :as shape]
-            [gdx.math.vector :as v]
             [gdx.tiled :as t]
             [gdx.utils :refer [dispose!]]
             [utils.core :refer [bind-root ->tile tile->middle safe-merge sort-by-order]]
@@ -53,6 +52,7 @@
 (declare ^:private entity-tick-error)
 
 (defn init! [tiled-map]
+  (init-tiled-map tiled-map)
   (bind-root #'entity-tick-error nil)
   (init-time!)
   (let [w (t/width  tiled-map)
