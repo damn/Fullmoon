@@ -1,5 +1,8 @@
 (in-ns 'world.core)
 
+(defn- init-explored-tile-corners [width height]
+  (def explored-tile-corners (atom (g2d/create-grid width height (constantly false)))))
+
 (def ^:private explored-tile-color (g/->color 0.5 0.5 0.5 1))
 
 (def ^:private ^:dbg-flag see-all-tiles? false)
@@ -36,6 +39,13 @@
         (do (when-not explored?
               (swap! explored-tile-corners assoc (->tile position) true))
             white)))))
+
+(declare tiled-map)
+
+(defn init-tiled-map [tm]
+  (when (bound? #'tiled-map)
+    (dispose! tiled-map))
+  (bind-root #'tiled-map tm))
 
 (defn- render-tiled-map! [light-position]
   (g/draw-tiled-map tiled-map
