@@ -1,4 +1,4 @@
-(ns property.audiovisual
+(ns world.audiovisual
   (:require [component.core :refer [defc]]
             [core.db :as db]
             [core.property :as property]
