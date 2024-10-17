@@ -190,7 +190,6 @@
     window))
 
 (import '(com.kotcrab.vis.ui.widget.tabbedpane Tab TabbedPane TabbedPaneAdapter))
-(import 'com.kotcrab.vis.ui.widget.VisTable)
 
 (defn- ->tab [{:keys [title content savable? closable-by-user?]}]
   (proxy [Tab] [(boolean savable?) (boolean closable-by-user?)]
@@ -199,7 +198,7 @@
 
 (defn- ->tabbed-pane [tabs-data]
   (let [main-table (ui/table {:fill-parent? true})
-        container (VisTable.)
+        container (ui/table {})
         tabbed-pane (TabbedPane.)]
     (.addListener tabbed-pane
                   (proxy [TabbedPaneAdapter] []
@@ -215,13 +214,11 @@
       (.add tabbed-pane (->tab tab-data)))
     main-table))
 
-(defn- open-property-editor-window! [property-id]
-  (stage-add! (->property-editor-window property-id)))
-
 (defn- ->tabs-data []
   (for [property-type (sort (property/types))]
     {:title (:title (property/overview property-type))
-     :content (overview-table property-type open-property-editor-window!)}))
+     :content (overview-table property-type (fn [property-id]
+                                              (stage-add! (->property-editor-window property-id))))}))
 
 (defn screen [->background-image]
   [:screens/property-editor

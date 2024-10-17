@@ -16,56 +16,9 @@
                  (* (g/height grid) factor)
                  (fn [posi]
                    (get grid (mapv #(int (/ % factor)) posi)))))
-; TODO other keys in the map-grid are lost -> look where i transform grids like this
-; merge with ld-grid?
-
-#_(defn create-borders-positions [grid] ; TODO not distinct -> apply distinct or set
-  (let [w (g/width grid),h (g/height grid)]
-    (concat
-      (mapcat (fn [x] [[x 0] [x (dec h)]]) (range w))
-      (mapcat (fn [y] [[0 y] [(dec w) y]]) (range h)))))
-
-#_(defn get-3x3-cellvalues [grid posi]
-  (map grid (cons posi (g/get-8-neighbour-positions posi))))
-
-(defn- not-border-position? [[x y] grid]
-  (and (>= x 1) (>= y 1)
-       (< x (dec (g/width grid)))
-       (< y (dec (g/height grid)))))
-
-(defn- border-position? [p grid] (not (not-border-position? p grid)))
 
 (defn- wall-at? [grid posi]
   (= :wall (get grid posi)))
-
-#_(defn- undefined-value-behind-walls
-  "also border positions set to undefined where there are nil values"
-  [grid]
-  (g/transform grid
-               (fn [posi value]
-                 (if (and (= :wall value)
-                          (every? #(let [value (get grid %)]
-                                     (or (= :wall value) (nil? value)))
-                                  (g/get-8-neighbour-positions posi)))
-                   :undefined
-                   value))))
-
-; if no tile
-; and some has tile at get-8-neighbour-positions
-; -> should be a wall
-; -> paint in tiled editor set tile at cell and layer
-; -> texture ?
-; spritesheet already available ?!
-
-(defn- fill-single-cells [grid] ; TODO removes single walls without adjacent walls
-  (g/transform grid
-               (fn [posi value]
-                 (if (and (not-border-position? posi grid)
-                          (= :wall value)
-                          (not-any? #(wall-at? grid %)
-                                    (g/get-4-neighbour-positions posi)))
-                   :ground
-                   value))))
 
 (defn- print-cell [celltype]
   (print (if (number? celltype)
