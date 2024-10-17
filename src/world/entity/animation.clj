@@ -1,8 +1,8 @@
 (ns ^:no-doc world.entity.animation
-  (:require [gdx.graphics :as g]
-            [component.core :refer [defc]]
+  (:require [component.core :refer [defc]]
+            [component.db :as db]
             [component.schema :as schema]
-            [core.db :as db]
+            [gdx.graphics :as g]
             [world.core :as world]
             [world.entity :as entity]))
 

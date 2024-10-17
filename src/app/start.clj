@@ -1,5 +1,15 @@
 (ns app.start
-  (:require [gdx.app :as app]
+  (:require [component.db :as db]
+            [component.tx :as tx]
+            [core.editor :as property-editor]
+            core.effect.entity
+            core.effect.target
+            core.tx.gdx
+            [core.widgets.debug-window :as debug-window]
+            [core.widgets.entity-info-window :as entity-info-window]
+            [core.widgets.hp-mana :as hp-mana-bars]
+            [core.widgets.player-message :as player-message]
+            [gdx.app :as app]
             [gdx.assets :as assets]
             [gdx.graphics :as g :refer [white black]]
             [gdx.graphics.camera :as 🎥]
@@ -9,16 +19,7 @@
             [gdx.ui.actor :as a]
             [gdx.ui.stage :as stage]
             [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
-            [core.editor :as property-editor]
-            core.effect.entity
-            core.effect.target
-            [core.db :as db]
-            [component.tx :as tx]
-            core.tx.gdx
-            [core.widgets.debug-window :as debug-window]
-            [core.widgets.entity-info-window :as entity-info-window]
-            [core.widgets.hp-mana :as hp-mana-bars]
-            [core.widgets.player-message :as player-message]
+            [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             world.audiovisual
             [world.creature :as creature]
             world.entity.animation
@@ -29,9 +30,7 @@
             world.entity.movement
             world.entity.string-effect
             [world.entity.skills :refer [action-bar]]
-            [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             [world.core :as world]
-
             [world.entity :as entity]
             world.entity.stats
             world.generate

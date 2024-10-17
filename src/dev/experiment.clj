@@ -1,8 +1,8 @@
 (ns dev.experiment
   (:require [component.core :as component]
+            [component.db :as db]
             [component.schema :as schema]
             [component.tx :as tx]
-            [core.db :as db]
             [gdx.app :refer [post-runnable!]]
             [gdx.graphics :as g]
             [gdx.ui :as ui]

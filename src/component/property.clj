@@ -1,4 +1,4 @@
-(ns core.property
+(ns component.property
   (:refer-clojure :exclude [def type])
   (:require [component.core :refer [defc] :as component]
             [component.schema :as schema]

@@ -1,8 +1,8 @@
 (ns world.entity.skills
   (:require [component.core :refer [defc defsystem]]
             [component.info :as info]
+            [component.property :as property]
             [component.tx :as tx]
-            [core.property :as property]
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.stage-screen :refer [stage-get]]

@@ -156,8 +156,8 @@
                 (.setScene scene)
                 .show)]))
 
-(require '[core.property :as property])
-(require '[core.db :as db])
+(require '[component.property :as property])
+(require '[component.db :as db])
 
 (def ->image (memoize (fn [file] (Image. file))))
 

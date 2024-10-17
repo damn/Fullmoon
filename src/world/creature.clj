@@ -1,10 +1,10 @@
 (ns world.creature
   (:require [clojure.string :as str]
             [component.core :refer [defc]]
+            [component.db :as db]
             [component.info :as info]
+            [component.property :as property]
             [component.tx :as tx]
-            [core.property :as property]
-            [core.db :as db]
             [core.effect :as effect]
             [gdx.graphics :as g]
             [gdx.tiled :as tiled]

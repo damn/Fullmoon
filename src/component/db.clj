@@ -1,9 +1,9 @@
-(ns core.db
+(ns component.db
   (:refer-clojure :exclude [get])
   (:require [clojure.edn :as edn]
             [clojure.pprint :refer [pprint]]
+            [component.property :as property]
             [component.schema :as schema]
-            [core.property :as property]
             [utils.core :refer [bind-root safe-get]]))
 
 (declare db

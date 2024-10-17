@@ -1,9 +1,9 @@
 (ns ^:no-doc world.projectile
   (:require [component.core :refer [defc]]
             [component.info :as info]
+            [component.property :as property]
             [component.tx :as tx]
             [core.effect :as effect :refer [source target target-direction]]
-            [core.property :as property]
             [gdx.math.vector :as v]
             [utils.core :refer [find-first]]
             [world.core :as w]

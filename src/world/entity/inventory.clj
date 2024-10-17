@@ -1,7 +1,7 @@
 (ns world.entity.inventory
   (:require [component.core :refer [defsystem defc]]
             [component.info :as info]
-            [core.property :as property]
+            [component.property :as property]
             [component.tx :as tx]
             [data.grid2d :as g2d]
             [gdx.graphics :as g]
