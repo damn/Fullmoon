@@ -52,7 +52,7 @@
                 ;*assert* false
                 *print-level* 3}
 
-  :profiles {:tool    {:aot [core.tool]}
+  :profiles {:tool    {:aot [editor.javafx]}
              :uberjar {:aot [app.start]}}
 
   :main app.start)
