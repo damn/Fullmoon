@@ -1,7 +1,7 @@
 (ns app.start
   (:require [component.db :as db]
             [component.tx :as tx]
-            [core.editor :as property-editor]
+            [editor.visui :as property-editor]
             [gdx.app :as app]
             [gdx.assets :as assets]
             [gdx.graphics :as g :refer [white black]]

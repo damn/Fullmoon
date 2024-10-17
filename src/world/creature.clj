@@ -51,7 +51,7 @@
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
-; assert min body size from core.entity
+; assert min body size from entity
 
 (defc :entity/body
   {:schema [:s/map [:body/width

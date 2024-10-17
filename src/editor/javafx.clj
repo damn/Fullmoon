@@ -1,4 +1,4 @@
-(ns core.tool
+(ns editor.javafx
   (:require [clojure.java.io :as io])
   (:import (javafx.event EventHandler)
            (javafx.scene.control Button TreeItem TreeView)
@@ -227,13 +227,13 @@
 
 #_(when-not (= (System/getenv "DEV_MODE") "true")
   (gen-class
-   :name "core.tool"
+   :name "editor"
    :extends "javafx.application.Application"))
 
 (defn- init-javafx! []
   (javafx.application.Platform/setImplicitExit false)
   ; otherwise cannot find class in dev mode w. ns-refresh, so create symbol
-  (javafx.application.Application/launch (eval 'core.tool) (into-array String [""])))
+  (javafx.application.Application/launch (eval 'editor.javafx) (into-array String [""])))
 
 (defn -main [& args]
   (init-javafx!))

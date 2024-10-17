@@ -1,4 +1,4 @@
-(ns core.editor
+(ns editor.visui
   (:require [clojure.edn :as edn]
             [clojure.set :as set]
             [clojure.string :as str]
@@ -12,12 +12,12 @@
             [gdx.input :refer [key-just-pressed?]]
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
+            [gdx.ui.error-window :refer [error-window!]]
             [gdx.ui.stage-screen :as stage-screen :refer [stage-add!]]
             [gdx.screen :as screen]
             [malli.core :as m]
             [malli.generator :as mg]
-            [utils.core :refer [safe-get index-of]]
-            [world.widgets.error :refer [error-window!]]))
+            [utils.core :refer [safe-get index-of]]))
 
 (comment
  ; Possible schemas:
