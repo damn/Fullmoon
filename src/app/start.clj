@@ -20,6 +20,7 @@
             [core.widgets.hp-mana :as hp-mana-bars]
             [core.widgets.player-message :as player-message]
             world.audiovisual
+            [world.creature :as creature]
             world.entity.animation
             world.entity.delete-after-duration
             world.entity.image
@@ -30,8 +31,7 @@
             [world.entity.skills :refer [action-bar]]
             [utils.core :refer [bind-root get-namespaces get-vars sort-by-order]]
             [world.core :as world]
-            [world.creature :as creature]
-            world.creature.states
+
             [world.entity :as entity]
             world.entity.stats
             world.generate

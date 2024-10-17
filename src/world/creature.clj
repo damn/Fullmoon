@@ -11,6 +11,7 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge tile->middle]]
             [world.core :as world]
+            world.creature.states
             [world.entity :as entity]))
 
 (defc :entity/player?
