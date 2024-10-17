@@ -1,25 +1,27 @@
 (ns gdx.graphics
-  (:require [clojure.string :as str]
-            [component.core :refer [defc]]
+  (:require [component.core :refer [defc]]
             [component.schema :as schema]
             [component.tx :as tx]
             [gdx.assets :as assets]
+            [gdx.graphics.batch :as batch]
+            [gdx.graphics.shape-drawer :as sd]
+            [gdx.graphics.text :as text]
+            [gdx.graphics.viewport :as vp]
             [gdx.tiled :as t]
             [gdx.utils :refer [gdx-field]]
             [utils.core :refer [bind-root safe-get]])
   (:import (com.badlogic.gdx Gdx)
-           (com.badlogic.gdx.graphics Color Colors OrthographicCamera Texture Texture$TextureFilter Pixmap Pixmap$Format)
-           (com.badlogic.gdx.graphics.g2d SpriteBatch Batch BitmapFont TextureRegion)
-           (com.badlogic.gdx.graphics.g2d.freetype FreeTypeFontGenerator FreeTypeFontGenerator$FreeTypeFontParameter)
-           (com.badlogic.gdx.math MathUtils Vector2)
-           (com.badlogic.gdx.utils Align Disposable)
-           (com.badlogic.gdx.utils.viewport Viewport FitViewport)
-           (space.earlygrey.shapedrawer ShapeDrawer)))
+           (com.badlogic.gdx.graphics Color Colors OrthographicCamera Texture Pixmap)
+           (com.badlogic.gdx.graphics.g2d SpriteBatch TextureRegion)
+           (com.badlogic.gdx.utils Disposable)
+           (com.badlogic.gdx.utils.viewport FitViewport)))
+
+(defn- tr-dimensions [^TextureRegion texture-region]
+  [(.getRegionWidth  texture-region)
+   (.getRegionHeight texture-region)])
 
 (defn delta-time        [] (.getDeltaTime       Gdx/graphics))
 (defn frames-per-second [] (.getFramesPerSecond Gdx/graphics))
-
-(defn- kw->color [k] (gdx-field "graphics.Color" k))
 
 (def white Color/WHITE)
 (def black Color/BLACK)
@@ -30,7 +32,7 @@
 
 (defn- munge-color ^Color [color]
   (cond (= Color (class color)) color
-        (keyword? color) (kw->color color)
+        (keyword? color) (gdx-field "graphics.Color" color)
         (vector? color) (apply ->color color)
         :else (throw (ex-info "Cannot understand color" {:color color}))))
 
@@ -40,29 +42,6 @@
   [javadoc](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/graphics/Colors.html)"
   [name-str color]
   (Colors/put name-str (munge-color color)))
-
-(defn- clamp [value min max]
-  (MathUtils/clamp (float value) (float min) (float max)))
-
-; touch coordinates are y-down, while screen coordinates are y-up
-; so the clamping of y is reverse, but as black bars are equal it does not matter
-(defn- unproject-mouse-posi
-  "Returns vector of [x y]."
-  [^Viewport viewport]
-  (let [mouse-x (clamp (.getX Gdx/input)
-                       (.getLeftGutterWidth viewport)
-                       (.getRightGutterX viewport))
-        mouse-y (clamp (.getY Gdx/input)
-                       (.getTopGutterHeight viewport)
-                       (.getTopGutterY viewport))
-        coords (.unproject viewport (Vector2. mouse-x mouse-y))]
-    [(.x coords) (.y coords)]))
-
-(defn- vp-world-width  [^Viewport vp] (.getWorldWidth  vp))
-(defn- vp-world-height [^Viewport vp] (.getWorldHeight vp))
-(defn- vp-camera       [^Viewport vp] (.getCamera      vp))
-(defn- vp-update!      [^Viewport vp [w h] & {:keys [center-camera?]}]
-  (.update vp w h (boolean center-camera?)))
 
 (defn ->texture-region
   ([path-or-texture]
@@ -74,160 +53,54 @@
   ([^TextureRegion texture-region [x y w h]]
    (TextureRegion. texture-region (int x) (int y) (int w) (int h))))
 
-(defn- texture-region-dimensions [^TextureRegion texture-region]
-  [(.getRegionWidth  texture-region)
-   (.getRegionHeight texture-region)])
+(declare ^:private sd
+         ^:private sd-texture)
 
-(declare batch)
-
-; TODO [x y] is center or left-bottom ?
-; why rotation origin calculations ?!
-(defn- draw-texture-region [^Batch batch texture-region [x y] [w h] rotation color]
-  (if color (.setColor batch color)) ; TODO move out, simplify ....
-  (.draw batch
-         texture-region
-         x
-         y
-         (/ (float w) 2) ; rotation origin
-         (/ (float h) 2)
-         w ; width height
-         h
-         1 ; scaling factor
-         1
-         rotation)
-  (if color (.setColor batch Color/WHITE)))
-
-(defn- draw-with! [^Batch batch ^Viewport viewport draw-fn]
-  (.setColor batch Color/WHITE) ; fix scene2d.ui.tooltip flickering
-  (.setProjectionMatrix batch (.combined (.getCamera viewport)))
-  (.begin batch)
-  (draw-fn)
-  (.end batch))
-
-(defn- ->shape-drawer [batch]
-  (let [^Texture tex (let [pixmap (doto (Pixmap. 1 1 Pixmap$Format/RGBA8888)
-                                    (.setColor Color/WHITE)
-                                    (.drawPixel 0 0))
-                           tex (Texture. pixmap)]
-                       (.dispose pixmap)
-                       tex)]
-    {:shape-drawer (ShapeDrawer. batch (TextureRegion. tex 1 0 1 1))
-     :shape-drawer-texture tex}))
-
-(defn- degree->radians [degree]
-  (* (float degree) MathUtils/degreesToRadians))
-
-(defn- set-color!          [^ShapeDrawer sd color] (.setColor sd (munge-color color)))
-(defn- sd-ellipse          [^ShapeDrawer sd [x y] radius-x radius-y] (.ellipse sd (float x) (float y) (float radius-x) (float radius-y)))
-(defn- sd-filled-ellipse   [^ShapeDrawer sd [x y] radius-x radius-y] (.filledEllipse sd (float x) (float y) (float radius-x) (float radius-y)))
-(defn- sd-circle           [^ShapeDrawer sd [x y] radius] (.circle sd (float x) (float y) (float radius)))
-(defn- sd-filled-circle    [^ShapeDrawer sd [x y] radius] (.filledCircle sd (float x) (float y) (float radius)))
-(defn- sd-arc              [^ShapeDrawer sd [centre-x centre-y] radius start-angle degree] (.arc sd centre-x centre-y radius (degree->radians start-angle) (degree->radians degree)))
-(defn- sd-sector           [^ShapeDrawer sd [centre-x centre-y] radius start-angle degree] (.sector sd centre-x centre-y radius (degree->radians start-angle) (degree->radians degree)))
-(defn- sd-rectangle        [^ShapeDrawer sd x y w h] (.rectangle sd x y w h))
-(defn- sd-filled-rectangle [^ShapeDrawer sd x y w h] (.filledRectangle sd (float x) (float y) (float w) (float h)) )
-(defn- sd-line             [^ShapeDrawer sd [sx sy] [ex ey]] (.line sd (float sx) (float sy) (float ex) (float ey)))
-
-(defn- sd-grid [sd leftx bottomy gridw gridh cellw cellh]
-  (let [w (* (float gridw) (float cellw))
-        h (* (float gridh) (float cellh))
-        topy (+ (float bottomy) (float h))
-        rightx (+ (float leftx) (float w))]
-    (doseq [idx (range (inc (float gridw)))
-            :let [linex (+ (float leftx) (* (float idx) (float cellw)))]]
-      (sd-line sd [linex topy] [linex bottomy]))
-    (doseq [idx (range (inc (float gridh)))
-            :let [liney (+ (float bottomy) (* (float idx) (float cellh)))]]
-      (sd-line sd [leftx liney] [rightx liney]))))
-
-(defn- sd-with-line-width [^ShapeDrawer sd width draw-fn]
-  (let [old-line-width (.getDefaultLineWidth sd)]
-    (.setDefaultLineWidth sd (float (* (float width) old-line-width)))
-    (draw-fn)
-    (.setDefaultLineWidth sd (float old-line-width))))
-
-(defn- ->ttf-params [size quality-scaling]
-  (let [params (FreeTypeFontGenerator$FreeTypeFontParameter.)]
-    (set! (.size params) (* size quality-scaling))
-    ; .color and this:
-    ;(set! (.borderWidth parameter) 1)
-    ;(set! (.borderColor parameter) red)
-    (set! (.minFilter params) Texture$TextureFilter/Linear) ; because scaling to world-units
-    (set! (.magFilter params) Texture$TextureFilter/Linear)
-    params))
-
-(defn- generate-ttf [{:keys [file size quality-scaling]}]
-  (let [generator (FreeTypeFontGenerator. (.internal Gdx/files file))
-        font (.generateFont generator (->ttf-params size quality-scaling))]
-    (.dispose generator)
-    (.setScale (.getData font) (float (/ quality-scaling)))
-    (set! (.markupEnabled (.getData font)) true)
-    (.setUseIntegerPositions font false) ; otherwise scaling to world-units (/ 1 48)px not visible
-    font))
-
-(defn- gdx-default-font [] (BitmapFont.))
-
-(defn- text-height [^BitmapFont font text]
-  (-> text
-      (str/split #"\n")
-      count
-      (* (.getLineHeight font))))
-
-(defn- font-draw [^BitmapFont font
-                  unit-scale
-                  batch
-                  {:keys [x y text h-align up? scale]}]
-  (let [data (.getData font)
-        old-scale (float (.scaleX data))]
-    (.setScale data (* old-scale (float unit-scale) (float (or scale 1))))
-    (.draw font
-           batch
-           (str text)
-           (float x)
-           (+ (float y) (float (if up? (text-height font text) 0)))
-           (float 0) ; target-width
-           (case (or h-align :center)
-             :center Align/center
-             :left   Align/left
-             :right  Align/right)
-           false) ; wrap false, no need target-width
-    (.setScale data old-scale)))
-
-(declare ^:private shape-drawer
-         ^:private shape-drawer-texture)
+(defn- sd-color [sd color]
+  (sd/set-color sd (munge-color color)))
 
 (defn draw-ellipse [position radius-x radius-y color]
-  (set-color! shape-drawer color)
-  (sd-ellipse shape-drawer position radius-x radius-y))
+  (sd-color sd color)
+  (sd/ellipse sd position radius-x radius-y))
+
 (defn draw-filled-ellipse [position radius-x radius-y color]
-  (set-color! shape-drawer color)
-  (sd-filled-ellipse shape-drawer position radius-x radius-y))
+  (sd-color sd color)
+  (sd/filled-ellipse sd position radius-x radius-y))
+
 (defn draw-circle [position radius color]
-  (set-color! shape-drawer color)
-  (sd-circle shape-drawer position radius))
+  (sd-color sd color)
+  (sd/circle sd position radius))
+
 (defn draw-filled-circle [position radius color]
-  (set-color! shape-drawer color)
-  (sd-filled-circle shape-drawer position radius))
+  (sd-color sd color)
+  (sd/filled-circle sd position radius))
+
 (defn draw-arc [center radius start-angle degree color]
-  (set-color! shape-drawer color)
-  (sd-arc shape-drawer center radius start-angle degree))
+  (sd-color sd color)
+  (sd/arc sd center radius start-angle degree))
+
 (defn draw-sector [center radius start-angle degree color]
-  (set-color! shape-drawer color)
-  (sd-sector shape-drawer center radius start-angle degree))
+  (sd-color sd color)
+  (sd/sector sd center radius start-angle degree))
+
 (defn draw-rectangle [x y w h color]
-  (set-color! shape-drawer color)
-  (sd-rectangle shape-drawer x y w h))
+  (sd-color sd color)
+  (sd/rectangle sd x y w h))
+
 (defn draw-filled-rectangle [x y w h color]
-  (set-color! shape-drawer color)
-  (sd-filled-rectangle shape-drawer x y w h))
+  (sd-color sd color)
+  (sd/filled-rectangle sd x y w h))
+
 (defn draw-line [start end color]
-  (set-color! shape-drawer color)
-  (sd-line shape-drawer start end))
+  (sd-color sd color)
+  (sd/line sd start end))
+
 (defn draw-grid [leftx bottomy gridw gridh cellw cellh color]
-  (set-color! shape-drawer color)
-  (sd-grid shape-drawer leftx bottomy gridw gridh cellw cellh))
+  (sd-color sd color)
+  (sd/grid sd leftx bottomy gridw gridh cellw cellh))
+
 (defn with-shape-line-width [width draw-fn]
-  (sd-with-line-width shape-drawer width draw-fn))
+  (sd/with-line-width sd width draw-fn))
 
 (defn- ->gui-view [{:keys [world-width world-height]}]
   {:unit-scale 1
@@ -261,20 +134,20 @@
 
 (defn- gui-mouse-position* []
   ; TODO mapv int needed?
-  (mapv int (unproject-mouse-posi (gui-viewport))))
+  (mapv int (vp/unproject-mouse-posi (gui-viewport))))
 
 (defn- world-mouse-position* []
   ; TODO clamping only works for gui-viewport ? check. comment if true
   ; TODO ? "Can be negative coordinates, undefined cells."
-  (unproject-mouse-posi (world-viewport)))
+  (vp/unproject-mouse-posi (world-viewport)))
 
 (defn gui-mouse-position    [] (gui-mouse-position*))
 (defn world-mouse-position  [] (world-mouse-position*))
-(defn gui-viewport-width    [] (vp-world-width  (gui-viewport)))
-(defn gui-viewport-height   [] (vp-world-height (gui-viewport)))
-(defn world-camera          [] (vp-camera       (world-viewport)))
-(defn world-viewport-width  [] (vp-world-width  (world-viewport)))
-(defn world-viewport-height [] (vp-world-height (world-viewport)))
+(defn gui-viewport-width    [] (vp/world-width  (gui-viewport)))
+(defn gui-viewport-height   [] (vp/world-height (gui-viewport)))
+(defn world-camera          [] (vp/camera       (world-viewport)))
+(defn world-viewport-width  [] (vp/world-width  (world-viewport)))
+(defn world-viewport-height [] (vp/world-height (world-viewport)))
 
 (defrecord Sprite [texture-region
                    pixel-dimensions
@@ -299,30 +172,32 @@
                   (number? (scale 0))
                   (number? (scale 1))))]}
   (let [pixel-dimensions (if (number? scale)
-                           (scale-dimensions (texture-region-dimensions texture-region) scale)
+                           (scale-dimensions (tr-dimensions texture-region) scale)
                            scale)]
     (assoc image
            :pixel-dimensions pixel-dimensions
            :world-unit-dimensions (scale-dimensions pixel-dimensions (world-unit-scale)))))
 
+(declare batch)
+
 (defn draw-image [{:keys [texture-region color] :as image} position]
-  (draw-texture-region batch
-                       texture-region
-                       position
-                       (unit-dimensions image)
-                       0 ; rotation
-                       color))
+  (batch/draw-texture-region batch
+                             texture-region
+                             position
+                             (unit-dimensions image)
+                             0 ; rotation
+                             color))
 
 (defn draw-rotated-centered-image
   [{:keys [texture-region color] :as image} rotation [x y]]
   (let [[w h] (unit-dimensions image)]
-    (draw-texture-region batch
-                         texture-region
-                         [(- (float x) (/ (float w) 2))
-                          (- (float y) (/ (float h) 2))]
-                         [w h]
-                         rotation
-                         color)))
+    (batch/draw-texture-region batch
+                               texture-region
+                               [(- (float x) (/ (float w) 2))
+                                (- (float y) (/ (float h) 2))]
+                               [w h]
+                               rotation
+                               color)))
 
 (defn draw-centered-image [image position]
   (draw-rotated-centered-image image 0 position))
@@ -363,8 +238,8 @@
    [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
 
 (defn- ->default-font [true-type-font]
-  (or (and true-type-font (generate-ttf true-type-font))
-      (gdx-default-font)))
+  (or (and true-type-font (text/truetype-font true-type-font))
+      (text/default-font)))
 
 (declare ^:private default-font)
 
@@ -374,7 +249,7 @@
   up? renders the font over y, otherwise under.
   scale will multiply the drawn text size with the scale."
   [{:keys [x y text font h-align up? scale] :as opts}]
-  (font-draw (or font default-font) *unit-scale* batch opts))
+  (text/draw (or font default-font) *unit-scale* batch opts))
 
 (defn- mapvals [f m]
   (into {} (for [[k v] m]
@@ -402,12 +277,12 @@
     nil))
 
 (defn- render-view! [{:keys [viewport unit-scale]} draw-fn]
-  (draw-with! batch
-              viewport
-              (fn []
-                (with-shape-line-width unit-scale
-                  #(binding [*unit-scale* unit-scale]
-                     (draw-fn))))))
+  (batch/draw-on batch
+                 viewport
+                 (fn []
+                   (with-shape-line-width unit-scale
+                     #(binding [*unit-scale* unit-scale]
+                        (draw-fn))))))
 
 (defn render-gui-view!   [render-fn] (render-view! gui-view render-fn))
 (defn render-world-view! [render-fn] (render-view! world-view render-fn))
@@ -433,10 +308,10 @@
 
 (defn load! [{:keys [views default-font cursors]}]
   (let [batch (SpriteBatch.)
-        {:keys [shape-drawer shape-drawer-texture]} (->shape-drawer batch)]
+        {:keys [shape-drawer shape-drawer-texture]} (sd/create batch)]
     (bind-root #'batch batch)
-    (bind-root #'shape-drawer shape-drawer)
-    (bind-root #'shape-drawer-texture shape-drawer-texture)
+    (bind-root #'sd shape-drawer)
+    (bind-root #'sd-texture shape-drawer-texture)
     (bind-root #'cursors (->cursors cursors))
     (bind-root #'default-font (->default-font default-font))
     (bind-views! views)
@@ -444,10 +319,10 @@
 
 (defn dispose! []
   (.dispose batch)
-  (.dispose shape-drawer-texture)
+  (.dispose sd-texture)
   (.dispose default-font)
   (run! Disposable/.dispose (vals cursors)))
 
 (defn resize! [[w h]]
-  (vp-update! (gui-viewport) [w h] :center-camera? true)
-  (vp-update! (world-viewport) [w h]))
+  (vp/update (gui-viewport) [w h] :center-camera? true)
+  (vp/update (world-viewport) [w h]))
