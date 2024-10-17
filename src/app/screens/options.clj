@@ -3,7 +3,7 @@
             [gdx.screen :as screen]
             [gdx.ui :as ui]
             [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
-            [utils.core :refer [bind-root get-namespaces get-vars]]))
+            [utils.core :refer [bind-root get-namespaces get-vars dev-mode?]]))
 
 (defprotocol ^:private StatusCheckBox
   (^:private get-text [this])

@@ -111,3 +111,4 @@
   (binding [*print-level* nil]
     (pr-str v)))
 
+(def dev-mode? (= (System/getenv "DEV_MODE") "true"))

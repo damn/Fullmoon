@@ -16,7 +16,7 @@
             [gdx.ui.stage-screen :as stage-screen :refer [stage-get]]
             [gdx.vis-ui :as vis-ui]
             level.generate
-            [utils.core :refer [sort-by-order]]
+            [utils.core :refer [sort-by-order dev-mode?]]
             moon.audiovisual
             [moon.creature :as creature]
             moon.creature.player.item-on-cursor
@@ -39,8 +39,6 @@
             [moon.widgets.hp-mana :as hp-mana-bars]
             [moon.widgets.player-message :as player-message]
             moon.widgets.player-modal))
-
-(def ^:private dev-mode? (= (System/getenv "DEV_MODE") "true"))
 
 ; 28.4 viewportwidth
 ; 16 viewportheight
