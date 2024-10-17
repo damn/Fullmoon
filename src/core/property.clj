@@ -1,7 +1,7 @@
 (ns core.property
   (:refer-clojure :exclude [def type])
   (:require [component.core :refer [defc] :as component]
-            [core.data :as data]
+            [component.schema :as schema]
             [malli.core :as m]
             [malli.error :as me]))
 
@@ -24,8 +24,7 @@
 (defn schema [property]
   (-> property
       type
-      data/component
-      data/schema
+      schema/form-of
       m/schema))
 
 (defn- invalid-ex-info [schema value]

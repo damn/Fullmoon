@@ -10,7 +10,7 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [component.core :as component]
-            [core.data :as data]
+            [component.schema :as schema]
             [core.db :as db]
             [core.info :as info]
             [core.property :as property]
@@ -19,14 +19,15 @@
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
 
-(defn- data-type->widget [data]
-  (cond
-   (#{:map-optional :components-ns}                 data) :map
-   (#{:number :nat-int :int :pos :pos-int :val-max} data) :number
-   :else data))
+(defn- widget-type [schema _]
+  (let [stype (schema/type schema)]
+    (cond
+     (#{:map-optional :components-ns}                 stype) :map
+     (#{:number :nat-int :int :pos :pos-int :val-max} stype) :number
+     :else stype)))
 
-(defmulti ^:private ->widget      (fn [data _v]      (data-type->widget (data/type data))))
-(defmulti ^:private widget->value (fn [data _widget] (data-type->widget (data/type data))))
+(defmulti ^:private ->widget      widget-type)
+(defmulti ^:private widget->value widget-type)
 
 (comment
  (keys (methods ->widget))
@@ -38,8 +39,8 @@
                       (ui/image->widget (g/edn->image image) {}))]
              :cell-defaults {:pad 1}}))
 
-(defn- add-data-tooltip! [widget data]
-  (ui/add-tooltip! widget (str "Data: " data))
+(defn- add-schema-tooltip! [widget schema]
+  (ui/add-tooltip! widget (str schema))
   widget)
 
 (defn- ->edn-str [v]
@@ -53,20 +54,20 @@
 (defmethod widget->value :boolean [_ widget]
   (.isChecked ^com.kotcrab.vis.ui.widget.VisCheckBox widget))
 
-(defmethod ->widget :string [data v]
-  (add-data-tooltip! (ui/text-field v {}) data))
+(defmethod ->widget :string [schema v]
+  (add-schema-tooltip! (ui/text-field v {}) schema))
 
 (defmethod widget->value :string [_ widget]
   (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
 
-(defmethod ->widget :number [data v]
-  (add-data-tooltip! (ui/text-field (->edn-str v) {}) data))
+(defmethod ->widget :number [schema v]
+  (add-schema-tooltip! (ui/text-field (->edn-str v) {}) schema))
 
 (defmethod widget->value :number [_ widget]
   (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
 
-(defmethod ->widget :enum [data v]
-  (ui/select-box {:items (map ->edn-str (rest data))
+(defmethod ->widget :enum [schema v]
+  (ui/select-box {:items (map ->edn-str (rest schema))
                   :selected (->edn-str v)}))
 
 (defmethod widget->value :enum [_ widget]
@@ -190,11 +191,11 @@
       k)))
 
 (defn- k->default-value [k]
-  (let [data (data/component k)]
+  (let [schema (schema/of k)]
     (cond
-     (#{:one-to-one :one-to-many} data) nil
+     (#{:one-to-one :one-to-many} schema) nil
      ;(#{:map} type) {} ; cannot have empty for required keys, then no Add Component button
-     :else (mg/generate (data/schema data) {:size 3}))))
+     :else (mg/generate (schema/form schema) {:size 3}))))
 
 (defn- ->choose-component-window [schema attribute-widget-group]
   (fn []
@@ -226,8 +227,8 @@
             (filter (fn [[k prop-m]] (:optional prop-m))
                     (k-properties schema)))))
 
-(defmethod ->widget :map [data m]
-  (let [schema (data/schema data)
+(defmethod ->widget :map [schema m]
+  (let [schema (schema/form schema)
         attribute-widget-group (->attribute-widget-group schema m)
         optional-keys-left? (seq (set/difference (optional-keyset schema)
                                                  (set (keys m))))]
@@ -252,7 +253,7 @@
 
 (defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
-        value-widget (->widget (data/component k) v)
+        value-widget (->widget (schema/of k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (:optional k-props)
@@ -286,7 +287,7 @@
   (into {} (for [k (map a/id (ui/children group))
                  :let [table (k group)
                        value-widget (attribute-widget-table->value-widget table)]]
-             [k (widget->value (data/component k) value-widget)])))
+             [k (widget->value (schema/of k) value-widget)])))
 
 ;;
 

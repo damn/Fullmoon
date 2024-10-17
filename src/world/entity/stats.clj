@@ -103,15 +103,15 @@
 
           For example:
           attack/cast-speed 1.5 => (/ action-time 1.5) => 150% attackspeed."
-      data :pos
+      schema :pos
       operations [:op/inc]]
   (defstat :stats/cast-speed
-    {:schema data
+    {:schema schema
      :editor/doc doc
      :modifier-ops operations})
 
   (defstat :stats/attack-speed
-    {:schema data
+    {:schema schema
      :editor/doc doc
      :modifier-ops operations}))
 

@@ -1,6 +1,7 @@
 (ns ^:no-doc world.entity.animation
   (:require [gdx.graphics :as g]
             [component.core :refer [defc]]
+            [component.schema :as schema]
             [core.db :as db]
             [world.core :as world]
             [world.entity :as entity]))
@@ -48,6 +49,12 @@
 
 (defn- tx-assoc-image-current-frame [eid animation]
   [:e/assoc eid :entity/image (current-frame animation)])
+
+(defmethod schema/form :schema/animation [_]
+  [:map {:closed true}
+   [:frames :some] ; FIXME actually images
+   [:frame-duration pos?]
+   [:looping? :boolean]])
 
 (defc :entity/animation
   {:schema :schema/animation

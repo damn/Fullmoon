@@ -1,6 +1,9 @@
 (ns gdx.assets
   (:refer-clojure :exclude [get])
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [component.core :refer [defc]]
+            [component.schema :as schema]
+            [core.tx :as tx])
   (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.audio Sound)
            (com.badlogic.gdx.assets AssetManager)
@@ -59,3 +62,11 @@
 
 (defn play-sound! [path]
   (Sound/.play (get path)))
+
+(defmethod schema/form :sound [_] :string)
+
+(defc :tx/sound
+  {:schema :sound}
+  (tx/do! [[_ file]]
+    (play-sound! file)
+    nil))

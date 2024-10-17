@@ -3,6 +3,9 @@
             [gdx.tiled :as t]
             [gdx.utils :refer [gdx-field]]
             [clojure.string :as str]
+            [component.core :refer [defc]]
+            [component.schema :as schema]
+            [core.tx :as tx]
             [utils.core :refer [bind-root safe-get]])
   (:import (com.badlogic.gdx Gdx)
            (com.badlogic.gdx.graphics Color Colors OrthographicCamera Texture Texture$TextureFilter Pixmap Pixmap$Format)
@@ -354,6 +357,11 @@
                (int (/ sprite-y tileh))]))
     (image file)))
 
+(defmethod schema/form :image [_]
+  [:map {:closed true}
+   [:file :string]
+   [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
+
 (defn- ->default-font [true-type-font]
   (or (and true-type-font (generate-ttf true-type-font))
       (gdx-default-font)))
@@ -387,6 +395,11 @@
 
 (defn set-cursor! [cursor-key]
   (.setCursor Gdx/graphics (safe-get cursors cursor-key)))
+
+(defc :tx/cursor
+  (tx/do! [[_ cursor-key]]
+    (set-cursor! cursor-key)
+    nil))
 
 (defn- render-view! [{:keys [viewport unit-scale]} draw-fn]
   (draw-with! batch

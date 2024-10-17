@@ -5,7 +5,7 @@
             [gdx.ui.stage :as stage]
             [gdx.ui.stage-screen :refer [stage-add!]]
             [component.core :as component]
-            [core.data :as data]
+            [component.schema :as schema]
             [core.db :as db]
             [core.tx :as tx]
             [utils.core :refer [get-namespaces get-vars]]
@@ -177,8 +177,8 @@
                    (println "      *" k)
                    (println (str "        * data: `" (pr-str (:schema (component/meta k))) "`"))))))))))
 
-(defn- data-components []
-  (sort (keys (methods data/schema))))
+#_(defn- data-components []
+  (sort (keys (methods data/schema)))) ; TODO use widget ...
 
 (defn- component-systems [component-k]
    (for [[sys-name sys-var] component/systems

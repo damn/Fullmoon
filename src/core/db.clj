@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [get])
   (:require [clojure.edn :as edn]
             [clojure.pprint :refer [pprint]]
-            [core.data :as data]
+            [component.schema :as schema]
             [core.property :as property]
             [utils.core :refer [bind-root safe-get]]))
 
@@ -61,15 +61,15 @@
           m
           (keys m)))
 
-(defmulti edn->value (fn [data v]
-                       (when data  ; undefined-data-ks
-                         (data/type data))))
-(defmethod edn->value :default [_data v] v)
+(defmulti edn->value (fn [schema v]
+                       (when schema  ; undefined-data-ks
+                         (schema/type schema))))
+(defmethod edn->value :default [_schema v] v)
 
 (defn- build [property]
   (apply-kvs property
              (fn [k v]
-               (try (edn->value (try (data/component k)
+               (try (edn->value (try (schema/of k)
                                      (catch Throwable _t
                                        (swap! undefined-data-ks conj k)
                                        nil))
@@ -107,8 +107,8 @@
 (defmethod edn->value :one-to-many [_ property-ids]
   (map get property-ids))
 
-(defmethod data/schema :one-to-one [[_ property-type]]
+(defmethod schema/form :one-to-one [[_ property-type]]
   [:qualified-keyword {:namespace (property/type->id-namespace property-type)}])
 
-(defmethod data/schema :one-to-many [[_ property-type]]
+(defmethod schema/form :one-to-many [[_ property-type]]
   [:set [:qualified-keyword {:namespace (property/type->id-namespace property-type)}]])
