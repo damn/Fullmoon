@@ -43,14 +43,14 @@
                :frame-duration frame-duration
                :looping? looping?))
 
-(defmethod db/edn->value :data/animation [_ animation]
+(defmethod db/edn->value :schema/animation [_ animation]
   (edn->animation animation))
 
 (defn- tx-assoc-image-current-frame [eid animation]
   [:e/assoc eid :entity/image (current-frame animation)])
 
 (defc :entity/animation
-  {:data :data/animation
+  {:schema :schema/animation
    :let animation}
   (entity/create [_ eid]
     [(tx-assoc-image-current-frame eid animation)])

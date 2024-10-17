@@ -168,14 +168,14 @@
              (doseq [k ks
                      :let [attr-m (component/meta k)]]
                (println (str "* __" k "__ `" (get (:params attr-m) "tx/do!") "`"))
-               (when-let [data (:data attr-m)]
+               (when-let [data (:schema attr-m)]
                  (println (str "    * data: `" (pr-str data) "`")))
                (let [ks (descendants k)]
                  (when (seq ks)
                    (println "    * Descendants"))
                  (doseq [k ks]
                    (println "      *" k)
-                   (println (str "        * data: `" (pr-str (:data (component/meta k))) "`"))))))))))
+                   (println (str "        * data: `" (pr-str (:schema (component/meta k))) "`"))))))))))
 
 (defn- data-components []
   (sort (keys (methods data/schema))))

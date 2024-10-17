@@ -20,7 +20,7 @@
   [:effect.entity/damage (entity->melee-damage @source)])
 
 (defc :effect.entity/melee-damage
-  {:data :some}
+  {:schema :some}
   (info/text [_]
     (str "Damage based on entity strength."
          (when source
@@ -74,11 +74,11 @@
 (defn- damage->text [{[min-dmg max-dmg] :damage/min-max}]
   (str min-dmg "-" max-dmg " damage"))
 
-(defc :damage/min-max {:data :val-max})
+(defc :damage/min-max {:schema :val-max})
 
 (defc :effect.entity/damage
   {:let damage
-   :data [:map [:damage/min-max]]}
+   :schema [:map [:damage/min-max]]}
   (info/text [_]
     (if source
       (let [modified (->effective-damage damage @source)]
@@ -132,7 +132,7 @@
 (let [modifiers {:modifier/movement-speed {:op/mult -0.5}}
       duration 5]
   (defc :effect.entity/spiderweb
-    {:data :some}
+    {:schema :some}
     (info/text [_]
       "Spiderweb slows 50% for 5 seconds."
       ; modifiers same like item/modifiers has info-text
@@ -150,7 +150,7 @@
          [:e/assoc target :entity/temp-modifier {:modifiers modifiers
                                                  :counter (timer duration)}]]))))
 (defc :effect.entity/convert
-  {:data :some}
+  {:schema :some}
   (info/text [_]
     "Converts target to your side.")
 
@@ -164,7 +164,7 @@
      [:e/assoc target :entity/faction (faction/friend @source)]]))
 
 (defc :effect.entity/stun
-  {:data :pos
+  {:schema :pos
    :let duration}
   (info/text [_]
     (str "Stuns for " (readable-number duration) " seconds"))
@@ -176,7 +176,7 @@
     [[:tx/event target :stun duration]]))
 
 (defc :effect.entity/kill
-  {:data :some}
+  {:schema :some}
   (info/text [_] "Kills target")
 
   (effect/applicable? [_]

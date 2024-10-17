@@ -30,10 +30,10 @@
 
 (comment
  (keys (methods ->widget))
- (:enum :sound :number :default :string :one-to-many :image :one-to-one :boolean :map :data/animation)
+ (:enum :sound :number :default :string :one-to-many :image :one-to-one :boolean :map :schema/animation)
  )
 
-(defmethod ->widget :data/animation [_ animation]
+(defmethod ->widget :schema/animation [_ animation]
   (ui/table {:rows [(for [image (:frames animation)]
                       (ui/image->widget (g/edn->image image) {}))]
              :cell-defaults {:pad 1}}))

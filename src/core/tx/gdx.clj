@@ -8,7 +8,7 @@
             [core.tx :as tx]))
 
 (defc :tx/sound
-  {:data :sound}
+  {:schema :sound}
   (tx/do! [[_ file]]
     (assets/play-sound! file)
     nil))

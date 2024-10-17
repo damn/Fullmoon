@@ -31,10 +31,10 @@
        (into {})))
 
 (defc :item/slot
-  {:data (apply vector :enum (keys empty-inventory))})
+  {:schema (apply vector :enum (keys empty-inventory))})
 
 (defc :item/modifiers
-  {:data [:components-ns :modifier]
+  {:schema [:components-ns :modifier]
    :let modifiers}
   (info/text [_]
     (when (seq modifiers)
@@ -159,7 +159,7 @@
   (boolean (pickup-item eid item)))
 
 (defc :entity/inventory
-  {:data [:one-to-many :properties/items]}
+  {:schema [:one-to-many :properties/items]}
   (entity/create [[_ items] eid]
     (cons [:e/assoc eid :entity/inventory empty-inventory]
           (for [item items]

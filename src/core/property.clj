@@ -5,11 +5,11 @@
             [malli.core :as m]
             [malli.error :as me]))
 
-(defc :property/id {:data :qualified-keyword})
+(defc :property/id {:schema :qualified-keyword})
 
 (defn def [k {:keys [schema overview]}]
   (defc k
-    {:data [:map (conj schema :property/id)]
+    {:schema [:map (conj schema :property/id)]
      :overview overview}))
 
 (defn type->id-namespace [property-type]

@@ -3,6 +3,9 @@
   (:require [component.core :as component]
             [utils.core :refer [safe-get]]))
 
+(defn component [k]
+  (:schema (safe-get component/meta k)))
+
 (defn type [data]
   {:post [(keyword? %)]}
   (if (vector? data)
@@ -17,7 +20,7 @@
 ; Do not use functions itself as data-types ( to delete the defmethods below )
 ; * tooltip in editor will not work for function
 ; * cannot derive, have to list possible data types
-; Also decided not to prefix :data/ or :d/ because we pass through schema
+; Also decided not to prefix :schema/ or :d/ because we pass through schema
 ; some malli schemas like :boolean/:string/:enum/:qualified-keyword (?)
 ; :map too?
 
@@ -38,14 +41,11 @@
    [:file :string]
    [:sub-image-bounds {:optional true} [:vector {:size 4} nat-int?]]])
 
-(defmethod schema :data/animation [_]
+(defmethod schema :schema/animation [_]
   [:map {:closed true}
    [:frames :some] ; FIXME actually images
    [:frame-duration pos?]
    [:looping? :boolean]])
-
-(defn component [k]
-  (:data (safe-get component/meta k)))
 
 (defn- attribute-schema
   "Can define keys as just keywords or with schema-props like [:foo {:optional true}]."

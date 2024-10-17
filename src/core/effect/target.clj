@@ -8,7 +8,7 @@
             [world.core :as world]
             [world.entity :as entity]))
 
-(defc :entity-effects {:data [:components-ns :effect.entity]})
+(defc :entity-effects {:schema [:components-ns :effect.entity]})
 
 ; TODO applicable targets? e.g. projectiles/effect s/???item entiteis ??? check
 ; same code as in render entities on world view screens/world
@@ -32,7 +32,7 @@
  )
 
 (defc :effect/target-all
-  {:data [:map [:entity-effects]]
+  {:schema [:map [:entity-effects]]
    :let {:keys [entity-effects]}}
   (info/text [_]
     "[LIGHT_GRAY]All visible targets[]")
@@ -87,13 +87,13 @@
          (v/scale (entity/direction entity target*)
                   maxrange)))
 
-(defc :maxrange {:data :pos}
+(defc :maxrange {:schema :pos}
   (info/text [[_ maxrange]]
     (str "[LIGHT_GRAY]Range " maxrange " meters[]")))
 
 (defc :effect/target-entity
   {:let {:keys [maxrange entity-effects]}
-   :data [:map [:entity-effects :maxrange]]
+   :schema [:map [:entity-effects :maxrange]]
    :editor/doc "Applies entity-effects to a target if they are inside max-range & in line of sight.
                Cancels if line of sight is lost. Draws a red/yellow line wheter the target is inside the max range. If the effect is to be done and target out of range -> draws a hit-ground-effect on the max location."}
 

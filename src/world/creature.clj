@@ -40,33 +40,33 @@
 (g/def-markup-color "ITEM_GOLD" [0.84 0.8 0.52])
 
 (defc :property/pretty-name
-  {:data :string
+  {:schema :string
    :let value}
   (info/text [_]
     (str "[ITEM_GOLD]"value"[]")))
 
-(defc :body/width   {:data :pos})
-(defc :body/height  {:data :pos})
-(defc :body/flying? {:data :boolean})
+(defc :body/width   {:schema :pos})
+(defc :body/height  {:schema :pos})
+(defc :body/flying? {:schema :boolean})
 
 ; player doesn;t need aggro-range/reaction-time
 ; stats armor-pierce wrong place
 ; assert min body size from core.entity
 
 (defc :entity/body
-  {:data [:map [:body/width
+  {:schema [:map [:body/width
                 :body/height
                 :body/flying?]]})
 
 (defc :creature/species
-  {:data [:qualified-keyword {:namespace :species}]}
+  {:schema [:qualified-keyword {:namespace :species}]}
   (entity/->v [[_ species]]
     (str/capitalize (name species)))
   (info/text [[_ species]]
     (str "[LIGHT_GRAY]Creature - " species "[]")))
 
 (defc :creature/level
-  {:data :pos-int}
+  {:schema :pos-int}
   (info/text [[_ lvl]]
     (str "[GRAY]Level " lvl "[]")))
 
@@ -197,7 +197,7 @@
 ; new UI -> show creature body & then place
 ; >> but what if it is blocked the area during action-time ?? <<
 (defc :effect/spawn
-  {:data [:one-to-one :properties/creatures]
+  {:schema [:one-to-one :properties/creatures]
    :let {:keys [property/id]}}
   (effect/applicable? [_]
     (and (:entity/faction @effect/source)

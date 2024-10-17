@@ -70,7 +70,7 @@
        "[]"))
 
 (defc :entity/modifiers
-  {:data [:components-ns :modifier]
+  {:schema [:components-ns :modifier]
    :let modifiers}
   (entity/->v [_]
     (into {} (for [[modifier-k operations] modifiers]
