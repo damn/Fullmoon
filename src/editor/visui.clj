@@ -129,13 +129,14 @@
 (def ^:private value-widget? (comp vector? a/id))
 
 (defn- attribute-label [k m-schema]
-  (let [label (ui/label (name k))
+  (let [label (ui/label (str "[GRAY]:" (namespace k) "[]/" (name k)))
         delete-button (when (malli/optional? k m-schema)
-                        (ui/text-button "[SCARLET]delete[] " (fn [])))]
+                        (ui/text-button "[SCARLET]-[] " (fn [])))]
     (when-let [doc (:editor/doc (component/meta k))]
       (ui/add-tooltip! label doc))
     (ui/table {:cell-defaults {:pad 2}
-               :rows [[delete-button label]]})))
+               :rows [[{:actor delete-button :left? true}
+                       label]]})))
 
 (defn- component-row [[k v] m-schema]
   [{:actor (attribute-label k m-schema)
@@ -175,9 +176,18 @@
                                 [(ui/horizontal-separator-cell 1)])
                               [map-widget]])})))
 
-; * get values out
-; * add component-row (rebuild -> will be at right place)
-; * remove component-row
+; ✅ get values out
+; * 'add component' / 'remove component' => rebuild whole window
+; maybe also overview so changes are visible
+; also if changes made, ask if really cancel?
+; ! NICER UI - skin ! i should be like a game ? buttons look l shit
+; different icons etc colors for labels/attributes ?
+; namespace show greyed
+; one-to-many/one-to-one actor remove same remove color
+
+; editor is also limited by game gui world-width/world-height ... can adjust this ?
+; also animations not playing ...
+
 
 (comment
  (let [window (:property-editor-window (gdx.ui.stage-screen/stage-get))
@@ -201,7 +211,7 @@
 (defn property-editor-window [id]
   (let [props (safe-get db/db id)
         schema (schema/of (property/type props))
-        window (ui/window {:title "Edit Property"
+        window (ui/window {:title (str "[SKY]Property[]")
                            :id :property-editor-window
                            :modal? true
                            :close-button? true
@@ -211,11 +221,11 @@
         widget (widget/create schema props)
         save!   (apply-context-fn window #(db/update! (widget/value schema widget)))
         delete! (apply-context-fn window #(db/delete! id))]
-    (ui/add-rows! window [[(scroll-pane-cell [[{:actor (ui/text-button "[LIME]Save[] [LIGHT_GRAY](ENTER)[]" save!)
-                                                :left? true}
+    (ui/add-rows! window [[(scroll-pane-cell [[{:actor widget :colspan 2}]
+                                              [{:actor (ui/text-button "[LIME]Save[] [LIGHT_GRAY](ENTER)[]" save!)
+                                                :center? true}
                                                {:actor (ui/text-button "[SCARLET]Delete[]" delete!)
-                                                :right? true}]
-                                              [{:actor widget :colspan 2}]])]])
+                                                :center? true}]])]])
     (ui/add-actor! window (ui/actor {:act (fn []
                                             (when (key-just-pressed? :enter)
                                               (save!)))}))

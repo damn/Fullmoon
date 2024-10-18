@@ -15,6 +15,7 @@
       :pad-bottom (.padBottom cell (float arg))
       :width      (.width     cell (float arg))
       :height     (.height    cell (float arg))
+      :center?    (.center    cell)
       :right?     (.right     cell)
       :left?      (.left      cell))))
 

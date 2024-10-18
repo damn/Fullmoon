@@ -75,8 +75,13 @@
     [(ui/image-button (g/image file) (fn []))]
     #_[(ui/text-button file (fn []))]))
 
+(defn- big-image-button [image]
+  (ui/image-button (g/edn->image image)
+                   (fn on-clicked [])
+                   {:scale 2}))
+
 (defmethod widget/create :s/image [_ image]
-  (ui/image->widget (g/edn->image image) {})
+  (big-image-button image)
   #_(ui/image-button image
                      #(stage-add! (scrollable-choose-window (texture-rows)))
                      {:dimensions [96 96]})) ; x2  , not hardcoded here
@@ -85,7 +90,7 @@
 
 (defmethod widget/create :s/animation [_ animation]
   (ui/table {:rows [(for [image (:frames animation)]
-                      (ui/image->widget (g/edn->image image) {}))]
+                      (big-image-button image))]
              :cell-defaults {:pad 1}}))
 
 ;;
