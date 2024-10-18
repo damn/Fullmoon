@@ -19,15 +19,15 @@
     (name layer)
     (.getName ^MapLayer layer)))
 
+(defn- lookup [has-properties key]
+  (.get (m-props has-properties) (name key)))
+
 (comment
  ; could do this but slow -> fetch directly necessary properties
  (defn properties [obj]
    (let [^MapProperties ps (.getProperties obj)]
      (zipmap (map keyword (.getKeys ps)) (.getValues ps))))
  )
-
-(defn- lookup [has-properties key]
-  (.get (m-props has-properties) (name key)))
 
 (extend-protocol HasProperties
   TiledMap

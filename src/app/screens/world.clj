@@ -28,6 +28,7 @@
             world.entity.line
             world.entity.movement
             world.entity.string-effect
+            world.effect.damage
             world.effect.entity
             world.effect.target
             world.entity.stats))

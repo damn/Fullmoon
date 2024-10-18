@@ -11,22 +11,14 @@
          "ui/opts"
          "ui/group"))
 
-#_(defn- add-window-close-button [^Window window]
-    (.add (.getTitleTable window)
-          (text-button "x" #(.setVisible window false)))
-    window)
-
-(defn button-group
-  "https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/scenes/scene2d/ui/ButtonGroup.html"
-  [{:keys [max-check-count min-check-count]}]
+(defn button-group [{:keys [max-check-count min-check-count]}]
   (let [bg (ButtonGroup.)]
     (.setMaxCheckCount bg max-check-count)
     (.setMinCheckCount bg min-check-count)
     bg))
 
 (defn check-box
-  "on-clicked is a fn of one arg, taking the current isChecked state
-  [com.kotcrab.vis.ui.widget.VisCheckBox](https://www.javadoc.io/static/com.kotcrab.vis/vis-ui/1.5.3/com/kotcrab/vis/ui/widget/VisCheckBox.html)"
+  "on-clicked is a fn of one arg, taking the current isChecked state"
   [text on-clicked checked?]
   (let [^Button button (VisCheckBox. ^String text)]
     (.setChecked button checked?)
@@ -135,7 +127,6 @@
 (defn image-button
   ([image on-clicked]
    (image-button image on-clicked {}))
-
   ([{:keys [^TextureRegion texture-region]} on-clicked {:keys [scale]}]
    (let [drawable (TextureRegionDrawable. ^TextureRegion texture-region)
          button (VisImageButton. drawable)]

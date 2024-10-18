@@ -78,17 +78,14 @@ direction keys: move")
 (defn- adjust-zoom [camera by] ; DRY context.game
   (🎥/set-zoom! camera (max 0.1 (+ (🎥/zoom camera) by))))
 
-; TODO movement-speed scales with zoom value for big maps useful
 (def ^:private camera-movement-speed 1)
 (def ^:private zoom-speed 0.1)
 
 ; TODO textfield takes control !
 ; TODO PLUS symbol shift & = symbol on keyboard not registered
 (defn- camera-controls [camera]
-  (when (key-pressed? :keys/shift-left)
-    (adjust-zoom camera    zoom-speed))
-  (when (key-pressed? :keys/minus)
-    (adjust-zoom camera (- zoom-speed)))
+  (when (key-pressed? :keys/shift-left) (adjust-zoom camera    zoom-speed))
+  (when (key-pressed? :keys/minus)      (adjust-zoom camera (- zoom-speed)))
   (let [apply-position (fn [idx f]
                          (🎥/set-position! camera
                                            (update (🎥/position camera)
@@ -98,10 +95,6 @@ direction keys: move")
     (if (key-pressed? :keys/right) (apply-position 0 +))
     (if (key-pressed? :keys/up)    (apply-position 1 +))
     (if (key-pressed? :keys/down)  (apply-position 1 -))))
-
-#_(def ^:private show-area-level-colors true)
-; TODO unused
-; TODO also draw numbers of area levels big as module size...
 
 (defn- render-on-map []
   (let [{:keys [tiled-map
@@ -114,7 +107,6 @@ direction keys: move")
     (g/draw-rectangle x y 1 1 :white)
     (when start-position
       (g/draw-filled-rectangle (start-position 0) (start-position 1) 1 1 [1 0 1 0.9]))
-    ; TODO move down to other doseq and make button
     (when show-movement-properties
       (doseq [[x y] visible-tiles
               :let [prop (movement-property tiled-map [x y])]]
@@ -145,9 +137,7 @@ direction keys: move")
 (defn ->generate-map-window [level-id]
   (ui/window {:title "Properties"
               :cell-defaults {:pad 10}
-              :rows [[(ui/label (with-out-str
-                                (clojure.pprint/pprint
-                                 (db/get level-id))))]
+              :rows [[(ui/label (with-out-str (clojure.pprint/pprint (db/get level-id))))]
                      [(ui/text-button "Generate" #(try (generate-screen-ctx (db/get level-id))
                                                        (catch Throwable t
                                                          (error-window! t)
