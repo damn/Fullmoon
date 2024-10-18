@@ -14,14 +14,41 @@
 (defn- defmodifier [k operations]
   (defc* k {:schema [:s/map-optional operations]}))
 
-(defn- stat-k->modifier-k [k]
-  (keyword "modifier" (name k)))
+(defn-  stat-k->effect-k   [k] (keyword "effect.entity" (name k)))
+(defn effect-k->stat-k     [k] (keyword "stats"         (name k)))
+(defn-  stat-k->modifier-k [k] (keyword "modifier"      (name k)))
 
-(defn- stat-k->effect-k [k]
-  (keyword "effect.entity" (name k)))
+(defn entity-stat
+  "Calculating value of the stat w. modifiers"
+  [entity stat-k]
+  (when-let [base-value (stat-k (:entity/stats entity))]
+    (->modified-value entity (stat-k->modifier-k stat-k) base-value)))
 
-(defn effect-k->stat-k [effect-k]
-  (keyword "stats" (name effect-k)))
+; is called :base/stat-effect so it doesn't show up in (:schema [:s/components-ns :effect.entity]) list in editor
+; for :skill/effects
+(defc :base/stat-effect
+  (info/text [[k operations]]
+    (str/join "\n"
+              (for [operation operations]
+                (str (op/info-text operation) " " (k->pretty-name k)))))
+
+  (effect/applicable? [[k _]]
+    (and effect/target
+         (entity-stat @effect/target (effect-k->stat-k k))))
+
+  (effect/useful? [_]
+    true)
+
+  (tx/do! [[effect-k operations]]
+    (let [stat-k (effect-k->stat-k effect-k)]
+      (when-let [effective-value (entity-stat @effect/target stat-k)]
+        [[:e/assoc-in effect/target [:entity/stats stat-k]
+          ; TODO similar to components.entity.modifiers/->modified-value
+          ; but operations not sort-by op/order ??
+          ; op-apply reuse fn over operations to get effectiv value
+          (reduce (fn [value operation] (op/apply operation value))
+                  effective-value
+                  operations)]]))))
 
 (defn defstat [k {:keys [modifier-ops effect-ops] :as attr-m}]
   (defc* k attr-m)
@@ -31,12 +58,6 @@
     (let [effect-k (stat-k->effect-k k)]
       (defc* effect-k {:schema [:s/map-optional effect-ops]})
       (derive effect-k :base/stat-effect))))
-
-(defn entity-stat
-  "Calculating value of the stat w. modifiers"
-  [entity stat-k]
-  (when-let [base-value (stat-k (:entity/stats entity))]
-    (->modified-value entity (stat-k->modifier-k stat-k) base-value)))
 
 ; TODO needs to be there for each npc - make non-removable (added to all creatures)
 ; and no need at created player (npc controller component?)
@@ -158,23 +179,21 @@
                     :when value]
                 (str (k->pretty-name stat-k) ": " value)))))
 
-; TODO mana optional? / armor-save / armor-pierce (anyway wrong here)
-; cast/attack-speed optional ?
 (defc :entity/stats
   {:schema [:s/map [:stats/hp
-                :stats/movement-speed
-                :stats/aggro-range
-                :stats/reaction-time
-                [:stats/mana          {:optional true}]
-                [:stats/strength      {:optional true}]
-                [:stats/cast-speed    {:optional true}]
-                [:stats/attack-speed  {:optional true}]
-                [:stats/armor-save    {:optional true}]
-                [:stats/armor-pierce  {:optional true}]]]
+                    :stats/movement-speed
+                    :stats/aggro-range
+                    :stats/reaction-time
+                    [:stats/mana          {:optional true}]
+                    [:stats/strength      {:optional true}]
+                    [:stats/cast-speed    {:optional true}]
+                    [:stats/attack-speed  {:optional true}]
+                    [:stats/armor-save    {:optional true}]
+                    [:stats/armor-pierce  {:optional true}]]]
    :let stats}
   (entity/->v [_]
     (-> stats
-        (update :stats/hp (fn [hp] (when hp [hp hp])))
+        (update :stats/hp   (fn [hp  ] (when hp   [hp   hp])))
         (update :stats/mana (fn [mana] (when mana [mana mana])))))
 
   (info/text [_]
@@ -201,29 +220,3 @@
 ; so can make positiive modifeirs green , negative red....
 (defmodifier :modifier/damage-receive [:op/max-inc :op/max-mult])
 (defmodifier :modifier/damage-deal [:op/val-inc :op/val-mult :op/max-inc :op/max-mult])
-
-; is called :base/stat-effect so it doesn't show up in (:schema [:s/components-ns :effect.entity]) list in editor
-; for :skill/effects
-(defc :base/stat-effect
-  (info/text [[k operations]]
-    (str/join "\n"
-              (for [operation operations]
-                (str (op/info-text operation) " " (k->pretty-name k)))))
-
-  (effect/applicable? [[k _]]
-    (and effect/target
-         (entity-stat @effect/target (effect-k->stat-k k))))
-
-  (effect/useful? [_]
-    true)
-
-  (tx/do! [[effect-k operations]]
-    (let [stat-k (effect-k->stat-k effect-k)]
-      (when-let [effective-value (entity-stat @effect/target stat-k)]
-        [[:e/assoc-in effect/target [:entity/stats stat-k]
-          ; TODO similar to components.entity.modifiers/->modified-value
-          ; but operations not sort-by op/order ??
-          ; op-apply reuse fn over operations to get effectiv value
-          (reduce (fn [value operation] (op/apply operation value))
-                  effective-value
-                  operations)]]))))
