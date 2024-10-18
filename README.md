@@ -2,7 +2,11 @@
 
 Based on [clojure](https://clojure.org/) & [libgdx](https://libgdx.com/).
 
-Featuring a property editor for creatures, skills, items, effects, modifiers, audiovisuals, worlds and app-settings.
+Featuring a property editor for creatures, skills, items, effects, modifiers, and audiovisuals..
+
+## Video
+
+[![YouTube](http://i.ytimg.com/vi/FJC_aCXQv58/hqdefault.jpg)](https://www.youtube.com/watch?v=FJC_aCXQv58)
 
 ## Screenshots
 
@@ -12,19 +16,10 @@ Featuring a property editor for creatures, skills, items, effects, modifiers, au
 </details>
 
 <details>
-  <summary>Skills & Effects</summary>
-  <img width="1440" alt="skilleditor" src="https://github.com/user-attachments/assets/daf5e3b4-ab4b-4226-9e65-cd7966b33336">
-</details>
+  <summary>Editor</summary>
+<img width="750" alt="reddragoneditor" src="https://github.com/user-attachments/assets/62b91a90-784e-4948-a89f-7d18fefce142">
 
 
-<details>
-  <summary>Items & Modifiers</summary>
-<img width="1440" alt="itemeditormodifier" src="https://github.com/user-attachments/assets/ec8a96ab-a3d5-45a5-994b-c5d01d3f99a0">
-</details>
-
-<details>
-  <summary>Creatures</summary>
-<img width="1438" alt="creatureeditor" src="https://github.com/user-attachments/assets/bbcb1d3e-983a-463e-9795-a081fe160511">
 </details>
 
 ## Levels
@@ -55,7 +50,7 @@ You need to have [leiningen](https://leiningen.org/) installed.
 
 </details>
 
-## [API Docs](https://damn.github.io/Fullmoon/)
+## [API Docs](https://damn.github.io/moon/)
 
 ## License
 
