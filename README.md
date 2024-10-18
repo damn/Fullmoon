@@ -4,6 +4,10 @@ Based on [clojure](https://clojure.org/) & [libgdx](https://libgdx.com/).
 
 Featuring a property editor for creatures, skills, items, effects, modifiers, and audiovisuals..
 
+## Video
+
+[![YouTube](http://i.ytimg.com/vi/FJC_aCXQv58/hqdefault.jpg)](https://www.youtube.com/watch?v=FJC_aCXQv58)
+
 ## Screenshots
 
 <details>
