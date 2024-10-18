@@ -1,14 +1,17 @@
 (ns world.entity.modifiers
-  (:require [clojure.gdx.graphics :as g]
-            [clojure.string :as str]
-            [core.component :refer [defc do!] :as component]
-            [core.operation :as op]
-            [utils.core :refer [remove-one k->pretty-name]]))
+  (:require [clojure.string :as str]
+            [component.core :refer [defc]]
+            [component.info :as info]
+            [component.operation :as op]
+            [component.tx :as tx]
+            [gdx.graphics :as g]
+            [utils.core :refer [remove-one k->pretty-name]]
+            [world.entity :as entity]))
 
-(defn- txs-update-modifiers [entity modifiers f]
+(defn- txs-update-modifiers [eid modifiers f]
   (for [[modifier-k operations] modifiers
         [operation-k value] operations]
-    [:e/update-in entity [:entity/modifiers modifier-k operation-k] (f value)]))
+    [:e/update-in eid [:entity/modifiers modifier-k operation-k] (f value)]))
 
 (defn- conj-value [value]
   (fn [values]
@@ -20,12 +23,12 @@
     (remove-one values value)))
 
 (defc :tx/apply-modifiers
-  (do! [[_ entity modifiers]]
-    (txs-update-modifiers entity modifiers conj-value)))
+  (tx/do! [[_ eid modifiers]]
+    (txs-update-modifiers eid modifiers conj-value)))
 
 (defc :tx/reverse-modifiers
-  (do! [[_ entity modifiers]]
-    (txs-update-modifiers entity modifiers remove-value)))
+  (tx/do! [[_ eid modifiers]]
+    (txs-update-modifiers eid modifiers remove-value)))
 
 (comment
  (= (txs-update-modifiers :entity
@@ -67,14 +70,14 @@
        "[]"))
 
 (defc :entity/modifiers
-  {:data [:components-ns :modifier]
+  {:schema [:s/components-ns :modifier]
    :let modifiers}
-  (component/create [_]
+  (entity/->v [_]
     (into {} (for [[modifier-k operations] modifiers]
                [modifier-k (into {} (for [[operation-k value] operations]
                                       [operation-k [value]]))])))
 
-  (component/info [_]
+  (info/text [_]
     (let [modifiers (sum-operation-values modifiers)]
       (when (seq modifiers)
         (mod-info-text modifiers)))))

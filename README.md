@@ -2,7 +2,11 @@
 
 Based on [clojure](https://clojure.org/) & [libgdx](https://libgdx.com/).
 
-Featuring a property editor for creatures, skills, items, effects, modifiers, audiovisuals, worlds and app-settings.
+Featuring a property editor for creatures, skills, items, effects, modifiers, and audiovisuals..
+
+## Video
+
+[![YouTube](http://i.ytimg.com/vi/FJC_aCXQv58/hqdefault.jpg)](https://www.youtube.com/watch?v=FJC_aCXQv58)
 
 ## Screenshots
 
@@ -12,19 +16,10 @@ Featuring a property editor for creatures, skills, items, effects, modifiers, au
 </details>
 
 <details>
-  <summary>Skills & Effects</summary>
-  <img width="1440" alt="skilleditor" src="https://github.com/user-attachments/assets/daf5e3b4-ab4b-4226-9e65-cd7966b33336">
-</details>
+  <summary>Editor</summary>
+<img width="750" alt="reddragoneditor" src="https://github.com/user-attachments/assets/62b91a90-784e-4948-a89f-7d18fefce142">
 
 
-<details>
-  <summary>Items & Modifiers</summary>
-<img width="1440" alt="itemeditormodifier" src="https://github.com/user-attachments/assets/ec8a96ab-a3d5-45a5-994b-c5d01d3f99a0">
-</details>
-
-<details>
-  <summary>Creatures</summary>
-<img width="1438" alt="creatureeditor" src="https://github.com/user-attachments/assets/bbcb1d3e-983a-463e-9795-a081fe160511">
 </details>
 
 ## Levels
@@ -50,8 +45,8 @@ You need to have [leiningen](https://leiningen.org/) installed.
 
 * NREPL-Server
 * On application close (ESC in the main menu), clojure.tools.namespace will do  refresh on any changed files and restart the app.
-* On any error the JVM does not have to be restarted, you can fix the error and call `clojure.gdx.dev/restart!`
-    * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'clojure.gdx.dev)(restart!))`
+* On any error the JVM does not have to be restarted, you can fix the error and call `gdx.dev/restart!`
+    * I have bound it on my VIM to F5 with: `nmap <F5> :Eval (do (in-ns 'gdx.dev)(restart!))`
 
 </details>
 

@@ -1,6 +1,6 @@
 (def libgdx-version "1.12.1")
 
-(defproject full-moon "-SNAPSHOT"
+(defproject moon "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.badlogicgames.gdx/gdx                   ~libgdx-version]
@@ -30,8 +30,9 @@
 
   :omit-source true
 
-  :jvm-opts ["-Xms256m"
-             "-Xmx256m"
+  ; because dev.browser 512...
+  :jvm-opts ["-Xms512m"
+             "-Xmx512m"
              "-Dvisualvm.display.name=CDQ"
              "-XX:-OmitStackTraceInFastThrow" ; disappeared stacktraces
              ; for visualvm profiling
@@ -41,7 +42,7 @@
              ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
 
-  :codox {:source-uri "https://github.com/damn/Fullmoon/blob/main/{filepath}#L{line}"
+  :codox {:source-uri "https://github.com/damn/moon/blob/main/{filepath}#L{line}"
           :metadata {:doc/format :markdown}}
 
   ; this from engine, what purpose?
@@ -52,16 +53,10 @@
                 ;*assert* false
                 *print-level* 3}
 
-  :aliases {"dev" ["run" "-m" "clojure.gdx.dev" "core.app"]}
+  :profiles {:javafx  {:aot [editor.javafx dev.browser]}
+             :uberjar {:aot [app.start]}}
 
-  :profiles {:tool {:aot [core.tool]}}
-
-  ; https://github.com/clojure/tools.namespace?tab=readme-ov-file#warnings-and-potential-problems
-  ; AOT-compilation: Reloading code does not work in the presence of AOT-compiled namespaces. If you are using AOT-compilation in your project, make sure it is disabled and you have deleted any AOT-compiled .class files before starting a REPL development session. (In Leiningen, run lein clean.)
-  ;:aot [core.tool]
-
-
-  :main core.app)
+  :main app.start)
 
 ; * Notes
 

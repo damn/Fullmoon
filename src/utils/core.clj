@@ -96,3 +96,39 @@
 
 (defn k->pretty-name [k]
   (str/capitalize (name k)))
+
+(defn assoc-ks [m ks v]
+  (if (empty? ks)
+    m
+    (apply assoc m (interleave ks (repeat v)))))
+
+(defn truncate [s limit]
+  (if (> (count s) limit)
+    (str (subs s 0 limit) "...")
+    s))
+
+(defn ->edn-str [v]
+  (binding [*print-level* nil]
+    (pr-str v)))
+
+(def dev-mode? (= (System/getenv "DEV_MODE") "true"))
+
+(defn indexed ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence of [index, item] pairs, where items come
+ from 's' and indexes count up from zero.
+
+ (indexed '(a b c d)) => ([0 a] [1 b] [2 c] [3 d])"
+  [s]
+  (map vector (iterate inc 0) s))
+
+(defn utils-positions ; from clojure.contrib.seq-utils (discontinued in 1.3)
+  "Returns a lazy sequence containing the positions at which pred
+	 is true for items in coll."
+  [pred coll]
+  (for [[idx elt] (indexed coll) :when (pred elt)] idx))
+
+(defmacro when-seq [[aseq bind] & body]
+  `(let [~aseq ~bind]
+     (when (seq ~aseq)
+       ~@body)))
+
