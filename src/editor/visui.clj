@@ -20,36 +20,9 @@
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
 
-; TODO items dont refresh on clicking tab -!
 ; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
-; TODO save button show if changes made, otherwise disabled?
-; when closing (lose changes? yes no)
-; TODO overview table not refreshed after changes in property editor window
-; * don't show button if no components to add anymore (use remaining-ks)
-; * what is missing to remove the button once the last optional key was added (not so important)
-; maybe check java property/game/db/editors .... unity? rpgmaker? gamemaker?
-
-(def ^:private property-k-sort-order
-  [:property/id
-   :property/pretty-name
-   :app/lwjgl3
-   :entity/image
-   :entity/animation
-   :creature/species
-   :creature/level
-   :entity/body
-   :item/slot
-   :projectile/speed
-   :projectile/max-range
-   :projectile/piercing?
-   :skill/action-time-modifier-key
-   :skill/action-time
-   :skill/start-action-sound
-   :skill/cost
-   :skill/cooldown])
-
-(defn- component-order [[k _v]]
-  (or (index-of k property-k-sort-order) 99))
+; -> reuse :s/map
+; TODO overview table not refreshed after changes in properties
 
 (declare ->component-widget
          attribute-widget-group->data)
@@ -145,6 +118,28 @@
 
 (defn- attribute-widget-table->value-widget [table]
   (-> table ui/children last))
+
+(def ^:private property-k-sort-order
+  [:property/id
+   :property/pretty-name
+   :app/lwjgl3
+   :entity/image
+   :entity/animation
+   :creature/species
+   :creature/level
+   :entity/body
+   :item/slot
+   :projectile/speed
+   :projectile/max-range
+   :projectile/piercing?
+   :skill/action-time-modifier-key
+   :skill/action-time
+   :skill/start-action-sound
+   :skill/cost
+   :skill/cooldown])
+
+(defn- component-order [[k _v]]
+  (or (index-of k property-k-sort-order) 99))
 
 (defn- ->component-widgets [schema props]
   (let [first-row? (atom true)
