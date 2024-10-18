@@ -50,7 +50,7 @@ You need to have [leiningen](https://leiningen.org/) installed.
 
 </details>
 
-## [API Docs](https://damn.github.io/Fullmoon/)
+## [API Docs](https://damn.github.io/moon/)
 
 ## License
 
