@@ -1,6 +1,7 @@
 (ns ^:no-doc editor.javafx
   (:require [clojure.java.io :as io]
-            [dev.javafx :as fx])
+            [dev.javafx :as fx]
+            utils.core)
   (:import (javafx.event EventHandler)
            (javafx.scene.control Button TreeItem TreeView)
            (javafx.scene.image Image ImageView)
@@ -8,16 +9,31 @@
            (javafx.scene Scene Node))
   #_(:gen-class :extends javafx.application.Application))
 
+(comment
+ ; * remove comment at :gen-class
+ ; * lein with-profile javafx repl
+ ; * lein clean before doing `dev` again (ns refresh doesnt work with aot)
+ (db/load! "properties.edn")
+ (fx/init)
+ (fx/run (properties-tabs))
+
+ )
+
+(defn -start [app stage]
+  (def stage stage))
+
 (import javafx.scene.control.TabPane
         javafx.scene.control.TabPane$TabClosingPolicy
         javafx.scene.control.Tab
         javafx.scene.control.Label
+        javafx.scene.control.TextField
         javafx.scene.layout.VBox)
 
 (import javafx.geometry.Insets)
 (import javafx.scene.image.ImageView)
 (import javafx.scene.image.Image)
 (import javafx.scene.layout.FlowPane)
+(import javafx.scene.layout.GridPane)
 
 (import javafx.geometry.Rectangle2D)
 
@@ -27,11 +43,20 @@
 (import javafx.stage.Stage)
 
 (defn- property-editor-window [property]
-  (let [scene (Scene. (FlowPane.) 450 450)
-        stage (doto (Stage.)
-                (.setTitle (name (:property/id property)))
-                (.setScene scene)
-                .show)]))
+  (let [grid (doto (GridPane.)
+               (.setPadding (Insets. 0 10 0 10))
+               (.setVgap 10)
+               (.setHgap 10))
+        scene (Scene. grid 450 450)
+        rows (atom -1)]
+    (doseq [[k v] property
+            :let [row (swap! rows inc)]]
+      (.add grid (Label. (str k)) 0 row)
+      (.add grid (TextField. (utils.core/->edn-str v)) 1 row))
+    (doto (Stage.)
+      (.setTitle (name (:property/id property)))
+      (.setScene scene)
+      .show)))
 
 (require '[component.property :as property])
 (require '[component.db :as db])
@@ -77,8 +102,6 @@
       (.add (.getChildren flow) (property->button property)))
     flow))
 
-(declare stage)
-
 (defn- properties-tabs []
   (let [tab-pane (doto (TabPane.)
                    (.setTabClosingPolicy TabPane$TabClosingPolicy/UNAVAILABLE))]
@@ -91,17 +114,3 @@
       (.setScene stage scene))
     (.setTitle stage "JavaFX App")
     (.show stage)))
-
-(defn -start [app the-stage]
-  (def stage the-stage)
-  #_(tool-tree "src/"))
-
-(comment
- ; lein with-profile tool repl
- ; lein clean before doing `dev` again (ns refresh doesnt work with aot)
-
- (db/load! "properties.edn")
- (fx/init)
- (fx/run (properties-tabs))
-
- )

@@ -13,10 +13,8 @@
  ; * remove comment at :gen-class
  ; * lein with-profile javafx repl
  ; * lein clean before doing `dev` again (ns refresh doesnt work with aot)
- ; * this:
- (fx/init )
+ (fx/init)
  (fx/run (tool-tree "src/"))
- ;
 
  (require '[rewrite-clj.parser :as p])
  (p/parse-file-all "src/core/stat.clj")
