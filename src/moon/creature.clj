@@ -10,6 +10,7 @@
             [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge tile->middle]]
             [world.core :as world]
+            [moon.creature.fsms :as fsms]
             moon.creature.active
             moon.creature.stunned
             moon.creature.npc.dead
@@ -105,60 +106,6 @@
             (assoc :entity/destroy-audiovisual :audiovisuals/creature-die)
             (safe-merge components))]])))
 
-(comment
- ; graphviz required in path
- (fsm/show-fsm player-fsm)
-
- )
-
-(fsm/defsm-inc ^:private player-fsm
-  [[:player-idle
-    :kill -> :player-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :pickup-item -> :player-item-on-cursor
-    :movement-input -> :player-moving]
-   [:player-moving
-    :kill -> :player-dead
-    :stun -> :stunned
-    :no-movement-input -> :player-idle]
-   [:active-skill
-    :kill -> :player-dead
-    :stun -> :stunned
-    :action-done -> :player-idle]
-   [:stunned
-    :kill -> :player-dead
-    :effect-wears-off -> :player-idle]
-   [:player-item-on-cursor
-    :kill -> :player-dead
-    :stun -> :stunned
-    :drop-item -> :player-idle
-    :dropped-item -> :player-idle]
-   [:player-dead]])
-
-(fsm/defsm-inc ^:private npc-fsm
-  [[:npc-sleeping
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :alert -> :npc-idle]
-   [:npc-idle
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :start-action -> :active-skill
-    :movement-direction -> :npc-moving]
-   [:npc-moving
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :timer-finished -> :npc-idle]
-   [:active-skill
-    :kill -> :npc-dead
-    :stun -> :stunned
-    :action-done -> :npc-idle]
-   [:stunned
-    :kill -> :npc-dead
-    :effect-wears-off -> :npc-idle]
-   [:npc-dead]])
-
 (def ^:private ^:dbg-flag spawn-enemies? true)
 
 ; player-creature needs mana & inventory
@@ -166,7 +113,7 @@
 (defn spawn-all [{:keys [tiled-map start-position]}]
   (tx/do-all (for [creature (cons {:position start-position
                                    :creature-id :creatures/vampire
-                                   :components {:entity/state {:fsm player-fsm
+                                   :components {:entity/state {:fsm fsms/player
                                                                :initial-state :player-idle}
                                                 :entity/faction :good
                                                 :entity/player? true
@@ -177,7 +124,7 @@
                                     (for [[position creature-id] (tiled/positions-with-property tiled-map :creatures :id)]
                                       {:position position
                                        :creature-id (keyword creature-id)
-                                       :components {:entity/state {:fsm npc-fsm
+                                       :components {:entity/state {:fsm fsms/npc
                                                                    :initial-state :npc-sleeping}
                                                     :entity/faction :evil}})))]
                [:tx/creature (update creature :position tile->middle)])))
@@ -194,6 +141,6 @@
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position effect/target-position
                     :creature-id id ; already properties/get called through one-to-one, now called again.
-                    :components {:entity/state {:fsm npc-fsm
+                    :components {:entity/state {:fsm fsms/npcs
                                                 :initial-state :npc-idle}
                                  :entity/faction (:entity/faction @effect/source)}}]]))
