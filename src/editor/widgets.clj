@@ -15,6 +15,8 @@
             [utils.core :refer [truncate ->edn-str]])
   (:load "widgets_relationships"))
 
+(def ^:private textfield->text com.kotcrab.vis.ui.widget.VisTextField/.getText)
+
 (defn- add-schema-tooltip! [widget schema]
   (ui/add-tooltip! widget (str schema))
   widget)
@@ -25,7 +27,7 @@
   (ui/label (truncate (->edn-str v) 60)))
 
 (defmethod widget/value :default [_ widget]
-  (a/id widget))
+  ((a/id widget) 1))
 
 ;;
 
@@ -42,7 +44,7 @@
   (add-schema-tooltip! (ui/text-field v {}) schema))
 
 (defmethod widget/value :string [_ widget]
-  (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget))
+  (textfield->text widget))
 
 ;;
 
@@ -50,7 +52,7 @@
   (add-schema-tooltip! (ui/text-field (->edn-str v) {}) schema))
 
 (defmethod widget/value number? [_ widget]
-  (edn/read-string (.getText ^com.kotcrab.vis.ui.widget.VisTextField widget)))
+  (edn/read-string (textfield->text widget)))
 
 ;;
 

@@ -57,17 +57,13 @@
 
 ;;
 
-(defn- attribute-label [k]
-  (let [label (ui/label (name k))]
-    (when-let [doc (:editor/doc (component/meta k))]
-      (ui/add-tooltip! label doc))
-    label))
-
 ;;
 
 ;; =>
 ; https://libgdx.com/wiki/graphics/2d/scene2d/table#inserting-cells
 ; => just rebuild the table/window !?
+
+(declare attribute-label)
 
 (defn- kv-widget [[k v] m-schema & {:keys [horizontal-sep?]}]
   (let [value-widget (widget/create (schema/of k) v)
@@ -125,23 +121,46 @@
 (defn- map-widget [m-schema props]
   (ui/vertical-group (kv-widgets m-schema props)))
 
-(defn- component-row [[k v]]
-  [{:actor (attribute-label k)
+(defn- value-widget [[k v]]
+  (let [widget (widget/create (schema/of k) v)]
+    (.setUserObject widget [k v])
+    widget))
+
+(def ^:private value-widget? (comp vector? a/id))
+
+(defn- attribute-label [k m-schema]
+  (let [label (ui/label (name k))
+        delete-button (when (malli/optional? k m-schema)
+                        (ui/text-button "[SCARLET]delete[] " (fn [])))]
+    (when-let [doc (:editor/doc (component/meta k))]
+      (ui/add-tooltip! label doc))
+    (ui/table {:cell-defaults {:pad 2}
+               :rows [[delete-button label]]})))
+
+(defn- component-row [[k v] m-schema]
+  [{:actor (attribute-label k m-schema)
     :right? true}
    (ui/vertical-separator-cell)
-   {:actor (widget/create (schema/of k) v)
+   {:actor (value-widget [k v])
     :left? true}])
 
 (defn- horiz-sep []
   [(ui/horizontal-separator-cell 3)])
+
+(comment
+ (when (malli/optional? k m-schema)
+   (ui/text-button "-" #(let [window (ui/find-ancestor-window table)]
+                          (a/remove! table)
+                          (.pack window)))))
 
 (defn- interpose-f [f coll]
   (drop 1 (interleave (repeatedly f) coll)))
 
 (defmethod widget/create :s/map [schema m]
   (ui/table {:cell-defaults {:pad 5}
+             :id :map-widget
              :rows (interpose-f horiz-sep
-                                (map component-row
+                                (map #(component-row % (schema/form schema))
                                      (sort-by component-order m)))})
 
   #_(let [m-schema (schema/form schema)
@@ -156,8 +175,22 @@
                                 [(ui/horizontal-separator-cell 1)])
                               [map-widget]])})))
 
+; * get values out
+; * add component-row (rebuild -> will be at right place)
+; * remove component-row
+
+(comment
+ (let [window (:property-editor-window (gdx.ui.stage-screen/stage-get))
+       table (.findActor (:scroll-pane window) "scroll-pane-table")
+       map-widget (:map-widget table)]
+   (widget/value :s/map map-widget))
+ )
+
 (defmethod widget/value :s/map [_ table]
-  #_(map-widget->data (:map-widget table)))
+  (into {}
+        (for [widget (filter value-widget? (ui/children table))
+              :let [[k _] (a/id widget)]]
+          [k (widget/value (schema/of k) widget)])))
 
 (defn- apply-context-fn [window f]
   #(try (f)
@@ -169,6 +202,7 @@
   (let [props (safe-get db/db id)
         schema (schema/of (property/type props))
         window (ui/window {:title "Edit Property"
+                           :id :property-editor-window
                            :modal? true
                            :close-button? true
                            :center? true
@@ -177,9 +211,11 @@
         widget (widget/create schema props)
         save!   (apply-context-fn window #(db/update! (widget/value schema widget)))
         delete! (apply-context-fn window #(db/delete! id))]
-    (ui/add-rows! window [[(scroll-pane-cell [[{:actor widget :colspan 2}]
-                                              [(ui/text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
-                                               (ui/text-button "Delete" delete!)]])]])
+    (ui/add-rows! window [[(scroll-pane-cell [[{:actor (ui/text-button "[LIME]Save[] [LIGHT_GRAY](ENTER)[]" save!)
+                                                :left? true}
+                                               {:actor (ui/text-button "[SCARLET]Delete[]" delete!)
+                                                :right? true}]
+                                              [{:actor widget :colspan 2}]])]])
     (ui/add-actor! window (ui/actor {:act (fn []
                                             (when (key-just-pressed? :enter)
                                               (save!)))}))

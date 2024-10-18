@@ -78,6 +78,7 @@
 
 (defn scroll-pane [actor]
   (let [scroll-pane (VisScrollPane. actor)]
+    (a/set-id! scroll-pane :scroll-pane)
     (.setFlickScroll scroll-pane false)
     (.setFadeScrollBars scroll-pane false)
     scroll-pane))
