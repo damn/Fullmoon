@@ -46,3 +46,14 @@
 (defn world-camera          [] (vp/camera       (world-viewport)))
 (defn world-viewport-width  [] (vp/world-width  (world-viewport)))
 (defn world-viewport-height [] (vp/world-height (world-viewport)))
+
+(defn- render-view! [{:keys [viewport unit-scale]} draw-fn]
+  (batch/draw-on batch
+                 viewport
+                 (fn []
+                   (with-shape-line-width unit-scale
+                     #(binding [*unit-scale* unit-scale]
+                        (draw-fn))))))
+
+(defn render-gui-view!   [render-fn] (render-view! gui-view render-fn))
+(defn render-world-view! [render-fn] (render-view! world-view render-fn))
