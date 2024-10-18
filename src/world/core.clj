@@ -91,7 +91,7 @@
     (grid-entity-position-changed! eid)
    nil))
 
-(def ^:private ^:dbg-flag pausing? true)
+(def ^:private ^:dbg-flag pausing? false)
 
 (defn- player-state-pause-game? [] (entity-state/pause-game? (entity-state/state-obj @player)))
 (defn- player-update-state      [] (entity-state/manual-tick (entity-state/state-obj @player)))

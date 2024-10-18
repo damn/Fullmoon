@@ -37,8 +37,8 @@
                :default-font {:file "fonts/exocet/films.EXL_____.ttf"
                               :size 16
                               :quality-scaling 2}
-               :views {:gui-view {:world-width 1440
-                                  :world-height 900}
+               :views {:gui-view {:world-width 1680
+                                  :world-height 1050}
                        :world-view {:world-width 1440
                                     :world-height 900
                                     :tile-size 48}}})

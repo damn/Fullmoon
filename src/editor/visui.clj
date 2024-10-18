@@ -138,6 +138,8 @@
                :rows [[{:actor delete-button :left? true}
                        label]]})))
 
+(def ^:private component-row-cols 3)
+
 (defn- component-row [[k v] m-schema]
   [{:actor (attribute-label k m-schema)
     :right? true}
@@ -146,7 +148,7 @@
     :left? true}])
 
 (defn- horiz-sep []
-  [(ui/horizontal-separator-cell 3)])
+  [(ui/horizontal-separator-cell component-row-cols)])
 
 (comment
  (when (malli/optional? k m-schema)
@@ -160,9 +162,13 @@
 (defmethod widget/create :s/map [schema m]
   (ui/table {:cell-defaults {:pad 5}
              :id :map-widget
-             :rows (interpose-f horiz-sep
-                                (map #(component-row % (schema/form schema))
-                                     (sort-by component-order m)))})
+             :rows (concat
+                    [(when (malli/optional-keys-left (schema/form schema) m)
+                       [{:actor (ui/text-button "[VIOLET]Add component[]" (fn []))
+                         :colspan component-row-cols}])]
+                    (interpose-f horiz-sep
+                                 (map #(component-row % (schema/form schema))
+                                      (sort-by component-order m))))})
 
   #_(let [m-schema (schema/form schema)
         map-widget (map-widget m-schema m)
@@ -170,7 +176,7 @@
     (a/set-id! map-widget :map-widget)
     (ui/table {:cell-defaults {:pad 5}
                :rows (remove nil?
-                             [(when optional-keys-left?
+                             [(when (malli/optional-keys-left (schema/form schema) m)
                                 [(ui/text-button "Add component" (choose-component-window m-schema map-widget))])
                               (when optional-keys-left?
                                 [(ui/horizontal-separator-cell 1)])
@@ -187,6 +193,8 @@
 
 ; editor is also limited by game gui world-width/world-height ... can adjust this ?
 ; also animations not playing ...
+
+; relationships just change userObject value instead of children id ?
 
 
 (comment

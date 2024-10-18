@@ -1,6 +1,6 @@
 (ns app.screens.world
   (:require [gdx.graphics :as g]
-            [gdx.graphics.camera :as 🎥]
+            [gdx.graphics.camera :as cam]
             [gdx.input :refer [key-pressed? key-just-pressed?]]
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
@@ -52,8 +52,9 @@
        true))))
 
 (defn- adjust-zoom [camera by] ; DRY map editor
-  (🎥/set-zoom! camera (max 0.1 (+ (🎥/zoom camera) by))))
+  (cam/set-zoom! camera (max 0.1 (+ (cam/zoom camera) by))))
 
+(def ^:private world-zoom 0.75)
 (def ^:private zoom-speed 0.05)
 
 (defn- check-zoom-keys []
@@ -75,7 +76,8 @@
 
 (deftype WorldScreen []
   screen/Screen
-  (screen/enter! [_])
+  (screen/enter! [_]
+    (cam/set-zoom! (g/world-camera) world-zoom))
 
   (screen/exit! [_]
     (g/set-cursor! :cursors/default))

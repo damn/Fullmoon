@@ -43,5 +43,5 @@
                         [(->background-image)
                          (tabbed-pane (tabs-data))
                          (ui/actor {:act (fn []
-                                           (when (key-just-pressed? :shift-left)
+                                           #_(when (key-just-pressed? :shift-left)
                                              (screen/change! :screens/main-menu)))})])])

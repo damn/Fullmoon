@@ -1,6 +1,6 @@
 (def libgdx-version "1.12.1")
 
-(defproject full-moon "-SNAPSHOT"
+(defproject moon "-SNAPSHOT"
   :repositories [["jitpack" "https://jitpack.io"]]
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.badlogicgames.gdx/gdx                   ~libgdx-version]
@@ -42,7 +42,7 @@
              ;"-Dcom.sun.management.jmxremote.authenticate=false"
              ]
 
-  :codox {:source-uri "https://github.com/damn/Fullmoon/blob/main/{filepath}#L{line}"
+  :codox {:source-uri "https://github.com/damn/moon/blob/main/{filepath}#L{line}"
           :metadata {:doc/format :markdown}}
 
   ; this from engine, what purpose?
