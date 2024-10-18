@@ -89,4 +89,3 @@
 (defstat :stats/armor-pierce
   {:schema number?
    :modifier-ops [:op/inc]})
-

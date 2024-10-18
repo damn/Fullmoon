@@ -15,13 +15,6 @@
             [level.modules :refer [module-width module-height]]
             [level.tiled :refer [movement-properties movement-property]]))
 
-; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
-; make more explicit clamped-map-coords ?
-; leftest two tiles are 0 coordinate x
-; and rightest is 16, not possible -> check clamping
-; depends on screen resize or something, changes,
-; maybe update viewport not called on resize sometimes
-
 (defn- show-whole-map! [camera tiled-map]
   (🎥/set-position! camera
                     [(/ (t/width  tiled-map) 2)
@@ -34,9 +27,7 @@
                                    :bottom [0 0])))
 
 (defn- current-data []
-  (-> (screen/current)
-      :sub-screen
-      :current-data))
+  (-> (screen/current) :sub-screen :current-data))
 
 (def ^:private infotext
   "L: grid lines
@@ -82,7 +73,7 @@ direction keys: move")
 (def ^:private zoom-speed 0.1)
 
 ; TODO textfield takes control !
-; TODO PLUS symbol shift & = symbol on keyboard not registered
+; PLUS symbol shift & = symbol on keyboard not registered
 (defn- camera-controls [camera]
   (when (key-pressed? :keys/shift-left) (adjust-zoom camera    zoom-speed))
   (when (key-pressed? :keys/minus)      (adjust-zoom camera (- zoom-speed)))
@@ -123,8 +114,7 @@ direction keys: move")
 (def ^:private world-id :worlds/modules)
 
 (defn- generate-screen-ctx [properties]
-  (let [;{:keys [tiled-map area-level-grid start-position]} (generate-modules context properties)
-        {:keys [tiled-map start-position]} (generate-level world-id)
+  (let [{:keys [tiled-map start-position]} (generate-level world-id)
         atom-data (current-data)]
     (dispose! (:tiled-map @atom-data))
     (swap! atom-data assoc

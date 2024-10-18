@@ -155,8 +155,8 @@
         save!   (apply-context-fn window #(db/update! (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(db/delete! id))]
     (ui/add-rows! window [[(scroll-pane-cell [[{:actor widgets :colspan 2}]
-                                                [(ui/text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
-                                                 (ui/text-button "Delete" delete!)]])]])
+                                              [(ui/text-button "Save [LIGHT_GRAY](ENTER)[]" save!)
+                                               (ui/text-button "Delete" delete!)]])]])
     (ui/add-actor! window (ui/actor {:act (fn []
                                             (when (key-just-pressed? :enter)
                                               (save!)))}))
