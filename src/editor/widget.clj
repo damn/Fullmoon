@@ -14,7 +14,7 @@
      :s/map
 
      (#{number? nat-int? int? pos? pos-int? :s/val-max} stype)
-     :s/number
+     number?
 
      :else stype)))
 
