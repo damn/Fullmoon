@@ -2,8 +2,7 @@
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.maps MapLayer MapLayers MapProperties)
            (com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell)
-           com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile
-           (gdl OrthogonalTiledMapRenderer ColorSetter)))
+           com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile))
 
 (defn load-map
   "Has to be disposed."
@@ -147,30 +146,3 @@
 
 (defn visible? [^TiledMapTileLayer layer]
   (.isVisible layer))
-
-(defn ->orthogonal-tiled-map-renderer
-  "OrthogonalTiledMapRenderer extends BatchTiledMapRenderer
-  and when a batch is passed to the constructor
-  we do not need to dispose the renderer"
-  [tiled-map unit-scale batch]
-  (OrthogonalTiledMapRenderer. tiled-map (float unit-scale) batch))
-
-(defn- set-color-setter! [^OrthogonalTiledMapRenderer map-renderer color-setter]
-  (.setColorSetter map-renderer (reify ColorSetter
-                                  (apply [_ color x y]
-                                    (color-setter color x y)))))
-
-(defn render-tm!
-  "Renders tiled-map using camera position and with unit-scale.
-  Color-setter is a (fn [color x y]) which is called for every tile-corner to set the color.
-  Can be used for lights & shadows.
-  Renders only visible layers."
-  [^OrthogonalTiledMapRenderer map-renderer color-setter camera tiled-map]
-  (set-color-setter! map-renderer color-setter)
-  (.setView map-renderer camera)
-  (->> tiled-map
-       layers
-       (filter visible?)
-       (map (partial layer-index tiled-map))
-       int-array
-       (.render map-renderer)))

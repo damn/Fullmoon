@@ -7,7 +7,7 @@
             [gdx.graphics.shape-drawer :as sd]
             [gdx.graphics.text :as text]
             [gdx.graphics.viewport :as vp]
-            [gdx.tiled :as t]
+            [gdx.graphics.tiled :as tiled]
             [gdx.utils :refer [gdx-field]]
             [utils.core :refer [bind-root safe-get]])
   (:import (com.badlogic.gdx Gdx)
@@ -78,13 +78,13 @@
 
   Renders only visible layers."
   [tiled-map color-setter]
-  (t/render-tm! (cached-map-renderer tiled-map)
+  (tiled/render (cached-map-renderer tiled-map)
                 color-setter
                 (world-camera)
                 tiled-map))
 
-(defn- ->tiled-map-renderer [tiled-map]
-  (t/->orthogonal-tiled-map-renderer tiled-map (world-unit-scale) batch))
+(defn- tiled-renderer [tiled-map]
+  (tiled/renderer tiled-map (world-unit-scale) batch))
 
 (defn load! [{:keys [views default-font cursors]}]
   (let [batch (SpriteBatch.)
@@ -95,7 +95,7 @@
     (bind-root #'cursors (->cursors cursors))
     (bind-root #'default-font (->default-font default-font))
     (bind-views! views)
-    (bind-root #'cached-map-renderer (memoize ->tiled-map-renderer))))
+    (bind-root #'cached-map-renderer (memoize tiled-renderer))))
 
 (defn dispose! []
   (.dispose batch)
