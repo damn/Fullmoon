@@ -25,7 +25,8 @@
                            (stage-add! window))))]
       (for [property-id property-ids]
         (let [property (db/get property-id)
-              image-widget (ui/image->widget (property/->image property) {:id property-id})]
+              image-widget (ui/image->widget (property/->image property)
+                                             {:id property-id})]
           (ui/add-tooltip! image-widget #(info/->text property))
           image-widget))
       (for [id property-ids]
