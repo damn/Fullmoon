@@ -1,11 +1,9 @@
 (ns ^:no-doc editor.visui
-  (:require [clojure.edn :as edn]
-            [component.core :as component]
+  (:require [component.core :as component]
             [component.db :as db]
             [component.info :as info]
             [component.property :as property]
             [component.schema :as schema]
-            [editor.overview :refer [overview-table]]
             [editor.malli :as malli]
             [editor.utils :refer [scroll-pane-cell]]
             [editor.widget :as widget]
@@ -14,8 +12,7 @@
             [gdx.ui :as ui]
             [gdx.ui.actor :as a]
             [gdx.ui.error-window :refer [error-window!]]
-            [gdx.ui.stage-screen :as stage-screen :refer [stage-add!]]
-            [gdx.screen :as screen]
+            [gdx.ui.stage-screen :refer [stage-add!]]
             [malli.core :as m]
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
@@ -146,7 +143,7 @@
         (catch Throwable t
           (error-window! t))))
 
-(defn- ->property-editor-window [id]
+(defn property-editor-window [id]
   (let [props (safe-get db/db id)
         window (ui/window {:title "Edit Property"
                            :modal? true
@@ -165,43 +162,3 @@
                                               (save!)))}))
     (.pack window)
     window))
-
-(import '(com.kotcrab.vis.ui.widget.tabbedpane Tab TabbedPane TabbedPaneAdapter))
-
-(defn- ->tab [{:keys [title content savable? closable-by-user?]}]
-  (proxy [Tab] [(boolean savable?) (boolean closable-by-user?)]
-    (getTabTitle [] title)
-    (getContentTable [] content)))
-
-(defn- ->tabbed-pane [tabs-data]
-  (let [main-table (ui/table {:fill-parent? true})
-        container (ui/table {})
-        tabbed-pane (TabbedPane.)]
-    (.addListener tabbed-pane
-                  (proxy [TabbedPaneAdapter] []
-                    (switchedTab [^Tab tab]
-                      (.clearChildren container)
-                      (.fill (.expand (.add container (.getContentTable tab)))))))
-    (.fillX (.expandX (.add main-table (.getTable tabbed-pane))))
-    (.row main-table)
-    (.fill (.expand (.add main-table container)))
-    (.row main-table)
-    (.pad (.left (.add main-table (ui/label "[LIGHT_GRAY]Left-Shift: Back to Main Menu[]"))) (float 10))
-    (doseq [tab-data tabs-data]
-      (.add tabbed-pane (->tab tab-data)))
-    main-table))
-
-(defn- ->tabs-data []
-  (for [property-type (sort (property/types))]
-    {:title (:title (property/overview property-type))
-     :content (overview-table property-type (fn [property-id]
-                                              (stage-add! (->property-editor-window property-id))))}))
-
-(defn screen [->background-image]
-  [:screens/property-editor
-   (stage-screen/create :actors
-                        [(->background-image)
-                         (->tabbed-pane (->tabs-data))
-                         (ui/actor {:act (fn []
-                                           (when (key-just-pressed? :shift-left)
-                                             (screen/change! :screens/main-menu)))})])])

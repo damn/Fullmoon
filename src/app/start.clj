@@ -1,10 +1,10 @@
 (ns app.start
-  (:require [app.screens.main :as main-menu]
+  (:require [app.screens.editor :as property-editor]
+            [app.screens.main :as main-menu]
             [app.screens.map-editor :as map-editor]
             [app.screens.options :as options-screen]
             [app.screens.world :as world-screen]
             [component.db :as db]
-            [editor.visui :as property-editor]
             [gdx.app :as app]
             [gdx.assets :as assets]
             [gdx.graphics :as g]
