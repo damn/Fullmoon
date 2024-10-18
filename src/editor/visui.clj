@@ -20,8 +20,7 @@
             [malli.generator :as mg]
             [utils.core :refer [safe-get index-of]]))
 
-; TODO main properties optional keys to add them itself not possible (e.g. to add skill/cooldown back)
-; -> reuse :s/map
+; TODO optional attributes in a property cannot be added again after remove -> reuse :s/map
 ; TODO overview table not refreshed after changes in properties
 
 (declare ->component-widget
@@ -44,23 +43,23 @@
      ;(#{:s/map} type) {} ; cannot have empty for required keys, then no Add Component button
      :else (mg/generate (schema/form schema) {:size 3}))))
 
-(defn- ->choose-component-window [schema attribute-widget-group]
+(defn- ->choose-component-window [schema-form attribute-widget-group]
   (fn []
-    (let [k-props (k-properties schema)
-          window (ui/window {:title "Choose"
+    (let [window (ui/window {:title "Choose"
                              :modal? true
                              :close-button? true
                              :center? true
                              :close-on-escape? true
                              :cell-defaults {:pad 5}})
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                     (map-keys schema)))]
+                                     (map-keys schema-form)))]
       (ui/add-rows! window (for [k remaining-ks]
                              [(ui/text-button (name k)
                                               (fn []
                                                 (a/remove! window)
                                                 (ui/add-actor! attribute-widget-group
-                                                               (->component-widget [k (get k-props k) (k->default-value k)]
+                                                               (->component-widget [k (k->default-value k)]
+                                                                                   schema-form
                                                                                    :horizontal-sep?
                                                                                    (pos? (count (ui/children attribute-widget-group)))))
                                                 (ui/pack-ancestor-window! attribute-widget-group)))]))
@@ -98,12 +97,12 @@
       (ui/add-tooltip! label doc))
     label))
 
-(defn- ->component-widget [[k k-props v] & {:keys [horizontal-sep?]}]
+(defn- ->component-widget [[k v] schema-form & {:keys [horizontal-sep?]}]
   (let [label (->attribute-label k)
         value-widget (widget/create (schema/of k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
-                       [(when (:optional k-props)
+                       [(when (:optional (k (k-properties schema-form)))
                           (ui/text-button "-" #(let [window (ui/find-ancestor-window table)]
                                                  (a/remove! table)
                                                  (.pack window))))
@@ -141,16 +140,15 @@
 (defn- component-order [[k _v]]
   (or (index-of k property-k-sort-order) 99))
 
-(defn- ->component-widgets [schema props]
-  (let [first-row? (atom true)
-        k-props (k-properties schema)]
+(defn- ->component-widgets [schema-form props]
+  (let [first-row? (atom true)]
     (for [[k v] (sort-by component-order props)
           :let [sep? (not @first-row?)
                 _ (reset! first-row? false)]]
-      (->component-widget [k (get k-props k) v] :horizontal-sep? sep?))))
+      (->component-widget [k v] schema-form :horizontal-sep? sep?))))
 
-(defn- ->attribute-widget-group [schema props]
-  (ui/vertical-group (->component-widgets schema props)))
+(defn- ->attribute-widget-group [schema-form props]
+  (ui/vertical-group (->component-widgets schema-form props)))
 
 (defn- attribute-widget-group->data [group]
   (into {} (for [k (map a/id (ui/children group))
@@ -172,7 +170,8 @@
                            :center? true
                            :close-on-escape? true
                            :cell-defaults {:pad 5}})
-        widgets (->attribute-widget-group (property/schema props) props)
+        widgets (->attribute-widget-group (property/schema props)  ; -form ?!
+                                          props)
         save!   (apply-context-fn window #(db/update! (attribute-widget-group->data widgets)))
         delete! (apply-context-fn window #(db/delete! id))]
     (ui/add-rows! window [[(scroll-pane-cell [[{:actor widgets :colspan 2}]
