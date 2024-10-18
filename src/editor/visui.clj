@@ -57,12 +57,6 @@
 
 ;;
 
-;;
-
-;; =>
-; https://libgdx.com/wiki/graphics/2d/scene2d/table#inserting-cells
-; => just rebuild the table/window !?
-
 (declare attribute-label)
 
 (defn- kv-widget [[k v] m-schema & {:keys [horizontal-sep?]}]
@@ -129,9 +123,14 @@
 (def ^:private value-widget? (comp vector? a/id))
 
 (defn- attribute-label [k m-schema]
-  (let [label (ui/label (str "[GRAY]:" (namespace k) "[]/" (name k)))
+  (let [label (ui/label #_(str "[GRAY]:" (namespace k) "[]/" (name k))
+                        (name k)
+                        )
         delete-button (when (malli/optional? k m-schema)
-                        (ui/text-button "[SCARLET]-[] " (fn [])))]
+                        (ui/text-button "[SCARLET]-[] "
+                                        (fn []
+
+                                          )))]
     (when-let [doc (:editor/doc (component/meta k))]
       (ui/add-tooltip! label doc))
     (ui/table {:cell-defaults {:pad 2}
@@ -197,12 +196,33 @@
 ; relationships just change userObject value instead of children id ?
 
 
-(comment
- (let [window (:property-editor-window (gdx.ui.stage-screen/stage-get))
-       table (.findActor (:scroll-pane window) "scroll-pane-table")
-       map-widget (:map-widget table)]
-   (widget/value :s/map map-widget))
- )
+(let [window (:property-editor-window (gdx.ui.stage-screen/stage-get))
+      scroll-pane-table (.findActor (:scroll-pane window) "scroll-pane-table")
+      m-widget-cell (first (seq (.getCells scroll-pane-table)))
+      table (:map-widget scroll-pane-table)]
+
+
+  ; we need the cell where the table is ??
+  ; replace with dissoc widget/create value dissoc k
+
+  (keep a/id (ui/children table))
+
+
+  #_(let [m (widget/value :s/map table)
+        schema (schema/of (property/type m))]
+
+    (.setActor m-widget-cell
+               (widget/create schema (dissoc m :property/id))
+
+               )
+    )
+  ;(schema/form (property/schema-form (widget/value :s/map table)))
+
+  (.pack window)
+
+
+  )
+
 
 (defmethod widget/value :s/map [_ table]
   (into {}
