@@ -21,21 +21,18 @@
 (defn types []
   (filter #(= "properties" (namespace %)) (keys component/meta)))
 
-(defn schema [property]
-  (-> property
-      type
-      schema/form-of
-      m/schema))
+(defn m-schema [property]
+  (-> property type schema/form-of))
 
-(defn- invalid-ex-info [schema value]
-  (ex-info (str (me/humanize (m/explain schema value)))
+(defn- invalid-ex-info [m-schema value]
+  (ex-info (str (me/humanize (m/explain m-schema value)))
            {:value value
-            :schema (m/form schema)}))
+            :schema (m/form m-schema)}))
 
 (defn validate! [property]
-  (let [schema (schema property)]
-    (when-not (m/validate schema property)
-      (throw (invalid-ex-info schema property)))))
+  (let [m-schema (m/schema (m-schema property))]
+    (when-not (m/validate m-schema property)
+      (throw (invalid-ex-info m-schema property)))))
 
 (defn overview [property-type]
   (:overview (component/meta property-type)))
