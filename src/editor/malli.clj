@@ -17,7 +17,7 @@
   (:optional (k (map-form-k->properties map-schema))))
 
 (defn- optional-keyset [m-schema]
-  (filter #(optional? % m-schema) (map-keys m-schema)))
+  (set (filter #(optional? % m-schema) (map-keys m-schema))))
 
 (comment
  (= (optional-keyset

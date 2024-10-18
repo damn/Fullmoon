@@ -26,7 +26,7 @@
 (defn- k->default-value [k]
   (let [schema (schema/of k)]
     (cond
-     (#{:s/one-to-one :s/one-to-many} schema) nil
+     (#{:s/one-to-one :s/one-to-many} (schema/type schema)) nil
      ;(#{:s/map} type) {} ; cannot have empty for required keys, then no Add Component button
      :else (mg/generate (schema/form schema) {:size 3}))))
 
