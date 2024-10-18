@@ -5,9 +5,9 @@
             [component.operation :as op]
             [component.tx :as tx]
             [data.val-max :as val-max]
-            [gdx.graphics :as g]
             [utils.core :refer [k->pretty-name]]
             [world.entity :as entity]
+            [world.entity.hpbar :as hpbar]
             [world.entity.modifiers :refer [->modified-value]]
             [world.effect :as effect]))
 
@@ -144,23 +144,6 @@
   {:schema number?
    :modifier-ops [:op/inc]})
 
-(def ^:private hpbar-colors
-  {:green     [0 0.8 0]
-   :darkgreen [0 0.5 0]
-   :yellow    [0.5 0.5 0]
-   :red       [0.5 0 0]})
-
-(defn- hpbar-color [ratio]
-  (let [ratio (float ratio)
-        color (cond
-                (> ratio 0.75) :green
-                (> ratio 0.5)  :darkgreen
-                (> ratio 0.25) :yellow
-                :else          :red)]
-    (color hpbar-colors)))
-
-(def ^:private borders-px 1)
-
 (let [stats-order [:stats/hp
                    :stats/mana
                    ;:stats/movement-speed
@@ -201,20 +184,9 @@
 
   (entity/render-info [_ entity]
     (when-let [hp (entity-stat entity :stats/hp)]
-      (let [ratio (val-max/ratio hp)
-            {:keys [position width half-width half-height entity/mouseover?]} entity
-            [x y] position]
-        (when (or (< ratio 1) mouseover?)
-          (let [x (- x half-width)
-                y (+ y half-height)
-                height (g/pixels->world-units 5)
-                border (g/pixels->world-units borders-px)]
-            (g/draw-filled-rectangle x y width height :black)
-            (g/draw-filled-rectangle (+ x border)
-                                     (+ y border)
-                                     (- (* width ratio) (* 2 border))
-                                     (- height (* 2 border))
-                                     (hpbar-color ratio))))))))
+      (let [ratio (val-max/ratio hp)]
+        (when (or (< ratio 1) (:entity/mouseover? entity))
+          (hpbar/draw entity ratio))))))
 
 ; TODO negate this value also @ use
 ; so can make positiive modifeirs green , negative red....
