@@ -25,7 +25,9 @@
   (let [schema (schema/of k)]
     (cond
      (#{:s/one-to-one :s/one-to-many} (schema/type schema)) nil
+
      ;(#{:s/map} type) {} ; cannot have empty for required keys, then no Add Component button
+
      :else (mg/generate (schema/form schema) {:size 3}))))
 
 ;;
@@ -55,21 +57,20 @@
 ;;
 
 (defn- attribute-label [k]
-  (let [label (ui/label (str k))]
+  (let [label (ui/label (name k))]
     (when-let [doc (:editor/doc (component/meta k))]
       (ui/add-tooltip! label doc))
     label))
 
 (defn- kv-widget [[k v] m-schema & {:keys [horizontal-sep?]}]
-  (let [label (attribute-label k)
-        value-widget (widget/create (schema/of k) v)
+  (let [value-widget (widget/create (schema/of k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
                        [(when (malli/optional? k m-schema)
                           (ui/text-button "-" #(let [window (ui/find-ancestor-window table)]
                                                  (a/remove! table)
                                                  (.pack window))))
-                        label
+                        (attribute-label k)
                         (ui/vertical-separator-cell)
                         value-widget])
         rows [(when horizontal-sep? [(ui/horizontal-separator-cell (count column))])
@@ -132,7 +133,6 @@
                               (when optional-keys-left?
                                 [(ui/horizontal-separator-cell 1)])
                               [map-widget]])})))
-
 
 (defmethod widget/value :s/map [_ table]
   (map-widget->data (:map-widget table)))
