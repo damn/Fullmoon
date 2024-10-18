@@ -17,8 +17,6 @@
 
 ; TODO map-coords are clamped ? thats why showing 0 under and left of the map?
 ; make more explicit clamped-map-coords ?
-
-; TODO
 ; leftest two tiles are 0 coordinate x
 ; and rightest is 16, not possible -> check clamping
 ; depends on screen resize or something, changes,
@@ -35,7 +33,6 @@
                                    :right [(t/width tiled-map) 0]
                                    :bottom [0 0])))
 
-; use var !
 (defn- current-data []
   (-> (screen/current)
       :sub-screen
@@ -69,7 +66,6 @@ direction keys: move")
          (remove nil?)
          (str/join "\n"))))
 
-; same as debug-window
 (defn- ->info-window []
   (let [label (ui/label "")
         window (ui/window {:title "Info" :rows [[label]]})]

@@ -1,5 +1,4 @@
 (ns gdx.tiled
-  "API for [com.badlogic.gdx.maps.tiled](https://javadoc.io/doc/com.badlogicgames.gdx/gdx/latest/com/badlogic/gdx/maps/tiled/package-summary.html) plus grid2d level generation."
   (:import com.badlogic.gdx.graphics.g2d.TextureRegion
            (com.badlogic.gdx.maps MapLayer MapLayers MapProperties)
            (com.badlogic.gdx.maps.tiled TmxMapLoader TiledMap TiledMapTile TiledMapTileLayer TiledMapTileLayer$Cell)
@@ -11,7 +10,6 @@
   [file]
   (.load (TmxMapLoader.) file))
 
-; implemented by: TiledMap, TiledMapTile, TiledMapTileLayer
 (defprotocol HasProperties
   (m-props ^MapProperties [_] "Returns instance of com.badlogic.gdx.maps.MapProperties")
   (get-property [_ key] "Pass keyword key, looks up in properties."))
@@ -26,7 +24,6 @@
  (defn properties [obj]
    (let [^MapProperties ps (.getProperties obj)]
      (zipmap (map keyword (.getKeys ps)) (.getValues ps))))
-
  )
 
 (defn- lookup [has-properties key]
@@ -36,11 +33,9 @@
   TiledMap
   (m-props [tiled-map] (.getProperties tiled-map))
   (get-property [tiled-map key] (lookup tiled-map key))
-
   MapLayer
   (m-props [layer] (.getProperties layer))
   (get-property [layer key] (lookup layer key))
-
   TiledMapTile
   (m-props [tile] (.getProperties tile))
   (get-property [tile key] (lookup tile key)))
@@ -48,8 +43,7 @@
 (defn width  [tiled-map] (get-property tiled-map :width))
 (defn height [tiled-map] (get-property tiled-map :height))
 
-(defn layers ^MapLayers [tiled-map]
-  (.getLayers tiled-map))
+(defn layers ^MapLayers [tiled-map] (.getLayers tiled-map))
 
 (defn layer-index
   "Returns nil or the integer index of the layer.
@@ -78,8 +72,6 @@
   (when-let [layer (get-layer tiled-map (layer-name layer))]
     (.getCell ^TiledMapTileLayer layer x y)))
 
-; we want cell property not tile property
-; so why care for no-cell ? just return nil
 (defn property-value
   "Returns the property value of the tile at the cell in layer.
   If there is no cell at this position in the layer returns :no-cell.
@@ -111,12 +103,11 @@
           :when (not (#{:undefined :no-cell} value))]
       [position value])))
 
-(def
-  ^{:doc "Memoized function.
-         Tiles are usually shared by multiple cells.
-         https://libgdx.com/wiki/graphics/2d/tile-maps#cells
-         No copied-tile for AnimatedTiledMapTile yet (there was no copy constructor/method)"}
-  copy-tile
+(def copy-tile
+  "Memoized function.
+  Tiles are usually shared by multiple cells.
+  https://libgdx.com/wiki/graphics/2d/tile-maps#cells
+  No copied-tile for AnimatedTiledMapTile yet (there was no copy constructor/method)"
   (memoize
    (fn [^StaticTiledMapTile tile]
      (assert tile)
@@ -146,8 +137,7 @@
     (.add ^MapLayers (layers tiled-map) layer)
     layer))
 
-(defn ->empty-tiled-map []
-  (TiledMap.))
+(defn ->empty-tiled-map [] (TiledMap.))
 
 (defn put! [^MapProperties properties key value]
   (.put properties key value))

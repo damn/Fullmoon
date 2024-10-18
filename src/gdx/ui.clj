@@ -61,12 +61,6 @@
   (-> (VisTextField. text)
       (set-opts opts)))
 
-(defn split-pane [{:keys [^Actor first-widget
-                          ^Actor second-widget
-                          ^Boolean vertical?] :as opts}]
-  (-> (VisSplitPane. first-widget second-widget vertical?)
-      (a/set-opts! opts)))
-
 (defn stack [actors]
   (proxy-ILookup Stack [(into-array Actor actors)]))
 
@@ -74,8 +68,7 @@
 (defmethod ->vis-image Drawable      [^Drawable d      ] (VisImage.  d))
 (defmethod ->vis-image TextureRegion [^TextureRegion tr] (VisImage. tr))
 
-; TODO widget also make, for fill parent
-(defn image-widget
+(defn image-widget ; TODO widget also make, for fill parent
   "Takes either a texture-region or drawable. Opts are :scaling, :align and actor opts."
   [object {:keys [scaling align fill-parent?] :as opts}]
   (-> (let [^Image image (->vis-image object)]
@@ -88,7 +81,6 @@
 (defn image->widget [image opts]
   (image-widget (:texture-region image) opts))
 
-; => maybe with VisImage not necessary anymore?
 (defn texture-region-drawable [^TextureRegion texture-region]
   (TextureRegionDrawable. texture-region))
 
@@ -184,7 +176,7 @@
   [bg]
   (.getChecked ^ButtonGroup bg))
 
+(defn tree [] (VisTree.))
+
 (defn t-node ^Tree$Node [actor]
   (proxy [Tree$Node] [actor]))
-
-(defn tree [] (VisTree.))
