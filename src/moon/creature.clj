@@ -7,7 +7,6 @@
             [component.tx :as tx]
             [gdx.graphics :as g]
             [gdx.tiled :as tiled]
-            [reduce-fsm :as fsm]
             [utils.core :refer [bind-root safe-merge tile->middle]]
             [world.core :as world]
             [moon.creature.fsms :as fsms]
@@ -141,6 +140,6 @@
     [[:tx/sound "sounds/bfxr_shield_consume.wav"]
      [:tx/creature {:position effect/target-position
                     :creature-id id ; already properties/get called through one-to-one, now called again.
-                    :components {:entity/state {:fsm fsms/npcs
+                    :components {:entity/state {:fsm fsms/npc
                                                 :initial-state :npc-idle}
                                  :entity/faction (:entity/faction @effect/source)}}]]))

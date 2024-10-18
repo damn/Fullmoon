@@ -1,4 +1,5 @@
-(ns moon.creature.fsms)
+(ns moon.creature.fsms
+  (:require [reduce-fsm :as fsm]))
 
 (comment
  ; graphviz required in path
