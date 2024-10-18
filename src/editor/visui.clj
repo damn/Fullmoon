@@ -18,6 +18,7 @@
             [utils.core :refer [safe-get index-of]]))
 
 ; TODO overview table not refreshed after changes in properties
+; -> just rebuild everything after save?!
 
 ;;
 
@@ -62,6 +63,12 @@
       (ui/add-tooltip! label doc))
     label))
 
+;;
+
+;; =>
+; https://libgdx.com/wiki/graphics/2d/scene2d/table#inserting-cells
+; => just rebuild the table/window !?
+
 (defn- kv-widget [[k v] m-schema & {:keys [horizontal-sep?]}]
   (let [value-widget (widget/create (schema/of k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
@@ -79,14 +86,11 @@
     (ui/add-rows! table (remove nil? rows))
     table))
 
-(defn- map-widget-table->value-widget [table]
-  (-> table ui/children last))
-
 (defn- map-widget->data [group]
   (into {} (for [k (map a/id (ui/children group))
-                 :let [table (k group)
-                       value-widget (map-widget-table->value-widget table)]]
-             [k (widget/value (schema/of k) value-widget)])))
+                 :let [table (k group)]]
+             [k (widget/value (schema/of k)
+                              (-> table ui/children last))])))
 
 (defn- choose-component-window [m-schema map-widget]
   (fn []
@@ -111,7 +115,7 @@
       (.pack window)
       (stage-add! window))))
 
-(defn- component-widgets [m-schema props]
+(defn- kv-widgets [m-schema props]
   (let [first-row? (atom true)]
     (for [[k v] (sort-by component-order props)
           :let [sep? (not @first-row?)
@@ -119,10 +123,26 @@
       (kv-widget [k v] m-schema :horizontal-sep? sep?))))
 
 (defn- map-widget [m-schema props]
-  (ui/vertical-group (component-widgets m-schema props)))
+  (ui/vertical-group (kv-widgets m-schema props)))
+
+(defn- component-row [[k v]]
+  [(attribute-label k)
+   (ui/vertical-separator-cell)
+   (widget/create (schema/of k) v)])
+
+(defn- horiz-sep []
+  [(ui/horizontal-separator-cell 3)])
+
+(defn- interpose-f [f coll]
+  (drop 1 (interleave (repeatedly f) coll)))
 
 (defmethod widget/create :s/map [schema m]
-  (let [m-schema (schema/form schema)
+  (ui/table {:cell-defaults {:pad 5}
+             :rows (interpose-f horiz-sep
+                                (map component-row
+                                     (sort-by component-order m)))})
+
+  #_(let [m-schema (schema/form schema)
         map-widget (map-widget m-schema m)
         optional-keys-left? (malli/optional-keys-left m-schema m)]
     (a/set-id! map-widget :map-widget)
@@ -135,7 +155,7 @@
                               [map-widget]])})))
 
 (defmethod widget/value :s/map [_ table]
-  (map-widget->data (:map-widget table)))
+  #_(map-widget->data (:map-widget table)))
 
 (defn- apply-context-fn [window f]
   #(try (f)

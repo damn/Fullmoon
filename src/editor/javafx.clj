@@ -6,6 +6,8 @@
            (javafx.scene.image Image ImageView)
            (javafx.scene.layout StackPane)
            (javafx.scene Scene Node))
+
+  ; use a macro with dev-mode? /
   #_(:gen-class :extends javafx.application.Application))
 
 (import javafx.scene.control.TabPane
