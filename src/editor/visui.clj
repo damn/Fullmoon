@@ -1,12 +1,12 @@
 (ns ^:no-doc editor.visui
   (:require [clojure.edn :as edn]
-            [clojure.set :as set]
             [component.core :as component]
             [component.db :as db]
             [component.info :as info]
             [component.property :as property]
             [component.schema :as schema]
             [editor.overview :refer [overview-table]]
+            [editor.malli :as malli]
             [editor.utils :refer [scroll-pane-cell]]
             [editor.widget :as widget]
             editor.widgets
@@ -26,16 +26,6 @@
 (declare ->component-widget
          attribute-widget-group->data)
 
-(defn- k-properties [m-schema]
-  (let [[_m _p & ks] m-schema]
-    (into {} (for [[k m? _schema] ks]
-               [k (if (map? m?) m?)]))))
-
-(defn- map-keys [m-schema]
-  (let [[_m _p & ks] m-schema]
-    (for [[k m? _schema] ks]
-      k)))
-
 (defn- k->default-value [k]
   (let [schema (schema/of k)]
     (cond
@@ -52,7 +42,7 @@
                              :close-on-escape? true
                              :cell-defaults {:pad 5}})
           remaining-ks (sort (remove (set (keys (attribute-widget-group->data attribute-widget-group)))
-                                     (map-keys m-schema)))]
+                                     (malli/map-keys m-schema)))]
       (ui/add-rows! window (for [k remaining-ks]
                              [(ui/text-button (name k)
                                               (fn []
@@ -68,16 +58,10 @@
 
 (declare ->attribute-widget-group)
 
-(defn- optional-keyset [schema]
-  (set (map first
-            (filter (fn [[k prop-m]] (:optional prop-m))
-                    (k-properties schema)))))
-
 (defmethod widget/create :s/map [schema m]
   (let [m-schema (schema/form schema)
         attribute-widget-group (->attribute-widget-group m-schema m)
-        optional-keys-left? (seq (set/difference (optional-keyset m-schema)
-                                                 (set (keys m))))]
+        optional-keys-left? (malli/optional-keys-left m-schema m)]
     (a/set-id! attribute-widget-group :attribute-widget-group)
     (ui/table {:cell-defaults {:pad 5}
                :rows (remove nil?
@@ -102,7 +86,7 @@
         value-widget (widget/create (schema/of k) v)
         table (ui/table {:id k :cell-defaults {:pad 4}})
         column (remove nil?
-                       [(when (:optional (k (k-properties m-schema)))
+                       [(when (malli/optional? k m-schema)
                           (ui/text-button "-" #(let [window (ui/find-ancestor-window table)]
                                                  (a/remove! table)
                                                  (.pack window))))
