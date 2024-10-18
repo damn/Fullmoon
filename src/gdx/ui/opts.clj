@@ -20,4 +20,3 @@
   (when (instance? WidgetGroup actor)
     (set-widget-group-opts actor opts))
   actor)
-

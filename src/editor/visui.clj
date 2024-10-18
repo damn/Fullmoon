@@ -126,9 +126,11 @@
   (ui/vertical-group (kv-widgets m-schema props)))
 
 (defn- component-row [[k v]]
-  [(attribute-label k)
+  [{:actor (attribute-label k)
+    :right? true}
    (ui/vertical-separator-cell)
-   (widget/create (schema/of k) v)])
+   {:actor (widget/create (schema/of k) v)
+    :left? true}])
 
 (defn- horiz-sep []
   [(ui/horizontal-separator-cell 3)])
